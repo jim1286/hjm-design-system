@@ -19,7 +19,13 @@ const meta = { includeStories: ["Default","Manual","OptionalAutoplay","Dark","La
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
-export const Manual: Story = { name: "수동 재생",};
+export const Manual: Story = { name: "수동 재생", args: {
+  slideMaxHeight: 180,
+  renderSlide: ({ label }) => <Surface padding="md" bordered><Stack gap="sm">
+    <Text variant="title" emphasis="strong">{label}</Text>
+    {[1, 2, 3, 4, 5].map(index => <Text key={index} tone="muted">{index}. 긴 안내를 위아래로 읽어도 이전·다음 조작은 아래에 남아요.</Text>)}
+  </Stack></Surface>,
+} };
 export const OptionalAutoplay: Story = { name: "자동 재생 연동", args: { autoplay: { intervalMs: 5000 } } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

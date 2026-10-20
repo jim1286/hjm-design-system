@@ -27,6 +27,8 @@ export function CarouselMotion(props) {
         watchFocus: false, duration: environment.reducedMotion ? 0 : 25 });
     const latest = useRef(props);
     latest.current = props;
+    const latestIndex = useRef(index);
+    latestIndex.current = index;
     const syncing = useRef(false);
     useEffect(() => {
         if (!api)
@@ -37,8 +39,15 @@ export function CarouselMotion(props) {
             if (!syncing.current && item && item.id !== current.currentKey)
                 current.onCurrentKeyChange(item.id);
         };
-        api.on("select", select);
-        return () => { api.off("select", select); };
+        // A zero-width/modal viewport can collapse snaps before its first measurement.
+        // Re-measurement must restore the controlled key, not retain that collapsed engine index.
+        const reInit = () => {
+            syncing.current = true;
+            api.scrollTo(latestIndex.current, true);
+            syncing.current = false;
+        };
+        api.on("select", select).on("reInit", reInit);
+        return () => { api.off("select", select).off("reInit", reInit); };
     }, [api]);
     useEffect(() => { syncing.current = true; api?.scrollTo(index, environment.reducedMotion); syncing.current = false; }, [api, index, environment.reducedMotion]);
     return _jsxs("section", { "aria-label": props.label, "aria-roledescription": "carousel", style: props.layoutStyle, children: [_jsx("div", { ref: viewport, style: { overflow: "hidden" }, children: _jsx("div", { style: { display: "flex", touchAction: "pan-y pinch-zoom" }, children: props.slides.map((slide, i) => _jsx("div", { role: "group", "aria-roledescription": "slide", "aria-label": resolved[i].accessibleName, "aria-hidden": resolved[i].inert, inert: resolved[i].inert, style: { flex: "0 0 100%", minWidth: 0 }, children: props.renderSlide(slide) }, slide.id)) }) }), props.navigation === "counter" ? _jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [_jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous")), children: _jsx(Icon, { name: "chevronStart" }) }), _jsxs(Text, { variant: "caption", "aria-live": "polite", children: [index + 1, "/", props.slides.length] }), _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.slides.length - 1, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next")), children: _jsx(Icon, { name: "chevronEnd" }) })] }) : _jsxs("div", { style: { display: "flex", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }, children: [_jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous")), children: _jsx(Icon, { name: "chevronStart" }) }), _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.slides.length - 1, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next")), children: _jsx(Icon, { name: "chevronEnd" }) })] })] });

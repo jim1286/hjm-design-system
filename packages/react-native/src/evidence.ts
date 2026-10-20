@@ -64,6 +64,7 @@ const nativeAction = (file: ProofFile = stableCoreProofFile): ClaimExtras => ({ 
 const nativeActionAndLongCopy = (file: ProofFile): ClaimExtras => ({ proofs: [{ scenarios: ["native-actions", "long-copy"], file }] });
 
 const claimExtras: Readonly<Record<string, ClaimExtras>> = {
+  "time-picker": nativeAction("test/time-picker.test.tsx"),
   "design-system-provider": { exportNames: ["useHjmNativeTheme"] },
   link: nativeAction(),
   field: nativeAction(),

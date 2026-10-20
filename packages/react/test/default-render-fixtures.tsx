@@ -1,3 +1,4 @@
+import { TimePicker } from "../src/time-picker.js";
 // 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
 import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, TypingIndicator, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, MediaSelectionScreen, ModerationScreen, OnboardingScreen, PermissionScreen, PhotoSourceSheet, ProfileScreen, ProfileSummary, SearchScreen } from "../src/screen-flows.js";
@@ -317,6 +318,12 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "form",
     marker: "hjm-form",
     render: () => <Form onSubmit={() => undefined}><TextField label="Name" /></Form>,
+  },
+  {
+    componentId: "time-picker",
+    marker: "hjm-time-picker",
+    render: () => <TimePicker presentation="inline" value="14:30" onValueChange={() => undefined} labels={{ label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" }} />,
+    renderLongCopy: copy => <TimePicker presentation="inline" value="14:30" onValueChange={() => undefined} description={copy} labels={{ label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" }} />,
   },
   {
     componentId: "date-picker",

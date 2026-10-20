@@ -1,10 +1,12 @@
+import type { ComponentRef } from "react";
 import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
 import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { TextInput, View, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps } from "react-native";
+import type { GridDescriptor } from "@hjmds/design-contracts/grid";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FieldAccessibleName = Readonly<{
     label: string;
@@ -53,12 +55,12 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
 }>;
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
 export type TextFieldProps = AccessibleFieldProps;
-export declare const TextField: import("react").ForwardRefExoticComponent<AccessibleFieldProps & import("react").RefAttributes<TextInput>>;
+export declare const TextField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>>;
 export type TextAreaProps = AccessibleFieldProps & Readonly<{
     trailing?: ReactNode;
     leadingAction?: ReactNode;
 }>;
-export declare const TextArea: import("react").ForwardRefExoticComponent<TextAreaProps & import("react").RefAttributes<TextInput>>;
+export declare const TextArea: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextAreaProps>>;
 export type SearchFieldAffordanceRenderProps = Readonly<{
     color: string;
     size: number;
@@ -79,7 +81,7 @@ export type SearchFieldProps = AccessibleFieldProps & Readonly<{
     renderClearIcon?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
     renderBusyIndicator?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
 }>;
-export declare const SearchField: import("react").ForwardRefExoticComponent<SearchFieldProps & import("react").RefAttributes<TextInput>>;
+export declare const SearchField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, SearchFieldProps>>;
 export type PasswordFieldToggleRenderProps = Readonly<{
     name: "visibility" | "visibilityOff";
     color: string;
@@ -101,7 +103,7 @@ export type PasswordFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultV
     renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
 }>;
 /** Password input with independent reveal state and native autofill translation. */
-export declare const PasswordField: import("react").ForwardRefExoticComponent<PasswordFieldProps & import("react").RefAttributes<TextInput>>;
+export declare const PasswordField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, PasswordFieldProps>>;
 export type OtpFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue" | "inputStyle" | "keyboardType" | "multiline" | "onChangeText" | "secureTextEntry" | "textContentType" | "value"> & FieldAccessibleName & Readonly<{
     length: number;
     value?: string;
@@ -112,7 +114,7 @@ export type OtpFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue"
     presentation?: OtpFieldPresentation;
 }>;
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
-export declare const OtpField: import("react").ForwardRefExoticComponent<OtpFieldProps & import("react").RefAttributes<TextInput>>;
+export declare const OtpField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, OtpFieldProps>>;
 export type ChoiceVisualRenderProps = Readonly<{
     checked: CheckboxState;
     selected: boolean;
@@ -174,9 +176,17 @@ export type RadioGroupItem<Value extends string = string> = Readonly<{
     disabled?: boolean;
     accessibilityHint?: string;
     leading?: ReactNode;
+    action?: Readonly<{
+        label: string;
+        accessibilityLabel?: string;
+        onAction: () => void;
+        disabled?: boolean;
+    }>;
 }>;
 type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
     orientation?: SelectionOrientation;
+    /** Equal-width responsive options, measured and arranged by the shared Grid. */
+    grid?: GridDescriptor;
     disabled?: boolean;
     readOnly?: boolean;
     invalid?: boolean;
@@ -196,6 +206,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     value?: Value | null;
     defaultValue?: Value | null;
     onValueChange?: (value: Value | null) => void;
+    /** Visual preview only; the string label remains the accessible name. */
+    renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
 }>;
@@ -208,7 +220,7 @@ export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisua
     renderIndicator?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
 }>;
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
-export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, presentation, size, indicator, renderLeading, renderIndicator, layoutStyle, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
+export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, grid, presentation, size, indicator, renderLeading, renderIndicator, layoutStyle, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
 type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibilityLabel" | "defaultValue" | "onValueChange" | "style" | "value"> & Readonly<{
     label: string;
     /** Use inside a labelled ListRow; the accessible name and hint remain present. */
@@ -234,6 +246,8 @@ export declare function Switch({ label, labelVisibility, presentation, testID, d
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;
+    /** Full spoken name when the visible label is abbreviated. */
+    accessibilityLabel?: string;
     disabled?: boolean;
     leading?: ReactNode;
     renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
@@ -258,6 +272,10 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";
     disabled?: boolean;
+    /** Pills wrap by default; a rail keeps one row while actions remain outside the selection group. */
+    overflow?: "wrap" | "scroll";
+    actions?: ReactNode;
+    testID?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -295,6 +313,6 @@ type SelectionChipProps = Readonly<{
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 /** Action/filter chip with role-specific, controlled selection semantics. */
 /** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */
-export declare const Chip: import("react").ForwardRefExoticComponent<ChipProps & import("react").RefAttributes<View>>;
+export declare const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipProps>>;
 export {};
 //# sourceMappingURL=inputs.d.ts.map

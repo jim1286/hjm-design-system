@@ -668,6 +668,19 @@
           "reducedMotion": false
         }
       ]
+    },
+    {
+      "proofFile": "test/time-picker.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
     }
   ]
 }

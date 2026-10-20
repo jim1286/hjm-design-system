@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { createRef } from "react";
 import { THEMES } from "@hjmds/design-contracts/colors";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
@@ -133,8 +134,8 @@ describe("Native core normalization", () => {
   });
 
   it("forwards the Native Text instance and keeps product props and style final", () => {
-    const nativeTextInstance = { measure: vi.fn() } as unknown as NativeText;
-    const ref = createRef<NativeText>();
+    const nativeTextInstance = { measure: vi.fn() } as unknown as ComponentRef<typeof NativeText>;
+    const ref = createRef<ComponentRef<typeof NativeText>>();
     let renderer: ReactTestRenderer | undefined;
     act(() => {
       renderer = create(
@@ -256,10 +257,10 @@ describe("Native core normalization", () => {
   });
 
   it("forwards action host refs, preserves caller state, and leaves rich Button content unwrapped", () => {
-    const buttonNode = { focus: vi.fn() } as unknown as View;
-    const iconButtonNode = { focus: vi.fn() } as unknown as View;
-    const buttonRef = createRef<View>();
-    const iconButtonRef = createRef<View>();
+    const buttonNode = { focus: vi.fn() } as unknown as ComponentRef<typeof View>;
+    const iconButtonNode = { focus: vi.fn() } as unknown as ComponentRef<typeof View>;
+    const buttonRef = createRef<ComponentRef<typeof View>>();
+    const iconButtonRef = createRef<ComponentRef<typeof View>>();
     let renderer: ReactTestRenderer | undefined;
     act(() => {
       renderer = create(

@@ -8,14 +8,17 @@ export type ConversationRowProps = Readonly<{
 
 /** Presentation inside a router-owned link: the host supplies its full accessible name. */
 export function ConversationRow({ title, preview, metadata, avatar, unread = false }: ConversationRowProps) {
+  // Separators join visible fields; a missing preview must not leave a leading dot.
+  const hasPreview = preview.trim().length > 0;
+  const hasMetadata = metadata.trim().length > 0;
   return <span aria-hidden="true" data-hjm-conversation-row="true" data-unread={unread || undefined}
     style={{display:"flex",alignItems:"center",gap:recipe.gap,paddingInline:recipe.paddingInline,paddingBlock:recipe.paddingBlock,minWidth:0,width:"100%",boxSizing:"border-box"}}>
     <span style={{display:"flex",alignItems:"center",justifyContent:"center",width:recipe.avatarSize,height:recipe.avatarSize,flexShrink:0,borderRadius:"50%",overflow:"hidden"}}>{avatar}</span>
     <span style={{display:"flex",flexDirection:"column",gap:recipe.contentGap,flex:1,minWidth:0}}>
       <Text style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:unread?recipe.unreadTitleWeight:recipe.titleWeight}}>{title}</Text>
       <span style={{display:"flex",minWidth:0}}>
-        <Text variant="label" tone={unread?"primary":"subtle"} style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{preview}</Text>
-        <Text variant="label" tone={unread?"primary":"subtle"} style={{flexShrink:0,/* "pre": flex items drop the leading space of " · " (2026-10-17 comparison); still no wrap. */whiteSpace:"pre",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{` · ${metadata}`}</Text>
+        {hasPreview ? <Text variant="label" tone={unread?"primary":"subtle"} style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{preview}</Text> : null}
+        {hasMetadata ? <Text variant="label" tone={unread?"primary":"subtle"} style={{flexShrink:0,/* "pre": flex items drop the leading space of " · " (2026-10-17 comparison); still no wrap. */whiteSpace:"pre",fontWeight:unread?recipe.unreadPreviewWeight:recipe.titleWeight}}>{hasPreview ? ` · ${metadata}` : metadata}</Text> : null}
       </span>
     </span>
     {unread?<span data-hjm-unread-dot="true" style={{width:recipe.unreadSize,height:recipe.unreadSize,flexShrink:0,borderRadius:"50%",background:"var(--hjm-color-content-brand)"}}/>:null}

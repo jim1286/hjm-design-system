@@ -1,0 +1,90 @@
+#!/usr/bin/env node
+// Type-check a consumer app against the same HJM source the development server runs.
+//
+// 2026-10-14 user request: Metro/Vite/Next already read the local HJM checkout in development
+// (scripts/hjm-local-source.cjs), but `tsc` still read the installed npm package, so every new HJM
+// API failed type checks until a release. This launcher applies the adapter's own decision
+// (`localSource()` returns null in CI, production, EAS and HJM_LOCAL_SOURCE=0):
+// - development: generate tsconfig.hjm-local.json mapping each *public* HJM export to its source file
+//   and HJM's peers to the app's own installs, then run tsc on it;
+// - CI/release: run tsc on the app's tsconfig unchanged (installed packages), so an unreleased API
+//   still fails where it matters — before a store/server build.
+// The compiler owns success/failure, including imported HJM source diagnostics.
+// Counting only app-file diagnostics hid HJM errors and compiler crashes (2026-10-17 audit).
+//
+// Usage (from the app or module root): node <portfolio>/scripts/hjm-typecheck.mjs [--project tsconfig.json]
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+
+const projectRoot = process.cwd();
+const projectArg = process.argv.indexOf('--project');
+const baseConfig = projectArg > 0 ? process.argv[projectArg + 1] : 'tsconfig.json';
+const require = createRequire(import.meta.url);
+
+function findAdapter(start) {
+  for (let directory = start; ; directory = path.dirname(directory)) {
+    for (const candidate of ['tools/hjm-local-source.cjs', 'scripts/hjm-local-source.cjs']) {
+      const file = path.join(directory, candidate);
+      if (existsSync(file)) return file;
+    }
+    if (path.dirname(directory) === directory) return path.join(path.dirname(new URL(import.meta.url).pathname), 'hjm-local-source.cjs');
+  }
+}
+
+function tsc(args) {
+  const local = path.join(projectRoot, 'node_modules/.bin/tsc');
+  // Use the consumer's installed compiler; implicit npx resolution can select or
+  // install a different package when the declared toolchain is missing.
+  if (!existsSync(local)) throw new Error(`Installed TypeScript compiler is missing: ${local}`);
+  const run = spawnSync(local, args, { cwd: projectRoot, stdio: 'inherit' });
+  if (run.error) console.error(run.error.message);
+  if (run.signal) console.error(`TypeScript compiler terminated by ${run.signal}`);
+  process.exit(run.status ?? 1);
+}
+
+const { localSource } = require(findAdapter(projectRoot));
+const state = localSource(projectRoot);
+if (!state) {
+  tsc(['--noEmit', '-p', baseConfig]);
+}
+
+// tsconfig is JSONC and may inherit paths. Ask the installed compiler to resolve
+// it instead of stripping comments/reading only the nearest JSON object (Vite adoption, 2026-10-19).
+const compiler = path.join(projectRoot, 'node_modules/.bin/tsc');
+if (!existsSync(compiler)) throw new Error(`Installed TypeScript compiler is missing: ${compiler}`);
+const shown = spawnSync(compiler, ['--showConfig', '-p', baseConfig], { cwd: projectRoot, encoding: 'utf8' });
+if (shown.error) throw shown.error;
+if (shown.status !== 0) {
+  process.stdout.write(shown.stdout ?? '');
+  process.stderr.write(shown.stderr ?? '');
+  if (shown.signal) console.error(`TypeScript compiler terminated by ${shown.signal}`);
+  process.exit(shown.status ?? 1);
+}
+const base = JSON.parse(shown.stdout);
+const paths = { ...(base.compilerOptions?.paths ?? {}) };
+for (const [specifier, file] of Object.entries(state.aliases)) paths[specifier] = [file];
+// HJM source must see the app's React/React Native types, not the checkout's own installs.
+for (const peer of state.peers) {
+  const types = path.join(projectRoot, 'node_modules/@types', peer.replace(/^@/, '').replace('/', '__'));
+  const installed = path.join(projectRoot, 'node_modules', peer);
+  const target = existsSync(types) ? types : existsSync(installed) ? installed : null;
+  if (target) {
+    // RN 0.88 exposes its declarations through exports.types without a top-level
+    // types field. A directory alias bypasses those exports and resolves JS only.
+    const manifestPath = path.join(target, 'package.json');
+    const manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : {};
+    const exportedTypes = manifest.exports?.['.']?.types;
+    const entry = typeof exportedTypes === 'string' ? exportedTypes : manifest.types ?? manifest.typings;
+    paths[peer] = [typeof entry === 'string' ? path.resolve(target, entry) : target];
+    // Automatic JSX imports must use the same React types as explicit imports;
+    // resolving jsx-runtime in the HJM checkout mixes nominal Ref identities.
+    paths[`${peer}/*`] = [path.join(target, '*')];
+  }
+}
+const config = { extends: `./${baseConfig}`, compilerOptions: { paths }, '//': 'Generated by scripts/hjm-typecheck.mjs for local HJM source; do not commit.' };
+const generated = path.join(projectRoot, 'tsconfig.hjm-local.json');
+writeFileSync(generated, `${JSON.stringify(config, null, 2)}\n`);
+
+tsc(['--noEmit', '-p', generated]);

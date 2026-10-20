@@ -1,6 +1,6 @@
 // HJM 1.31 screen additions on Native: header identity mark, brand loader, IconTile frame options, reaction summary,
 // menu tone, composer error announcement, typing indicator and date separator.
-import { AccessibilityInfo, Animated, Modal, Platform, Pressable, View } from "react-native";
+import { AccessibilityInfo, Animated, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { startedAnimatedTimings } from "./react-native.mock.js";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -159,4 +159,44 @@ describe("ChatDateSeparator", () => {
     expect(text.props).toMatchObject({ variant: "caption", tone: "muted", align: "center" });
     expect(text.parent!.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ alignItems: "center", paddingTop: 12, paddingBottom: 4 })]));
   });
+});
+
+
+it("owns IconTile activation and blocks disabled presses without changing the static tile", () => {
+  const activate = vi.fn(), preview = vi.fn();
+  const view = render(<IconTile label="Artwork" activationLabel="Open artwork" activationHint="Hold to preview" onActivate={activate} onLongPress={preview} icon={<Text>★</Text>} />);
+  const action = view.root.findByType(Pressable);
+  expect(action.props.accessibilityRole).toBe("button");
+  expect(action.props.accessibilityLabel).toBe("Open artwork");
+  expect(action.props.accessibilityHint).toBe("Hold to preview");
+  expect(action.props.style({ pressed: false })[0].minWidth).toBe(44);
+  act(() => action.props.onPress()); expect(activate).toHaveBeenCalledOnce();
+  act(() => action.props.onLongPress()); expect(preview).toHaveBeenCalledOnce();
+  expect(activate).toHaveBeenCalledOnce();
+  act(() => view.update(<HjmNativeProvider><IconTile label="Artwork" onActivate={activate} onLongPress={preview} disabled icon={<Text>★</Text>} /></HjmNativeProvider>));
+  const disabled = view.root.findByType(Pressable);
+  expect(disabled.props.accessibilityLabel).toBe("Artwork");
+  expect(disabled.props.accessibilityState.disabled).toBe(true);
+  act(() => disabled.props.onPress()); expect(activate).toHaveBeenCalledOnce();
+  act(() => disabled.props.onLongPress()); expect(preview).toHaveBeenCalledOnce();
+  act(() => view.update(<HjmNativeProvider><IconTile label="Artwork" icon={<Text>★</Text>} /></HjmNativeProvider>));
+  expect(view.root.findAllByType(Pressable)).toHaveLength(0);
+});
+
+it("reserves the measured overlay header height while the scroll background remains underneath", () => {
+  const view = render(<ScreenLayout title="둥지" headerPosition="overlay" header={<View testID="scene-toolbar" />} scrollEdgeEffect={<View testID="edge-material" />}><Text>본문</Text></ScreenLayout>);
+  const scroller = () => view.root.findByType(ScrollView);
+  const initial = StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop;
+  const header = view.root.findAll(node => typeof node.type === "string" && node.props.pointerEvents === "box-none" && node.props.onLayout)[0]!;
+  act(() => header.props.onLayout({ nativeEvent: { layout: { width: 390, height: 103 } } }));
+  expect(StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop).toBe(initial + 103);
+  act(() => header.props.onLayout({ nativeEvent: { layout: { width: 390, height: 119 } } }));
+  expect(StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop).toBe(initial + 119);
+  const edge = view.root.findAll(node => typeof node.type === "string" && node.props.pointerEvents === "none" && node.props.importantForAccessibility === "no-hide-descendants" && StyleSheet.flatten(node.props.style)?.zIndex === 1)[0]!;
+  expect(StyleSheet.flatten(edge.props.style).height).toBe(119 + initial);
+  expect(edge.props.accessible).toBe(false);
+  act(() => view.update(<HjmNativeProvider><ScreenLayout title="편지 쓰기" titleVisibility="hidden" safeAreaTop={59}><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
+  expect(StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop).toBe(initial + 59);
+  act(() => view.update(<HjmNativeProvider><ScreenLayout title="안내" safeAreaTop={59} header={<Text>호스트가 보호하는 헤더</Text>}><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
+  expect(StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop).toBe(initial);
 });

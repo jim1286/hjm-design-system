@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-19
 - 근거: recipe `selectionGroupRecipe`·`selectionControlRecipe`(`src/component-recipes.ts`), behavior `checkboxGroup`
 - 스토리북: `배포/컴포넌트/입력/체크박스 그룹`
 
@@ -21,7 +21,7 @@
 | 하나만 고름 | [RadioGroup](radio-group.md) |
 | 가로 버튼 줄로 짧은 옵션을 켜고 끔 | [ToggleGroup](toggle-group.md) ([경계](../../toggle-group.md)) |
 | 약관 동의(필수가 제출 가능 여부를 정함) | [Agreement](agreement.md) ([이유](../../agreement.md)) |
-| 칩 모양의 필터 줄 | [Chip](chip.md) `selectionMode="multiple"` |
+| 그룹 밖 단일 필터 칩 | [Chip](chip.md) `selectionMode="multiple"` |
 | 목록 밖 값을 직접 입력 | [TagsInput](tags-input.md) |
 
 ## 공개 이름과 import
@@ -68,7 +68,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 | `defaultValue` | `ReadonlySet<Key>` | 빈 `Set` | 비제어. 항목에서 빠진 id는 선택에서 자동으로 지워진다 |
 | `label` · `accessibilityLabel` | `string` | — | 둘 중 하나는 필수 |
 | `orientation` | `vertical` · `horizontal` | `vertical` | — |
-| `presentation` | `card` · `plain` · `grouped` | `card` | — |
+| `presentation` | `card` · `plain` · `grouped` · `chips` | `card` | — |
 | `size` | `medium` · `small` | `medium` | — |
 | `renderLeading` | Web `(item, appearance: { selected, color: "currentColor", size }) => ReactNode` · Native `(item, props: { checked, selected, disabled, readOnly, color, size }) => ReactNode` | — | 항목 아이콘 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 그룹 외곽(Web `fieldset`) 배치 |
@@ -106,3 +106,33 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 ## 근거
 
 2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.
+
+
+### 미선택·다중 선택의 칩 묶음
+
+2026-10-19 오늘야구 연도 선택 이관에서 nullable 단일 선택과 드래프트 다중 선택을 앱이
+Chip/직접 wrap으로 조립하고 있었다. `presentation="chips"`는 기존 선택 엔진·항목 타입·값 계약을
+유지하고 Chip recipe의 모서리·색·타이포·크기를 사용한다. 기본 원/체크 indicator는 감추고(Native의 명시적 `renderIndicator`는 유지),
+선택 색·굵기와 실제 radio/checkbox 의미를 유지한다. 그룹은 orientation과 관계없이 시작 쪽부터
+줄바꿈하고 항목 간격은 `spacing.xs` 8이다. 설명·오류·비활성·읽기 전용 계약도 같다.
+
+`size="small"`의 보이는 최소 높이는 Chip처럼36, medium은44이며 작은 칩의 터치 영역은44다.
+필수 단일 보기 전환은 SegmentedControl, 선택 없음이 유효한 질문은 RadioGroup,
+동시에 여러 조건을 고르면 CheckboxGroup을 사용한다. chips 모양 때문에 다른 선택 의미로 바꾸지 않는다.
+기존 양쪽 RadioGroup의 `ChipChoices` 예제가 두 그룹과 미선택/다중 선택을 함께 실행한다.
+
+연도/카테고리 창이 전체 목록의 일부만 보여주면 제품은 보이는 값만 그룹에 전달하고,
+활성화된 항목의 도메인 변경을 전체 선택에 합쳐야 한다. 현재 보이지 않는 선택을 실제 목록 삭제로
+오인해 지우지 않는다. 삭제·비활성 항목 pruning은 기존 그룹 계약을 그대로 따른다.
+
+### 동일 폭의 선택 카드(미게시)
+
+`grid`에 기존 Grid descriptor(`columns`, `gap`, `minColumnWidth`)를 전달하면 Web·Native 모두
+선택 항목을 동일 폭으로 배치한다. 생략하면 기존 `orientation` 배치를 유지한다.
+2026-10-20 다에리의 직접 카드/내부 CSS 이관이 계기이며, 선택 엔진은 바꾸지 않고 공통 Grid의 측정·열 축소를 합성한다.
+예: `grid={{ columns: { compact: 2 }, gap: { compact: "xs" }, minColumnWidth: { compact: 152 } }}`.
+그룹 안쪽을 측정해 두 열이 들어가지 않으면 한 열로 줄인다. 제품에서 항목 폭·grid CSS를 다시 계산하지 않는다.
+
+### 같은 행의 카드 높이 (checkout 수정·미게시)
+
+`presentation="card"` 항목은 같은 Grid 행에서 가장 높은 콘텐츠에 맞춰 칸을 채운다. Native의 Grid 칸 안에서 카드가 내용 높이만 사용하던 문제를 공통 ChoiceRow에서 수정했다(2026-10-20 다에리 공개 범위 선택 카드 지적). 제품에서 높이를 고정하거나 설명을 줄여 맞추지 않는다. 행별 높이는 해당 행의 콘텐츠로 결정한다.

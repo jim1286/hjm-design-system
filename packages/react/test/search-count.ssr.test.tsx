@@ -24,6 +24,8 @@ it("hides only the visual count and retains announcements and body states", () =
   expect(render(24)).toContain("선수 결과");
   expect(render(24, false)).toMatch(/<span class="hjm-text"[^>]*>total:24<\/span>/);
   expect(render(0)).toContain("결과 없음");
+  expect(render(0)).toContain('data-content-alignment="center"');
+  expect(render(24)).toContain('data-content-alignment="start"');
   expect(render(null)).toContain("검색 로딩");
   expect(render(null)).not.toContain("선수 결과");
 });

@@ -1,5 +1,5 @@
-import { type ButtonAlign, type ButtonEdge, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
-export type { ButtonAlign, ButtonEdge, ButtonShape };
+import { type ButtonAppearance, type ButtonAlign, type ButtonEdge, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
+export type { ButtonAlign, ButtonEdge, ButtonShape, ButtonAppearance };
 import { type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkTone, type LinkVariant } from "@hjmds/design-contracts/recipes";
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ForwardedRef, type ReactElement, type ReactNode } from "react";
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
@@ -10,6 +10,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     size?: ButtonSize;
     /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
     shape?: ButtonShape;
+    appearance?: ButtonAppearance;
+    fullWidth?: boolean;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
@@ -35,6 +37,8 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     size?: ButtonSize;
     /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
     shape?: ButtonShape;
+    appearance?: ButtonAppearance;
+    fullWidth?: boolean;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
@@ -55,6 +59,23 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLButtonElement>>;
+/** Web navigation with Button paint. Mutation/loading/toggle semantics belong to Button. */
+export type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "tone" | "size" | "shape" | "appearance" | "fullWidth" | "align" | "leading" | "trailing" | "edge" | "layoutStyle"> & Readonly<{
+    href: string;
+    disabled?: boolean;
+    /** Framework routing adapter; HJM still owns the anchor destination, ref and disabled guards. */
+    renderAnchor?: (props: AnchorHTMLAttributes<HTMLAnchorElement> & {
+        ref: ForwardedRef<HTMLAnchorElement>;
+    }) => ReactElement;
+}>;
+export declare const ButtonLink: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "appearance" | "tone" | "size" | "layoutStyle" | "align" | "leading" | "trailing" | "shape" | "fullWidth" | "edge"> & Readonly<{
+    href: string;
+    disabled?: boolean;
+    /** Framework routing adapter; HJM still owns the anchor destination, ref and disabled guards. */
+    renderAnchor?: (props: AnchorHTMLAttributes<HTMLAnchorElement> & {
+        ref: ForwardedRef<HTMLAnchorElement>;
+    }) => ReactElement;
+}> & import("react").RefAttributes<HTMLAnchorElement>>;
 export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "aria-label"> & Readonly<{
     label: string;
     tone?: IconButtonTone;

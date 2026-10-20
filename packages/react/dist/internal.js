@@ -1,4 +1,8 @@
 import { createContext, useContext, useCallback, useEffect, useState, useSyncExternalStore, } from "react";
+/** ARIA's string "false" is valid; grammar/spelling express invalid input just like true. */
+export function isAriaInvalid(value) {
+    return value === true || (typeof value === "string" && value !== "false");
+}
 export function classNames(...values) {
     const result = values.filter(Boolean).join(" ");
     return result.length > 0 ? result : undefined;

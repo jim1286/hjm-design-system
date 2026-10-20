@@ -69,6 +69,18 @@ export const sheetDragRecipe = {
 } as const;
 
 /**
+ * A persistent map panel folds to its handle instead of dismissing. Preserve the
+ * 14pt reading/paging arbitration observed in Diairy: taking a drag after native
+ * scrolling starts makes both the panel and its text move (2026-10-05 recording).
+ */
+export const sheetPanelBehavior = {
+  activationDistance: 14,
+  collapseDistanceRatio: 0.5,
+  collapseVelocity: 500,
+  spring: { damping: 18, stiffness: 180, overshootClamping: true },
+} as const;
+
+/**
  * Resolves an attempted close without platform knowledge. Programmatic close is
  * intentionally an owner override: a controlled `open={false}` cannot be vetoed
  * by a renderer, even while the Sheet is busy or not user-dismissible.

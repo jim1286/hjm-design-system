@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, Platform, View, type TextInput } from "react-native";
 import { useCompositionAction } from "./internal/use-composition-action.js";
@@ -29,7 +30,7 @@ export function InlineEdit(props: InlineEditProps) { return <InlineEditBody key=
 function InlineEditBody(props: InlineEditProps) {
   const [editing, setEditing] = useState(false), [draft, setDraft] = useState(props.value);
   const action = useCompositionAction(props.disabled);
-  const input = useRef<TextInput>(null), trigger = useRef<View>(null), restore = useRef(false);
+  const input = useRef<ComponentRef<typeof TextInput>>(null), trigger = useRef<ComponentRef<typeof View>>(null), restore = useRef(false);
   const { palette } = useHjmNativeTheme();
   const toolColor = (disabled: boolean) => resolveIconButtonPresentation("ghost", palette, disabled).content;
   useLayoutEffect(() => {
@@ -67,7 +68,7 @@ export type RepeatableFieldGroupProps = Omit<FieldGroupProps, "renderField"> & R
   onAdd: () => string | undefined; onRemove: (id: string) => void;
 }>;
 export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, onAdd, onRemove, ...props }: RepeatableFieldGroupProps) {
-  const targets = useRef(new Map<string, FocusTarget>()), add = useRef<View>(null);
+  const targets = useRef(new Map<string, FocusTarget>()), add = useRef<ComponentRef<typeof View>>(null);
   const { palette } = useHjmNativeTheme();
   const focus = useRef<string | null | undefined>(undefined);
   useLayoutEffect(() => {

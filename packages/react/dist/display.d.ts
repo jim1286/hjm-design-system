@@ -1,4 +1,4 @@
-import { listRowRecipe, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type ListRowDensity, type ListRowLeadingShape } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type ListRowDensity, type ListRowLeadingShape } from "@hjmds/design-contracts/recipes";
 import { type TagTone } from "@hjmds/design-contracts/components/tag";
 import { type CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
@@ -11,8 +11,8 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     tone?: BadgeTone;
     size?: BadgeSize;
     variant?: BadgeVariant;
-    leading?: ReactNode;
-    trailing?: ReactNode;
+    leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
+    trailing?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -20,8 +20,8 @@ export declare const Badge: import("react").ForwardRefExoticComponent<HTMLAttrib
     tone?: BadgeTone;
     size?: BadgeSize;
     variant?: BadgeVariant;
-    leading?: ReactNode;
-    trailing?: ReactNode;
+    leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
+    trailing?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
@@ -42,7 +42,25 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     description?: ReactNode;
     leading?: ReactNode;
     media?: ReactNode;
+    /** Decorative artwork behind the shared body/actions; its host determines the available height. */
+    backgroundMedia?: ReactNode;
+    /** Platform gesture/accessibility host behind content. Requires backgroundMedia; never put metadata/actions here. */
+    backgroundInteraction?: ReactNode;
+    /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
+    mediaBadges?: ReactNode;
+    badges?: ReactNode;
+    /** Activate only the passive cover; other card content/actions keep independent targets. */
+    mediaAction?: Readonly<{
+        label: string;
+        onActivate(): void;
+        icon?: (context: Readonly<{
+            color: string;
+            size: number;
+        }>) => ReactNode;
+    }>;
     actions?: ReactNode;
+    /** Independent commands at the header end; never nested in whole-card activation. */
+    headerActions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
     /**
@@ -50,6 +68,10 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
      * action region, so actions remain independent buttons (never a button inside a button). Keep other children passive.
      */
     onActivate?: () => void;
+    /** A native anchor preserves new-tab, copy-link and browser previews; it is exclusive with onActivate. */
+    href?: string;
+    /** Framework routing and product effects can wrap the shared anchor without replacing its placement. */
+    renderLink?: (props: React.ComponentPropsWithRef<"a">) => ReactNode;
     disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
@@ -63,7 +85,25 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     description?: ReactNode;
     leading?: ReactNode;
     media?: ReactNode;
+    /** Decorative artwork behind the shared body/actions; its host determines the available height. */
+    backgroundMedia?: ReactNode;
+    /** Platform gesture/accessibility host behind content. Requires backgroundMedia; never put metadata/actions here. */
+    backgroundInteraction?: ReactNode;
+    /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
+    mediaBadges?: ReactNode;
+    badges?: ReactNode;
+    /** Activate only the passive cover; other card content/actions keep independent targets. */
+    mediaAction?: Readonly<{
+        label: string;
+        onActivate(): void;
+        icon?: (context: Readonly<{
+            color: string;
+            size: number;
+        }>) => ReactNode;
+    }>;
     actions?: ReactNode;
+    /** Independent commands at the header end; never nested in whole-card activation. */
+    headerActions?: ReactNode;
     headingLevel?: CardHeadingLevel;
     selected?: boolean;
     /**
@@ -71,6 +111,10 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
      * action region, so actions remain independent buttons (never a button inside a button). Keep other children passive.
      */
     onActivate?: () => void;
+    /** A native anchor preserves new-tab, copy-link and browser previews; it is exclusive with onActivate. */
+    href?: string;
+    /** Framework routing and product effects can wrap the shared anchor without replacing its placement. */
+    renderLink?: (props: React.ComponentPropsWithRef<"a">) => ReactNode;
     disabled?: boolean;
     tone?: SurfaceTone;
     bordered?: boolean;
@@ -79,6 +123,17 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     /** Canonical layout-only placement; forwarded to the root Surface, which applies it. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
+/** An attributed quotation reuses Card material while keeping quotation semantics and its caption together. */
+export type QuoteCardProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
+    children: ReactNode;
+    attribution?: string;
+    renderMark?: (context: {
+        color: string;
+        size: number;
+    }) => ReactNode;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+export declare function QuoteCard({ children, attribution, renderMark, ...props }: QuoteCardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"> & Readonly<{
     title: ReactNode;
     description?: ReactNode;

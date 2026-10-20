@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { createRef } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import type { View } from "react-native";
@@ -9,7 +10,7 @@ import { BottomCTA, HjmNativeProvider } from "../src/index.js";
 // 2026-10-18 Utilverse display board: Native overlays return focus only to an explicit `returnFocusRef`, so the action
 // that opens one must hand out its button host.
 it("forwards each action's buttonRef to the pressable host of that button", () => {
-  const primary = createRef<View>(), secondary = createRef<View>();
+  const primary = createRef<ComponentRef<typeof View>>(), secondary = createRef<ComponentRef<typeof View>>();
   let tree: ReactTestRenderer;
   act(() => {
     tree = create(<HjmNativeProvider><BottomCTA

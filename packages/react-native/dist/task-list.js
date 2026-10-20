@@ -5,12 +5,12 @@ import { List } from './data-display.js';
 import { View } from "react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 /** Canonical Checkbox/List own semantics; optional collection composition keeps drag peers out of this entry. */
-export function TaskList({ label, items, onCompletedChange, disabled = false, emptyContent, renderItemAction, renderCollection }) {
+export function TaskList({ label, items, onCompletedChange, disabled = false, emptyContent, itemPresentation, renderItemAction, renderCollection }) {
     validateTasks(items);
     if (!label.trim())
         throw new TypeError('TaskList needs a localized label');
     const renderItem = (item) => {
-        const control = _jsx(Checkbox, { label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
+        const control = _jsx(Checkbox, { ...(itemPresentation === undefined ? {} : { presentation: itemPresentation }), label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
         const action = renderItemAction?.({ item, disabled: disabled || item.disabled === true });
         // Same as Web: the action sits beside Checkbox (never inside its label, so pressing it cannot toggle completion) and
         // long labels wrap inside the checkbox column; a separate action line made each task two to three lines tall.

@@ -36,19 +36,21 @@ it("keeps host refresh and keyboard ownership when content scrolling is replaced
  render(ui({kind:'ready'}));expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);expect(JSON.stringify(tree!.toJSON())).toContain('List owns scrolling');
 });
 
-it("hides the route name and centers context between unequal navigation controls", () => {
+it("keeps hidden route identity accessible and balances unequal navigation controls", () => {
  const back=vi.fn();
  render(<ScreenLayout title="Route name" titleVisibility="hidden" description="2026.10.14" exit={{kind:"back",label:"Back",onPress:back}} actions={<Text>Two actions</Text>}><Text>Body</Text></ScreenLayout>);
- expect(JSON.stringify(tree!.toJSON())).not.toContain('Route name');
+ expect(tree!.root.findAllByType(View).some(node=>node.props.accessibilityLabel==='Route name')).toBe(true);
+ expect(tree!.root.findAllByType(Text).some(node=>node.props.children==='Route name')).toBe(false);
  const measures=tree!.root.findAllByType(View).filter(node=>node.props.onLayout);
  expect(measures).toHaveLength(2);
  act(()=>{measures[0]!.props.onLayout({nativeEvent:{layout:{width:44}}});measures[1]!.props.onLayout({nativeEvent:{layout:{width:96}}});});
- const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===screenHeaderRecipe.minHeight)!;
+ const centered=tree!.root.findAllByType(View).find(node=>StyleSheet.flatten(node.props.style)?.minHeight===screenHeaderRecipe.compactMinHeight)!;
  // Equal side columns (the wider measured control, 96) keep the title centered; controls stay in flow
  // so their height counts toward the header (centered header rework, 2026-10-17).
- const sides=centered.props.children.filter((child: unknown)=>child&&typeof child==='object').map((child: {props:{style:unknown}})=>StyleSheet.flatten(child.props.style)).filter((style: {width?:unknown})=>typeof style?.width==='number');
- expect(sides.map((style: {width:number})=>style.width)).toEqual([96,96]);
+ const sides=centered.props.children.filter((child: unknown)=>child&&typeof child==='object').map((child: {props:{style:Parameters<typeof StyleSheet.flatten>[0]}})=>StyleSheet.flatten(child.props.style)).filter((style: {minWidth?:unknown;flexShrink?:number})=>style?.flexShrink===0 && typeof style.minWidth==='number');
+ expect(sides.map((style: {minWidth:number})=>style.minWidth)).toEqual([96,96]);
  expect(measures.every(node=>StyleSheet.flatten(node.props.style).position!=='absolute')).toBe(true);
- expect(tree!.root.findAllByType(Text).find(node=>node.props.children==='2026.10.14')!.props.align).toBe('center');
+ // Supporting header copy was retired; required content belongs in the body.
+ expect(tree!.root.findAllByType(Text).some(node=>node.props.children==='2026.10.14')).toBe(false);
  act(()=>tree!.root.findByType(IconButton).props.onPress());expect(back).toHaveBeenCalledOnce();
 });

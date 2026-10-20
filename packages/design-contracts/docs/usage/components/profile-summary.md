@@ -1,12 +1,12 @@
 # ProfileSummary
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 1.26.0
-- 검토일: 2026-10-18
+- 검토일: 2026-10-19
 - 근거: [프로필 화면](../screens/common-profile.md), `src/screen-patterns.ts`의 `profileSummaryRecipe`, 양 renderer `src/screen-flows.tsx`
-- 스토리북: 별도 예제 미등록
+- 스토리북: `배포/컴포넌트/데이터 표시/프로필 요약`
 
 ## 언제 쓰나
 
@@ -50,6 +50,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | badge | ReactNode | 없음 | 이름 옆 배지 |
 | nameActions | ReactNode | 없음 | 이름 행의 행동 |
 | stats | `{id,value,label,onPress?,disabled?}[]` | `[]` | 통계 수치. `onPress`가 있으면 버튼 |
+| actionsLayout | `inline` · `stacked` | `inline` | 미게시. 가로 보조 행동은 기존 줄바꿈 행, 팔로우/메시지처럼 같은 폭의 주·보조 행동은 stacked로 세로 배치 |
 | actions | ReactNode | 없음 | 수치 아래 행동 줄. [ProfileScreen](profile-screen.md) `editPlacement="summary"` 안에서는 그 화면의 `edit`이 이 줄 맨 앞에 `secondary` `small` 버튼(`profileSummaryRecipe.editAction`)으로 먼저 들어간다(1.31.0) |
 | children | ReactNode | 없음 | 하단 footer |
 
@@ -74,3 +75,15 @@ HJM이 원형 72px 아바타 프레임, 이름, 수치, 행동의 순서와 간�
 ## 관련 지침
 
 [프로필 화면](../screens/common-profile.md), [ProfileScreen](profile-screen.md), [CompositionLayout](composition-layout.md).
+
+### 세로 행동과 아바타 그림
+
+2026-10-19 번뚝 공개 프로필의 Web inline flex 안에 제품 Stack을 넣으면 fullWidth 버튼도 좁게 모였다. `actionsLayout="stacked"`가 양 renderer의 전체 폭·세로8 간격을 소유한다. actions에는 버튼을 fragment로 공급하며 제품에서 같은 기본 Stack을 다시 조립하지 않는다. 기본 inline과 ProfileScreen의 edit 삽입은 유지한다. 여러 수치/관계 목록 이동/별도 메시지 행동을 가진 요약이며 단일 관계 수치·팔로우 proposal을 제공하는 FollowProfileCard와 역할이 다르다.
+
+Web의 텍스트/이모지 artwork는 원형72 프레임 안에서 glyph.xxl48 크기로 중앙 배치한다. SVG/사진 콘텐츠는 프레임을 채우고 제품에서 별도 아바타 좌표를 보정하지 않는다. Native의 Avatar/제품 이미지 adapter는 같은72 프레임 안에 콘텐츠를 공급한다.
+
+```tsx
+<ProfileSummary name={name} avatar={avatar} stats={stats} actionsLayout="stacked"
+  actions={<><Button fullWidth onClick={follow}>{followLabel}</Button><Button fullWidth tone="secondary" onClick={message}>{messageLabel}</Button></>} />
+// Native는 같은 actionsLayout에 Button.onPress를 연결한다.
+```

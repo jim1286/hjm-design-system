@@ -6,7 +6,7 @@
 - 적용: 1.17.1
 - 검토일: 2026-10-18
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. `onSubmit`·`filtersOverflow`는 2026-10-06 사용자 요청("검색과 필터 있는 앱 서비스 따라해")의 검색 화면 개편에서 추가. 같은 날 사용자 위임 결정(권장안)으로 미리보기에만 있던 두 단계 검색 로직(`committedQuery`·`recentQueries`·`suggestedQueries`·`suggestions`·`resultSummary`·`appliedFilters`·`filterSheet`)과 `queryLabelVisibility`를, utilverse 적용 조사로 `searching`·`searchingLabel`을 추가([계약 결정 표](../../screen-patterns.md#searchscreen-두-단계-검색)). 1.13.0 utilverse 적용에서 드러난 결함으로 `hostGutter`와 확정 시 키보드 닫기(Web 결과 영역 포커스)를 추가(1.13.1 patch). `filtersRole`은 2026-10-18 choose-window 적용 감사에서 추가(검색어 때문인 0건의 복구 수단인 범위 필터가 숨겨져 제품이 `resultSummary`를 쓰지 못했다). 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
-- 스토리북: `배포/화면/검색/검색 결과와 필터`
+- 스토리북: `배포/화면/검색/검색 결과와 필터` · `배포/컴포넌트/레이아웃/검색 화면`
 
 ## 언제 쓰나
 
@@ -16,6 +16,32 @@
 최근·추천 검색어와 제안의 배치, 결과 개수·정렬, 적용 필터 칩, 초안/적용 필터 시트, 0건 원인별 복구, 지운 뒤 포커스, 개수 낭독을
 SearchScreen이 맡고 제품은 데이터·요청·문구·아이콘만 넘긴다. 한 줄 가로 스크롤 필터 칩 줄은 `filtersOverflow="scroll"`로 만든다.
 화면 전체 배치는 [검색 화면 지침](../screens/common-search.md)을 따른다.
+
+### 시트와 가상 목록 연결 (미게시)
+
+`embedded`의 기본값은 false다. true이면 부모 Sheet가 제목·닫기·진입 포커스·바깥 여백을 맡고,
+SearchScreen은 같은 입력/필터/상태/결과 엔진을 CompositionLayout으로 렌더한다. 별도 화면 헤더를 만들지
+않으며 결과만 입력 아래에서 스크롤한다. 부모의 고정된 높이 또는 flex 남은 높이를 제공해야 한다.
+`header`·`exit`·헤더 `actions`는 부모에 연결하며 embedded 화면에 중복 공급하지 않는다.
+
+Native에서 `scroll="content"`면 결과 host가 남은 높이를 채워 FlatList/SectionList를 직접 연결할 수 있다.
+제품은 가상화 데이터·끝 도달을 연결하고 행과 구역은 HJM 공개 구성으로 공급한다.
+FlatList/SectionList에는 `keyboardShouldPersistTaps="handled"`를 연결해 키보드가 떠 있어도 첫 탭이 결과 행동에 도달하게 한다. 임의 부모 ScrollView를
+추가하지 않는다. 번뚝의 기존 본문 Stack이 FlatList에 높이를 주지 못해 기본 화면을 다시 조립했던 원인을 고쳤다.
+
+TanStack Query처럼 요청·취소를 소유하는 캐시는 `onSearch={setRequestQuery}`로 HJM debounce 결과를
+제품 query key에 연결할 수 있다. 같은 입력에 제품 debounce를 다시 붙이지 않는다. 최소 검색 길이·URL·
+통계·현재 요청의 응답만 표시하는 판정은 제품이 유지하고, queryFn에는 캐시가 제공한 signal을 전달한다.
+
+```tsx
+// Web — Sheet가 제목/닫기/진입 포커스를 소유한다.
+<Sheet open={open} onOpenChange={setOpen} title={t("search.title")} closeLabel={t("common.close")} size="full">
+  <SearchScreen embedded title={t("search.title")} query={query} onQueryChange={setQuery}
+    queryLabel={t("search.query")} queryClearLabel={t("common.clear")} onSearch={setRequestQuery}>
+    <Results items={queryData} />
+  </SearchScreen>
+</Sheet>
+```
 
 ## 쓰지 않을 때
 
@@ -229,3 +255,5 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 ### 고정 아이콘과 큰 글자
 
 2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.
+
+빈 검색 결과와 필터 해제·추천 검색어 묶음은 고정 검색·필터 영역 아래 보이는 본문 중앙에 배치한다. 지도 필터가 있어도 그 아래 남은 본문이 기준이다. 첫 조회 실패는 `state`/`stateAction`으로 연결하고, 기존 결과가 남은 갱신 실패는 `notice`로 알린다(2026-10-18 선택의창 실화면에서 상단에 붙은 빈 상태를 확인해 보완, 미게시).

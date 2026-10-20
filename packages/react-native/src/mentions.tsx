@@ -8,7 +8,7 @@ import {
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Pressable, View, type NativeSyntheticEvent, type TextInputSelectionChangeEventData } from "react-native";
+import { Pressable, View, type TextInputProps } from "react-native";
 import { TextArea, type TextAreaProps } from "./inputs.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -97,7 +97,7 @@ export function Mentions<TriggerId extends string = string>({
           ...textAreaProps,
           value,
           onValueChange,
-          onSelectionChange: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+          onSelectionChange: (event: Parameters<NonNullable<TextInputProps["onSelectionChange"]>>[0]) => {
             setCaret(event.nativeEvent.selection.end);
             textAreaProps.onSelectionChange?.(event);
           },

@@ -10,8 +10,8 @@ import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollectionRailLabels = Readonly<{ previous: string; next: string; navigation: string }>;
-export type CollectionRailProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
-  label: string; items: readonly CollectionRailItem[]; renderItem: (item: CollectionRailItem) => ReactNode;
+export type CollectionRailProps<Item extends CollectionRailItem = CollectionRailItem> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+  label: string; items: readonly Item[]; renderItem: (item: Item) => ReactNode;
   labels: CollectionRailLabels; density?: CollectionRailDensity; emptyContent?: ReactNode;
   /** Initial scroll anchor, not selection. Later collection changes reconcile by stable ID. */
   defaultStartKey?: string;
@@ -27,8 +27,8 @@ export type CollectionRailProps = Omit<HTMLAttributes<HTMLDivElement>, "children
 }>;
 
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
-export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }: CollectionRailProps) {
+export function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }: CollectionRailProps<Item>) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";

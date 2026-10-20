@@ -12,7 +12,6 @@ Web Storybook: [storybook.jmstudioapps.com](https://storybook.jmstudioapps.com/)
 | [`@hjmds/design-contracts`](packages/design-contracts) | renderer-neutral tokens, recipes, behavior, catalog, evidence |
 | [`@hjmds/react`](packages/react) | accessible React 19 Web components |
 | [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
-| [`hjm_flutter`](packages/flutter) | Existing Flutter products: beta renderer, pinned Git source; separate from the npm train |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
 현재 API 안정성과 플랫폼 지원은 [생성된 성숙도 표](packages/design-contracts/docs/generated/component-maturity.md)를 따른다.
@@ -48,8 +47,7 @@ Git tag의 버전 source of truth는 fixed train의 `packages/design-contracts/p
 세 패키지는 npm registry에 함께 publish합니다. renderer를 사용하는 앱은 contracts도
 명시적으로 설치하고, 세 패키지는 하나의 fixed version train이므로 **정확히 같은
 SemVer**를 씁니다. 이 npm 패키지의 Git ref, package path, vendored tarball 소비는 지원하지 않습니다.
-기존 Flutter 제품의 별도 `hjm_flutter` beta는 [Flutter 안내](packages/flutter/README.md)에 따라
-검토한 Git SHA와 package 경로를 고정합니다. npm 게시나 전체 renderer parity를 뜻하지 않습니다.
+Flutter renderer는 퇴역했다. [제거 이유와 이전 소스](docs/FLUTTER_LEGACY.md)를 참고한다.
 
 ```json
 {
@@ -156,6 +154,7 @@ Showcase는 공개 API의 소비 예제이며 제품에서 기본 구조를 복�
 ## 로컬 HJM 소스 연결
 
 일상 개발은 `pnpm showcase:web` 또는 `pnpm showcase:native`로 시작한다.
+Showcase의 `typecheck`도 공용 개발 adapter로 같은 공개 source exports를 읽는다. 기존 `tsc`가 이전 dist 타입을 읽어 새 슬롯을 거부하던 불일치를 없앴다. CI/production 또는 `HJM_LOCAL_SOURCE=0`에서는 기존 tsconfig와 설치 패키지를 검사한다.
 2026-10-09부터 이 명령은 선행 package build 없이 `src`를 직접 읽고 자동 갱신한다.
 2026-10-12 사용자 요청으로 소비 앱의 개발 서버도 중앙 소스를 기본으로 읽는다.
 게시 버전과 비교할 때만 `HJM_LOCAL_SOURCE=0`으로 실행한다. production/CI와 배포 빌드는

@@ -1,4 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Grid } from "./layout.js";
+import { Button } from "./actions.js";
 import { useDesignProfileDefaults } from "./internal.js";
 import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjmds/design-contracts/behaviors";
@@ -69,7 +71,10 @@ export const Radio = forwardRef(function Radio({ label, description, checked: ch
                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: label }), description ? _jsx("span", { className: "hjm-choice__description", children: description }) : null] })] }));
 });
-function CheckboxGroupInner({ items, label, accessibilityLabel, description, error, orientation = selectionGroupRecipe.defaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, name, required = false, readOnly = false, renderLeading, value: valueProp, defaultValue, onValueChange, disabled, className, layoutStyle, style, ...props }, ref) {
+function ChoiceItems({ grid, className, children }) {
+    return grid ? _jsx(Grid, { ...grid, children: children }) : _jsx("div", { className: className, children: children });
+}
+function CheckboxGroupInner({ items, label, accessibilityLabel, description, error, orientation = selectionGroupRecipe.defaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, name, required = false, readOnly = false, renderLeading, value: valueProp, defaultValue, onValueChange, disabled, className, layoutStyle, style, ...props }, ref) {
     const resolvedLabel = resolveControlAccessibleName(label, accessibilityLabel, "CheckboxGroup");
     const [value, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
@@ -89,7 +94,7 @@ function CheckboxGroupInner({ items, label, accessibilityLabel, description, err
     const generatedId = useId().replaceAll(":", "");
     const descriptionId = `${generatedId}-checkbox-group-description`;
     const errorId = `${generatedId}-checkbox-group-error`;
-    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-checkbox-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-required": required || undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label === undefined ? "hjm-visually-hidden" : undefined, children: label ?? resolvedLabel }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, _jsx("div", { className: "hjm-checkbox-group__items", children: items.map((item) => {
+    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-checkbox-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-required": required || undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label === undefined ? "hjm-visually-hidden" : undefined, children: label ?? resolvedLabel }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, _jsx(ChoiceItems, { grid: grid, className: "hjm-checkbox-group__items", children: items.map((item) => {
                     const checked = reconciledValue.has(item.id);
                     return (_jsxs("label", { className: "hjm-choice", "data-kind": "checkbox", "data-state": checked ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [_jsx("input", { className: "hjm-choice__input", type: "checkbox", name: name, value: item.id, checked: checked, disabled: item.disabled, "aria-readonly": readOnly || undefined, onChange: () => {
                                     if (!readOnly) {
@@ -118,7 +123,7 @@ function validateItems(component, items) {
         values.add(item.value);
     }
 }
-export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityLabel, items, value: valueProp, defaultValue = null, onValueChange, orientation = selectionGroupRecipe.defaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, description, error, name, required = false, readOnly = false, renderLeading, disabled, className, layoutStyle, style, ...props }, ref) {
+export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityLabel, items, value: valueProp, defaultValue = null, onValueChange, orientation = selectionGroupRecipe.defaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, description, error, name, required = false, readOnly = false, indicator = "default", renderLeading, renderLabel, disabled, className, layoutStyle, style, ...props }, ref) {
     validateItems("RadioGroup", items);
     if (accessibilityLabel !== undefined &&
         accessibilityLabel.trim().length === 0)
@@ -165,16 +170,21 @@ export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityL
     }, [controlled, setValue, storedValue, value]);
     const descriptionId = `${generatedName}-radio-description`;
     const errorId = `${generatedName}-radio-error`;
-    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-radio-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label == null ? "hjm-visually-hidden" : undefined, children: resolvedLabel }), description && !error ? _jsx("div", { id: descriptionId, className: "hjm-field__description", children: description }) : null, _jsx("div", { className: "hjm-radio-group__items", children: items.map((item) => {
+    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-radio-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label == null ? "hjm-visually-hidden" : undefined, children: resolvedLabel }), description && !error ? _jsx("div", { id: descriptionId, className: "hjm-field__description", children: description }) : null, _jsx(ChoiceItems, { grid: grid, className: "hjm-radio-group__items", children: items.map((item) => {
                     const selected = item.value === value;
-                    return (_jsxs("label", { className: "hjm-choice", "data-kind": "radio", "data-state": selected ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [_jsx("input", { className: "hjm-choice__input", type: "radio", name: name ?? generatedName, value: item.value, checked: selected, disabled: item.disabled, required: required, "aria-readonly": readOnly || undefined, onClick: readOnly ? (event) => event.preventDefault() : undefined, onChange: () => {
+                    const choice = (_jsxs("label", { className: item.action ? "hjm-choice__target" : "hjm-choice", "data-kind": "radio", "data-state": selected ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [_jsx("input", { className: "hjm-choice__input", type: "radio", name: name ?? generatedName, value: item.value, checked: selected, disabled: item.disabled, required: required, ...(renderLabel && typeof item.label === "string" ? { "aria-label": item.label } : {}), "aria-readonly": readOnly || undefined, onClick: readOnly ? (event) => event.preventDefault() : undefined, onChange: () => {
                                     if (!readOnly)
                                         setValue(item.value);
-                                } }), _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true" }), renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading(item, {
+                                } }), indicator === "default" ? _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true" }) : null, renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading(item, {
                                     selected,
                                     color: "currentColor",
                                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
-                                }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.value));
+                                }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: renderLabel?.(item) ?? item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.value));
+                    if (!item.action)
+                        return choice;
+                    // A button inside a label can activate its radio. Keep two independent targets
+                    // inside one recipe-owned frame, including when the group is read-only.
+                    return _jsxs("div", { className: "hjm-choice hjm-choice--with-action", "data-kind": "radio", "data-state": selected ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [choice, _jsx("span", { className: "hjm-choice__action", children: _jsx(Button, { tone: "ghost", size: "small", disabled: disabled || item.disabled || item.action.disabled, "aria-label": item.action.accessibilityLabel, onClick: item.action.onAction, children: item.action.label }) })] }, item.value);
                 }) }), _jsx(FieldError, { id: errorId, error: error })] }));
 });
 export const Switch = forwardRef(function Switch({ label, labelVisibility = "visible", description, presentation = switchRecipe.presentationDefaults.web, checked: checkedProp, defaultChecked = false, size = switchRecipe.defaults.size, onCheckedChange, disabled, type = "button", className, onClick, layoutStyle, style, ...props }, ref) {
@@ -191,7 +201,7 @@ export const Switch = forwardRef(function Switch({ label, labelVisibility = "vis
             onClick?.(event);
         }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsxs("span", { className: classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden"), children: [_jsx("span", { id: labelId, className: classNames("hjm-switch__label", presentation === "row" && "hjm-text"), "data-font-role": presentation === "row" ? "ui" : undefined, "data-variant": presentation === "row" ? switchRecipe.rowLabelTextVariant : undefined, children: label }), hasDescription ? _jsx("span", { id: descriptionId, className: "hjm-switch__description", children: description }) : null] })] }));
 });
-export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, name, disabled = false, className, layoutStyle, style, ...props }, ref) {
+export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, name, overflow = "wrap", actions, disabled = false, className, layoutStyle, style, ...props }, ref) {
     const designProfile = useDesignProfileDefaults();
     const selectionMotion = presentation === "text" ? "none" : suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
     validateItems("SegmentedControl", items);
@@ -269,6 +279,19 @@ export const SegmentedControl = forwardRef(function SegmentedControl({ label, it
         document.addEventListener("visibilitychange", visibility);
         return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };
     }, [value, items, presentation, selectionMotion, disabled]);
-    return (_jsxs("fieldset", { ...props, disabled: disabled, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-segmented", className), "data-size": size, "data-presentation": presentation, "data-text-emphasis": presentation === "text" ? textEmphasis : undefined, role: presentation === "text" ? "radiogroup" : undefined, children: [_jsx("legend", { className: "hjm-visually-hidden", children: label }), _jsx("div", { className: "hjm-segmented__scroller", children: _jsxs("div", { className: "hjm-segmented__items", ref: trackRef, children: [selectionMotion === "slide" ? _jsx("span", { ref: highlightRef, className: "hjm-segmented__highlight", "aria-hidden": "true" }) : null, items.map((item) => (_jsxs("label", { className: "hjm-segmented__item", "data-state": item.value === value ? "checked" : "unchecked", "data-disabled": item.disabled || disabled || undefined, children: [_jsx("input", { type: "radio", name: name ?? generatedName, value: item.value, checked: item.value === value, disabled: item.disabled || disabled, required: true, onChange: () => setValue(item.value) }), _jsx("span", { children: item.label })] }, item.value)))] }) })] }));
+    const revealOption = (option) => {
+        if (overflow !== "scroll" || !option)
+            return;
+        const viewport = trackRef.current?.parentElement;
+        if (!viewport)
+            return;
+        const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
+        const delta = bounds.left < frame.left ? bounds.left - frame.left : bounds.right > frame.right ? bounds.right - frame.right : 0;
+        if (delta)
+            viewport.scrollBy({ left: delta, behavior: "instant" });
+    };
+    useLayoutEffect(() => { revealOption(trackRef.current?.querySelector('[data-state="checked"]') ?? null); }, [value, items, overflow]);
+    const group = (_jsxs("fieldset", { ...props, disabled: disabled, ref: ref, style: { ...style, ...(actions == null ? layoutStyle : { flex: 1, minInlineSize: 0 }) }, className: classNames("hjm-segmented", className), "data-overflow": overflow, onFocusCapture: event => { props.onFocusCapture?.(event); revealOption(event.target.closest(".hjm-segmented__item")); }, "data-size": size, "data-presentation": presentation, "data-text-emphasis": presentation === "text" ? textEmphasis : undefined, role: presentation === "text" ? "radiogroup" : undefined, children: [_jsx("legend", { className: "hjm-visually-hidden", children: label }), _jsx("div", { className: "hjm-segmented__scroller", children: _jsxs("div", { className: "hjm-segmented__items", ref: trackRef, children: [selectionMotion === "slide" ? _jsx("span", { ref: highlightRef, className: "hjm-segmented__highlight", "aria-hidden": "true" }) : null, items.map((item) => (_jsxs("label", { className: "hjm-segmented__item", "data-state": item.value === value ? "checked" : "unchecked", "data-disabled": item.disabled || disabled || undefined, children: [_jsx("input", { type: "radio", name: name ?? generatedName, value: item.value, "aria-label": item.accessibilityLabel, checked: item.value === value, disabled: item.disabled || disabled, required: true, onChange: () => setValue(item.value) }), _jsx("span", { children: item.label })] }, item.value)))] }) })] }));
+    return actions == null ? group : _jsxs("div", { className: "hjm-segmented-rail", style: layoutStyle, children: [group, actions] });
 });
 //# sourceMappingURL=selection.js.map

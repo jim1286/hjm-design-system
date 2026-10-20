@@ -37,6 +37,7 @@ export function CarouselMotion(props: CarouselMotionProps) {
     // Embla's default 25 is a physics duration factor, not an HJM millisecond token.
     watchFocus: false, duration: environment.reducedMotion ? 0 : 25 });
   const latest = useRef(props); latest.current = props;
+  const latestIndex = useRef(index); latestIndex.current = index;
   const syncing = useRef(false);
   useEffect(() => {
     if (!api) return;
@@ -45,8 +46,15 @@ export function CarouselMotion(props: CarouselMotionProps) {
       const item = current.slides[api.selectedScrollSnap()];
       if (!syncing.current && item && item.id !== current.currentKey) current.onCurrentKeyChange(item.id);
     };
-    api.on("select", select);
-    return () => { api.off("select", select); };
+    // A zero-width/modal viewport can collapse snaps before its first measurement.
+    // Re-measurement must restore the controlled key, not retain that collapsed engine index.
+    const reInit = () => {
+      syncing.current = true;
+      api.scrollTo(latestIndex.current, true);
+      syncing.current = false;
+    };
+    api.on("select", select).on("reInit", reInit);
+    return () => { api.off("select", select).off("reInit", reInit); };
   }, [api]);
   useEffect(() => { syncing.current = true; api?.scrollTo(index, environment.reducedMotion); syncing.current = false; }, [api, index, environment.reducedMotion]);
   return <section aria-label={props.label} aria-roledescription="carousel" style={props.layoutStyle}>

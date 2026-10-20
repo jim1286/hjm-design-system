@@ -24,8 +24,11 @@ it("preserves mounted actions while hiding them from touch and accessibility and
     expect(tree.root.findAllByType(ActivityIndicator)).toHaveLength(1);
     expect(tree.root.findAllByType(Text)).toHaveLength(0);
     const loading = tree.root.findAllByType(View).find(node => node.props.accessibilityRole === "progressbar")!;
-    expect(loading.props).toMatchObject({ accessibilityLabel: "로그인 중", accessibilityState: { busy: true },
-      style: { position: "absolute", top: 0, bottom: 0, left: 0, right: 0, alignItems: "center", justifyContent: "center" } });
+    expect(loading.props).toMatchObject({ accessibilityLabel: "로그인 중", accessibilityState: { busy: true } });
+    expect(tree.root.findAllByType(View).some(node => {
+      const style = flattenStyle(node.props.style);
+      return style.position === "absolute" && style.top === 0 && style.bottom === 0 && style.left === 0 && style.right === 0 && style.alignItems === "center" && style.justifyContent === "center";
+    })).toBe(true);
     act(() => tree.update(screen(false)));
     expect(tree.root.findByType(Pressable)).toBe(button);
     expect(tree.root.findAllByType(ActivityIndicator)).toHaveLength(0);

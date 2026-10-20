@@ -1,8 +1,7 @@
 import type { WebKeyboardKey } from "./behaviors.js";
 import type { DesignSystemDirection } from "./design-system-provider.js";
 /**
- * The grid never parses or computes dates — month/leap-year/timezone
- * arithmetic stays product-owned (see docs/calendar.md). This only checks the
+ * The descriptor accepts product-owned calendar keys. This only checks the
  * "YYYY-MM-DD" shape products already use as their KBO schedule date key.
  */
 export declare function isIsoCalendarDate(value: string): boolean;
@@ -24,6 +23,11 @@ export type CalendarDateCellDescriptor<Content = unknown> = Readonly<{
     disabled?: boolean;
     content?: Content;
 }>;
+/** Civil Gregorian display cells only; business dates, time zones and the clock remain caller-owned. */
+export declare function createCalendarMonthCells(month: string, { weekStartsOn, outsideMonth }?: Readonly<{
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    outsideMonth?: "adjacent" | "blank";
+}>): readonly CalendarDateCellDescriptor[];
 export type CalendarWeekdayLabels = readonly [
     string,
     string,
@@ -34,11 +38,9 @@ export type CalendarWeekdayLabels = readonly [
     string
 ];
 /**
- * Raw product data for one visible month page. HJM does not compute which
- * dates belong to a month or the leading/trailing blanks — the product
- * already owns that arithmetic (see `buildCalendarCells` in Yajalal's
- * schedule explorer). HJM only validates the row-major seven-column shape
- * and resolves per-cell semantic state on top of it.
+ * Raw product data for one visible month page. Use createCalendarMonthCells
+ * for a plain Gregorian page or supply a product-specific grid with content.
+ * The renderer validates shape and resolves semantic state, without reading a clock.
  */
 export type CalendarGridDescriptor<Content = unknown> = Readonly<{
     /** Row-major, seven columns per row (one per weekday), so length must be a positive multiple of seven. */

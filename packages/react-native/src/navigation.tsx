@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import {
   getTabNavigationTarget,
   resolveInitialTabValue,
@@ -337,11 +338,11 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const selected = storedValueValid ? storedValue : collectionFallback;
   const [focusValue, setFocusValue] = useState(selected);
   const [visited, setVisited] = useState<ReadonlySet<Value>>(() => new Set([selected]));
-  const tabRefs = useRef(new Map<Value, View>());
+  const tabRefs = useRef(new Map<Value, ComponentRef<typeof View>>());
   const appearance = resolveTabsAppearance(suppliedAppearance, theme.designProfile?.interactions.selectionMotion, orientation);
   const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
   const [indicatorRects, setIndicatorRects] = useState<Record<string, GooeyIndicatorRect>>({});
-  const tabScroll = useRef<ScrollView>(null);
+  const tabScroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const [tabViewport, setTabViewport] = useState(0);
   const [tabContentWidth, setTabContentWidth] = useState(0);
   const destination = indicatorRects[selected];
@@ -436,7 +437,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
         return;
       }
       const handle = findNodeHandle(node);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      if (typeof handle === "number") AccessibilityInfo.setAccessibilityFocus(handle);
     });
   };
   const moveFocus = (from: Value, intent: "next" | "previous" | "first" | "last") => {
@@ -865,6 +866,9 @@ export function BottomNavigation<
   const badgeTone = counterBadgeRecipe.tones.danger;
   const badgeVariant = counterBadgeRecipe.variants[bottomNavigationRecipe.badge.variant];
   const [focusedKey, setFocusedKey] = useState<Key | null>(null);
+  const destinationRefs = useRef(new Map<Key, ComponentRef<typeof Pressable>>());
+  const keyboardFocusKey = resolved.items.some(item => item.id === focusedKey && !item.disabled)
+    ? focusedKey : resolved.selectedKey ?? resolved.items.find(item => !item.disabled)?.id;
   const iconSize = presentation.iconSize === "standard"
     ? glyph[density.icon]
     : bottomNavigationRecipe.iconSizes[presentation.iconSize];
@@ -976,6 +980,22 @@ export function BottomNavigation<
                 accessibilityLabel={item.resolvedAccessibilityLabel}
                 accessibilityRole="tab"
                 accessibilityState={{ disabled: item.disabled, selected }}
+                ref={node => { if (node) destinationRefs.current.set(item.id, node); else destinationRefs.current.delete(item.id); }}
+                // RN Web omits accessibilityState.selected. Share Tabs' DOM state and
+                // manual keyboard activation; arrow focus must not navigate routes by itself.
+                {...webOnly(webTabProps({ selected, disabled: item.disabled, controls: undefined,
+                  focused: keyboardFocusKey === item.id, orientation: "horizontal", direction: presentation.direction,
+                  onActivate: () => {
+                    const activation = resolveBottomNavigationActivation(descriptor, item.id);
+                    if (activation) onActivate(activation);
+                  },
+                  onMoveFocus: intent => {
+                    const target = getTabNavigationTarget(resolved.items, item.id, intent, tabsBehaviorDefaults.loop);
+                    if (target === undefined) return;
+                    setFocusedKey(target);
+                    queueMicrotask(() => (destinationRefs.current.get(target) as unknown as { focus?: () => void } | undefined)?.focus?.());
+                  },
+                }))}
                 disabled={item.disabled}
                 onBlur={() => {
                   setFocusedKey((current) => current === item.id ? null : current);
@@ -1394,6 +1414,8 @@ export type TopBarProps = Readonly<{
   actions?: ReactNode;
   centered?: boolean;
   safeAreaTop?: number;
+  /** Share a product scene behind the bar without replacing its layout or controls. */
+  surface?: "default" | "transparent";
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
         }>;
@@ -1413,6 +1435,7 @@ export function TopBar({
   actions,
   centered = topBarRecipe.defaults.centered,
   safeAreaTop = 0,
+  surface = "default",
   layoutStyle,
   ...removedProps
 }: TopBarProps) {
@@ -1544,7 +1567,7 @@ export function TopBar({
       style={[
         {
           alignItems: largeText ? "stretch" : "center",
-          backgroundColor: resolveColorReference(topBarRecipe.background, theme.palette),
+          backgroundColor: surface === "transparent" ? "transparent" : resolveColorReference(topBarRecipe.background, theme.palette),
           direction: theme.environment.direction,
           flexDirection: largeText ? "column" : "row",
           gap: topBarRecipe.gap,
@@ -1883,8 +1906,8 @@ export function Menu<
       throw new RangeError(`Menu selection must identify an item: ${key}`);
     }
   }
-  const triggerRef = useRef<View>(null);
-  const itemRefs = useRef(new Map<Value, View>());
+  const triggerRef = useRef<ComponentRef<typeof View>>(null);
+  const itemRefs = useRef(new Map<Value, ComponentRef<typeof View>>());
   const modalDismiss = useMenuAfterDismiss(visible);
   const densityContract = menuRecipe.density[density];
   const requestOpen = useCallback((next: boolean, reason: MenuOpenChangeReason) => {
@@ -1895,7 +1918,7 @@ export function Menu<
   const close = useCallback((reason: MenuOpenChangeReason, after?: null | (() => void | Promise<void>)) => {
     modalDismiss.queue(async () => {
       const handle = findNodeHandle(triggerRef.current);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      if (typeof handle === "number") AccessibilityInfo.setAccessibilityFocus(handle);
       onDismiss?.(reason);
       await after?.();
     });
@@ -1910,7 +1933,7 @@ export function Menu<
     const target = itemRefs.current.get(first.id);
     if (target) {
       const handle = findNodeHandle(target);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      if (typeof handle === "number") AccessibilityInfo.setAccessibilityFocus(handle);
     }
   };
   const activate = (item: CollectionItemDescriptor<Value>) => {

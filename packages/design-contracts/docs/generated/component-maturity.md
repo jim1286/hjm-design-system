@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 125 · beta 5
-- Web renderer: stable 125 · beta 5
-- Native renderer: stable 105 · beta 7 · unsupported 18
+- Contract: stable 126 · beta 5
+- Web renderer: stable 126 · beta 5
+- Native renderer: stable 106 · beta 7 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -51,6 +51,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | NumberField | `input/number-field` | stable | stable | stable | [authored](../number-field.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Select | `input/select` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Combobox | `input/combobox` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
+| TimePicker | `input/time-picker` | stable | stable | stable | [authored](../time-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | DatePicker | `input/date-picker` | stable | stable | stable | [authored](../date-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | DateRangePicker | `input/date-range-picker` | stable | stable | stable | generated only | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |
 | ColorPicker | `input/color-picker` | stable | stable | unsupported | [authored](../color-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |

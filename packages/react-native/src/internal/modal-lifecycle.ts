@@ -1,4 +1,4 @@
-import { InteractionManager, Platform } from "react-native";
+import { Platform } from "react-native";
 
 export type NativeModalTeardownTask = Readonly<{ cancel(): void }>;
 
@@ -18,5 +18,8 @@ export function shouldAwaitNativeModalDismiss(wasShown: boolean): boolean {
 export function scheduleAfterNativeModalTeardown(
   complete: () => void,
 ): NativeModalTeardownTask {
-  return InteractionManager.runAfterInteractions(complete);
+  // RN 0.88 removed InteractionManager, while Expo browser hosts lack setImmediate.
+  // A cancellable zero-delay timer preserves the post-removal turn on both hosts.
+  const task = setTimeout(complete, 0);
+  return { cancel: () => clearTimeout(task) };
 }

@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 // Keep these interactive examples independent of the full component catalog.
 import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
@@ -16,7 +17,7 @@ export function DialogExample() {
   // The example owns its draft outside the modal so dismissing does not lose input.
   const [draft, setDraft] = useState(savedName);
   const [message, setMessage] = useState("");
-  const trigger = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
   const name = draft.trim();
   return <StoryFrame>
     <Text>앨범 이름: {savedName}</Text>
@@ -39,7 +40,7 @@ export function AlertDialogExample() {
   const [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [message, setMessage] = useState("");
-  const trigger = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
   return <StoryFrame>
     <Text>{deleted ? "보관된 기록이 없어요." : "보관된 기록: 주말 산책"}</Text>
     <Button ref={trigger} tone="secondary" onPress={() => {

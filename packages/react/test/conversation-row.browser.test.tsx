@@ -31,3 +31,9 @@ it("retains radio selection for text navigation and keeps row actions outside li
  expect(link.contains(action)).toBe(false);await act(async()=>action.click());expect(followed).toBe(1);
  } finally {await act(async()=>root.unmount());host.remove();}
 });
+
+it.each([['', 'now', 'Peernow'], ['  ', 'now', 'Peernow'], ['hello', '', 'Peerhello'], ['', '', 'Peer']])('omits empty conversation fields without orphan separators: %j/%j', async (preview, metadata, expected) => {
+ const host=document.createElement('div');document.body.append(host);const root=createRoot(host);
+ try { await act(async()=>root.render(<ConversationRow title="Peer" preview={preview} metadata={metadata} avatar={null}/>));expect(host.textContent).toBe(expected); }
+ finally {await act(async()=>root.unmount());host.remove();}
+});

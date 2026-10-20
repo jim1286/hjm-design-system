@@ -85,6 +85,7 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 | 닫기 | — | — | 바깥 누름으로 닫히지 않는다. Escape(Web)·뒤로(Native)는 취소로 끝난다. 처리 중(`busy`)에는 닫을 수 없다 |
 | `request.onConfirm` 실패 | — | — | 열린 채로 `resolveErrorMessage` 또는 `fallbackErrorMessage`를 보여 준다 |
 | Web `trigger` | `ReactNode` | — | 비제어면 필수 |
+| `confirmDisabled` | boolean | false | checkout·미게시. 제품의 확인 불가 조건만 잠그며 외부 잠금만으로 취소·실패 세션을 초기화하지 않는다 |
 | `size` | `small` · `medium` · `large` | Web `medium` · Native `small` | 각 플랫폼 recipe의 최대 폭·안쪽 여백을 선택한다 |
 | Web `modalPriority` | `number` | `0` | 높은 우선순위 모달이 뒤에 열린 낮은 모달 위에서 동작한다 |
 | Native `contentStyle` | 배치 key(margin·width·flex·`alignSelf`)만 | — | `HjmCompositionStyleProp` 배치 전용 타입. 색·radius·padding은 받지 않으며 크기는 `size`로 지정한다 |
@@ -149,3 +150,7 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
   삭제·Apple 인증·로컬 정리의 성공을 뜻하지 않는다. 처리 결과는 제품 상태 화면이 계속 보여 준다.
 - Native에서 매우 긴 확인 문구는 본문이 스크롤되도록 바뀌었지만 큰 글자 실기기 검증은 끝나지 않았다([Dialog](../../dialog.md)).
   문구를 자르거나 글자 크기 상한으로 피하지 않는다.
+
+### 외부 확인 잠금 (checkout, 미게시)
+
+`confirmDisabled`(기본 false)는 요청 제한 시간 등 제품이 판단한 확인 불가 조건이다. Web·Native 모두 확인 행동만 차단하며 취소는 유지한다. 비동기 처리 중 중복 실행·닫힘·실패 상태는 기존 세션이 계속 소유한다. 잠금을 해제해도 열린 세션과 실패 안내를 초기화하지 않는다. Spint의 내 글 내리기 재시도 제한을 공통 확인창에서도 보존하기 위해 추가했다.

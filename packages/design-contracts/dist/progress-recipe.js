@@ -1,9 +1,9 @@
-import { radius } from "./foundations.js";
+import { radius, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const progressRecipe = {
     slots: ["root", "track", "indicator", "label", "value"],
     // Shared max default (Web was 100, Native 1): see docs/progress.md.
-    defaults: { size: "medium", tone: "brand", shape: "linear", max: 100 },
+    defaults: { size: "medium", tone: "brand", shape: "linear", max: 100, showValue: true },
     sizes: { small: 4, medium: 8, large: 12 },
     /*
       같은 값을 원으로 그리는 변형이다. 새 컴포넌트가 아닌 이유는 의미가 완전히 같기
@@ -14,6 +14,7 @@ export const progressRecipe = {
       획 두께를 함께 정해야 같은 tone에서 같은 무게로 읽힌다. Diairy가 ProgressRing을
       직접 만든 자리이고, 그때 필요했던 값이 이 둘이다.
     */
+    segmented: { gap: spacing.xxs },
     circular: {
         sizes: { small: 24, medium: 40, large: 64 },
         strokeWidth: { small: 3, medium: 4, large: 6 },
@@ -27,4 +28,16 @@ export const progressRecipe = {
     track: semanticColors.surface.sunken,
     radius: "full",
 };
+/** Same determinate quantity, painted in equal units (Diairy activity days); never a step-navigation engine. */
+export function resolveProgressSegments(value, max, count, shape) {
+    if (count === undefined)
+        return undefined;
+    if (!Number.isInteger(count) || count < 2)
+        throw new RangeError("Progress segments must be an integer of at least two");
+    if (shape !== "linear" || value === undefined)
+        throw new TypeError("Progress segments require determinate linear progress");
+    if (!Number.isFinite(max) || max <= 0 || !Number.isFinite(value) || value < 0 || value > max)
+        throw new RangeError("Progress value must be between zero and a positive finite max");
+    return Array.from({ length: count }, (_, index) => Math.max(0, Math.min(1, value / max * count - index)));
+}
 //# sourceMappingURL=progress-recipe.js.map

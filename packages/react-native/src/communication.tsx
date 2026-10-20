@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 "use client";
 import { useEffect,useRef,useState,type ReactNode } from "react";
 import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
@@ -42,7 +43,7 @@ export type ExpandableSearchProps<T>=Readonly<{
 }>;
 export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  const [snapshot,setSnapshot]=useState<Readonly<{query:string;response:SearchResponse<T>}>|null>(null),[pending,setPending]=useState(false),[failed,setFailed]=useState(false),[committed,setCommitted]=useState("");
- const latest=useRef(props);latest.current=props;const input=useRef<TextInput>(null),generation=useRef(0),controller=useRef<AbortController|null>(null);
+ const latest=useRef(props);latest.current=props;const input=useRef<ComponentRef<typeof TextInput>>(null),generation=useRef(0),controller=useRef<AbortController|null>(null);
 
  useEffect(()=>{if(!props.expanded){controller.current?.abort();generation.current++;setPending(false);setCommitted("");}},[props.expanded]);
  useEffect(()=>()=>{generation.current++;controller.current?.abort();},[]);

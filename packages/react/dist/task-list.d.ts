@@ -7,6 +7,8 @@ export type TaskListProps = Readonly<{
     onCompletedChange: (id: string, completed: boolean) => void;
     disabled?: boolean;
     emptyContent?: ReactNode;
+    /** Use plain rows inside an enclosing surface; omission retains the Checkbox default. */
+    itemPresentation?: "plain" | "card";
     /** Independent row action beside the checkbox; apply disabled to the supplied control. */
     renderItemAction?: (context: Readonly<{
         item: TaskItem;
@@ -20,5 +22,5 @@ export type TaskListProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Canonical Checkbox/List own semantics; optional collection composition keeps drag peers out of this entry. */
-export declare function TaskList({ label, items, onCompletedChange, disabled, emptyContent, renderItemAction, renderCollection, layoutStyle }: TaskListProps): import("react").JSX.Element;
+export declare function TaskList({ label, items, onCompletedChange, disabled, emptyContent, itemPresentation, renderItemAction, renderCollection, layoutStyle }: TaskListProps): import("react").JSX.Element;
 //# sourceMappingURL=task-list.d.ts.map

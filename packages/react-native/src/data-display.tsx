@@ -38,6 +38,7 @@ import {
   resolveTimelineDescriptor,
   timelineRecipe,
   type ComposeTimelineAccessibleName,
+  type ResolvedTimelineItemDescriptor,
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
@@ -51,6 +52,7 @@ import {
   listRowRecipe,
   statisticRecipe,
   type AccordionDensity,
+  type BadgeAdornmentContext,
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant as ContractBadgeVariant,
@@ -113,8 +115,8 @@ export type BadgeProps = Omit<
   tone?: StatusTone;
   size?: BadgeSize;
   variant?: BadgeVariant;
-  leading?: ReactNode;
-  trailing?: ReactNode;
+  leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
+  trailing?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
   accessibilityLabel?: string;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -137,6 +139,7 @@ export function Badge({
   const metrics = badgeRecipe.sizes[size];
   const variantPresentation = badgeRecipe.variants[variant];
   const outlined = !variantPresentation.usesToneBackground;
+  const iconContext = { color: resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette), size: metrics.iconSize };
   const borderReference = outlined ? presentation.border ?? variantPresentation.borderFallback : null;
   const borderColor = borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);
   return (
@@ -170,7 +173,7 @@ export function Badge({
           accessible={false}
           importantForAccessibility="no-hide-descendants"
         >
-          {leading}
+          {typeof leading === "function" ? leading(iconContext) : leading}
         </View>
       )}
       <Text
@@ -192,7 +195,7 @@ export function Badge({
       </Text>
       {trailing === undefined ? null : (
         <View accessibilityElementsHidden accessible={false} importantForAccessibility="no-hide-descendants">
-          {trailing}
+          {typeof trailing === "function" ? trailing(iconContext) : trailing}
         </View>
       )}
     </View>
@@ -270,7 +273,18 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     description?: ReactNode;
     leading?: ReactNode;
     media?: ReactNode;
+    /** Decorative artwork behind the shared body/actions; its host determines the available height. */
+    backgroundMedia?: ReactNode;
+    /** Platform gesture/accessibility host behind content. Requires backgroundMedia; never put metadata/actions here. */
+    backgroundInteraction?: ReactNode;
+    /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
+    mediaBadges?: ReactNode;
+    badges?: ReactNode;
+    /** Activate only the passive cover; other card content/actions keep independent targets. */
+    mediaAction?: Readonly<{ label: string; onActivate(): void; icon?: (context: Readonly<{ color: string; size: number }>) => ReactNode }>;
     actions?: ReactNode;
+    /** Independent commands at the header end; never nested in whole-card activation. */
+    headerActions?: ReactNode;
     selected?: boolean;
     /**
      * Whole-card activation. With `actions`, media and body become one Pressable and the actions row stays a sibling,
@@ -290,7 +304,13 @@ export function Card({
   description,
   leading,
   media,
+  backgroundMedia,
+  backgroundInteraction,
+  mediaBadges,
+  badges,
+  mediaAction,
   actions,
+  headerActions,
   selected = cardRecipe.defaults.selected,
   onActivate,
   disabled = false,
@@ -303,15 +323,21 @@ export function Card({
   radius: cornerRadius = surfaceDefaults.radius,
   ...props
 }: CardProps) {
-  const { environment, tokens } = useHjmNativeTheme();
+  const { environment, tokens, colors } = useHjmNativeTheme();
   if (onActivate && !accessibilityLabel?.trim()) {
     throw new TypeError("Interactive Card requires accessibilityLabel");
   }
+  if (mediaAction && (onActivate || !media || !mediaAction.label.trim())) throw new TypeError("Card mediaAction requires passive media, a label, and no whole-card onActivate");
+  if (backgroundMedia && (media || mediaAction || onActivate)) throw new TypeError("Card backgroundMedia is decorative and cannot combine with media, mediaAction or onActivate");
+  if ((backgroundInteraction !== undefined || mediaBadges !== undefined) && !backgroundMedia) throw new TypeError("Card backgroundInteraction/mediaBadges require backgroundMedia");
+  const [headerActionSize, setHeaderActionSize] = useState({ width: 0, height: 0 });
+  const [headerBodyTop, setHeaderBodyTop] = useState(0);
+  const [headerRow, setHeaderRow] = useState<{ top: number; height: number } | null>(null);
   const bodyPadding = surfaceGeometry.paddings[padding];
   const hasHeader =
-    leading !== undefined || title !== undefined || description !== undefined;
+    leading !== undefined || title !== undefined || description !== undefined || headerActions !== undefined;
   // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete); see `onActivate`.
-  const split = onActivate !== undefined && actions !== undefined && actions !== null && actions !== false;
+  const split = onActivate !== undefined && Boolean(actions || headerActions);
   const activate = () => { if (!disabled) onActivate?.(); };
   const activationA11y = {
     accessibilityRole: "button" as const,
@@ -321,6 +347,7 @@ export function Card({
   };
   const feedbackOpacity = (pressed: boolean) =>
     disabled ? cardRecipe.interaction.disabledOpacity : pressed ? cardRecipe.interaction.pressedOpacity : 1;
+  // The activation host owns placement; its inner frame/body fill a stretched collection slot.
   const frame = (
     <Surface
       {...props}
@@ -328,27 +355,44 @@ export function Card({
       padding="none"
       radius={cornerRadius}
       {...(onActivate ? {} : { accessibilityLabel, accessibilityHint })}
-      {...(layoutStyle === undefined || (onActivate && !split) ? {} : { layoutStyle })}
+      {...(onActivate && !split ? { layoutStyle: { flexGrow: 1 } } : layoutStyle === undefined ? {} : { layoutStyle })}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
       {/* The inner clip must use the same theme radius as Surface; foundation-only
           geometry left images mismatched after profile changes. Keep shadows outside. */}
       <View
+        pointerEvents={backgroundMedia ? "box-none" : "auto"}
         style={{
           overflow: "hidden",
+          flexGrow: 1,
           borderRadius: tokens.radius[cornerRadius],
+          ...(backgroundMedia ? { flex: 1, justifyContent: "flex-end" } as const : {}),
         }}
       >
+        {backgroundMedia ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill}>
+          {backgroundMedia}
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: cardRecipe.backgroundMedia.scrim }]} />
+        </View> : null}
+        {backgroundInteraction === undefined ? null : <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>{backgroundInteraction}</View>}
+        {mediaBadges === undefined ? null : <View pointerEvents="box-none" style={{ position: "absolute", top: cardRecipe.mediaAction.inset, end: cardRecipe.mediaAction.inset, flexDirection: "row", flexWrap: "wrap", gap: cardRecipe.body.gap, zIndex: 1 }}>{mediaBadges}</View>}
         <CardActivationRegion split={split} activation={activationA11y} disabled={disabled} onPress={activate} feedbackOpacity={feedbackOpacity}>
-        {media === undefined ? null : <View>{media}</View>}
-        <View style={{ gap: cardRecipe.body.gap, padding: bodyPadding }}>
+        {media === undefined ? null : mediaAction ? <Pressable accessibilityRole="button" accessibilityLabel={mediaAction.label} accessibilityState={{ disabled }} disabled={disabled}
+          onPress={() => { if (!disabled) mediaAction.onActivate(); }}
+          style={({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }]}>
+          {media}
+          {mediaAction.icon ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", end: cardRecipe.mediaAction.inset, bottom: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.border }}>{mediaAction.icon({ color: colors.text, size: cardRecipe.mediaAction.iconSize })}</View> : null}
+        </Pressable> : <View>{media}</View>}
+        <View onLayout={({ nativeEvent: { layout } }) => setHeaderBodyTop(layout.y)} style={{ gap: cardRecipe.body.gap, padding: bodyPadding, flexGrow: backgroundMedia ? 0 : 1 }}>
+          {badges === undefined ? null : <View style={{ flexDirection: "row", flexWrap: "wrap", gap: cardRecipe.body.gap }}>{badges}</View>}
           {hasHeader ? (
             <View
+              onLayout={({ nativeEvent: { layout } }) => setHeaderRow(current => current?.top === layout.y && current.height === layout.height ? current : { top: layout.y, height: layout.height })}
               style={{
-                alignItems: "flex-start",
+                alignItems: cardRecipe.header.alignItems,
                 direction: environment.direction,
                 flexDirection: "row",
                 gap: cardRecipe.header.gap,
+                ...(headerActionSize.width > 0 ? { marginEnd: headerActionSize.width + cardRecipe.header.gap, minHeight: headerActionSize.height } : {}),
               }}
             >
               {leading === undefined ? null : (
@@ -360,22 +404,30 @@ export function Card({
                     accessibilityRole="header"
                     emphasis="strong"
                     tone="primary"
+                    {...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {})}
                     variant="title"
                   >
                     {title}
                   </Text>
                 )}
                 {description === undefined ? null : (
-                  <Text emphasis="regular" tone="muted" variant="body">
+                  <Text emphasis="regular" tone="muted" {...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {})} variant="body">
                     {description}
                   </Text>
                 )}
               </View>
             </View>
           ) : null}
-          {children === undefined ? null : <View>{children}</View>}
+          {children === undefined ? null : <View style={{ flexGrow: 1 }}>{children}</View>}
         </View>
         </CardActivationRegion>
+        {/* Keep header commands outside the accessible Pressable. Measure their real width instead of reserving an app-specific icon size. */}
+        {headerActions === undefined ? null : <View
+          onLayout={({ nativeEvent: { layout } }) => setHeaderActionSize(current => current.width === layout.width && current.height === layout.height ? current : { width: layout.width, height: layout.height })}
+          // Commands stay outside the accessible card target; measured row height also centers wrapped copy.
+          style={{ position: "absolute", top: headerBodyTop + (headerRow?.top ?? bodyPadding) + Math.max(0, ((headerRow?.height ?? headerActionSize.height) - headerActionSize.height) / 2), end: bodyPadding, flexDirection: "row", alignItems: cardRecipe.header.alignItems, gap: cardRecipe.body.gap, zIndex: 1 }}>
+          {headerActions}
+        </View>}
         {actions === undefined ? null : (
           <View
             style={{
@@ -412,16 +464,36 @@ function CardActivationRegion({ split, activation, disabled, onPress, feedbackOp
 }>) {
   if (!split) return <>{children}</>;
   return <Pressable {...activation} disabled={disabled} onPress={onPress}
-    style={({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }]}>{children}</Pressable>;
+    style={({ pressed }) => [minimumTargetStyle, { flexGrow: 1, opacity: feedbackOpacity(pressed) }]}>{children}</Pressable>;
+}
+
+export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
+  children: ReactNode;
+  attribution?: string;
+  renderMark?: (context: { color: string; size: number }) => ReactNode;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/** The quotation and caption stay one visual unit; nested disclosures remain independently accessible. */
+export function QuoteCard({ children, attribution, renderMark, ...props }: QuoteCardProps) {
+  const { colors } = useHjmNativeTheme();
+  return <Card {...props} leading={<View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    {renderMark?.({ color: colors.contentBrand, size: cardRecipe.quotation.markSize }) ?? <Text variant="heading" tone="brand">“</Text>}
+  </View>}>
+    <View style={{ gap: cardRecipe.quotation.gap }}>
+      {children}
+      {attribution === undefined ? null : <Text variant="caption" tone="muted">{attribution}</Text>}
+    </View>
+  </Card>;
 }
 
 /**
  * A List item hands its rows this reporter so the indented separator drawn after the item follows the row's text
- * column: leading 40 + gap 12 when the row has a leading frame, the content edge when it has none (2026-10-17 user
+ * column: measured leading width + gap when the row has a leading frame, the content edge when it has none (2026-10-17 user
  * report: a fixed 52 cut the line off midway under rows without leading). Web reads the same fact from the ListRow
  * root's `data-leading` attribute in CSS.
  */
-const ListItemLeadingContext = createContext<((hasLeading: boolean) => void) | null>(null);
+const ListItemLeadingContext = createContext<((contentInset: number) => void) | null>(null);
 
 export type ListRowProps = Omit<
   PressableProps,
@@ -502,11 +574,18 @@ export function ListRow({
   // this row's text column (listRecipe.separators). Runs before the loading early return to keep hook order.
   const reportLeading = useContext(ListItemLeadingContext);
   const hasLeading = Boolean(leading);
+  const [leadingWidth, setLeadingWidth] = useState<number>(listRowRecipe.leadingSize);
+  const measureLeading = (event: LayoutChangeEvent) => {
+    if (!reportLeading) return;
+    const width = event.nativeEvent.layout.width;
+    if (Number.isFinite(width) && width >= 0) setLeadingWidth(current => current === width ? current : width);
+  };
   useLayoutEffect(() => {
     if (!reportLeading) return undefined;
-    reportLeading(hasLeading);
-    return () => reportLeading(false);
-  }, [reportLeading, hasLeading]);
+    // Ranking rows may compose rank + portrait in a wider public leading slot (2026-10-19).
+    reportLeading(hasLeading ? leadingWidth + listRowRecipe.gap : 0);
+    return () => reportLeading(0);
+  }, [reportLeading, hasLeading, leadingWidth]);
   const metrics = listRowRecipe.density[density];
   const interactive = onPress !== undefined;
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
@@ -556,7 +635,7 @@ export function ListRow({
         gap: listRowRecipe.gap, minHeight: visualState.minHeight, marginHorizontal: -metrics.paddingHorizontal,
         paddingHorizontal: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder,
         borderWidth: rowBorder, borderColor: "transparent" }, layoutStyle]}>
-      {leading ? <View style={[placeholder, leadingFrameStyle]} /> : null}
+      {leading ? <View onLayout={measureLeading} style={[placeholder, leadingFrameStyle, leadingStyle]} /> : null}
       <View style={{ flex: 1, minWidth: 0, gap: spacing.xxs }}>
         <View style={[placeholder, { width: `${listRowRecipe.loading.titleWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.title.textVariant].lineHeight }]} />
         {description ? <View style={[placeholder, { width: `${listRowRecipe.loading.descriptionWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.description.textVariant].lineHeight }]} /> : null}
@@ -568,6 +647,7 @@ export function ListRow({
     <>
       {leading ? (
         <View
+          onLayout={measureLeading}
           accessible={interactive ? false : undefined}
           importantForAccessibility={interactive ? "no-hide-descendants" : "auto"}
           style={[leadingFrameStyle, leadingStyle]}
@@ -1483,7 +1563,7 @@ export type ListProps = Omit<
   /** Localized accessible name for this list. */
   label: string;
   children: ReactNode;
-  separator?: "none" | "full" | "indented";
+  separator?: keyof typeof listRecipe.separators;
   appearance?: ListAppearance;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -1538,6 +1618,29 @@ export function List({
   );
 }
 
+export type ListSeparatorProps = Readonly<{
+  /** content: already padded rows; full: ListRow surface; indented: ListRow text column. */
+  separator?: keyof typeof listRecipe.separators;
+  leading?: boolean;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/** Decorative separator for a product-owned virtual collection; never replaces its accessible row. */
+export function ListSeparator({ separator = "content", leading = false, layoutStyle }: ListSeparatorProps) {
+  const { colors } = useHjmNativeTheme();
+  const insets = listRecipe.separators[separator];
+  return insets ? <ListSeparatorFrame color={colors.border} start={leading ? insets.leadingInsetStart : insets.insetStart} end={insets.insetEnd} layoutStyle={layoutStyle} /> : null;
+}
+
+// List and virtual hosts share the actual line. List keeps its measured leading width for custom row slots.
+function ListSeparatorFrame({ color, start, end, layoutStyle }: Readonly<{color: string; start: number; end: number; layoutStyle?: HjmCompositionStyleProp}>) {
+  // Keep host placement outside the line: Yoga's explicit logical marginStart/End would otherwise override
+  // a caller's marginHorizontal even when the content-edge inset is zero.
+  return <View accessible={false} importantForAccessibility="no" style={layoutStyle}>
+    <View accessible={false} importantForAccessibility="no" style={{ backgroundColor: color, height: 1, marginStart: start, marginEnd: end }} />
+  </View>;
+}
+
 /** One list item and the separator that belongs to it (drawn after it, as an iOS cell separator). */
 function ListItem({
   borderColor,
@@ -1548,21 +1651,11 @@ function ListItem({
   children: ReactNode;
   separator: (typeof listRecipe.separators)[keyof typeof listRecipe.separators];
 }>) {
-  const [hasLeading, setHasLeading] = useState(false);
+  const [contentInset, setContentInset] = useState(0);
   return (
     <View>
-      <ListItemLeadingContext.Provider value={setHasLeading}>{children}</ListItemLeadingContext.Provider>
-      {separator ? (
-        <View
-          accessible={false}
-          style={{
-            backgroundColor: borderColor,
-            height: 1,
-            marginEnd: separator.insetEnd,
-            marginStart: hasLeading ? separator.leadingInsetStart : separator.insetStart,
-          }}
-        />
-      ) : null}
+      <ListItemLeadingContext.Provider value={setContentInset}>{children}</ListItemLeadingContext.Provider>
+      {separator ? <ListSeparatorFrame color={borderColor} start={separator.leadingInsetStart === separator.insetStart ? separator.insetStart : contentInset} end={separator.insetEnd} /> : null}
     </View>
   );
 }
@@ -1588,6 +1681,9 @@ export type StatisticProps<Id extends string = string> = Readonly<{
   contextLabel?: string;
   accessibilityLabel?: string;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  leading?: ReactNode;
+  /** Product-owned series/category color shared by value and leading. */
+  valueColor?: string;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -1605,9 +1701,11 @@ function renderStatistic<Id extends string = string>({
   contextLabel,
   accessibilityLabel,
   composeAccessibilityLabel,
+  leading,
+  valueColor,
   renderTrendMark,
   layoutStyle,
-}: StatisticProps<Id>) {
+}: StatisticProps<Id>, bar = false, barDivider = false) {
   const resolved = resolveStatisticDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const densityContract = statisticRecipe.density[density];
@@ -1632,6 +1730,21 @@ function renderStatistic<Id extends string = string>({
   const trendColor = resolved.trend
     ? resolveColorReference(statisticRecipe.trend.tones[resolved.trend.tone], theme.palette)
     : undefined;
+  const labelNode = (
+      <Text
+        accessible={false}
+        style={[
+          {
+            color: resolveColorReference(statisticRecipe.label.color, theme.palette),
+            fontWeight: statisticRecipe.label.fontWeight,
+            ...(bar ? { textAlign: "center" } as const : {}),
+          },
+        ]}
+        variant={densityContract.labelVariant}
+      >
+        {resolved.label}
+      </Text>
+  );
   return (
     <View
       accessibilityLabel={announcement}
@@ -1644,9 +1757,10 @@ function renderStatistic<Id extends string = string>({
           borderColor: presentationContract.border
             ? resolveColorReference(presentationContract.border, theme.palette)
             : "transparent",
-          borderRadius: theme.tokens.radius[presentationContract.radius],
+          borderRadius: bar ? 0 : theme.tokens.radius[presentationContract.radius],
           borderWidth: presentationContract.borderWidth,
-          gap: densityContract.gap,
+          gap: bar ? statisticRecipe.group.bar.valueGap : densityContract.gap,
+          ...(bar ? { alignItems: "center", paddingHorizontal: statisticRecipe.group.bar.cellPadding, borderStartWidth: barDivider ? 1 : 0, borderStartColor: theme.colors.border } as const : {}),
           minWidth: 0,
           // Plain statistics align with surrounding text; only the surface plate is inset (Web keys on data-presentation).
           padding: presentation === "surface" ? densityContract.padding : 0,
@@ -1654,22 +1768,12 @@ function renderStatistic<Id extends string = string>({
         layoutStyle,
       ]}
     >
-      <Text
-        accessible={false}
-        style={[
-          {
-            color: resolveColorReference(statisticRecipe.label.color, theme.palette),
-            fontWeight: statisticRecipe.label.fontWeight,
-          },
-        ]}
-        variant={densityContract.labelVariant}
-      >
-        {resolved.label}
-      </Text>
+      {!bar && labelNode}
       <View
         accessible={false}
         style={{
-          alignItems: "baseline",
+          alignItems: leading ? "center" : "baseline",
+          ...(bar ? { justifyContent: "center" } as const : {}),
           direction: theme.environment.direction,
           flexDirection: "row",
           flexWrap: "wrap",
@@ -1677,6 +1781,7 @@ function renderStatistic<Id extends string = string>({
           minWidth: 0,
         }}
       >
+        {leading === undefined ? null : <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{leading}</View>}
         {resolved.prefix ? (
           <Text
             accessible={false}
@@ -1695,7 +1800,7 @@ function renderStatistic<Id extends string = string>({
           accessible={false}
           style={[
             {
-              color: resolveColorReference(statisticRecipe.value.color, theme.palette),
+              color: valueColor ?? resolveColorReference(statisticRecipe.value.color, theme.palette),
               flexShrink: 1,
               fontVariant: ["tabular-nums"],
               fontWeight: statisticRecipe.value.fontWeight,
@@ -1720,6 +1825,7 @@ function renderStatistic<Id extends string = string>({
           </Text>
         ) : null}
       </View>
+      {bar && labelNode}
       {resolved.trend ? (
         <View
           accessible={false}
@@ -1780,6 +1886,9 @@ export type StatisticGroupProps<Id extends string = string> = Omit<
   density?: StatisticDensity;
   presentation?: StatisticPresentation;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  arrangement?: "grid" | "bar";
+  renderLeading?: (item: StatisticDescriptor<Id>, context: { color: string; size: number }) => ReactNode;
+  getValueColor?: (item: StatisticDescriptor<Id>) => string | undefined;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -1792,6 +1901,9 @@ export function StatisticGroup<Id extends string = string>({
   density,
   presentation,
   composeAccessibilityLabel,
+  arrangement = "grid",
+  renderLeading,
+  getValueColor,
   renderTrendMark,
   layoutStyle,
   onLayout,
@@ -1800,7 +1912,7 @@ export function StatisticGroup<Id extends string = string>({
   assertNoRemovedStyleProps("StatisticGroup", props, ["style","itemStyle"]);
   validateStatisticGroup(descriptor);
   const { width: windowWidth } = useWindowDimensions();
-  const { environment } = useHjmNativeTheme();
+  const { environment, colors } = useHjmNativeTheme();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
   if (!Number.isFinite(innerWidth) || innerWidth <= 0) {
@@ -1808,21 +1920,22 @@ export function StatisticGroup<Id extends string = string>({
   }
   const requested = descriptor.columns ?? statisticRecipe.defaults.columns;
   const minItemWidth = statisticRecipe.group.minItemWidth * Math.max(1, environment.textScale);
-  let columns = requested;
+  let columns: number = arrangement === "bar" ? descriptor.items.length : requested;
+  const gap = arrangement === "bar" ? 0 : statisticRecipe.group.gap;
   while (
-    columns > 1 &&
-    (innerWidth - statisticRecipe.group.gap * (columns - 1)) / columns < minItemWidth
+    arrangement !== "bar" && columns > 1 &&
+    (innerWidth - gap * (columns - 1)) / columns < minItemWidth
   ) {
     columns -= 1;
   }
   const itemWidth =
-    (innerWidth - statisticRecipe.group.gap * (columns - 1)) / columns;
+    (innerWidth - gap * (columns - 1)) / columns;
   const remainder = descriptor.items.length % columns;
   const finalRowCount = remainder === 0 ? columns : remainder;
   const finalRowStart = descriptor.items.length - finalRowCount;
   const finalRowItemWidth = finalRowCount === columns
     ? itemWidth
-    : (innerWidth - statisticRecipe.group.gap * (finalRowCount - 1)) / finalRowCount;
+    : (innerWidth - gap * (finalRowCount - 1)) / finalRowCount;
   const handleLayout = (event: LayoutChangeEvent) => {
     onLayout?.(event);
     if (availableWidth !== undefined) return;
@@ -1842,14 +1955,20 @@ export function StatisticGroup<Id extends string = string>({
           direction: environment.direction,
           flexDirection: "row",
           flexWrap: "wrap",
-          gap: statisticRecipe.group.gap,
+          gap,
         },
         layoutStyle,
       ]}
     >
-      {descriptor.items.map((item, index) => (
+      {descriptor.items.map((item, index) => {
+        const valueColor = getValueColor?.(item);
+        return (
         <StatisticGroupItem
           key={item.id}
+          bar={arrangement === "bar"}
+          barDivider={index > 0}
+          {...(valueColor ? { valueColor } : {})}
+          {...(renderLeading ? { leading: renderLeading(item, { color: valueColor ?? colors.text, size: statisticRecipe.group.bar.iconSize }) } : {})}
           contextLabel={label}
           descriptor={item}
           {...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel })}
@@ -1858,14 +1977,14 @@ export function StatisticGroup<Id extends string = string>({
           {...(renderTrendMark === undefined ? {} : { renderTrendMark })}
           layoutStyle={{ width: index >= finalRowStart ? finalRowItemWidth : itemWidth }}
         />
-      ))}
+      ); })}
     </View>
   );
 }
 
 /** Group cell: same render as Statistic without attributing the group's styles to the caller. */
-function StatisticGroupItem<Id extends string = string>(props: StatisticProps<Id>) {
-  return renderStatistic(props);
+function StatisticGroupItem<Id extends string = string>({ bar, barDivider, ...props }: StatisticProps<Id> & { bar: boolean; barDivider: boolean }) {
+  return renderStatistic(props, bar, barDivider);
 }
 
 export type TimelineProps<Id extends string = string> = Omit<
@@ -1875,6 +1994,14 @@ export type TimelineProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
+    renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Virtualization host only; the shared renderer still owns every record, rail, label and command target. */
+    renderList?: (context: Readonly<{
+      items: readonly ResolvedTimelineItemDescriptor<Id>[];
+      renderItem: (item: ResolvedTimelineItemDescriptor<Id>, index: number) => ReactNode;
+      separator: ReactNode;
+    }>) => ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -1883,6 +2010,9 @@ export type TimelineProps<Id extends string = string> = Omit<
 export function Timeline<Id extends string = string>({
   items,
   composeAccessibleName,
+  renderMetadata,
+  renderActions,
+  renderList,
   layoutStyle,
   ...props
 }: TimelineProps<Id>) {
@@ -1895,24 +2025,22 @@ export function Timeline<Id extends string = string>({
   // Dot, label first line and timestamp share the label's rendered first line box (token × text scale), matching
   // Web's 1lh anchor (2026-10-17 measured audit: the dot sat at the top and the caption rode the baseline).
   const labelLineHeight = theme.tokens.typography[timelineRecipe.label.textVariant].lineHeight * theme.textScaling.scale;
-  const timestampLineHeight = theme.tokens.typography[timelineRecipe.timestamp.textVariant].lineHeight * theme.textScaling.scale;
-  return (
-    <View {...props} style={[{ gap: timelineRecipe.gap }, layoutStyle]}>
-      {resolved.map((item, index) => {
+  const renderRecord = (item: ResolvedTimelineItemDescriptor<Id>, index: number) => {
+        const actions = renderActions?.(item);
         const tone = timelineRecipe.dot.tones[item.tone];
         const accessibilityLabel = [
           item.accessibleName,
-          item.timestamp,
           item.description,
+          item.timestamp,
         ]
           .filter(Boolean)
           .join(", ");
         return (
           <View
-            accessible
-            accessibilityLabel={accessibilityLabel}
+            accessible={!actions}
+            accessibilityLabel={actions ? undefined : accessibilityLabel}
             key={item.id}
-            style={{ flexDirection: "row", gap: spacing.sm }}
+            style={{ flexDirection: "row", gap: spacing.sm, padding: timelineRecipe.item.padding, borderRadius: radius.md, backgroundColor: item.emphasized ? resolveColorReference(timelineRecipe.item.emphasisBackground, theme.palette) : undefined }}
           >
             <View
               importantForAccessibility="no-hide-descendants"
@@ -1943,14 +2071,18 @@ export function Timeline<Id extends string = string>({
                       timelineRecipe.connector.tone,
                       theme.palette,
                     ),
-                    flex: 1,
+                    position: "absolute",
+                    top: (labelLineHeight + timelineRecipe.dot.diameter) / 2,
+                    bottom: -timelineRecipe.gap - 2 * timelineRecipe.item.padding - labelLineHeight / 2,
                     width: timelineRecipe.connector.width,
                   }}
                 />
               ) : null}
             </View>
             <View
-              importantForAccessibility="no-hide-descendants"
+              accessible={!!actions}
+              accessibilityLabel={actions ? accessibilityLabel : undefined}
+              importantForAccessibility={actions ? "auto" : "no-hide-descendants"}
               style={{ flex: 1, gap: spacing.xxs, minWidth: 0, paddingBottom: spacing.xxs }}
             >
               <View
@@ -1959,7 +2091,6 @@ export function Timeline<Id extends string = string>({
                   flexDirection: "row",
                   flexWrap: "wrap",
                   gap: spacing.xs,
-                  justifyContent: "space-between",
                 }}
               >
                 <Text
@@ -1974,20 +2105,7 @@ export function Timeline<Id extends string = string>({
                 >
                   {item.label}
                 </Text>
-                {item.timestamp ? (
-                  <Text
-                    style={{
-                      color: resolveColorReference(
-                        timelineRecipe.timestamp.color,
-                        theme.palette,
-                      ),
-                      marginTop: (labelLineHeight - timestampLineHeight) / 2,
-                    }}
-                    variant={timelineRecipe.timestamp.textVariant}
-                  >
-                    {item.timestamp}
-                  </Text>
-                ) : null}
+                {renderMetadata?.(item)}
               </View>
               {item.description ? (
                 <Text
@@ -2002,10 +2120,13 @@ export function Timeline<Id extends string = string>({
                   {item.description}
                 </Text>
               ) : null}
+              {item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
             </View>
+            {actions ? <View style={{ flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }}>{actions}</View> : null}
           </View>
         );
-      })}
-    </View>
-  );
+  };
+  return <View {...props} style={[renderList ? {} : { gap: timelineRecipe.gap }, layoutStyle]}>
+    {renderList ? renderList({ items: resolved, renderItem: renderRecord, separator: <View style={{ height: timelineRecipe.gap }} /> }) : resolved.map(renderRecord)}
+  </View>;
 }

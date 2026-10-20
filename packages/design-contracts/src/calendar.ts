@@ -17,8 +17,7 @@ function assertNonEmpty(value: string, field: string): void {
 }
 
 /**
- * The grid never parses or computes dates — month/leap-year/timezone
- * arithmetic stays product-owned (see docs/calendar.md). This only checks the
+ * The descriptor accepts product-owned calendar keys. This only checks the
  * "YYYY-MM-DD" shape products already use as their KBO schedule date key.
  */
 export function isIsoCalendarDate(value: string): boolean {
@@ -57,6 +56,42 @@ export type CalendarDateCellDescriptor<Content = unknown> = Readonly<{
   content?: Content;
 }>;
 
+/** Civil Gregorian display cells only; business dates, time zones and the clock remain caller-owned. */
+export function createCalendarMonthCells(
+  month: string,
+  { weekStartsOn = 0, outsideMonth = "adjacent" }: Readonly<{
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    outsideMonth?: "adjacent" | "blank";
+  }> = {},
+): readonly CalendarDateCellDescriptor[] {
+  assertIsoCalendarMonth(month, "month");
+  if (!Number.isInteger(weekStartsOn) || weekStartsOn < 0 || weekStartsOn > 6) {
+    throw new RangeError("Calendar weekStartsOn must be an integer from zero to six");
+  }
+  if (outsideMonth !== "adjacent" && outsideMonth !== "blank") {
+    throw new TypeError("Calendar outsideMonth must be adjacent or blank");
+  }
+  // UTC is a coordinate system for civil-day layout, never a conversion of the
+  // traveller's/service's date. Local Date arithmetic skips/repeats hours at DST.
+  const first = new Date(`${month}-01T00:00:00Z`);
+  const next = new Date(first);
+  next.setUTCMonth(next.getUTCMonth() + 1);
+  const day = 86_400_000;
+  const leading = (first.getUTCDay() - weekStartsOn + 7) % 7;
+  const count = Math.ceil((leading + (next.getTime() - first.getTime()) / day) / 7) * 7;
+  return Array.from({ length: count }, (_, index) => {
+    const value = new Date(first.getTime() + (index - leading) * day);
+    // Four-digit descriptor keys cannot represent the adjacent year at the
+    // outer supported boundaries. Those cells stay non-interactive fillers.
+    if (value.getUTCFullYear() < 0 || value.getUTCFullYear() > 9999) return {};
+    const date = value.toISOString().slice(0, 10);
+    const outsideFocusedMonth = !date.startsWith(month);
+    return outsideFocusedMonth
+      ? outsideMonth === "blank" ? {} : { date, outsideFocusedMonth: true }
+      : { date };
+  });
+}
+
 export type CalendarWeekdayLabels = readonly [
   string,
   string,
@@ -68,11 +103,9 @@ export type CalendarWeekdayLabels = readonly [
 ];
 
 /**
- * Raw product data for one visible month page. HJM does not compute which
- * dates belong to a month or the leading/trailing blanks — the product
- * already owns that arithmetic (see `buildCalendarCells` in Yajalal's
- * schedule explorer). HJM only validates the row-major seven-column shape
- * and resolves per-cell semantic state on top of it.
+ * Raw product data for one visible month page. Use createCalendarMonthCells
+ * for a plain Gregorian page or supply a product-specific grid with content.
+ * The renderer validates shape and resolves semantic state, without reading a clock.
  */
 export type CalendarGridDescriptor<Content = unknown> = Readonly<{
   /** Row-major, seven columns per row (one per weekday), so length must be a positive multiple of seven. */

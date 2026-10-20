@@ -1656,7 +1656,9 @@
       "storyId": "input/chip",
       "name": "Chip",
       "label": "선택 칩",
-      "companions": [],
+      "companions": [
+        "ShortcutRail"
+      ],
       "extensions": [],
       "category": "input",
       "platform": "shared",
@@ -2126,6 +2128,57 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": null
+      }
+    },
+    {
+      "id": "time-picker",
+      "storyId": "input/time-picker",
+      "name": "TimePicker",
+      "label": "시각 선택",
+      "companions": [],
+      "extensions": [],
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "stable",
+        "native": "stable"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/time-picker.md"
       }
     },
     {
@@ -3424,7 +3477,9 @@
       "storyId": "data-display/card",
       "name": "Card",
       "label": "카드",
-      "companions": [],
+      "companions": [
+        "QuoteCard"
+      ],
       "extensions": [
         "DocumentResource"
       ],

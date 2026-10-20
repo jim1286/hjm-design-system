@@ -20,9 +20,13 @@ export type TimelineItemDescriptor<Id extends string = string> = Readonly<{
   label: string;
   /** Product-formatted "when" copy, e.g. "3회 초" or "2024-01-15". Timeline never formats a clock, inning, or date itself. */
   timestamp?: string;
+  /** Machine-readable date for the formatted timestamp; products retain the original instant. */
+  dateTime?: string;
   /** Product-formatted supplementary detail, e.g. "안타로 1루 진출". */
   description?: string;
   tone?: TimelineItemTone;
+  /** Passive emphasis for a notable record, not a progress cursor or selection. */
+  emphasized?: boolean;
 }>;
 
 export type TimelineDescriptor<Id extends string = string> = Readonly<{
@@ -74,12 +78,19 @@ export function validateTimelineItemDescriptor<Id extends string>(
   item: TimelineItemDescriptor<Id>,
 ): void {
   assertNonEmpty(item.id, "item id");
+  if (item.emphasized !== undefined && typeof item.emphasized !== "boolean") {
+    throw new TypeError("Timeline item emphasized must be a boolean");
+  }
   if (item.id !== item.id.trim()) {
     throw new TypeError("Timeline item id must not start or end with whitespace");
   }
   assertNonEmpty(item.label, "item label");
   if (item.timestamp !== undefined) {
     assertNonEmpty(item.timestamp, "item timestamp");
+  }
+  if (item.dateTime !== undefined) {
+    assertNonEmpty(item.dateTime, "item dateTime");
+    if (item.timestamp === undefined) throw new TypeError("Timeline dateTime requires timestamp");
   }
   if (item.description !== undefined) {
     assertNonEmpty(item.description, "item description");
@@ -159,7 +170,9 @@ export const timelineRecipe = {
     "label",
     "description",
   ] as const,
-  gap: spacing.md,
+  gap: spacing.lg,
+  // A record remains passive: emphasis highlights its history without implying progress.
+  item: { padding: spacing.sm, emphasisBackground: semanticColors.feedback.info.background },
   dot: {
     diameter: 10,
     borderWidth: stroke.default,
@@ -203,6 +216,7 @@ export const timelineRecipe = {
 } as const satisfies {
   slots: readonly string[];
   gap: number;
+  item: { padding: number; emphasisBackground: ColorReference };
   dot: {
     diameter: number;
     borderWidth: number;

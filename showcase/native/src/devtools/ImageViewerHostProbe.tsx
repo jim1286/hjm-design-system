@@ -12,7 +12,9 @@ export function ImageViewerHostProbe({ inspection = false }: { inspection?: bool
   const [status, setStatus] = useState("아직 열지 않음");
   const failOnce = useRef(true);
   const insets = useSafeAreaInsets();
-  const uri = Image.resolveAssetSource(require("../../../shared/photos/valley.jpg")).uri;
+  const source = Image.resolveAssetSource(require("../../../shared/photos/valley.jpg"));
+  if (!source) throw new Error("Bundled image host probe could not be resolved");
+  const uri = source.uri;
   return <Stack gap="md">
     <Button onPress={() => { failOnce.current = true; setOpen(true); }}>이미지 호스트 확인</Button>
     <Text>{status}</Text>

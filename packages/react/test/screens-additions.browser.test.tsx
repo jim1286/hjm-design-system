@@ -2,7 +2,7 @@
 // composer error announcement, typing indicator and date separator. Normal text only (maximum text is out of scope).
 import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmProvider } from "../src/provider.js";
 import { ChatDateSeparator, ChatMessage, ChatScreen, IconTile, MessageComposer, ScreenLayout, TypingIndicator } from "../src/screens.js";
@@ -158,4 +158,42 @@ it("centers a product-formatted date between timeline groups", async () => {
   const row = host.querySelector<HTMLElement>(".hjm-chat-date-separator")!;
   const text = time.getBoundingClientRect(), box = row.getBoundingClientRect();
   expect(Math.abs((text.left + text.right) / 2 - (box.left + box.right) / 2)).toBeLessThan(2);
+});
+
+
+it("activates an IconTile without clipping its 64px artwork in a narrow cell", async () => {
+  const activate = vi.fn();
+  const content = (disabled = false) => <HjmProvider><div style={{ width: 68 }}><IconTile label="Long artwork title" activationLabel="Open artwork" onActivate={activate} disabled={disabled} icon={<span>★</span>} /></div></HjmProvider>;
+  await act(async () => root.render(content()));
+  const button = host.querySelector("button")!;
+  const frame = host.querySelector('[data-hjm-icon-tile]')!.firstElementChild!;
+  expect(button.getBoundingClientRect().width).toBe(68);
+  expect(frame.getBoundingClientRect().width).toBe(64);
+  expect(button.getBoundingClientRect().width).toBeGreaterThanOrEqual(frame.getBoundingClientRect().width);
+  expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+  await page.getByRole("button", { name: "Open artwork", exact: true }).click();
+  await userEvent.keyboard("{Enter}");
+  expect(activate).toHaveBeenCalledTimes(2);
+  await act(async () => root.render(content(true)));
+  expect(button.disabled).toBe(true);
+  button.click();
+  expect(activate).toHaveBeenCalledTimes(2);
+});
+
+
+it("stacks profile summary actions at full width and gives emoji artwork a profile-sized frame", async () => {
+  const follow = vi.fn(), message = vi.fn();
+  const { ProfileSummary } = await import("../src/screen-flows.js");
+  const { Button } = await import("../src/actions.js");
+  await act(async () => root.render(<HjmProvider><div style={{ width: 320 }}><ProfileSummary name="Maker"
+    avatar={<span data-testid="profile-emoji">🌼</span>} actionsLayout="stacked"
+    actions={<><Button fullWidth onClick={follow}>Follow</Button><Button fullWidth onClick={message}>Message</Button></>} /></div></HjmProvider>));
+  const buttons = [...host.querySelectorAll("button")];
+  expect(buttons).toHaveLength(2);
+  const first = buttons[0]!.getBoundingClientRect(), second = buttons[1]!.getBoundingClientRect();
+  expect(first.width).toBe(320); expect(second.width).toBe(first.width);
+  expect(second.top).toBeGreaterThan(first.bottom);
+  expect(Number.parseFloat(getComputedStyle(host.querySelector('[data-testid="profile-emoji"]')!).fontSize)).toBeGreaterThanOrEqual(40);
+  await page.getByRole("button", { name: "Message", exact: true }).click();
+  expect(message).toHaveBeenCalledOnce(); expect(follow).not.toHaveBeenCalled();
 });

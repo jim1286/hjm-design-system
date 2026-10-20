@@ -1,8 +1,10 @@
 import { control, fontWeight, radius, spacing, typography } from "./foundations.js";
 /** Small renderer entry point for the three foundational visual recipes. */
 export const buttonRecipe = {
-    slots: ["root", "leading", "label", "trailing", "spinner"],
-    defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" },
+    slots: ["root", "face", "side", "leading", "label", "trailing", "spinner"],
+    defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center", appearance: "flat" },
+    // A solid underside belongs to the button, rather than a product's second press/state engine.
+    raised: { depths: { small: 3, medium: 4, large: 5 }, sideShade: 0.25, settleDuration: 120 },
     tones: {
         primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
         // The outline is a border role, not a text color. Drawing it in `textSub`
@@ -60,6 +62,14 @@ export const buttonRecipe = {
      */
     label: { overflow: "wrap", maxLines: 2, liftCapOnLargeText: true },
 };
+/** Raised paint never adds a frame to a frameless ghost/link action. */
+export function resolveButtonDepth(appearance, tone, size) {
+    if (appearance !== "flat" && appearance !== "raised")
+        throw new TypeError("Unknown Button appearance");
+    if (appearance === "flat" || tone === "ghost" || tone === "link")
+        return 0;
+    return buttonRecipe.raised.depths[size];
+}
 export function resolveButtonEdgeOverhang(tone, size) {
     const toneContract = buttonRecipe.tones[tone];
     if (toneContract.background !== null || toneContract.border !== null)
@@ -142,7 +152,8 @@ export const fieldRecipe = {
     states: {
         idle: { border: "borderControl" },
         focused: { border: "contentBrand" },
-        invalid: { border: "danger" },
+        // Error and focus can share a hue in a product palette; thickness keeps validation distinct without color alone.
+        invalid: { border: "danger", borderWidth: 2 },
     },
     minHeight: control.minTouchTarget,
     multilineMinHeight: 80,

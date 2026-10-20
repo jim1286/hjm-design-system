@@ -1,5 +1,30 @@
 # Stable Core
 
+## 2026-10-19 TimePicker 개발 소스 승격
+
+사용자가 승인한 통합 시·분 열 디자인으로 `TimePicker`를 canonical catalog에 등록하고 계약·Web·Native
+surface를 stable로 승격했다. 양쪽 개별 Storybook은 `배포/컴포넌트/입력/시각 선택`이다.
+필드 한 개와 Popover/Sheet 한 개의 초안·확정·취소, 기존 폼 안에 넣는 inline 모드,
+`HH:mm | null` 값·분 간격·선택 불가 시간·비활성/읽기 전용을 공통으로 제공한다.
+과거 Select 두 개의 합성만 제공한다는 판단은 실제 선택의창 요구와 사용자 승인으로 대체됐다.
+
+변경 범위 검사: contracts 16건(핵심 helper 3건과 기존 참조/상태 검사 13건), Web 동작 10건,
+Native host 동작 7건, Web TimePicker matrix 5건·SSR 1건, Native matrix/default 6건 통과.
+최대 글자 조건은 범위 제외다. 두 renderer build·typecheck, 두 Showcase typecheck,
+공개 API map 및 선택한 사용 지침 2개 검사도 통과했다. 실제 Web inline 렌더링을 캡처·확인했다.
+선택의창 local-source 타입 검사와 iOS/Android 개발 번들 HTTP 200 및 새 TimePicker 모듈 포함을 확인했다.
+실제 iOS/Android 화면 조작·VoiceOver/TalkBack 기기 검증으로 해석하지 않는다.
+
+새 granular TimePicker entry의 import graph는 Web 9개·Native 21개 로컬 모듈이며 root barrel,
+metadata, optional peer 유입이 없다. 기존 전체 renderer 경계 검사는 Web `social-compositions`·
+`toggle-feedback`의 `@number-flow/react` 선택 의존성 유입으로 실패하여 전체 통과로 보고하지 않는다.
+이 별도 소스는 이번 TimePicker 범위에서 수정하지 않았다.
+
+최신 사용자 지시로 개발 소스에서만 확인했다. 세 패키지 버전은 1.34.0으로 유지하며
+release:version·npm 게시·공개 Storybook 배포·앱 릴리즈·커밋·push를 실행하지 않았다.
+선택의창은 기존 개발 소스 adapter로 소비하며 설치된 1.34.0 패키지에 새 API가 있다고 주장하지 않는다.
+
+
 ## 2026-10-18 화면·구성 22종 승격
 
 ScreenLayout, CompositionLayout, SettingsScreen, SearchScreen, EditorScreen, PermissionScreen,

@@ -16,9 +16,6 @@
     },
     "android": {
       "package": "dev.hjm.designsystem.showcase"
-    },
-    "plugins": [
-      "./plugins/with-ios-scene-lifecycle.cjs"
-    ]
+    }
   }
 }

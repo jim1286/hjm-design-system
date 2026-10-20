@@ -6,6 +6,24 @@ import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+it.each(["ltr", "rtl"] as const)("keeps the selected tab visible after its viewport shrinks (%s)", async direction => {
+  const host = document.createElement("div"); host.style.width = "1000px"; document.body.append(host);
+  const root = createRoot(host), change = vi.fn();
+  try {
+    await act(async () => root.render(<HjmProvider><Tabs direction={direction} label="Topics" value="history" onValueChange={change} overflow="scroll" renderPanels={false} items={["about", "structure", "design", "operations", "quality", "products", "history", "contact"].map(id => ({ id, label: `Portfolio ${id}` }))} /></HjmProvider>));
+    const selected = host.querySelector<HTMLButtonElement>('[aria-selected="true"]')!;
+    const list = selected.parentElement!;
+    const pageTop = window.scrollY;
+    host.style.width = "260px";
+    await expect.poll(() => {
+      const tab = selected.getBoundingClientRect(), rail = list.getBoundingClientRect();
+      return tab.left >= rail.left - 1 && tab.right <= rail.right + 1;
+    }).toBe(true);
+    expect(selected.id).toContain("history");
+    expect(change).not.toHaveBeenCalled();
+    expect(window.scrollY).toBe(pageTop);
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});
 it("follows fractional pager position without committing selection or trapping page gestures", async () => {
   const host = document.createElement("div"); document.body.append(host); host.style.width = "360px";
   const root = createRoot(host), change = vi.fn();

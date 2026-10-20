@@ -9,6 +9,10 @@ import { ImageChoiceGroup } from "../src/image-choice.js";
 // componentId: "image-choice-group"
 const items = [{ id: "a", label: "웃는 얼굴", image: <Text>A</Text> }, { id: "b", label: "윙크", image: <Text>B</Text> }];
 const tiles = (tree: ReactTestRenderer) => {
+  // react-test-renderer has no native layout pass; supply the measured group viewport before interacting.
+  const group = tree.root.findAll(node => typeof node.props.onLayout === "function" && node.props.accessibilityLabel !== undefined && node.props.accessibilityRole === "radiogroup")[0]
+    ?? tree.root.findAll(node => typeof node.props.onLayout === "function" && node.props.accessibilityRole === "list")[0];
+  if (group) act(() => group.props.onLayout({ nativeEvent: { layout: { width: 360 } } }));
   const seen = new Set<string>();
   return tree.root.findAll(node => typeof node.props.onPress === "function" && (node.props.accessibilityRole === "radio" || node.props.accessibilityRole === "checkbox"))
     .filter(node => !seen.has(node.props.accessibilityLabel) && !!seen.add(node.props.accessibilityLabel));

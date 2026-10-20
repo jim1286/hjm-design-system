@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import { control, glyph, radius, typography } from "@hjmds/design-contracts/foundations";
@@ -396,12 +397,12 @@ describe("Native input and navigation intent", () => {
       backgroundColor: lightProviderValue.palette.theme[fieldRecipe.variants.inset.background],
       borderColor: lightProviderValue.palette.theme[fieldRecipe.states.invalid.border],
       borderRadius: radius[fieldRecipe.shapes.large],
-      borderWidth: fieldRecipe.borderWidth,
+      borderWidth: fieldRecipe.states.invalid.borderWidth,
       minHeight: fieldRecipe.multilineMinHeight,
       paddingHorizontal: fieldRecipe.paddingHorizontal,
     });
     expect(flattenStyle(textArea.root.findByType(TextInput).props.style)).toMatchObject({
-      minHeight: fieldRecipe.multilineMinHeight - (fieldRecipe.borderWidth * 2),
+      minHeight: fieldRecipe.multilineMinHeight - (fieldRecipe.states.invalid.borderWidth * 2),
       paddingVertical: fieldRecipe.paddingVertical,
       textAlignVertical: "top",
     });
@@ -828,7 +829,7 @@ describe("modal lifecycle contracts", () => {
         defaultOpen
         onOpenChange={onOpenChange}
         onResult={onResult}
-        returnFocusRef={{ current: {} as View }}
+        returnFocusRef={{ current: {} as ComponentRef<typeof View> }}
         request={{
           mode: "confirm",
           tone: "danger",
@@ -921,7 +922,7 @@ describe("modal lifecycle contracts", () => {
         defaultOpen
         onDismissComplete={onDismissComplete}
         onOpenChange={onOpenChange}
-        returnFocusRef={{ current: {} as View }}
+        returnFocusRef={{ current: {} as ComponentRef<typeof View> }}
         safeAreaInsets={{ bottom: 20 }}
         title="필터"
       />,
@@ -940,7 +941,7 @@ describe("modal lifecycle contracts", () => {
           defaultOpen
           onDismissComplete={onDismissComplete}
           onOpenChange={onOpenChange}
-          returnFocusRef={{ current: {} as View }}
+          returnFocusRef={{ current: {} as ComponentRef<typeof View> }}
           safeAreaInsets={{ bottom: 20 }}
           title="필터"
         />,

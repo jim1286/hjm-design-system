@@ -57,10 +57,16 @@ describe("Timeline descriptor validation", () => {
         id: "a",
         label: "안타",
         timestamp: "1회 초",
+        dateTime: "2026-10-19T00:00:00Z",
         description: "설명",
         tone: "success",
       }),
     ).not.toThrow();
+  });
+
+  it("requires a visible timestamp for a machine-readable date", () => {
+    expect(() => validateTimelineItemDescriptor({id: "a", label: "A", dateTime: "2026-10-19"})).toThrow(/timestamp/);
+    expect(() => validateTimelineItemDescriptor({id: "a", label: "A", timestamp: "Today", dateTime: " "})).toThrow(/dateTime/);
   });
 
   it("accepts an item with only the base collection fields", () => {

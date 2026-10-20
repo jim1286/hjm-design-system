@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import {
   resolveGridLayout,
   type GridDescriptor,
@@ -126,11 +127,11 @@ export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
   headerProps?: LayoutRegionProps;
   mainProps?: LayoutRegionProps;
   footerProps?: LayoutRegionProps;
-  mainRef?: Ref<View>;
+  mainRef?: Ref<ComponentRef<typeof View>>;
 }>;
 
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
-export const Layout = forwardRef<View, LayoutProps>(function Layout({
+export const Layout: ReturnType<typeof forwardRef<ComponentRef<typeof View>, LayoutProps>> = forwardRef<ComponentRef<typeof View>, LayoutProps>(function Layout({
   children,
   header,
   footer,
@@ -200,7 +201,7 @@ export type TextProps = Omit<NativeTextProps, "children"> &
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export const Text = forwardRef<NativeText, TextProps>(function Text(
+export const Text: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>, TextProps>> = forwardRef<ComponentRef<typeof NativeText>, TextProps>(function Text(
   {
     children,
     variant = textRecipe.defaults.variant,

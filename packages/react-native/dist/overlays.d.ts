@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjmds/design-contracts/components/alert-dialog";
@@ -66,7 +67,7 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     size?: DialogSize;
     /** Localized accessible name for the close action. */
     closeLabel: string;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     /** Layout-only placement for the sheet content. Use `size` for height. */
     contentStyle?: HjmCompositionStyleProp;
     /**
@@ -92,14 +93,16 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
 export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, initialFocus, overlayLayer, scrollEnabled, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
+    /** Product eligibility (for example a retry cooldown); cancel remains available. */
+    confirmDisabled?: boolean;
     size?: DialogSize;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     onResult?: (result: AlertDialogResult) => void;
     /** Layout-only placement; semantic size and the recipe own appearance. */
     contentStyle?: HjmCompositionStyleProp;
 }>;
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
-export declare function AlertDialog({ open, defaultOpen, onOpenChange, request, size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }: AlertDialogProps): import("react").JSX.Element;
+export declare function AlertDialog({ open, defaultOpen, onOpenChange, request, confirmDisabled, size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }: AlertDialogProps): import("react").JSX.Element;
 export type SheetPlacement = "bottom" | "start" | "end";
 export type SheetSize = keyof typeof sheetRecipe.sizes;
 export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDetails["reason"]> & OverlayTitleProps & Readonly<{
@@ -115,9 +118,11 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     size?: SheetSize;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
+    /** Downward handle dismissal. Bottom sheets enable it by default; side reading panels opt in. */
+    swipeDirection?: "down";
     /** Localized accessible name for the close action. */
     closeLabel: string;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     safeAreaInsets?: Partial<Insets>;
     onDismissComplete?: (detail: Readonly<{
         reason: SheetDismissReason;
@@ -134,7 +139,7 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     initialFocus?: InitialFocusMode;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, initialFocus, ...modalProps }: SheetProps): import("react").JSX.Element;
+export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, swipeDirection, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, showClose, onShow, initialFocus, ...modalProps }: SheetProps): import("react").JSX.Element;
 export type ImmersiveOverlayOpenChangeReason = "exit-action" | "back";
 export type ImmersiveOverlayProps = Readonly<{
     open: boolean;
@@ -151,7 +156,7 @@ export type ImmersiveOverlayProps = Readonly<{
     tools?: ReactNode;
     /** Status copy above the action row (keep-awake state, a notice). */
     status?: ReactNode;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     onShow?: ModalProps["onShow"];
 }>;
 /**

@@ -9,7 +9,7 @@ export function focusAccessibleHost(target) {
         return;
     }
     const handle = findNodeHandle(target);
-    if (handle !== null)
+    if (typeof handle === "number")
         AccessibilityInfo.setAccessibilityFocus(handle);
 }
 //# sourceMappingURL=accessible-focus.js.map

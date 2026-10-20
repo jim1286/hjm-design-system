@@ -95,3 +95,23 @@ describe("AlertDialog actions", () => {
     renderer.unmount();
   });
 });
+
+
+it("preserves an open error session across external confirm locks and still permits cancellation", async () => {
+  const run=vi.fn().mockRejectedValue(new Error('temporary failure')), close=vi.fn();
+  const value:AlertDialogRequest={...request,onConfirm:run,fallbackErrorMessage:'Try again'};
+  let tree!:ReactTestRenderer;
+  const node=(locked:boolean)=><HjmNativeProvider reducedMotion><AlertDialog open request={value} confirmDisabled={locked} onOpenChange={close}/></HjmNativeProvider>;
+  const button=(label:string)=>tree.root.findAllByType(Pressable).find(n=>n.props.accessibilityLabel===label)!;
+  act(()=>{tree=create(node(true));});
+  expect(button('정리하기').props.disabled).toBe(true);
+  await act(async()=>{button('정리하기').props.onPress();});expect(run).not.toHaveBeenCalled();
+  act(()=>tree.update(node(false)));
+  await act(async()=>{button('정리하기').props.onPress();});expect(run).toHaveBeenCalledOnce();
+  expect(JSON.stringify(tree.toJSON())).toContain('Try again');
+  act(()=>tree.update(node(true)));
+  expect(JSON.stringify(tree.toJSON())).toContain('Try again');
+  expect(button('취소').props.disabled).toBe(false);
+  act(()=>button('취소').props.onPress());expect(close).toHaveBeenCalledWith(false,expect.anything());
+  act(()=>tree.unmount());
+});

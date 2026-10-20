@@ -1,3 +1,5 @@
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import type { ComponentRef } from "react";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import {
@@ -90,7 +92,7 @@ function defaultInputMode(min: number, step: number): "decimal" | "numeric" | "t
 }
 
 /** Expo-independent exact numeric input sharing the Web range/step resolver. */
-export const NumberField = forwardRef<TextInput, NumberFieldProps>(
+export const NumberField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, NumberFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, NumberFieldProps>(
   function NumberField(
     {
       label,
@@ -231,7 +233,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
                 ? numberFieldRecipe.frame.focusBorder
                 : numberFieldRecipe.frame.border, palette),
             borderRadius: tokens.radius[numberFieldRecipe.frame.radius],
-            borderWidth: error || focused ? 2 : numberFieldRecipe.frame.borderWidth,
+            borderWidth: error ? fieldRecipe.states.invalid.borderWidth : focused ? 2 : numberFieldRecipe.frame.borderWidth,
             direction: environment.direction,
             flexDirection: "row",
             minHeight: recipe.minHeight,

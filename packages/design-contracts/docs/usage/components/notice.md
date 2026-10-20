@@ -88,11 +88,13 @@ import { Notice } from "@hjmds/react-native/feedback";
 | --- | --- | --- |
 | 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 1(`stroke.default`), radius `radius.md` 12 | `noticeRecipe` |
 | 간격 | 안쪽 `spacing.md` 16, 아이콘·문구·행동 사이 `spacing.sm` 12, 제목·설명 사이 `spacing.xxs` 4. 이웃 블록과는 `layout.contentGap` 16 | `noticeRecipe`, `.hjm-notice*` |
-| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래**. 아이콘·제목 첫 줄·(Web) 행동은 한 첫 줄 기준에 가운데를 맞춘다. 기준 높이는 행동이 없으면 제목 줄 높이(`1lh`), Web 행동이 있으면 small 버튼 높이 36(`control.buttonHeight.small`)이고 추가 줄은 아래로 늘어난다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
+| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래**. Web은 제목·설명 전체 묶음과 행동의 세로 중심을 행 높이의 중앙에 맞춘다. 첫 줄에 버튼 높이 기반 여백을 더하지 않는다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
 | 고정·스크롤 | 본문 흐름 안. 먼저 읽어야 하는 경고·입력 오류는 영향을 받는 내용 바로 위(화면 상태는 제목 아래, 폼 검증은 제출 버튼 위). 제출 후 성공·실패 결과는 구성 지침이 지정한 행동 인접 위치에 둔다. 떠 있거나 고정되지 않고 함께 스크롤되며 여러 개 쌓지 않는다 | — |
 | 좁은 폭·큰 글자 | Web은 문구 칸이 60% 아래로 줄면 행동이 다음 줄로 감긴다. 제목·설명은 줄바꿈된다 | `.hjm-notice__content`(`flex: 1 1 60%`) |
 
 ## 꼭 지킬 것
+
+Web은 기본적으로 danger를 assertive, 나머지를 polite로 알린다. 배경 갱신 실패처럼 기존 본문을 유지하며 끼어들지 않아야 할 때는 공개 HTML prop `aria-live="polite"`를 전달한다. 2026-10-19 번뚝 팔로우 목록에서 전달한 값이 덮어써지던 구현을 보완했으며 기본값은 유지한다(개발 소스, 미게시). Native는 기존 `announcement`를 사용한다.
 
 - 제목·설명·행동 문구는 i18n 키로 넣는다. 아이콘은 제품 소유 자산이고 색은 tone이 정한다.
 - 배치는 `layoutStyle`로만 한다. 색·padding·radius를 `style`/`className`으로 덮지 않는다. Native `style`은 제거된 속성이다.
@@ -117,3 +119,5 @@ import { Notice } from "@hjmds/react-native/feedback";
 ## 근거
 
 - 첫 줄 기준: 2026-10-17 정렬 실측(Web 402·1280, 검색 오류 Notice). 행 끝 행동 버튼 가운데 195, 제목 첫 줄 가운데 187로 8px 어긋났고 Web 아이콘 칸에는 규칙이 없었다. Toast의 첫 줄 기준(c053d956)과 같은 방식으로 맞춘 뒤 아이콘·제목 첫 줄·행동 모두 195로 측정됐다.
+
+- 2026-10-19 번뚝 댓글 오류 안내에서 두 줄 문구와 재시도 버튼의 높이 중심이 달라 보인다는 사용자 지적을 반영했다. Web은 첫 줄 offset을 제거하고 행의 `align-items: center`로 전체 문구·버튼을 맞춘다. 393px 개발 화면에서 문구·버튼·카드 중심이 모두 239.8046875px로 일치했다. Native의 기존 아래 행동 배치는 이번 수정 범위가 아니다. 개발 소스 수정이며 미게시다.

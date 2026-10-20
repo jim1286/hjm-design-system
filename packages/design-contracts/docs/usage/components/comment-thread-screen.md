@@ -92,8 +92,17 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 `CommentThreadItem`: `id`, `parentId`(`null`이면 최상위), `author`, `body`(노드), `timeLabel`, `likeCountLabel`,
 `likeIcon`, `likeLabel`은 필수. 선택은 `bodyText`(작성자와 본문을 한 줄 흐름으로), `avatar`, `likeAction`(기본
 좋아요 버튼 교체, `null`이면 생략), `actions`(하트 바로 옆의 더보기 메뉴 등), `canReply`(기본: 최상위만 true), `replyDisabled`.
+최상위 항목에는 `repliesCount`·`repliesNotice`·`repliesFooter`를 연결할 수 있다(checkout 변경·미게시).
+`repliesCount`는 0 이상 정수인 서버 전체 개수이며 생략하면 받은 답글 수다. 실제 받은 수보다 작으면
+받은 수를 표시한다. 원글 본문 뒤 답글 들여쓰기 영역에 펼침 버튼 → (펼쳤을 때) repliesNotice → 답글 행 → repliesFooter 순으로 둔다.
+받은 답글이 없어도 전체 개수·복구 안내·더 보기 슬롯으로 답글 영역을 열 수 있다. 접으면 세 영역이 함께 숨는다.
+조회·커서·재시도·문구·데이터 보존은 제품이 맡고 오류/페이지 행동은 HJM Notice·Button/LoadMore로 공급한다.
+Spint에서 페이지 오류와 더 보기가 원글 body에 들어가 답글을 접어도 남던 2026-10-18 이관이 확장 근거다.
+실행 원본: [Web 답글 복구](../../../../../showcase/web/src/components/comment-thread-replies-preview.tsx),
+[Native 답글 복구](../../../../../showcase/native/src/components/comment-thread-replies-preview.tsx).
+
 `reactions`(미게시)를 주면 작성자·본문을 길게 눌러 ChatMessage와 같은 메뉴(반응 줄 → 미리보기 → 시각 → 답글 달기 → `menuActions` → `reportAction` 신고)가 열린다. 답글 달기는 `canReply`일 때 `onReply`로 자동 연결되고, 아이콘은 `reactions.replyIcon`으로 넘긴다. `reactionSummary`는 답글 달기 앞에 놓는 선택된 반응 표시 슬롯이다. 댓글의 기본은 반응 옵션을 비운(`options: []`) 동작 목록 전용 메뉴다(답글 달기 → `menuActions` → 신고, 인스타그램 댓글 길게 누르기 실측). 댓글 이모지는 길게 누르기가 아니라 작성창의 `quickInserts` 이모지 줄로 입력한다. 반응 줄은 제품이 명시적으로 댓글 반응을 운영할 때만 옵션을 넣는다. 댓글 메뉴에는 시각 제목을 두지 않는다(행에 이미 보인다).
-`media`(미게시, 선택)는 본문 아래 사진·스티커이며 최대 폭 `commentThreadRecipe.mediaMaxWidth` 160, radius 12로 감싼다. 사진 여러 장을 한 장씩 불러와야 하면 `media` 대신 `mediaAlbum`, 시각을 답글 줄로 옮기려면 `timePlacement: "actions"`, 수정·신고·차단 양식은 `panel`을 쓴다(미게시, [CommentThreadRow](comment-thread-row.md#축과-기본값)). `likeCountLabel`은 하트 아래 숫자만(예: "15") 넣고 0이면 빈 문자열로 숨긴다. 개수를 포함한 전체 문장은 `likeLabel`에 둔다.
+`media`(미게시, 선택)는 본문 아래 사진·스티커이며 최대 폭 `commentThreadRecipe.mediaMaxWidth` 160, radius 12로 감싼다. 호스트는 기본 폭 160과 부모 기준 최대 폭 100%를 함께 제공하므로, percentage 폭 이미지도 별도 제품 썸네일 틀 없이 비율을 유지한다. Spint 사진의 본문 내 배치를 media 슬롯으로 옮기면서 확인한 계약이다. 사진 여러 장을 한 장씩 불러와야 하면 `media` 대신 `mediaAlbum`, 시각을 답글 줄로 옮기려면 `timePlacement: "actions"`, 수정·신고·차단 양식은 `panel`을 쓴다(미게시, [CommentThreadRow](comment-thread-row.md#축과-기본값)). `likeCountLabel`은 하트 아래 숫자만(예: "15") 넣고 0이면 빈 문자열로 숨긴다. 개수를 포함한 전체 문장은 `likeLabel`에 둔다.
 
 ## 배치
 
@@ -113,13 +122,13 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 아바타 `commentThreadRecipe.avatarSize` 32, 답글 아바타 `replyAvatarSize` 24(제품은 이 크기로 넘긴다); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요(44 터치 영역)·`actions`를 한 행으로, 좋아요 수는 하트 아래 가운데; 답글·펼침은 흐린 글자 버튼(caption, 굵게) | `commentThreadRecipe`, Web·Native `CommentThreadRow` |
 | 간격 | 화면 padding `spacing.md` 16; 댓글 행 사이 `rowGap` 12(최상위·답글 동일); 답글 묶음은 부모 글 열에 맞춰 `replyIndent` 40 들여쓰기; 아바타–본문 `avatarGap` 8; 작성자·본문·답글 줄 사이 `lineGap` 2; 작성자–시각 `spacing.xxs` 4; 좋아요–actions `spacing.xxs` 4 | `commentThreadRecipe` |
-| 순서·정렬 | 최상위 댓글(아바타 → 작성자·시각 → 본문 → 답글 달기) + 행 오른쪽 좋아요 → `actions` → `commentMenu` 세로 점 버튼(끝), 그 아래 좋아요 수 → 답글 펼침 → 펼친 답글 → … → `threadFooter` → composer(footer) | 렌더 순서 |
+| 순서·정렬 | 최상위 댓글(아바타 → 작성자·시각 → 본문 → 답글 달기) + 행 오른쪽 좋아요 → `actions` → `commentMenu` 세로 점 버튼(끝), 그 아래 좋아요 수 → 답글 펼침 → 펼친 repliesNotice → 답글 → repliesFooter → … → `threadFooter` → composer(footer) | 렌더 순서 |
 | 고정·스크롤 | 헤더·composer 고정, 댓글은 본문 화면 스크롤(`scroll` 기본 `"screen"`); composer는 `ready`·`empty`에서만 | `ScreenLayout`, `screen-flows.tsx` |
 | 좁은 폭·큰 글자 | 시각·좋아요 수·답글 버튼 줄과 작성자 줄은 줄바꿈(`flexWrap: "wrap"`); 답글은 한 단계만 들여써 좁은 폭에서도 본문 폭을 지킨다 | `screen-flows.tsx` |
 
 ## 꼭 지킬 것
 
-- 진입 포커스(`initialFocus`)는 페이지에서 기본 `first-input`이다(1.33.0 정책 변경). 하단 시트 안에서는 중첩 화면·작성창 모두 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스)를 따른다.
+- 진입 포커스(`initialFocus`)는 페이지에서 기본 `first-input`이다(1.33.0 정책 변경). 상단·본문 입력만 대상이며 하단 `composer`는 자동 포커스하지 않는다(2026-10-18 후속 요청, checkout 변경·미게시). 하단 시트 안에서는 중첩 화면·작성창 모두 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스)를 따른다.
 
 - id는 비어 있지 않고 유일해야 하며, 답글의 `parentId`는 `items` 안의 **최상위** 댓글이어야 한다. 아니면 렌더 중
   `TypeError`가 난다. 답글의 답글은 표현하지 않으므로 제품이 최상위로 평탄화한다.

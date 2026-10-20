@@ -328,3 +328,12 @@ theme에서 역할을 읽는다. 다중 선택·비활성·같은 항목/초점�
 Web 10종 light/dark 실제 스타일·키보드와 Native 모의 호스트의 상태 유지, 명시적 중첩
 profile/neutral 복귀를 검증했다. 이 수정의 실제 Native 기기·AT·Release 성능·npm 게시는
 [QA](../../../docs/qa/2026-10-07-design-profile-research.md)와 구분하는 미확인 범위다.
+
+### 일반 버튼 기본값 (미게시)
+
+`controls.button?: { appearance?: "flat" | "raised"; shape?: "rounded" | "pill" }`은 제품의 공통 버튼 표현을 한 번 선택한다.
+생략하면 기존 프로필/기본값을 유지한다. 정규화된 button에는 두 값이 모두 있고 개별 Button prop이 이를 이긴다.
+이 데이터는 frame 선택만 소유하며 disabled/loading/선택/실행·포커스·측정은 기존 HJM Button이 계속 맡는다.
+입체 버튼이 필요했던 다에리의 제품 상태 엔진을 없애기 위해 추가했다. 앱 자체의 햅틱 허용/전송 요청은 제품에 남긴다.
+Native에서 controls만 선택하는 neutral 서체 프로필은 호스트의 `fonts="pretendard"` 설정을 유지하고,
+프로필에 별도 UI 서체를 명시하면 그 서체를 우선한다.

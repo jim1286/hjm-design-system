@@ -2,6 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { keyboardTransitionDuration, resolveKeyboardAvoidanceBehavior, resolveKeyboardInset, } from "@hjmds/design-contracts/components/native-platform";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Keyboard, LayoutAnimation, Platform, TextInput, View, } from "react-native";
+import { inputVisibilityFrame } from "./internal/field-visibility.js";
 /**
  * Keeps bottom actions above the keyboard. Products were each choosing
  * `KeyboardAvoidingView`'s behavior themselves and re-discovering that a
@@ -58,7 +59,8 @@ export function useScrollFocusedInputIntoView(scroll, enabled = true, margin = 1
         if (!enabled)
             return;
         const shown = Keyboard.addListener("keyboardDidShow", () => {
-            const input = TextInput.State.currentlyFocusedInput?.();
+            const focused = TextInput.State.currentlyFocusedInput?.();
+            const input = focused ? inputVisibilityFrame(focused) : null;
             const view = scroll.current;
             if (!input || !view || typeof input.measureInWindow !== "function")
                 return;

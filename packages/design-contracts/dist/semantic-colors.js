@@ -26,6 +26,8 @@ export const semanticColors = {
         brand: themeColor("contentBrand"),
         danger: themeColor("danger"),
         inverse: themeColor("onPrimary"),
+        // Status fills are independent of a product's primary button contrast pair.
+        statusInverse: themeColor("onStatusFill"),
     },
     border: {
         subtle: themeColor("border", 0.7),

@@ -1341,6 +1341,28 @@ export declare const behaviorRegistry: {
         };
         readonly scenarios: readonly ["visible-label-or-accessibility-label-names-trigger", "trigger-shows-the-product-formatted-display-value-or-placeholder", "popover-and-sheet-content-reuse-the-calendar-grid-contract-unchanged", "activating-an-enabled-date-commits-selection-and-closes", "disabled-dates-remain-focusable-but-never-commit-or-close", "clear-commits-null-and-closes-without-reopening", "escape-closes-without-commit-and-restores-trigger-focus", "outside-press-closes-without-commit", "controlled-owner-may-defer-a-selection-close-request", "changing-the-focused-month-never-changes-or-clears-the-selection", "range-selection-is-not-part-of-the-contract"];
     };
+    readonly timePicker: {
+        readonly controlled: readonly ["value", "onValueChange"];
+        readonly inputs: readonly ["labels", "minuteStep", "isTimeUnavailable", "presentation"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "readOnly"];
+            readonly value: readonly ["empty", "partial", "selected"];
+            readonly interaction: readonly ["closed", "editing"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button", "dialog", "listbox", "option"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space", "Escape", "ArrowUp", "ArrowDown", "Home", "End"];
+            readonly focus: "roving";
+            readonly dismiss: readonly ["action", "escape", "outside", "blur"];
+        };
+        readonly native: {
+            readonly roles: readonly ["button", "dialog", "radio"];
+            readonly states: readonly ["disabled", "expanded", "checked"];
+            readonly actions: readonly ["activate", "dismiss"];
+            readonly dismiss: readonly ["action", "back", "outside"];
+        };
+        readonly scenarios: readonly ["two-columns-share-one-draft-and-overlay", "column-selection-never-dismisses", "confirm-commits-a-complete-available-HH:mm", "cancel-discards-edits", "external-value-reconciles-draft", "inline-parent-owns-confirmation", "unavailable-options-never-activate", "midnight-is-a-valid-value"];
+    };
     readonly sidePanel: {
         readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "dismissPolicy"];
         readonly defaults: {

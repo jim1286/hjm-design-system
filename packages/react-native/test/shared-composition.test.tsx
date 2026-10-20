@@ -45,12 +45,12 @@ it("keeps prompt semantics and forwards host drag callbacks without nesting a sc
   expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);
   act(() => tree!.unmount());
 });
-it("preserves a title action and announces its subtitle context", () => {
+it("preserves a title action while omitting the retired toolbar subtitle", () => {
   let tree: ReactTestRenderer; const open=vi.fn();
   act(() => {tree=create(<HjmNativeProvider><TopBar title="도구" subtitle="설명" onTitlePress={open} /></HjmNativeProvider>);});
-  const action=tree!.root.findAll(node=>node.props.accessibilityRole==="button" && node.props.accessibilityLabel==="도구. 설명")[0]!;
+  const action=tree!.root.findAll(node=>node.props.accessibilityRole==="button" && node.props.accessibilityLabel==="도구")[0]!;
   act(()=>action.props.onPress()); expect(open).toHaveBeenCalledOnce();
-  expect(JSON.stringify(tree!.toJSON())).toContain("설명");act(()=>tree!.unmount());
+  expect(JSON.stringify(tree!.toJSON())).not.toContain("설명");act(()=>tree!.unmount());
 });
 
 import { ProfileSummary } from '../src/screen-flows.js';

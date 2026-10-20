@@ -21,6 +21,9 @@ function PageIndicatorPreview() {
     </div>
     <PageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page}
       onCurrentIndexChange={go} composeAccessibleName={pageIndicatorExample.pageName} />
+    {/* The same confirmed pager position can also be displayed without another set of targets. */}
+    <PageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page}
+      interactive={false} maxVisibleDots={2} onCurrentIndexChange={go} composeAccessibleName={pageIndicatorExample.pageName} />
   </div>;
 }
 

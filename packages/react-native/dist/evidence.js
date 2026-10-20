@@ -15,6 +15,7 @@ const nativeScenarioGaps = {};
 const nativeAction = (file = stableCoreProofFile) => ({ proofs: [{ scenarios: ["native-actions"], file }] });
 const nativeActionAndLongCopy = (file) => ({ proofs: [{ scenarios: ["native-actions", "long-copy"], file }] });
 const claimExtras = {
+    "time-picker": nativeAction("test/time-picker.test.tsx"),
     "design-system-provider": { exportNames: ["useHjmNativeTheme"] },
     link: nativeAction(),
     field: nativeAction(),

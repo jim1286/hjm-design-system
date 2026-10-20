@@ -8,7 +8,8 @@ import { classNames } from "./internal.js";
 import { useHjmDensityDefault } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, className, children, layoutStyle, style, ...props }, ref) {
-    return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: trailing }))] }));
+    const iconContext = { color: "currentColor", size: badgeRecipe.sizes[size].iconSize };
+    return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof leading === "function" ? leading(iconContext) : leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof trailing === "function" ? trailing(iconContext) : trailing }))] }));
 });
 export const Tag = forwardRef(function Tag({ children, tone, className, layoutStyle, style, ...props }, ref) {
     const descriptor = resolveTagDescriptor({
@@ -17,26 +18,48 @@ export const Tag = forwardRef(function Tag({ children, tone, className, layoutSt
     });
     return (_jsx("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-tag", className), "data-tone": descriptor.tone, children: _jsx("span", { className: "hjm-tag__label", children: descriptor.label }) }));
 });
-export const Card = forwardRef(function Card({ title, description, leading, media, actions, headingLevel = cardRecipe.defaults.headingLevel, selected = cardRecipe.defaults.selected, onActivate, disabled = false, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, radius, className, children, ...props }, ref) {
-    if (onActivate && !props["aria-label"]?.trim()) {
+export const Card = forwardRef(function Card({ title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, mediaAction, actions, headerActions, headingLevel = cardRecipe.defaults.headingLevel, 
+// An omitted selection is an ordinary action, not an unpressed toggle.
+selected, onActivate, href, renderLink, disabled = false, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, radius, className, children, ...props }, ref) {
+    if (href !== undefined && (!href.trim() || onActivate))
+        throw new TypeError("Card href requires a destination and cannot combine with onActivate");
+    if (renderLink && href === undefined)
+        throw new TypeError("Card renderLink requires href");
+    if ((onActivate || href !== undefined) && !props["aria-label"]?.trim()) {
         throw new TypeError("Interactive Card requires aria-label");
     }
-    const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
+    if (mediaAction && (onActivate || href !== undefined || !media || !mediaAction.label.trim()))
+        throw new TypeError("Card mediaAction requires passive media, a label, and no whole-card activation");
+    if (backgroundMedia && (media || mediaAction || onActivate || href !== undefined))
+        throw new TypeError("Card backgroundMedia is decorative and cannot combine with media, mediaAction, onActivate or href");
+    if ((backgroundInteraction !== undefined || mediaBadges !== undefined) && !backgroundMedia)
+        throw new TypeError("Card backgroundInteraction/mediaBadges require backgroundMedia");
+    const hasHeader = leading !== undefined || title !== undefined || description !== undefined || headerActions !== undefined;
     // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete). A root button cannot
     // contain the action buttons, so the root stays an article and an overlay button carries the card's name and state.
-    const overlay = onActivate !== undefined && Boolean(actions);
+    const overlay = href !== undefined || (onActivate !== undefined && Boolean(actions || headerActions));
     const { "aria-label": activationLabel, ...rootProps } = props;
     const activate = () => { if (!disabled)
         onActivate?.(); };
+    const linkProps = {
+        href: disabled ? undefined : href, role: "link", className: "hjm-card__activator",
+        "aria-label": activationLabel, "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : undefined,
+    };
+    // Link activation belongs to the shared card; a product-owned stretched link was its own second layout (Diairy).
+    const destination = href === undefined ? null : !disabled && renderLink ? renderLink(linkProps) : _jsx("a", { ...linkProps });
     return (_jsxs(Surface, { ...(overlay ? rootProps : props), ref: ref, as: onActivate && !overlay ? "button" : "article", ...(onActivate && !overlay ? {
             type: "button", disabled, "aria-pressed": selected,
             "data-interactive": true, onClick: activate,
-        } : {}), ...(overlay ? { "data-activation": "overlay" } : {}), tone: selected ? cardRecipe.selectedTone : tone, bordered: bordered, ...(radius === undefined ? {} : { radius }), className: classNames("hjm-card", className), "data-state": onActivate && disabled ? "disabled" : selected ? "selected" : "idle", style: { "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
-            "--hjm-card-pressed-opacity": cardRecipe.interaction.pressedOpacity, ...props.style }, children: [media ? _jsx("div", { className: "hjm-card__media", "data-slot": "media", children: media }) : null, _jsxs("div", { className: "hjm-card__body", "data-slot": "body", style: { padding: surfaceGeometry.paddings[padding] }, children: [hasHeader ? (_jsxs("div", { className: "hjm-card__header", "data-slot": "header", children: [leading === undefined ? null : (_jsx("span", { className: "hjm-card__leading", "data-slot": "leading", children: leading })), _jsxs("div", { className: "hjm-card__copy", children: [title === undefined
+        } : {}), ...(overlay ? { "data-activation": "overlay" } : {}), tone: selected ? cardRecipe.selectedTone : tone, bordered: bordered, ...(radius === undefined ? {} : { radius }), className: classNames("hjm-card", className), "data-background-media": backgroundMedia ? true : undefined, "data-state": (onActivate || href !== undefined || mediaAction) && disabled ? "disabled" : selected ? "selected" : "idle", style: { "--hjm-card-background-scrim": cardRecipe.backgroundMedia.scrim, "--hjm-card-background-foreground": cardRecipe.backgroundMedia.foreground, "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
+            "--hjm-card-pressed-opacity": cardRecipe.interaction.pressedOpacity, ...props.style }, children: [backgroundMedia ? _jsxs("div", { className: "hjm-card__background", "aria-hidden": "true", children: [backgroundMedia, _jsx("span", { className: "hjm-card__scrim" })] }) : null, backgroundInteraction === undefined ? null : _jsx("div", { className: "hjm-card__background-interaction", "data-slot": "background-interaction", children: backgroundInteraction }), mediaBadges === undefined ? null : _jsx("div", { className: "hjm-card__media-badges", "data-slot": "media-badges", children: mediaBadges }), media ? _jsx("div", { className: "hjm-card__media", "data-slot": "media", children: mediaAction ? _jsxs("button", { type: "button", className: "hjm-card__media-action", "aria-label": mediaAction.label, disabled: disabled, onClick: () => { if (!disabled)
+                        mediaAction.onActivate(); }, children: [media, mediaAction.icon ? _jsx("span", { className: "hjm-card__media-icon", "aria-hidden": "true", style: { insetInlineEnd: cardRecipe.mediaAction.inset, insetBlockEnd: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter }, children: mediaAction.icon({ color: "currentColor", size: cardRecipe.mediaAction.iconSize }) }) : null] }) : media }) : null, _jsxs("div", { className: "hjm-card__body", "data-slot": "body", style: { padding: surfaceGeometry.paddings[padding] }, children: [badges === undefined ? null : _jsx("div", { className: "hjm-card__badges", "data-slot": "badges", children: badges }), hasHeader ? (_jsxs("div", { className: "hjm-card__header", "data-slot": "header", children: [leading === undefined ? null : (_jsx("span", { className: "hjm-card__leading", "data-slot": "leading", children: leading })), _jsxs("div", { className: "hjm-card__copy", children: [title === undefined
                                         ? null
-                                        : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), overlay ? (_jsx("button", { type: "button", className: "hjm-card__activator", "data-slot": "activator", "aria-label": activationLabel, "aria-pressed": selected, disabled: disabled, onClick: activate })) : null, actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
+                                        : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] }), headerActions === undefined ? null : _jsx("div", { className: "hjm-card__header-actions", "data-slot": "header-actions", children: headerActions })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), destination, overlay && href === undefined ? (_jsx("button", { type: "button", className: "hjm-card__activator", "data-slot": "activator", "aria-label": activationLabel, "aria-pressed": selected, disabled: disabled, onClick: activate })) : null, actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
-export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
+export function QuoteCard({ children, attribution, renderMark, ...props }) {
+    return _jsx(Card, { ...props, leading: _jsx("span", { className: "hjm-quote-card__mark", "aria-hidden": "true", children: renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? "“" }), children: _jsxs("blockquote", { className: "hjm-quote-card__body", children: [children, attribution === undefined ? null : _jsx("footer", { children: _jsx(Text, { variant: "caption", tone: "muted", children: attribution }) })] }) });
+}
+export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the
     // rules of hooks on the very first row that passes `density`.
     const densityDefault = useHjmDensityDefault({

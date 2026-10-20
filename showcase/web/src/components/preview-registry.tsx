@@ -1,3 +1,4 @@
+import { TimePicker as HjmTimePicker } from "@hjmds/react/time-picker";
 import { DialogPreview, AlertDialogPreview } from "./dialog-examples.js";
 // 2026-10-17 screen compositions registered.
 import { ScreenLayoutPreview, CompositionLayoutPreview, SettingsScreenPreview, SearchScreenPreview, EditorScreenPreview, PermissionScreenPreview, OnboardingScreenPreview, ModerationScreenPreview, ChatScreenPreview, NotificationInboxScreenPreview, CommentThreadScreenPreview, ListDetailScreenPreview, MediaSelectionScreenPreview, ProfileScreenPreview, ChatMessagePreview, NotificationRowPreview, NotificationItemPreview, CommentThreadRowPreview, ProfileSummaryPreview, IconTilePreview, MessageComposerPreview, PhotoSourceSheetPreview, TypingIndicatorPreview, ChatDateSeparatorPreview } from "../patterns/ScreenComponents.previews.js";
@@ -411,6 +412,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "NumberField": return <HjmNumberField label={numberFieldExample.label} min={numberFieldExample.min} max={numberFieldExample.max} defaultValue={numberFieldExample.value} decrementLabel={numberFieldExample.decrementLabel} incrementLabel={numberFieldExample.incrementLabel} />;
     case "Slider": return <HjmSlider label={sliderExample.label} min={sliderExample.min} max={sliderExample.max} defaultValue={sliderExample.value} getValueText={sliderExample.valueText} />;
     case "Form": return <ObservablePreview>{({ setMessage }) => <HjmForm onSubmit={() => setMessage(formExample.result)} actions={<HjmButton type="submit">{formExample.submit}</HjmButton>}><HjmSearchField label={formExample.field.label} clearLabel={formExample.field.clearLabel} defaultValue={formExample.field.value} /></HjmForm>}</ObservablePreview>;
+    case "TimePicker": return <TimePickerPreview />;
     case "DatePicker": return <DatePickerPreview />;
     case "FilePicker": return <ObservablePreview>{({ setMessage }) => <HjmFilePicker buttonLabel={filePickerExample.buttonLabel} descriptor={{ mode: "multiple", accept: ["image/*"], maxCount: 4 }} dropzoneLabel={filePickerExample.dropzoneLabel} hint={filePickerExample.hint} label={filePickerExample.label} onSelect={() => setMessage(filePickerExample.result)} />}</ObservablePreview>;
     case "Checkbox": return <HjmCheckbox label={checkboxExample.label} description={checkboxExample.description} defaultChecked={checkboxExample.checked} />;
@@ -1089,4 +1091,9 @@ function SkipNavPreview() {
 function PageIndicatorRegistryPreview() {
   const [page, setPage] = useState(0);
   return <HjmPageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page} onCurrentIndexChange={setPage} composeAccessibleName={pageIndicatorExample.pageName} />;
+}
+
+function TimePickerPreview() {
+  const [value, setValue] = useState<string | null>("14:30");
+  return <HjmTimePicker value={value} onValueChange={setValue} labels={{ label: "시간", hour: "시", minute: "분", placeholder: "시간 선택", confirm: "선택 완료", cancel: "취소" }} />;
 }

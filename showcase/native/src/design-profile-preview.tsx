@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Tabs, type TabsAppearance } from "@hjmds/react-native/navigation";
 import { CodeBlock } from "@hjmds/react-native/code-block";
 import { useMemo, useEffect, useRef, useState } from "react";
@@ -68,8 +69,8 @@ export function RecordSample() {
 function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
   const [open, setOpen] = useState<"dialog" | "sheet" | null>(null);
   const [draft, setDraft] = useState<string>(copy.initial);
-  const dialogTrigger = useRef<View>(null);
-  const sheetTrigger = useRef<View>(null);
+  const dialogTrigger = useRef<ComponentRef<typeof View>>(null);
+  const sheetTrigger = useRef<ComponentRef<typeof View>>(null);
   const [toastRevision, setToastRevision] = useState(0);
   const fields = <Stack gap="md"><TextField label={copy.overlayDraft} value={draft} onValueChange={setDraft} /><Button onPress={onNextTheme}>{copy.nextTheme}</Button></Stack>;
   return <Collapsible trigger={copy.chrome} defaultOpen><Stack gap="md">
@@ -94,7 +95,7 @@ const materialBlur = loadSurfaceBlur();
 function ProfileMaterialSample({ onNextTheme }: { onNextTheme: () => void }) {
   const [draft, setDraft] = useState<string>(copy.initial);
   const { colors } = useHjmNativeTheme();
-  const target = useRef<View>(null);
+  const target = useRef<ComponentRef<typeof View>>(null);
   const Target = materialBlur?.BlurTargetView ?? View;
   const surfaceEffects = useMemo(() => ({
     insetShadows: Platform.OS === "ios" || (Platform.OS === "android" && Number(Platform.Version) >= 29), // Expo 57 uses New Architecture; other products must confirm their own host.

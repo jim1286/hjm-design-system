@@ -3,12 +3,12 @@ import { validateTasks } from '@hjmds/design-contracts/task-list';
 import { Checkbox } from './selection.js';
 import { List } from './advanced-display.js';
 /** Canonical Checkbox/List own semantics; optional collection composition keeps drag peers out of this entry. */
-export function TaskList({ label, items, onCompletedChange, disabled = false, emptyContent, renderItemAction, renderCollection, layoutStyle }) {
+export function TaskList({ label, items, onCompletedChange, disabled = false, emptyContent, itemPresentation, renderItemAction, renderCollection, layoutStyle }) {
     validateTasks(items);
     if (!label.trim())
         throw new TypeError('TaskList needs a localized label');
     const renderItem = (item) => {
-        const control = _jsx(Checkbox, { label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
+        const control = _jsx(Checkbox, { ...(itemPresentation === undefined ? {} : { presentation: itemPresentation }), label: item.label, checked: item.completed, disabled: disabled || item.disabled === true, onCheckedChange: completed => onCompletedChange(item.id, completed), ...(item.description === undefined ? {} : { description: item.description }) });
         const action = renderItemAction?.({ item, disabled: disabled || item.disabled === true });
         // The action sits beside Checkbox, never inside its label (pressing it must not toggle completion); long labels wrap
         // inside the checkbox column. A separate action line made each task two to three lines tall (2026-10-17 review).

@@ -1,3 +1,5 @@
+import type { ComponentRef } from "react";
+import { TimePicker } from "@hjmds/react-native/time-picker";
 import { DialogExample, AlertDialogExample } from "./dialog-examples";
 // Component fixtures are kept separate from CSF modules so importing a preview never registers a second story.
 import { Agreement } from "@hjmds/react-native/agreement";
@@ -727,7 +729,7 @@ return (<StoryFrame><Section title={assetExample.title} description={assetExampl
 function EmptyStateExample({ variant }: { variant: PreviewVariant }) {
   const [created, setCreated] = useState(false);
   const [query, setQuery] = useState("");
-  const input = useRef<TextInput>(null);
+  const input = useRef<ComponentRef<typeof TextInput>>(null);
   const found = created && "예시 초안".includes(query.trim());
   const focusSearch = () => input.current?.focus();
   return <StoryFrame><Stack gap="md">
@@ -979,6 +981,7 @@ const examples = {
 "number-field": NumberFieldExample,
 "slider": SliderExample,
 "form": FormExample,
+"time-picker": TimePickerExample,
 "date-picker": DatePickerExample,
 "file-picker": FilePickerExample,
 "checkbox": CheckboxExample,
@@ -1059,3 +1062,8 @@ const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },
   frame: { gap: 16, paddingBottom: 48 },
 });
+
+function TimePickerExample({ variant }: { variant: PreviewVariant }) {
+  const [value, setValue] = useState<string | null>("14:30");
+  return <StoryFrame><TimePicker value={value} onValueChange={setValue} disabled={variant === "disabled"} labels={{ label: "시간", hour: "시", minute: "분", placeholder: "시간 선택", confirm: "선택 완료", cancel: "취소" }} /></StoryFrame>;
+}

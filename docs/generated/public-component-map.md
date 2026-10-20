@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 219개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 225개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -35,6 +35,7 @@
 | BottomNavigationInsetProvider | BottomNavigation | companion-or-alternative | root, ./navigation |
 | Breadcrumb | Breadcrumb | canonical | root, ./breadcrumb, ./navigation |
 | Button | Button | canonical | root, ./actions |
+| ButtonLink | Button | companion-or-alternative | root, ./actions |
 | Calendar | Calendar | canonical | root, ./calendar |
 | Card | Card | canonical | root, ./display |
 | Carousel | Carousel | canonical | root, ./carousel |
@@ -113,6 +114,7 @@
 | List | List | canonical | root, ./display |
 | ListDetailScreen | ListDetailScreen | canonical | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./display |
+| ListSeparator | List | companion-or-alternative | root, ./display |
 | LoadMore | LoadMore | canonical | root, ./navigation |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
@@ -143,6 +145,7 @@
 | Pagination | Pagination | canonical | root, ./navigation, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
+| PendingContent | Spinner | companion-or-alternative | root, ./feedback |
 | PermissionScreen | PermissionScreen | canonical | ./screen-flows |
 | PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
@@ -153,6 +156,7 @@
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
+| QuoteCard | Card | companion-or-alternative | root, ./display |
 | RadarChart | Chart | companion-or-alternative | ./chart |
 | Radio | Radio | canonical | root, ./selection |
 | RadioGroup | RadioGroup | canonical | root, ./selection |
@@ -174,6 +178,7 @@
 | SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
 | SettingsScreen | SettingsScreen | canonical | ./screens |
 | Sheet | Sheet | canonical | root, ./overlays |
+| ShortcutRail | Chip | companion-or-alternative | ./shortcut-rail |
 | ShortcutRecorder | 별도 보조 기능 | supplemental | ./authoring-tools |
 | Sidebar | Sidebar | canonical | root, ./sidebar |
 | SidePanel | SidePanel | canonical | root, ./side-panel |
@@ -210,6 +215,7 @@
 | TextTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ThinkingOrb | ThinkingOrb | canonical | ./thinking-orb |
 | Timeline | Timeline | canonical | root, ./display |
+| TimePicker | TimePicker | canonical | root, ./time-picker |
 | Toast | Toast | canonical | root, ./toast |
 | ToastProvider | Toast | companion-or-alternative | root, ./toast |
 | ToggleFeedbackButton | 별도 보조 기능 | supplemental | ./toggle-feedback |
@@ -230,7 +236,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 207개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 213개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -340,6 +346,7 @@
 | List | List | canonical | root, ./data-display |
 | ListDetailScreen | ListDetailScreen | canonical | ./screen-flows |
 | ListRow | ListRow | canonical | root, ./data-display |
+| ListSeparator | List | companion-or-alternative | root, ./data-display |
 | LoadMore | LoadMore | canonical | root, ./navigation, ./top-bar |
 | Masonry | Masonry | canonical | ./masonry |
 | MatrixTable | DataTable | companion-or-alternative | ./data-table |
@@ -367,6 +374,7 @@
 | Pagination | Pagination | canonical | root, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
+| PendingContent | Spinner | companion-or-alternative | root, ./feedback |
 | PermissionScreen | PermissionScreen | canonical | ./screen-flows |
 | PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
@@ -376,6 +384,7 @@
 | Progress | Progress | canonical | root, ./feedback |
 | ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
+| QuoteCard | Card | companion-or-alternative | root, ./data-display |
 | RadarChart | Chart | companion-or-alternative | ./chart |
 | Radio | Radio | canonical | root, ./inputs |
 | RadioGroup | RadioGroup | canonical | root, ./inputs |
@@ -399,6 +408,8 @@
 | SharedTransitionElement | 별도 보조 기능 | supplemental | ./screen-transition |
 | SharedTransitionScreen | 별도 보조 기능 | supplemental | ./screen-transition |
 | Sheet | Sheet | canonical | root, ./overlays |
+| SheetPanel | Sheet | optional-extension | ./sheet-panel |
+| ShortcutRail | Chip | companion-or-alternative | ./shortcut-rail |
 | Skeleton | Skeleton | canonical | root, ./feedback |
 | Slider | Slider | canonical | root, ./inputs, ./slider |
 | SortableCollection | 별도 보조 기능 | supplemental | ./sortable |
@@ -428,6 +439,7 @@
 | TextTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | ThinkingOrb | ThinkingOrb | canonical | ./thinking-orb |
 | Timeline | Timeline | canonical | root, ./data-display |
+| TimePicker | TimePicker | canonical | root, ./time-picker |
 | Toast | Toast | canonical | root, ./feedback |
 | ToastRegion | Toast | companion-or-alternative | root, ./feedback |
 | ToggleFeedbackButton | 별도 보조 기능 | supplemental | ./toggle-feedback |

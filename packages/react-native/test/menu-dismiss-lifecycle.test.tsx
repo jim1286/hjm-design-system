@@ -1,8 +1,9 @@
-import { InteractionManager, Modal, Platform, Pressable } from "react-native";
+import { Modal, Platform, Pressable } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Menu } from "../src/navigation.js";
+import * as modalLifecycle from "../src/internal/modal-lifecycle.js";
 
 let renderer: ReactTestRenderer;
 let complete: () => void;
@@ -10,10 +11,10 @@ const cancel = vi.fn();
 beforeEach(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   cancel.mockClear();
-  vi.spyOn(InteractionManager, "runAfterInteractions").mockImplementation(callback => {
+  vi.spyOn(modalLifecycle, "scheduleAfterNativeModalTeardown").mockImplementation(callback => {
     if (typeof callback !== "function") throw new TypeError("Expected a teardown callback");
     complete = callback;
-    return { cancel, then: async onfulfilled => onfulfilled?.(), done: () => undefined };
+    return { cancel };
   });
 });
 afterEach(() => { act(() => renderer?.unmount()); vi.restoreAllMocks(); Platform.OS = "android"; });
@@ -80,7 +81,7 @@ it("waits for shown iOS modal dismissal and ignores duplicate completion", async
   // A controlled owner can refuse the close; no action runs until acceptance.
   expect(action).not.toHaveBeenCalled();
   act(() => renderer.update(view(false, action)));
-  expect(InteractionManager.runAfterInteractions).not.toHaveBeenCalled();
+  expect(modalLifecycle.scheduleAfterNativeModalTeardown).not.toHaveBeenCalled();
   const dismiss = renderer.root.findByType(Modal).props.onDismiss;
   await act(async () => { dismiss(); dismiss(); });
   expect(action).toHaveBeenCalledOnce();

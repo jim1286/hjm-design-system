@@ -43,10 +43,11 @@ import { Badge } from "@hjmds/react-native/data-display";
 <Badge tone="success" size="small" label={t("order.status.done")} />
 ```
 
-왼쪽 → 라벨 → 오른쪽 순서로 배치한다. 아이콘에는 배지 글자와 같은 색과 12~14 크기를 전달한다. 아이콘은 장식이며 별도 누르기 동작을 넣지 않는다.
+왼쪽 → 라벨 → 오른쪽 순서로 배치한다. 아이콘 콜백은 배지 글자와 같은 `color`와 `glyph.xs`(14) `size`를 받는다. Native는 실제 테마 색을, Web은 `currentColor`를 전달한다. 이 콜백 API는 미게시다. 아이콘은 장식이며 별도 누르기 동작을 넣지 않는다.
 
 ```tsx
-<Badge tone="success" leading={<Trophy size={12} color="currentColor" />} trailing={<Check size={12} color="currentColor" />}>완료</Badge>
+// Web
+<Badge tone="success" leading={({ color, size }) => <Trophy size={size} color={color} />} trailing={({ color, size }) => <Check size={size} color={color} />}>완료</Badge>
 ```
 
 ## 축과 기본값
@@ -56,12 +57,14 @@ import { Badge } from "@hjmds/react-native/data-display";
 | `tone` | `neutral` · `strong` · `brand` · `info` · `success` · `warning` · `attention` · `danger` | `neutral` | 단색 배경과 흰색 굵은 글자를 사용한다. `neutral`은 회색, `strong`은 더 진한 회색, 나머지는 각 의미의 solid fill이다. `outline`은 투명 배경과 의미색 글자다 |
 | `variant` | `filled` · `outline` | `filled` | — |
 | `size` | `small` · `medium` | `medium` | — |
-| `leading` · `trailing` | `ReactNode` | — | 라벨 왼쪽·오른쪽 아이콘. 양쪽 동시 사용 가능하며 보조기기에서 숨겨진다 |
+| `leading` · `trailing` | `ReactNode \| (context: BadgeAdornmentContext) => ReactNode` | — | 라벨 왼쪽·오른쪽 아이콘. 양쪽 동시 사용 가능하며 보조기기에서 숨겨진다 |
 | Web `children` · Native `label` | `ReactNode` · `string \| number`(필수) | — | 표시 라벨 |
 | Native `accessibilityLabel` | `string` | `String(label)` | 숫자 라벨에 단위를 붙여 읽힐 때 쓴다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`labelStyle`은 제거된 속성 — layoutStyle 또는 tone/토큰 |
 
-콜백이 없다. 누를 수 없는 표시다.
+행동 콜백은 없다. 아이콘 렌더 콜백은 색과 크기만 받으며 배지는 누를 수 없는 표시다.
+
+상태 채움의 글자·아이콘은 `onStatusFill`, 브랜드 채움은 `onPrimary`, 위험 채움은 `onDanger`를 쓴다. 브랜드의 전경색이 어두워도 상태 배지의 대비를 독립적으로 유지하기 위한 역할 분리다(미게시).
 
 ## 배치
 

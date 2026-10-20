@@ -31,11 +31,7 @@
 뜻하지 않는다. 2026-10-13 실제 package 의존성을 대조해 누락된 Utilverse와 App Release Hub를
 추가했다. Hub는 정책 사이트 생성에 colors/foundations만 사용하므로 renderer 이관과 구분한다.
 
-기존 Flutter 제품은 별도 `hjm_flutter` beta renderer를 사용한다. npm fixed train에 포함되지
-않으며, 검토한 Git SHA와 `packages/flutter` 경로를 pubspec/lock에 고정한다. 공개 API와 지원
-범위는 [고정 source의 Flutter README](https://github.com/jim1286/hjm-design-system/blob/dfe74c171809dd43e43aa08f127de20932cb8257/packages/flutter/README.md), 버전·SDK는 해당 pubspec이 소유한다.
-2026-10-17 선택의창의 실제 Dart 소비를 대조해 module 계약에 Flutter 인터페이스와 소비자를
-추가했다. pub.dev 게시나 npm renderer의 전체 API parity, 기기 검증 완료를 뜻하지 않는다.
+Flutter renderer는 2026-10-18 전사 제거 요청으로 퇴역했다. 과거 소스는 저장소 `docs/FLUTTER_LEGACY.md`의 Git 기준에서 조회하며 현재 소비 경로는 React·React Native다.
 
 ## 2. 성숙도별 채택
 
@@ -60,9 +56,7 @@
 [Stable Core 기록](stable-core.md)에 보존한다. 현재 규칙에 이전 버전의 개수나 임시 foundation
 bridge를 복제하지 않는다. 구버전 소비자는 설치된 정책·profile과 해당 이관표를 확인한다.
 
-화면은 [선택 기준](usage/SELECTION.md)에 따라 그대로 사용, 공개 슬롯 확장, 공통 API 보완, 제품 고유 기능 연결 중 고른다.
-제품의 저장·권한 흐름은 제품이 연결하되, 공통 배치·상태 엔진이 부족하면 HJM API를 보완한다.
-`children`·header·footer 슬롯이 있다는 이유로 공통 구조를 제품에서 다시 만들지 않는다.
+화면의 수정 위치·API 선택·합성 경계는 [선택 기준](usage/SELECTION.md)을 따른다.
 
 ## 3. 코드 경계
 
@@ -141,12 +135,14 @@ OS 최대 글자 및 그 최대값 모사는 설계·검증·후속 조건에서
 ## 6. 예외와 변경 절차
 
 계약 변경이나 예외의 이유·영향·검사 결과·미확인 범위는 기존 계약 문서, TASKS 또는 커밋에 남긴다.
-작은 수정에 별도 ADR, 고정 항목 수, 중복 승인을 요구하지 않는다. 임시 우회에는 제거 조건을 적는다.
+작은 수정에 별도 ADR, 고정 항목 수, 중복 승인을 요구하지 않는다.
+2026-10-18 지침 정리: 제거 조건만 적으면 임시 우회를 허용하는 것으로 읽히던 문장을 제거했다.
+원인을 소유한 구현·설정·계약을 직접 수정하며, 원인을 남긴 우회는 제거 조건이 있어도 허용하지 않는다.
 공개 API·데이터·호환성을 바꾸면 해당 계약과 migration을 갱신한다.
 
-공통 API를 바꾸는 것이 한 제품의 local override보다 적절하면 제품 코드를 복제하지 않고
-HJM에 Changeset과 Web/RN evidence를 먼저 제출합니다. 반대로 제품 의미가 들어가면 공통
-package로 승격하지 않습니다.
+공통 구조의 계약 공백은 [선택 기준](usage/SELECTION.md)에 따라 HJM에서 보완한다.
+HJM 변경의 문서·검사·Changeset 범위는 checkout의 `CONTRIBUTING.md`를 따른다.
+제품 의미가 들어간 도메인 로직은 공통 package로 옮기지 않는다.
 
 ## 7. 신규 앱 완료 조건
 

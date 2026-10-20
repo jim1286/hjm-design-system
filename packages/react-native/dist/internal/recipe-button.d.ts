@@ -1,34 +1,11 @@
-import { type ReactNode } from "react";
-import { View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
-export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omit<import("react-native").PressableProps, "style" | "children" | "hitSlop" | "accessibilityRole" | "accessibilityState" | "disabled"> & Readonly<{
-    children?: ReactNode;
-    tone?: import("../actions.js").ButtonTone;
-    size?: import("../actions.js").ButtonSize;
-    shape?: import("../actions.js").ButtonShape;
-    align?: import("../actions.js").ButtonAlign;
-    selected?: boolean;
-    disabled?: boolean;
-    loading?: boolean;
-    completion?: Readonly<{
-        confirmed: boolean;
-        label: string;
-    }>;
-    disableWhileLoading?: boolean;
-    growWithContent?: boolean;
-    loadingLabel?: ReactNode;
-    leading?: ReactNode;
-    trailing?: ReactNode;
-    edge?: import("../actions.js").ButtonEdge;
-    fullWidth?: boolean;
-    hitSlop?: import("react-native").PressableProps["hitSlop"];
-    accessibilityState?: import("react-native").PressableProps["accessibilityState"];
-    layoutStyle?: import("../composition-style.js").HjmCompositionStyleProp;
-    renderLoadingIndicator?: (props: Readonly<{
-        color: string;
-        size: "small";
-    }>) => ReactNode;
-}> & Readonly<{
+import type { ComponentRef } from "react";
+import { forwardRef } from "react";
+import { type View as NativeView, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import type { ButtonProps } from "../actions.js";
+type RecipeButtonProps = ButtonProps & Readonly<{
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
-}> & import("react").RefAttributes<View>>;
+}>;
+export declare const RecipeButton: ReturnType<typeof forwardRef<ComponentRef<typeof NativeView>, RecipeButtonProps>>;
+export {};
 //# sourceMappingURL=recipe-button.d.ts.map

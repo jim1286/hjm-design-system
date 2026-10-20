@@ -1,11 +1,12 @@
-import { forwardRef, useEffect, useRef, useState, type HTMLAttributes, type MouseEvent } from "react";
-import { getAnchorCurrentId, resolveAnchorItems, type AnchorItem } from "@hjmds/design-contracts/components/anchor";
+import { forwardRef, useEffect, useRef, useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
+import { anchorRecipe, getAnchorCurrentId, resolveAnchorItems, type AnchorItem } from "@hjmds/design-contracts/components/anchor";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
   label: string;
   items: readonly AnchorItem[];
+  renderLeading?: (item: AnchorItem) => ReactNode;
   /** undefined observes the document; null waits for a custom scroll ref. */
   container?: HTMLElement | null;
   offset?: number;
@@ -18,7 +19,7 @@ export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readon
 
 /** Same-document table of contents; sticky positioning belongs to its host layout. */
 export const Anchor = forwardRef<HTMLElement, AnchorProps>(function Anchor({ label, items, container, offset = 0,
-  orientation = "vertical", historyMode = "push", onNavigate, className, layoutStyle, ...props }, ref) {
+  orientation = "vertical", historyMode = "push", onNavigate, renderLeading, className, layoutStyle, ...props }, ref) {
   const resolved = resolveAnchorItems(items);
   if (!label.trim()) throw new TypeError("Anchor label must not be empty");
   getAnchorCurrentId([], offset);
@@ -86,6 +87,6 @@ export const Anchor = forwardRef<HTMLElement, AnchorProps>(function Anchor({ lab
         const reduced = theme?.environment.reducedMotion ?? window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         scrollToTarget(target, reduced ? "instant" : "smooth"); focusTarget(target);
         if (historyMode !== "none" && window.location.hash !== item.href) window.history[historyMode === "replace" ? "replaceState" : "pushState"](window.history.state, "", item.href);
-      }}>{item.label}</a></li>)}</ul>
+      }}>{renderLeading ? <span className="hjm-anchor__leading" aria-hidden="true" style={{ inlineSize: anchorRecipe.link.leadingSize, blockSize: anchorRecipe.link.leadingSize }}>{renderLeading(item)}</span> : null}<span>{item.label}</span></a></li>)}</ul>
   </nav>;
 });

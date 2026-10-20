@@ -15,6 +15,7 @@ const webScenarioGaps = {};
 const keyboard = (file = stableCoreProofFile) => ({ proofs: [{ scenarios: ["keyboard"], file }] });
 const keyboardAndLongCopy = (file) => ({ proofs: [{ scenarios: ["keyboard", "long-copy"], file }] });
 const claimExtras = {
+    "time-picker": keyboard("test/time-picker.browser.test.tsx"),
     "design-system-provider": { exportNames: ["useHjmTheme"] },
     layout: keyboard(),
     link: keyboard(),

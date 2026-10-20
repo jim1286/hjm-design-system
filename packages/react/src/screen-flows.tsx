@@ -34,7 +34,7 @@ function Action({action,secondary=false,buttonRef,edge}:{action:ScreenFlowAction
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 
-export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
+export type ListDetailScreenProps = Base & { list:ReactNode; detail?:Pick<ScreenLayoutProps,"title"|"state"|"stateAction"|"notice"|"titleVisibility"|"headerAlignment"|"actions"|"footer"> & {content:ReactNode}; back:ScreenFlowAction; refresh?:ScreenFlowIconAction; loadMore?:ScreenFlowAction };
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,...screen}:ListDetailScreenProps){
  const open=!!detail;
@@ -58,7 +58,7 @@ export function ListDetailScreen({list,detail,back,refresh,loadMore,layoutStyle,
  // "Load more" ends the list inside the scroll body, centered like LoadMore; the fixed footer is the bottom CTA slot (2026-10-17 review).
  return <div style={{height:"100%",...layoutStyle}}>
   <div ref={listHost} tabIndex={-1} hidden={open} style={{height:"100%"}} onFocusCapture={event=>{returnFocus.current=event.target as HTMLElement;}}><ScreenLayout {...screen} {...(refresh||screen.actions?{actions:<Stack axis="inline" gap="xs" align="center">{/* Refresh no longer replaces the screen's own actions (2026-10-16 composition review). */}{screen.actions}{refresh?<Action action={refresh} secondary edge="end"/>:null}</Stack>}:{})}>{loadMore?<div style={{display:"flex",flexDirection:"column",flex:"1 1 auto",minHeight:0,gap:screenPatternRecipe.itemGap}}>{list}<div style={{display:"flex",justifyContent:"center"}}><Action action={loadMore} secondary/></div></div>:list}</ScreenLayout></div>
-  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
+  {detail?<div ref={detailHost} style={{height:"100%"}}><ScreenLayout title={detail.title} {...(detail.titleVisibility === undefined ? {} : { titleVisibility: detail.titleVisibility })} {...(detail.headerAlignment === undefined ? {} : { headerAlignment: detail.headerAlignment })} {...(detail.state === undefined ? {} : {state:detail.state})} stateAction={detail.stateAction} notice={detail.notice} actions={detail.actions} footer={detail.footer} exit={{kind:"back",label:back.label,onClick:back.onAction,disabled:!!(back.disabled||back.pending)}}>{detail.content}</ScreenLayout></div>:null}
  </div>;
 }
 
@@ -498,7 +498,7 @@ function SearchResultsBody({ summary, applied, suggested, cause, onCommit, onCle
 
 function SearchFilterTrigger<F>({ sheet, appliedCount, triggerRef }: { sheet: SearchFilterSheet<F>; appliedCount: number; triggerRef: RefObject<HTMLButtonElement | null> }) {
   const trigger = sheet.trigger!;
-  return <Chip ref={triggerRef} label={trigger.label(appliedCount)} aria-label={trigger.accessibilityLabel(appliedCount)} aria-haspopup="dialog"
+  return <Chip ref={triggerRef} label={trigger.label(appliedCount)} aria-label={trigger.accessibilityLabel(appliedCount)} aria-haspopup="dialog" layoutStyle={{alignSelf:"center"}}
     {...(trigger.icon === undefined ? {} : { leading: trigger.icon })} onPress={() => sheet.onOpenChange(true)} />;
 }
 
@@ -533,7 +533,7 @@ type SearchInputSlot = {queryField: ReactNode; queryClearLabel?: string} | {quer
 /** One name for the default field's progress on both platforms (Web SearchField `loading`, Native `busy`+`busyLabel`). */
 type SearchProgressSlot = {searching?: never; searchingLabel?: never} | {searching: boolean; searchingLabel: string};
 type SearchCommitSlot = {committedQuery?: never; onSubmit?: (query:string)=>void} | {committedQuery: string; onSubmit:(query:string)=>void};
-export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchCommitSlot & SearchProgressSlot & {query:string;queryLabel:string;onQueryChange(value:string):void;onSearch(query:string,context:{signal:AbortSignal}):void;debounceMs?:number;filters?:ReactNode;recentSearches?:ReactNode;children:ReactNode;
+export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchCommitSlot & SearchProgressSlot & {embedded?:boolean;query:string;queryLabel:string;onQueryChange(value:string):void;onSearch(query:string,context:{signal:AbortSignal}):void;debounceMs?:number;filters?:ReactNode;recentSearches?:ReactNode;children:ReactNode;
  /** ScreenLayout footer (bottom action or ad bar) under the results; it owns the bottom inset, as on every screen (unairplane rendered it outside the screen, 2026-10-17). */
  footer?:ScreenLayoutProps["footer"];
  /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
@@ -547,7 +547,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",filtersRole="narrow",hostGutter="none",queryLabelVisibility="hidden",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({embedded=false,query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",filtersRole="narrow",hostGutter="none",queryLabelVisibility="hidden",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,initialFocus=initialFocusDefaults.search,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const searchDelay=resolveSearchDebounceMs(debounceMs);
@@ -580,7 +580,7 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  // but keeps scope filters, which are that zero's recovery (resolveSearchFilterRailVisible, Native twin).
  const showRail=resolveSearchFilterRailVisible(phase,committedQuery!==undefined,cause,filtersRole);
  const trigger=filterSheet?.trigger?<SearchFilterTrigger sheet={filterSheet} appliedCount={appliedCount} triggerRef={focus.filterTrigger}/>:null;
- const rail=!showRail?null:trigger&&filters!=null?<Stack axis="inline" gap="xs" wrap={filtersOverflow==="wrap"}>{trigger}{filters}</Stack>:trigger??filters;
+ const rail=!showRail?null:trigger&&filters!=null?<Stack axis="inline" align="center" gap="xs" wrap={filtersOverflow==="wrap"}>{trigger}{filters}</Stack>:trigger??filters;
  // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.
  // A product-owned CSS/ScrollView rail would re-derive bleed, scroll padding and RTL per app.
  // contentInset="none" leaves the gutter to the host, which CSS cannot see; hostGutter names it (Native twin).
@@ -604,28 +604,43 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
    <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={pick} onClearAll={clearApplied}>{children}</SearchResultsBody></>;
  // Search-first routes have no visible heading: navigation and input share one row.
  // Keep explicit host headers and described/titled screens in their existing layout.
- const inlineNavigation=screen.titleVisibility==="hidden"&&screen.header==null;
+ const inlineNavigation=!embedded&&screen.titleVisibility==="hidden"&&screen.header==null;
  const searchInput=queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>;
  const queryRow=inlineNavigation?<Stack axis="inline" align="center" gap="sm">{screen.exit?<ScreenExitButton {...screen.exit}/>:null}<div style={{flex:1,minWidth:0}}>{searchInput}</div>{screen.actions}</Stack>:searchInput;
  // The query field is the search screen's primary input (2026-10-18 entry focus).
- return <><ScreenLayout {...screen} initialFocus={initialFocus} {...(inlineNavigation?{header:<></>}: {})} notice={<Stack gap="sm" ref={fieldHost}>{queryRow}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
+ // Empty results belong to the visible body below the pinned query/filter/map region.
+ // Reuse ScreenLayout's centering contract rather than giving EmptyState an arbitrary top inset.
+ const centerResults=phase==="results"&&cause!=="none"&&resultSummary?.empty!==undefined;
+ const notice=<Stack gap="sm" ref={fieldHost}>{queryRow}{filterSlot}{screen.notice}</Stack>;
+ const results=<Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1} justify={embedded&&centerResults?"center":"start"}
+   style={{...(embedded||screen.scroll==="content"?{flex:1,minHeight:0}:{}),...(embedded?{overflowY:screen.scroll==="content"?"hidden":"auto"}: {})}}>
+   {suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack>;
+ // A sheet already owns the title, exit, focus scope and outer scroll boundary. Reuse the same input/state/results
+ // anatomy without adding a nested screen; the result host alone scrolls below the pinned query.
+ return <>{embedded?<div className="hjm-search-screen--embedded"><CompositionLayout notice={notice} {...(screen.state===undefined?{}:{state:screen.state})} stateAction={screen.stateAction}
+   loadingIndicator={screen.loadingIndicator} footer={screen.footer} layoutStyle={{flex:1,...screen.layoutStyle}}>{results}</CompositionLayout></div>
+   :<ScreenLayout {...screen} contentAlignment={phase==="results"&&cause!=="none"&&resultSummary?.empty?"center":screen.contentAlignment??"start"} initialFocus={initialFocus} {...(inlineNavigation?{header:<></>}: {})} notice={notice}>{results}</ScreenLayout>}
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 
 export type PermissionScreenProps = Base & {status:PermissionScreenStatus;illustration?:ReactNode;explanation:ReactNode;request:ScreenFlowAction;settings:ScreenFlowAction;continueAction:ScreenFlowAction;skip?:ScreenFlowAction};
-export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;return <ScreenLayout {...screen} footer={<Stack gap="xs">{primary?<Action action={primary}/>:null}{skip?<Action action={skip} secondary/>:null}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
+// Permission guidance occupies the current screen body; keep its default centered on both platforms.
+export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;return <ScreenLayout {...screen} contentAlignment={screen.contentAlignment ?? "center"} footer={<Stack gap="xs">{primary?<Action action={primary}/>:null}{skip?<Action action={skip} secondary/>:null}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
 
 export type OnboardingStep = {id:string;title:string;description:string;content:ReactNode};
-export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;layoutStyle?:ScreenLayoutProps["layoutStyle"]};
-export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;
+export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;exit?:ScreenLayoutProps["exit"];layoutStyle?:ScreenLayoutProps["layoutStyle"]};
+export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,complete,skip,progressLabel,exit,layoutStyle}:OnboardingScreenProps){const position=resolveOnboardingStep(steps.length,index);const step=steps[index]!;
  // Completion and skip persist the same flow: keep navigation stable until the receipt.
  const host=useRef<HTMLDivElement|null>(null);
  // ScreenLayout owns this scroll region; keep focus while resetting each new step.
  useLayoutEffect(()=>{const body=host.current?.querySelector<HTMLElement>(".hjm-screen__body");if(body)body.scrollTop=0;},[index]);
  const pending=!!(complete.pending||skip?.pending);
- return <div ref={host} style={{display:"contents"}}><ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} actions={skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="xs"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout></div>;}
+ return <div ref={host} style={{display:"contents"}}><ScreenLayout {...(layoutStyle===undefined?{}:{layoutStyle})} title={step.title} description={step.description} {...(exit?{exit:{...exit,disabled:!!(exit.disabled||pending)}}:{})} actions={skip?<Action action={{...skip,disabled:!!(skip.disabled||pending)}} secondary/>:null} notice={<Text variant="caption" tone="muted">{progressLabel(index+1,steps.length)}</Text>} footer={<Stack gap="xs"><Action action={position.last?{...complete,disabled:!!(complete.disabled||pending)}:{label:nextLabel,disabled:pending,onAction:()=>onIndexChange(index+1)}}/>{!position.first?<Action action={{label:backLabel,disabled:pending,onAction:()=>onIndexChange(index-1)}} secondary/>:null}</Stack>}>{step.content}</ScreenLayout></div>;}
 
-export type CommentThreadItem = Readonly<{id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
+export type CommentThreadItem = Readonly<{
+ /** Root-only reply branch. Total can exceed the loaded preview; HJM owns its indentation and expansion. */
+ repliesCount?:number;repliesNotice?:ReactNode;repliesFooter?:ReactNode;
+ id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
  /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
  reactions?:CommentReactions;reactionSummary?:ReactNode;
  /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
@@ -686,9 +701,10 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  const time=item.timeLabel?<time className="hjm-comment-row__time" dateTime={item.timeDateTime}><Text variant="caption" tone="muted">{item.timeLabel}</Text></time>:null;
  // The like count sits under the heart so the text column carries only identity, body and reply.
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<div className="hjm-comment-row__avatar" style={{inlineSize:avatarSize}}>{item.avatar}</div>:null}<div className="hjm-comment-row__text" style={{gap:commentThreadRecipe.lineGap}}>
+ {/* A definite media width resolves percentage-sized children; the parent cap preserves narrow comment columns (Spint photo adoption). */}
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
  {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{timeInActions?null:time}</Stack>:null}
- {item.body}{item.media?<div className="hjm-comment-row__media" style={{maxInlineSize:commentThreadRecipe.mediaMaxWidth,borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
+ {item.body}{item.media?<div className="hjm-comment-row__media" style={{inlineSize:commentThreadRecipe.mediaMaxWidth,maxInlineSize:"100%",borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {item.mediaAlbum?<MediaAlbumView className="hjm-comment-row__album" album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/>:null}
  {(timeInActions&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
  {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
@@ -709,7 +725,7 @@ export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,o
  const row=(item:CommentThreadItem)=><CommentThreadRow key={item.id} item={item} onLike={onLike} onReply={onReply} replyLabel={replyLabel} {...(commentMenu===undefined?{}:{commentMenu})}/>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
- return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];return <div key={item.id} className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{replies.length?<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap,marginInlineStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(replies.length,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?replies.map(row):null}</div>:null}</div>;})}</div>{threadFooter}</Stack></ScreenLayout>;
+ return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];const total=item.repliesCount;if(total!==undefined&&(!Number.isSafeInteger(total)||total<0))throw new RangeError("CommentThreadItem repliesCount must be nonnegative");const count=Math.max(replies.length,total??0);return <div key={item.id} className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{count||item.repliesNotice||item.repliesFooter?<div className="hjm-comment-thread" style={{gap:commentThreadRecipe.rowGap,marginInlineStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(count,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?<>{item.repliesNotice}{replies.map(row)}{item.repliesFooter}</>:null}</div>:null}</div>;})}</div>{threadFooter}</Stack></ScreenLayout>;
 }
 
 export type ProfileSummaryProps = Readonly<{
@@ -720,21 +736,23 @@ export type ProfileSummaryProps = Readonly<{
   nameActions?: ReactNode;
   stats?: readonly Readonly<{ id: string; value: string; label: string; onPress?(): void; disabled?: boolean }>[];
   actions?: ReactNode;
+  actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
   children?: ReactNode;
 }>;
 
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
-export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, children }: ProfileSummaryProps) {
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
+  const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];
   const edit = useContext(ProfileEditContext);
   const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
   const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onClick={edit.onAction}>{edit.label}</Button> : null;
-  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameActions} footer={children}>
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: profileSummaryRecipe.avatarGlyphSize, lineHeight: 1, width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameActions} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{stats.map(stat =>
       <Stack key={stat.id} gap="xxs" align="center" justify="center" layoutStyle={{ flex: 1, minWidth: 0 }}>
         {stat.onPress ? <Button tone="ghost" aria-label={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onClick={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
           : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
       </Stack>)}</Stack> : null}
-    {editButton || actions ? <Stack axis="inline" gap="sm" wrap>{editButton}{actions}</Stack> : null}
+    {editButton || actions ? <Stack axis={actionLayout.axis} gap={actionLayout.gap} wrap={actionsLayout === "inline"} layoutStyle={{ width: "100%" }}>{editButton}{actions}</Stack> : null}
   </CompositionLayout>;
 }

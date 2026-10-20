@@ -21,7 +21,7 @@
 | --- | --- |
 | 아이콘만 있는 행동, 도구성 행동(새로고침·추가·편집·삭제·공유·검색·필터·더보기) | [IconButton](icon-button.md) — 글자는 `label`로 |
 | 화면 하단에 고정된 주 행동 | [BottomCTA](bottom-cta.md) |
-| 다른 페이지·URL로 이동 | [Link](link.md) (`tone="link"` 버튼은 같은 화면 안의 행동용) |
+| 다른 페이지·URL로 이동 | [Link](link.md), Web의 채워진 주 CTA는 `ButtonLink`(미게시). `tone="link"` 버튼은 같은 화면 안의 행동용 |
 | 여러 선택지 중 하나를 고름 | [SegmentedControl](segmented-control.md), [RadioGroup](radio-group.md), [ToggleGroup](toggle-group.md), `Chip`(`selectionMode="single"`) |
 | 여러 개를 고름 | `Chip`(`selectionMode="multiple"`), [CheckboxGroup](checkbox-group.md) |
 | 설정 켜고 끄기 | [Switch](switch.md)(설정 목록은 [ListRow](list-row.md) + Switch) |
@@ -34,6 +34,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Button` | 기본 | `@hjmds/react`, `/actions` | `@hjmds/react-native`, `/actions` |
+| `ButtonLink` | 동반(버튼형 URL 이동, 미게시) | `@hjmds/react`, `/actions` | — |
 | `ClipboardButton` | 동반(복사) | `/clipboard` | — |
 | `InlineConfirm` | 확장(버튼 자리에서 한 번 더 확인) | `/inline-confirm` | `/inline-confirm` |
 | `ReactionPicker` | 확장(반응 고르기) | `/reaction-picker` | `/reaction-picker` |
@@ -67,13 +68,15 @@ import { Button } from "@hjmds/react-native/actions";
 | `shape` | `rounded` · `pill` | `rounded` | `radius.md` · `full` |
 | `align` | `center` · `leading` | `center` | `leading`은 꽉 찬 폭의 행 행동 |
 | `edge` | `start` · `end` · `both` | — | 버튼이 놓인 컨테이너 가장자리(논리 방향). `ghost`면 자기 좌우 여백만큼 그 쪽으로 내밀어 라벨·trailing 아이콘이 여백 선에 온다(`small` 12, `medium` 16, `large` 24, `resolveButtonEdgeOverhang`; Web은 투명 테두리 1을 더한다). 틀이 보이는 tone과 `link`는 움직이지 않는다. 규칙과 근거는 [IconButton](icon-button.md#근거) |
+| `appearance` | `flat` · `raised` | 프로필 controls.button.appearance / 없으면 flat | 미게시. framed primary/secondary/danger에 옆면·눌림을 제공한다. ghost/link는 항상 평면이며 루트 입력 목표는 움직이지 않는다 |
+| `fullWidth` | boolean | false | 부모 폭을 채운다. Native와 같은 축으로 Web에도 제공(미게시). 줄 안의 비율은 부모 구성이 맡는다 |
 | `selected` | `boolean` | — | 눌림 상태를 갖는 행동 토글(저장·북마크, 켜 둔 도구). Web `aria-pressed`, Native 접근성 state. 선택지 고르기·설정 켜고 끄기에는 쓰지 않는다 |
 | `loading` | `boolean` | `false` | 기존 문구·아이콘을 시각적으로 숨기고 중앙 스피너 하나만 표시한다. 같은 children을 유지해 크기를 보존하고 누름을 막는다. 접근성 이름·포커스는 유지한다(Web `aria-disabled`, Native는 `disableWhileLoading`으로만 옛 disabled 동작) |
 | Web `onClick` | `(event: MouseEvent<HTMLButtonElement>) => void` | — | `disabled`·`loading`·`aria-disabled`이면 부르지 않는다 |
 | Native `onPress` | `(event: GestureResponderEvent) => void` | — | 같은 조건에서 부르지 않는다 |
 | `leading` · `trailing` | `ReactNode` | — | 라벨 앞뒤 아이콘 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치. Web 꽉 찬 폭은 `layoutStyle={{ width: "100%" }}` |
-| Native `fullWidth` | `boolean` | `false` | 부모 폭을 채운다 |
+| Native `fullWidth` | `boolean` | `false` | 부모 폭을 채운다. 가로 행동 행에서도 폭을 유지한다(미게시 보완) |
 | Native `loadingLabel` · `renderLoadingIndicator` | `ReactNode` · `(props: { color: string; size: "small" }) => ReactNode` | — | 로딩 중 읽기 문구·스피너 교체 |
 | Native `growWithContent` | `boolean` | `false` | 이미지 등 사용자 콘텐츠가 recipe 높이를 넘어 늘어나게 한다. 문자열·숫자 라벨은 이 옵션 없이도 줄 수에 맞춰 늘어난다 |
 | `ClipboardButton` | `value: string`, `labels: { idle; copied }`, `onCopy?: (value: string) => void`, `onCopyError?: (error: unknown) => void`, `feedbackDuration?`(ms, 2000) | — | Button props를 물려받는다(`tone` 기본 `secondary`, 1.13.0 변경). 쓰는 법은 [CodeBlock](code-block.md) |
@@ -180,3 +183,40 @@ Button의 loading은 표시와 UI 재실행을 막는 기능이다. 같은 프�
 - `selected` 버튼 나열 금지: 2026-10-16 사용자 지적 — 예제의 선택 버튼 줄이 테두리 없는 글자처럼 보이고 폭이 제각각이었다.
 - footer 순서 범위: 2026-10-06 독립 지침 재구현에서 footer 순서를 모든 본문 행동에 강제하는 것으로 읽혔다.
 - 선택 테두리 없음: 2026-10-10 사용자 요청으로 선택 시 추가되는 테두리를 제거했다.
+
+### 입체 표현과 제품 기본값 (미게시)
+
+다에리가 별도의 버튼 프레임·spinner·press/busy/selected 엔진을 구현하던 원인인 옆면 공백을
+`appearance="raised"`로 해소했다. `defineHjmDesignProfile({ controls: { button: { appearance: "raised", shape: "pill" } } })`을
+Provider에 넣으면 HJM 내부의 일반 버튼도 같은 기본값을 받는다. 개별 명시 prop은 프로필보다 우선한다.
+브랜드 팔레트의 primary/dangerFill/borderControl을 옆면의 기초색으로 쓰며 공유 raised.sideShade25%를 적용한다.
+제품에서 별도의 상태/옆면 색을 CSS로 덮지 않는다. FAB처럼 자체 frame을 가진 다른 컴포넌트는 자체 recipe를 유지한다.
+
+Root → side + face → leading/label/trailing/spinner 순서다. small3/medium4/large5px(pt)의 옆면은
+buttonRecipe.raised.depths가 소유한다. root의 누름·포커스 목표는 그대로 두고 face만 눌려 내려갔다가120ms로 복귀한다.
+동작 줄이기는 전환 시간을0으로 한다. loading은 face를 유지하고 라벨/아이콘을 시각적으로 숨긴 채 중앙 spinner 하나를 표시한다.
+`loading`과 `disabled`를 함께 넘겨도 busy 동안 포커스를 유지하고 실행을 막는다. Native의 기존 physical disabled 방식은
+`disableWhileLoading` 명시 opt-in만 사용한다. 보조기술에는 busy+disabled를 함께 보고한다.
+
+양 Showcase의 Button Raised는 이 공개 API의 실행 예제다. 특정 제품의 색·자산은 포함하지 않는다.
+
+## 버튼형 이동 링크 (Web · 미게시)
+
+`ButtonLink`는 주요 URL 이동에 Button의 tone/size/shape/appearance와 제품 프로필을 적용하는 실제 `<a>`다.
+일반 문장/보조 이동에는 Link를 사용한다. 번뚝 공개 소개·가이드가 채워진 CTA를 자체 CSS로 그리던 문제 때문에
+Button의 paint resolver를 공유한다. Button은 실제 실행·제출/로딩·토글, ButtonLink는 href/target/rel/download를 보존하는 이동이다.
+버튼 안 링크 또는 링크 안 버튼을 만들지 않는다. Native에는 DOM anchor가 없어 이 Web companion을 추가하지 않으며 기존 Link의 onNavigate 계약을 유지한다.
+
+```tsx
+import { ButtonLink } from "@hjmds/react/actions";
+<ButtonLink href="/guides" shape="pill">가이드 보기</ButtonLink>
+```
+
+`leading`/`trailing`, `fullWidth`/`align`/`edge`/`layoutStyle`도 Button과 같다.
+`disabled` 또는 `aria-disabled`는 href를 제거하고 Tab 순서에서 제외하며 click/auxclick 콜백과 이동을 막는다.
+활성 상태는 기본 anchor이므로 Enter, 링크 복사, 새 탭 열기를 유지한다. loading/completion/selected는 이동 API에 제공하지 않는다.
+
+`ButtonLink.renderAnchor`(미게시)는 Next 등 프레임워크의 내부 이동 어댑터를 연결한다.
+2026-10-20 다에리의 지도/장소 이동에서 초안 보호·오프라인 차단을 유지하기 위해 추가했다.
+전달받은 anchor props와 `ref`를 실제 링크에 그대로 연결하며, `href`가 없으면 내부 라우팅도 하지 않는다.
+버튼의 색/크기/초점/비활성·수정키/새 탭 의미는 HJM이 소유하고 제품은 목적지·이동 처리를 연결한다.

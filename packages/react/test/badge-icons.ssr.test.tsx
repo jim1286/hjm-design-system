@@ -11,3 +11,11 @@ it("renders decorative icons on either side without leaking slot props to the DO
     expect((html.match(/aria-hidden="true"/g) ?? []).length).toBe(Object.keys(slots).length);
   }
 });
+
+it("provides matching decorative icon metrics through both render slots", () => {
+  const html = renderToStaticMarkup(<Badge leading={({ color, size }) => <svg data-color={color} width={size} />}
+    trailing={({ color, size }) => <svg data-color={color} width={size} />}>완료</Badge>);
+  expect((html.match(/data-color="currentColor"/g) ?? []).length).toBe(2);
+  expect((html.match(/width="14"/g) ?? []).length).toBe(2);
+  expect((html.match(/aria-hidden="true"/g) ?? []).length).toBe(2);
+});

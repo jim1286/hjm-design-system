@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useState } from "react";
 import { ScrollView, View, type View as NativeView } from "react-native";
 import { useRef } from "react";
@@ -15,7 +16,7 @@ import { PreviewTools } from "./preview-tools";
 export function PaperSurfacePreview() {
   const [profileId, setProfileId] = useState<string>(profileOptions[1].id), [mode, setMode] = useState<PaperSurfaceMode>("theme");
   const [interval, setInterval] = useState("24"), [draft, setDraft] = useState<string>(copy.initial), [saved, setSaved] = useState("");
-  const [open, setOpen] = useState(false), trigger = useRef<NativeView>(null);
+  const [open, setOpen] = useState(false), trigger = useRef<ComponentRef<typeof NativeView>>(null);
   const preset = profileOptions.find(option => option.id === profileId) ?? profileOptions[1];
   const profile = defineHjmDesignProfile({ extends: preset.id, id: `paper-surface-${preset.id}-${mode}`,
     // Same explicit study override as Web; actual preset inheritance remains selectable.

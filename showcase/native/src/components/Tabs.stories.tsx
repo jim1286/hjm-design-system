@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useId, useMemo, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useHjmNativeTheme } from "@hjmds/react-native/provider";
@@ -17,7 +18,7 @@ export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" 
 
 function SwipePagerPreview() {
   const [selected, setSelected] = useState("one"), [width, setWidth] = useState(320), id = useId();
-  const pager = useRef<ScrollView>(null);
+  const pager = useRef<ComponentRef<typeof ScrollView>>(null);
   const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
   const position = useMemo(() => {
     let current = 0; const listeners = new Set<(value: number) => void>();

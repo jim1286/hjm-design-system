@@ -21,7 +21,8 @@ export type StepsProps<Id extends string = string> = Omit<
   renderMark?: (status: StepStatus, position: number) => ReactNode;
   /**
    * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-   * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+   * later steps stay static in default linear mode. Free reading mode makes every step selectable.
+   * Omit the handler while the flow is locked.
    */
   onStepPress?: (id: Id) => void;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -36,10 +37,12 @@ export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
   const steps = resolveStepsDescriptor(descriptor, { statusLabels, composeAccessibleName });
   const statusId = useId();
   return (
-    <ol {...props} style={{ ["--hjm-steps-press-target" as string]: `${stepsRecipe.press.minTouchTarget}px`, ...props.style, ...layoutStyle }} ref={ref} className={classNames("hjm-steps", className)}>
+    <ol {...props} // The terminal step has no outgoing connector: reserve only its content width.
+      style={{ ["--hjm-steps-count" as string]: steps.length, ["--hjm-steps-connector-count" as string]: steps.length - 1, ["--hjm-steps-press-target" as string]: `${stepsRecipe.press.minTouchTarget}px`, ...props.style, ...layoutStyle }} ref={ref} className={classNames("hjm-steps", className)}>
       {steps.map((step, index) => {
         const content = <>
           <div className="hjm-steps__rail" aria-hidden="true">
+            {index === steps.length - 1 ? <span className="hjm-steps__connector" data-reached={steps[index - 1]?.status === "complete" || undefined} /> : null}
             <span className="hjm-steps__indicator">
               {renderMark?.(step.status, step.position) ?? (
                 step.status === "complete" ? "✓" : step.status === "error" ? "!" : step.position
@@ -56,9 +59,10 @@ export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
           </div>
         </>;
         // A pressable step is one named button; its status stays a description so the name keeps order + label.
-        return step.revisitable && onStepPress ? (
+        return (descriptor.navigationMode === "free" || step.revisitable) && onStepPress ? (
           <li className="hjm-steps__step" data-status={step.status} key={step.id}>
             <button type="button" className="hjm-steps__press" aria-label={step.accessibleName} aria-describedby={`${statusId}-${index}`}
+              aria-current={step.status === "current" || step.status === "error" ? "step" : undefined}
               onClick={() => onStepPress(step.id)}>{content}</button>
           </li>
         ) : (

@@ -6,6 +6,7 @@ import { focusIndicatorContract } from "../src/component-contracts.js";
 import {
   calendarBehavior,
   calendarRecipe,
+  createCalendarMonthCells,
   getCalendarNavigationIntent,
   getCalendarNavigationTarget,
   resolveCalendarDescriptor,
@@ -34,6 +35,37 @@ function contrast(foreground: string, background: string): number {
 }
 
 const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+
+describe("plain civil month cells", () => {
+  it("covers leap centuries and complete week rows without local-time arithmetic", () => {
+    const dates = (month: string) => createCalendarMonthCells(month).filter(cell => cell.date?.startsWith(month));
+    expect(dates("1900-02")).toHaveLength(28);
+    expect(dates("2000-02")).toHaveLength(29);
+    expect(createCalendarMonthCells("2026-02")).toHaveLength(28);
+    const march = createCalendarMonthCells("2026-03");
+    expect(march.filter(cell => !cell.outsideFocusedMonth)).toHaveLength(31);
+    expect(march[0]?.date).toBe("2026-03-01");
+    expect(march.at(-1)).toEqual({ date: "2026-04-04", outsideFocusedMonth: true });
+    validateCalendarGridDescriptor({ cells: march, weekdayLabels: WEEKDAY_LABELS, todayDate: "2026-03-08" });
+  });
+  it("supports Monday-first pages, blank padding and four-digit year boundaries", () => {
+    const monday = createCalendarMonthCells("2026-03", { weekStartsOn: 1 });
+    expect(monday[0]).toEqual({ date: "2026-02-23", outsideFocusedMonth: true });
+    const blanks = createCalendarMonthCells("2026-03", { weekStartsOn: 1, outsideMonth: "blank" });
+    expect(blanks.slice(0, 6)).toEqual(Array.from({ length: 6 }, () => ({})));
+    for (const month of ["0000-01", "0099-02", "9999-12"]) {
+      const cells = createCalendarMonthCells(month);
+      validateCalendarGridDescriptor({ cells, weekdayLabels: WEEKDAY_LABELS, todayDate: `${month}-01` });
+      expect(cells.length % 7).toBe(0);
+      expect(cells.some(cell => cell.date === `${month}-01`)).toBe(true);
+    }
+  });
+  it("rejects invalid month and layout options", () => {
+    expect(() => createCalendarMonthCells("2026-13")).toThrow();
+    expect(() => createCalendarMonthCells("2026-03", { weekStartsOn: 7 as 0 })).toThrow();
+    expect(() => createCalendarMonthCells("2026-03", { outsideMonth: "other" as "blank" })).toThrow();
+  });
+});
 
 /**
  * 2027-02: 3 leading fillers (Feb 1 lands on column 4 / Wed), 28 dated cells

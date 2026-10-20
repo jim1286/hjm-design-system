@@ -199,6 +199,16 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
     }, [onOpenChange, open, visible]);
     const triggerRef = useRef(null);
     const optionRefs = useRef(new Map());
+    const optionsScroll = useRef(null);
+    const optionsContent = useRef(null);
+    const optionViewport = useRef({ height: 0, contentHeight: 0, presented: false, positioned: false, measuring: false, epoch: 0 });
+    useLayoutEffect(() => {
+        const viewport = optionViewport.current;
+        viewport.epoch += 1;
+        viewport.presented = false;
+        viewport.positioned = false;
+        viewport.measuring = false;
+    }, [visible]);
     const modalDismiss = useAfterModalDismiss(visible);
     const sizeContract = selectRecipe.sizes[size];
     const densityContract = selectRecipe.density[density];
@@ -220,6 +230,27 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
             return;
         const target = optionRefs.current.get(initialValue);
         focusAccessibleHost(target);
+    };
+    const revealInitialOption = () => {
+        const viewport = optionViewport.current;
+        const scroll = optionsScroll.current;
+        const content = optionsContent.current;
+        const key = reconciledSelected ?? collectionItems.find(option => !option.disabled)?.id;
+        const target = key === undefined ? undefined : optionRefs.current.get(key);
+        if (!visible || !viewport.presented || viewport.positioned || viewport.measuring || !scroll || !content || !target || viewport.height <= 0 || viewport.contentHeight <= 0)
+            return;
+        // Accessibility focus does not scroll a native Select. Measure actual rows (including section headings and
+        // wrapped descriptions) instead of estimating an index offset; late measurements must not move a reopened list.
+        viewport.measuring = true;
+        const epoch = viewport.epoch;
+        target.measureLayout(content, (_left, top, _width, height) => {
+            if (epoch !== viewport.epoch)
+                return;
+            viewport.measuring = false;
+            viewport.positioned = true;
+            scroll.scrollTo({ y: Math.max(0, Math.min(top - (viewport.height - height) / 2, viewport.contentHeight - viewport.height)), animated: false });
+            focusInitialOption();
+        });
     };
     const leadingColor = resolveColorReference(selectRecipe.leading.color, theme.palette);
     const triggerLeading = renderLeading?.(resolvedSelectedItem, {
@@ -294,7 +325,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                         // Same frame border source as TextField and Web .hjm-field__control (it drew the lighter divider color).
                         borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
                         borderRadius: tokens.radius.md,
-                        borderWidth: error ? 2 : 1,
+                        borderWidth: error ? fieldRecipe.states.invalid.borderWidth : fieldRecipe.borderWidth,
                         direction: environment.direction,
                         flexDirection: "row",
                         gap: selectRecipe.value.gap,
@@ -305,6 +336,8 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                     },
                 ], children: [triggerLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: { opacity: busy ? 0 : 1 }, children: triggerLeading })) : null, _jsx(Text, { fontRole: "ui", style: { flex: 1, opacity: busy ? 0 : 1 }, tone: resolvedSelectedItem ? "body" : "muted", variant: sizeContract.textVariant, children: resolvedSelectedItem?.label ?? placeholder }), _jsx(Text, { accessible: false, style: { opacity: busy ? 0 : 1 }, tone: "muted", children: "\u2304" }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { size: glyph[selectRecipe.busyIndicator.glyph] }) }) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => close("escape"), onShow: () => {
                     modalDismiss.onShow();
+                    optionViewport.current.presented = true;
+                    revealInitialOption();
                     focusInitialOption();
                 }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
                                 backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
@@ -322,7 +355,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                                 padding: spacing.md,
                                 // Clear the home indicator / navigation bar (2026-09-30 audit).
                                 paddingBottom: spacing.md + (safeArea.bottom ?? 0),
-                            }, children: [_jsx(CollectionSheetHeader, { title: label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => close("programmatic") }), _jsxs(ScrollView, { children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] })] })] }) })] }));
+                            }, children: [_jsx(CollectionSheetHeader, { title: label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => close("programmatic") }), _jsx(ScrollView, { ref: optionsScroll, onLayout: event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }, onContentSizeChange: (_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }, children: _jsxs(View, { ref: optionsContent, collapsable: false, children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }) })] })] }) })] }));
 }
 /**
  * How long focus events are ignored after a result is chosen. It covers the
@@ -580,7 +613,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     backgroundColor: colors.bg,
                     borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
                     borderRadius: tokens.radius.md,
-                    borderWidth: error ? 2 : 1,
+                    borderWidth: error ? fieldRecipe.states.invalid.borderWidth : fieldRecipe.borderWidth,
                     direction: environment.direction,
                     flexDirection: "row",
                     minHeight: sizeContract.minHeight,

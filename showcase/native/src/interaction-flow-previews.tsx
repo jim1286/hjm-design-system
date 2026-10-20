@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Heading } from "@hjmds/react-native/heading";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { compositionBrandFixtures } from "../../shared/composition-brand-fixtures";
@@ -37,7 +38,7 @@ export function ApplyOrDiscardSelection() {
  const { open, start: openSheet, close, isCurrent, onOpenChange } = usePreviewSheet();
  const [applied, setApplied] = useState<DisplayId>("compact");
  const [draft, setDraft] = useState<DisplayId>(applied);
- const trigger = useRef<View>(null);
+ const trigger = useRef<ComponentRef<typeof View>>(null);
  const start = () => { setDraft(applied); openSheet(); };
  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md"><Heading level="level3">선택 후 적용하거나 취소</Heading>
   <StatusText>{`현재 표시: ${displayCopy[applied]}`}</StatusText>
@@ -53,7 +54,7 @@ export function ApplyOrDiscardSelection() {
 
 export function ReopenDraft() {
  const { open, start, close, isCurrent, onOpenChange } = usePreviewSheet(); const [draft, setDraft] = useState(""); const [saved, setSaved] = useState("");
- const trigger = useRef<View>(null);
+ const trigger = useRef<ComponentRef<typeof View>>(null);
  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact" size="reading"><Stack gap="md"><Heading level="level3">작성 중 닫고 초안 이어쓰기</Heading>
   <View ref={trigger} collapsable={false}><Button onPress={start}>메모 작성</Button></View>
   <StatusText>{draft ? "작성 중인 초안이 있어요." : "작성 중인 초안이 없어요."}</StatusText>
@@ -77,7 +78,7 @@ function LatestSearchContents({ initialState = "idle" }: Pick<LatestSearchProps,
  const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
  const [query, setQuery] = useState("일기");
  // Consume failure when each attempt starts; response order must not steal another attempt's failure.
- const searchRef = useRef<TextInput>(null);
+ const searchRef = useRef<ComponentRef<typeof TextInput>>(null);
  const timers = useRef(new Map<ReturnType<typeof setTimeout>, () => void>());
  const failNext = useRef(false);
  const [failureArmed, setFailureArmed] = useState(false);

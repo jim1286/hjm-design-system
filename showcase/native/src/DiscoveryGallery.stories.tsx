@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Chip, SegmentedControl } from "@hjmds/react-native/inputs";
 import { Heading } from "@hjmds/react-native/heading";
 import { useRef, useState } from "react";
@@ -31,8 +32,8 @@ function DiscoveryGallery() {
  const { colors }=useHjmNativeTheme();
  const [query,setQuery] = useState(""); const [category,setCategory] = useState<GalleryCategory>("전체");
  const [sort,setSort] = useState<"popular" | "latest">("popular"); const [saved,setSaved] = useState<string[]>([]); const [savedOnly,setSavedOnly] = useState(false); const [selected,setSelected] = useState<GalleryEntry | null>(null);
- const savedFilterRef=useRef<View>(null), returnFocusRef=useRef<View>(null);
- const detailRefs=useRef(new Map<string, View>());
+ const savedFilterRef=useRef<ComponentRef<typeof View>>(null), returnFocusRef=useRef<ComponentRef<typeof View>>(null);
+ const detailRefs=useRef(new Map<string, ComponentRef<typeof View>>());
  const closeDetail=()=>{
   // Saving in the detail can remove its original card from the saved-only results.
   returnFocusRef.current=(selected?detailRefs.current.get(selected.id):null)??savedFilterRef.current;

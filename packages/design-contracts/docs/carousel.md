@@ -161,3 +161,13 @@ Native 페이징 목록)에서 같은 점·같은 끝 멈춤 이동을 쓰게 �
 `composeAccessibleName`으로 제품이 짓는다)와 `getPageIndicatorTarget`(순환 없이 끝에서 멈춤)이고 recipe는 `carouselRecipe.dot`
 그대로다. Carousel도 같은 점 줄을 렌더한다(Web 내부 공유 컴포넌트, Native `PageIndicator`). Native는 줄 하나가 adjustable
 요소이고 Web은 group 안의 점 버튼이며 ←/→로 한 페이지씩 요청한다.
+
+
+### 제품 소유 페이저의 표시 창
+
+`PageIndicatorDescriptor.maxVisibleDots`는 현재 페이지를 포함한 연속 위치 창을 계산한다.
+전체 페이지의 index/position/total과 이동 경계는 유지하며 누락 시 기존처럼 전부 표시한다.
+양 renderer의 `PageIndicator interactive={false}`는 별도 이전·다음 컨트롤이 있는 곳에 작은
+위치 표시만 제공한다. 점을 작은 버튼으로 만들지 않으며 기본 대화형 동작은 유지한다.
+2026-10-19 번뚝의 중복 구현 이관을 위한 checkout 변경으로 미게시다.
+사용 예와 배치는 [PageIndicator 지침](usage/components/page-indicator.md)을 따른다.

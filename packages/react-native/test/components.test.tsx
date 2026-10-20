@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, Modal, Pressable, TextInput, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -166,7 +167,7 @@ describe("@hjmds/react-native vertical slice", () => {
   it("maps Dialog to a modal accessibility boundary and closes uncontrolled state", () => {
     vi.useFakeTimers();
     const focusSpy = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
-    const returnFocusRef = { current: {} as View };
+    const returnFocusRef = { current: {} as ComponentRef<typeof View> };
     const renderer = renderWithProvider(
       <Dialog
         closeLabel="닫기"

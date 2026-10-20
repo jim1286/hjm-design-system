@@ -59,6 +59,10 @@ it("retains local content on collapse and expands inline tools without an access
   act(() => renderer.root.findByType(Pressable).props.onPress());
   expect(mounts).toBe(1);
   expect(renderer.root.findAll(node => node.props.importantForAccessibility === "no-hide-descendants").length).toBeGreaterThan(0);
+  act(() => renderer.update(<HjmNativeProvider><Collapsible trigger="도구" pendingLabel="Preparing" keepMounted><Draft /></Collapsible></HjmNativeProvider>));
+  expect(mounts).toBe(1);
+  expect(renderer.root.findAllByType(Pressable)).toHaveLength(0);
+  expect(renderer.root.findAll(node => node.props.importantForAccessibility === "no-hide-descendants").length).toBeGreaterThan(0);
   act(() => renderer.update(<HjmNativeProvider><Collapsible trigger="도구" presentation="inline" keepMounted><Draft /></Collapsible></HjmNativeProvider>));
   expect(mounts).toBe(1);
   expect(renderer.root.findByType(Pressable).props.style.display).toBe("none");
@@ -66,4 +70,34 @@ it("retains local content on collapse and expands inline tools without an access
 it("blocks a host activation after the disclosure becomes disabled",()=>{
  let changes=0;const view=(disabled:boolean)=><HjmNativeProvider><Collapsible trigger="Details" disabled={disabled} onOpenChange={()=>changes++}><Text>Content</Text></Collapsible></HjmNativeProvider>;
  act(()=>{renderer=create(view(false));});act(()=>renderer.update(view(true)));act(()=>renderer.root.findByType(Pressable).props.onPress());expect(changes).toBe(0);expect(renderer.root.findByType(Pressable).props.accessibilityState.expanded).toBe(false);
+});
+
+it("names an artwork disclosure independently of its decorative trigger", () => {
+  act(() => { renderer = create(<HjmNativeProvider>
+    <Collapsible trigger={<Text accessibilityElementsHidden>Artwork</Text>} triggerLabel="Show proportions" marker="none">
+      <Text>Blue 66.7%</Text>
+    </Collapsible>
+  </HjmNativeProvider>); });
+  const action = () => renderer.root.findByType(Pressable);
+  expect(action().props.accessibilityLabel).toBe("Show proportions");
+  expect(renderer.root.findAllByType(DrawnChevron)).toHaveLength(0);
+  expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Blue 66.7%")).toBe(false);
+  act(() => action().props.onPress());
+  expect(action().props.accessibilityState.expanded).toBe(true);
+  expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Blue 66.7%")).toBe(true);
+});
+
+it("places a pending indicator beside the static title and returns a closed actionable disclosure", () => {
+  const render = (pending: boolean) => <HjmNativeProvider><Collapsible title={<Text>Evaluation</Text>}
+    trigger="Open" {...(pending ? { pendingLabel: "Measuring" } : {})}><Text>Scores</Text></Collapsible></HjmNativeProvider>;
+  act(() => { renderer = create(render(true)); });
+  expect(renderer.root.findAllByType(Pressable)).toHaveLength(0);
+  expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Evaluation")).toBe(true);
+  expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Scores")).toBe(false);
+  expect(renderer.root.findAll(node => node.props.accessibilityLabel === "Measuring").length).toBeGreaterThan(0);
+  act(() => renderer.update(render(false)));
+  const trigger = renderer.root.findByType(Pressable);
+  expect(trigger.props.accessibilityState.expanded).toBe(false);
+  act(() => trigger.props.onPress());
+  expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Scores")).toBe(true);
 });

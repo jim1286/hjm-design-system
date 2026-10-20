@@ -3,7 +3,7 @@ import { type ScreenLayoutProps } from "./screens.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { profileSummaryRecipe, type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { type MediaAlbum } from "./internal/media-album.js";
 export type { MediaAlbum } from "./internal/media-album.js";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
@@ -26,7 +26,7 @@ export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{
 type Base = Omit<ScreenLayoutProps, "children" | "footer">;
 export type ListDetailScreenProps = Base & {
     list: ReactNode;
-    detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility" | "headerAlignment"> & {
+    detail?: Pick<ScreenLayoutProps, "title" | "state" | "stateAction" | "notice" | "titleVisibility" | "headerAlignment" | "actions" | "footer"> & {
         content: ReactNode;
     };
     back: ScreenFlowAction;
@@ -314,6 +314,7 @@ type SearchCommitSlot = {
     onSubmit: (query: string) => void;
 };
 export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchCommitSlot & SearchProgressSlot & {
+    embedded?: boolean;
     query: string;
     queryLabel: string;
     onQueryChange(value: string): void;
@@ -342,7 +343,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filterSheet?: SearchFilterSheet<F>;
 };
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, filtersRole, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
+export declare function SearchScreen<F = unknown>({ embedded, query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, filtersRole, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, initialFocus, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
 export type PermissionScreenProps = Base & {
     status: PermissionScreenStatus;
     illustration?: ReactNode;
@@ -368,12 +369,17 @@ export type OnboardingScreenProps = {
     complete: ScreenFlowAction;
     skip?: ScreenFlowAction;
     progressLabel(index: number, total: number): string;
+    exit?: ScreenLayoutProps["exit"];
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
     /** Same as ScreenLayout: the footer pads max(16, inset) (yajalal/diairy wrapped the screen in their own inset, 2026-10-17). */
     safeAreaBottom?: ScreenLayoutProps["safeAreaBottom"];
 };
-export declare function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle, safeAreaBottom }: OnboardingScreenProps): import("react").JSX.Element;
+export declare function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, exit, layoutStyle, safeAreaBottom }: OnboardingScreenProps): import("react").JSX.Element;
 export type CommentThreadItem = Readonly<{
+    /** Root-only reply branch. Total can exceed the loaded preview; HJM owns its indentation and expansion. */
+    repliesCount?: number;
+    repliesNotice?: ReactNode;
+    repliesFooter?: ReactNode;
     id: string;
     parentId: string | null;
     author: string;
@@ -483,8 +489,9 @@ export type ProfileSummaryProps = Readonly<{
         disabled?: boolean;
     }>[];
     actions?: ReactNode;
+    actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
     children?: ReactNode;
 }>;
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
-export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, stats, actions, children }: ProfileSummaryProps): import("react").JSX.Element;
+export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, stats, actions, actionsLayout, children }: ProfileSummaryProps): import("react").JSX.Element;
 //# sourceMappingURL=screen-flows.d.ts.map

@@ -4,8 +4,8 @@ import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type Statis
 import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/components/tag";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
-import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
-import { listRowRecipe, statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
+import { type ComposeTimelineAccessibleName, type ResolvedTimelineItemDescriptor, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
+import { listRecipe, listRowRecipe, statisticRecipe, type AccordionDensity, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type ViewProps } from "react-native";
 import { type SurfacePadding, type SurfaceProps } from "./primitives.js";
@@ -16,8 +16,8 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
     tone?: StatusTone;
     size?: BadgeSize;
     variant?: BadgeVariant;
-    leading?: ReactNode;
-    trailing?: ReactNode;
+    leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
+    trailing?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
     accessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -38,7 +38,25 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     description?: ReactNode;
     leading?: ReactNode;
     media?: ReactNode;
+    /** Decorative artwork behind the shared body/actions; its host determines the available height. */
+    backgroundMedia?: ReactNode;
+    /** Platform gesture/accessibility host behind content. Requires backgroundMedia; never put metadata/actions here. */
+    backgroundInteraction?: ReactNode;
+    /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
+    mediaBadges?: ReactNode;
+    badges?: ReactNode;
+    /** Activate only the passive cover; other card content/actions keep independent targets. */
+    mediaAction?: Readonly<{
+        label: string;
+        onActivate(): void;
+        icon?: (context: Readonly<{
+            color: string;
+            size: number;
+        }>) => ReactNode;
+    }>;
     actions?: ReactNode;
+    /** Independent commands at the header end; never nested in whole-card activation. */
+    headerActions?: ReactNode;
     selected?: boolean;
     /**
      * Whole-card activation. With `actions`, media and body become one Pressable and the actions row stays a sibling,
@@ -51,7 +69,18 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, actions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
+    children: ReactNode;
+    attribution?: string;
+    renderMark?: (context: {
+        color: string;
+        size: number;
+    }) => ReactNode;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+/** The quotation and caption stay one visual unit; nested disclosures remain independently accessible. */
+export declare function QuoteCard({ children, attribution, renderMark, ...props }: QuoteCardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     title: string;
     description?: string;
@@ -233,13 +262,21 @@ export type ListProps = Omit<ViewProps, "accessibilityLabel" | "accessibilityRol
     /** Localized accessible name for this list. */
     label: string;
     children: ReactNode;
-    separator?: "none" | "full" | "indented";
+    separator?: keyof typeof listRecipe.separators;
     appearance?: ListAppearance;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Semantic list container that owns separator rhythm around composed rows. */
 export declare function List({ label, children, separator, appearance, layoutStyle, ...props }: ListProps): import("react").JSX.Element;
+export type ListSeparatorProps = Readonly<{
+    /** content: already padded rows; full: ListRow surface; indented: ListRow text column. */
+    separator?: keyof typeof listRecipe.separators;
+    leading?: boolean;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+/** Decorative separator for a product-owned virtual collection; never replaces its accessible row. */
+export declare function ListSeparator({ separator, leading, layoutStyle }: ListSeparatorProps): import("react").JSX.Element | null;
 export type StatisticTrendMarkRenderProps = Readonly<{
     name: (typeof statisticRecipe.trend.marks)[keyof typeof statisticRecipe.trend.marks];
     color: string;
@@ -257,6 +294,9 @@ export type StatisticProps<Id extends string = string> = Readonly<{
     contextLabel?: string;
     accessibilityLabel?: string;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    leading?: ReactNode;
+    /** Product-owned series/category color shared by value and leading. */
+    valueColor?: string;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -269,18 +309,32 @@ export type StatisticGroupProps<Id extends string = string> = Omit<ViewProps, "a
     density?: StatisticDensity;
     presentation?: StatisticPresentation;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    arrangement?: "grid" | "bar";
+    renderLeading?: (item: StatisticDescriptor<Id>, context: {
+        color: string;
+        size: number;
+    }) => ReactNode;
+    getValueColor?: (item: StatisticDescriptor<Id>) => string | undefined;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function StatisticGroup<Id extends string = string>({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, renderTrendMark, layoutStyle, onLayout, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
+export declare function StatisticGroup<Id extends string = string>({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, arrangement, renderLeading, getValueColor, renderTrendMark, layoutStyle, onLayout, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
 export type TimelineProps<Id extends string = string> = Omit<ViewProps, "children" | "style"> & Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
+    renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Virtualization host only; the shared renderer still owns every record, rail, label and command target. */
+    renderList?: (context: Readonly<{
+        items: readonly ResolvedTimelineItemDescriptor<Id>[];
+        renderItem: (item: ResolvedTimelineItemDescriptor<Id>, index: number) => ReactNode;
+        separator: ReactNode;
+    }>) => ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
+export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, renderMetadata, renderActions, renderList, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=data-display.d.ts.map

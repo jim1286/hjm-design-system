@@ -279,7 +279,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Button";
     readonly label: "버튼";
-    readonly companions: readonly ["ClipboardButton"];
+    readonly companions: readonly ["ClipboardButton", "ButtonLink"];
     readonly extensions: readonly ["ReactionPicker", "InlineConfirm"];
     readonly category: "action";
     readonly platform: "shared";
@@ -504,6 +504,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Chip";
     readonly label: "선택 칩";
+    readonly companions: readonly ["ShortcutRail"];
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "stable";
@@ -618,6 +619,18 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Combobox";
     readonly label: "검색형 선택";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "stable";
+}, {
+    readonly recipe: "timePickerRecipe";
+    readonly behavior: "timePicker";
+    readonly surfaceStatus: {
+        readonly web: "stable";
+        readonly native: "stable";
+    };
+    readonly name: "TimePicker";
+    readonly label: "시각 선택";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -977,6 +990,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Card";
     readonly label: "카드";
+    readonly companions: readonly ["QuoteCard"];
     readonly extensions: readonly ["DocumentResource"];
     readonly category: "data-display";
     readonly platform: "shared";
@@ -989,7 +1003,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "List";
     readonly label: "목록";
-    readonly companions: readonly ["CollectionRail"];
+    readonly companions: readonly ["CollectionRail", "ListSeparator"];
     readonly extensions: readonly ["TaskList"];
     readonly category: "data-display";
     readonly platform: "shared";
@@ -1254,6 +1268,7 @@ export declare const componentCatalog: readonly [{
         readonly native: "stable";
     };
     readonly name: "Spinner";
+    readonly companions: readonly ["PendingContent"];
     readonly label: "로딩 표시";
     readonly category: "feedback";
     readonly platform: "shared";
@@ -1355,7 +1370,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Sheet";
     readonly label: "시트";
-    readonly extensions: readonly ["GestureSheet", "GestureSheetProvider"];
+    readonly extensions: readonly ["GestureSheet", "GestureSheetProvider", "SheetPanel"];
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -1736,6 +1751,20 @@ export declare function componentIdOf(entry: Pick<ComponentCatalogEntry, "name" 
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
+    readonly timePickerRecipe: {
+        readonly rowHeight: 44;
+        readonly visibleRows: 5;
+        readonly gap: 12;
+        readonly sectionGap: 16;
+        readonly radius: "md";
+        readonly readoutSize: 20;
+        readonly readoutLineHeight: 28;
+        readonly panelWidth: 304;
+        readonly defaults: {
+            readonly presentation: "field";
+            readonly minuteStep: 1;
+        };
+    };
     readonly imageChoiceRecipe: {
         readonly tileSize: 72;
         readonly gap: 8;
@@ -2120,7 +2149,7 @@ export declare const recipeRegistry: {
             readonly neutral: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2138,7 +2167,7 @@ export declare const recipeRegistry: {
             readonly strong: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2174,7 +2203,7 @@ export declare const recipeRegistry: {
             readonly info: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2196,7 +2225,7 @@ export declare const recipeRegistry: {
             readonly success: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2218,7 +2247,7 @@ export declare const recipeRegistry: {
             readonly warning: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2240,7 +2269,7 @@ export declare const recipeRegistry: {
             readonly attention: {
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "onPrimary";
+                    key: "onStatusFill";
                     alpha?: number;
                 }>;
                 readonly outlineContent: Readonly<{
@@ -2287,12 +2316,14 @@ export declare const recipeRegistry: {
                 readonly minHeight: 20;
                 readonly paddingHorizontal: 8;
                 readonly gap: 4;
+                readonly iconSize: 14;
                 readonly textVariant: "caption";
             };
             readonly medium: {
                 readonly minHeight: 24;
                 readonly paddingHorizontal: 8;
                 readonly gap: 4;
+                readonly iconSize: 14;
                 readonly textVariant: "caption";
             };
         };
@@ -2610,11 +2641,11 @@ export declare const recipeRegistry: {
     readonly bottomCtaRecipe: {
         readonly slots: readonly ["root", "description", "secondaryAction", "primaryAction"];
         readonly minHeight: 64;
-        readonly paddingHorizontal: 20;
+        readonly paddingHorizontal: 16;
         readonly paddingTop: 12;
         readonly paddingBottom: 12;
         readonly gap: 12;
-        readonly contentMaxWidth: 720;
+        readonly contentMaxWidth: number;
         readonly background: Readonly<{
             source: "theme";
             key: "bg";
@@ -2635,10 +2666,13 @@ export declare const recipeRegistry: {
         };
     };
     readonly anchorRecipe: {
-        readonly slots: readonly ["root", "list", "link", "indicator"];
+        readonly slots: readonly ["root", "list", "link", "leading", "indicator"];
         readonly gap: 4;
         readonly link: {
             readonly padding: 8;
+            readonly minHeight: 44;
+            readonly gap: 8;
+            readonly leadingSize: 20;
             readonly color: Readonly<{
                 source: "theme";
                 key: "textMuted";
@@ -3607,7 +3641,7 @@ export declare const recipeRegistry: {
         };
     };
     readonly cardRecipe: {
-        readonly slots: readonly ["root", "media", "body", "header", "leading", "title", "description", "content", "actions"];
+        readonly slots: readonly ["root", "media", "backgroundMedia", "backgroundInteraction", "mediaBadges", "badges", "mediaAction", "body", "header", "leading", "title", "description", "content", "actions"];
         readonly defaults: {
             readonly tone: "raised";
             readonly selected: false;
@@ -3620,12 +3654,26 @@ export declare const recipeRegistry: {
             readonly disabledOpacity: 0.5;
             readonly pressedOpacity: 0.86;
         };
+        readonly mediaAction: {
+            readonly inset: 12;
+            readonly diameter: 44;
+            readonly iconSize: 20;
+        };
+        readonly backgroundMedia: {
+            readonly scrim: "rgba(0, 0, 0, 0.6)";
+            readonly foreground: "#ffffff";
+        };
+        readonly quotation: {
+            readonly gap: 8;
+            readonly markSize: 24;
+        };
         readonly body: {
             readonly padding: 16;
             readonly gap: 8;
         };
         readonly header: {
             readonly gap: 12;
+            readonly alignItems: "center";
         };
         readonly title: {
             readonly variant: "title";
@@ -3644,12 +3692,22 @@ export declare const recipeRegistry: {
         };
     };
     readonly buttonRecipe: {
-        readonly slots: readonly ["root", "leading", "label", "trailing", "spinner"];
+        readonly slots: readonly ["root", "face", "side", "leading", "label", "trailing", "spinner"];
         readonly defaults: {
             readonly tone: "primary";
             readonly size: "medium";
             readonly shape: "rounded";
             readonly align: "center";
+            readonly appearance: "flat";
+        };
+        readonly raised: {
+            readonly depths: {
+                readonly small: 3;
+                readonly medium: 4;
+                readonly large: 5;
+            };
+            readonly sideShade: 0.25;
+            readonly settleDuration: 120;
         };
         readonly tones: {
             readonly primary: {
@@ -3742,6 +3800,7 @@ export declare const recipeRegistry: {
         };
         readonly dot: {
             readonly diameter: 8;
+            readonly compactGap: 8;
             readonly hitTarget: 44;
             readonly color: {
                 readonly inactive: Readonly<{
@@ -4886,6 +4945,7 @@ export declare const recipeRegistry: {
             };
             readonly invalid: {
                 readonly border: "danger";
+                readonly borderWidth: 2;
             };
         };
         readonly minHeight: 44;
@@ -5247,6 +5307,11 @@ export declare const recipeRegistry: {
         };
         readonly separators: {
             readonly none: null;
+            readonly content: {
+                readonly insetStart: 0;
+                readonly leadingInsetStart: 0;
+                readonly insetEnd: 0;
+            };
             readonly full: {
                 readonly insetStart: number;
                 readonly leadingInsetStart: number;
@@ -6012,11 +6077,15 @@ export declare const recipeRegistry: {
             readonly tone: "brand";
             readonly shape: "linear";
             readonly max: 100;
+            readonly showValue: true;
         };
         readonly sizes: {
             readonly small: 4;
             readonly medium: 8;
             readonly large: 12;
+        };
+        readonly segmented: {
+            readonly gap: 4;
         };
         readonly circular: {
             readonly sizes: {
@@ -6550,7 +6619,7 @@ export declare const recipeRegistry: {
         };
     };
     readonly selectionGroupRecipe: {
-        readonly slots: readonly ["root", "label", "requiredIndicator", "description", "items", "error"];
+        readonly slots: readonly ["root", "label", "requiredIndicator", "description", "items", "itemLabel", "itemAction", "error"];
         readonly defaults: {
             readonly orientation: "vertical";
             readonly presentation: "card";
@@ -6562,6 +6631,7 @@ export declare const recipeRegistry: {
                     readonly plain: 4;
                     readonly card: 8;
                     readonly grouped: 0;
+                    readonly chips: 8;
                 };
             };
             readonly horizontal: {
@@ -6570,6 +6640,7 @@ export declare const recipeRegistry: {
                     readonly plain: 12;
                     readonly card: 16;
                     readonly grouped: 0;
+                    readonly chips: 8;
                 };
             };
         };
@@ -6657,7 +6728,7 @@ export declare const recipeRegistry: {
         readonly pills: {
             readonly gap: 8;
             readonly radius: 999;
-            readonly inset: 8;
+            readonly inset: 4;
             readonly minHeight: 44;
             readonly selectedBackground: Readonly<{
                 source: "theme";
@@ -6779,6 +6850,22 @@ export declare const recipeRegistry: {
         };
         readonly indicatorBorderWidth: 2;
         readonly presentations: {
+            readonly chips: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+                readonly borderWidth: 1;
+                readonly radius: "full";
+                readonly useSizePadding: true;
+                readonly labelColor: null;
+            };
             readonly plain: {
                 readonly background: null;
                 readonly border: null;
@@ -7924,6 +8011,11 @@ export declare const recipeRegistry: {
         readonly group: {
             readonly gap: 8;
             readonly minItemWidth: 120;
+            readonly bar: {
+                readonly cellPadding: 8;
+                readonly valueGap: 4;
+                readonly iconSize: 20;
+            };
             readonly columns: readonly [1, 2, 3, 4];
         };
         readonly label: {
@@ -8534,7 +8626,15 @@ export declare const recipeRegistry: {
     };
     readonly timelineRecipe: {
         readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];
-        readonly gap: 16;
+        readonly gap: 20;
+        readonly item: {
+            readonly padding: 12;
+            readonly emphasisBackground: Readonly<{
+                source: "accent";
+                key: "info";
+                alpha?: number;
+            }>;
+        };
         readonly dot: {
             readonly diameter: 10;
             readonly borderWidth: 1;
@@ -9187,6 +9287,15 @@ export declare const recipeRegistry: {
         readonly whiteSpace: "nowrap";
     };
     readonly screenPatternRecipe: {
+        readonly pullDismiss: {
+            readonly activationDistance: 6;
+            readonly distance: 80;
+            readonly flickDistance: 32;
+            readonly flickVelocity: 0.65;
+            readonly maxOffset: 160;
+            readonly settleDuration: 140;
+            readonly topTolerance: 1;
+        };
         readonly maxWidth: 720;
         readonly padding: 16;
         readonly sectionGap: 24;
@@ -9255,6 +9364,11 @@ export declare const recipeRegistry: {
         };
     };
     readonly notificationRowRecipe: {
+        readonly separatorInsetStart: number;
+        readonly interaction: {
+            readonly disabledOpacity: 0.5;
+            readonly pressedOpacity: 0.86;
+        };
         readonly gap: 12;
         readonly contentGap: 4;
         readonly avatarSize: 44;
@@ -9267,6 +9381,17 @@ export declare const recipeRegistry: {
     };
     readonly profileSummaryRecipe: Readonly<{
         avatarSize: 72;
+        avatarGlyphSize: 44;
+        actionsLayouts: Readonly<{
+            inline: Readonly<{
+                readonly axis: "inline";
+                readonly gap: "sm";
+            }>;
+            stacked: Readonly<{
+                readonly axis: "block";
+                readonly gap: "xs";
+            }>;
+        }>;
         editAction: Readonly<{
             readonly tone: "secondary";
             readonly size: "small";
@@ -9281,6 +9406,11 @@ export declare const recipeRegistry: {
         gap: 6;
         iconRadius: "22%";
         shapes: Readonly<Record<import("./screen-patterns.js").IconTileShape, number>>;
+        activation: Readonly<{
+            minimumTarget: 44;
+            pressedOpacity: 0.86;
+            disabledOpacity: 0.5;
+        }>;
         fillMinSize: 48;
         fillMaxSize: 68;
         defaults: Readonly<{

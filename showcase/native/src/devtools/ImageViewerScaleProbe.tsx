@@ -19,7 +19,11 @@ export function ImageViewerScaleProbe() {
   const zoom = useRef<ResumableZoomRefType>(null);
   const { colors } = useHjmNativeTheme();
   const source = Image.resolveAssetSource(require("../../../shared/photos/valley.jpg"));
-  const { width, height } = resolveImageInspectionGeometry(source, viewport, mode);
+  const assetWidth = source?.width, assetHeight = source?.height;
+  if (!source || typeof assetWidth !== "number" || typeof assetHeight !== "number") {
+    throw new Error("Bundled image scale probe has no pixel dimensions");
+  }
+  const { width, height } = resolveImageInspectionGeometry({ width: assetWidth, height: assetHeight }, viewport, mode);
   const key = `${engine}:${mode}:${viewport.width}:${viewport.height}`;
   useEffect(() => setMeasurement("측정 전"), [key]);
   const photo = <Image source={source} accessibilityLabel="600×600 계곡 진단 사진" style={{ width, height }} resizeMode="contain" />;

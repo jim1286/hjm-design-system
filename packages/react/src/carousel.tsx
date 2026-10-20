@@ -20,6 +20,8 @@ export type CarouselProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "o
   composeAccessibleName: ComposeCarouselAccessibleName;
   labels: CarouselLabels;
   autoplay?: CarouselAutoplayConfig;
+  /** Available content height in a bounded host. Navigation stays outside the scrolling slide. */
+  slideMaxHeight?: number;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -30,6 +32,10 @@ export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"
   count: number;
   /** Zero-based current page; the product pager owns it. */
   currentIndex: number;
+  /** Limit visible dots while retaining absolute page names and navigation. */
+  maxVisibleDots?: number;
+  /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
+  interactive?: boolean;
   /** Requested page from a dot or an arrow key. It can repeat the current index. */
   onCurrentIndexChange: (index: number) => void;
   composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -55,23 +61,38 @@ function PageDots({ dots, onSelect, dotClassName, keys }: Readonly<{
  * one page in reading direction, as in Carousel's controls.
  */
 export const PageIndicator = forwardRef<HTMLDivElement, PageIndicatorProps>(function PageIndicator({
-  label, count, currentIndex, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, layoutStyle, ...props
+  label, count, currentIndex, maxVisibleDots, interactive = true, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, onFocusCapture, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
+  const host = useRef<HTMLDivElement | null>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    // Moving the bounded window can remove the focused dot. Recover within the same control only when
+    // removal left focus on body; a user who moved elsewhere keeps that focus.
+    if (interactive && lastFocused.current && !lastFocused.current.isConnected && document.activeElement === document.body) {
+      host.current?.querySelector<HTMLButtonElement>('.hjm-page-indicator__dot[data-current="true"]')?.focus();
+    }
+  }, [interactive, count, currentIndex, maxVisibleDots]);
   if (!label.trim()) throw new TypeError("PageIndicator label must not be empty");
-  const descriptor = { count, currentIndex };
+  const descriptor = { count, currentIndex, ...(maxVisibleDots === undefined ? {} : { maxVisibleDots }) };
   const dots = resolvePageIndicator(descriptor, composeAccessibleName);
-  return <div {...props} ref={ref} style={{ ...props.style, ...layoutStyle }} role="group" aria-label={label}
+  const current = dots.find(dot => dot.current)!;
+  return <div {...props} ref={node => { host.current = node; assignRef(ref, node); }} style={{ ...props.style, ...layoutStyle }} role={interactive ? "group" : "img"} aria-label={interactive ? label : current.accessibleName} data-interactive={interactive}
     className={classNames("hjm-page-indicator", className)}
+    onFocusCapture={event => {
+      lastFocused.current = event.target instanceof HTMLElement ? event.target : null;
+      onFocusCapture?.(event);
+    }}
     onKeyDown={(event) => {
       onKeyDown?.(event);
-      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (!interactive || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
       event.preventDefault();
       onCurrentIndexChange(getPageIndicatorTarget(descriptor,
         (event.key === "ArrowRight") !== (theme?.environment.direction === "rtl") ? "next" : "previous"));
     }}>
-    <PageDots dots={dots} onSelect={onCurrentIndexChange} dotClassName="hjm-page-indicator__dot" />
+    {interactive ? <PageDots dots={dots} onSelect={onCurrentIndexChange} dotClassName="hjm-page-indicator__dot" />
+      : dots.map(dot => <span key={dot.index} aria-hidden="true" data-current={dot.current} className="hjm-page-indicator__marker"><span /></span>)}
   </div>;
 });
 
@@ -79,7 +100,7 @@ export const PageIndicator = forwardRef<HTMLDivElement, PageIndicatorProps>(func
 export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carousel({
   label, slides, renderSlide, composeAccessibleName, labels, autoplay,
   currentKey, defaultCurrentKey, onCurrentKeyChange, className,
-  onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props
+  onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, slideMaxHeight, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
   const [storedCurrent, setCurrent] = useControllableState({
@@ -107,6 +128,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   const descriptor = { slides, currentKey: current, ...(autoplay ? { autoplay } : {}) };
   const resolved = resolveCarouselDescriptor(descriptor, { composeAccessibleName });
   if (!label.trim() || Object.values(labels).some((value) => !value.trim())) throw new TypeError("Carousel labels must not be empty");
+  if (slideMaxHeight !== undefined && (!Number.isFinite(slideMaxHeight) || slideMaxHeight <= 0)) throw new TypeError("Carousel slideMaxHeight must be finite and positive");
   const [rotating, setRotating] = useState(autoplay !== undefined);
   const [hovered, setHovered] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -160,7 +182,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       }}>{rotationRequested ? labels.pause : labels.resume}</Button> : null}
     <div className="hjm-carousel__track" aria-live={playing ? "off" : "polite"} aria-atomic={false}>
       {resolved.map((slide) => <div key={slide.id} className="hjm-carousel__slide" role="group"
-        aria-roledescription="slide" aria-label={slide.accessibleName} hidden={slide.inert} inert={slide.inert}>
+        aria-roledescription="slide" aria-label={slide.accessibleName} hidden={slide.inert} inert={slide.inert}
+        tabIndex={slideMaxHeight === undefined ? undefined : 0}
+        style={slideMaxHeight === undefined ? undefined : { maxHeight: slideMaxHeight, overflowY: "auto" }}>
         {renderSlide(slide)}
       </div>)}
     </div>

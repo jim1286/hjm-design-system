@@ -1,4 +1,4 @@
-import { glyph, layout, radius, spacing } from "./foundations.js";
+import { control, glyph, layout, opacity, radius, spacing } from "./foundations.js";
 import { avatarRecipe, emptyStateRecipe } from "./component-recipes.js";
 export function resolveScreenContentState(state = { kind: "ready" }) {
     if (!["ready", "loading", "empty", "error", "restricted"].includes(state.kind)) {
@@ -100,6 +100,17 @@ export function resolveEntryFocus(phase, event, facts) {
 }
 // Reuse reading-width and spacing tokens; do not derive geometry from a product's device or artwork.
 export const screenPatternRecipe = {
+    // Full-screen reading routes use fixed travel, unlike a Sheet's fraction of its own height.
+    // Migrated from Diairy's handle/top-bounce contract so products no longer own dismissal physics.
+    pullDismiss: {
+        activationDistance: 6,
+        distance: 80,
+        flickDistance: 32,
+        flickVelocity: 0.65,
+        maxOffset: 160,
+        settleDuration: 140,
+        topTolerance: 1,
+    },
     maxWidth: layout.readingMaxWidth,
     padding: spacing.md,
     sectionGap: spacing.xl,
@@ -478,13 +489,24 @@ export function timestampRevealOffset(dx, dy) {
 }
 /** Notification previews need an actor/type badge and a separate subject thumbnail.
  * Keep this geometry shared so inboxes do not recreate the same row per product. */
-export const notificationRowRecipe = {
+const notificationRowGeometry = {
     gap: 12, contentGap: 4, avatarSize: 44, avatarBadgeSize: 20,
     thumbnailSize: 44, unreadSize: 6, previewLines: 2, paddingBlock: 12, paddingInline: 16,
+};
+export const notificationRowRecipe = {
+    ...notificationRowGeometry,
+    // Virtualized inboxes provide the section boundary; the shared row owns the text-aligned separator.
+    separatorInsetStart: notificationRowGeometry.paddingInline + notificationRowGeometry.avatarSize + notificationRowGeometry.gap,
+    interaction: { disabledOpacity: opacity.disabled, pressedOpacity: opacity.pressed },
 };
 /** Shared profile identity geometry; product owns the avatar content. */
 export const profileSummaryRecipe = Object.freeze({
     avatarSize: 72,
+    avatarGlyphSize: glyph.xxl,
+    actionsLayouts: Object.freeze({
+        inline: Object.freeze({ axis: "inline", gap: "sm" }),
+        stacked: Object.freeze({ axis: "block", gap: "xs" }),
+    }),
     /**
      * ProfileScreen `editPlacement="summary"` draws the edit action first in the summary's action row. A framed small
      * button reads as the card's own action; the below-summary placement keeps its ghost button (2026-10-15 utilverse
@@ -495,6 +517,8 @@ export const profileSummaryRecipe = Object.freeze({
 export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, multilineLabelMaxWidth: 84, multilineLabelMinHeight: 44, ghostOpacity: 0.55, gap: 6, iconRadius: "22%",
     /** Corner radius as a fraction of the icon size; `squircle` keeps the original 22%. */
     shapes: Object.freeze({ squircle: 0.22, square: 0, circle: 0.5 }),
+    // Standalone tile activation must not add Button face padding around a narrow launcher cell.
+    activation: Object.freeze({ minimumTarget: control.minTouchTarget, pressedOpacity: opacity.pressed, disabledOpacity: opacity.disabled }),
     fillMinSize: 48, fillMaxSize: 68,
     defaults: Object.freeze({ frame: "surface", shape: "squircle", size: "fixed" }) });
 /** The edge a `size="fill"` icon takes in a cell of `cellWidth`, for layout estimates made before the tile measures. */

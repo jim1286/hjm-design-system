@@ -1,5 +1,7 @@
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
-import { type Dispatch, type Ref, type SetStateAction } from "react";
+import { type AriaAttributes, type Dispatch, type Ref, type SetStateAction } from "react";
+/** ARIA's string "false" is valid; grammar/spelling express invalid input just like true. */
+export declare function isAriaInvalid(value: AriaAttributes["aria-invalid"]): boolean;
 export declare function classNames(...values: readonly (string | false | null | undefined)[]): string | undefined;
 export declare function assignRef<Element>(ref: Ref<Element> | undefined, value: Element | null): void;
 export declare function composeRefs<Element>(...refs: readonly (Ref<Element> | undefined)[]): (value: Element | null) => void;
@@ -16,6 +18,12 @@ export declare function useWindowWidth(): number;
 export declare function useElementWidth<Element extends HTMLElement>(externalRef?: Ref<Element>): readonly [number | undefined, (node: Element | null) => void];
 export declare const DesignProfileContext: import("react").Context<Readonly<{
     id: string;
+    controls?: Readonly<{
+        button?: Readonly<{
+            appearance: import("@hjmds/design-contracts/recipes/base").ButtonAppearance;
+            shape: import("@hjmds/design-contracts/recipes/base").ButtonShape;
+        }>;
+    }>;
     palette: Readonly<Record<import("@hjmds/design-contracts/colors").ResolvedTheme, Readonly<import("@hjmds/design-contracts/colors").ThemeColors>>>;
     tokens: Readonly<{
         radius: Readonly<Record<"sm" | "md" | "lg" | "xl" | "full", number>>;

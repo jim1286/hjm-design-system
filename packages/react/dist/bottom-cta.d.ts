@@ -3,13 +3,20 @@ import { type ButtonSize, type ButtonTone } from "./actions.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type BottomCTAAction = Readonly<{
     label: string;
-    onClick: MouseEventHandler<HTMLButtonElement>;
+    /** A regular button requires a handler; submit/reset may use the browser's native form action. */
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+    type?: "button" | "submit" | "reset";
+    /** HTML form owner, including a form in a Sheet body while this action is in its footer. */
+    form?: string;
     accessibilityLabel?: string;
     disabled?: boolean;
     loading?: boolean;
     loadingLabel?: string;
     size?: ButtonSize;
     tone?: ButtonTone;
+    /** Decorative Button adornments; label remains the action name. */
+    leading?: ReactNode;
+    trailing?: ReactNode;
     /**
      * Ref to this action's button. The component `ref` names the bar; a dialog or overlay opened from the primary
      * action needs the button itself to return focus to on close (2026-10-18 Utilverse display board).

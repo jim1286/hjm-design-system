@@ -310,3 +310,9 @@ describe("Steps revisitable steps", () => {
     expect(stepsRecipe.press.minTouchTarget).toBe(44);
   });
 });
+
+it("accepts explicit free reading navigation and rejects unknown navigation modes", () => {
+  expect(()=>validateStepsDescriptor({steps,currentStepId:steps[0]!.id,navigationMode:"free"})).not.toThrow();
+  expect(()=>validateStepsDescriptor({steps,currentStepId:steps[0]!.id,navigationMode:"linear"})).not.toThrow();
+  expect(()=>validateStepsDescriptor({steps,currentStepId:steps[0]!.id,navigationMode:"skip" as "free"})).toThrow(/navigationMode/);
+});

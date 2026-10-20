@@ -46,5 +46,11 @@ export declare function InitialFocusScope({ mode, children }: {
 }): import("react").JSX.Element;
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */
 export declare function useInitialFocusTarget(element: RefObject<HTMLElement | null>, preference: boolean | undefined): void;
+/** Page footer inputs are bottom-anchored, so entry must not open their keyboard (2026-10-18 user request).
+ * Keep the boundary through nested screens; a separately opened overlay owns its own focus policy.
+ */
+export declare function BottomEntryFocusBoundary({ children }: {
+    children: ReactNode;
+}): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=initial-focus.d.ts.map

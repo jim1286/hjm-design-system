@@ -328,6 +328,9 @@ export const publicExportEntries = {
     ListRow: [
         "./data-display"
     ],
+    ListSeparator: [
+        "./data-display"
+    ],
     LoadMore: [
         "./top-bar",
         "./navigation"
@@ -414,6 +417,9 @@ export const publicExportEntries = {
     PasswordRulesField: [
         "./task-controls"
     ],
+    PendingContent: [
+        "./feedback"
+    ],
     PermissionScreen: [
         "./screen-flows"
     ],
@@ -440,6 +446,9 @@ export const publicExportEntries = {
     ],
     QRCode: [
         "./qr-code"
+    ],
+    QuoteCard: [
+        "./data-display"
     ],
     RadarChart: [
         "./chart"
@@ -509,6 +518,12 @@ export const publicExportEntries = {
     ],
     Sheet: [
         "./overlays"
+    ],
+    SheetPanel: [
+        "./sheet-panel"
+    ],
+    ShortcutRail: [
+        "./shortcut-rail"
     ],
     Skeleton: [
         "./feedback"
@@ -599,6 +614,9 @@ export const publicExportEntries = {
     ],
     Timeline: [
         "./data-display"
+    ],
+    TimePicker: [
+        "./time-picker"
     ],
     Toast: [
         "./feedback"

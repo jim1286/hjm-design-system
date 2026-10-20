@@ -1,3 +1,5 @@
+import { PendingContent } from "./internal/pending-content.js";
+import type { ComponentRef } from "react";
 import {
   authScreenRecipe,
   resolveAuthScreenDescriptor,
@@ -18,7 +20,6 @@ import { resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { useKeyboardOverlap } from "./keyboard.js";
 import { Text } from "./primitives.js";
 import {
-  ActivityIndicator,
   Platform,
   Pressable,
   ScrollView,
@@ -131,7 +132,7 @@ export function AuthScreenLayout({
   const pending = pendingLabel !== undefined;
   if (pending && !pendingLabel.trim()) throw new TypeError("AuthScreen pendingLabel must not be empty");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("AuthScreenLayout safeAreaBottom must be non-negative");
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ComponentRef<typeof ScrollView>>(null);
   // Only a keyboard flag: automaticallyAdjustKeyboardInsets already pads the overlap, which clears the home indicator.
   // The ScrollView class exposes its host view (with measureInWindow) through getNativeScrollRef.
   const keyboardHost = useMemo(() => ({ get current() { return scrollRef.current?.getNativeScrollRef?.() ?? null; } }), []);
@@ -170,15 +171,7 @@ export function AuthScreenLayout({
         {/* Web centers hero copy with inherited text-align; Native needs the explicit context. */}
         <AuthScreenDensityContext.Provider value={resolved.density}><InheritedTextAlignContext.Provider value="center"><View style={{ width: "100%", alignItems: "center", gap: resolved.heroGap }}>{hero}</View></InheritedTextAlignContext.Provider></AuthScreenDensityContext.Provider>
         <MainContainer style={{ width: "100%" }}>
-          {/* Keep layout and form state, while excluding hidden controls from touch and screen-reader navigation. */}
-          <View pointerEvents={pending ? "none" : "auto"} accessibilityElementsHidden={pending}
-            importantForAccessibility={pending ? "no-hide-descendants" : "auto"}
-            style={pending ? { opacity: 0 } : undefined}>{main}</View>
-          {pending ? <View accessible accessibilityLabel={pendingLabel} accessibilityRole="progressbar"
-            accessibilityLiveRegion="polite" accessibilityState={{ busy: true }}
-            style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, alignItems: "center", justifyContent: "center" }}>
-            <ActivityIndicator accessible={false} />
-          </View> : null}
+          <PendingContent pending={pending} label={pendingLabel ?? ""}>{main}</PendingContent>
         </MainContainer>
       </View>
       {showFooter ? (

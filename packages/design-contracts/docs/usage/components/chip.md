@@ -87,6 +87,11 @@ import { Chip } from "@hjmds/react-native/inputs";
 - 색·테두리를 덮지 않는다. 배치는 두 renderer 모두 `layoutStyle`로 한다. Native `labelStyle`은 제거된 속성 —
   `size`·`selected`로 글자 모양을 정한다([이관 문서](../../migration-native-legacy-removal.md)).
 
+### 열기와 삭제가 독립적인 가로 목록
+
+`ShortcutRail`은 Chip의 companion이다. 최근 도시·도구처럼 열기와 기록 삭제가 각각 필요한 항목은
+[바로가기 목록 구성](../compositions/shortcut-rail.md)을 쓴다. Chip.trailing에 삭제 버튼을 넣어 중첩하지 않는다.
+
 ## 플랫폼 차이
 
 | 항목 | Web | Native |

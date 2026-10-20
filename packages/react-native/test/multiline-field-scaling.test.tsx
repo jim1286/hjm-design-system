@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { createRef } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Platform, TextInput } from "react-native";
@@ -12,7 +13,7 @@ afterEach(() => { testPlatform.OS = originalOS; vi.restoreAllMocks(); });
 // 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
 it.skip("refreshes iOS attributed draft text across scales while preserving value, focus, selection and forwarded ref", () => {
   testPlatform.OS = "ios";
-  const ref = createRef<TextInput>();
+  const ref = createRef<ComponentRef<typeof TextInput>>();
   const onValueChange = vi.fn();
   let scale = 1;
   let renderer!: ReactTestRenderer;
@@ -43,7 +44,7 @@ it.skip("refreshes iOS attributed draft text across scales while preserving valu
 it.skip("retains the Android editor and unchanged-scale iOS editor", () => {
   for (const os of ["android", "ios"] as const) {
     testPlatform.OS = os;
-    const ref = createRef<TextInput>();
+    const ref = createRef<ComponentRef<typeof TextInput>>();
     let scale = 1;
     let renderer!: ReactTestRenderer;
     const tree = () => <HjmNativeProvider theme="light" reducedMotion textScale={scale}><TextArea ref={ref} accessibilityLabel="Idea" defaultValue="draft" /></HjmNativeProvider>;
@@ -63,9 +64,9 @@ it.skip("retains the Android editor and unchanged-scale iOS editor", () => {
 it("attaches product callback refs once instead of re-attaching on every render", () => {
   testPlatform.OS = "ios";
   const fields = [
-    (ref: (node: TextInput | null) => void, value: string) => <TextArea ref={ref} accessibilityLabel="Idea" value={value} onValueChange={() => {}} minVisibleLines={3} />,
-    (ref: (node: TextInput | null) => void, value: string) => <SearchField ref={ref} label="검색" clearLabel="지우기" busyLabel="검색 중" value={value} onValueChange={() => {}} />,
-    (ref: (node: TextInput | null) => void, value: string) => <PasswordField ref={ref} label="비밀번호" autofillHint="current" revealLabel="보기" concealLabel="숨기기" value={value} onValueChange={() => {}} />,
+    (ref: (node: ComponentRef<typeof TextInput> | null) => void, value: string) => <TextArea ref={ref} accessibilityLabel="Idea" value={value} onValueChange={() => {}} minVisibleLines={3} />,
+    (ref: (node: ComponentRef<typeof TextInput> | null) => void, value: string) => <SearchField ref={ref} label="검색" clearLabel="지우기" busyLabel="검색 중" value={value} onValueChange={() => {}} />,
+    (ref: (node: ComponentRef<typeof TextInput> | null) => void, value: string) => <PasswordField ref={ref} label="비밀번호" autofillHint="current" revealLabel="보기" concealLabel="숨기기" value={value} onValueChange={() => {}} />,
   ];
   for (const field of fields) {
     const ref = vi.fn();

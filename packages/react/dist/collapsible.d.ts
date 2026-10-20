@@ -4,6 +4,12 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type CollapsibleProps = CollapsibleOpenState & Readonly<{
     /** The control's label; it also tells the user what will appear. */
     trigger: ReactNode;
+    /** Accessible action name when the trigger is artwork or has a shorter visible label. */
+    triggerLabel?: string;
+    /** Static heading beside the disclosure action, outside the button's accessible name. */
+    title?: ReactNode;
+    /** While content is being prepared, replace the action with one labeled spinner. */
+    pendingLabel?: string;
     children: ReactNode;
     disabled?: boolean;
     /** Inline tools stay expanded without a disclosure trigger. */

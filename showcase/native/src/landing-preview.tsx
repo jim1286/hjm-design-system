@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { PatternStatus } from "./pattern-status";
 import { useRef, useState } from "react";
 import { Container, Stack, Surface, Text } from "@hjmds/react-native/primitives";
@@ -14,10 +15,10 @@ import { spacing } from "@hjmds/design-contracts/foundations";
 export function LandingPreview(){
  const[open,setOpen]=useState(false);const[draft,setDraft]=useState("");const[error,setError]=useState(false);const[notes,setNotes]=useState([{ id: 0, text: copy.initial }]);const[saved,setSaved]=useState(false);
  const nextId=useRef(1); const sessionOpen=useRef(false);
- const input=useRef<TextInput>(null); const returnFocus=useRef<View>(null);
- const topTrigger=useRef<View>(null); const bottomTrigger=useRef<View>(null);
+ const input=useRef<ComponentRef<typeof TextInput>>(null); const returnFocus=useRef<ComponentRef<typeof View>>(null);
+ const topTrigger=useRef<ComponentRef<typeof View>>(null); const bottomTrigger=useRef<ComponentRef<typeof View>>(null);
  // Dismissal keeps the draft; only a successful save starts a fresh note.
- const start=(trigger: View | null)=>{returnFocus.current=trigger;sessionOpen.current=true;setError(false);setSaved(false);setOpen(true);};
+ const start=(trigger: ComponentRef<typeof View> | null)=>{returnFocus.current=trigger;sessionOpen.current=true;setError(false);setSaved(false);setOpen(true);};
  const changeOpen=(next:boolean)=>{sessionOpen.current=next;setOpen(next);};
  const submit=()=>{
   // The ref closes this session before React commits, so two submit events cannot append twice.

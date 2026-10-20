@@ -3,7 +3,7 @@ import { Text } from "./layout.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { typography } from "@hjmds/design-contracts/foundations";
 import {
-  imageChoiceRecipe, resolveImageChoiceCaptionLines, resolveImageChoiceColumns, resolveImageChoiceTileHeight, resolveImageChoiceToggle,
+  imageChoiceRecipe, resolveImageChoiceCaptionLines, resolveImageChoiceColumns, resolveImageChoiceOuterSize, resolveImageChoiceTileHeight, resolveImageChoiceToggle,
   validateImageChoiceItemLabelLines, validateImageChoiceItems, type ImageChoiceItemDescriptor, type ImageChoiceItemLabelLines,
 } from "@hjmds/design-contracts/components/image-choice";
 import { resolveVirtualWindow, virtualListRecipe } from "@hjmds/design-contracts/components/virtual-list";
@@ -114,7 +114,7 @@ function VirtualTileRows({ items, renderTile, label, role, height, overscan, est
     const rendered = host.current?.querySelector<HTMLElement>(".hjm-image-choice__row")?.offsetHeight ?? 0;
     if (rendered > 0 && rendered !== measuredTileHeight) setMeasuredTileHeight(rendered);
   });
-  const columns = width > 0 ? resolveImageChoiceColumns(width) : 0;
+  const columns = width > 0 ? Math.min(items.length, resolveImageChoiceColumns(width)) : 0;
   const stride = (measuredTileHeight || estimatedTileHeight) + imageChoiceRecipe.gap;
   const rowCount = columns ? Math.ceil(items.length / columns) : 0;
   const range = resolveVirtualWindow(rowCount, stride, height, scrollTop, overscan);
@@ -125,7 +125,7 @@ function VirtualTileRows({ items, renderTile, label, role, height, overscan, est
   return <div ref={host} className="hjm-image-choice__viewport" role={role} aria-label={label} style={{ height }}
     onScroll={event => setScrollTop(event.currentTarget.scrollTop)}>
     {columns ? <div style={{ position: "relative", height: Math.max(0, range.totalHeight - imageChoiceRecipe.gap) }}>
-      {rows.map(row => <div key={row} className="hjm-image-choice__row" style={{ top: row * stride }}
+      {rows.map(row => <div key={row} className="hjm-image-choice__row" style={{ top: row * stride, display: "grid", gridTemplateColumns: `repeat(${columns}, ${resolveImageChoiceOuterSize()}px)`, justifyContent: "space-between" }}
         onFocusCapture={() => setFocusedRow(row)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocusedRow(current => current === row ? null : current); }}>
         {items.slice(row * columns, row * columns + columns).map((item, offset) => renderTile(item, row * columns + offset))}
       </div>)}

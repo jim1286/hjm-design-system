@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState } from "react";
 import { Platform, ScrollView, type View } from "react-native";
 import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
@@ -20,7 +21,7 @@ const families = Platform.OS === "ios" ? { display: ["Georgia"], reading: ["Pala
 export function FontRolePreview({ initialMode = "separated" }: FontRolePreviewProps) {
   const [mode, setMode] = useState<FontRoleMode>(initialMode), [index, setIndex] = useState(0);
   const [draft, setDraft] = useState<string>(copy.initial), [open, setOpen] = useState(false);
-  const trigger = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
   const design = defineHjmDesignProfile(fontRolePreviewInput(profileOptions[index]!.id, mode, families));
   const nextTheme = () => setIndex(current => (current + 1) % profileOptions.length);
   return <HjmNativeProvider designProfile={design}><ScrollView keyboardShouldPersistTaps="handled"><Container size="reading" gutter="compact"><Stack gap="lg">

@@ -1,3 +1,4 @@
+import type { GridDescriptor } from "@hjmds/design-contracts/grid";
 import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 export type { SwitchSize, SwitchPresentation };
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
@@ -102,6 +103,8 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<FieldsetHTMLAttributes<HT
     description?: ReactNode;
     error?: ReactNode;
     orientation?: SelectionGroupOrientation;
+    /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
+    grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
     size?: SelectionControlSize;
     name?: string;
@@ -118,6 +121,13 @@ export type RadioGroupItem = Readonly<{
     label: ReactNode;
     description?: ReactNode;
     disabled?: boolean;
+    /** Independent sibling action; activating it never selects the option. */
+    action?: Readonly<{
+        label: string;
+        accessibilityLabel?: string;
+        onAction: () => void;
+        disabled?: boolean;
+    }>;
 }>;
 type RadioGroupLabelProps = Readonly<{
     label: ReactNode;
@@ -132,13 +142,19 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
+    grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
     size?: SelectionControlSize;
+    /** Hide the decorative dot when a product preview already communicates the choice. */
+    indicator?: "default" | "none";
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
     required?: boolean;
     readOnly?: boolean;
+    /** Visual preview only; the item label remains the accessible name. */
+    renderLabel?: (item: RadioGroupItem) => ReactNode;
     renderLeading?: (item: RadioGroupItem, appearance: ChoiceLeadingRenderProps) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -177,6 +193,8 @@ export declare const Switch: import("react").ForwardRefExoticComponent<Omit<Butt
 export type SegmentedControlItem = Readonly<{
     value: string;
     label: ReactNode;
+    /** Full spoken name when the visible label is abbreviated. */
+    accessibilityLabel?: string;
     disabled?: boolean;
 }>;
 export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "defaultValue" | "onChange" | "value"> & Readonly<{
@@ -190,6 +208,8 @@ export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElem
     textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
+    overflow?: "wrap" | "scroll";
+    actions?: ReactNode;
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -205,6 +225,8 @@ export declare const SegmentedControl: import("react").ForwardRefExoticComponent
     textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
+    overflow?: "wrap" | "scroll";
+    actions?: ReactNode;
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

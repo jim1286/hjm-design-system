@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AppState, type View } from "react-native";
 import { videoDialogHost } from "./video-dialog-host";
@@ -40,7 +41,7 @@ export function VideoDialogPreview() {
   const [broken, setBroken] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [draft, setDraft] = useState("");
-  const trigger = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
   return <Stack gap="lg">
     <Text>짧은 영상을 확인하고 작성 중인 메모로 돌아오세요.</Text>
     <TextField label="영상 메모" value={draft} onValueChange={setDraft} />

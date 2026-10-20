@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState } from "react";
 import type { View } from "react-native";
 import { CollectionRail } from "@hjmds/react-native/collection-rail";
@@ -16,7 +17,7 @@ import { collectionRecords, collectionCopy as copy, type CollectionDetailProps }
 function RecordCard({ label, description }: { label: string; description: string }) {
   const [draft, setDraft] = useState<string>(copy.initial), [detailDraft, setDetailDraft] = useState<string>(copy.initial);
   const [open, setOpen] = useState(false);
-  const trigger = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
   // An explicit canonical return target preserves the invoking card action,
   // including after theme changes; no separate Native focus engine is added.
   return <Card title={label} description={description} actions={<Button ref={trigger} tone="secondary" onPress={() => setOpen(true)}>{label} {copy.open}</Button>}>

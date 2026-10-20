@@ -65,6 +65,8 @@ import { PageIndicator } from "@hjmds/react-native/carousel";
 | --- | --- | --- | --- |
 | `label` | `string` | 필수 | 페이지 묶음의 이름. Web은 group 이름, Native는 `label: 현재 페이지 이름`으로 읽힌다. 비면 `TypeError` |
 | `count` | 1 이상 정수 | 필수 | 페이지 수. 밖이면 `RangeError` |
+| `maxVisibleDots` | 1 이상 정수 | 전체 | 현재 페이지를 포함하는 연속 창만 표시. 이름·이동은 전체 페이지 기준이며 창 크기는 페이지 수를 넘지 않는다(checkout 미게시) |
+| `interactive` | `boolean` | `true` | `false`이면 위치만 표시하며 점은 누름 대상/키보드/조절 행동을 만들지 않는다. 별도 이전·다음 컨트롤이 있는 작은 표시용(checkout 미게시) |
 | `currentIndex` | 0부터 `count - 1` | 필수 | 페이저가 확정한 현재 페이지. 컴포넌트는 따로 기억하지 않는다 |
 | `onCurrentIndexChange` | `(index: number) => void` | 필수 | 점 누름·Web 화살표 키·Native 조절 동작이 요청한 페이지. 처음·끝에서는 같은 값이 다시 올 수 있다(넘어가지 않고 멈춘다) |
 | `composeAccessibleName` | `({ position, total }) => string` | 필수 | 점 하나의 이름. 숫자 문법은 제품 문구다. 빈 문자열은 `TypeError` |
@@ -87,6 +89,7 @@ import { PageIndicator } from "@hjmds/react-native/carousel";
 - `onCurrentIndexChange`에서 페이저를 그 페이지로 옮긴다. 이 컴포넌트는 스크롤하지 않는다.
 - 숨은 페이지의 내용은 제품 페이저가 접근성 트리에서 뺀다(`accessibilityElementsHidden`·`importantForAccessibility`).
 - 점의 색·크기를 덮지 않는다. Carousel과 같은 recipe를 쓴다.
+- 제한 창의 대화형 점이 이동하면서 현재 초점의 점을 제거하면 Web은 현재 점으로 초점을 복구한다. 다른 컨트롤로 이동한 초점은 유지한다.
 
 ## 플랫폼 차이
 
@@ -100,3 +103,12 @@ import { PageIndicator } from "@hjmds/react-native/carousel";
 ## 근거
 
 - PageIndicator 추가: 2026-10-18 Utilverse 홈 런처가 Native 페이저 아래 점을 직접 그렸다(HJM 1.30.0 감사 "HJM gap"). Carousel 점 줄을 공개 부품으로 빼서 같은 recipe·같은 이동 규칙을 쓰게 했다.
+
+
+## 별도 이동 컨트롤이 있는 작은 위치 표시
+
+번뚝처럼 이전·다음 버튼과 페이저를 이미 제공하는 화면은 `interactive={false}`와
+`maxVisibleDots={5}`를 사용한다. 8px 점과 8px 간격은 그대로이며 44px 버튼을 작게 만들지 않는다.
+Web은 현재 페이지 이름을 갖는 `img`, Native는 같은 이름의 `image`이다. 이동은 별도 공통
+IconButton 또는 제품 페이저가 소유한다. `interactive`를 생략하면 기존 점 선택·키보드·Native 조절이 유지된다.
+이 옵션은 2026-10-19 번뚝 앱·웹에 각각 있던 5개 점 창과 직접 스타일을 제거하기 위해 추가했으며 미게시다.

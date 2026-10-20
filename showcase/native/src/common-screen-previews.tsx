@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { ProviderLogo } from "./provider-logo";
 import { SettingsPagePreview } from "./settings-page-preview";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
@@ -70,7 +71,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   };
   // Long conversations need a virtualized list, so the timeline is a FlatList under ChatScreen's default
   // scroll="content" (2026-10-06; it was a mapped Stack under scroll="screen"). Reply links jump by index.
-  const listRef = useRef<FlatList<DemoMessage>>(null);
+  const listRef = useRef<ComponentRef<typeof FlatList<DemoMessage>>>(null);
   const timeline = [...initialMessages, ...messages];
   // Group positions own the gaps between messages, so the list adds no separator.
   const groupPositions = resolveChatMessageGroups(timeline.map(message => ({id:message.id,authorId:message.author,timestamp:message.timestamp})));

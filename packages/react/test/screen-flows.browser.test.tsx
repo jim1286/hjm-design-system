@@ -6,6 +6,16 @@ import {beforeEach,afterEach,it,expect,vi} from "vitest";
 import {HjmProvider} from "../src/provider.js";
 import {EditorScreen,ListDetailScreen,SearchScreen,PermissionScreen,CommentThreadScreen} from "../src/screen-flows.js";
 import "../src/styles.css";
+it("closes replay onboarding without completion and disables exit during persistence",async()=>{
+ const {OnboardingScreen}=await import("../src/screen-flows.js");
+ const close=vi.fn(),finish=vi.fn(),move=vi.fn();
+ const screen=(pending=false)=><HjmProvider><OnboardingScreen steps={[{id:"one",title:"안내 다시 보기",description:"설명",content:"기존 선택"}]} index={0} onIndexChange={move} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:finish,pending}} exit={{kind:"close",label:"안내 닫기",onClick:close}} progressLabel={()=>"1/1"}/></HjmProvider>;
+ await act(async()=>root.render(screen()));
+ const button=()=>host.querySelector<HTMLButtonElement>('button[aria-label="안내 닫기"]')!;
+ expect(button().querySelector('[data-kind="close"]')).not.toBeNull();await userEvent.click(button());
+ expect(close).toHaveBeenCalledOnce();expect(finish).not.toHaveBeenCalled();expect(move).not.toHaveBeenCalled();
+ await act(async()=>root.render(screen(true)));expect(button().disabled).toBe(true);
+});
 it("keeps comment overflow beside the heart with separate keyboard actions at narrow width",async()=>{
  const {IconButton}=await import("../src/actions.js");
  const like=vi.fn(),more=vi.fn();host.style.width="320px";host.style.height="720px";
@@ -366,4 +376,22 @@ it("aligns anonymous comment body with avatar without an empty metadata row", as
  await act(async()=>root.render(<HjmProvider><CommentThreadScreen title="Comments" items={[{id:"one",parentId:null,author:"",timeLabel:"",body:<div data-testid="aligned-body">Comment</div>,avatar:<div data-testid="aligned-avatar" style={{width:40,height:40}}>Avatar</div>,likeCountLabel:"",likeIcon:null,likeLabel:"Like",likeAction:null,canReply:false}]} expandedIds={[]} onExpandedChange={()=>{}} onLike={()=>{}} onReply={()=>{}} replyLabel="Reply" repliesLabel={()=>"Replies"}/></HjmProvider>));
  const body=host.querySelector('[data-testid="aligned-body"]')!,avatar=host.querySelector('[data-testid="aligned-avatar"]')!;
  expect(Math.abs(body.getBoundingClientRect().top-avatar.getBoundingClientRect().top)).toBeLessThan(1);
+});
+
+
+it("centers permission guidance in the actual body between its header and footer", async () => {
+ const request=vi.fn();
+ for(const height of [480,720]){
+  // Viewport dimensions belong to the host, not the screen's layout-only public style contract.
+  await act(async()=>root.render(<HjmProvider><div style={{height,width:360}}><PermissionScreen title="알림 권한" status="prompt"
+   explanation={<p data-testid="permission-guidance">도착 소식을 알려 드려요.</p>}
+   request={{label:"허용",onAction:request}} settings={{label:"설정",onAction:vi.fn()}}
+   continueAction={{label:"계속",onAction:vi.fn()}} skip={{label:"나중에",onAction:vi.fn()}}/></div></HjmProvider>));
+  const body=host.querySelector('.hjm-screen__body')!.getBoundingClientRect();
+  const guidance=host.querySelector('[data-testid="permission-guidance"]')!.getBoundingClientRect();
+  const footer=host.querySelector('.hjm-screen__footer')!.getBoundingClientRect();
+  expect(Math.abs((guidance.top+guidance.bottom)/2-(body.top+body.bottom)/2)).toBeLessThan(1);
+  expect(guidance.bottom).toBeLessThanOrEqual(footer.top);
+  expect(request).not.toHaveBeenCalled();
+ }
 });

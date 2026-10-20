@@ -35,7 +35,7 @@ it("does not steal focus from a field the user is in or from under an open modal
   await render(<ScreenLayout title="프로필" initialFocus="first-input"><TextField aria-label="별명" /></ScreenLayout>);
   expect(active()).not.toBe("별명"); modal.remove();
 });
-it("defaults on for search, editor and chat pages", async () => {
+it("focuses upper search/editor inputs but leaves the bottom chat composer alone", async () => {
   await render(<SearchScreen title="검색" query="" queryLabel="검색어" queryClearLabel="지우기" onQueryChange={() => {}} onSearch={() => {}}>{null}</SearchScreen>);
   expect(document.activeElement?.tagName).toBe("INPUT");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
@@ -44,7 +44,7 @@ it("defaults on for search, editor and chat pages", async () => {
   expect(active()).toBe("본문");
   await act(async () => root.unmount()); root = createRoot(host); (document.activeElement as HTMLElement).blur();
   await render(<ChatScreen title="대화" composer={<TextArea aria-label="메시지" />}>{null}</ChatScreen>);
-  expect(active()).toBe("메시지");
+  expect(active()).not.toBe("메시지");
 });
 it("never focuses a bottom sheet input on opening, with one field or several", async () => {
   await render(<Sheet open onOpenChange={() => {}} title="이름 바꾸기" closeLabel="닫기" showClose><TextField aria-label="새 이름" /></Sheet>);
@@ -137,4 +137,12 @@ it.each(["click", "contextmenu"])("cancels deferred page focus when a %s arrives
   control.dispatchEvent(new MouseEvent(event, { bubbles: true }));
   await settle();
   expect(active()).toBe("반응");
+});
+
+it("excludes marked footer inputs and nested footer screens while retaining upper input focus", async () => {
+  await render(<ScreenLayout title="설정" footer={<TextField aria-label="하단" initialFocusTarget />}><TextField aria-label="상단" /></ScreenLayout>);
+  expect(active()).toBe("상단");
+  await act(async () => root.unmount()); root = createRoot(host);
+  await render(<ScreenLayout title="상세" footer={<ScreenLayout title="하단 입력"><TextField aria-label="하단" initialFocusTarget /></ScreenLayout>}>{null}</ScreenLayout>);
+  expect(active()).not.toBe("하단");
 });

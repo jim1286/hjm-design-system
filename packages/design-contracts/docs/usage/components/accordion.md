@@ -63,14 +63,14 @@ import { Text } from "@hjmds/react-native/primitives";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `items` | Web `{ id, title: ReactNode, panel: ReactNode, disabled? }[]` · Native `{ value, title: string, description?, content, disabled?, accessibilityLabel?, accessibilityHint?, contentAccessibilityLabel? }[]` | 필수 | 한 개 이상, 식별자 고유 |
+| `items` | Web `{ id, title: ReactNode, panel: ReactNode, disabled?, accessibilityLabel? }[]` · Native `{ value, title: string, description?, content, disabled?, accessibilityLabel?, accessibilityHint?, contentAccessibilityLabel? }[]` | 필수 | 한 개 이상, 식별자 고유 |
 | `density` | `compact` · `comfortable` | `comfortable` | compact는 trigger 최소 높이가 최소 터치 영역이다 |
 | Web `allowsMultipleExpanded` · Native `multiple` | `boolean` | `false` | 여러 항목 동시 펼침 |
 | Web `value`·`defaultValue` · Native `expandedValues`·`defaultExpandedValues` | `readonly string[]`(펼친 식별자) | `defaultValue`·`defaultExpandedValues` `[]` | 제어·비제어 둘 다 된다 |
 | Web `onValueChange` · Native `onExpandedValuesChange` | `(value: readonly string[]) => void` | — | 펼친 식별자 전체 목록을 받는다(단일 모드는 0~1개) |
 | Web `headingLevel` | `2`~`6` | `3` | 화면의 heading 위계에 맞춰 정한다 |
 | Native `label` | `string` | 필수 | 그룹 접근성 이름 |
-| Native `renderIndicator` | `(props: { value, expanded, disabled, color, size }) => ReactNode` | `+`/`−` | 펼침 표시만 교체한다 |
+| `renderIndicator` | Web `(props: { value, expanded, disabled }) => ReactNode` · Native는 `color, size`도 제공 | `+`/`−` | Web 슬롯·항목 접근성 이름은 미게시 로컬 소스다. 장식 펼침 표시만 교체한다. 점수 등 도메인 정보를 넣으면 item의 `accessibilityLabel`에 값도 포함한다. 버튼·링크를 넣지 않는다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용 |
 | Native `style`·`itemStyle`·`triggerStyle`·`titleStyle`·`indicatorStyle`·`panelStyle` | — | — | 제거된 속성 — `layoutStyle` 또는 `density`/`renderIndicator` |
 
@@ -107,3 +107,5 @@ import { Text } from "@hjmds/react-native/primitives";
 | 항목별 접근성 문구 | 없음 | `accessibilityLabel`, `accessibilityHint`, `contentAccessibilityLabel` |
 | 키보드 | ArrowUp/Down·Home·End로 trigger 이동(disabled 건너뜀) | 해당 없음 |
 | 애니메이션 | 없음(`hidden` 전환) | `LayoutAnimation`, reduced motion이면 생략 |
+
+2026-10-20 번뚝 평가 항목 이관에서 Web에도 Native와 같은 장식 indicator 슬롯과 항목 접근성 이름이 필요했다. 공통 버튼·키보드 이동·단일 펼침 엔진을 유지하면서 제품 점수 막대를 연결하도록 제공한다.

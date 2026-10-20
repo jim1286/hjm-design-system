@@ -5,11 +5,15 @@ export declare const progressRecipe: {
         readonly tone: "brand";
         readonly shape: "linear";
         readonly max: 100;
+        readonly showValue: true;
     };
     readonly sizes: {
         readonly small: 4;
         readonly medium: 8;
         readonly large: 12;
+    };
+    readonly segmented: {
+        readonly gap: 4;
     };
     readonly circular: {
         readonly sizes: {
@@ -55,4 +59,6 @@ export declare const progressRecipe: {
 export type ProgressSize = keyof typeof progressRecipe.sizes;
 export type ProgressTone = keyof typeof progressRecipe.tones;
 export type ProgressShape = "linear" | "circular";
+/** Same determinate quantity, painted in equal units (Diairy activity days); never a step-navigation engine. */
+export declare function resolveProgressSegments(value: number | undefined, max: number, count: number | undefined, shape: ProgressShape): readonly number[] | undefined;
 //# sourceMappingURL=progress-recipe.d.ts.map

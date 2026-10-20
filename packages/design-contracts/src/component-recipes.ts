@@ -52,6 +52,7 @@ export {
 } from "./counter-badge-recipe.js";
 export {
   progressRecipe,
+  resolveProgressSegments,
   type ProgressShape,
   type ProgressSize,
   type ProgressTone,
@@ -267,7 +268,7 @@ export const linkRecipe = {
 };
 
 export const selectionGroupRecipe = {
-  slots: ["root", "label", "requiredIndicator", "description", "items", "error"] as const,
+  slots: ["root", "label", "requiredIndicator", "description", "items", "itemLabel", "itemAction", "error"] as const,
   defaults: { orientation: "vertical", presentation: "card" },
   orientations: {
     vertical: {
@@ -276,11 +277,11 @@ export const selectionGroupRecipe = {
       // the only outer radius and the rows share edges instead of floating
       // apart with their own gap — the same shape as `selectionControlRecipe`'s
       // `grouped` presentation, which this gap pairs with.
-      gap: { plain: spacing.xxs, card: spacing.xs, grouped: 0 },
+      gap: { plain: spacing.xxs, card: spacing.xs, grouped: 0, chips: spacing.xs },
     },
     horizontal: {
       direction: "row",
-      gap: { plain: spacing.sm, card: spacing.md, grouped: 0 },
+      gap: { plain: spacing.sm, card: spacing.md, grouped: 0, chips: spacing.xs },
     },
   },
   label: formSupportContract.label,
@@ -315,6 +316,8 @@ export type BadgeTone =
 export type BadgeSize = "small" | "medium";
 export type BadgeVariant = "filled" | "outline";
 
+export type BadgeAdornmentContext = Readonly<{ color: string; size: number }>;
+
 export const badgeRecipe = {
   slots: ["root", "icon", "label", "trailing"] as const,
   defaults: { tone: "neutral", size: "medium", variant: "filled" },
@@ -331,13 +334,13 @@ export const badgeRecipe = {
   // 2026-10-18: match the Today Baseball status plate reference: solid fill,
   // white copy and compact rounded corners. Outline retains its tone-colored copy.
   tones: {
-    neutral: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.secondary, background: themeColor("neutralFill"), border: null },
-    strong: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.primary, background: themeColor("strongFill"), border: null },
+    neutral: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.secondary, background: themeColor("neutralFill"), border: null },
+    strong: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.primary, background: themeColor("strongFill"), border: null },
     brand: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.brand, background: semanticColors.action.brand.background, border: null },
-    info: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.info.foreground, background: solidAccentColor("info"), border: semanticColors.feedback.info.border },
-    success: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.success.foreground, background: solidAccentColor("success"), border: semanticColors.feedback.success.border },
-    warning: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.warning.foreground, background: solidAccentColor("warning"), border: semanticColors.feedback.warning.border },
-    attention: { content: semanticColors.content.inverse, outlineContent: semanticColors.feedback.attention.foreground, background: solidAccentColor("attention"), border: semanticColors.feedback.attention.border },
+    info: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.info.foreground, background: solidAccentColor("info"), border: semanticColors.feedback.info.border },
+    success: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.success.foreground, background: solidAccentColor("success"), border: semanticColors.feedback.success.border },
+    warning: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.warning.foreground, background: solidAccentColor("warning"), border: semanticColors.feedback.warning.border },
+    attention: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.attention.foreground, background: solidAccentColor("attention"), border: semanticColors.feedback.attention.border },
     danger: { content: semanticColors.action.danger.content, outlineContent: semanticColors.content.danger, background: semanticColors.action.danger.background, border: semanticColors.feedback.danger.border },
   },
   sizes: {
@@ -345,12 +348,14 @@ export const badgeRecipe = {
       minHeight: 20,
       paddingHorizontal: spacing.xs,
       gap: spacing.xxs,
+      iconSize: glyph.xs,
       textVariant: "caption",
     },
     medium: {
       minHeight: 24,
       paddingHorizontal: spacing.xs,
       gap: spacing.xxs,
+      iconSize: glyph.xs,
       textVariant: "caption",
     },
   },
@@ -534,6 +539,8 @@ export const listRecipe = {
    */
   separators: {
     none: null,
+    // Controls and router-owned rows already contain their own padding; their separators stay on the content edge.
+    content: { insetStart: 0, leadingInsetStart: 0, insetEnd: 0 },
     full: { insetStart: -listRowSurfaceBleed, leadingInsetStart: -listRowSurfaceBleed, insetEnd: -listRowSurfaceBleed },
     indented: { insetStart: 0, leadingInsetStart: listRowLeadingSize + listRowGap, insetEnd: 0 },
   },
@@ -987,7 +994,9 @@ export const segmentedControlRecipe = {
   defaults: { size: "medium" },
   // Category filters share the single-selection engine, with a compact surface inside a 44 target.
   // See usage/components/segmented-control.md; no separate filter-selection state is introduced.
-  pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xs, minHeight: control.minTouchTarget,
+  // Match Chip's visible size step in mixed filter rails; the inset keeps a separate 44pt touch box.
+  // The old 8pt inset drew 28pt pills next to a 36pt small action chip (Utilverse, 2026-10-20).
+  pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xxs, minHeight: control.minTouchTarget,
     selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas,
     /**
      * Pills are content-width, so large text keeps the row: it wraps inside a block and stays one line
@@ -1168,6 +1177,16 @@ export const selectionControlRecipe = {
   // Web drew 2px and Native 1px; Agreement and TransferList now reuse this indicator, so the width is one value.
   indicatorBorderWidth: stroke.strong,
   presentations: {
+    // Nullable and multi-select chip collections keep the existing radio/checkbox engines;
+    // SegmentedControl deliberately always selects one value, so it cannot represent them.
+    chips: {
+      background: chipRecipe.states.idle.background,
+      border: chipRecipe.states.idle.border,
+      borderWidth: chipRecipe.borderWidth,
+      radius: chipRecipe.radius,
+      useSizePadding: true,
+      labelColor: null,
+    },
     plain: {
       background: null,
       border: null,
@@ -1737,6 +1756,8 @@ export const statisticRecipe = {
   group: {
     gap: spacing.xs,
     minItemWidth: 120,
+    // Read-only social/count bars retain one row, with the value before its label.
+    bar: { cellPadding: spacing.xs, valueGap: spacing.xxs, iconSize: glyph.sm },
     columns: [1, 2, 3, 4] as const,
   },
   label: {
@@ -1804,6 +1825,7 @@ export const statisticRecipe = {
   group: {
     gap: number;
     minItemWidth: number;
+    bar: { cellPadding: number; valueGap: number; iconSize: number };
     columns: readonly (1 | 2 | 3 | 4)[];
   };
   label: { color: ColorReference; fontWeight: FontWeightValue };
@@ -2358,13 +2380,15 @@ export const topBarRecipe = {
 export const bottomCtaRecipe = {
   slots: ["root", "description", "secondaryAction", "primaryAction"] as const,
   minHeight: 64,
-  paddingHorizontal: layout.pagePadding.regular,
+  // A standalone bar shares ScreenLayout's 16pt content edges. The general 20pt page gutter
+  // narrowed the pinned action below the search field (Unairplane simulator review, 2026-10-20).
+  paddingHorizontal: spacing.md,
   paddingTop: spacing.sm,
   paddingBottom: spacing.sm,
   gap: spacing.sm,
-  // The footer surface spans the viewport, but its copy and actions stop at the reading width (ScreenLayout's body
-  // width): on a 1200px desktop or tablet stage each half-width button had stretched to ~440px (2026-10-17 review).
-  contentMaxWidth: layout.readingMaxWidth,
+  // ScreenLayout's reading width includes its two body gutters. Subtract them here because this
+  // max width measures the actions themselves; otherwise tablet buttons extend 16pt beyond each body edge.
+  contentMaxWidth: layout.readingMaxWidth - spacing.md * 2,
   // A footer painted in the canvas tone left only a 1pt hairline between it
   // and the content scrolling underneath — a product author found that the
   // line cut a glyph in half at whatever scroll position the reader stopped

@@ -7,8 +7,8 @@ import { semanticColors } from "./semantic-colors.js";
 /**
  * Ant Design Steps' full surface (navigation jump, dot type, custom per-item
  * icon, vertical orientation) is intentionally not reproduced. Steps stay a
- * single-cursor, horizontal wizard; the only press is returning to a step
- * before the cursor (2026-10-18, spint compose rebuilt its own rail for it).
+ * single-cursor horizontal flow. Validated forms default to backward-only
+ * navigation; reading flows explicitly opt into free navigation (2026-10-19 portfolio).
  * See docs/steps.md for the per-axis rationale.
  */
 export type StepStatus = "pending" | "current" | "complete" | "error";
@@ -26,13 +26,15 @@ export type StepItemDescriptor<Id extends string = string> = Readonly<{
 /**
  * A single stable cursor (`currentStepId`) is the source of truth instead of a
  * per-item status array, so "two current steps" or "a completed step past an
- * unresolved error" cannot be represented. Pressing only returns to a step
- * before the cursor, so the flow stays linear relative to the cursor.
+ * unresolved error" cannot be represented. Linear navigation only returns before the cursor. Free reading navigation
+ * can select any step without changing the single-cursor state model.
  */
 export type StepsDescriptor<Id extends string = string> = Readonly<{
   steps: readonly StepItemDescriptor<Id>[];
   currentStepId: Id;
   currentStepStatus?: StepCursorStatus;
+  /** Free navigation is for reading flows; linear remains the default for validated forms. */
+  navigationMode?: "linear" | "free";
 }>;
 
 export const stepsDefaults = {
@@ -106,6 +108,9 @@ export function validateStepItemDescriptor<Id extends string>(
 export function validateStepsDescriptor<Id extends string>(
   descriptor: StepsDescriptor<Id>,
 ): void {
+  if (descriptor.navigationMode !== undefined && descriptor.navigationMode !== "linear" && descriptor.navigationMode !== "free") {
+    throw new TypeError(`Unsupported Steps navigationMode: ${String(descriptor.navigationMode)}`);
+  }
   if (descriptor.steps.length < 2) {
     throw new RangeError("Steps must contain at least two steps");
   }

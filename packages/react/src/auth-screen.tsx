@@ -1,3 +1,4 @@
+import { PendingContentHost } from "./internal/pending-content.js";
 import {
   authScreenRecipe,
   resolveAuthScreenDescriptor,
@@ -119,14 +120,12 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
         <div className="hjm-auth-screen__block">
           <AuthScreenDensityContext.Provider value={resolved.density}><AuthScreenTitledContext.Provider value={title !== undefined}><div className="hjm-auth-screen__hero">{hero}</div></AuthScreenTitledContext.Provider></AuthScreenDensityContext.Provider>
           <div className="hjm-auth-screen__main" data-card={mainCard || undefined} aria-busy={pending || undefined}>
-            {/* Keep the action block in flow so the card never collapses; inert also removes keyboard access. */}
-            <div ref={actionsRef} className="hjm-auth-screen__actions" inert={pending} aria-hidden={pending || undefined}
-              onFocusCapture={event => { focusedAction.current = event.target; }}
-              onBlurCapture={event => { if (!pending && !event.currentTarget.contains(event.relatedTarget)) focusedAction.current = null; }}
-              style={pending ? { visibility: "hidden" } : undefined}>{main}</div>
-            {pending ? <div className="hjm-auth-screen__pending" role="status" aria-label={pendingLabel}>
-              <span className="hjm-auth-provider-button__spinner" aria-hidden="true" />
-            </div> : null}
+            <PendingContentHost pending={pending} label={pendingLabel ?? ""} indicatorClassName="hjm-auth-screen__pending"
+              contentProps={{ ref: actionsRef, className: "hjm-auth-screen__actions",
+                onFocusCapture: event => { focusedAction.current = event.target; },
+                onBlurCapture: event => { if (!pending && !event.currentTarget.contains(event.relatedTarget)) focusedAction.current = null; } }}>
+              {main}
+            </PendingContentHost>
           </div>
         </div>
         {showFooter ? <div className="hjm-auth-screen__footer">{footer}</div> : null}

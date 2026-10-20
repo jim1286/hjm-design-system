@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 130/130 active implementations; 129/130 required scenario sets
-- native: 112/112 active implementations; 109/112 required scenario sets
+- web: 131/131 active implementations; 130/131 required scenario sets
+- native: 113/113 active implementations; 110/113 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -50,6 +50,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | NumberField | web | stable | @hjmds/react | ./number-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#number-field, test/scenario-matrix.browser.test.tsx#number-field, test/stable-core.browser.test.tsx#number-field |
 | Select | web | stable | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#select, test/scenario-matrix.browser.test.tsx#select, test/stable-core.browser.test.tsx#select |
 | Combobox | web | stable | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#combobox, test/scenario-matrix.browser.test.tsx#combobox, test/stable-core.browser.test.tsx#combobox |
+| TimePicker | web | stable | @hjmds/react | ./time-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#time-picker, test/scenario-matrix.browser.test.tsx#time-picker, test/time-picker.browser.test.tsx#time-picker |
 | DatePicker | web | stable | @hjmds/react | ./date-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#date-picker, test/scenario-matrix.browser.test.tsx#date-picker, test/stable-core.browser.test.tsx#date-picker |
 | DateRangePicker | web | stable | @hjmds/react | ./date-range | default, dark, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#date-range-picker, test/scenario-matrix.browser.test.tsx#date-range-picker, test/date-range.keyboard.browser.test.tsx#date-range-picker |
 | ColorPicker | web | stable | @hjmds/react | ./color-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#color-picker, test/scenario-matrix.browser.test.tsx#color-picker, test/web-additions.browser.test.tsx#color-picker |
@@ -178,6 +179,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | NumberField | native | stable | @hjmds/react-native | ./number-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#number-field, test/scenario-matrix.test.tsx#number-field, test/stable-core.test.tsx#number-field |
 | Select | native | stable | @hjmds/react-native | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#select, test/scenario-matrix.test.tsx#select, test/stable-core.test.tsx#select |
 | Combobox | native | stable | @hjmds/react-native | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#combobox, test/scenario-matrix.test.tsx#combobox, test/stable-core.test.tsx#combobox |
+| TimePicker | native | stable | @hjmds/react-native | ./time-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#time-picker, test/scenario-matrix.test.tsx#time-picker, test/time-picker.test.tsx#time-picker |
 | DatePicker | native | stable | @hjmds/react-native | ./date-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-picker, test/scenario-matrix.test.tsx#date-picker, test/stable-core.test.tsx#date-picker |
 | DateRangePicker | native | stable | @hjmds/react-native | ./date-range | default, dark, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-range-picker, test/scenario-matrix.test.tsx#date-range-picker, test/date-range-actions.test.tsx#date-range-picker |
 | FilePicker | native | stable | @hjmds/react-native | ./file-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#file-picker, test/scenario-matrix.test.tsx#file-picker, test/file-picker-host-action.test.tsx#file-picker |

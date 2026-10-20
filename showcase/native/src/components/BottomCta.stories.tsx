@@ -1,3 +1,6 @@
+import type { ComponentRef } from "react";
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { Play } from "lucide-react-native";
 import { useRef, useState } from "react";
 import type { View } from "react-native";
 import { BottomCTA, Dialog, Text } from "@hjmds/react-native";
@@ -9,12 +12,13 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
 
 function FocusReturnPreview() {
+  const { colors } = useHjmNativeTheme();
   const [open, setOpen] = useState(false);
   // Native overlays return focus only to an explicit target, so the footer action hands out its button.
-  const start = useRef<View>(null);
+  const start = useRef<ComponentRef<typeof View>>(null);
   return <>
     <Text tone="muted">시작을 눌러 연 창을 닫으면 포커스가 시작 버튼으로 돌아와요.</Text>
-    <BottomCTA primaryAction={{ label: "전광판 시작", onPress: () => setOpen(true), buttonRef: start }} />
+    <BottomCTA primaryAction={{ label: "전광판 시작", leading: <Play accessible={false} size={16} color={colors.onPrimary} />, onPress: () => setOpen(true), buttonRef: start }} />
     <Dialog open={open} onOpenChange={setOpen} title="전광판" closeLabel="전광판 닫기" returnFocusRef={start}>
       <Text>오늘도 좋은 하루</Text>
     </Dialog>

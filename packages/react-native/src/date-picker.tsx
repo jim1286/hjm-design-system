@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import {
   type ComposeCalendarAccessibleName,
   type ResolvedCalendarDateCell,
@@ -75,7 +76,7 @@ export function DatePicker<Content>({
   const controlledSelection = descriptor.selectedDate !== undefined;
   const [internalSelection, setInternalSelection] = useState(descriptor.defaultSelectedDate ?? null);
   const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
-  const returnFocusRef = useRef<View>(null);
+  const returnFocusRef = useRef<ComponentRef<typeof View>>(null);
   const requestOpen = useCallback((next: boolean, reason: DatePickerOpenChangeReason) => {
     if (!controlledOpen) setInternalOpen(next);
     descriptor.onOpenChange?.(next, reason);
@@ -93,7 +94,7 @@ export function DatePicker<Content>({
     // No Sheet dismissal occurs when the already-closed field loses its clear action.
     if (reason === "clear" && !open && returnFocusRef.current) {
       const handle = findNodeHandle(returnFocusRef.current);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      if (typeof handle === "number") AccessibilityInfo.setAccessibilityFocus(handle);
     }
   };
   // The outer field owns selection; the shared grid receives only its resolved controlled value.

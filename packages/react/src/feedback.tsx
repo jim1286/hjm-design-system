@@ -2,6 +2,7 @@ import {
   emptyStateRecipe,
   noticeRecipe,
   progressRecipe,
+  resolveProgressSegments,
   skeletonRecipe,
   type NoticeTone,
   type ProgressShape,
@@ -64,7 +65,9 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
       className={classNames("hjm-notice", className)}
       data-tone={tone}
       role={urgent ? "alert" : "status"}
-      aria-live={urgent ? "assertive" : "polite"}
+      // A background refresh can retain content while reporting danger. Honor the
+      // public HTML live-region override instead of forcing every danger to interrupt.
+      aria-live={props["aria-live"] ?? (urgent ? "assertive" : "polite")}
     >
       {icon ? <div className="hjm-notice__icon" aria-hidden="true">{icon}</div> : null}
       <div className="hjm-notice__content">
@@ -215,7 +218,11 @@ export type ProgressProps = Omit<
   Readonly<{
     value?: number;
     max?: number;
+    /** Equal visual units for determinate linear progress; fractions fill a partial unit. */
+    segments?: number;
     valueText?: string;
+    /** Hide only the visible auxiliary value when the label already contains a count; accessibility keeps its value. */
+    showValue?: boolean;
     size?: ProgressSize;
     tone?: ProgressTone;
     /**
@@ -236,6 +243,8 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       label,
       value,
       valueText,
+      segments,
+      showValue = progressRecipe.defaults.showValue,
       max = progressRecipe.defaults.max,
       size = progressRecipe.defaults.size,
       tone = progressRecipe.defaults.tone,
@@ -256,6 +265,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
     ) {
       throw new RangeError("Progress value must be between zero and max");
     }
+    const segmentFills = resolveProgressSegments(value, max, segments, shape);
     const labelId = useId();
     // usage/components/progress.md: valueText defaults to the percentage. Only Native applied it, so the same
     // StepPlayer/ScrollProgress inputs showed "0%" on Native and nothing on Web (2026-10-17 review F N4).
@@ -268,6 +278,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
         data-size={size}
         data-tone={tone}
         data-shape={shape}
+        data-segmented={segmentFills ? "true" : undefined}
         data-state={value === undefined ? "indeterminate" : "determinate"}
         // `layoutStyle` lands on this frame, not on the native <progress> that
         // receives the rest props, so placement moves the label and bar together.
@@ -284,7 +295,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
           <span className="hjm-progress__copy">
             {/* Label and value use the label/caption roles, as Native Progress does; both inherited body 16 before (2026-10-17 review). */}
             <Text id={labelId} variant="label">{label}</Text>
-            {resolvedValueText ? <Text variant="caption" tone="muted">{resolvedValueText}</Text> : null}
+            {showValue && resolvedValueText ? <Text variant="caption" tone="muted">{resolvedValueText}</Text> : null}
           </span>
         )}
         {shape === "circular" ? (
@@ -292,6 +303,9 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
             {children ? <span className="hjm-progress__ring-content">{children}</span> : null}
           </span>
         ) : null}
+        {segmentFills ? <span className="hjm-progress__segments" aria-hidden="true" style={{ gap: progressRecipe.segmented.gap, height: progressRecipe.sizes[size] }}>
+          {segmentFills.map((fill, index) => <span key={index}><i style={{ width: `${fill * 100}%` }} /></span>)}
+        </span> : null}
         <progress
           {...props}
           ref={ref}
@@ -383,3 +397,5 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
 // apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
 // subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
 export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
+
+export { PendingContent, type PendingContentProps } from "./internal/pending-content.js";

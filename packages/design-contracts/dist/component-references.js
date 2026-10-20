@@ -47,7 +47,7 @@ const antDesignReferenceSources = [
     { name: "Select", category: "data-entry", targets: ["Select"], relationship: "direct" },
     { name: "Slider", category: "data-entry", targets: ["Slider"], relationship: "direct" },
     { name: "Switch", category: "data-entry", targets: ["Switch"], relationship: "direct" },
-    { name: "TimePicker", category: "data-entry", targets: ["Select"], relationship: "adapted" },
+    { name: "TimePicker", category: "data-entry", targets: ["TimePicker"], relationship: "direct" },
     { name: "Transfer", category: "data-entry", targets: ["TransferList"], relationship: "adapted" },
     { name: "TreeSelect", category: "data-entry", targets: ["Popover", "Tree"], relationship: "decomposed" },
     { name: "Upload", category: "data-entry", targets: ["FilePicker", "UploadItem"], relationship: "decomposed" },

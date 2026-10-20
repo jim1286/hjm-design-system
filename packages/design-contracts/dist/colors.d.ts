@@ -30,6 +30,7 @@ export type ThemeColors = {
     danger: string;
     onPrimary: string;
     /** Opaque status plates keep white badge copy legible in both themes. */
+    onStatusFill: string;
     neutralFill: string;
     strongFill: string;
     dangerFill: string;

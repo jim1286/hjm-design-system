@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -32,6 +33,10 @@ export type ScreenLayoutProps = Readonly<{
     headerAlignment?: "start" | "center";
     /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
     header?: ReactNode;
+    /** Overlay the custom header; shared scrolling reserves its measured height for the first content. */
+    headerPosition?: "flow" | "overlay";
+    /** Decorative top scroll-edge material. The host owns its measured frame and excludes it from input/a11y. */
+    scrollEdgeEffect?: ReactNode;
     /**
      * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
      * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
@@ -70,8 +75,12 @@ export type ScreenLayoutProps = Readonly<{
      * (2026-10-17 user report: too much space below buttons). Pass it instead of a bottom SafeAreaView edge, never both.
      */
     safeAreaBottom?: number;
+    /** Top window inset for an edge-to-edge body without a header; backgrounds still reach the window edge. */
+    safeAreaTop?: number;
     testID?: string;
-    scrollRef?: Ref<ScrollView>;
+    scrollRef?: Ref<ComponentRef<typeof ScrollView>>;
+    /** Native reading route: handle or a new downward pull at the top calls the existing close exit. */
+    pullToDismiss?: boolean;
     /**
      * Keeps the footer and focused field above the keyboard (default on, 2026-10-16 keyboard audit).
      * Skipped inside KeyboardAvoiding or a keyboard-aware Sheet/Dialog, which already handle it.
@@ -85,7 +94,7 @@ export type ScreenLayoutProps = Readonly<{
     initialFocus?: ScreenInitialFocus;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance, safeAreaBottom, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 /**
  * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
  * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
@@ -144,7 +153,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     sendDisabled?: boolean;
     additionalContent?: boolean;
     leadingAction?: ReactNode;
-    inputRef?: Ref<TextInput>;
+    inputRef?: Ref<ComponentRef<typeof TextInput>>;
     /** Release typing presence when the host input loses focus. */
     onBlur?: () => void;
     onValueChange(value: string): void;
@@ -182,7 +191,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     }>)[];
     onRemoveAttachment?: (id: string) => void;
 }>;
-export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, descriptionAlign, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;
@@ -267,9 +276,17 @@ export type NotificationRowProps = Readonly<{
     avatarBadge?: ReactNode;
     thumbnail?: ReactNode;
     unread?: boolean;
+    /** The section/list supplies the boundary; HJM aligns its divider with the preview column. */
+    separator?: boolean;
+    /** One optional command around the passive preview; the product retains routing/permission decisions. */
+    action?: Readonly<{
+        label: string;
+        onActivate(): void;
+        disabled?: boolean;
+    }>;
 }>;
-/** The host supplies navigation/disabled state and the complete accessible name. */
-export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread }: NotificationRowProps): import("react").JSX.Element;
+/** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
+export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread, separator, action }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
     /**
      * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
@@ -286,9 +303,17 @@ export type IconTileProps = Readonly<{
     shape?: IconTileShape;
     /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
     size?: IconTileSize;
+    /** Activation is HJM-owned; omit for product drag gesture hosts. */
+    onActivate?: () => void;
+    activationLabel?: string;
+    activationHint?: string;
+    /** Native secondary gesture; the product supplies its preview/menu without recreating the press host. */
+    onLongPress?: () => void;
+    disabled?: boolean;
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size }: IconTileProps): import("react").JSX.Element;
+/** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
+export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, activationHint, onLongPress, disabled, layoutStyle }: IconTileProps): import("react").JSX.Element;
 export type TypingIndicatorProps = Readonly<{
     /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
     label: string;

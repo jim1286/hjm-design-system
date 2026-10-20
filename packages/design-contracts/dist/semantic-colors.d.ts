@@ -81,6 +81,11 @@ export declare const semanticColors: {
             key: "onPrimary";
             alpha?: number;
         }>;
+        readonly statusInverse: Readonly<{
+            source: "theme";
+            key: "onStatusFill";
+            alpha?: number;
+        }>;
     };
     readonly border: {
         readonly subtle: Readonly<{

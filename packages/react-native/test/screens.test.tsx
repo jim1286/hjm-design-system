@@ -96,6 +96,7 @@ describe("native screen composition", () => {
       } else {
         expect(tree.root.findAllByType(Spinner)).toHaveLength(0);
         expect(tree.root.findAllByType(Text).some(node => node.props.children === "안내")).toBe(true);
+        expect(tree.root.findAllByType(View).filter(node => node.props.accessibilityRole === "alert")).toHaveLength(kind === "error" ? 1 : 0);
       }
     }
     act(() => tree.unmount());

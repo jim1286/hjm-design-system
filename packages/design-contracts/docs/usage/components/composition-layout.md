@@ -73,7 +73,7 @@ footer
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 부모의 가용 폭·높이 | 별도 고정 높이나 스크롤 없음 |
-| 제목·상태 문구 | 제목은 두 플랫폼 모두 `Heading level3`(문서 단계는 `headingLevel`). 상태 블록은 제목(`Text title`)·설명이 블록 줄로 가운데 정렬된다 | renderer. 2026-10-17 화면 검토: Native 제목이 작은 `Text title`이었고 Web 상태 문구가 한 줄로 이어져 왼쪽 정렬됐다 |
+| 제목·상태 문구 | 제목은 두 플랫폼 모두 `Heading level5`(문서 단계는 `headingLevel`). 상태 블록은 제목(`Text title`)·설명이 블록 줄로 가운데 정렬된다 | renderer. 2026-10-17 화면 검토: Native 제목이 작은 `Text title`이었고 Web 상태 문구가 한 줄로 이어져 왼쪽 정렬됐다 |
 | 간격 | 영역 spacing.md 16, 제목 행 spacing.sm 12, 배지 spacing.xs 8, 제목/설명 spacing.xxs 4 | Stack props |
 | 순서·정렬 | 머리글 → notice → 본문 → footer | renderer |
 | 고정·스크롤 | 부모 HJM 화면이 소유, 자체 ScrollView 없음 | renderer |
@@ -92,3 +92,8 @@ footer
 | --- | --- | --- |
 | 의미 | Heading·alert/status | header·accessibilityLiveRegion |
 | 환경 | 부모 화면의 높이 | 부모 화면의 safe area·키보드 |
+
+제목과 설명 묶음은 자연 너비를 기준으로 늘어나며 부모 너비를 넘지 않는다. 제목과 actions가 한 줄에 들어가지 않으면 actions가 다음 줄로 이동한다. Spint 셀에서 제목이 정렬 버튼 옆의 남은 폭으로 압축되던 문제를 양 renderer에서 수정했다(미게시).
+
+2026-10-19 사용자 지시: 앱·모바일 웹뷰의 큰 글씨를 지양하므로 구획 제목은 두 renderer 모두 18(level5)을 기본으로 쓴다.
+headingLevel은 문서 구조만 결정한다. 기존 24는 상한이며 일반 카드·선택 영역 제목의 기본값이 아니다.

@@ -45,7 +45,7 @@ export function DatePicker({ descriptor, monthLabel, composeAccessibleName, prev
         // No Sheet dismissal occurs when the already-closed field loses its clear action.
         if (reason === "clear" && !open && returnFocusRef.current) {
             const handle = findNodeHandle(returnFocusRef.current);
-            if (handle !== null)
+            if (typeof handle === "number")
                 AccessibilityInfo.setAccessibilityFocus(handle);
         }
     };

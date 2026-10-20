@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import type { ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   isLargeTextScale,
@@ -6,12 +7,14 @@ import {
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import {
   buttonRecipe,
+  resolveButtonDepth,
   resolveButtonEdgeOverhang,
   resolveButtonLabelLines,
 } from "@hjmds/design-contracts/recipes/base";
-import { Children, forwardRef, useState, type ReactNode } from "react";
+import { Children, forwardRef, useEffect, useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
+  Animated,
   Pressable,
   View,
   type View as NativeView,
@@ -42,13 +45,14 @@ function joinTextChildren(children: ReactNode): ReactNode {
 }
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
+export const RecipeButton: ReturnType<typeof forwardRef<ComponentRef<typeof NativeView>, RecipeButtonProps>> = forwardRef<ComponentRef<typeof NativeView>, RecipeButtonProps>(
   function RecipeButton(
     {
       children,
       tone = buttonRecipe.defaults.tone,
       size = buttonRecipe.defaults.size,
-      shape = buttonRecipe.defaults.shape,
+      shape: suppliedShape,
+      appearance: suppliedAppearance,
       align = buttonRecipe.defaults.align,
       selected,
       disabled = false,
@@ -71,16 +75,29 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
       accessibilityState,
       onPress,
       onLongPress,
+      onPressIn,
+      onPressOut,
       ...props
     }: RecipeButtonProps,
     ref,
   ) {
-    const { colors, environment, tokens, textScaling } = useHjmNativeTheme();
+    const { colors, environment, tokens, textScaling, designProfile } = useHjmNativeTheme();
+    const shape = suppliedShape ?? designProfile?.controls?.button?.shape ?? buttonRecipe.defaults.shape;
+    const appearance = suppliedAppearance ?? designProfile?.controls?.button?.appearance ?? buttonRecipe.defaults.appearance;
+    const depth = resolveButtonDepth(appearance, tone, size);
+    const sideColor = tone === "secondary" ? colors.borderControl : tone === "danger" ? colors.dangerFill : colors.primary;
+    const [pressOffset] = useState(() => new Animated.Value(0));
+    useEffect(() => { pressOffset.stopAnimation(); pressOffset.setValue(0); }, [pressOffset, depth, disabled, loading]);
+    useEffect(() => () => pressOffset.stopAnimation(), [pressOffset]);
+    const moveFace = (offset: number) => {
+      pressOffset.stopAnimation();
+      Animated.timing(pressOffset, { toValue: offset, duration: environment.reducedMotion ? 0 : buttonRecipe.raised.settleDuration, useNativeDriver: true }).start();
+    };
     const labelLines = resolveButtonLabelLines(
       isLargeTextScale(environment.textScale),
     );
     const inactive = disabled && !loading;
-    const unavailable = disabled || (loading && disableWhileLoading);
+    const unavailable = inactive || (loading && disableWhileLoading);
     // Preserve the idle content's measured width while the pending label remains the accessible name.
     const content = joinTextChildren(children);
     const textContent = typeof content === "string" || typeof content === "number";
@@ -121,64 +138,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
         return current[label] === height ? current : { ...current, [label]: height };
       });
     };
-    return (
-      <Pressable
-        {...props}
-        ref={ref}
-        accessibilityLabel={
-          accessibilityLabel ??
-          (typeof announcedContent === "string" ? announcedContent : undefined)
-        }
-        accessibilityRole="button"
-        accessibilityState={{
-          ...accessibilityState,
-          ...(selected === undefined ? {} : { selected }),
-          disabled: unavailable,
-          busy: loading,
-        }}
-        disabled={unavailable}
-        hitSlop={
-          hitSlop ??
-          (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)
-        }
-        onPress={loading ? () => undefined : onPress}
-        onLongPress={loading ? () => undefined : onLongPress}
-        style={({ pressed }) => [
-          {
-            alignItems: "center",
-            backgroundColor: resolveColor(
-              selectedContract?.background ?? toneContract.background,
-            ),
-            borderColor: resolveColor(
-              (selectedContract ?? toneContract).border,
-            ),
-            borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
-            borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
-            direction: environment.direction,
-            flexDirection: "row",
-            gap: spacing.xs,
-            // Wrapped labels need their intrinsic height, especially when large text
-            // lifts the line cap. Fixed recipe height clipped the independent 2x fixture.
-            ...(growWithContent || textContent ? {} : { height: visibleHeight }),
-            justifyContent: buttonRecipe.aligns[align],
-            minHeight: visibleHeight,
-            minWidth: control.minTouchTarget,
-            opacity: inactive
-              ? buttonRecipe.opacity.disabled
-              : pressed
-              ? buttonRecipe.opacity.pressed
-              : 1,
-            paddingHorizontal:
-              toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
-            // Edge alignment (resolveButtonEdgeOverhang): a frameless button overhangs by its own padding.
-            ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
-            ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
-            ...(fullWidth ? { alignSelf: "stretch" } : {}),
-          },
-          style,
-          layoutStyle,
-        ]}
-      >
+    const slots = <>
         {loading && leading != null ? <View style={{ opacity: 0 }}>{leading}</View> : leading}
         {completion ? <View style={{ flexShrink: 1, minWidth: 0, height: slotHeight }}>
           <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: 0, opacity: 0 }}>
@@ -208,6 +168,99 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
         {loading ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}>
           {renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? <ActivityIndicator color={contentColor} size="small" />}
         </View> : null}
+    </>;
+    const faceStyle = (): ViewStyle => ({
+            alignItems: "center",
+            backgroundColor: resolveColor(
+              selectedContract?.background ?? toneContract.background,
+            ),
+            borderColor: resolveColor(
+              (selectedContract ?? toneContract).border,
+            ),
+            borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
+            borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+            direction: environment.direction,
+            flexDirection: "row",
+            gap: spacing.xs,
+            // Wrapped labels need their intrinsic height, especially when large text
+            // lifts the line cap. Fixed recipe height clipped the independent 2x fixture.
+            ...(growWithContent || textContent ? {} : { height: visibleHeight }),
+            justifyContent: buttonRecipe.aligns[align],
+            minHeight: visibleHeight,
+            minWidth: control.minTouchTarget,
+            opacity: 1,
+            paddingHorizontal:
+              toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
+          });
+    return (
+      <Pressable
+        {...props}
+        ref={ref}
+        accessibilityLabel={
+          accessibilityLabel ??
+          (typeof announcedContent === "string" ? announcedContent : undefined)
+        }
+        accessibilityRole="button"
+        accessibilityState={{
+          ...accessibilityState,
+          ...(selected === undefined ? {} : { selected }),
+          disabled: disabled || loading,
+          busy: loading,
+        }}
+        disabled={unavailable}
+        hitSlop={
+          hitSlop ??
+          (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)
+        }
+        onPressIn={event => { if (!disabled && !loading && depth > 0) moveFace(depth); onPressIn?.(event); }}
+        onPressOut={event => { if (depth > 0) moveFace(0); onPressOut?.(event); }}
+        onPress={loading ? () => undefined : onPress}
+        onLongPress={loading ? () => undefined : onLongPress}
+        style={({ pressed }) => depth > 0 ? [
+          { paddingBottom: depth, backgroundColor: sideColor, borderRadius: tokens.radius[buttonRecipe.shapes[shape]], opacity: inactive ? buttonRecipe.opacity.disabled : 1,
+            ...(fullWidth ? { width: "100%" as const, alignSelf: "stretch" as const } : {}) }, style, layoutStyle,
+        ] : [
+          {
+            alignItems: "center",
+            backgroundColor: resolveColor(
+              selectedContract?.background ?? toneContract.background,
+            ),
+            borderColor: resolveColor(
+              (selectedContract ?? toneContract).border,
+            ),
+            borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
+            borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+            direction: environment.direction,
+            flexDirection: "row",
+            gap: spacing.xs,
+            // Wrapped labels need their intrinsic height, especially when large text
+            // lifts the line cap. Fixed recipe height clipped the independent 2x fixture.
+            ...(growWithContent || textContent ? {} : { height: visibleHeight }),
+            justifyContent: buttonRecipe.aligns[align],
+            minHeight: visibleHeight,
+            minWidth: control.minTouchTarget,
+            opacity: inactive
+              ? buttonRecipe.opacity.disabled
+              : pressed
+              ? buttonRecipe.opacity.pressed
+              : 1,
+            paddingHorizontal:
+              toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
+            // Edge alignment (resolveButtonEdgeOverhang): a frameless button overhangs by its own padding.
+            ...(edgeOverhang > 0 && edge !== "end" ? { marginStart: -edgeOverhang } : {}),
+            ...(edgeOverhang > 0 && edge !== "start" ? { marginEnd: -edgeOverhang } : {}),
+            // Stretch alone fills a column's cross axis, but becomes height in Card's row of actions.
+            // fullWidth is explicitly the parent width in every host (button usage contract).
+            ...(fullWidth ? { width: "100%" as const, alignSelf: "stretch" as const } : {}),
+          },
+          style,
+          layoutStyle,
+        ]}
+      >
+        {depth > 0 ? <>
+          <View pointerEvents="none" style={{ position: "absolute", inset: 0, borderRadius: tokens.radius[buttonRecipe.shapes[shape]], backgroundColor: "#000000", opacity: buttonRecipe.raised.sideShade }} />
+          <Animated.View style={[faceStyle(), { transform: [{ translateY: pressOffset }] }]}>{slots}</Animated.View>
+        </> : slots}
       </Pressable>
     );
   },

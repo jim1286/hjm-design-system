@@ -1,5 +1,6 @@
+import type { ComponentRef } from "react";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode, type RefObject } from "react";
 import { AccessibilityInfo, Platform, View, type StyleProp, type ViewStyle } from "react-native";
 import { Text } from "../primitives.js";
 import { useHjmNativeTheme } from "../provider.js";
@@ -19,12 +20,12 @@ export function FieldErrorText({ error }: Readonly<{ error: string }>) {
   return <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">{error}</Text>;
 }
 
-export function FieldMessage({ error, supportText }: Readonly<{ error?: string; supportText?: string }>) {
-  const { colors } = useHjmNativeTheme();
+export function FieldMessage({ error, supportText, descriptionAlign = "start" }: Readonly<{ error?: string; supportText?: string; descriptionAlign?: "start" | "end" }>) {
+  const { colors, environment } = useHjmNativeTheme();
   useFieldErrorAnnouncement(error);
   if (!error && !supportText) return null;
   return <Text accessibilityLiveRegion={error ? "assertive" : "none"}
-    style={{ color: colors[error ? fieldRecipe.support.errorColor : fieldRecipe.support.hintColor] }}
+    style={{ color: colors[error ? fieldRecipe.support.errorColor : fieldRecipe.support.hintColor], ...(!error && descriptionAlign === "end" ? { textAlign: environment.direction === "rtl" ? "left" as const : "right" as const, alignSelf: "stretch" as const } : {}) }}
     tone={error ? "danger" : "muted"} variant={fieldRecipe.support.textVariant}>
     {error ?? supportText}
   </Text>;
@@ -34,14 +35,14 @@ export function FieldMessage({ error, supportText }: Readonly<{ error?: string; 
 // Keep the host control in a slot so its keyboard/ref behavior stays unchanged.
 // `disabledOpacity` fades only the label here (fieldRecipe.disabledScope); the caller fades its
 // control, and the hint/error message keeps full contrast.
-export function NativeFieldFrame({ label, required = false, error, description, children, style, groupControl = true, disabledOpacity }: Readonly<{
-  label?: string; required?: boolean; error?: string; description?: string;
-  children: ReactNode; style?: StyleProp<ViewStyle>; groupControl?: boolean; disabledOpacity?: number;
+export function NativeFieldFrame({ label, required = false, error, description, descriptionAlign = "start", children, style, groupControl = true, disabledOpacity, frameRef }: Readonly<{
+  label?: string; required?: boolean; error?: string; description?: string; descriptionAlign?: "start" | "end";
+  children: ReactNode; style?: StyleProp<ViewStyle>; groupControl?: boolean; disabledOpacity?: number; frameRef?: RefObject<ComponentRef<typeof View> | null>;
 }>) {
   const { colors } = useHjmNativeTheme();
-  const message = <FieldMessage {...(error === undefined ? {} : { error })}
+  const message = <FieldMessage descriptionAlign={descriptionAlign} {...(error === undefined ? {} : { error })}
     {...(description === undefined ? {} : { supportText: description })} />;
-  return <View style={[{ gap: fieldRecipe.label.gap }, style]}>
+  return <View ref={frameRef} collapsable={frameRef ? false : undefined} style={[{ gap: fieldRecipe.label.gap }, style]}>
     {label ? <Text tone="body" variant={fieldRecipe.label.textVariant}
       style={{ color: colors[fieldRecipe.label.color], fontWeight: fieldRecipe.label.fontWeight, ...(disabledOpacity === undefined ? {} : { opacity: disabledOpacity }) }}>
       {label}{required ? " *" : ""}

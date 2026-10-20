@@ -27,7 +27,7 @@ export const FloatingActionButton = forwardRef(function FloatingActionButton({ d
         window.addEventListener("resize", measure);
         return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
     }, [minimumClearance, safeAreaBottomInset, onContentClearanceChange]);
-    return _jsx(Button, { ...props, ref: (node) => { buttonRef.current = node; assignRef(forwardedRef, node); }, className: classNames("hjm-fab", className), size: "large", tone: "primary", shape: "pill", "data-mode": resolved.layoutMode, "data-direction": theme?.environment.direction ?? "ltr", "data-reduced-motion": theme?.environment.reducedMotion ?? false, "aria-label": resolved.resolvedAccessibilityLabel, style: { "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
+    return _jsx(Button, { ...props, appearance: "flat", ref: (node) => { buttonRef.current = node; assignRef(forwardedRef, node); }, className: classNames("hjm-fab", className), size: "large", tone: "primary", shape: "pill", "data-mode": resolved.layoutMode, "data-direction": theme?.environment.direction ?? "ltr", "data-reduced-motion": theme?.environment.reducedMotion ?? false, "aria-label": resolved.resolvedAccessibilityLabel, style: { "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
             "--hjm-fab-safe-area": `${safeAreaBottomInset}px`, "--hjm-fab-duration": `${recipe.transition.duration}ms`,
             "--hjm-fab-easing": `cubic-bezier(${easing[recipe.transition.easing].join(",")})`,
             // Match other floating chrome under a profile; keep the stylesheet-only

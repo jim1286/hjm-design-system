@@ -21,7 +21,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { classNames, composeRefs, isAriaInvalid, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { FieldError } from "./internal/field-error.js";
 
@@ -197,9 +197,10 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
     };
 
     const unavailable = disabled || readOnly;
+    const hasInvalidState = Boolean(error) || isAriaInvalid(ariaInvalid);
     const state = disabled
       ? "disabled"
-      : error || ariaInvalid
+      : hasInvalidState
         ? "invalid"
         : focused
           ? "focused"
@@ -226,6 +227,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
         data-availability={disabled ? "disabled" : readOnly ? "readOnly" : "enabled"}
         data-size={size}
         data-state={state}
+        data-invalid={hasInvalidState || undefined}
         data-value={currentValue === null ? "empty" : "filled"}
       >
         <label className="hjm-field__label" htmlFor={controlId}>

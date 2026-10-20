@@ -42,7 +42,7 @@ function accordionFocusTarget(items, currentIndex, key) {
     }
     return currentIndex;
 }
-export const Accordion = forwardRef(function Accordion({ items, value: valueProp, defaultValue = [], onValueChange, allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, headingLevel = 3, className, layoutStyle, ...props }, ref) {
+export const Accordion = forwardRef(function Accordion({ items, value: valueProp, defaultValue = [], onValueChange, allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, headingLevel = 3, renderIndicator, className, layoutStyle, ...props }, ref) {
     validateAccordionItems(items);
     const [storedValue, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
@@ -105,13 +105,13 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                         triggerRefs.current.set(item.id, node);
                     else
                         triggerRefs.current.delete(item.id);
-                }, id: triggerId, type: "button", className: "hjm-accordion__trigger", "aria-expanded": expanded, "aria-controls": panelId, disabled: item.disabled, onClick: () => toggle(item.id), onKeyDown: (event) => {
+                }, id: triggerId, type: "button", className: "hjm-accordion__trigger", "aria-expanded": expanded, "aria-label": item.accessibilityLabel, "aria-controls": panelId, disabled: item.disabled, onClick: () => toggle(item.id), onKeyDown: (event) => {
                     const target = accordionFocusTarget(items, index, event.key);
                     if (target === undefined || target < 0)
                         return;
                     event.preventDefault();
                     triggerRefs.current.get(items[target].id)?.focus();
-                }, children: [_jsx("span", { className: "hjm-accordion__title", children: item.title }), _jsx("span", { className: "hjm-accordion__indicator", "aria-hidden": "true", children: expanded ? "−" : "+" })] }));
+                }, children: [_jsx("span", { className: "hjm-accordion__title", children: item.title }), _jsx("span", { className: "hjm-accordion__indicator", "aria-hidden": "true", children: renderIndicator ? renderIndicator({ value: item.id, expanded, disabled: item.disabled === true }) : expanded ? "−" : "+" })] }));
             return (_jsxs("div", { onFocusCapture: event => { if (event.target instanceof HTMLElement)
                     focused.current = { id: item.id, index, node: event.target }; }, className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
@@ -159,6 +159,16 @@ export const Divider = forwardRef(function Divider({ orientation = dividerRecipe
         "aria-orientation": decorative ? undefined : orientation,
     });
 });
+/** Decorative separator for a product-owned virtual collection. List owns separators for finite rows. */
+export function ListSeparator({ separator = "content", leading = false, layoutStyle }) {
+    if (!listRecipe.separators[separator])
+        return null;
+    return _jsx("div", { "aria-hidden": "true", role: "presentation", className: "hjm-list-separator", style: {
+            marginInlineStart: `var(--hjm-list-separator-${separator}-${leading ? "leading-start" : "start"})`,
+            marginInlineEnd: `var(--hjm-list-separator-${separator}-end)`,
+            ...layoutStyle,
+        } });
+}
 /** Semantic list container that owns separators around composed rows. */
 export const List = forwardRef(function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", className, layoutStyle, ...props }, ref) {
     if (!label.trim())
@@ -166,7 +176,10 @@ export const List = forwardRef(function List({ label, children, separator = list
     const items = Children.toArray(children);
     return (_jsx("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, "aria-label": label, className: classNames("hjm-list", className), "data-appearance": appearance, "data-separator": separator, role: "list", children: items.map((item, index) => (_jsx("div", { className: "hjm-list__item", role: "listitem", children: item }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
 });
-export function Statistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, renderValue, className, layoutStyle, ...props }) {
+export function Statistic(props) {
+    return _jsx(StatisticView, { ...props });
+}
+function StatisticView({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, leading, valueColor, bar = false, renderTrendMark, renderValue, className, layoutStyle, ...props }) {
     const resolved = resolveStatisticDescriptor(descriptor);
     const valueText = `${resolved.prefix ?? ""}${resolved.value}${resolved.suffix ?? ""}`;
     const announcement = accessibilityLabel ?? composeAccessibilityLabel?.({
@@ -181,13 +194,16 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
     const trendName = resolved.trend
         ? statisticRecipe.trend.marks[resolved.trend.direction]
         : undefined;
-    return (_jsxs("article", { ...props, style: { ...props.style, ...layoutStyle }, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
+    return (_jsxs("article", { ...props, style: { ...props.style, ...layoutStyle, ...(valueColor ? { "--hjm-statistic-value-color": valueColor } : {}) }, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-arrangement": bar ? "bar" : undefined, "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [leading === undefined ? null : _jsx("span", { className: "hjm-statistic__leading", children: leading }), resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
 }
-export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, layoutStyle, ...props }) {
+export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, arrangement = "grid", renderLeading, getValueColor, renderTrendMark, className, style, layoutStyle, ...props }) {
     validateStatisticGroup(descriptor);
     if (!label.trim())
         throw new TypeError("StatisticGroup label must not be empty");
-    return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", style: { ...style, ...layoutStyle, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => (_jsx("div", { role: "listitem", children: _jsx(Statistic, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id))) }));
+    return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", "data-arrangement": arrangement, style: { ...style, ...layoutStyle, "--hjm-statistic-columns": arrangement === "bar" ? descriptor.items.length : descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => {
+            const valueColor = getValueColor?.(item);
+            return (_jsx("div", { role: "listitem", children: _jsx(StatisticView, { bar: arrangement === "bar", ...(valueColor ? { valueColor } : {}), ...(renderLeading ? { leading: renderLeading(item, { color: valueColor ?? "currentColor", size: statisticRecipe.group.bar.iconSize }) } : {}), contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id));
+        }) }));
 }
 function DescriptionListInner({ items, columns, layout, className, layoutStyle, style, ...props }, forwardedRef) {
     const descriptor = resolveDescriptionListDescriptor({
@@ -239,9 +255,12 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
                                 } })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
-function TimelineInner({ items, composeAccessibleName, className, layoutStyle, ...props }, ref) {
+function TimelineInner({ items, composeAccessibleName, renderMetadata, renderActions, className, layoutStyle, ...props }, ref) {
     const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
-    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), item.timestamp ? (_jsx("time", { className: "hjm-timeline__timestamp", children: item.timestamp })) : null] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null] })] }, item.id))) }));
+    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => {
+            const actions = renderActions?.(item);
+            return (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, "data-emphasized": item.emphasized || undefined, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), renderMetadata?.(item)] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null, item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, children: item.timestamp }) : null] }), actions ? _jsx("div", { className: "hjm-timeline__actions", children: actions }) : null] }, item.id));
+        }) }));
 }
 export const Timeline = forwardRef(TimelineInner);
 //# sourceMappingURL=advanced-display.js.map

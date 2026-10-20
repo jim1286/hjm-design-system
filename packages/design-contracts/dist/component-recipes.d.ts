@@ -1,7 +1,7 @@
 import { control, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
 export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
-export { progressRecipe, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
+export { progressRecipe, resolveProgressSegments, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
 export type { BottomNavigationDensity, BottomNavigationDistribution, BottomNavigationPresentation, } from "./bottom-navigation-defaults.js";
 export type TextTone = "primary" | "body" | "muted" | "subtle" | "weak" | "brand" | "danger" | "inverse";
 export type TextEmphasis = "regular" | "medium" | "strong";
@@ -236,7 +236,7 @@ export declare const linkRecipe: {
     };
 };
 export declare const selectionGroupRecipe: {
-    readonly slots: readonly ["root", "label", "requiredIndicator", "description", "items", "error"];
+    readonly slots: readonly ["root", "label", "requiredIndicator", "description", "items", "itemLabel", "itemAction", "error"];
     readonly defaults: {
         readonly orientation: "vertical";
         readonly presentation: "card";
@@ -248,6 +248,7 @@ export declare const selectionGroupRecipe: {
                 readonly plain: 4;
                 readonly card: 8;
                 readonly grouped: 0;
+                readonly chips: 8;
             };
         };
         readonly horizontal: {
@@ -256,6 +257,7 @@ export declare const selectionGroupRecipe: {
                 readonly plain: 12;
                 readonly card: 16;
                 readonly grouped: 0;
+                readonly chips: 8;
             };
         };
     };
@@ -311,6 +313,10 @@ export type BadgeTone = "neutral"
  | "strong" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
 export type BadgeSize = "small" | "medium";
 export type BadgeVariant = "filled" | "outline";
+export type BadgeAdornmentContext = Readonly<{
+    color: string;
+    size: number;
+}>;
 export declare const badgeRecipe: {
     readonly slots: readonly ["root", "icon", "label", "trailing"];
     readonly defaults: {
@@ -336,7 +342,7 @@ export declare const badgeRecipe: {
         readonly neutral: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -354,7 +360,7 @@ export declare const badgeRecipe: {
         readonly strong: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -390,7 +396,7 @@ export declare const badgeRecipe: {
         readonly info: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -412,7 +418,7 @@ export declare const badgeRecipe: {
         readonly success: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -434,7 +440,7 @@ export declare const badgeRecipe: {
         readonly warning: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -456,7 +462,7 @@ export declare const badgeRecipe: {
         readonly attention: {
             readonly content: Readonly<{
                 source: "theme";
-                key: "onPrimary";
+                key: "onStatusFill";
                 alpha?: number;
             }>;
             readonly outlineContent: Readonly<{
@@ -503,12 +509,14 @@ export declare const badgeRecipe: {
             readonly minHeight: 20;
             readonly paddingHorizontal: 8;
             readonly gap: 4;
+            readonly iconSize: 14;
             readonly textVariant: "caption";
         };
         readonly medium: {
             readonly minHeight: 24;
             readonly paddingHorizontal: 8;
             readonly gap: 4;
+            readonly iconSize: 14;
             readonly textVariant: "caption";
         };
     };
@@ -735,6 +743,11 @@ export declare const listRecipe: {
      */
     readonly separators: {
         readonly none: null;
+        readonly content: {
+            readonly insetStart: 0;
+            readonly leadingInsetStart: 0;
+            readonly insetEnd: 0;
+        };
         readonly full: {
             readonly insetStart: number;
             readonly leadingInsetStart: number;
@@ -1875,7 +1888,7 @@ export declare const segmentedControlRecipe: {
     readonly pills: {
         readonly gap: 8;
         readonly radius: 999;
-        readonly inset: 8;
+        readonly inset: 4;
         readonly minHeight: 44;
         readonly selectedBackground: Readonly<{
             source: "theme";
@@ -2118,6 +2131,22 @@ export declare const selectionControlRecipe: {
     };
     readonly indicatorBorderWidth: 2;
     readonly presentations: {
+        readonly chips: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "full";
+            readonly useSizePadding: true;
+            readonly labelColor: null;
+        };
         readonly plain: {
             readonly background: null;
             readonly border: null;
@@ -3149,6 +3178,11 @@ export declare const statisticRecipe: {
     readonly group: {
         readonly gap: 8;
         readonly minItemWidth: 120;
+        readonly bar: {
+            readonly cellPadding: 8;
+            readonly valueGap: 4;
+            readonly iconSize: 20;
+        };
         readonly columns: readonly [1, 2, 3, 4];
     };
     readonly label: {
@@ -4031,11 +4065,11 @@ export declare const topBarRecipe: {
 export declare const bottomCtaRecipe: {
     readonly slots: readonly ["root", "description", "secondaryAction", "primaryAction"];
     readonly minHeight: 64;
-    readonly paddingHorizontal: 20;
+    readonly paddingHorizontal: 16;
     readonly paddingTop: 12;
     readonly paddingBottom: 12;
     readonly gap: 12;
-    readonly contentMaxWidth: 720;
+    readonly contentMaxWidth: number;
     readonly background: Readonly<{
         source: "theme";
         key: "bg";

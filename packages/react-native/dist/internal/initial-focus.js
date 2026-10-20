@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveEntryFocus } from "@hjmds/design-contracts/screen-patterns";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { InteractionManager, TextInput } from "react-native";
+import { TextInput } from "react-native";
 /**
  * Nearest screen/overlay scope that chooses the field focused on entry (rules: screen-patterns `resolveEntryFocus`).
  * Fields register by context rather than the scope searching the host tree, which Native cannot query; a scope with
@@ -111,15 +111,18 @@ export function useInitialFocusScope({ mode, active: ownActive = true, layer: ow
             return undefined;
         }
         scope.dispatch({ kind: "activate" });
-        // After interactions, so the keyboard does not animate against a navigation or overlay enter transition.
-        const enter = InteractionManager.runAfterInteractions(() => { s.fresh.clear(); scope.dispatch({ kind: "enter" }); });
-        let unblock = null;
-        // An overlay above closed: retry once its teardown interaction is over.
-        const onLayerClosed = () => { unblock?.cancel(); unblock = InteractionManager.runAfterInteractions(() => scope.dispatch({ kind: "unblock" })); };
+        // RN 0.88 removed InteractionManager; browser hosts also lack setImmediate.
+        // Use the shared timer turn on both hosts; overlays still wait for native onShow.
+        const enter = setTimeout(() => { s.fresh.clear(); scope.dispatch({ kind: "enter" }); }, 0);
+        let unblock;
+        // An overlay above closed: retry on the turn after its teardown.
+        const onLayerClosed = () => { if (unblock !== undefined)
+            clearTimeout(unblock); unblock = setTimeout(() => scope.dispatch({ kind: "unblock" }), 0); };
         layerListeners.add(onLayerClosed);
         return () => {
-            enter.cancel();
-            unblock?.cancel();
+            clearTimeout(enter);
+            if (unblock !== undefined)
+                clearTimeout(unblock);
             layerListeners.delete(onLayerClosed);
             if (s.flush) {
                 clearTimeout(s.flush);
@@ -148,5 +151,11 @@ export function useInitialFocusTarget(input, preference, focusable) {
         order.current ??= registry.nextOrder();
         return registry.register({ order: order.current, preference, focusable: () => focusableRef.current(), focus: () => input.current?.focus() }, mounted);
     }, [registry, preference, input]);
+}
+/** Page footer inputs are bottom-anchored, so entry must not open their keyboard (2026-10-18 user request).
+ * Keep the boundary through nested screens; a separately opened overlay owns its own focus policy.
+ */
+export function BottomEntryFocusBoundary({ children }) {
+    return _jsx(EntryFocusEnabledContext.Provider, { value: false, children: _jsx(InitialFocusContext.Provider, { value: null, children: children }) });
 }
 //# sourceMappingURL=initial-focus.js.map

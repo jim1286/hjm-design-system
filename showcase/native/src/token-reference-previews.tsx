@@ -32,7 +32,7 @@ function Specimen({ specimen }: { specimen: TokenSpecimen }) {
     case "text": return <Text emphasis="regular" {...(specimen.fontRole ? { fontRole: specimen.fontRole } : {})} style={{
       ...(specimen.fontWeight ? { fontWeight: specimen.fontWeight as TextStyle["fontWeight"] } : {}),
       ...(specimen.letterSpacing !== undefined ? { letterSpacing: specimen.letterSpacing } : {}),
-      ...(specimen.numeric ? { fontVariant: [specimen.numeric as NonNullable<TextStyle["fontVariant"]>[number]] } : {}),
+      ...(specimen.numeric ? { fontVariant: [specimen.numeric as Extract<NonNullable<TextStyle["fontVariant"]>, readonly unknown[]>[number]] } : {}),
     }}>{specimen.numeric ? tokenSample.numeric : specimen.fontWeight ? tokenSample.short : tokenSample.text}</Text>;
     case "bar": return <View accessible={false} style={{ width: specimen.length, height: spacing.xs, backgroundColor: colors.primary }} />;
     case "ratio": return <View accessible={false} style={{ height: spacing.xs, borderRadius: radius.full, backgroundColor: colors.surfaceAlt, overflow: "hidden" }}><View style={{ width: `${specimen.fraction * 100}%`, height: "100%", borderRadius: radius.full, backgroundColor: colors.primary }} /></View>;

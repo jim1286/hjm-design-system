@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
@@ -21,8 +22,9 @@ import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext, resolveScreenBottomPadding } from "./internal/screen-footer.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
 import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
-import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
+import { BottomEntryFocusBoundary, InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
+import { useScreenPullDismiss } from "./internal/screen-dismiss.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
@@ -51,6 +53,10 @@ export type ScreenLayoutProps = Readonly<{
   headerAlignment?: "start" | "center";
   /** Host navigation can supply its existing header while the shared shell owns scrolling and state. */
   header?: ReactNode;
+  /** Overlay the custom header; shared scrolling reserves its measured height for the first content. */
+  headerPosition?: "flow" | "overlay";
+  /** Decorative top scroll-edge material. The host owns its measured frame and excludes it from input/a11y. */
+  scrollEdgeEffect?: ReactNode;
   /**
    * Hosts that already inset routes avoid applying the shared gutter twice (`none`). `body-edge` keeps the header,
    * notice and footer gutter and drops only the body's horizontal padding so full-width list rows own their inset.
@@ -89,8 +95,12 @@ export type ScreenLayoutProps = Readonly<{
    * (2026-10-17 user report: too much space below buttons). Pass it instead of a bottom SafeAreaView edge, never both.
    */
   safeAreaBottom?: number;
+  /** Top window inset for an edge-to-edge body without a header; backgrounds still reach the window edge. */
+  safeAreaTop?: number;
   testID?: string;
-  scrollRef?: Ref<ScrollView>;
+  scrollRef?: Ref<ComponentRef<typeof ScrollView>>;
+  /** Native reading route: handle or a new downward pull at the top calls the existing close exit. */
+  pullToDismiss?: boolean;
   /**
    * Keeps the footer and focused field above the keyboard (default on, 2026-10-16 keyboard audit).
    * Skipped inside KeyboardAvoiding or a keyboard-aware Sheet/Dialog, which already handle it.
@@ -105,23 +115,28 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, keyboardAvoidance = true, safeAreaBottom = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, headerPosition = "flow", scrollEdgeEffect, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, pullToDismiss = false, keyboardAvoidance = true, safeAreaBottom = 0, safeAreaTop = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
+  if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("ScreenLayout safeAreaTop must be non-negative");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
+  if (pullToDismiss && (exit?.kind !== "close" || scroll !== "screen" || header != null)) throw new TypeError("ScreenLayout pullToDismiss requires its own close exit and screen scrolling");
+  const dismissal = useScreenPullDismiss(pullToDismiss && !exit?.disabled, exit?.onPress, testID);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
   const insideAvoidance = useInsideKeyboardAvoidance();
   const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
-  const rootRef = useRef<View>(null);
+  const rootRef = useRef<ComponentRef<typeof View>>(null);
   const keyboardOverlap = useKeyboardOverlap(rootRef, avoidKeyboard);
-  const bodyScroll = useRef<ScrollView | null>(null);
+  const bodyScroll = useRef<ComponentRef<typeof ScrollView> | null>(null);
   const focusScope = useInitialFocusScope({ mode: initialFocus });
   const trackScroll = useScrollFocusedInputIntoView(bodyScroll, avoidKeyboard);
   // ScrollView decorates object refs with scrollTo/scrollToEnd; mirror that instance into the host ref
   // after commit (child layout effects run before host effects) instead of passing a callback ref.
   useLayoutEffect(() => {
     if (typeof scrollRef === "function") scrollRef(bodyScroll.current);
-    else if (scrollRef) (scrollRef as { current: ScrollView | null }).current = bodyScroll.current;
+    else if (scrollRef) (scrollRef as { current: ComponentRef<typeof ScrollView> | null }).current = bodyScroll.current;
   });
+  const [overlayHeaderHeight, setOverlayHeaderHeight] = useState(0);
+  const overlayHeader = headerPosition === "overlay" && header != null;
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
@@ -162,7 +177,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap, paddingHorizontal: stateInline }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
-    {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center" }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
+    {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center" }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
       <Text variant={resolved.titleVariant} align="center">{state.title}</Text>
       {state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}
     </View>}{stateAction}
@@ -171,23 +186,27 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   // alone it becomes the header, named by `title`.
   const mark = hasMark ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexShrink: 0, alignItems: "center", justifyContent: "center" }}>{titleLeading}</View> : null;
   const standaloneMark = (centered: boolean) => mark ? <View accessible accessibilityRole="header" accessibilityLabel={title} style={{ alignItems: centered ? "center" : "flex-start" }}>{mark}</View> : null;
-  return <View ref={rootRef} testID={testID} accessibilityLabel={titleVisibility === "hidden" || header ? title : undefined} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle]}>
+  const Root = pullToDismiss ? Animated.View : View;
+  return <Root ref={rootRef} onAccessibilityEscape={pullToDismiss ? dismissal.close : undefined} testID={testID} accessibilityLabel={titleVisibility === "hidden" || header ? title : undefined} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle, ...(pullToDismiss ? [{ transform: [{ translateY: dismissal.offset }] }] : [])]}>
     <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
+    {dismissal.handle}
+    {scrollEdgeEffect ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", top: 0, start: 0, end: 0, height: (overlayHeader ? overlayHeaderHeight : safeAreaTop) + recipe.padding, zIndex: 1 }}>{scrollEdgeEffect}</View> : null}
     {/* Not TopBar: this is the page heading (titleLarge, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding, paddingVertical: headerVerticalPadding, flexDirection: "row", alignItems: "center", gap: recipe.itemGap }}>
-      {/* Measure intrinsic control rows, never a box constrained by its own last measurement.
+    {overlayHeader ? <View pointerEvents="box-none" onLayout={event => setOverlayHeaderHeight(event.nativeEvent.layout.height)} style={{ position: "absolute", top: 0, start: 0, end: 0, zIndex: 2 }}>{header}</View> : header ?? (!showHeader ? null : headerAlignment === "center" ? <View style={{ minHeight: compactHeader ? screenHeaderRecipe.compactMinHeight : screenHeaderRecipe.minHeight, paddingHorizontal: padding, paddingVertical: headerVerticalPadding, flexDirection: "row", alignItems: "center", gap: recipe.itemGap }}>
+      {/* Minimum side widths keep intrinsic control rows measurable. A fixed width re-constrained
+          the caption to its previous measurement and wrapped the settings version inside 44pt.
           Equal side columns center the title; in-flow controls also contribute their height so
           wrapping a title/badge cannot shrink controls and start another Yoga layout cycle. */}
-      <View style={{ width: sideWidth, flexShrink: 0, alignItems: "flex-start" }}>
+      <View style={{ minWidth: sideWidth, flexShrink: 0, alignItems: "flex-start" }}>
         <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{leading}</View>
       </View>
       <View style={{ flex: 1, minWidth: 0, alignItems: "center", gap: 4 }}>
         {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{mark}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>{titleBadge}</Stack> : standaloneMark(true)}
       </View>
-      <View style={{ width: sideWidth, flexShrink: 0, alignItems: "flex-end" }}>
+      <View style={{ minWidth: sideWidth, flexShrink: 0, alignItems: "flex-end" }}>
         <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{actions}</View>
       </View>
     </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
@@ -199,13 +218,16 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
-      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop, paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
-      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop, paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }}>{body}</View>}
+      alwaysBounceVertical={pullToDismiss || scrollProps?.alwaysBounceVertical}
+      onScrollBeginDrag={event => { dismissal.onScrollBeginDrag(event); scrollProps?.onScrollBeginDrag?.(event); }}
+      onScrollEndDrag={event => { dismissal.onScrollEndDrag(event); scrollProps?.onScrollEndDrag?.(event); }}
+      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
+      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }}>{body}</View>}
     {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;
         only then may BottomCTA render bare, otherwise it keeps its own bar (utilverse tool footers lost theirs, 2026-10-17). */}
-    {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}>{footer}</ScreenFooterContext.Provider></View> : null}
+    {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}><BottomEntryFocusBoundary>{footer}</BottomEntryFocusBoundary></ScreenFooterContext.Provider></View> : null}
     </InitialFocusProvider></KeyboardAvoidanceContext.Provider>
-  </View>;
+  </Root>;
 }
 
 /**
@@ -276,7 +298,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   sendDisabled?: boolean;
   additionalContent?: boolean;
   leadingAction?: ReactNode;
-  inputRef?: Ref<TextInput>;
+  inputRef?: Ref<ComponentRef<typeof TextInput>>;
   /** Release typing presence when the host input loses focus. */
   onBlur?: () => void;
   onValueChange(value: string): void;
@@ -295,7 +317,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   attachments?: readonly (MessageAttachmentDescriptor & Readonly<{ preview: ReactNode }>)[];
   onRemoveAttachment?: (id: string) => void;
 }>;
-export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }: MessageComposerProps) {
+export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, descriptionAlign = "start", error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
   if (lengthFeedback && maxLength === undefined) throw new TypeError("Composer length feedback requires maxLength");
@@ -307,7 +329,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
   const { colors, tokens } = useHjmNativeTheme();
   // The error is announced by TextArea's shared FieldMessage (internal/field-frame.tsx), on Android and iOS.
-  const compactField: FieldPrivateProps = { hjmCompactMultiline: true };
+  const compactField: FieldPrivateProps = { hjmCompactMultiline: true, hjmDescriptionAlign: descriptionAlign };
   const attach = attachmentAction ? <IconButton label={attachmentAction.label} tone="ghost" disabled={locked || (attachmentAction.disabled ?? false)} onPress={attachmentAction.onPress}>{attachmentAction.icon}</IconButton> : null;
   const send = sendIcon ? <IconButton label={sendLabel} size={sendPresentation === "circle" ? "small" : "medium"} shape="circle" tone={sendPresentation === "circle" ? "primary" : "ghost"} disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendIcon}</IconButton> : <Button disabled={!canSend} loading={pending} onPress={() => { if (canSend) onSend(value); }}>{sendLabel}</Button>;
   const composerBody = <>{attachments.length ? <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: tokens.spacing.sm, alignItems: "center" }}>
@@ -466,11 +488,12 @@ export type CompositionLayoutProps = Readonly<{
 }>;
 export function CompositionLayout({title, headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
-  // Same Heading level3 as Web; a title-variant Text rendered smaller and lighter on Native (2026-10-17 review).
+  // Compact section titles follow the 2026-10-19 mobile typography direction; headingLevel still owns document semantics.
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
-      {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
+      {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
+      {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
     </Stack> : null}
@@ -491,12 +514,19 @@ export type NotificationRowProps = Readonly<{
   avatarBadge?: ReactNode;
   thumbnail?: ReactNode;
   unread?: boolean;
+  /** The section/list supplies the boundary; HJM aligns its divider with the preview column. */
+  separator?: boolean;
+  /** One optional command around the passive preview; the product retains routing/permission decisions. */
+  action?: Readonly<{ label: string; onActivate(): void; disabled?: boolean }>;
+
 }>;
 
-/** The host supplies navigation/disabled state and the complete accessible name. */
-export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false }: NotificationRowProps) {
+/** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
+export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false, separator = false, action }: NotificationRowProps) {
   const r = notificationRecipe, { colors, tokens } = useHjmNativeTheme();
-  return <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: "row", alignItems: "center", gap: r.gap, paddingVertical: r.paddingBlock, paddingHorizontal: r.paddingInline, width: "100%", minWidth: 0 }}>
+  if (action && !action.label.trim()) throw new TypeError("NotificationRow action requires a localized label");
+  const content = <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexDirection: "row", alignItems: "center", gap: r.gap, paddingVertical: r.paddingBlock, paddingHorizontal: r.paddingInline, width: "100%", minWidth: 0 }}>
+    {separator ? <View testID="hjm-notification-separator" style={{ position: "absolute", top: 0, start: r.separatorInsetStart, end: 0, borderTopWidth: 1, borderColor: colors.border }} /> : null}
     <View style={{ width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }}>
       <View style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: r.avatarSize / 2 }}>{avatar}</View>
       {avatarBadge ? <View style={{ position: "absolute", bottom: 0, right: 0, alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: r.avatarBadgeSize / 2, backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.surface }}>{avatarBadge}</View> : null}
@@ -507,6 +537,12 @@ export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbn
     </View>
     {thumbnail ? <View style={{ width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: tokens.radius.sm }}>{thumbnail}</View> : null}
   </View>;
+  return action ? <Pressable accessible accessibilityRole="button" accessibilityLabel={action.label}
+    accessibilityState={{ disabled: action.disabled ?? false }} disabled={action.disabled}
+    onPress={() => { if (!action.disabled) action.onActivate(); }}
+    style={({ pressed }) => ({ width: "100%", opacity: action.disabled ? r.interaction.disabledOpacity : pressed ? r.interaction.pressedOpacity : 1 })}>
+    {content}
+  </Pressable> : content;
 }
 
 export type IconTileProps = Readonly<{
@@ -520,10 +556,21 @@ export type IconTileProps = Readonly<{
   /** Frame (and ghost outline) corner shape from the product's icon theme. */
   shape?: IconTileShape;
   /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
-  size?: IconTileSize }>;
-/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size}: IconTileProps) {
+  size?: IconTileSize;
+  /** Activation is HJM-owned; omit for product drag gesture hosts. */
+  onActivate?: () => void;
+  activationLabel?: string;
+  activationHint?: string;
+  /** Native secondary gesture; the product supplies its preview/menu without recreating the press host. */
+  onLongPress?: () => void;
+  disabled?: boolean;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, activationHint, onLongPress, disabled = false, layoutStyle}: IconTileProps) {
   const r = iconTileRecipe;
+  if (onActivate && !(activationLabel ?? label).trim()) throw new TypeError("Interactive IconTile requires a label");
+  if (onLongPress && !onActivate) throw new TypeError("IconTile onLongPress requires onActivate");
   const {colors} = useHjmNativeTheme();
   // A filling icon's edge is known only after layout; the radius follows the measured edge so the shape holds at every
   // cell width (percentage border radii are not relied on across the supported RN versions).
@@ -531,10 +578,15 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
   const edge = size === "fill" ? fillEdge : r.iconSize;
   const framed = frame === "surface";
   const dimensions = size === "fill" ? {width: "100%" as const, minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1} : {width: r.iconSize, height: r.iconSize};
-  return <View style={{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
+  const content = <View style={[{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}, onActivate ? undefined : layoutStyle]}>
     <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</View>
     <Text variant="caption" numberOfLines={labelLines} style={{width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
   </View>;
+  if (!onActivate) return content;
+  return <Pressable accessibilityRole="button" accessibilityLabel={activationLabel ?? label} accessibilityHint={activationHint} accessibilityState={{ disabled }} disabled={disabled}
+    onPress={() => { if (!disabled) onActivate(); }}
+    onLongPress={onLongPress ? () => { if (!disabled) onLongPress(); } : undefined}
+    style={({ pressed }) => [{ minWidth: r.activation.minimumTarget, minHeight: r.activation.minimumTarget, width: "100%", opacity: disabled ? r.activation.disabledOpacity : pressed ? r.activation.pressedOpacity : 1 }, layoutStyle]}>{content}</Pressable>;
 }
 
 export type TypingIndicatorProps = Readonly<{

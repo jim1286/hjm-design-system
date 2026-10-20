@@ -1,5 +1,5 @@
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
-import { InitialFocusScope } from "./internal/initial-focus.js";
+import { BottomEntryFocusBoundary, InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
@@ -156,7 +156,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
       </div>}
     </div>
     {/* Same rule as Native: with contentInset="none" the host owns the insets, so BottomCTA keeps its own bar. */}
-    {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value={contentInset !== "none"}>{footer}</ScreenFooterContext.Provider></footer> : null}
+    {footer ? <footer className="hjm-screen__footer"><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding: "max(var(--hjm-screen-padding), env(safe-area-inset-bottom, 0px))" }}><BottomEntryFocusBoundary>{footer}</BottomEntryFocusBoundary></ScreenFooterContext.Provider></footer> : null}
     </InitialFocusScope>
   </Element>;
 }
@@ -245,7 +245,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
+export function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder = label, description, descriptionAlign = "start", error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
   if (lengthFeedback && maxLength === undefined) throw new TypeError("Composer length feedback requires maxLength");
@@ -270,7 +270,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
     {quickInserts.items.map(item => <button key={item.id} type="button" className="hjm-message-composer__quick-item" aria-label={item.label} disabled={locked} onClick={() => onValueChange(value + item.emoji)}>{item.emoji}</button>)}
   </div> : null;
   // The error is announced by TextArea's shared Field error region (internal/field-error.tsx); no composer-only copy.
-  return <div className="hjm-message-composer" data-send-presentation={sendPresentation} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the textarea is never remounted (focus stays). */}<div className="hjm-message-composer__reply-card" data-replying={replyTo ? true : undefined}>{replyTo ? <div className="hjm-message-composer__reply"><div className="hjm-message-composer__reply-text"><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" className="hjm-message-composer__reply-excerpt">{replyTo.excerpt}</Text></div><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onClick={replyTo.onCancel}><Text>×</Text></IconButton></div> : null}{composerBody}</div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</div>;
+  return <div className="hjm-message-composer" data-send-presentation={sendPresentation} data-description-align={descriptionAlign} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the textarea is never remounted (focus stays). */}<div className="hjm-message-composer__reply-card" data-replying={replyTo ? true : undefined}>{replyTo ? <div className="hjm-message-composer__reply"><div className="hjm-message-composer__reply-text"><Text emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted" className="hjm-message-composer__reply-excerpt">{replyTo.excerpt}</Text></div><IconButton label={replyTo.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onClick={replyTo.onCancel}><Text>×</Text></IconButton></div> : null}{composerBody}</div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</div>;
 }
 
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }>; summary?: ChatMessageReactionSummary }>;
@@ -359,8 +359,9 @@ export function CompositionLayout({title, headingLevel = 3, description, badge, 
   const resolved = resolveScreenContentState(state);
   return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
-      {leading}<Stack gap="xxs" layoutStyle={{flex: 1, minWidth: 0}}>
-        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level3" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
+      {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
+      {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading> : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
       </Stack>{actions}
     </Stack> : null}
@@ -381,22 +382,34 @@ export type NotificationRowProps = Readonly<{
   avatarBadge?: ReactNode;
   thumbnail?: ReactNode;
   unread?: boolean;
+  /** The section/list supplies the boundary; HJM aligns its divider with the preview column. */
+  separator?: boolean;
+  /** One optional command around the passive preview; the product retains routing/permission decisions. */
+  action?: Readonly<{ label: string; onActivate(): void; disabled?: boolean }>;
+
 }>;
 
-/** Router host owns the sole target and localized accessible name, as with ConversationRow. */
-export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false }: NotificationRowProps) {
+/** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
+export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false, separator = false, action }: NotificationRowProps) {
   const r = notificationRecipe;
-  return <span aria-hidden="true" data-hjm-notification-row="true" style={{ display: "flex", alignItems: "center", gap: r.gap, padding: `${r.paddingBlock}px ${r.paddingInline}px`, width: "100%", minWidth: 0, boxSizing: "border-box" }}>
+  if (action && !action.label.trim()) throw new TypeError("NotificationRow action requires a localized label");
+  const content = <span aria-hidden="true" data-hjm-notification-row="true" style={{ position: "relative", display: "flex", alignItems: "center", gap: r.gap, padding: `${r.paddingBlock}px ${r.paddingInline}px`, width: "100%", minWidth: 0, boxSizing: "border-box" }}>
+    {separator ? <span data-hjm-notification-separator="true" style={{ position: "absolute", insetBlockStart: 0, insetInlineStart: r.separatorInsetStart, insetInlineEnd: 0, borderBlockStart: "1px solid var(--hjm-color-border)" }} /> : null}
     <span style={{ position: "relative", width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }}>
       <span style={{ display: "flex", width: "100%", height: "100%", overflow: "hidden", borderRadius: "50%" }}>{avatar}</span>
       {avatarBadge ? <span style={{ position: "absolute", bottom: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: "50%", background: "var(--hjm-color-surface)", border: "2px solid var(--hjm-color-surface)", boxSizing: "border-box" }}>{avatarBadge}</span> : null}
     </span>
-    <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: r.contentGap }}>
+    <span data-hjm-notification-copy="true" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: r.contentGap }}>
       <Text style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: r.previewLines, overflow: "hidden" }}>{preview}</Text>
       <span style={{ display: "flex", alignItems: "center", gap: r.contentGap }}><Text variant="caption" tone="muted">{metadata}</Text>{unread ? <span data-hjm-unread-dot="true" style={{ width: r.unreadSize, height: r.unreadSize, borderRadius: "50%", flexShrink: 0, background: "var(--hjm-color-content-brand)" }} /> : null}</span>
     </span>
     {thumbnail ? <span style={{ width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: "var(--hjm-radius-sm)" }}>{thumbnail}</span> : null}
   </span>;
+  return action ? <button type="button" className="hjm-notification-row-action" aria-label={action.label}
+    disabled={action.disabled} onClick={() => { if (!action.disabled) action.onActivate(); }}
+    style={{ "--hjm-notification-disabled-opacity": r.interaction.disabledOpacity, "--hjm-notification-pressed-opacity": r.interaction.pressedOpacity } as React.CSSProperties}>
+    {content}
+  </button> : content;
 }
 
 export type IconTileProps = Readonly<{
@@ -410,10 +423,17 @@ export type IconTileProps = Readonly<{
   /** Frame (and ghost outline) corner shape from the product's icon theme. */
   shape?: IconTileShape;
   /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
-  size?: IconTileSize }>;
-/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size}: IconTileProps) {
+  size?: IconTileSize;
+  /** Simple activation is HJM-owned; omit for product drag/long-press gesture hosts. */
+  onActivate?: () => void;
+  activationLabel?: string;
+  disabled?: boolean;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+/** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, disabled = false, layoutStyle}: IconTileProps) {
   const r = iconTileRecipe;
+  if (onActivate && !(activationLabel ?? label).trim()) throw new TypeError("Interactive IconTile requires a label");
   const framed = frame === "surface";
   // Percent radius follows the rendered size, so a filling icon keeps its shape at every cell width.
   const dimensions = size === "fill" ? {width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: "1"} : {width: r.iconSize, height: r.iconSize};
@@ -432,10 +452,15 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
     return () => observer.disconnect();
   }, [measureEdge, r.fillMinSize]);
   const edge = size === "fill" ? fillEdge : r.iconSize;
-  return <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}}>
+  const content = <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible", ...(onActivate ? {} : layoutStyle)}}>
     <span ref={frameRef} style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</span>
     <Text variant="caption" style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
   </span>;
+  if (!onActivate) return content;
+  return <button type="button" className="hjm-icon-tile-action" aria-label={activationLabel ?? label} disabled={disabled}
+    style={{ "--hjm-icon-tile-pressed-opacity": r.activation.pressedOpacity, "--hjm-icon-tile-disabled-opacity": r.activation.disabledOpacity,
+      minWidth: r.activation.minimumTarget, minHeight: r.activation.minimumTarget, ...layoutStyle } as React.CSSProperties}
+    onClick={() => { if (!disabled) onActivate(); }}>{content}</button>;
 }
 
 export type TypingIndicatorProps = Readonly<{

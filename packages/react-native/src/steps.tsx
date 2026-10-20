@@ -21,7 +21,8 @@ export type StepsProps<Id extends string = string> = Readonly<{
   renderMark?: (status: StepStatus, position: number) => ReactNode;
   /**
    * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-   * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+   * later steps stay static in default linear mode. Free reading mode makes every step selectable.
+   * Omit the handler while the flow is locked.
    */
   onStepPress?: (id: Id) => void;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -44,22 +45,26 @@ export function Steps<Id extends string>({
   const { indicator, connector, label } = stepsRecipe;
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, palette);
   return (
-    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row", gap: stepsRecipe.gap }, layoutStyle]}>
+    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row" }, layoutStyle]}>
       {steps.map((step, index) => {
-        const cell = { flex: 1, gap: stepsRecipe.gap, minWidth: 0 } as const;
+        const terminal = index === steps.length - 1;
+        // The final step reserves only its copy/marker width; connectors own all remaining rail width.
+        const cell = { flexGrow: terminal ? 0 : 1, flexBasis: terminal ? "auto" as const : 0, flexShrink: 1, gap: stepsRecipe.gap, minWidth: indicator.size, ...(terminal ? { maxWidth: `${100 / steps.length}%` as const } : {}) };
+        const segment = (reached: boolean) => <View style={{ backgroundColor: color(reached ? connector.tone.reached : connector.tone.unreached), flex: 1, height: connector.height }} />;
         const content = <>
           <View accessible={false} style={{ alignItems: "center", flexDirection: "row" }}>
+            {terminal ? segment(steps[index - 1]?.status === "complete") : null}
             <View style={{ alignItems: "center", backgroundColor: indicator.background[step.status] === null ? colors.bg : color(indicator.background[step.status]!), borderColor: color(indicator.border[step.status]), borderRadius: indicator.size / 2, borderWidth: step.status === "current" || step.status === "error" ? indicator.activeBorderWidth : indicator.borderWidth, height: indicator.size, justifyContent: "center", width: indicator.size }}>
               {renderMark?.(step.status, step.position) ?? <Text align="center" emphasis="strong" style={{ color: color(indicator.content[step.status]) }} variant="label">{step.status === "complete" ? "✓" : step.status === "error" ? "!" : step.position}</Text>}
             </View>
-            {index === steps.length - 1 ? null : <View style={{ backgroundColor: color(step.status === "complete" ? connector.tone.reached : connector.tone.unreached), flex: 1, height: connector.height }} />}
+            {terminal ? null : segment(step.status === "complete")}
           </View>
-          <Text emphasis="medium" style={{ color: color(label.color[step.status]) }} variant={label.textVariant}>{step.label}</Text>
-          {step.description === undefined ? null : <Text tone="muted" variant="caption">{step.description}</Text>}
+          <Text emphasis="medium" align={terminal ? "end" : "start"} style={{ color: color(label.color[step.status]), ...(terminal ? {} : { paddingEnd: stepsRecipe.gap }) }} variant={label.textVariant}>{step.label}</Text>
+          {step.description === undefined ? null : <Text tone="muted" align={terminal ? "end" : "start"} variant="caption">{step.description}</Text>}
         </>;
         // A pressable step is one named button over marker and label; the status stays the hint, as on static steps.
-        return step.revisitable && onStepPress
-          ? <Pressable accessibilityRole="button" accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} key={step.id}
+        return (descriptor.navigationMode === "free" || step.revisitable) && onStepPress
+          ? <Pressable accessibilityRole="button" accessibilityState={{ selected: step.status === "current" || step.status === "error" }} accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} key={step.id}
               onPress={() => onStepPress(step.id)} style={{ ...cell, minHeight: stepsRecipe.press.minTouchTarget }}>{content}</Pressable>
           : <View accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} accessible key={step.id} style={cell}>{content}</View>;
       })}

@@ -1,4 +1,6 @@
+import type { ComponentRef } from "react";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 // Overlays cover the bottom bar, so screens inside them must not pad for it.
 import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
 import { InitialFocusProvider, useInitialFocusScope, useOverlayLayer } from "./internal/initial-focus.js";
@@ -27,7 +29,7 @@ import {
   type SheetOpenChangeDetails,
 } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, control, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   actionGroupRecipe,
   alertDialogRecipe,
@@ -81,9 +83,9 @@ function CloseGlyph() {
   return <FixedGlyph fontSize={glyph.sm}>×</FixedGlyph>;
 }
 
-// Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
-// Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
-// while still painting; a non-animated boundary preserves reopen accessibility.
+// Keep interaction visibility off native-driven animation hosts: closing content becomes inert while its host exits.
+// This boundary does not reset UIKit state leaked by Fabric's native view recycling (react/react-native#58361);
+// that dependency defect needs a prepareForRecycle correction, not another JS visibility/animation toggle.
 function ModalInteractionBoundary({ visible, onTouchStart, children }: { visible: boolean; onTouchStart(): void; children: ReactNode }) {
   return <View
     onTouchStart={onTouchStart}
@@ -215,7 +217,7 @@ function useReasonedOpenState<Reason>({
   return [visible, changeOpen] as const;
 }
 
-function focusNativeTarget(target: RefObject<View | null> | undefined): void {
+function focusNativeTarget(target: RefObject<ComponentRef<typeof View> | null> | undefined): void {
   focusAccessibleHost(target?.current);
 }
 
@@ -338,7 +340,7 @@ export type DialogProps = NativeModalProps &
     size?: DialogSize;
     /** Localized accessible name for the close action. */
     closeLabel: string;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     /** Layout-only placement for the sheet content. Use `size` for height. */
     contentStyle?: HjmCompositionStyleProp;
     /**
@@ -436,7 +438,7 @@ export function Dialog({
     exitFallbackTask.current?.cancel();
     exitFallbackTask.current = null;
   }, []);
-  const originContentRef = useRef<View>(null);
+  const originContentRef = useRef<ComponentRef<typeof View>>(null);
   const originLayout = useRef<{ width: number; height: number } | null>(null);
   const originRef = useRef(motionOrigin); originRef.current = motionOrigin;
   const measurementRun = useRef(0);
@@ -732,8 +734,10 @@ export type AlertDialogProps = NativeModalProps &
   ReasonedOpenProps<AlertDialogOpenChangeReason> &
   Readonly<{
     request: AlertDialogRequest;
+    /** Product eligibility (for example a retry cooldown); cancel remains available. */
+    confirmDisabled?: boolean;
     size?: DialogSize;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     onResult?: (result: AlertDialogResult) => void;
     /** Layout-only placement; semantic size and the recipe own appearance. */
     contentStyle?: HjmCompositionStyleProp;
@@ -745,6 +749,7 @@ export function AlertDialog({
   defaultOpen,
   onOpenChange,
   request,
+  confirmDisabled = false,
   size = alertDialogRecipe.defaults.size,
   returnFocusRef,
   onResult,
@@ -805,8 +810,8 @@ export function AlertDialog({
   const exitFallbackTask = useRef<NativeModalTeardownTask | null>(null);
   const onResultRef = useRef(onResult);
   onResultRef.current = onResult;
-  const cancelRef = useRef<View>(null);
-  const confirmRef = useRef<View>(null);
+  const cancelRef = useRef<ComponentRef<typeof View>>(null);
+  const confirmRef = useRef<ComponentRef<typeof View>>(null);
 
   const cancelExitFallback = useCallback(() => {
     exitFallbackTask.current?.cancel();
@@ -990,6 +995,7 @@ export function AlertDialog({
     requestClose(session, reason);
   };
   const confirm = () => {
+    if (confirmDisabled) return;
     void session.confirm().then((closing) => {
       if (closing) requestClose(session, "confirm");
     });
@@ -1024,8 +1030,8 @@ export function AlertDialog({
       ref={confirmRef}
       accessibilityLabel={request.confirmLabel}
       accessibilityRole="button"
-      accessibilityState={{ busy, disabled: busy }}
-      disabled={busy}
+      accessibilityState={{ busy, disabled: busy || confirmDisabled }}
+      disabled={busy || confirmDisabled}
       onPress={confirm}
       style={({ pressed }) => [
         minimumTargetStyle,
@@ -1036,7 +1042,7 @@ export function AlertDialog({
           flex: stackActions ? undefined : 1,
           justifyContent: "center",
           minWidth: alertDialogRecipe.actions.minButtonWidth,
-          opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+          opacity: busy || confirmDisabled ? 0.5 : pressed ? 0.86 : 1,
           paddingHorizontal: spacing.md,
         },
       ]}
@@ -1197,9 +1203,11 @@ export type SheetProps = NativeModalProps &
     size?: SheetSize;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
+    /** Downward handle dismissal. Bottom sheets enable it by default; side reading panels opt in. */
+    swipeDirection?: "down";
     /** Localized accessible name for the close action. */
     closeLabel: string;
-    returnFocusRef?: RefObject<View | null>;
+    returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
     safeAreaInsets?: Partial<Insets>;
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
     /** Layout-only placement; semantic size and the recipe own appearance. */
@@ -1228,6 +1236,7 @@ export function Sheet({
   size = sheetRecipe.defaults.size,
   busy = false,
   dismissPolicy,
+  swipeDirection,
   closeLabel,
   returnFocusRef,
   safeAreaInsets: suppliedSafeAreaInsets,
@@ -1492,7 +1501,7 @@ export function Sheet({
   // release past the distance or velocity threshold closes with reason "swipe", otherwise it springs back.
   const [dragOffset] = useState(() => new Animated.Value(0));
   const sheetHeight = useRef(0);
-  const showHandle = !side && policy.dismissible && policy.swipeDismiss;
+  const showHandle = (!side || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
   const closeBlocked = busy && !policy.dismissWhileBusy;
   const canSwipe = showHandle && !closeBlocked;
   const requestCloseRef = useRef(requestClose);
@@ -1622,7 +1631,7 @@ export function Sheet({
                 transform: environment.reducedMotion
                   ? undefined
                   : side
-                    ? [{ translateX: translate }]
+                    ? [{ translateX: translate }, { translateY: dragOffset }]
                     // Two translateY entries compose: the enter/exit motion plus the live drag offset.
                     : [{ translateY: translate }, { translateY: dragOffset }],
                 width: side ? "88%" : "100%",
@@ -1637,11 +1646,18 @@ export function Sheet({
               style={{ position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" }} />
             <View {...(canSwipe ? dragResponder.panHandlers : {})} style={{ flexShrink: 0 }}>
             {showHandle && sheetRecipe.handle.visibleByDefault ? (
-              // The handle doubles as a close control so switch and screen-reader users need no drag.
-              <Pressable accessibilityRole="button" accessibilityLabel={closeLabel} accessibilityState={{ disabled: closeBlocked }} disabled={closeBlocked} onPress={() => requestClose("close-action")} hitSlop={spacing.sm}
-                style={{ alignSelf: "center", paddingVertical: spacing.xs }}>
-                <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />
-              </Pressable>
+              // An explicit × owns the close command; its handle remains a drag affordance.
+              closeVisible ? (
+                <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+                  style={{ alignSelf: "center", minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", paddingVertical: spacing.xs }}>
+                  <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />
+                </View>
+              ) : (
+                <Pressable accessibilityRole="button" accessibilityLabel={closeLabel} accessibilityState={{ disabled: closeBlocked }} disabled={closeBlocked} onPress={() => requestClose("close-action")} hitSlop={spacing.sm}
+                  style={{ alignSelf: "center", minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", paddingVertical: spacing.xs }}>
+                  <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />
+                </Pressable>
+              )
             ) : null}
             {description || (policy.dismissible && closeVisible) ? (
             <View
@@ -1676,14 +1692,15 @@ export function Sheet({
                 // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
                 // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
                 style={{ flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }}
-                contentContainerStyle={{ gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }}
+                // Fill the scroll viewport so a CompositionLayout state can center in the sheet body.
+                contentContainerStyle={{ flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }}
                 keyboardShouldPersistTaps="handled"
                 keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
                 automaticallyAdjustKeyboardInsets={false}
               >
-                <KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider>
+                <ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider>
               </ScrollView>
-            ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></View>}
+            ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}><ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider></View>}
             {footer ? (
               <View
                 style={{
@@ -1692,7 +1709,8 @@ export function Sheet({
                   paddingTop: sheetRecipe.footer.paddingTop,
                 }}
               >
-                {footer}
+                {/* The Sheet owns the inset; composing BottomCTA must not inset the action a second time. */}
+                <ScreenFooterContext.Provider value={{ bottomPadding: sheetRecipe.content.paddingBottom + bottomInset }}>{footer}</ScreenFooterContext.Provider>
               </View>
             ) : null}
           </Animated.View>
@@ -1718,7 +1736,7 @@ export type ImmersiveOverlayProps = Readonly<{
   tools?: ReactNode;
   /** Status copy above the action row (keep-awake state, a notice). */
   status?: ReactNode;
-  returnFocusRef?: RefObject<View | null>;
+  returnFocusRef?: RefObject<ComponentRef<typeof View> | null>;
   onShow?: ModalProps["onShow"];
 }>;
 

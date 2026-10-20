@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
@@ -99,7 +100,7 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
                         }
                     }, children: [_jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", "data-scroll": scrollEnabled ? undefined : "locked", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }), overlayLayer ? _jsx("div", { className: "hjm-dialog__overlay-layer", "aria-hidden": "true", inert: true, children: overlayLayer }) : null] }) })) : null] }));
 });
-export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, confirmDisabled = false, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
     validateAlertDialogRequest(request);
     const [open, changeOpen] = useOpenState({
@@ -153,7 +154,7 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
     });
     const confirm = async () => {
         const session = sessionRef.current;
-        if (!session)
+        if (!session || confirmDisabled)
             return;
         if (await session.confirm())
             changeOpen(false, { reason: "confirm" });
@@ -181,9 +182,9 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
                 startSession();
                 changeOpen(true, { reason: "trigger" });
-            }), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
+            }), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing || confirmDisabled, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
 });
-export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, size = sheetRecipe.defaults.size, detents, activeDetent, onDetentChange, detentLabels, busy = false, dismissPolicy, closeLabel, initialFocusRef, initialFocus = initialFocusDefaults.overlay, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, showClose, }, forwardedRef) {
+export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, size = sheetRecipe.defaults.size, detents, activeDetent, onDetentChange, detentLabels, busy = false, dismissPolicy, swipeDirection, closeLabel, initialFocusRef, initialFocus = initialFocusDefaults.overlay, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, showClose, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
@@ -194,11 +195,27 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
     const closeVisible = resolveSheetCloseButton(placement, showClose);
     // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
     // release past the distance or velocity threshold closes with reason "swipe".
-    const showHandle = placement === "bottom" && policy.dismissible && policy.swipeDismiss;
+    const showHandle = (placement === "bottom" || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
     const closeBlocked = busy && !policy.dismissWhileBusy;
     const canSwipe = showHandle && !closeBlocked;
     const dragRef = useRef(null);
     const [dragY, setDragY] = useState(0);
+    const suppressDragClick = useRef(false);
+    const cancelDrag = (pointerId) => {
+        if (dragRef.current?.pointerId !== pointerId)
+            return;
+        suppressDragClick.current = dragRef.current.moved;
+        dragRef.current = null;
+        setDragY(0);
+    };
+    useEffect(() => {
+        // Retire a held gesture when its modal closes or becomes busy/non-dismissible.
+        if (open && canSwipe)
+            return;
+        dragRef.current = null;
+        suppressDragClick.current = false;
+        setDragY(0);
+    }, [open, canSwipe]);
     const lifecycleRef = useRef(createSheetLifecycle(open));
     const previousOpenRef = useRef(open);
     const currentOpenRef = useRef(open);
@@ -283,33 +300,44 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                             requestClose("outside");
                         }
                     }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", "data-dragging": dragY > 0 || undefined, style: dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined, children: [_jsx("h2", { id: titleId, className: "hjm-visually-hidden", children: title }), _jsxs("div", { className: "hjm-sheet__drag", "data-swipe": canSwipe || undefined, onPointerDown: (event) => {
-                                    if (!canSwipe || event.button !== 0 || event.target.closest("a,input,textarea,select,.hjm-dialog__close"))
+                                    if (!canSwipe || dragRef.current || event.button !== 0 || event.target.closest("a,input,textarea,select,.hjm-dialog__close"))
                                         return;
-                                    dragRef.current = { pointerId: event.pointerId, y: event.clientY, t: event.timeStamp, moved: false };
+                                    suppressDragClick.current = false;
+                                    dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, t: event.timeStamp, moved: false };
+                                    // Capture from the start so a release outside cannot strand ownership. Preserve the
+                                    // originating handle button as the click target for tap/keyboard/detent behavior.
+                                    (event.target.closest("button") ?? event.currentTarget).setPointerCapture(event.pointerId);
                                 }, onPointerMove: (event) => {
                                     const drag = dragRef.current;
-                                    if (!drag || drag.pointerId !== event.pointerId)
+                                    if (!canSwipe || !drag || drag.pointerId !== event.pointerId)
                                         return;
                                     const dy = event.clientY - drag.y;
-                                    if (!drag.moved && dy < sheetDragRecipe.activationDistance)
+                                    if (!drag.moved && (dy < sheetDragRecipe.activationDistance || dy <= Math.abs(event.clientX - drag.x)))
                                         return;
-                                    if (!drag.moved) {
-                                        drag.moved = true;
-                                        event.currentTarget.setPointerCapture(event.pointerId);
-                                    }
+                                    drag.moved = true;
                                     setDragY(Math.max(0, dy));
                                 }, onPointerUp: (event) => {
                                     const drag = dragRef.current;
+                                    if (!drag || drag.pointerId !== event.pointerId)
+                                        return;
                                     dragRef.current = null;
-                                    if (!drag || drag.pointerId !== event.pointerId || !drag.moved)
+                                    suppressDragClick.current = drag.moved;
+                                    setDragY(0);
+                                    if (!canSwipe || !drag.moved)
                                         return;
                                     const dy = event.clientY - drag.y;
                                     const velocity = dy / Math.max(1, event.timeStamp - drag.t);
                                     const height = contentRef.current?.getBoundingClientRect().height ?? 0;
-                                    setDragY(0);
                                     if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity)
                                         requestClose("swipe");
-                                }, onPointerCancel: () => { dragRef.current = null; setDragY(0); }, children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
+                                }, onPointerCancel: (event) => cancelDrag(event.pointerId), onLostPointerCapture: (event) => cancelDrag(event.pointerId), onClickCapture: (event) => {
+                                    // The browser emits click after a released drag; it must not turn a short drag into a close.
+                                    if (!suppressDragClick.current || event.detail === 0)
+                                        return;
+                                    suppressDragClick.current = false;
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                }, children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
                                                 ? detentLabels.collapse
                                                 : detentLabels.expand, onClick: () => {
                                                 const expand = resolveNextSheetDetent(detents, activeDetent, "expand");
@@ -317,8 +345,8 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                                                 if (next !== null)
                                                     onDetentChange?.(next);
                                             }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : showHandle ? (
-                                    // Without detents the handle is the visible close control for keyboard and switch users.
-                                    _jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: _jsx(InitialFocusProvider, { scope: focusScope, children: footer }) }) : null] }) }) })) : null] }));
+                                    // Keep one close command: an explicit × owns it; otherwise the handle supports keyboard and switch users.
+                                    _jsx("div", { className: "hjm-sheet__handle-row", children: closeVisible ? (_jsx("div", { className: "hjm-sheet__handle", "aria-hidden": "true", children: _jsx("span", { className: "hjm-sheet__handle-bar" }) })) : (_jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) })) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: _jsx(ScreenFooterContext.Provider, { value: { bottomPadding: placement === "bottom" ? "calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px))" : "var(--hjm-space-sm)" }, children: _jsx(InitialFocusProvider, { scope: focusScope, children: footer }) }) }) : null] }) }) })) : null] }));
 });
 export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({

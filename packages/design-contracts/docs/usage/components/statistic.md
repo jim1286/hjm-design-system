@@ -82,9 +82,32 @@ import { Statistic } from "@hjmds/react-native/data-display";
 | `composeAccessibilityLabel` | `(input: { contextLabel?, descriptor, valueText }) => string` | 기본 어순 | `descriptor`는 trend tone 기본값이 채워진 descriptor, `valueText`는 prefix·value·suffix를 이은 문자열 |
 | `renderTrendMark` | `(props: { name: "trendUp" \| "trendDown" \| "trendFlat", color, size }) => ReactNode` | 내장 표시 | 추세 아이콘을 제품 아이콘으로 바꾼다. `color`는 Web `"currentColor"`, Native trend tone 색 |
 | `renderValue`(Web) | `(value: string) => ReactNode` | — | 보이는 값만 바꾼다. 접근성 값은 descriptor 그대로 |
+| `arrangement`(`StatisticGroup`, 미게시) | `grid` · `bar` | `grid` | bar는 짧은 수치들을 같은 폭 한 줄로 표시 |
+| `leading` · `valueColor`(미게시) | ReactNode · 색 문자열 | 없음 | 수치 옆 장식과 제품 범주/시리즈 색 |
+| `renderLeading` · `getValueColor`(`StatisticGroup`, 미게시) | callback | 없음 | 항목별 장식/색. 아래 한 줄 통계 바 참조 |
 | `availableWidth`(Native `StatisticGroup`) | `number` | 측정 폭 | 열 수 계산에 쓸 폭 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
 | Native `style`·`labelStyle`·`valueStyle`·`affixStyle`·`trendStyle`·`hintStyle`, 그룹 `style`·`itemStyle` | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `density`·`presentation`. 현재 공개 props에서 제거되었다 |
+
+## 한 줄 통계 바(미게시)
+
+2026-10-18 번뚝의 피드 요약·이야기 상세가 각각 숫자 3칸의 순서·아이콘·세로 구분선을
+다시 그리던 문제를 기존 StatisticGroup의 `arrangement="bar"`로 해결했다. 별도 통계 API를 만들지 않는다.
+
+- 기본 `grid`는 기존 열 수/좁은 폭 동작을 유지한다. `bar`는 짧은 수치 몇 개를 한 행의 같은 폭 칸으로 둔다. 열 수는 항목 수이며 `descriptor.columns`는 grid에만 적용한다.
+- bar는 아이콘+값 → 라벨 → 추세/힌트 순서로 가운데 정렬한다. 구분선은 논리적 시작 쪽에 그리므로 RTL도 같은 읽기 순서를 유지한다. 칸 좌우 `spacing.xs` 8, 값/라벨 간격 `spacing.xxs` 4다.
+- `Statistic.leading`은 값 옆 장식 슬롯, `valueColor`는 제품이 소유한 범주/시리즈 색이다. 그룹은 `renderLeading(item, {color, size})`, `getValueColor(item)`로 공급한다. 아이콘 크기는 `glyph.sm`이며 값 색이 없으면 기본 본문색이다. 아이콘이 있는 경우 값 줄의 세로 중앙을 맞춘다.
+- 아이콘은 읽기 대상이 아니다. 접근성 이름은 기존 descriptor의 label/value/trend/hint로 만든다. `0`도 값이며 숨기지 않는다.
+- 바깥 입체 판은 Card, 이미 카드 안이면 Divider/Stack을 합성한다. 제품에서 칸 배치·숫자 굵기·구분선을 다시 그리지 않는다.
+
+```tsx
+// Web
+<StatisticGroup arrangement="bar" label={t("stats.summary")}
+  descriptor={{ items: stats }}
+  getValueColor={item => seriesColors[item.id]}
+  renderLeading={(item, { color, size }) => <SeriesIcon id={item.id} color={color} size={size} />} />
+// Native: 같은 공개 props와 callback. descriptor.value는 제품에서 포맷한 문자열이다.
+```
 
 ## 배치
 

@@ -10,8 +10,7 @@ function assertNonEmpty(value, field) {
     }
 }
 /**
- * The grid never parses or computes dates — month/leap-year/timezone
- * arithmetic stays product-owned (see docs/calendar.md). This only checks the
+ * The descriptor accepts product-owned calendar keys. This only checks the
  * "YYYY-MM-DD" shape products already use as their KBO schedule date key.
  */
 export function isIsoCalendarDate(value) {
@@ -29,6 +28,36 @@ export function assertIsoCalendarMonth(value, field) {
     if (!isIsoCalendarMonth(value)) {
         throw new TypeError(`Calendar ${field} must be an ISO "YYYY-MM" month string`);
     }
+}
+/** Civil Gregorian display cells only; business dates, time zones and the clock remain caller-owned. */
+export function createCalendarMonthCells(month, { weekStartsOn = 0, outsideMonth = "adjacent" } = {}) {
+    assertIsoCalendarMonth(month, "month");
+    if (!Number.isInteger(weekStartsOn) || weekStartsOn < 0 || weekStartsOn > 6) {
+        throw new RangeError("Calendar weekStartsOn must be an integer from zero to six");
+    }
+    if (outsideMonth !== "adjacent" && outsideMonth !== "blank") {
+        throw new TypeError("Calendar outsideMonth must be adjacent or blank");
+    }
+    // UTC is a coordinate system for civil-day layout, never a conversion of the
+    // traveller's/service's date. Local Date arithmetic skips/repeats hours at DST.
+    const first = new Date(`${month}-01T00:00:00Z`);
+    const next = new Date(first);
+    next.setUTCMonth(next.getUTCMonth() + 1);
+    const day = 86_400_000;
+    const leading = (first.getUTCDay() - weekStartsOn + 7) % 7;
+    const count = Math.ceil((leading + (next.getTime() - first.getTime()) / day) / 7) * 7;
+    return Array.from({ length: count }, (_, index) => {
+        const value = new Date(first.getTime() + (index - leading) * day);
+        // Four-digit descriptor keys cannot represent the adjacent year at the
+        // outer supported boundaries. Those cells stay non-interactive fillers.
+        if (value.getUTCFullYear() < 0 || value.getUTCFullYear() > 9999)
+            return {};
+        const date = value.toISOString().slice(0, 10);
+        const outsideFocusedMonth = !date.startsWith(month);
+        return outsideFocusedMonth
+            ? outsideMonth === "blank" ? {} : { date, outsideFocusedMonth: true }
+            : { date };
+    });
 }
 export function validateCalendarGridDescriptor(grid) {
     if (grid.cells.length === 0 || grid.cells.length % GRID_COLUMNS !== 0) {

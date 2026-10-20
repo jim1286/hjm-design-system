@@ -148,3 +148,5 @@ Web popover                         Native sheet
 | 낭독 보조 | 없음 | `readOnlyLabel`, `openHint`, `optionsAccessibilityLabel` |
 | 키보드 | `loop`, typeahead(`locale`) | 해당 없음 |
 | `description`·`error` 타입 | `ReactNode` | `string` |
+
+Native는 목록을 열 때 선택 항목(없으면 첫 활성 항목)을 실제 행·섹션 높이로 측정해 보이는 목록 안으로 이동한다. 접근성 포커스만 이동하면 현재 시각이 화면 밖에 남았던 선택의창 점검을 반영했다(2026-10-18, 미게시). 최초 위치를 맞춘 뒤 사용자의 스크롤을 유지하며, 다시 열 때 새 선택 위치를 맞춘다. Web은 기존 활성 항목 `scrollIntoView` 동작을 유지한다.

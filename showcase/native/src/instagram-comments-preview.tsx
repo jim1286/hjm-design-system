@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { CommentThreadScreen } from "@hjmds/react-native/screen-flows";
 import { useRef, useState } from "react";
 import { ScreenLayout, MessageComposer } from "@hjmds/react-native/screens";
@@ -41,7 +42,7 @@ export function InstagramCommentsPreview({stateKind="ready",tools=false}:Props){
  const [draft,setDraft]=useState("");
  const [closed,setClosed]=useState(false);
  const [recovered,setRecovered]=useState(false);
- const input=useRef<TextInput>(null);
+ const input=useRef<ComponentRef<typeof TextInput>>(null);
  const kind=recovered?"ready":stateKind;
  const state:ScreenContentState=kind==="loading"?{kind:"loading",title:"댓글을 불러오고 있어요"}:kind==="error"?{kind:"error",title:"댓글을 불러오지 못했어요",description:"연결을 확인하고 다시 시도해 주세요."}:kind==="restricted"?{kind:"restricted",title:"로그인하고 대화에 참여하세요"}:comments.length===0?{kind:"empty",title:"아직 댓글이 없어요",description:"첫 댓글을 남겨보세요."}:{kind:"ready"};
  const focus=()=>input.current?.focus();

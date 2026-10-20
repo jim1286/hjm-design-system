@@ -1,5 +1,5 @@
 /**
- * Set inside ScreenLayout's footer. The footer already owns the bar chrome (top border, screen padding, safe area), so
+ * Set inside a padded ScreenLayout or Sheet footer. The parent already owns the bar chrome and safe area, so
  * BottomCTA placed there renders only its copy and actions; drawing its own bar too doubled the border, inset the
  * buttons twice and (Native) added a shadowed surface inside the footer (2026-10-17 screen review, common-screen-shell).
  * `bottomPadding` is the footer's resolved bottom padding, so a BottomCTA `safeAreaBottom` only adds what the footer

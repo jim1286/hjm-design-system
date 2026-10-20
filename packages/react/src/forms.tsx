@@ -38,7 +38,7 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
-import { composeRefs, classNames, useControllableState } from "./internal.js";
+import { composeRefs, classNames, isAriaInvalid, useControllableState } from "./internal.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -119,6 +119,7 @@ function FieldFrame({
       }}
       className={classNames("hjm-field", className)}
       data-state={state}
+      data-invalid={Boolean(error || invalid) || undefined}
       data-variant={variant}
       data-shape={shape}
       data-align={align}
@@ -329,7 +330,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         required={required ?? false}
         disabled={disabled ?? false}
         focused={focused}
-        invalid={ariaInvalid === true || ariaInvalid === "true"}
+        invalid={isAriaInvalid(ariaInvalid)}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}
@@ -441,6 +442,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         required={required ?? false}
         disabled={disabled ?? false}
         focused={focused}
+        invalid={isAriaInvalid(ariaInvalid)}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}

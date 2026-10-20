@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Button } from '@hjmds/react-native/actions';
@@ -8,7 +9,7 @@ import { Stack } from '@hjmds/react-native/primitives';
 import { PatternStatus } from './pattern-status';
 import type { TransitionRect } from '@hjmds/design-contracts/content-transition';
 export function OriginDialogPreview() {
- const trigger = useRef<View>(null);
+ const trigger = useRef<ComponentRef<typeof View>>(null);
  const [origin, setOrigin] = useState<TransitionRect>();
  const [open, setOpen] = useState(false);
  const [draft, setDraft] = useState('다음 여행에서 하고 싶은 일');

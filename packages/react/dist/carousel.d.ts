@@ -15,6 +15,8 @@ export type CarouselProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "o
     composeAccessibleName: ComposeCarouselAccessibleName;
     labels: CarouselLabels;
     autoplay?: CarouselAutoplayConfig;
+    /** Available content height in a bounded host. Navigation stays outside the scrolling slide. */
+    slideMaxHeight?: number;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -24,6 +26,10 @@ export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"
     count: number;
     /** Zero-based current page; the product pager owns it. */
     currentIndex: number;
+    /** Limit visible dots while retaining absolute page names and navigation. */
+    maxVisibleDots?: number;
+    /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
+    interactive?: boolean;
     /** Requested page from a dot or an arrow key. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -40,6 +46,10 @@ export declare const PageIndicator: import("react").ForwardRefExoticComponent<Om
     count: number;
     /** Zero-based current page; the product pager owns it. */
     currentIndex: number;
+    /** Limit visible dots while retaining absolute page names and navigation. */
+    maxVisibleDots?: number;
+    /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
+    interactive?: boolean;
     /** Requested page from a dot or an arrow key. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;

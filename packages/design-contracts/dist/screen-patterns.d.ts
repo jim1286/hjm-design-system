@@ -146,6 +146,15 @@ export type EntryFocusResolution<T> = Readonly<{
 }>;
 export declare function resolveEntryFocus<T extends InitialFocusCandidate>(phase: EntryFocusPhase, event: EntryFocusEvent<T>, facts: EntryFocusFacts<T>): EntryFocusResolution<T>;
 export declare const screenPatternRecipe: {
+    readonly pullDismiss: {
+        readonly activationDistance: 6;
+        readonly distance: 80;
+        readonly flickDistance: 32;
+        readonly flickVelocity: 0.65;
+        readonly maxOffset: 160;
+        readonly settleDuration: 140;
+        readonly topTolerance: 1;
+    };
     readonly maxWidth: 720;
     readonly padding: 16;
     readonly sectionGap: 24;
@@ -170,6 +179,8 @@ export type MessageComposerDescriptor = Readonly<{
     /** Short visual copy may differ from the complete accessible input name. */
     placeholder?: string;
     description?: string;
+    /** Counters can align to the field end; validation errors retain their normal alignment. */
+    descriptionAlign?: "start" | "end";
     error?: string;
     invalid?: boolean;
     /** Newline remains the compatible default; desktop chat may explicitly opt into send. */
@@ -515,9 +526,12 @@ export declare const searchScreenRecipe: {
 export declare function resolveSearchDebounceMs(value?: number): number;
 /** Horizontal intent preserves vertical scrolling and uses one reveal distance across renderers. */
 export declare function timestampRevealOffset(dx: number, dy: number): number;
-/** Notification previews need an actor/type badge and a separate subject thumbnail.
- * Keep this geometry shared so inboxes do not recreate the same row per product. */
 export declare const notificationRowRecipe: {
+    readonly separatorInsetStart: number;
+    readonly interaction: {
+        readonly disabledOpacity: 0.5;
+        readonly pressedOpacity: 0.86;
+    };
     readonly gap: 12;
     readonly contentGap: 4;
     readonly avatarSize: 44;
@@ -531,6 +545,17 @@ export declare const notificationRowRecipe: {
 /** Shared profile identity geometry; product owns the avatar content. */
 export declare const profileSummaryRecipe: Readonly<{
     avatarSize: 72;
+    avatarGlyphSize: 44;
+    actionsLayouts: Readonly<{
+        inline: Readonly<{
+            readonly axis: "inline";
+            readonly gap: "sm";
+        }>;
+        stacked: Readonly<{
+            readonly axis: "block";
+            readonly gap: "xs";
+        }>;
+    }>;
     /**
      * ProfileScreen `editPlacement="summary"` draws the edit action first in the summary's action row. A framed small
      * button reads as the card's own action; the below-summary placement keeps its ghost button (2026-10-15 utilverse
@@ -561,6 +586,11 @@ export declare const iconTileRecipe: Readonly<{
     iconRadius: "22%";
     /** Corner radius as a fraction of the icon size; `squircle` keeps the original 22%. */
     shapes: Readonly<Record<IconTileShape, number>>;
+    activation: Readonly<{
+        minimumTarget: 44;
+        pressedOpacity: 0.86;
+        disabledOpacity: 0.5;
+    }>;
     fillMinSize: 48;
     fillMaxSize: 68;
     defaults: Readonly<{

@@ -196,11 +196,13 @@ export type TopBarProps = Readonly<{
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Share a product scene behind the bar without replacing its layout or controls. */
+    surface?: "default" | "transparent";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native screen top bar with logical action slots and large-text reflow. */
-export declare function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered, safeAreaTop, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
+export declare function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered, safeAreaTop, surface, layoutStyle, ...removedProps }: TopBarProps): import("react").JSX.Element;
 /** Flat and sectioned menus share collection identifiers and rendering slots. */
 export type MenuItem<Value extends string = string> = Omit<CollectionItemDescriptor<Value>, "textValue"> & Readonly<{
     textValue?: string;

@@ -188,4 +188,10 @@ export function useInitialFocusTarget(element, preference) {
         }, mounted);
     }, [registry, preference, element]);
 }
+/** Page footer inputs are bottom-anchored, so entry must not open their keyboard (2026-10-18 user request).
+ * Keep the boundary through nested screens; a separately opened overlay owns its own focus policy.
+ */
+export function BottomEntryFocusBoundary({ children }) {
+    return _jsx(EntryFocusEnabledContext.Provider, { value: false, children: _jsx(InitialFocusContext.Provider, { value: null, children: children }) });
+}
 //# sourceMappingURL=initial-focus.js.map

@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { act, create } from "react-test-renderer";
 import { createRef, useState } from "react";
 import { AccessibilityInfo, TextInput } from "react-native";
@@ -62,7 +63,7 @@ describe("Form Native host actions", () => {
     const focus = vi.fn();
     const setAccessibilityFocus = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
     const onSubmit = vi.fn();
-    const firstInvalidFieldRef = { current: { focus } } as unknown as RefObject<TextInput | null>;
+    const firstInvalidFieldRef = { current: { focus } } as unknown as RefObject<ComponentRef<typeof TextInput> | null>;
     let renderer!: ReturnType<typeof create>;
     await act(async () => {
       renderer = create(
@@ -97,7 +98,7 @@ describe("Form Native host actions", () => {
 
 it("shares guarded submit with an external footer and keyboard without a duplicate button", async () => {
   const ref = createRef<FormHandle>();
-  const invalid = {current: null} as RefObject<TextInput | null>;
+  const invalid = {current: null} as RefObject<ComponentRef<typeof TextInput> | null>;
   let complete!: () => void;
   const onSubmit = vi.fn(() => new Promise<void>(resolve => {complete = resolve;}));
   let renderer!: ReturnType<typeof create>;
@@ -109,7 +110,7 @@ it("shares guarded submit with an external footer and keyboard without a duplica
   expect(onSubmit).toHaveBeenCalledExactlyOnceWith({name:"초안"});
   await act(async () => { complete(); await submission; });
   const focus = vi.fn();
-  invalid.current = {focus} as unknown as TextInput;
+  invalid.current = {focus} as unknown as ComponentRef<typeof TextInput>;
   await act(async () => { await ref.current!.submit(); });
   expect(focus).toHaveBeenCalledOnce();
   expect(onSubmit).toHaveBeenCalledTimes(1);

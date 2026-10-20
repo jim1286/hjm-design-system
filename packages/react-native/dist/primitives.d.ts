@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { type GridDescriptor, type ResolvedGridLayout } from "@hjmds/design-contracts/grid";
 import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect-ratio";
 import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
@@ -6,7 +7,7 @@ import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layou
 import { type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjmds/design-contracts/recipes";
-import { type Ref, type ReactNode } from "react";
+import { forwardRef, type Ref, type ReactNode } from "react";
 import { Text as NativeText, View, type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjmds/design-contracts/recipes";
@@ -33,19 +34,10 @@ export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
     headerProps?: LayoutRegionProps;
     mainProps?: LayoutRegionProps;
     footerProps?: LayoutRegionProps;
-    mainRef?: Ref<View>;
+    mainRef?: Ref<ComponentRef<typeof View>>;
 }>;
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
-export declare const Layout: import("react").ForwardRefExoticComponent<Omit<ViewProps, "children"> & Readonly<{
-    children: ReactNode;
-    header?: ReactNode;
-    footer?: ReactNode;
-    sidebar?: LayoutSidebar;
-    headerProps?: LayoutRegionProps;
-    mainProps?: LayoutRegionProps;
-    footerProps?: LayoutRegionProps;
-    mainRef?: Ref<View>;
-}> & import("react").RefAttributes<View>>;
+export declare const Layout: ReturnType<typeof forwardRef<ComponentRef<typeof View>, LayoutProps>>;
 export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     children: ReactNode;
     variant?: TextVariant;
@@ -65,25 +57,7 @@ export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Text: import("react").ForwardRefExoticComponent<Omit<NativeTextProps, "children"> & Readonly<{
-    children: ReactNode;
-    variant?: TextVariant;
-    /** Overrides family role while retaining the variant metrics and text semantics. */
-    fontRole?: FontRole;
-    tone?: TextTone;
-    /**
-     * Product-owned color role (team, sentiment, chart series) that replaces the `tone` color while keeping the HJM
-     * variant metrics and font face. Products dropped to RN Text for these and lost the bundled face (2026-10-18
-     * yajalal stats). Contrast against the surface stays the product's responsibility.
-     */
-    color?: string;
-    /** Digit spacing; `tabular` keeps changing numbers (scores, timers, counts) from shifting the layout. */
-    numeric?: NumericVariant;
-    emphasis?: TextEmphasis;
-    align?: TextStyle["textAlign"];
-    /** Canonical layout-only placement. Controlled visual keys are excluded. */
-    layoutStyle?: HjmCompositionStyleProp;
-}> & import("react").RefAttributes<NativeText>>;
+export declare const Text: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>, TextProps>>;
 export type HjmTextFaceOptions = Readonly<{
     /** Final weight of the product-drawn text ("400"–"800", "normal", "bold"). */
     weight?: TextStyle["fontWeight"];

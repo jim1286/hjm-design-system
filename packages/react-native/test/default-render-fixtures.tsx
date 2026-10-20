@@ -1,3 +1,4 @@
+import { TimePicker } from "../src/time-picker.js";
 // 2026-10-17 screen compositions registered: screen compositions (catalog rows added the same day).
 import { Text as RNText } from "react-native";
 import { ChatDateSeparator, ChatMessage, ChatScreen, CompositionLayout, IconTile, TypingIndicator, MessageComposer, NotificationInboxScreen, NotificationItem, NotificationRow, ScreenLayout, SettingsScreen } from "../src/screens.js";
@@ -277,6 +278,11 @@ export const defaultRenderCases = [
         <Text>필드</Text>
       </Form>
     ),
+  },
+  {
+    componentId: "time-picker",
+    render: () => <TimePicker presentation="inline" value="14:30" onValueChange={() => undefined} labels={{ label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" }} />,
+    renderLongCopy: copy => <TimePicker presentation="inline" value="14:30" onValueChange={() => undefined} description={copy} labels={{ label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" }} />,
   },
   {
     componentId: "date-picker",

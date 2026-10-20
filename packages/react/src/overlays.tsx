@@ -1,4 +1,5 @@
 import { InitialFocusProvider, useInitialFocusScope, type ModalLayerRef } from "./internal/initial-focus.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
@@ -300,6 +301,8 @@ export type AlertDialogProps = ModalOpenState<
 > &
   Readonly<{
     request: AlertDialogRequest;
+    /** Product eligibility (for example a retry cooldown); cancel remains available. */
+    confirmDisabled?: boolean;
     icon?: ReactNode;
     size?: DialogSize;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -314,6 +317,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
     {
       trigger,
       request,
+      confirmDisabled = false,
       icon,
       size = dialogRecipe.defaults.size,
       returnFocusRef,
@@ -384,7 +388,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
 
     const confirm = async () => {
       const session = sessionRef.current;
-      if (!session) return;
+      if (!session || confirmDisabled) return;
       if (await session.confirm()) changeOpen(false, { reason: "confirm" });
     };
     useEffect(() => {
@@ -463,7 +467,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
                     ref={confirmRef}
                     tone={tone === "danger" ? "danger" : "primary"}
                     loading={busy}
-                    disabled={closing}
+                    disabled={closing || confirmDisabled}
                     onClick={() => void confirm()}
                   >
                     {request.confirmLabel}
@@ -509,6 +513,8 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     detentLabels?: Readonly<{ expand: string; collapse: string }>;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
+    /** Downward handle dismissal. Bottom sheets enable it by default; side sheets opt in for a reading panel. */
+    swipeDirection?: "down";
     /** Localized accessible name for the close action. */
     closeLabel: string;
     /** Side sheets only. Bottom sheets focus their modal container, never an input on opening. */
@@ -544,6 +550,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     detentLabels,
     busy = false,
     dismissPolicy,
+    swipeDirection,
     closeLabel,
     initialFocusRef,
     initialFocus = initialFocusDefaults.overlay,
@@ -569,11 +576,25 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
   const closeVisible = resolveSheetCloseButton(placement, showClose);
   // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
   // release past the distance or velocity threshold closes with reason "swipe".
-  const showHandle = placement === "bottom" && policy.dismissible && policy.swipeDismiss;
+  const showHandle = (placement === "bottom" || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
   const closeBlocked = busy && !policy.dismissWhileBusy;
   const canSwipe = showHandle && !closeBlocked;
-  const dragRef = useRef<{ pointerId: number; y: number; t: number; moved: boolean } | null>(null);
+  const dragRef = useRef<{ pointerId: number; x: number; y: number; t: number; moved: boolean } | null>(null);
   const [dragY, setDragY] = useState(0);
+  const suppressDragClick = useRef(false);
+  const cancelDrag = (pointerId: number) => {
+    if (dragRef.current?.pointerId !== pointerId) return;
+    suppressDragClick.current = dragRef.current.moved;
+    dragRef.current = null;
+    setDragY(0);
+  };
+  useEffect(() => {
+    // Retire a held gesture when its modal closes or becomes busy/non-dismissible.
+    if (open && canSwipe) return;
+    dragRef.current = null;
+    suppressDragClick.current = false;
+    setDragY(0);
+  }, [open, canSwipe]);
   const lifecycleRef = useRef(createSheetLifecycle(open));
   const previousOpenRef = useRef(open);
   const currentOpenRef = useRef(open);
@@ -702,32 +723,46 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               {/*
                 The handle is a real control, not a drag-only affordance: a
                 keyboard or switch user must be able to change the height too.
-                Gesture physics stay with the product and report the same way.
+                Pointer ownership and gesture physics belong to this shared Sheet.
               */}
               <div className="hjm-sheet__drag" data-swipe={canSwipe || undefined}
                 onPointerDown={(event) => {
-                  if (!canSwipe || event.button !== 0 || (event.target as HTMLElement).closest("a,input,textarea,select,.hjm-dialog__close")) return;
-                  dragRef.current = { pointerId: event.pointerId, y: event.clientY, t: event.timeStamp, moved: false };
+                  if (!canSwipe || dragRef.current || event.button !== 0 || (event.target as HTMLElement).closest("a,input,textarea,select,.hjm-dialog__close")) return;
+                  suppressDragClick.current = false;
+                  dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, t: event.timeStamp, moved: false };
+                  // Capture from the start so a release outside cannot strand ownership. Preserve the
+                  // originating handle button as the click target for tap/keyboard/detent behavior.
+                  ((event.target as HTMLElement).closest<HTMLElement>("button") ?? event.currentTarget).setPointerCapture(event.pointerId);
                 }}
                 onPointerMove={(event) => {
                   const drag = dragRef.current;
-                  if (!drag || drag.pointerId !== event.pointerId) return;
+                  if (!canSwipe || !drag || drag.pointerId !== event.pointerId) return;
                   const dy = event.clientY - drag.y;
-                  if (!drag.moved && dy < sheetDragRecipe.activationDistance) return;
-                  if (!drag.moved) { drag.moved = true; event.currentTarget.setPointerCapture(event.pointerId); }
+                  if (!drag.moved && (dy < sheetDragRecipe.activationDistance || dy <= Math.abs(event.clientX - drag.x))) return;
+                  drag.moved = true;
                   setDragY(Math.max(0, dy));
                 }}
                 onPointerUp={(event) => {
                   const drag = dragRef.current;
+                  if (!drag || drag.pointerId !== event.pointerId) return;
                   dragRef.current = null;
-                  if (!drag || drag.pointerId !== event.pointerId || !drag.moved) return;
+                  suppressDragClick.current = drag.moved;
+                  setDragY(0);
+                  if (!canSwipe || !drag.moved) return;
                   const dy = event.clientY - drag.y;
                   const velocity = dy / Math.max(1, event.timeStamp - drag.t);
                   const height = contentRef.current?.getBoundingClientRect().height ?? 0;
-                  setDragY(0);
                   if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity) requestClose("swipe");
                 }}
-                onPointerCancel={() => { dragRef.current = null; setDragY(0); }}
+                onPointerCancel={(event) => cancelDrag(event.pointerId)}
+                onLostPointerCapture={(event) => cancelDrag(event.pointerId)}
+                onClickCapture={(event) => {
+                  // The browser emits click after a released drag; it must not turn a short drag into a close.
+                  if (!suppressDragClick.current || event.detail === 0) return;
+                  suppressDragClick.current = false;
+                  event.preventDefault();
+                  event.stopPropagation();
+                }}
               >
               {detents && detentLabels && activeDetent ? (
                 <div className="hjm-sheet__handle-row">
@@ -749,11 +784,17 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                   </button>
                 </div>
               ) : showHandle ? (
-                // Without detents the handle is the visible close control for keyboard and switch users.
+                // Keep one close command: an explicit × owns it; otherwise the handle supports keyboard and switch users.
                 <div className="hjm-sheet__handle-row">
-                  <button type="button" className="hjm-sheet__handle" aria-label={closeLabel} disabled={closeBlocked} onClick={() => requestClose("close-action")}>
-                    <span aria-hidden="true" className="hjm-sheet__handle-bar" />
-                  </button>
+                  {closeVisible ? (
+                    <div className="hjm-sheet__handle" aria-hidden="true">
+                      <span className="hjm-sheet__handle-bar" />
+                    </div>
+                  ) : (
+                    <button type="button" className="hjm-sheet__handle" aria-label={closeLabel} disabled={closeBlocked} onClick={() => requestClose("close-action")}>
+                      <span aria-hidden="true" className="hjm-sheet__handle-bar" />
+                    </button>
+                  )}
                 </div>
               ) : null}
               {description || (policy.dismissible && closeVisible) ? <header className="hjm-sheet__header">
@@ -771,8 +812,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                 ) : null}
               </header> : null}
               </div>
-              {children ? <div className="hjm-sheet__body"><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></div> : null}
-              {footer ? <footer className="hjm-sheet__footer"><InitialFocusProvider scope={focusScope}>{footer}</InitialFocusProvider></footer> : null}
+              {children ? <div className="hjm-sheet__body"><ScreenFooterContext.Provider value={null}><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></ScreenFooterContext.Provider></div> : null}
+              {/* The Sheet owns the footer inset. A nested BottomCTA must not draw a second bar (Choose Window, 2026-10-20). */}
+              {footer ? <footer className="hjm-sheet__footer"><ScreenFooterContext.Provider value={{ bottomPadding: placement === "bottom" ? "calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px))" : "var(--hjm-space-sm)" }}><InitialFocusProvider scope={focusScope}>{footer}</InitialFocusProvider></ScreenFooterContext.Provider></footer> : null}
             </div>
           </div>
         </HjmPortal>

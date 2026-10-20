@@ -47,6 +47,16 @@ it("keeps dirty draft mounted while native discard confirmation is shown",()=>{c
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});
 it("uses the settings callback only for denied permission",()=>{const request=vi.fn(),settings=vi.fn();const tree=render(<PermissionScreen title="알림" status="denied" explanation="안내" request={{label:"허용",onAction:request}} settings={{label:"설정",onAction:settings}} continueAction={{label:"계속",onAction:()=>{}}}/>);expect(request).not.toHaveBeenCalled();act(()=>tree.root.findByType(Button).props.onPress());expect(settings).toHaveBeenCalledOnce();act(()=>tree.unmount());});
 it("completes a one-step onboarding without an invalid next cursor",()=>{const finish=vi.fn(),move=vi.fn();const tree=render(<OnboardingScreen steps={[{id:"one",title:"시작",description:"안내",content:"내용"}]} index={0} onIndexChange={move} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:finish}} progressLabel={()=>"1/1"}/>);act(()=>tree.root.findByType(Button).props.onPress());expect(finish).toHaveBeenCalledOnce();expect(move).not.toHaveBeenCalled();act(()=>tree.unmount());});
+it("closes replay onboarding independently of completion and locks exit during persistence",()=>{
+ const close=vi.fn(),finish=vi.fn(),move=vi.fn();
+ const screen=(pending=false)=><OnboardingScreen steps={[{id:"one",title:"안내 다시 보기",description:"설명",content:"기존 선택"}]} index={0} onIndexChange={move} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:finish,pending}} exit={{kind:"close",label:"안내 닫기",onPress:close}} progressLabel={()=>"1/1"}/>;
+ const tree=render(screen());
+ const exit=()=>tree.root.findAllByType(IconButton).find(button=>button.props.label==="안내 닫기")!;
+ expect(exit().props.disabled).toBe(false);act(()=>exit().props.onPress());
+ expect(close).toHaveBeenCalledOnce();expect(finish).not.toHaveBeenCalled();expect(move).not.toHaveBeenCalled();
+ act(()=>tree.update(<HjmNativeProvider theme="dark" textScale={1}>{screen(true)}</HjmNativeProvider>));
+ expect(exit().props.disabled).toBe(true);act(()=>tree.unmount());
+});
 it("keeps large onboarding guidance scrollable while completion stays outside the scroll body",()=>{
  const tree=render(<OnboardingScreen steps={[{id:"one",title:"긴 시작 안내",description:"키보드가 열려도 안내와 입력에 도달해야 합니다.",content:<TextInput value="초안"/>}]} index={0} onIndexChange={()=>{}} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:()=>{}}} progressLabel={()=>"1/1"}/>);
  const body=tree.root.findByType(ScrollView);

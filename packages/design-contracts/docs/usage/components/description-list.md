@@ -84,6 +84,7 @@ import { DescriptionList } from "@hjmds/react-native/data-display";
 ## 꼭 지킬 것
 
 - `value`는 제품이 locale·단위까지 포맷한 문자열로 넘긴다. HJM은 값을 포맷하지 않는다.
+- 값 안의 줄바꿈은 양 플랫폼에서 보존한다. 2026-10-20 번뚝 작성 확인 단계 이관 중 Web의 기본 공백 처리로 여러 줄 내용이 한 줄로 합쳐지는 것을 확인해 수정했다.
 - 큰 글자 대응으로 화면에서 `fontScale`을 보고 `columns={1}`을 넘기지 않는다. 접힘은 resolver가 한다
   ([계약](../../description-list.md#큰-글자에서의-전환--resolver가-소유)).
 - 라벨은 i18n 키로 넣는다. Native는 목록 전체의 접근성 이름 `label`이 필수다.

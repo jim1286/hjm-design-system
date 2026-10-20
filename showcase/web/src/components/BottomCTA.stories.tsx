@@ -1,3 +1,4 @@
+import { Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { BottomCTA, Dialog, Text } from "@hjmds/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -16,7 +17,7 @@ function FocusReturnPreview() {
   const start = useRef<HTMLButtonElement>(null);
   return <div style={{ display: "grid", gap: 12 }}>
     <Text tone="muted">시작을 눌러 연 창을 닫으면 포커스가 시작 버튼으로 돌아와요.</Text>
-    <BottomCTA primaryAction={{ label: "전광판 시작", onClick: () => setOpen(true), buttonRef: start }} />
+    <BottomCTA primaryAction={{ label: "전광판 시작", leading: <Play aria-hidden="true" size={16} />, onClick: () => setOpen(true), buttonRef: start }} />
     <Dialog open={open} onOpenChange={setOpen} title="전광판" closeLabel="전광판 닫기" returnFocusRef={start}>
       <Text>오늘도 좋은 하루</Text>
     </Dialog>

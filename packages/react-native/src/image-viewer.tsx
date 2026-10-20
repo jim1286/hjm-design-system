@@ -4,11 +4,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Spinner } from "./internal/spinner.js";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
 import { SegmentedControl } from "./inputs.js";
 import { ImageInspection, type ImageViewerInspection } from "./internal/image-inspection.js";
 export type { ImageViewerInspection } from "./internal/image-inspection.js";
 import { Surface, Text } from "./primitives.js";
+import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string; width?: number; height?: number };
@@ -138,7 +141,9 @@ function ImageViewerSession(props: ImageViewerProps) {
         {/* Controls and caption share the page gutter (Container's default); they
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
-        <View style={controlInsets}><Button growWithContent onPress={props.onClose}>{props.closeLabel}</Button></View>
+        <View style={{ ...controlInsets, flexDirection: "row", justifyContent: "flex-end" }}>
+          <IconButton label={props.closeLabel} tone="ghost" onPress={props.onClose}><DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton>
+        </View>
         {props.inspection ? <View style={controlInsets}><SegmentedControl label={props.inspection.labels.mode}
           value={props.inspection.mode} onValueChange={props.inspection.onModeChange}
           items={[{ value: "fit", label: props.inspection.labels.fit }, { value: "double", label: props.inspection.labels.double }, { value: "pixels", label: props.inspection.labels.pixels }]} /></View> : null}
@@ -162,10 +167,14 @@ function ImageViewerSession(props: ImageViewerProps) {
             </Surface>
           </View> : null}
         </View>}
-        <View style={{ gap: theme.tokens.spacing.xs, ...controlInsets, paddingTop: theme.tokens.spacing.sm }}>
-          <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
-          {(!props.inspection || props.items.length > 1) ? <><Button growWithContent disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
-          <Button growWithContent disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button></> : null}
+        {/* Gallery navigation is neutral chrome, not three stacked primary actions (BurnTok image QA, 2026-10-20). */}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }}>
+          {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}><DrawnChevron direction="start" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text variant="caption" align="center" numberOfLines={2} accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
+            {props.items.length > 1 ? <Text variant="caption" tone="muted" numeric="tabular" align="center">{`${currentIndex + 1}/${props.items.length}`}</Text> : null}
+          </View>
+          {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}><DrawnChevron direction="end" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
         </View>
       </View>
     </GestureHandlerRootView>

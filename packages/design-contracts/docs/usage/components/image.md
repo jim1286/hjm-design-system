@@ -100,7 +100,7 @@ Native 이미지 프레임은 `imageRecipe.radius` 역할을 Provider의 `tokens
 | 간격 | 카드 안에 넣을 때 카드 padding 안쪽에 둔다 | — |
 | 순서·정렬 | 여러 장은 직접 줄 세우지 말고 [Grid](grid.md)·[Masonry](masonry.md)·[Carousel](carousel.md)로 배치한다 | — |
 | 고정·스크롤 | ImageViewer는 전체 화면을 덮는다. 상·하단 버튼은 `safeAreaInsets` 안쪽에 그려지므로 호스트가 inset을 넘긴다 | `react-native/src/image-viewer.tsx` |
-| 좁은 폭·큰 글자 | Web 루트는 `inline-size: width`, `max-inline-size: 100%`라 부모보다 넓어지지 않는다. Native 루트 폭은 `width` 숫자 그대로이므로 화면 폭 사진은 `layoutStyle={{ width: "100%" }}`로 준다. Grid·Masonry 칸에 채울 때 Web은 `layoutStyle={{ inlineSize: "100%" }}`(루트 `style`도 기본 `inline-size`를 덮는다), Native는 `layoutStyle={{ width: "100%" }}`로 칸 폭에 맞춘다. 원본이 칸보다 작으면 기본값으로는 좁게 남는다 | `react/src/styles.css`(`.hjm-image`), `react-native/src/data-display.tsx`(Image) |
+| 좁은 폭·큰 글자 | Web 루트는 `inline-size: width`, `max-inline-size: 100%`라 부모보다 넓어지지 않는다. Native 루트 폭은 `width` 숫자 그대로이므로 화면 폭 사진은 `layoutStyle={{ width: "100%" }}`로 준다. Grid·Masonry 칸에 채울 때 Web은 `layoutStyle={{ width: "100%" }}`(루트 `style`도 기본 `inline-size`를 덮는다), Native는 `layoutStyle={{ width: "100%" }}`로 칸 폭에 맞춘다. 원본이 칸보다 작으면 기본값으로는 좁게 남는다 | `react/src/styles.css`(`.hjm-image`), `react-native/src/data-display.tsx`(Image) |
 
 ## 꼭 지킬 것
 
@@ -202,3 +202,10 @@ const geometry = resolveImageInspectionGeometry(
 - `renderImage` adapter가 받은 `onLoad`·`onError`를 실제 이미지 요소에 넘기지 않으면 HJM이 실패를 보지 못해
   대체 화면과 GridReveal의 `ready`가 동작하지 않는다.
 - Native 루트 폭은 `width` 숫자 그대로다. 화면 폭에 맞추려면 `layoutStyle`로 폭을 준다.
+
+
+### Native 확대 화면의 행동 배치
+
+2026-10-20 번뚝 실제 첨부 사진 확인에서 큰 닫기/이전/다음 주 버튼이 사진 영역을 차지한 문제를 반영했다. ImageViewer는 우측 상단 닫기 IconButton과 하단의 이전·사진 이름/순서·다음 아이콘 행을 제공한다. 제품이 전달한 지역화 label을 접근성 이름으로 유지하고, 한 장이면 페이지 이동 버튼은 표시하지 않는다. 첫/마지막의 disabled, 전체 폭 사진·확대·오류 재시도·좌우 safe area는 유지한다. 현재 개발 소스의 표현 수정이며 공개 prop·플랫폼 지원 범위는 바뀌지 않는다.
+
+2026-10-20 번뚝 사진 보기 확인: 고정 크기 뷰어 안에서는 원본 `width`·`height`와 `fit="contain"`을 유지하고 Image 루트의 공개 `style={{ inlineSize: "100%", blockSize: "100%" }}`로 주어진 슬롯을 채울 수 있다. 이 경우에도 실제 이미지의 fit은 HJM이 소유한다. `layoutStyle`은 배치용 `width`만 지원하며 `inlineSize`·`blockSize`를 받는 속성이 아니다.

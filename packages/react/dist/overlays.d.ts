@@ -63,6 +63,8 @@ export type AlertDialogProps = ModalOpenState<Readonly<{
     reason: AlertDialogOpenChangeReason;
 }>> & Readonly<{
     request: AlertDialogRequest;
+    /** Product eligibility (for example a retry cooldown); cancel remains available. */
+    confirmDisabled?: boolean;
     icon?: ReactNode;
     size?: DialogSize;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -102,6 +104,8 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     }>;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
+    /** Downward handle dismissal. Bottom sheets enable it by default; side sheets opt in for a reading panel. */
+    swipeDirection?: "down";
     /** Localized accessible name for the close action. */
     closeLabel: string;
     /** Side sheets only. Bottom sheets focus their modal container, never an input on opening. */

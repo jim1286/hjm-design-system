@@ -256,7 +256,7 @@ Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 성숙도�
 ### Batch 3 — 복합 데이터와 파일
 
 - beta: Timeline, UploadItem, DatePicker, Calendar, FilePicker
-- composed: TimePicker (Web/RN 시·분 선택·확정 예제 제공, 독립 renderer는 없음)
+- implemented: TimePicker (2026-10-19: Web/RN 통합 두 열·확정 및 인라인 renderer 제공; 기존 Select 합성 판단 대체)
 - web: DataTable, Tree, ColorPicker, CommandPalette, SidePanel, Popover
 
 FilePicker는 파일 선택 의도만 소유합니다. 업로드 요청·재시도·서버 상태는 제품이 소유하고,

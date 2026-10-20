@@ -52,3 +52,21 @@ it("expands and collapses Accordion panels with browser Tab and Enter", async ()
   expect(triggers[0]!.getAttribute("aria-expanded")).toBe("false");
   expect(shippingPanel.hidden).toBe(true);
 });
+
+it("keeps a domain indicator decorative while naming and toggling its common trigger", async () => {
+  await act(async () => root.render(<HjmProvider><Accordion items={[
+    { id: "novelty", title: "새로움", accessibilityLabel: "새로움 평가 기준, 2/5", panel: <p>기준</p> },
+    { id: "fun", title: "재미", accessibilityLabel: "재미 평가 기준, 4/5", panel: <p>예시</p> },
+  ]} renderIndicator={({ value, expanded }) => <span data-indicator={value}>{expanded ? "open" : "closed"}</span>} /></HjmProvider>));
+  const triggers = host.querySelectorAll<HTMLButtonElement>(".hjm-accordion__trigger");
+  expect(triggers[0]!.getAttribute("aria-label")).toBe("새로움 평가 기준, 2/5");
+  expect(host.querySelector('[data-indicator="novelty"]')!.parentElement!.getAttribute("aria-hidden")).toBe("true");
+  await act(async () => triggers[0]!.click());
+  expect(host.querySelector('[data-indicator="novelty"]')!.textContent).toBe("open");
+  await act(async () => triggers[1]!.click());
+  expect(triggers[0]!.getAttribute("aria-expanded")).toBe("false");
+  expect(triggers[1]!.getAttribute("aria-expanded")).toBe("true");
+  await act(async () => triggers[0]!.focus());
+  await act(async () => userEvent.keyboard("{ArrowDown}"));
+  expect(document.activeElement).toBe(triggers[1]);
+});

@@ -168,3 +168,11 @@ Web TextField의 `aria-invalid={true}`는 외부 오류 ID를 `aria-describedby`
 여러 입력이 한 질문에 답하면 `FieldGroup`을 사용한다. Form의 제출 경계와 구분하며
 `@hjmds/react/field-group`, `@hjmds/react-native/field-group`에서 제공한다.
 [관련 입력 묶음 지침](../compositions/field-group.md)의 renderField 연결·오류·잠금 규칙을 따른다.
+
+### 오류 상태의 비색상 단서(미게시)
+
+`fieldRecipe.states.invalid.borderWidth`는 2px/2dp다. 기본 테두리1과 구별하여 브랜드 포커스와
+오류색이 비슷한 제품에서도 오류를 색만으로 전달하지 않는다(2026-10-20 다에리의 제품별 오류 CSS 이관).
+Web TextArea도 `aria-invalid`를 공통 frame에 전달한다. 오류가 비활성 입력에 남아 있어도
+오류 테두리·별도 안내는 유지하며, label/control의 비활성 흐림과 기존 error 안내/읽기는 그대로다.
+제품에서 `.hjm-field__control:has(...)`로 유효성을 다시 추론하거나 테두리를 덮지 않는다.

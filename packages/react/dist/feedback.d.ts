@@ -70,7 +70,11 @@ type ProgressName = Readonly<{
 export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "children" | "max" | "size" | "value" | "aria-label"> & ProgressName & Readonly<{
     value?: number;
     max?: number;
+    /** Equal visual units for determinate linear progress; fractions fill a partial unit. */
+    segments?: number;
     valueText?: string;
+    /** Hide only the visible auxiliary value when the label already contains a count; accessibility keeps its value. */
+    showValue?: boolean;
     size?: ProgressSize;
     tone?: ProgressTone;
     /**
@@ -124,4 +128,5 @@ export declare const Skeleton: import("react").ForwardRefExoticComponent<Omit<HT
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
 export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
+export { PendingContent, type PendingContentProps } from "./internal/pending-content.js";
 //# sourceMappingURL=feedback.d.ts.map

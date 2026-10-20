@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Container } from "@hjmds/react-native/primitives";
 // STEA Code P1 후보를 기존 HJM API만으로 조합한 실험 구성이다. 새 공개 API는 만들지 않는다.
 // 상태 규칙은 shared/stea-compositions.ts가 소유하고 이 파일은 Native 표현만 맡는다.
@@ -57,7 +58,7 @@ export function OtpVerifyRecover() {
   }, [state.phase]);
   // phase를 의존성에 넣으면 확인 요청마다 1초 타이머가 다시 시작돼 대기 시간이 줄지 않는다(2026-10-02 실측).
   const verified = state.phase === "verified";
-  const input = useRef<TextInput>(null);
+  const input = useRef<ComponentRef<typeof TextInput>>(null);
   const previousVerified = useRef(verified);
   const previousResend = useRef(state.resendCount);
   useEffect(() => {

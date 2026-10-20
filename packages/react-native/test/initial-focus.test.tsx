@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 const focused: string[] = [];
 let tree: ReactTestRenderer | undefined;
 beforeEach(() => { vi.useFakeTimers(); focused.length = 0; });
-afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; vi.useRealTimers(); });
+afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; vi.unstubAllGlobals(); vi.useRealTimers(); });
 function render(node: ReactNode) {
   act(() => { tree = create(<HjmNativeProvider>{node}</HjmNativeProvider>, {
     createNodeMock: element => element.type === "TextInput" ? { focus: () => focused.push(String((element.props as { accessibilityLabel?: string }).accessibilityLabel)), isFocused: () => false } : {},
@@ -21,7 +21,9 @@ function render(node: ReactNode) {
   act(() => { vi.runAllTimers(); });
 }
 
-it("focuses the first input on a page by default", () => {
+it("focuses the first input on a browser host without immediate globals", () => {
+  vi.stubGlobal("setImmediate", undefined);
+  vi.stubGlobal("clearImmediate", undefined);
   render(<ScreenLayout title="설정"><TextField label="이름" /></ScreenLayout>);
   expect(focused).toEqual(["이름"]);
 });
@@ -35,7 +37,7 @@ it("focuses the marked field, else the first enabled one, once per mount", () =>
   render(<ScreenLayout title="프로필" initialFocus="first-input"><TextField label="이름" readOnly /><TextField label="소개" initialFocusTarget={false} /><TextField label="별명" /></ScreenLayout>);
   expect(focused).toEqual(["별명"]);
 });
-it("defaults on for search, editor and chat pages", () => {
+it("focuses upper search/editor inputs but leaves the bottom chat composer alone", () => {
   render(<SearchScreen title="검색" query="" queryLabel="검색어" queryClearLabel="지우기" onQueryChange={() => {}} onSearch={() => {}}>{null}</SearchScreen>);
   expect(focused).toEqual(["검색어"]);
   act(() => tree!.unmount()); tree = undefined; focused.length = 0;
@@ -44,7 +46,7 @@ it("defaults on for search, editor and chat pages", () => {
   expect(focused).toEqual(["본문"]);
   act(() => tree!.unmount()); tree = undefined; focused.length = 0;
   render(<ChatScreen title="대화" composer={<TextArea label="메시지" />}>{null}</ChatScreen>);
-  expect(focused).toEqual(["메시지"]);
+  expect(focused).toEqual([]);
 });
 it("never focuses a bottom sheet input after it enters or reopens", () => {
   const sheet = (open: boolean, fields: ReactNode) => <ScreenLayout title="목록"><Sheet open={open} onOpenChange={() => {}} title="이름 바꾸기" closeLabel="닫기">{fields}</Sheet></ScreenLayout>;
@@ -133,5 +135,13 @@ it("blocks automatic focus in a bottom sheet footer even when a nested screen op
     footer={<ScreenLayout title="작성창" initialFocus="first-input"><TextField label="하단 입력" initialFocusTarget /></ScreenLayout>} />);
   const modal = tree!.root.find(node => String(node.type) === "Modal");
   act(() => modal.props.onShow?.({})); act(() => { vi.runAllTimers(); });
+  expect(focused).toEqual([]);
+});
+
+it("excludes marked footer inputs and nested footer screens while retaining upper input focus", () => {
+  render(<ScreenLayout title="설정" footer={<TextField label="하단" initialFocusTarget />}><TextField label="상단" /></ScreenLayout>);
+  expect(focused).toEqual(["상단"]);
+  act(() => tree!.unmount()); tree = undefined; focused.length = 0;
+  render(<ScreenLayout title="상세" footer={<ScreenLayout title="하단 입력"><TextField label="하단" initialFocusTarget /></ScreenLayout>}>{null}</ScreenLayout>);
   expect(focused).toEqual([]);
 });

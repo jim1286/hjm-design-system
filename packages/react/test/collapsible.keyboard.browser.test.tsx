@@ -20,6 +20,21 @@ beforeEach(() => {
   root = createRoot(host);
 });
 
+it("names an artwork disclosure and opens its details with the keyboard", async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion>
+    <Collapsible trigger={<span aria-hidden="true">Artwork</span>} triggerLabel="Show proportions" marker="none">
+      <p>Blue 66.7%</p>
+    </Collapsible>
+  </HjmProvider>));
+  const trigger = host.querySelector<HTMLButtonElement>("button")!;
+  expect(trigger.getAttribute("aria-label")).toBe("Show proportions");
+  expect(host.querySelector(".hjm-collapsible__marker")).toBeNull();
+  await act(async () => userEvent.tab());
+  await act(async () => userEvent.keyboard("{Enter}"));
+  expect(trigger.getAttribute("aria-expanded")).toBe("true");
+  expect(host.querySelector('[role="region"]')?.textContent).toBe("Blue 66.7%");
+});
+
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
@@ -60,4 +75,38 @@ it.each([false,true])('restores focus after external collapse with keepMounted=%
 it('does not steal an external focus on collapse and refuses disabled activation',async()=>{
  let calls=0;const render=(open:boolean,disabled=false)=>act(async()=>root.render(<HjmProvider><button id="external">Outside</button><Collapsible trigger="Details" open={open} onOpenChange={()=>calls++} disabled={disabled}><input/></Collapsible></HjmProvider>));
  await render(true);await act(async()=>host.querySelector<HTMLButtonElement>('#external')!.focus());await render(false,true);expect(document.activeElement?.id).toBe('external');await act(async()=>host.querySelector<HTMLButtonElement>('.hjm-collapsible__trigger')!.click());expect(calls).toBe(0);
+});
+
+it("keeps a separate title while pending content becomes a closed ready disclosure", async () => {
+  const render = (pending: boolean) => act(async () => root.render(<HjmProvider><Collapsible
+    title={<h3>評価</h3>} trigger="Open" {...(pending ? { pendingLabel: "Measuring" } : {})}
+  ><p>Scores</p></Collapsible></HjmProvider>));
+  await render(true);
+  expect(host.querySelector("h3")!.textContent).toBe("評価");
+  expect(host.querySelector("button")).toBeNull();
+  expect(host.querySelector('[aria-busy="true"]')).not.toBeNull();
+  expect(host.querySelector('[aria-label="Measuring"]')).not.toBeNull();
+  expect(host.textContent).not.toContain("Scores");
+  await render(false);
+  const trigger = host.querySelector<HTMLButtonElement>("button")!;
+  expect(trigger.textContent).toContain("Open");
+  expect(trigger.textContent).not.toContain("評価");
+  expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  await act(async () => trigger.click());
+  expect(host.querySelector('[role="region"]')!.textContent).toBe("Scores");
+});
+it("recovers focused content to the host when preparation removes its trigger", async () => {
+  const render = (pending: boolean) => act(async () => root.render(<HjmProvider><Collapsible
+    title={<h3>Details</h3>} trigger="Open" open onOpenChange={() => {}} keepMounted {...(pending ? { pendingLabel: "Measuring" } : {})}
+  ><input defaultValue="Draft" /></Collapsible></HjmProvider>));
+  await render(false);
+  const draft = host.querySelector("input")!;
+  await act(async () => draft.focus());
+  await render(true);
+  expect(document.activeElement).toBe(host.querySelector(".hjm-collapsible"));
+  expect(host.querySelector("input")).toBe(draft);
+  expect(host.querySelector<HTMLElement>('[role="region"]')!.hidden).toBe(true);
+  await render(false);
+  expect(host.querySelector("input")).toBe(draft);
+  expect(draft.value).toBe("Draft");
 });

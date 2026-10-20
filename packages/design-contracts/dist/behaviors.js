@@ -1,3 +1,4 @@
+import { timePickerBehavior } from "./time-picker.js";
 import { anchorBehavior } from "./anchor.js";
 import { agreementBehavior } from "./agreement.js";
 import { topBehavior } from "./top.js";
@@ -964,6 +965,7 @@ export const behaviorRegistry = {
     passwordField: passwordFieldBehavior,
     splitter: splitterBehavior,
     datePicker: datePickerBehavior,
+    timePicker: timePickerBehavior,
     sidePanel: sidePanelBehavior,
     filePicker: filePickerBehavior,
     pagination: {

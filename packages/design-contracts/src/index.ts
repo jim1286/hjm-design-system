@@ -322,6 +322,7 @@ export {
   bottomNavigationRecipe,
   bottomCtaRecipe,
   buttonRecipe,
+  resolveButtonDepth,
   cardRecipe,
   chipRecipe,
   comboboxRecipe,
@@ -340,6 +341,7 @@ export {
   menuRecipe,
   noticeRecipe,
   progressRecipe,
+  resolveProgressSegments,
   searchFieldRecipe,
   selectRecipe,
   selectionGroupRecipe,
@@ -365,6 +367,7 @@ export {
   type AlertDialogTone,
   type AvatarShape,
   type AvatarSize,
+  type BadgeAdornmentContext,
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant,
@@ -688,3 +691,5 @@ export * from "./asset.js";
 export * from "./dataviz.js";
 export * from "./menubar.js";
 export * from "./context-menu.js";
+
+export * from "./time-picker.js";

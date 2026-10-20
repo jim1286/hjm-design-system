@@ -1,0 +1,36 @@
+import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { Pressable } from "react-native";
+import { afterEach, expect, it, vi } from "vitest";
+import { RadioGroup, CheckboxGroup } from "../src/inputs.js";
+import { HjmNativeProvider } from "../src/provider.js";
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+let tree: ReactTestRenderer;
+afterEach(() => act(() => tree?.unmount()));
+const items = [{ value: "2026", label: "2026" }, { value: "2025", label: "2025" }, { value: "2024", label: "2024", disabled: true }];
+it.each(["light", "dark"] as const)("keeps nullable chip radios unselected until activation in %s", theme => {
+  const changed = vi.fn(), leading = vi.fn((_item: unknown, appearance: { selected: boolean; color: string }) => { void appearance; return null; });
+  const ui = (readOnly = false) => <HjmNativeProvider theme={theme}><RadioGroup accessibilityLabel="Season" presentation="chips" size="small" readOnly={readOnly} items={items} defaultValue={null} onValueChange={changed} renderLeading={leading} /></HjmNativeProvider>;
+  act(() => { tree = create(ui()); });
+  const radios = () => tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "radio");
+  expect(radios().every(node => !node.props.accessibilityState.checked)).toBe(true);
+  expect(radios()[2]!.props.disabled).toBe(true);
+  const idleColor = leading.mock.calls[1]![1].color;
+  act(() => radios()[1]!.props.onPress());
+  expect(changed).toHaveBeenLastCalledWith("2025");
+  const selectedAppearance = leading.mock.calls.filter(([, appearance]) => appearance.selected).at(-1)![1];
+  expect(selectedAppearance.color).not.toBe(idleColor);
+  expect(radios().map(node => node.props.accessibilityState.checked)).toEqual([false, true, false]);
+  changed.mockClear(); act(() => tree.update(ui(true))); act(() => radios()[0]!.props.onPress());
+  expect(changed).not.toHaveBeenCalled(); expect(radios()[1]!.props.accessibilityState.checked).toBe(true);
+});
+it.each(["light", "dark"] as const)("keeps chip checkbox values independent and removable in %s", theme => {
+  const changed = vi.fn();
+  act(() => { tree = create(<HjmNativeProvider theme={theme}><CheckboxGroup accessibilityLabel="Draft years" presentation="chips" size="small" items={items.map(item => ({id:item.value,label:item.label,disabled:item.disabled ?? false}))} defaultValue={new Set<string>()} onValueChange={changed} /></HjmNativeProvider>); });
+  const boxes = () => tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "checkbox");
+  act(() => boxes()[0]!.props.onPress()); act(() => boxes()[1]!.props.onPress());
+  expect(changed).toHaveBeenLastCalledWith(new Set(["2026", "2025"]));
+  act(() => boxes()[0]!.props.onPress());
+  expect(changed).toHaveBeenLastCalledWith(new Set(["2025"]));
+  expect(boxes().map(node => node.props.accessibilityState.checked)).toEqual([false,true,false]);
+  expect(boxes()[2]!.props.disabled).toBe(true);
+});

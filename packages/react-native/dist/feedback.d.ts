@@ -63,7 +63,11 @@ type ProgressName = Readonly<{
 export type ProgressProps = ProgressName & Readonly<{
     value?: number;
     max?: number;
+    /** Equal visual units for determinate linear progress; fractions fill a partial unit. */
+    segments?: number;
     valueText?: string;
+    /** Hide only the visible auxiliary value when the label already contains a count; accessibility keeps its value. */
+    showValue?: boolean;
     accessibilityHint?: string;
     size?: ProgressSize;
     /**
@@ -79,7 +83,7 @@ export type ProgressProps = ProgressName & Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
     testID?: string;
 }>;
-export declare function Progress({ value, max, label, accessibilityLabel, valueText, accessibilityHint, size, tone, shape, children, layoutStyle, testID, }: ProgressProps): import("react").JSX.Element;
+export declare function Progress({ value, max, label, accessibilityLabel, valueText, segments, showValue, accessibilityHint, size, tone, shape, children, layoutStyle, testID, }: ProgressProps): import("react").JSX.Element;
 export { Spinner, type SpinnerProps } from "./internal/spinner.js";
 export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Readonly<{
@@ -175,4 +179,5 @@ export type ToastRegionProps = Readonly<{
 export declare function ToastRegion({ presentationAdapter, occluded, children, accessibilityLabel, toasts, defaultToasts, onToastsChange, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, placement, safeAreaInsets, avoidKeyboard, keyboardOffset, renderToneIcon, layoutStyle, }: ToastRegionProps): import("react").JSX.Element;
 export declare function useToastRegion(): ToastRegionController;
 export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
+export { PendingContent, type PendingContentProps } from "./internal/pending-content.js";
 //# sourceMappingURL=feedback.d.ts.map

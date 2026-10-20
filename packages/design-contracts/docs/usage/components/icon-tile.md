@@ -1,12 +1,12 @@
 # IconTile
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 1.26.0
-- 검토일: 2026-10-16
+- 검토일: 2026-10-20
 - 근거: `src/screen-patterns.ts`의 `iconTileRecipe`
-- 스토리북: 별도 예제 미등록
+- 스토리북: `배포/컴포넌트/데이터 표시/아이콘 타일`
 
 ## 언제 쓰나
 
@@ -32,17 +32,16 @@
 ```tsx
 // Web
 import { IconTile } from "@hjmds/react/screens";
-<button type="button" onClick={openItem} aria-label={openLabel}>
-  <IconTile icon={artwork} label={title} overlay={productBadge} />
-</button>
+<IconTile icon={artwork} label={title} overlay={productBadge}
+  onActivate={openItem} activationLabel={openLabel} />
 ```
 
 ```tsx
 // Native
 import { IconTile } from "@hjmds/react-native/screens";
-<Pressable accessibilityLabel={openLabel} onPress={openItem}>
-  <IconTile icon={artwork} label={title} overlay={productBadge} />
-</Pressable>
+<IconTile icon={artwork} label={title} overlay={productBadge}
+  onActivate={openItem} activationLabel={openLabel}
+  onLongPress={previewItem} activationHint={previewHint} />
 ```
 
 ```tsx
@@ -56,6 +55,9 @@ import { IconTile } from "@hjmds/react-native/screens";
 | --- | --- | --- | --- |
 | icon | `ReactNode` · `(artwork: IconTileArtwork) => ReactNode` | 필수 | 아이콘 원본. 함수면 그려질 아이콘 한 변 `artwork.edge`를 받는다(`fixed` 64, `fill`은 측정한 칸 크기 48~68). 고정 크기 이미지·생성 아트워크는 이 값으로 크기를 맞춘다(미게시, 1.31.0 이후) |
 | label | string | 필수 | 제목 |
+| onActivate · activationLabel · disabled | callback · string · boolean | 없음 · label · false | 미게시. 단순 항목 열기는 IconTile 자체의 버튼을 사용한다. 44 최소 대상/키보드/초점/비활성/누름 피드백을 HJM이 제공한다 |
+| Native `onLongPress` · `activationHint` | callback · string | 없음 | 미게시. `onActivate`와 함께 길게 누르기 미리보기·메뉴를 연결한다. 비활성일 때 두 행동을 모두 막고 설명은 버튼의 접근성 hint로 전달한다. Web prop으로 제공하지 않는다 |
+| layoutStyle | 배치 전용 style | 없음 | 정적 타일 또는 interactive 루트의 폭·외부 배치 |
 | overlay | ReactNode | 없음 | 제품 배지 |
 | labelLines | 1 또는 2 | 1 | 제목 줄 수 |
 | ghost | boolean | false | 이동 대상 표시 |
@@ -86,7 +88,9 @@ import { IconTile } from "@hjmds/react-native/screens";
 
 ## 상태와 상호작용
 
-이 구성은 표시 전용이다. 링크/버튼/드래그 host가 disabled·포커스·키보드·길게 누르기와 라우팅을 소유하므로 기존 앱의 drag engine을 교체하지 않는다.
+`onActivate`가 없으면 표시 전용이며, 있으면 HJM이 버튼·누름 피드백·비활성을 소유한다.
+Native의 길게 누르기 미리보기는 `onLongPress`에 제품 콜백을 연결한다. 별도 Pressable로 감싸지 않는다.
+실제 끌기·재배열 같은 제품 제스처는 정적 타일을 기존 gesture host에 넣어 유지한다.
 
 ## 접근성
 
@@ -104,3 +108,18 @@ host에 전체 행동의 현지화 이름을 제공한다. 아이콘 내부 장�
 
 - `frame`·`shape`·`size`: 2026-10-18 HJM 1.30.0 감사. 유틸버스 런처는 도구 아트워크가 완성된 아이콘(셸에 따라 iPhone squircle, Windows·Linux square)이고 크기가 격자를 따라 48~68로 변해, 고정 64 틀을 그리는 IconTile 대신 자체 타일을 유지했다. 범위 48~68은 그 런처의 실제 칸 계산값이다.
 - `icon` 함수와 `resolveIconTileFillEdge`: 2026-10-18 HJM 1.32.0 감사. `size="fill"` 채택 뒤에도 유틸버스 런처는 도구 아트워크가 고정 크기 이미지라 격자 폭에서 48~68 제한을 다시 계산해(`ToolboxScreen` `size`) 아트워크에 넘겼다. 타일이 측정한 한 변을 아트워크에 넘겨 계산을 HJM 한 곳에 둔다.
+
+### 단순 열기와 제품 제스처 host
+
+2026-10-19 번뚝 공개 프로필에서 일반 Button의 face 여백과 label clipping이 64px 그림을 약26px 칸으로 좁혔다. 단순 열기는 `onActivate`로 연결하며 추가 Button/Pressable을 중첩하지 않는다. 내용에 별도 입력/링크/행동을 넣지 않는다. 접근성 이름은 잘리지 않은 label을 기본으로 쓰고 열기 같은 동사를 포함할 때 activationLabel을 공급한다. 읽기 전용 타일은 onActivate를 생략하면 기존 수동 표시를 유지한다. 실제 끌기·재배열 제스처의 런처 host는 정적 IconTile을 계속 사용한다.
+
+2026-10-20 Utilverse는 길게 누르기 미리보기 때문에 별도 Pressable·누름 스프링·비활성 처리를 유지했다.
+Native `onLongPress`·`activationHint`를 추가해 미리보기/열기/진동의 제품 콜백만 남기고 공통 누름 host를 재사용한다.
+누름 표현은 `iconTileRecipe.activation`의 공통 opacity 피드백이며 앱별 spring/축소 값을 주입하지 않는다.
+
+```tsx
+<IconTile label={item.title} activationLabel={t("openItem", { title: item.title })}
+  onActivate={() => open(item.id)} disabled={pending} icon={artwork} />
+```
+
+격자가 고정64 그림을 요청할 때는 Grid의 minColumnWidth를 iconTileRecipe.iconSize와 연결한다. 줄 수를 유지하려고 그림/제목을 일반 버튼 여백 안에서 자르지 않는다.

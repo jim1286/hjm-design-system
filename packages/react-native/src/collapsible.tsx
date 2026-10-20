@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { control, glyph } from "@hjmds/design-contracts/foundations";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
+import { Spinner } from "./internal/spinner.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -15,6 +16,12 @@ export type CollapsibleProps = CollapsibleOpenState &
   Readonly<{
     /** The control's label; it also tells the user what will appear. */
     trigger: ReactNode;
+    /** Accessible action name when the trigger is artwork or has a shorter visible label. */
+    triggerLabel?: string;
+    /** Static heading beside the disclosure action, outside the button's accessible name. */
+    title?: ReactNode;
+    /** While content is being prepared, replace the action with one labeled spinner. */
+    pendingLabel?: string;
     children: ReactNode;
     disabled?: boolean;
     /** Inline tools stay expanded without a disclosure trigger. */
@@ -32,15 +39,19 @@ export type CollapsibleProps = CollapsibleOpenState &
 
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", layoutStyle, ...openState }: CollapsibleProps) {
+export function Collapsible({ trigger, triggerLabel, title, pendingLabel, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", layoutStyle, ...openState }: CollapsibleProps) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
   const open = presentation === "inline" || (openState.open ?? internalOpen);
+  const contentOpen = open && pendingLabel === undefined;
   return (
-    <View style={[{ gap: collapsibleRecipe.gap }, layoutStyle]}>
-      <Pressable
+    <View accessibilityState={pendingLabel === undefined ? undefined : { busy: true }} style={[{ gap: collapsibleRecipe.gap }, layoutStyle]}>
+      <View style={{ display: presentation === "inline" ? "none" : "flex", flexDirection: "row", alignItems: "center", gap: collapsibleRecipe.gap, minHeight: control.minTouchTarget }}>
+      {title == null ? null : <View style={{ flex: 1 }}>{title}</View>}
+      {pendingLabel === undefined ? <Pressable
         accessibilityRole="button"
+        accessibilityLabel={triggerLabel}
         accessibilityState={{ expanded: open, disabled }}
         disabled={disabled}
         onPress={() => {
@@ -51,15 +62,16 @@ export function Collapsible({ trigger, children, disabled = false, presentation 
         }}
         // The trigger is the only control here, so it keeps the shared 44 target like Web
         // `.hjm-collapsible__trigger`; a one-line text trigger was ~20 tall (2026-10-06 follow-up).
-        style={{ display: presentation === "inline" ? "none" : "flex", minHeight: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
+        style={{ display: presentation === "inline" ? "none" : "flex", flex: title == null ? 1 : undefined, minHeight: control.minTouchTarget, minWidth: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
       >
         {typeof trigger === "string" ? <Text
               fontRole="ui">{trigger}</Text> : trigger}
         {marker === "end" ? <CollapsibleMarker open={open} /> : null}
-      </Pressable>
+      </Pressable> : <View style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, flex: title == null ? 1 : undefined, alignItems: "center", justifyContent: "center" }}><Spinner label={pendingLabel} size="small" /></View>}
+      </View>
       {/* Display and accessibility agree: retained input state must not leave
           collapsed tools reachable to assistive technology or hit testing. */}
-      {open || keepMounted ? <View accessibilityElementsHidden={!open} importantForAccessibility={open ? "auto" : "no-hide-descendants"} style={{ display: open ? "flex" : "none" }}>{children}</View> : null}
+      {contentOpen || keepMounted ? <View accessibilityElementsHidden={!contentOpen} importantForAccessibility={contentOpen ? "auto" : "no-hide-descendants"} style={{ display: contentOpen ? "flex" : "none" }}>{children}</View> : null}
     </View>
   );
 }

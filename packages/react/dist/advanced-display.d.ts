@@ -10,6 +10,8 @@ export type AccordionItem = Readonly<{
     title: ReactNode;
     panel: ReactNode;
     disabled?: boolean;
+    /** Include domain values when a decorative indicator carries more than expansion. */
+    accessibilityLabel?: string;
 }>;
 export type AccordionProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & Readonly<{
     items: readonly AccordionItem[];
@@ -19,6 +21,12 @@ export type AccordionProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & 
     allowsMultipleExpanded?: boolean;
     density?: AccordionDensity;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Decorative replacement; interaction and expanded state remain owned by Accordion. */
+    renderIndicator?: (props: Readonly<{
+        value: string;
+        expanded: boolean;
+        disabled: boolean;
+    }>) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -30,6 +38,12 @@ export declare const Accordion: import("react").ForwardRefExoticComponent<Omit<H
     allowsMultipleExpanded?: boolean;
     density?: AccordionDensity;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Decorative replacement; interaction and expanded state remain owned by Accordion. */
+    renderIndicator?: (props: Readonly<{
+        value: string;
+        expanded: boolean;
+        disabled: boolean;
+    }>) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLDivElement>>;
@@ -98,6 +112,13 @@ export declare const Divider: import("react").ForwardRefExoticComponent<HTMLAttr
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLElement>>;
+export type ListSeparatorProps = Readonly<{
+    separator?: keyof typeof listRecipe.separators;
+    leading?: boolean;
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+/** Decorative separator for a product-owned virtual collection. List owns separators for finite rows. */
+export declare function ListSeparator({ separator, leading, layoutStyle }: ListSeparatorProps): import("react").JSX.Element | null;
 export type ListAppearance = "grouped" | "plain";
 export type ListProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     label: string;
@@ -133,24 +154,34 @@ export type StatisticProps<Id extends string = string> = Omit<HTMLAttributes<HTM
     contextLabel?: string;
     accessibilityLabel?: string;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    leading?: ReactNode;
+    /** Product-owned series/category color; value text and decorative leading share it. */
+    valueColor?: string;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
     /** Optional visual adapter; the descriptor remains the accessible value source. */
     renderValue?: (value: string) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Statistic<Id extends string = string>({ descriptor, density, presentation, contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, renderValue, className, layoutStyle, ...props }: StatisticProps<Id>): import("react").JSX.Element;
+export declare function Statistic<Id extends string = string>(props: StatisticProps<Id>): import("react").JSX.Element;
 export type StatisticGroupProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     label: string;
     descriptor: StatisticGroupDescriptor<Id>;
     density?: StatisticDensity;
     presentation?: StatisticPresentation;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    /** A bar is a single equal-width row for a few short counts; grid retains responsive columns. */
+    arrangement?: "grid" | "bar";
+    renderLeading?: (item: StatisticDescriptor<Id>, context: {
+        color: string;
+        size: number;
+    }) => ReactNode;
+    getValueColor?: (item: StatisticDescriptor<Id>) => string | undefined;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function StatisticGroup<Id extends string = string>({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, layoutStyle, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
+export declare function StatisticGroup<Id extends string = string>({ label, descriptor, density, presentation, composeAccessibilityLabel, arrangement, renderLeading, getValueColor, renderTrendMark, className, style, layoutStyle, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
 export type DescriptionListProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDListElement>, "children"> & Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;
@@ -184,6 +215,8 @@ export declare const Table: <Row>(props: TableProps<Row> & RefAttributes<HTMLTab
 export type TimelineProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
+    renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;

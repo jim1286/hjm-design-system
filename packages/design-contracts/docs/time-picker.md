@@ -1,114 +1,22 @@
-# TimePicker — 새 컴포넌트를 만들지 않는다
+# TimePicker
 
-> 2026-09-30 정리: 구현된 조합을 미구현으로 집계하지 않도록 독립 Planned 행과 catalog ID를 제거했다.
-> 기존 조합 예제와 공개 helper는 유지하며, 참조표는 실제 구성 컴포넌트로 연결한다.
-> 아래 날짜별 설계 기록의 행 유지 지시는 당시 판단이며 이 결정으로 대체한다.
+2026-10-19: 사용자가 승인한 통합 열 선택 디자인으로 독립 컴포넌트를 제공한다.
+이 결정은 과거의 ‘Select 두 개로 충분하므로 새 renderer를 만들지 않는다’ 판단을 대체한다.
+선택의창에서 날짜 선택 시트 안에 다시 시·분 Sheet가 열리는 실제 요구가 생겼고,
+두 열의 초안·확정·취소와 접근성 이동을 제품별로 조립하지 않도록 HJM으로 옮겼다.
 
+- 계약과 recipe: `src/time-picker.ts`. Web/RN: `@hjmds/react/time-picker`, `@hjmds/react-native/time-picker`.
+- `presentation="field"`(기본): 필드 한 개 → Web Popover / Native Sheet 한 개. 두 열 선택은 초안이며 확인 버튼으로만 `onValueChange`한다. 닫기·Escape·바깥 누름·시트 dismiss는 확정하지 않는다.
+- `presentation="inline"`: 같은 두 열을 기존 폼·시트 안에 표시한다. 최종 확인은 바깥 폼이 소유한다. 각 선택에서 완전하고 사용 가능한 값은 `HH:mm`, 미완성·선택 불가 초안은 `null`로 전달한다. 부모가 null을 반영해도 사용 중인 부분 선택은 유지한다.
+- 값은 `HH:mm | null`, 날짜·시간대·서머타임·현재 시각 계산은 제품 소유. 자정 `00:00`도 유효하다.
+- `minuteStep` 기본 1. 60의 양의 정수 약수만 허용한다. 기존 값이 간격과 맞지 않아도 자동 반올림하지 않는다.
+- `isTimeUnavailable(time)`은 제품이 제공한다. 시는 사용 가능한 분이 하나라도 있으면 선택할 수 있다. 선택한 분을 몰래 바꾸지 않으며, 그 조합이 불가하면 확인할 수 없다.
+- 외부 `value` 변경은 초안에 반영한다. 비활성·읽기 전용으로 전환하면 열린 선택기를 닫고 확정하지 않는다.
+- Web: 열마다 roving focus, 방향키·Home·End가 비활성 항목을 건너뛰며 선택한다. Enter/Space는 버튼 기본 동작. Popover가 초점·Escape·바깥/blur dismiss·복귀를 소유한다.
+- Native: 각 값은 이름·checked/disabled 상태를 가진 radio이며 host 활성화를 사용한다. Sheet가 back·dismiss·safe area·복귀를 소유한다. 실제 VoiceOver/TalkBack 기기 검증과 host action 검사는 구분한다.
 
-## 문제로 제기된 것
+기존 Collection/Select는 단일 선택으로 닫히는 계약이다. TimePicker는 그 wrapper가 아니라 두 부분을 한 번에 확정하는 세션이다. 목록 값과 공통 Popover/Sheet/Button을 재사용하며, 날짜 엔진이나 새 native peer를 추가하지 않는다.
 
-Ant Design `TimePicker`는 필드 트리거를 누르면 시·분(·초) 열이 나란히 있는 팝업이 뜨고,
-각 열에서 스크롤/클릭으로 값을 고르는 컴포넌트다. crosswalk는 이미
-`{ name: "TimePicker", category: "data-entry", targets: ["TimePicker"], relationship:
-"direct" }`로 연결돼 있다(`src/component-references.ts:86`).
-
-## 판정: 새 컴포넌트가 필요 없다 — 문제가 이미 Select로 완결된다
-
-시·분은 **격자가 아니라 목록**이다(Calendar의 날짜 격자와 다르다 — 그건 2차원이라
-Collection 기본 계약을 적용하지 않기로 했지만, 시·분은 처음부터 1차원 목록이라 정확히
-그 계약이 맞는 자리다). 시(0~23)와 분(0~59)은 각각:
-
-- stable id(`"00"`..`"23"`, `"00"`..`"59"`)
-- 보이는 label(제품이 포맷 — 24시간제, 앞자리 0)
-- 선택적 `disabled`(예: 영업시간 밖 시각을 회색 처리)
-- `none|single` 선택 모드, 정적 목록(비동기 상태 불필요)
-
-인 **정확히 `CollectionItemDescriptor` 하나**다. 그리고 "트리거 + 적응형 오버레이(Web
-popover / Native Sheet) + 단일 committed key + disabled 항목을 건너뛰는 예측 가능한
-방향키 이동"은 이미 `Select`가 `beta`로 검증한 계약 그대로다. 즉:
-
-**시 Select 하나 + 분 Select 하나 = TimePicker.** 제품이 두 값을 `"HH:mm"` 문자열로
-합치기만 하면 antd `TimePicker`가 푸는 사용자 문제(하루 중 시각 하나를 고른다)는 이미
-완결된다. 새 recipe도, 새 behavior도, 새 상태 축도 필요하지 않다 — Dropdown이
-`Menu`로 완전히 흡수된 것과 같은 자리다: 격자처럼 여기서만 필요한 새 조각
-(Calendar의 `row`/`column`/`overflow` 같은)이 하나도 없다.
-
-## 실사용처 확인
-
-Yajalal 전체(`날짜/시간 선택`, `TimePicker`, 알림 설정 화면 `NotificationSettingsScreen.tsx`
-등)를 검색했지만 하루 중 시각 하나를 고르는 UI 자체가 어디에도 없다. 측정된 요구가
-없다는 점에서도 지금 새 계약을 여는 것을 정당화할 근거가 없다.
-
-## 왜 압축된 단일 트리거(진짜 antd 형태)를 만들지 않았는가
-
-두 개의 Select를 나란히 두는 것과 antd처럼 **트리거 하나 + 팝업 하나 안에 두 열이
-동기화된 형태**는 시각적으로 다르다. 후자를 만들려면:
-
-- 하나의 열림 상태가 두 열을 동시에 제어해야 하고,
-- 트리거의 표시 문자열이 두 committed key를 조합해야 하며(Statistic/Calendar와 같은
-  "제품이 포맷한 문자열을 받는다" 원칙),
-- **"selection"이 더 이상 자동 닫힘 사유가 아니어야 한다** — 시만 고르고 분을 아직
-  안 골랐는데 닫히면 안 되기 때문이다(DatePicker/Select는 값 하나를 고르면 바로
-  닫히지만, 여기서는 두 값이 다 맞아떨어져야 "완료"다).
-
-이 세 가지는 실제로 작겠지만 **새로운 축**이다 — Select의 트리거/오버레이/커밋 계약을
-그대로 복제하면서 "selection은 안 닫는다"는 예외 하나만 얹는 얇은 wrapper가 된다.
-지금은 이 압축 형태를 요구하는 화면이 없으므로, 순전히 미관상의 이유로 그 wrapper를
-먼저 만들지 않는다 — 로드맵의 "측정된 요구가 나타나면 그때 기본을 재검토한다" 원칙과
-`docs/notification.md`/`docs/dropdown.md`가 이미 세운 관례를 그대로 따른다.
-
-## 제품이 지금 composing할 때 지킬 것 (판정이 이대로 유지되는 동안)
-
-- 값은 각 Select의 committed key를 그대로 쓰되, 최종 시각은 **문자열** `"HH:mm"`
-  (24시간제, 앞자리 0)로 합성한다. `Date` 객체를 어디에도 들이지 않는다 — DatePicker와
-  같은 이유(시간대·서머타임을 이 패키지가 가지면 안 된다).
-- **초 단위는 넣지 않는다.** 측정된 요구가 없고, 두 Select를 세 Select로 늘리는 것도
-  같은 근거로 보류한다.
-- **12시간제(오전/오후)는 넣지 않는다.** 24시간제 값 위에 표시만 로케일별로 다르게
-  하고 싶다면 그건 제품이 표시 문자열을 포맷하는 몫이다(Statistic 원칙) — 값 자체에
-  `period` 축을 추가하지 않는다.
-
-## 판정이 뒤집힐 조건
-
-실제 화면이 **트리거 하나 + 팝업 하나**의 압축된 형태를 구체적으로 요구하면(예: 경기
-알림 시각 설정처럼 공간이 좁은 자리), 그때 얇은 `time-picker.ts`를 연다. 그 경우 권장
-설계:
-
-- `hours`/`minutes` 각 열은 `collection.ts`의 `CollectionItemDescriptor`/
-  `validateCollection`/`getCollectionNavigationTarget`/`getCollectionTypeaheadMatch`를
-  **그대로 재사용**한다 — 여기서 재정의할 것이 없다.
-- 트리거/오버레이 축(`open`/`defaultOpen`/`onOpenChange`, 라벨)은 `DatePickerOpenState`/
-  `DatePickerLabel`과 같은 모양으로 새 파일에 다시 선언한다(자급자족 원칙 — DatePicker가
-  `collection.ts`의 Select 타입을 그대로 가져오지 않고 같은 모양을 다시 선언한 것과
-  같은 이유).
-- `dismiss`에서 `"selection"`을 뺀다 — 여기서만 다른 예외이므로 반드시 문서에
-  남긴다. 대신 명시적 `"confirm"` 사유를 추가한다.
-- 초·12시간제 축은 이 조건이 왔다고 해서 자동으로 열리지 않는다 — 그 축은 별도로
-  다시 측정한다.
-
-## 배선 명세 (리드 참고)
-
-catalog의 `{ name: "TimePicker", category: "input", platform: "adaptive", status:
-"planned" }`(`src/catalog.ts:69`) 행은 바꿀 것이 없다 — recipe/behavior가 원래 없었고,
-지금도 없다. `src/time-picker.ts`, `test/time-picker.test.ts`는 만들지 않았다.
-
-
-## 2026-09-16: React/RN 작동 조합
-
-명시 요청에 따라 위 합성 경로를 양쪽 Showcase의 `패턴/시간 선택`에 구현했다.
-시 00–23와 분 00–59의 독립 Select, 두 값이 있어야 가능한 확정, 초기화, 변경 시 확정 결과 해제를
-포함한다. 새 TimePicker renderer를 선언하지 않고 기존 공개 `Select`를 그대로 조합한다.
-
-- Web API: `@hjmds/react/forms`의 `Select`, `@hjmds/react/actions`의 `Button`.
-- Native API: `@hjmds/react-native/forms`의 `Select`, `@hjmds/react-native/actions`의 `Button`.
-- [Web 예제](../../../showcase/web/src/patterns/TimeSelection.stories.tsx)와
-  [Native 예제](../../../showcase/native/src/TimeSelection.stories.tsx)는 제품이 가져갈 상태 연결을 보여준다.
-- 두 값은 `selectedKey` / `onSelectionChange`로 통제하고 둘 다 non-null일 때 `HH:mm`으로 조합한다.
-  `00`도 유효한 선택이다. 시각을 실제 알림·서버 시각으로 바꾸는 작업은 제품 소유다.
-- [Ant TimePicker](https://ant.design/components/time-picker/)의 명시 확정 흐름을 비교했다.
-  HJM 예제에서는 각 Select의 선택과 최종 시각 확정을 분리한다. 두 popup을 하나로 합치지 않는다.
-- 320px 브라우저에서 시만 선택했을 때 확정 비활성, 23:59 확정, 초기화 후 비활성을 확인했다.
-  Native는 타입·Showcase 검사 범위이며 실제 기기 조작 확인은 별도다.
-
-Catalog의 `planned + roadmap.composed`는 독립 renderer가 없다는 의미로 유지한다.
-합성 예제 완료를 새 renderer 수나 stable 승격으로 더하지 않는다.
+디자인 모티브: [Ant Design](https://ant.design/components/time-picker/)의 통합 열·확정,
+[Material 3](https://m3.material.io/components/time-pickers/)의 큰 시각 표시.
+색·모서리·간격은 HJM recipe와 소비 제품의 semantic palette를 따른다.

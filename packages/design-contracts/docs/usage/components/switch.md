@@ -111,6 +111,11 @@ presentation="row"                    큰 글자(≥1.6)
 | 꺼짐 상태 hairline | 그림(track·thumb 모두 1px inset) | 그리지 않음(RN `Switch`에 테두리 hook이 없음, `*Border` 슬롯은 Web 전용) |
 | iOS 크기 | 해당 없음 | `UISwitch` 고유 크기를 따른다(Android는 recipe 크기) |
 
+Native renderer를 브라우저 개발 미리보기에서 실행하면 행 `Pressable`이 단일 switch와
+`aria-checked`·Space 키 동작을 소유하고, 트랙·thumb은 recipe로 그린 장식 View다.
+RN Web의 `Switch`는 `accessible={false}`여도 별도 focusable input을 만들기 때문에
+2026-10-19 확인된 이중 제어와 선택 상태 불일치를 없앴다. iOS·Android의 RN Switch 경로는 유지한다.
+
 ## 함정
 
 - Native는 옛 `value`/`defaultValue`/`onValueChange`를 받으면 실행 중 `TypeError`를 던진다.

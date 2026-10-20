@@ -148,8 +148,8 @@ describe("component reference coverage", () => {
     // 2026-10-18: the chat timeline pieces TypingIndicator and ChatDateSeparator start as beta on both renderers.
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "PageIndicator", "Chart", "TypingIndicator", "ChatDateSeparator"]);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "PageIndicator", "Pagination", "DataTable", "Chart", "TypingIndicator", "ChatDateSeparator"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(125);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(105);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(126);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(106);
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {
@@ -166,7 +166,7 @@ describe("component reference coverage", () => {
   it("does not list deliberately excluded candidates as future work", () => {
     const names = componentCatalog.map(entry => entry.name) as readonly string[];
     // Chart left this list on 2026-10-14 (user request to absorb chart libraries; docs/chart.md).
-    for (const name of ["AppProvider", "Utility", "BorderBeam", "TimePicker", "Cascader", "Rating", "TreeSelect", "ConfirmPopover"]) expect(names).not.toContain(name);
+    for (const name of ["AppProvider", "Utility", "BorderBeam", "Cascader", "Rating", "TreeSelect", "ConfirmPopover"]) expect(names).not.toContain(name);
   });
 
   it("explains every roadmap transition and every planned row", () => {

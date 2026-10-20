@@ -3,7 +3,7 @@ import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
-import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, textRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, noticeRecipe, progressRecipe, resolveProgressSegments, skeletonRecipe, textRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
@@ -160,18 +160,19 @@ export function Result({ status, title, description, actions, renderIcon, layout
                     marginTop: spacing.xs,
                 }, children: [result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null, result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, layoutStyle, testID, }) {
+export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, segments, showValue = progressRecipe.defaults.showValue, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, layoutStyle, testID, }) {
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
     if (value !== undefined && (!Number.isFinite(value) || value < 0 || value > max)) {
         throw new RangeError("Progress value must be between zero and max");
     }
+    const segmentFills = resolveProgressSegments(value, max, segments, shape);
     const theme = useHjmNativeTheme();
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Progress");
     const percentage = value === undefined ? undefined : Math.round((value / max) * 100);
     const resolvedValueText = valueText ?? (percentage === undefined ? undefined : `${percentage}%`);
-    return (_jsxs(View, { accessibilityHint: accessibilityHint, accessibilityLabel: accessibleName, accessibilityRole: "progressbar", accessibilityState: value === undefined ? { busy: true } : undefined, accessibilityValue: {
+    return (_jsxs(View, { accessible: true, accessibilityHint: accessibilityHint, accessibilityLabel: accessibleName, accessibilityRole: "progressbar", accessibilityState: value === undefined ? { busy: true } : undefined, accessibilityValue: {
             min: 0,
             max: 100,
             ...(percentage === undefined ? {} : { now: percentage }),
@@ -181,7 +182,7 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                }, children: [_jsx(Text, { variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), shape === "circular" ? (_jsxs(View, { accessible: false, style: [
+                }, children: [_jsx(Text, { variant: "label", children: label }), showValue && resolvedValueText ? (_jsx(Text, { tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), shape === "circular" ? (_jsxs(View, { accessible: false, style: [
                     {
                         alignItems: "center",
                         borderColor: resolveColorReference(progressRecipe.track, theme.palette),
@@ -199,7 +200,7 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
                             return null;
                         const left = half === 0 ? diameter / 2 : 0;
                         return _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: -progressRecipe.circular.strokeWidth[size], left: left - progressRecipe.circular.strokeWidth[size], width: diameter / 2, height: diameter, overflow: "hidden" }, children: _jsx(View, { style: { position: "absolute", left: -left, width: diameter, height: diameter, transform: [{ rotate: `${(sweep - 1) * 180}deg` }] }, children: _jsx(View, { style: { position: "absolute", left, width: diameter / 2, height: diameter, overflow: "hidden" }, children: _jsx(View, { style: [{ position: "absolute", left: -left, width: diameter, height: diameter, borderRadius: diameter / 2, borderWidth: progressRecipe.circular.strokeWidth[size], borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette) }] }) }) }) }, half);
-                    }), children] })) : (_jsx(View, { accessible: false, style: [
+                    }), children] })) : segmentFills ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flexDirection: "row", direction: theme.environment.direction, gap: progressRecipe.segmented.gap }, children: segmentFills.map((fill, index) => _jsx(View, { style: { flex: 1, height: progressRecipe.sizes[size], borderRadius: theme.tokens.radius[progressRecipe.radius], overflow: "hidden", backgroundColor: resolveColorReference(progressRecipe.track, theme.palette) }, children: _jsx(View, { style: { height: "100%", width: `${fill * 100}%`, backgroundColor: resolveColorReference(progressRecipe.tones[tone], theme.palette) } }) }, index)) })) : (_jsx(View, { accessible: false, style: [
                     {
                         backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
                         borderRadius: theme.tokens.radius[progressRecipe.radius],
@@ -832,4 +833,5 @@ export function useToastRegion() {
 // apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
 // subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
 export { ActivityChip } from "./activity-chip.js";
+export { PendingContent } from "./internal/pending-content.js";
 //# sourceMappingURL=feedback.js.map

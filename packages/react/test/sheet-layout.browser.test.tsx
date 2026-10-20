@@ -7,6 +7,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { HjmProvider } from "../src/provider.js";
 import { Sheet } from "../src/overlays.js";
+import { BottomCTA } from "../src/bottom-cta.js";
 import "../src/styles.css";
 
 let root: Root;
@@ -20,6 +21,25 @@ afterEach(async () => { await act(async () => root.unmount()); container.remove(
 
 export const sheetKeyboardCases = [{ componentId: "sheet" }] as const;
 export const sheetLongCopyCases = [{ componentId: "sheet" }] as const;
+
+it("aligns a composed BottomCTA with the Sheet body without a second bar", async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion>
+    <Sheet open onOpenChange={() => {}} title="Edit place" closeLabel="Close"
+      footer={<BottomCTA primaryAction={{label: "Save", onClick: () => {}}} />}>
+      <input aria-label="Nickname" style={{width: "100%", boxSizing: "border-box"}} />
+    </Sheet>
+  </HjmProvider>));
+  for (const width of [393, 1280]) {
+    await page.viewport(width, 852);
+    const input = document.querySelector('input[aria-label="Nickname"]')!.getBoundingClientRect();
+    const cta = document.querySelector<HTMLElement>(".hjm-sheet__footer .hjm-bottom-cta")!;
+    const action = cta.querySelector("button")!.getBoundingClientRect();
+    expect(action.left).toBeCloseTo(input.left, 1);
+    expect(action.right).toBeCloseTo(input.right, 1);
+    expect(getComputedStyle(cta).paddingInlineStart).toBe("0px");
+    expect(getComputedStyle(cta).borderTopWidth).toBe("0px");
+  }
+});
 
 // Keep historical maximum-text cases registered without executing them (2026-10-07 user scope).
 for (const textScale of [1, 2]) {
@@ -42,6 +62,8 @@ for (const textScale of [1, 2]) {
     expect(header.height).toBeLessThanOrEqual(close.height + 1);
     expect(sheet.scrollWidth).toBeLessThanOrEqual(sheet.clientWidth);
     expect(close.width).toBeGreaterThanOrEqual(44);
+    expect(sheet.querySelectorAll('button[aria-label="닫기"]')).toHaveLength(1);
+    expect(sheet.querySelector('.hjm-sheet__handle[aria-hidden="true"]')).not.toBeNull();
   });
 }
 
@@ -131,4 +153,91 @@ it("names the Sheet by a long title and wraps a long description in a narrow vie
   expect(description.textContent).toBe(longCopy);
   expect(description.scrollWidth).toBeLessThanOrEqual(description.clientWidth + 2);
   expect(sheet.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
+});
+
+
+async function draggableSideSheet(props: { busy?: boolean } = {}) {
+  const onOpenChange = vi.fn();
+  await act(async () => root.render(<HjmProvider reducedMotion>
+    <Sheet open placement="end" swipeDirection="down" showClose={false} {...props}
+      onOpenChange={onOpenChange} title="Letter" closeLabel="Close letter"><p>Read the letter</p></Sheet>
+  </HjmProvider>));
+  const sheet = document.querySelector<HTMLElement>('.hjm-sheet')!;
+  const zone = sheet.querySelector<HTMLElement>('.hjm-sheet__drag')!;
+  vi.spyOn(zone, 'setPointerCapture').mockImplementation(() => {});
+  async function pointer(type: string, id: number, y: number, t: number, x = 50) {
+    const event = new PointerEvent(type, { bubbles: true, pointerId: id, clientX: x, clientY: y, button: 0 });
+    Object.defineProperty(event, 'timeStamp', { value: t + 10000 });
+    await act(async () => zone.dispatchEvent(event));
+  }
+  return { sheet, zone, pointer, onOpenChange };
+}
+
+it('offers downward handle dismissal on an opted-in side sheet without duplicating its close action', async () => {
+  const { sheet, pointer, onOpenChange } = await draggableSideSheet();
+  expect(sheet.dataset.placement).toBe('end');
+  expect(sheet.querySelector<HTMLElement>('.hjm-sheet__handle')!.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+  expect(sheet.querySelectorAll('button[aria-label="Close letter"]')).toHaveLength(1);
+  expect(sheet.querySelector('.hjm-dialog__close')).toBeNull();
+  await pointer('pointerdown', 1, 100, 0);
+  await pointer('pointermove', 1, 400, 1000);
+  expect(sheet.style.transform).toBe('translateY(300px)');
+  await pointer('pointerup', 1, 400, 2000);
+  expect(sheet.style.transform).toBe('');
+  expect(onOpenChange).toHaveBeenCalledWith(false, { reason: 'swipe' });
+});
+
+it.each(['pointerup', 'pointercancel', 'lostpointercapture'])('preserves the held Sheet pointer through a foreign %s', async (foreignEvent) => {
+  const { sheet, pointer, onOpenChange } = await draggableSideSheet();
+  await pointer('pointerdown', 1, 100, 0);
+  await pointer('pointerdown', 2, 120, 100);
+  await pointer('pointermove', 2, 400, 200);
+  expect(sheet.style.transform).toBe('');
+  await pointer('pointermove', 1, 150, 1000);
+  await pointer(foreignEvent, 2, 400, 1200);
+  expect(sheet.style.transform).toBe('translateY(50px)');
+  expect(onOpenChange).not.toHaveBeenCalled();
+  await pointer('pointerup', 1, 400, 2000);
+  expect(onOpenChange).toHaveBeenCalledWith(false, { reason: 'swipe' });
+});
+
+it.each(['pointercancel', 'lostpointercapture'])('resets an owning Sheet %s and ignores its later release', async (event) => {
+  const { sheet, pointer, onOpenChange } = await draggableSideSheet();
+  await pointer('pointerdown', 1, 100, 0);
+  await pointer('pointermove', 1, 150, 1000);
+  await pointer(event, 1, 150, 1200);
+  expect(sheet.style.transform).toBe('');
+  await pointer('pointerup', 1, 400, 2000);
+  expect(onOpenChange).not.toHaveBeenCalled();
+});
+
+it('returns a short Sheet drag without its generated click closing, while keeping keyboard close', async () => {
+  const { sheet, pointer, onOpenChange } = await draggableSideSheet();
+  const handle = sheet.querySelector<HTMLElement>('.hjm-sheet__handle')!;
+  await pointer('pointerdown', 1, 100, 0);
+  await pointer('pointermove', 1, 120, 1000);
+  await pointer('pointerup', 1, 120, 2000);
+  await act(async () => handle.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 })));
+  expect(onOpenChange).not.toHaveBeenCalled();
+  await act(async () => handle.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 0 })));
+  expect(onOpenChange).toHaveBeenCalledWith(false, { reason: 'close-action' });
+});
+
+it('keeps a busy side Sheet closed to downward gesture requests', async () => {
+  const { zone, pointer, onOpenChange } = await draggableSideSheet({ busy: true });
+  expect(zone.dataset.swipe).toBeUndefined();
+  await pointer('pointerdown', 1, 100, 0);
+  await pointer('pointermove', 1, 400, 1000);
+  await pointer('pointerup', 1, 400, 2000);
+  expect(onOpenChange).not.toHaveBeenCalled();
+});
+
+it('does not begin Sheet dismissal for a horizontal gesture', async () => {
+  const { sheet, zone, pointer, onOpenChange } = await draggableSideSheet();
+  await pointer('pointerdown', 1, 100, 0);
+  expect(zone.setPointerCapture).toHaveBeenCalledWith(1);
+  await pointer('pointermove', 1, 120, 1000, 250);
+  await pointer('pointerup', 1, 120, 2000, 250);
+  expect(sheet.style.transform).toBe('');
+  expect(onOpenChange).not.toHaveBeenCalled();
 });

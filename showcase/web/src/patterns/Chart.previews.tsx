@@ -96,7 +96,8 @@ export function StatTablePreview() {
         columns={tableColumns}
         rows={ids.map((id) => ({ id }))}
         labels={{ table: copy.table, selectAll: "", selectRow: (id) => id, sortColumn: (header, state) => copy.sortColumn(header, state) }}
-        renderCell={(rowId, columnId) => tableRows[rowId]![columnId]}
+        getCellText={(rowId, columnId) => String(tableRows[rowId]![columnId] ?? "")}
+        renderCell={(rowId, columnId) => columnId === "name" ? <strong>{tableRows[rowId]![columnId]}</strong> : tableRows[rowId]![columnId]}
         sortState={sortState}
         onSortChange={setSortState}
         summaryRow={(columnId) => columnId === "name" ? copy.total : columnId === "team" ? null : average(columnId)}

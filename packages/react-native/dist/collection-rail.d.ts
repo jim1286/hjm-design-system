@@ -6,10 +6,10 @@ export type CollectionRailLabels = Readonly<{
     next: string;
     navigation: string;
 }>;
-export type CollectionRailProps = Readonly<{
+export type CollectionRailProps<Item extends CollectionRailItem = CollectionRailItem> = Readonly<{
     label: string;
-    items: readonly CollectionRailItem[];
-    renderItem: (item: CollectionRailItem) => ReactNode;
+    items: readonly Item[];
+    renderItem: (item: Item) => ReactNode;
     labels: CollectionRailLabels;
     density?: CollectionRailDensity;
     emptyContent?: ReactNode;
@@ -25,5 +25,5 @@ export type CollectionRailProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
     testID?: string;
 }>;
-export declare function CollectionRail({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, layoutStyle, testID }: CollectionRailProps): import("react").JSX.Element;
+export declare function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, layoutStyle, testID }: CollectionRailProps<Item>): import("react").JSX.Element;
 //# sourceMappingURL=collection-rail.d.ts.map

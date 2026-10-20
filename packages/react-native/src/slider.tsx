@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import {
   getSliderStepTarget,
@@ -66,7 +67,7 @@ export type SliderProps = NativeSliderViewProps &
   }>;
 
 /** Dependency-free horizontal Slider using the Native responder system. */
-export const Slider = forwardRef<View, SliderProps>(function Slider(
+export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, SliderProps>> = forwardRef<ComponentRef<typeof View>, SliderProps>(function Slider(
   {
     label,
     min,

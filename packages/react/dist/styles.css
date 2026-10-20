@@ -228,6 +228,7 @@
   cursor: pointer;
 }
 .hjm-button {
+  text-decoration: none;
   position: relative;
   min-block-size: var(--hjm-control-button-medium);
   padding: var(--hjm-space-xs) var(--hjm-space-md);
@@ -276,10 +277,23 @@
    버튼인지 잃고, 무제한 줄바꿈은 하단 CTA 행 같은 남의 레이아웃을 밀어낸다. */
 .hjm-button__label { min-inline-size: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--hjm-button-label-lines, 2); overflow: hidden; }
 /* Keep the original content in layout for stable width; the sole visible busy cue sits at the frame center. */
-.hjm-button[data-state="loading"] > :not(.hjm-button__loading-indicator) { opacity: 0; }
+.hjm-button[data-state="loading"] > :not(.hjm-button__loading-indicator):not(.hjm-button__face),
+.hjm-button[data-state="loading"] > .hjm-button__face > :not(.hjm-button__loading-indicator) { opacity: 0; }
 .hjm-button__loading-indicator { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 /* 큰 글자 설정에서는 상한을 푼다 — 사용자가 키운 글자를 잘라 내용을 숨기면 WCAG 1.4.4다. */
 [data-large-text="true"] .hjm-button__label { display: block; overflow: visible; }
+/* The root stays still as the face sinks, preserving the original pointer/focus target. */
+.hjm-button[data-full-width="true"] { inline-size: 100%; }
+.hjm-button[data-tone="primary"] { --hjm-button-face-fill: var(--hjm-color-primary); }
+.hjm-button[data-tone="secondary"] { --hjm-button-face-fill: var(--hjm-color-bg); --hjm-button-face-border: var(--hjm-color-border-control); }
+.hjm-button[data-tone="danger"] { --hjm-button-face-fill: var(--hjm-color-danger-fill); }
+.hjm-button[data-selected="true"] { --hjm-button-face-fill: var(--hjm-color-bg); --hjm-button-face-border: transparent; }
+.hjm-button[data-raised="true"] { padding: 0 0 var(--hjm-button-depth); border: 0; gap: 0; flex-direction: column; background: color-mix(in srgb, var(--hjm-button-side), #000 var(--hjm-button-side-shade)); }
+.hjm-button__face { position: relative; display: flex; box-sizing: border-box; inline-size: 100%; min-block-size: inherit; flex: 1; align-items: center; justify-content: inherit; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-button-face-padding); border: 1px solid var(--hjm-button-face-border, transparent); border-radius: inherit; background: var(--hjm-button-face-fill); transition: transform var(--hjm-button-settle) ease-out; }
+.hjm-button[data-raised="true"]:active:not(:disabled):not([aria-disabled="true"]) { opacity: 1; }
+.hjm-button[data-raised="true"]:active:not(:disabled):not([aria-disabled="true"]) > .hjm-button__face { transform: translateY(var(--hjm-button-depth)); }
+@media (prefers-reduced-motion: reduce) { .hjm-button__face { transition: none; } }
+[data-reduced-motion="true"] .hjm-button__face { transition: none; }
 .hjm-button__spinner,
 .hjm-spinner__glyph {
   display: inline-block;
@@ -349,11 +363,12 @@
   font-family: var(--hjm-font-family-ui, inherit); display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; }
 .hjm-field__label { color: var(--hjm-color-text-body); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-field__control {
+  --hjm-field-resolved-border-width: var(--hjm-field-border-width);
   display: flex;
   align-items: center;
   min-block-size: var(--hjm-control-field-height);
   padding-inline: var(--hjm-space-md);
-  border: var(--hjm-field-border-width) solid var(--hjm-color-border-control);
+  border: var(--hjm-field-resolved-border-width) solid var(--hjm-color-border-control);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
 }
@@ -365,7 +380,9 @@
    reads as hue only. The wider ring makes it a shape change like every other control.
    See issue #19. */
 .hjm-field[data-state="focused"] .hjm-field__control { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 var(--hjm-field-focus-ring-width) var(--hjm-color-content-brand); }
-.hjm-field[data-state="invalid"] .hjm-field__control { border-color: var(--hjm-color-danger); }
+/* Validation remains visible when availability is disabled; support text and aria-invalid keep their existing contracts. */
+.hjm-field[data-state="invalid"] .hjm-field__control,
+.hjm-field[data-invalid="true"] .hjm-field__control { border-color: var(--hjm-color-danger); --hjm-field-resolved-border-width: var(--hjm-field-invalid-border-width); }
 /* fieldRecipe.disabledScope (2026-10-06): disabled fades the label and the control, not
    the hint or the error, which explain why the field is locked or what to fix. Fading the
    whole frame (the rule before) took their contrast down with it. Every direct child except
@@ -373,10 +390,11 @@
    recipe value (Select, NumberField, OtpField, SearchField, PasswordField) arrives as an
    inline --hjm-field-disabled-opacity on the root. */
 .hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
+/* The editable minimum excludes both resolved borders, keeping the field footprint stable in invalid state. */
 .hjm-field__input {
   inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: calc(var(--hjm-control-field-height) - 2px);
+  min-block-size: calc(var(--hjm-control-field-height) - 2 * var(--hjm-field-resolved-border-width));
   padding-block: var(--hjm-space-xs);
   border: 0;
   outline: 0;
@@ -393,7 +411,7 @@
 .hjm-field__control--multiline { min-block-size: var(--hjm-field-multiline-min-height); align-items: stretch; }
 .hjm-field__control--multiline textarea {
   min-block-size: max(
-    calc(var(--hjm-field-multiline-min-height) - 2px),
+    calc(var(--hjm-field-multiline-min-height) - 2 * var(--hjm-field-resolved-border-width)),
     calc(var(--hjm-field-min-visible-lines, 0) * var(--hjm-type-body-line-height) + var(--hjm-field-padding-block) * 2)
   );
   max-block-size: calc(
@@ -411,7 +429,7 @@
    so clearing has one localized name, onClear callback and focus-restoration path. */
 .hjm-search-field input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 .hjm-search-field:has(.hjm-field__input[data-size="large"]) .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-search-field-padding-large, var(--hjm-space-md)); gap: var(--hjm-search-field-gap-large, var(--hjm-space-sm)); }
-.hjm-search-field .hjm-field__input[data-size="large"] { min-block-size: calc(var(--hjm-control-button-large) - 2px); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
+.hjm-search-field .hjm-field__input[data-size="large"] { min-block-size: calc(var(--hjm-control-button-large) - 2 * var(--hjm-field-resolved-border-width)); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
 /* The visible circle is the recipe diameter; ::after extends the hit area by clearHitSlop so the target stays 44. */
 .hjm-search-field__clear { --hjm-search-clear-slop: var(--hjm-search-field-clear-slop-medium, 4px); position: relative; flex: 0 0 auto; inline-size: var(--hjm-search-field-clear-medium, 36px); block-size: var(--hjm-search-field-clear-medium, 36px); display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
 .hjm-search-field__clear::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-search-clear-slop)); border-radius: 50%; }
@@ -419,7 +437,7 @@
 .hjm-search-field__spinner { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; color: var(--hjm-color-content-brand); }
 .hjm-search-field__spinner:empty::before { content: ""; inline-size: 1em; block-size: 1em; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-password-field--large .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-space-lg); }
-.hjm-password-field--large .hjm-field__input { min-block-size: calc(var(--hjm-control-button-large) - 2px); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
+.hjm-password-field--large .hjm-field__input { min-block-size: calc(var(--hjm-control-button-large) - 2 * var(--hjm-field-resolved-border-width)); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
 .hjm-password-field__toggle {
   position: relative;
   flex: 0 0 var(--hjm-control-min-touch-target);
@@ -643,7 +661,7 @@
   font-variant-numeric: tabular-nums;
 }
 .hjm-number-field[data-size="large"] .hjm-number-field__input {
-  min-block-size: calc(var(--hjm-control-button-large) - 2px);
+  min-block-size: calc(var(--hjm-control-button-large) - 2 * var(--hjm-field-resolved-border-width));
   padding-inline: var(--hjm-space-xs);
   font-size: var(--hjm-type-body-large-size);
   line-height: var(--hjm-type-body-large-line-height);
@@ -814,16 +832,24 @@
 .hjm-choice__copy { display: grid; gap: var(--hjm-space-xxs); padding-block: 2px; }
 .hjm-choice[data-state="checked"] .hjm-choice__copy > :first-child,
 .hjm-choice[data-state="mixed"] .hjm-choice__copy > :first-child { font-weight: var(--hjm-font-weight-semibold); }
-.hjm-radio-group { min-inline-size: 0; padding: 0; border: 0; }
-.hjm-radio-group legend { margin-block-end: var(--hjm-space-xs); font-weight: var(--hjm-text-emphasis-medium); }
+/* Native groups have no outer inset; remove the browser fieldset margin so sibling content shares one edge. */
+.hjm-radio-group { margin: 0; min-inline-size: 0; padding: 0; border: 0; }
+.hjm-radio-group legend { padding: 0; margin-block-end: var(--hjm-space-xs); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-radio-group__items { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-radio-group[data-presentation="plain"] .hjm-radio-group__items { gap: var(--hjm-space-xxs); }
 .hjm-radio-group[data-presentation="grouped"] .hjm-radio-group__items { gap: 0; overflow: hidden; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); }
 .hjm-radio-group[data-orientation="horizontal"] .hjm-radio-group__items { flex-direction: row; flex-wrap: wrap; gap: var(--hjm-space-md); }
 .hjm-radio-group[data-orientation="horizontal"][data-presentation="plain"] .hjm-radio-group__items { gap: var(--hjm-space-sm); }
 .hjm-radio-group[data-orientation="horizontal"][data-presentation="grouped"] .hjm-radio-group__items { gap: 0; }
+/* Radio option actions are siblings of the label, never nested interactive controls. */
+.hjm-choice.hjm-choice--with-action { padding: 0; gap: 0; }
+.hjm-choice__target { display: flex; align-items: center; align-self: stretch; flex: 1; min-inline-size: 0; min-block-size: inherit; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm) var(--hjm-space-md); cursor: inherit; }
+.hjm-choice[data-size="small"] > .hjm-choice__target { gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-space-sm); }
+.hjm-choice[data-presentation="plain"] > .hjm-choice__target { padding: 0; }
+.hjm-choice__action { flex: 0 0 auto; padding-inline-end: var(--hjm-space-xs); }
+.hjm-choice__target .hjm-choice__copy { min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-checkbox-group { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
-.hjm-checkbox-group legend { margin-block-end: var(--hjm-space-xs); font-weight: var(--hjm-text-emphasis-medium); }
+.hjm-checkbox-group legend { padding: 0; margin-block-end: var(--hjm-space-xs); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-checkbox-group__items { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-checkbox-group[data-presentation="plain"] .hjm-checkbox-group__items { gap: var(--hjm-space-xxs); }
 .hjm-checkbox-group[data-presentation="grouped"] .hjm-checkbox-group__items { gap: 0; overflow: hidden; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); }
@@ -845,6 +871,18 @@
 .hjm-switch__copy { display: flex; flex-direction: column; gap: var(--hjm-space-xxs); min-inline-size: 0; text-align: start; overflow-wrap: anywhere; }
 .hjm-switch__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-switch[data-presentation="row"] { display: flex; inline-size: 100%; justify-content: space-between; }
+/* Chip collections retain their native radio/checkbox inputs, including nullable and multi-select values. */
+:is(.hjm-radio-group, .hjm-checkbox-group)[data-presentation="chips"] > :is(.hjm-radio-group__items, .hjm-checkbox-group__items) { flex-direction: row; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+.hjm-choice[data-presentation="chips"] { position: relative; flex: 0 1 auto; min-block-size: var(--hjm-control-min-touch-target); padding: 0 var(--hjm-space-md); border-radius: var(--hjm-radius-full); color: var(--hjm-color-text-muted); font-weight: var(--hjm-text-emphasis-medium); }
+.hjm-choice[data-presentation="chips"][data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); }
+.hjm-choice[data-presentation="chips"][data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
+.hjm-choice[data-presentation="chips"].hjm-choice--with-action { padding: 0; }
+.hjm-choice[data-presentation="chips"] > .hjm-choice__target { padding-block: 0; }
+.hjm-choice[data-presentation="chips"] .hjm-choice__indicator { display: none; }
+.hjm-choice[data-presentation="chips"] .hjm-choice__leading { color: inherit; }
+.hjm-choice[data-presentation="chips"] .hjm-choice__copy { min-inline-size: 0; overflow-wrap: anywhere; padding-block: 0; }
+.hjm-choice[data-presentation="chips"][data-state="checked"], .hjm-choice[data-presentation="chips"][data-state="mixed"] { color: var(--hjm-color-content-brand); border-color: var(--hjm-color-content-brand); }
+.hjm-choice[data-presentation="chips"]:has(.hjm-choice__input:focus-visible) { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 /* A described switch: copy + switchRecipe.rowPaddingVertical 8 on both sides, min rowTwoLineMinHeight 56, same as Native.
    Stacked switch rows carry this spacing themselves; containers add no gap between them (2026-10-17). */
 .hjm-switch[data-two-line="true"] { min-block-size: var(--hjm-switch-row-two-line-min-height); padding-block: var(--hjm-switch-row-padding-vertical); }
@@ -924,10 +962,10 @@
 
 .hjm-badge, .hjm-tag { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; overflow-wrap: anywhere; }
 /* Solid status plates mirror badgeRecipe; Tag keeps its independent tint treatment. */
-.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 0; border-radius: var(--hjm-radius-sm); color: var(--hjm-color-on-primary); background: var(--hjm-color-neutral-fill); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
+.hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 0; border-radius: var(--hjm-radius-sm); color: var(--hjm-color-on-status-fill); background: var(--hjm-color-neutral-fill); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
 .hjm-badge[data-size="small"] { min-block-size: 20px; }
 .hjm-badge[data-tone="strong"] { background: var(--hjm-color-strong-fill); }
-.hjm-badge[data-tone="brand"] { background: var(--hjm-color-primary); }
+.hjm-badge[data-tone="brand"] { color: var(--hjm-color-on-primary); background: var(--hjm-color-primary); }
 .hjm-badge[data-tone="danger"] { color: var(--hjm-color-on-danger); background: var(--hjm-color-danger-fill); }
 .hjm-badge__icon { display: inline-flex; align-items: center; flex: 0 0 auto; }
 .hjm-badge[data-variant="outline"] { background: transparent; border: 1px solid var(--hjm-color-border); color: var(--hjm-color-text-muted); }
@@ -967,13 +1005,16 @@
 .hjm-counter-badge[data-tone="danger"] { color: var(--hjm-color-on-danger); background: var(--hjm-color-danger-fill); }
 .hjm-counter-badge[data-variant="floating"] { border: 2px solid var(--hjm-color-bg); }
 
-.hjm-card { overflow: hidden; }
+.hjm-card { display: flex; flex-direction: column; overflow: hidden; }
 .hjm-card__media > * { display: block; inline-size: 100%; }
-/* The implicit auto column grew to the min-content of slotted children (e.g. a SegmentedControl with max-content items),
-   pushing content past the card padding at narrow widths (2026-10-17 STEA schedule card at 402). minmax(0, 1fr) keeps every
-   slot inside the padded body so scroll/wrap rules of the child apply. */
-.hjm-card__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--hjm-space-xs); padding: var(--hjm-space-md); }
-.hjm-card__header { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); min-inline-size: 0; }
+/* Zero inline minima preserve narrow-slot wrapping; body/content relay allocated height to slotted layouts
+   without growing headers or footer commands (Diairy journey overview, 2026-10-20). */
+.hjm-card__body { display: flex; flex-direction: column; flex: 1; min-inline-size: 0; min-block-size: 0; gap: var(--hjm-space-xs); padding: var(--hjm-space-md); }
+.hjm-card__body > * { min-inline-size: 0; }
+.hjm-card__content { display: flex; flex-direction: column; flex: 1; min-block-size: 0; }
+.hjm-card__media, .hjm-card__actions { flex-shrink: 0; }
+.hjm-card__header { display: flex; align-items: center; gap: var(--hjm-space-sm); min-inline-size: 0; }
+.hjm-card__header-actions { position: relative; z-index: 1; display: flex; flex: 0 0 auto; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-card__leading { flex: 0 0 auto; display: inline-grid; place-items: center; line-height: 1; }
 .hjm-card__copy { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xs); }
 /* cardRecipe.title.emphasis "strong": without a weight the h2–h6 element fell back to the UA bold (700). */
@@ -1071,13 +1112,15 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list { min-inline-size: 0; }
 .hjm-list[data-appearance="grouped"] { overflow: hidden; padding-inline: var(--hjm-list-grouped-padding-inline); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); }
 .hjm-list__item { min-inline-size: 0; }
+.hjm-list-separator { border-block-start: 1px solid var(--hjm-color-border); flex-shrink: 0; pointer-events: none; }
 /* Indent only the divider: moving the row shifted every title after the first
    and narrowed its text column in the notification-settings composition. Insets are measured from the list content
    edge (where the row text sits) and come from listRecipe.separators: full spans the row surface; indented follows
    the text column of the row above (the separator belongs to that row, as Native draws it after the row) — 52 after a
    row with leading (ListRow root `data-leading`), 0 after one without, ending on the content edge (2026-10-17). */
-.hjm-list:is([data-separator="full"], [data-separator="indented"]) > .hjm-list__item + .hjm-list__item { position: relative; }
-.hjm-list:is([data-separator="full"], [data-separator="indented"]) > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; }
+.hjm-list:is([data-separator="full"], [data-separator="indented"], [data-separator="content"]) > .hjm-list__item + .hjm-list__item { position: relative; }
+.hjm-list:is([data-separator="full"], [data-separator="indented"], [data-separator="content"]) > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; }
+.hjm-list[data-separator="content"] > .hjm-list__item + .hjm-list__item::before { inset-inline: var(--hjm-list-separator-content-start) var(--hjm-list-separator-content-end); }
 .hjm-list[data-separator="full"] > .hjm-list__item + .hjm-list__item::before { inset-inline: var(--hjm-list-separator-full-start) var(--hjm-list-separator-full-end); }
 .hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item::before { inset-inline: var(--hjm-list-separator-indented-start) var(--hjm-list-separator-indented-end); }
 .hjm-list[data-separator="indented"] > .hjm-list__item:has(> [data-leading]) + .hjm-list__item::before { inset-inline-start: var(--hjm-list-separator-indented-leading-start); }
@@ -1095,7 +1138,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-statistic__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 .hjm-statistic[data-density="compact"] .hjm-statistic__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-statistic__value-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--hjm-space-xxs); min-inline-size: 0; }
-.hjm-statistic__value { color: var(--hjm-color-text); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); font-weight: var(--hjm-font-weight-semibold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hjm-statistic__value { color: var(--hjm-statistic-value-color, var(--hjm-color-text)); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); font-weight: var(--hjm-font-weight-semibold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .hjm-statistic[data-density="compact"] .hjm-statistic__value { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
 .hjm-statistic__affix { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-statistic__hint { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
@@ -1108,7 +1151,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   .hjm-statistic-group { grid-template-columns: minmax(0, 1fr); }
 }
 
-.hjm-notice { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--hjm-space-sm); padding: var(--hjm-space-md); border: 1px solid; border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); border-color: var(--hjm-color-border); }
+.hjm-notice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-md); border: 1px solid; border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); border-color: var(--hjm-color-border); }
 .hjm-notice[data-tone="info"] { border-color: var(--hjm-accent-info); }
 .hjm-notice[data-tone="success"] { border-color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 10%, var(--hjm-color-bg)); }
 .hjm-notice[data-tone="warning"] { border-color: var(--hjm-accent-warning); background: color-mix(in srgb, var(--hjm-accent-warning) 10%, var(--hjm-color-bg)); }
@@ -1116,14 +1159,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice[data-tone="danger"] { border-color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg)); }
 /* Reserve readable copy; wrap the action instead of crushing its label. */
 .hjm-notice__content { flex: 1 1 60%; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
-/* First-line anchor (2026-10-17 measured audit): the inline action (contract: Button size="small") centered 8px
-   below the title's first line and the icon box had no rule at all. Icon, first line and action now share one
-   anchor — the line box (1lh) alone, or the small-button height when an action sits on the row. Extra lines
-   grow downward; Native keeps the action under the copy (docs/usage/components/notice.md). */
-.hjm-notice { --hjm-notice-anchor: 1lh; }
-.hjm-notice:has(> .hjm-notice__action) { --hjm-notice-anchor: var(--hjm-control-button-small); }
-.hjm-notice__icon { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; min-inline-size: 1.25rem; block-size: var(--hjm-notice-anchor); }
-.hjm-notice__content > :first-child { margin-block-start: calc((var(--hjm-notice-anchor) - 1lh) / 2); }
+/* Center the complete copy and action within the row; a first-line offset drifts
+   when the copy wraps or the button's actual height differs from its token. */
+.hjm-notice__icon { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; min-inline-size: 1.25rem; block-size: 1lh; }
 .hjm-notice__action { flex: 0 0 auto; max-inline-size: 100%; }
 .hjm-notice__title, .hjm-notice__description { overflow-wrap: anywhere; }
 /* noticeRecipe/emptyStateRecipe title weight; the <strong> otherwise draws the UA bold (700). */
@@ -1171,7 +1209,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Copy row above the ring at the start edge, like the linear bar and Native (2026-10-06 follow-up). The ring used to sit
    beside the copy (grid auto 1fr), so the same Progress laid out differently per platform. */
 .hjm-progress[data-shape="circular"] { justify-items: start; }
-.hjm-progress[data-shape="circular"] .hjm-progress__native { display: none; }
+/* Keep one semantic progress target even when decorative segments or the ring paint it. */
+.hjm-progress[data-shape="circular"] .hjm-progress__native,
+.hjm-progress[data-segmented] .hjm-progress__native { position: absolute; inline-size: 1px; block-size: 1px; clip-path: inset(50%); overflow: hidden; }
+.hjm-progress__segments { display: flex; inline-size: 100%; }
+.hjm-progress__segments > span { flex: 1; min-inline-size: 0; overflow: hidden; border-radius: var(--hjm-radius-full); background: var(--hjm-progress-track); }
+.hjm-progress__segments > span > i { display: block; block-size: 100%; background: var(--hjm-progress-fill); }
 .hjm-progress__ring {
   position: relative;
   display: grid;
@@ -2453,7 +2496,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   display: grid;
   place-items: center;
   min-inline-size: var(--hjm-control-min-touch-target);
-  min-block-size: var(--hjm-space-lg);
+  min-block-size: var(--hjm-control-min-touch-target);
   padding: 0;
   border: 0;
   background: transparent;
@@ -2706,8 +2749,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* Advanced display ------------------------------------------------------- */
 /* timelineRecipe label/description are `body`; binding it here lets the rail and timestamp derive from the same line box. */
-.hjm-timeline { display: grid; gap: var(--hjm-space-md); margin: 0; padding: 0; list-style: none; font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
-.hjm-timeline__item { min-inline-size: 0; display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--hjm-space-sm); }
+.hjm-timeline { display: grid; gap: var(--hjm-space-lg); margin: 0; padding: 0; list-style: none; font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
+.hjm-timeline__item { padding: var(--hjm-space-sm); border-radius: var(--hjm-radius-md); min-inline-size: 0; display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--hjm-space-sm); }
+.hjm-timeline__item[data-emphasized="true"] { background: color-mix(in srgb, var(--hjm-accent-info) 10%, transparent); }
 .hjm-timeline__rail { position: relative; display: flex; justify-content: center; }
 /* Dot, label first line and timestamp share the label's first line box (2026-10-17 measured audit: centers 396/397/398.5).
    The rail inherits the label's line height, so 1lh is that line box. */
@@ -2715,12 +2759,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-timeline__item[data-tone="info"] .hjm-timeline__dot { border-color: var(--hjm-accent-info); background: var(--hjm-accent-info); }
 .hjm-timeline__item[data-tone="success"] .hjm-timeline__dot { border-color: var(--hjm-accent-success); background: var(--hjm-accent-success); }
 .hjm-timeline__item[data-tone="attention"] .hjm-timeline__dot { border-color: var(--hjm-accent-attention); background: var(--hjm-accent-attention); }
-.hjm-timeline__connector { position: absolute; inset-block: calc((1lh + 0.625rem) / 2) calc(-1 * var(--hjm-space-md)); inline-size: 1px; background: var(--hjm-color-border); }
+.hjm-timeline__connector { position: absolute; inset-block: calc((1lh + 0.625rem) / 2) calc(-1 * (var(--hjm-space-lg) + 2 * var(--hjm-space-sm)) - .5lh); inline-size: 1px; background: var(--hjm-color-border); }
 .hjm-timeline__content { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-block-end: var(--hjm-space-xxs); }
-.hjm-timeline__heading { min-inline-size: 0; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--hjm-space-xxs) var(--hjm-space-sm); }
+.hjm-timeline__heading { min-inline-size: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--hjm-space-xxs) var(--hjm-space-sm); }
 .hjm-timeline__label { color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 /* Baseline sharing put the smaller caption 1.5px under the label's center; center it on the label's first line instead. */
-.hjm-timeline__timestamp { margin-block-start: calc((var(--hjm-type-body-line-height) - var(--hjm-type-caption-line-height)) / 2); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
+.hjm-timeline__timestamp { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-timeline__description { color: var(--hjm-color-text-body); white-space: pre-wrap; overflow-wrap: anywhere; }
 .hjm-accordion { border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-accordion__item { border-block-end: 1px solid var(--hjm-color-border); }
@@ -2773,7 +2817,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-description-list { display: grid; grid-template-columns: repeat(var(--hjm-description-columns), minmax(0, 1fr)); gap: var(--hjm-space-sm); margin: 0; }
 .hjm-description-list__item { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-description-list__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-description-list__value { margin: 0; color: var(--hjm-color-text); overflow-wrap: anywhere; }
+.hjm-description-list__value { margin: 0; color: var(--hjm-color-text); white-space: pre-wrap; overflow-wrap: anywhere; }
 .hjm-table-scroll { max-inline-size: 100%; overflow: auto; outline-offset: 2px; }
 .hjm-table { inline-size: 100%; border-collapse: collapse; color: var(--hjm-color-text-body); }
 .hjm-table__caption { padding: var(--hjm-space-sm); color: var(--hjm-color-text); font-weight: var(--hjm-type-title-weight); text-align: start; }
@@ -2823,7 +2867,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-load-more__spinner { inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 
 /* Expansion renderers --------------------------------------------------- */
-.hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-count, auto-fit), minmax(0, 1fr)); gap: var(--hjm-space-xs); margin: 0; padding: 0; list-style: none; }
+.hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-connector-count), minmax(0, 1fr)) fit-content(calc(100% / var(--hjm-steps-count))); gap: 0; margin: 0; padding: 0; list-style: none; }
 .hjm-steps__step { min-inline-size: 0; display: grid; align-content: start; gap: var(--hjm-space-xs); }
 .hjm-steps__rail { display: flex; align-items: center; min-inline-size: 0; }
 .hjm-steps__indicator { flex: 0 0 auto; inline-size: 1.5rem; block-size: 1.5rem; display: grid; place-items: center; border: 1px solid var(--hjm-color-border); border-radius: 50%; color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
@@ -2831,11 +2875,16 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-steps__step[data-status="current"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-content-brand); color: var(--hjm-color-content-brand); }
 .hjm-steps__step[data-status="complete"] .hjm-steps__indicator { border-color: var(--hjm-accent-success); color: var(--hjm-accent-success); background: var(--hjm-color-bg); }
 .hjm-steps__step[data-status="complete"] .hjm-steps__connector { background: var(--hjm-color-content-brand); }
+/* The terminal incoming segment continues the previous rail across its copy width. */
+.hjm-steps__connector[data-reached="true"] { background: var(--hjm-color-content-brand); }
 .hjm-steps__step[data-status="error"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-danger); color: var(--hjm-color-danger); background: var(--hjm-color-danger-fill); }
 .hjm-steps__copy { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-inline-end: var(--hjm-space-sm); }
 .hjm-steps__label { color: var(--hjm-color-text); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 .hjm-steps__step[data-status="pending"] .hjm-steps__label { color: var(--hjm-color-text-muted); }
 .hjm-steps__step[data-status="error"] .hjm-steps__label { color: var(--hjm-color-danger); }
+/* Keep the terminal marker at the inline edge instead of an empty trailing step cell. */
+.hjm-steps__step:last-child .hjm-steps__rail { justify-content: flex-end; }
+.hjm-steps__step:last-child .hjm-steps__copy { padding-inline-end: 0; text-align: end; }
 .hjm-steps__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); overflow-wrap: anywhere; }
 /* A step before the cursor is one button over marker and label (Steps onStepPress); the cell keeps its static layout. */
 .hjm-steps__press { display: grid; align-content: start; gap: var(--hjm-space-xs); min-inline-size: 0; min-block-size: var(--hjm-steps-press-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
@@ -2991,6 +3040,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Intrinsic action columns keep short labels readable at 320px; the title wraps
    in the remaining space instead of squeezing actions to equal-width tracks. */
 .hjm-top-bar { display: grid; grid-template-columns: minmax(var(--hjm-control-min-touch-target), auto) minmax(0, 1fr) minmax(var(--hjm-control-min-touch-target), auto); align-items: center; min-block-size: var(--hjm-top-bar-min-height); gap: var(--hjm-top-bar-gap); padding-inline: var(--hjm-top-bar-padding); padding-block-start: max(env(safe-area-inset-top, 0px), var(--hjm-top-bar-safe-area)); background: var(--hjm-color-bg); }
+.hjm-top-bar[data-surface="transparent"] { background: transparent; }
 .hjm-top-bar__leading, .hjm-top-bar__trailing { display: flex; flex-wrap: wrap; align-items: center; min-inline-size: 0; gap: var(--hjm-top-bar-gap); }
 .hjm-top-bar__trailing { justify-content: flex-end; }
 .hjm-top-bar__title { min-inline-size: 0; text-align: center; overflow-wrap: anywhere; }
@@ -3004,11 +3054,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__trailing { grid-column: 2; grid-row: 1; }
 .hjm-bottom-cta { display: grid; gap: var(--hjm-bottom-cta-gap); min-block-size: var(--hjm-bottom-cta-min-height); padding: var(--hjm-bottom-cta-padding-top) var(--hjm-bottom-cta-padding-inline) max(var(--hjm-bottom-cta-padding-bottom), env(safe-area-inset-bottom, 0px), var(--hjm-bottom-cta-safe-area)); border-block-start: 1px solid var(--hjm-color-border); background: var(--hjm-color-bg); box-shadow: var(--hjm-bottom-cta-shadow, none); }
 .hjm-bottom-cta[data-position="sticky"] { position: sticky; inset-block-end: 0; z-index: var(--hjm-layer-sticky); }
-/* Inside ScreenLayout's footer the footer owns border, padding, surface and safe area; BottomCTA keeps only its copy,
+/* Inside a padded ScreenLayout or Sheet footer the parent owns padding, surface and safe area; BottomCTA keeps only its copy,
    actions and an explicit safeAreaBottom (2026-10-17: the doubled bar inset the buttons twice). */
-/* The screen footer already pads max(screen padding, env(safe-area-inset-bottom)); an explicit safeAreaBottom adds only
+/* Each footer passes its actual bottom padding (ScreenLayout max, Sheet additive); an explicit safeAreaBottom adds only
    the remainder so the gap is max(footer, inset), not their sum (2026-10-17 "버튼 아래 여백이 많아"). */
-.hjm-bottom-cta[data-placement="screen-footer"] { position: static; min-block-size: 0; padding: 0 0 max(0px, calc(var(--hjm-bottom-cta-safe-area) - max(var(--hjm-screen-padding), env(safe-area-inset-bottom, 0px)))); border: 0; background: none; box-shadow: none; }
+.hjm-bottom-cta[data-placement="screen-footer"] { position: static; box-sizing: border-box; inline-size: 100%; min-inline-size: 0; min-block-size: 0; padding: 0 0 max(0px, calc(var(--hjm-bottom-cta-safe-area) - var(--hjm-bottom-cta-parent-padding))); border: 0; background: none; box-shadow: none; }
 .hjm-bottom-cta__description { margin: 0; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-gap); }
 /* bottomCtaRecipe.contentMaxWidth: the surface spans the viewport, its copy and actions stop at the reading width. */
@@ -3075,7 +3125,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 .hjm-anchor { min-inline-size: 0; }
 .hjm-anchor__list { display: flex; flex-direction: column; gap: var(--hjm-space-xxs); list-style: none; margin: 0; padding: 0; }
-.hjm-anchor__link { display: block; padding: var(--hjm-space-xs); border-inline-start: 2px solid transparent; color: var(--hjm-color-text-muted); text-decoration: none; overflow-wrap: anywhere; }
+.hjm-anchor__link { display: flex; align-items: center; gap: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); box-sizing: border-box; padding: var(--hjm-space-xs); border-inline-start: 2px solid transparent; color: var(--hjm-color-text-muted); text-decoration: none; overflow-wrap: anywhere; }
 .hjm-anchor__link:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .hjm-anchor__link[aria-current="location"] { color: var(--hjm-color-content-brand); border-color: var(--hjm-color-focus); font-weight: var(--hjm-text-emphasis-strong); }
 .hjm-anchor__link:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
@@ -3098,6 +3148,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Disclosure, context menu, menubar --------------------------------------- */
 .hjm-collapsible { display: grid; gap: var(--hjm-collapsible-gap); min-inline-size: 0; }
 .hjm-collapsible__trigger { inline-size: 100%; min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) 0; border: 0; background: transparent; color: var(--hjm-color-text-body); font: inherit; text-align: start; cursor: pointer; }
+.hjm-collapsible__header { display: flex; align-items: center; gap: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); min-inline-size: 0; }
+.hjm-collapsible__title { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-collapsible__header[data-titled] > .hjm-collapsible__trigger { inline-size: auto; min-inline-size: var(--hjm-control-min-touch-target); flex: 0 0 auto; }
+.hjm-collapsible__pending { display: inline-flex; align-items: center; justify-content: center; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); }
+.hjm-collapsible__header:not([data-titled]) > .hjm-collapsible__pending { flex: 1; }
+.hjm-collapsible__header[hidden] { display: none; }
 .hjm-collapsible__trigger:disabled { opacity: 0.5; cursor: not-allowed; }
 .hjm-collapsible__trigger:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
 /* The marker is decoration: aria-expanded carries the state, so it only needs
@@ -3324,6 +3380,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-message-composer { display: flex; flex-direction: column; gap: var(--hjm-message-composer-gap, var(--hjm-space-sm)); }
 .hjm-message-composer__row { display: flex; gap: var(--hjm-message-composer-gap, var(--hjm-space-sm)); align-items: flex-end; }
 .hjm-message-composer__row > .hjm-field { flex: 1; min-inline-size: 0; }
+/* 2026-10-20: numeric composer hints belong at the end; errors keep the field default. */
+.hjm-message-composer[data-description-align="end"] > .hjm-message-composer__reply-card > .hjm-message-composer__row > .hjm-field > .hjm-field__description { text-align: end; }
 .hjm-message-composer__row > .hjm-button { flex-shrink: 0; }
 /* 2026-10-16 timeline standard (measured KakaoTalk iOS chat room, chatMessageRecipe): filled borderless
    bubbles, one avatar/author/tip per run, time beside the run's last bubble. */
@@ -3393,7 +3451,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 
 .hjm-image-choice { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-image-choice__label { font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-image-choice__tiles { display: flex; flex-wrap: wrap; gap: var(--hjm-image-choice-gap); }
+.hjm-image-choice__tiles { display: grid; grid-template-columns: repeat(auto-fit, calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2)); justify-content: space-between; gap: var(--hjm-image-choice-gap); }
 /* The button is a column (ring frame, optional item label) so the label shares the tap target; the ring is drawn on
    the inner frame (2026-10-18 showItemLabels). */
 .hjm-image-choice__tile { display: flex; flex-direction: column; gap: var(--hjm-image-choice-item-label-gap); inline-size: calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2); padding: 0; border: 0; border-radius: calc(var(--hjm-image-choice-radius) + var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)); background: none; color: inherit; cursor: pointer; }
@@ -3411,7 +3469,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-choice__row { position: absolute; inset-inline: 0; display: flex; gap: var(--hjm-image-choice-gap); }
 .hjm-image-choice__tile:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; }
 .hjm-image-choice__tile:disabled { opacity: 0.5; cursor: default; }
-.hjm-image-choice__image { display: block; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }
+.hjm-image-choice__image { display: flex; align-items: center; justify-content: center; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }
 .hjm-image-choice__image > img { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
 .hjm-image-choice__check { position: absolute; inset-block-start: 0; inset-inline-end: 0; inline-size: var(--hjm-image-choice-check); block-size: var(--hjm-image-choice-check); border-radius: 50%; background: var(--hjm-color-content-brand); color: var(--hjm-color-on-primary); font-size: 12px; line-height: var(--hjm-image-choice-check); text-align: center; }
 .hjm-message-composer__leading { flex: 0 0 auto; align-self: center; display: inline-flex; }
@@ -3533,8 +3591,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-segmented[data-presentation="pills"] { background:transparent; border:0; padding:0; }
 /* Keep the inset pill behind the whole line at large text (40px text / 28px fill was observed). Native already includes this inset as vertical padding. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:var(--hjm-control-min-touch-target); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-surface-alt); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xxs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:max(var(--hjm-control-min-touch-target), calc(var(--hjm-segmented-height) + 2 * var(--hjm-space-xxs))); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xxs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-surface-alt); }
+.hjm-segmented[data-presentation="pills"][data-size="small"] .hjm-segmented__item { padding-inline:var(--hjm-space-sm); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item > span { position:relative; overflow-wrap:anywhere; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"] { color:var(--hjm-color-bg); font-weight:var(--hjm-font-weight-semibold); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background:var(--hjm-color-text-body); }
@@ -3607,3 +3666,119 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-description-list[data-layout="inline"] { gap: 0; }
 .hjm-description-list[data-layout="inline"] .hjm-description-list__item { grid-template-columns: 24% minmax(0, 1fr); gap: var(--hjm-space-sm); padding-block: var(--hjm-space-sm); }
 .hjm-description-list[data-layout="inline"] .hjm-description-list__item + .hjm-description-list__item { border-block-start: 1px solid var(--hjm-color-border); }
+
+/* A cover action stays separate from creator/metadata/footer controls in a Card. */
+.hjm-card__media-action { display: block; position: relative; inline-size: 100%; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; text-align: inherit; }
+.hjm-card__media-action:active { opacity: var(--hjm-card-pressed-opacity); }
+.hjm-card__media-action:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-primary); outline-offset: calc(-1 * var(--hjm-focus-width)); }
+.hjm-card__media-action:disabled { cursor: default; }
+.hjm-card__media-icon { position: absolute; display: flex; align-items: center; justify-content: center; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-full); background: var(--hjm-color-bg); color: var(--hjm-color-text); pointer-events: none; }
+
+/* Background artwork keeps Card anatomy and independent actions; it is never a second activation target. */
+.hjm-card[data-background-media="true"] { position: relative; display: flex; flex-direction: column; }
+.hjm-card__background { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.hjm-card__background > :first-child { width: 100%; height: 100%; }
+/* A product gesture host stays behind the common copy/actions; corner badges remain readable. */
+.hjm-card__background-interaction { position: absolute; inset: 0; }
+.hjm-card__background-interaction > :first-child { width: 100%; height: 100%; }
+.hjm-card__media-badges { position: absolute; inset-block-start: var(--hjm-space-sm); inset-inline-end: var(--hjm-space-sm); display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); z-index: 1; }
+.hjm-card__scrim { position: absolute; inset: 0; background: var(--hjm-card-background-scrim); }
+.hjm-card__badges { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+.hjm-card[data-background-media="true"] > .hjm-card__body { position: relative; flex: 0 1 auto; margin-block-start: auto; }
+.hjm-card[data-background-media="true"] > .hjm-card__actions { position: relative; }
+.hjm-card[data-background-media="true"] .hjm-card__title,
+.hjm-card[data-background-media="true"] .hjm-card__description { color: var(--hjm-card-background-foreground); }
+
+@media (forced-colors: active) {
+  .hjm-card__background { display: none; }
+  .hjm-card[data-background-media="true"] :is(.hjm-card__title, .hjm-card__description) { color: CanvasText; }
+}
+
+.hjm-statistic__leading { display: inline-flex; align-items: center; color: var(--hjm-statistic-value-color, var(--hjm-color-text)); }
+.hjm-statistic-group[data-arrangement="bar"] { grid-template-columns: repeat(var(--hjm-statistic-columns), minmax(0, 1fr)); gap: 0; }
+.hjm-statistic-group[data-arrangement="bar"] > * { min-inline-size: 0; padding-inline: var(--hjm-space-xs); }
+.hjm-statistic-group[data-arrangement="bar"] > * + * { border-inline-start: 1px solid var(--hjm-color-border); }
+.hjm-statistic[data-arrangement="bar"] { align-items: center; text-align: center; gap: var(--hjm-space-xxs); }
+.hjm-statistic[data-arrangement="bar"] .hjm-statistic__label { order: 1; }
+.hjm-statistic[data-arrangement="bar"] .hjm-statistic__value-row { justify-content: center; align-items: center; }
+.hjm-statistic[data-arrangement="bar"] :is(.hjm-statistic__trend, .hjm-statistic__hint) { order: 2; }
+
+.hjm-quote-card__mark { display: inline-flex; align-items: center; color: var(--hjm-color-content-brand); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); }
+.hjm-quote-card__body { display: grid; gap: var(--hjm-space-xs); margin: 0; min-inline-size: 0; }
+
+/* NotificationRow's optional command owns focus and feedback; its passive preview owns all geometry. */
+.hjm-notification-row-action { appearance: none; display: block; inline-size: 100%; border: 0; padding: 0; margin: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.hjm-notification-row-action:disabled { opacity: var(--hjm-notification-disabled-opacity); cursor: not-allowed; }
+.hjm-notification-row-action:enabled:active { opacity: var(--hjm-notification-pressed-opacity); }
+.hjm-notification-row-action:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: calc(-1 * var(--hjm-focus-width)); }
+
+.hjm-search-screen--embedded { display: flex; flex-direction: column; flex: 1; min-block-size: 0; }
+.hjm-search-screen--embedded > .hjm-stack { flex: 1; min-block-size: 0; }
+
+/* Independent shortcut/remove targets share a Chip-shaped surface; neither button contains the other. */
+.hjm-shortcut-rail { display: flex; overflow-x: auto; list-style: none; margin: 0; padding: 4px 0; min-inline-size: 0; }
+.hjm-shortcut-rail[data-empty] { padding: 0; }
+.hjm-shortcut-rail__item { position: relative; display: inline-flex; align-items: stretch; flex: 0 0 auto; color: var(--hjm-color-text-body); }
+.hjm-shortcut-rail__item::before { content: ""; pointer-events: none; position: absolute; inset: 4px 0; border: 1px solid var(--hjm-color-border); border-radius: 999px; background: var(--hjm-color-bg); }
+.hjm-shortcut-rail[data-size="medium"] .hjm-shortcut-rail__item::before { inset-block: 0; }
+.hjm-shortcut-rail__action, .hjm-shortcut-rail__remove { position: relative; display: inline-flex; align-items: center; justify-content: center; min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); background: transparent; color: inherit; font: inherit; font-weight: var(--hjm-text-emphasis-medium); border: 0; border-radius: 999px; cursor: pointer; }
+.hjm-shortcut-rail__action { gap: var(--hjm-space-xxs); padding-inline: var(--hjm-space-sm); white-space: nowrap; }
+.hjm-shortcut-rail[data-size="medium"] .hjm-shortcut-rail__action { gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); }
+.hjm-shortcut-rail__remove { inline-size: var(--hjm-control-min-touch-target); padding: 0; }
+.hjm-shortcut-rail__remove > span { font-size: 14px; line-height: 1; }
+.hjm-shortcut-rail__item[data-disabled] { opacity: 0.5; }
+.hjm-shortcut-rail button:disabled { cursor: not-allowed; }
+.hjm-shortcut-rail button:active:not(:disabled) { opacity: 0.7; }
+.hjm-shortcut-rail:focus-visible, .hjm-shortcut-rail button:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
+
+/* A filter rail scrolls independently of its trailing action (Spint spot adoption). */
+.hjm-segmented-rail { display:flex; align-items:center; gap:var(--hjm-space-xs); min-inline-size:0; }
+.hjm-segmented-rail > :last-child { flex-shrink:0; }
+.hjm-segmented[data-overflow="scroll"] .hjm-segmented__items { flex-direction:row; flex-wrap:nowrap; inline-size:max-content; min-inline-size:100%; }
+.hjm-segmented[data-overflow="scroll"] .hjm-segmented__item { flex-shrink:0; }
+
+/* A destination card uses an anchor; disabled links omit href and share the card's disabled feedback. */
+.hjm-card__activator[aria-disabled="true"] { cursor:default; }
+.hjm-card[data-activation="overlay"]:has(> .hjm-card__activator[aria-disabled="true"]) > :is(.hjm-card__media,.hjm-card__body) { opacity:var(--hjm-card-disabled-opacity); }
+
+.hjm-anchor__leading { display: inline-flex; flex: 0 0 auto; }
+.hjm-anchor__leading svg { inline-size: 100%; block-size: 100%; }
+.hjm-shortcut-rail[data-layout="wrap"] { flex-wrap: wrap; overflow-x: visible; }
+.hjm-shortcut-rail[data-layout="wrap"] .hjm-shortcut-rail__item { max-inline-size: 100%; min-inline-size: 0; }
+.hjm-shortcut-rail[data-layout="wrap"] .hjm-shortcut-rail__action { white-space: normal; overflow-wrap: anywhere; }
+
+/* TimePicker: one two-column session; dimensions come from the shared recipe on its panel. */
+.hjm-time-picker { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-time-picker[data-disabled] { opacity: .5; }
+.hjm-time-picker__label { font-weight: 500; }
+.hjm-time-picker__trigger { display:flex; align-items:center; gap:var(--hjm-space-xs); inline-size:100%; min-block-size:44px; padding:var(--hjm-space-sm); border:1px solid var(--hjm-color-border-control); border-radius:var(--hjm-radius-md); background:var(--hjm-color-bg); color:var(--hjm-color-text); font:inherit; font-variant-numeric:tabular-nums; cursor:pointer; }
+.hjm-time-picker__trigger[aria-invalid=true] { border-color:var(--hjm-color-danger); }
+.hjm-time-picker__trigger:disabled { cursor:default; }
+.hjm-time-picker__panel { display:grid; gap:var(--hjm-space-md); inline-size:100%; min-inline-size:0; }
+.hjm-time-picker__panel > .hjm-button { inline-size:100%; }
+.hjm-time-picker__readout { text-align:center; font-size:var(--hjm-time-summary); line-height:var(--hjm-time-summary-line-height); font-weight:500; font-variant-numeric:tabular-nums; direction:ltr; }
+.hjm-time-picker__readout span { color:var(--hjm-color-text-muted); padding-inline:var(--hjm-space-xs); }
+.hjm-time-picker__columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--hjm-space-sm); }
+.hjm-time-picker__caption { text-align:center; color:var(--hjm-color-text-muted); margin-block-end:var(--hjm-space-xs); }
+.hjm-time-picker__list { position:relative; block-size:var(--hjm-time-height); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+.hjm-time-picker__list button { display:block; inline-size:100%; min-block-size:var(--hjm-time-row); border:0; border-radius:var(--hjm-radius-md); background:transparent; color:var(--hjm-color-text); font:inherit; font-variant-numeric:tabular-nums; cursor:pointer; }
+.hjm-time-picker__list button[aria-selected=true] { background:var(--hjm-color-surface-accent); color:var(--hjm-color-content-brand); font-weight:500; }
+.hjm-time-picker__list button:disabled { opacity:.4; cursor:default; }
+.hjm-time-picker__list button:focus-visible,.hjm-time-picker__trigger:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:-2px; }
+.hjm-time-picker__description { color:var(--hjm-color-text-muted); }
+.hjm-time-picker__error { color:var(--hjm-color-danger); }
+
+/* IconTile's own target keeps the full artwork width; Button's face padding would squeeze narrow grid cells. */
+.hjm-icon-tile-action { display: block; box-sizing: border-box; width: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.hjm-icon-tile-action:focus-visible { outline: 2px solid var(--hjm-color-primary); outline-offset: 2px; }
+.hjm-icon-tile-action:active:not(:disabled) { opacity: var(--hjm-icon-tile-pressed-opacity); }
+.hjm-icon-tile-action:disabled { opacity: var(--hjm-icon-tile-disabled-opacity); cursor: default; }
+
+/* Position-only pager indicators have no small interactive targets; adjacent pager controls own navigation. */
+.hjm-page-indicator__marker, .hjm-page-indicator__marker > span { display: block; inline-size: var(--hjm-space-xs); block-size: var(--hjm-space-xs); border-radius: var(--hjm-radius-full); }
+.hjm-page-indicator__marker > span { background: var(--hjm-color-text-weak); }
+.hjm-page-indicator__marker[data-current="true"] > span { background: var(--hjm-color-content-brand); }
+
+/* Commands remain independent of the passive record and rail. */
+.hjm-timeline__item:has(> .hjm-timeline__actions) { grid-template-columns: 1rem minmax(0, 1fr) auto; }
+.hjm-timeline__actions { align-self: center; display: flex; align-items: center; gap: var(--hjm-space-xs); }

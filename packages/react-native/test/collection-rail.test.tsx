@@ -102,3 +102,11 @@ describe("useScreenBodyScrollRoom", () => {
     expect(room!.contentContainerStyle.paddingHorizontal).toBe(0);
   });
 });
+
+it("preserves product payload types through the public item renderer", () => {
+ act(() => { renderer = create(<HjmNativeProvider><CollectionRail label="Drafts"
+  items={[{ id: "draft", label: "Draft", note: "Product-owned draft" }]}
+  labels={{ previous: "Previous", next: "Next", navigation: "Browse" }}
+  renderItem={item => <TextInput accessibilityLabel={item.label} defaultValue={item.note} />} /></HjmNativeProvider>); });
+ expect(renderer!.root.findByType(TextInput).props.defaultValue).toBe("Product-owned draft");
+});

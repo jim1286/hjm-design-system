@@ -6,7 +6,8 @@ export type { BlobatarFallbackOptions } from "@hjmds/design-contracts/avatar-fal
 /** Optional, local artwork. Avatar owns naming and image-error recovery. */
 export function createBlobatarFallback(options: BlobatarFallbackOptions): (context: AvatarFallbackContext) => ReactNode {
   const { seed, expression } = resolveBlobatarFallback(options);
-  return ({ size }) => <Blobatar name={seed} size={size} normalize={false} animate={false}
+  // Omit animate for the documented static default; blobatar 2.7 intersects its false branch with Animate.
+  return ({ size }) => <Blobatar name={seed} size={size} normalize={false}
     {...(expression === "happy" ? { expression: happy } : {})}
     alt="" aria-hidden="true" style={{ display: "block" }} />;
 }

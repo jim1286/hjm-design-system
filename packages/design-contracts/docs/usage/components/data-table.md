@@ -109,6 +109,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | `columns` | `{ id, header: string, align?, sortable?, width?, sortDescFirst?, pinned? }[]` | — (필수, 하나 이상) | `id`는 비어 있지 않고 중복 없음 |
 | `rows` | `{ id, disabled? }[]` | — (필수) | 셀 내용은 `renderCell`이 그린다 |
 | `renderCell` | `(rowId: RowKey, columnId: ColumnKey) => ReactNode` | — (필수) | 행·열 id로 셀을 그린다 |
+| `getCellText` | `(rowId, columnId) => string \| undefined` | 없음 | 미게시. 사진·아이콘 등을 포함한 셀의 읽기용 값. Native 행 이름과 Web 셀 이름에 사용한다. 생략한 문자열·숫자 셀은 기존 표시 텍스트를 읽는다 |
 | `labels` | `{ table: string; selectAll: string; selectRow: (rowId: string) => string; sortColumn: (header: string, direction: DataTableSortState) => string }` | — (필수) | 모든 문구는 i18n 키. Native는 `table`·`sortColumn`만 받는다 |
 | `sortState` | `{ columnId, direction: "ascending" \| "descending" } \| null` | `null` | 제어 전용(내부 상태 없음) |
 | `onSortChange` | `(next: DataTableSortState<ColumnKey>) => void` | — | 다음 정렬 상태(`null` = 정렬 없음)를 알린다. 재정렬은 제품이 한다 |
@@ -202,3 +203,12 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 ### ComparisonTable 중복 머리글
 
 2026-10-14 야잘알 비교 화면에서 상단 선택 카드의 선수·시즌이 표에 반복되어 읽는 흐름을 끊었다. Web/Native의 `showSideNames={false}`로 시각 머리글만 숨긴다(기본 `true`). `sides`는 계속 전달하며 각 행의 접근성 이름에는 양쪽 이름과 수치를 보존한다. 상단에서 양쪽 대상을 식별할 수 있을 때만 사용한다. 행 여백과 막대 간격을 넓히고 지표·비우세 수치의 대비를 유지해 기록을 구분한다.
+
+
+2026-10-19 오늘야구 선수단/박스스코어에서 사진과 이름을 함께 그린 셀이 Native 행 이름에 포함되지 않아
+"선수"/"타자"로만 읽히는 문제를 확인했다. `getCellText`에는 화면에 표시한 이름·값을 전달한다.
+ReactNode에서 자식 텍스트나 이미지 prop을 추측하지 않는다. Web은 각 셀의 `aria-label`로 사용하며
+선택 체크박스의 이름·키보드 동작은 기존 `labels.selectRow`/selection 계약을 유지한다.
+Native는 고정 열의 행 target 하나만 이름을 갖고, 고정 열이 없는 표도 같은 행 이름을 갖는다.
+`onRowPress`를 쓰는 분할 행의 스크롤 영역은 터치·포인터로 같은 행을 열지만 별도 접근성·키보드 대상은 아니다.
+개발 브라우저에서도 이 구분을 유지하며, 고정 행 이름에는 스크롤 열의 값까지 포함한다.

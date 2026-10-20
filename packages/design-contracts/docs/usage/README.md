@@ -6,7 +6,7 @@
 버튼 위치에서 시작해 구성·컴포넌트 지침으로 내려가고, 값은 토큰 지침에서 고른다.
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.32.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.34.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -53,7 +53,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Breadcrumb](components/breadcrumb.md) | 탐색 | Web의 깊은 계층 화면에서 현재 위치까지의 경로를 보여 주고 상위 계층으로 바로 돌아가게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Button](components/button.md) | 동작 | 사용자가 누르면 무언가가 일어나는 텍스트 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Calendar](components/calendar.md) | 데이터 표시 | 화면에 항상 펼쳐진 한 달 격자에서 날짜 하나를 고를 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Card](components/card.md) | 데이터 표시 | 문서 metadata·미리보기·내보내기 상태는 실험 구성 DocumentResource를 먼저 대조한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Card](components/card.md) | 데이터 표시 | 인용문과 출처를 묶으면 미게시 동반 API `QuoteCard`를 사용한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web beta / Native beta | 배포 |
@@ -102,7 +102,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [HistogramExplorer](components/histogram-explorer.md) | 구성/정보 표시 | 실제 관측값 배열의 분포를 동폭 구간 막대로 보여 주고, 사용자가 구간 수를 바꿔 볼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 47개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [IconTile](components/icon-tile.md) | — | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | Web stable / Native stable | 실험 |
+| [IconTile](components/icon-tile.md) | 데이터 표시 | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | Web stable / Native stable | 배포 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ImageChoiceGroup](components/image-choice-group.md) | 화면/계정 | 아바타 얼굴, 프로필 사진, 모음에 넣을 사진처럼 **그림을 보고 고르는** 단일·다중 선택에 쓴다. | 미게시(1.26.1 이후) | Web · Native | Web beta / Native beta | 배포 |
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -130,7 +130,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Notice](components/notice.md) | 상태와 알림 | 화면 흐름 안 **제자리에 남아 있는** 상태 알림에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationInboxScreen](components/notification-inbox-screen.md) | 화면/소통 | 알림함 화면 전체 틀에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [NotificationItem](components/notification-item.md) | 구성/정보 표시 | 알림함의 알림 한 행에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
-| [NotificationRow](components/notification-row.md) | — | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. | 1.26.0 | Web · Native | Web stable / Native stable | 실험 |
+| [NotificationRow](components/notification-row.md) | 데이터 표시 | 알림 목록에서 아바타, 유형 배지, 미리보기, 시간, 읽지 않음 표시, 선택적 썸네일을 나란히 배치한다. | 1.26.0 | Web · Native | Web stable / Native stable | 배포 |
 | [NumberField](components/number-field.md) | 입력 | 범위가 정해진 **정확한 수 하나**를 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 1.14.0 | Web · Native | Web stable / Native stable | 배포 |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -144,7 +144,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Popover](components/popover.md) | 오버레이 | 트리거에 붙어 뜨는 비모달 표면 안에 **포커스를 받는 임의 콘텐츠**를 둘 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [PricingChoice](components/pricing-choice.md) | 구성/선택과 필터 | 요금제·결제 주기 중 하나를 고르고, 선택한 실제 가격과 혜택을 확인한 뒤 [계속]으로 제품 결제 흐름을 시작할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ProfileScreen](components/profile-screen.md) | 화면/계정 | 내 프로필(또는 계정) 화면 틀에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
-| [ProfileSummary](components/profile-summary.md) | — | 프로필의 아바타·이름·배지·통계 수치·행동을 구성한다. | 1.26.0 | Web · Native | Web stable / Native stable | 실험 |
+| [ProfileSummary](components/profile-summary.md) | 데이터 표시 | 프로필의 아바타·이름·배지·통계 수치·행동을 구성한다. | 1.26.0 | Web · Native | Web stable / Native stable | 배포 |
 | [Progress](components/progress.md) | 상태와 알림 | 작업이 얼마나 진행됐는지 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [QRCode](components/qr-code.md) | 데이터 표시 | 문자열(초대 링크, 연결 코드, 결제·체크인 URL)을 다른 기기의 카메라로 스캔하게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -158,7 +158,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [SavedItemsScreen](components/saved-items-screen.md) | 화면/콘텐츠 | 저장한 이미지·게시물을 컬렉션 표지 → 사진 격자 → 상세 순서로 탐색할 때 쓴다. | 1.17.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ScreenLayout](components/screen-layout.md) | 화면/화면 틀과 도구 | 한 라우트 화면의 뼈대가 필요할 때 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SearchField](components/search-field.md) | 입력 | 목록·화면 안에서 검색어를 입력받을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [SearchScreen](components/search-screen.md) | 화면/검색 | 검색어 입력, 필터, 최근 검색, 결과 목록을 갖춘 검색 화면 전체에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
+| [SearchScreen](components/search-screen.md) | 레이아웃 | 검색어 입력, 필터, 최근 검색, 결과 목록을 갖춘 검색 화면 전체에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Section](components/section.md) | 레이아웃 | 화면 안의 내용 묶음에 제목·설명·머리 행동(“모두 보기”, “편집”)을 붙일 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SegmentedControl](components/segmented-control.md) | 입력 | 2~4개의 짧은 보기 중 **항상 하나가 선택된** 전환에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Select](components/select.md) | 입력 | 폼 한 칸에서 여러 선택지 중 하나를 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -195,12 +195,13 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [TextTransition](components/text-transition.md) | 시각 효과 | 같은 자리의 짧은 문자열이 바뀔 때(상태 문구, 버튼 옆 안내, 단계 이름) 바뀐 순간을 짧은 등장 모션으로 알린다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ThinkingOrb](components/thinking-orb.md) | 상태와 알림 | AI 에이전트가 실제로 검색·생성·듣기 같은 작업을 하는 동안 그 단계를 보여 줄 때만 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Timeline](components/timeline.md) | 데이터 표시 | 이미 일어난 일을 시간 순서대로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [TimePicker](components/time-picker.md) | 입력 | 하루 중 시각 하나를 시·분 두 열에서 고를 때 쓴다. | 미게시(1.34.0 이후) | Web · Native | Web stable / Native stable | 배포 |
 | [Toast](components/toast.md) | 상태와 알림 | 방금 한 행동의 결과처럼 **무시해도 안전한 짧은 알림**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ToggleFeedbackButton](components/toggle-feedback-button.md) | 구성/직접 조작과 모션 | 좋아요·저장·알림 받기처럼 켜고 끄는 선택에 반응 모션과 개수를 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ToggleGroup](components/toggle-group.md) | 입력 | 여러 개를 동시에 켜고 끄는 짧은 버튼 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tooltip](components/tooltip.md) | 오버레이 | Web에서 이미 이름과 focus를 가진 컨트롤(대개 IconButton)에 **짧은 보충 설명 한 문장**을 붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Top](components/top.md) | 레이아웃 | 화면 **본문의 첫 블록**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [TopBar](components/top-bar.md) | 탐색 | 화면 맨 위에 붙는 **크롬**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [TopBar](components/top-bar.md) | 탐색 | 2026-10-18 전사 기준: 하단 탭·상단 탐색과 중복되는 최상위 화면명은 생략한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tour](components/tour.md) | 오버레이 | 새 화면·새 기능을 처음 만난 사용자에게 화면의 여러 요소를 순서대로 짚어 설명할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [TransferList](components/transfer-list.md) | 입력 | 한 항목 집합을 두 목록으로 나누고 사용자가 항목을 오가게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TransferTask](components/transfer-task.md) | 구성/피드백과 복구 | 업로드·다운로드·동기화처럼 실제 전송 계층이 진행량을 알려 주는 작업에 시작·취소·진행률·결과를 한 묶음으로 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -285,6 +286,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고, 앱 소유 테마 설정을 넣었을 때 네 단계의 전파와 상태 유지를 검토할 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [환경 조합 검증](compositions/environment-matrix.md) | 비교와 검증 | 제품 화면이 테마·쓰기 방향·글자 크기·모션 설정이 달라져도 같은 의미를 유지하는지 확인할 때, 어떤 환경 조합과 검증 항목을 골라 볼지 정하는 기준표로 쓴다. | 1.12.1 | Web | 구성 API별 | 배포 |
+| [ShortcutRail](compositions/shortcut-rail.md) | 콘텐츠 | 최근 장소·최근 도구처럼 누르면 바로 열리는 유한 목록이다. | 미게시(1.34.0 이후) | Web · Native | 구성 API별 | 실험 |
 
 ## 화면
 

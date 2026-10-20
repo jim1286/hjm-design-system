@@ -248,6 +248,26 @@ describe("Native product renderer gaps", () => {
       </HjmNativeProvider>,
     ));
     expect(dividers(renderer)).toEqual([expect.objectContaining({ marginStart: 0, marginEnd: 0 })]);
+    act(() => renderer.update(
+      <HjmNativeProvider direction="rtl" reducedMotion theme="light">
+        <List label="순위 목록"><ListRow title="선수" leading={leadingIcon} leadingStyle={{ width: 88 }} /><ListRow title="다음 선수" /></List>
+      </HjmNativeProvider>,
+    ));
+    const leading = renderer.root.findAllByType(View).find(node =>
+      flattenStyle(node.props.style).width === 88 && typeof node.props.onLayout === "function")!;
+    act(() => leading.props.onLayout({ nativeEvent: { layout: { width: 88 } } }));
+    expect(dividers(renderer)).toEqual([expect.objectContaining({ marginStart: 88 + listRowRecipe.gap, marginEnd: 0 })]);
+    act(() => leading.props.onLayout({ nativeEvent: { layout: { width: 64 } } }));
+    expect(dividers(renderer)).toEqual([expect.objectContaining({ marginStart: 64 + listRowRecipe.gap, marginEnd: 0 })]);
+    act(() => renderer.update(
+      <HjmNativeProvider direction="rtl" reducedMotion theme="light">
+        <List label="순위 목록"><ListRow title="선수" loading leading={leadingIcon} leadingStyle={{ width: 88 }} /><ListRow title="다음 선수" /></List>
+      </HjmNativeProvider>,
+    ));
+    const placeholder = renderer.root.findAllByType(View).find(node =>
+      flattenStyle(node.props.style).width === 88 && typeof node.props.onLayout === "function")!;
+    act(() => placeholder.props.onLayout({ nativeEvent: { layout: { width: 88 } } }));
+    expect(dividers(renderer)).toEqual([expect.objectContaining({ marginStart: 88 + listRowRecipe.gap, marginEnd: 0 })]);
     const full = render(<List label="전체 목록" separator="full"><ListRow title="행" leading={leadingIcon} /><ListRow title="행 2" /></List>);
     expect(dividers(full)).toEqual([expect.objectContaining({
       marginStart: -listRowRecipe.surfaceBleed,

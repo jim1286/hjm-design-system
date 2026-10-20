@@ -7,11 +7,11 @@ const sections = [
   { key: "keep", title: "나에게 맞게 모아요", paragraphs: ["함께 보고 싶은 기록에 같은 주제를 붙여보세요. 산책, 여행, 식사처럼 편한 이름을 쓰면 돼요.", "제목을 바꿔도 기록의 내용은 그대로 남아요. 나중에 찾기 좋은 이름으로 다듬어보세요.", "분류가 떠오르지 않으면 먼저 기록만 남겨도 괜찮아요."] },
   { key: "review", title: "다시 돌아봐요", paragraphs: ["한 주가 끝나면 가장 마음에 남는 기록을 골라보세요.", "처음에는 지나쳤던 기쁨을 다시 발견할 수도 있어요."] },
 ];
-export function AnchorPreview({ horizontal = true }: { horizontal?: boolean }) {
+export function AnchorPreview({ horizontal = true, leading = false }: { horizontal?: boolean; leading?: boolean }) {
   const id = useId(); const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const items = sections.map((section) => ({ id: `${id}-${section.key}`, label: section.title }));
   return <Section title="기록을 오래 이어가는 방법" description="궁금한 부분부터 읽어보세요."><Stack gap="md">
-    <Anchor label="기록 가이드 목차" items={items} container={container} orientation={horizontal ? "horizontal" : "vertical"} historyMode="none" />
+    <Anchor label="기록 가이드 목차" items={items} container={container} orientation={horizontal ? "horizontal" : "vertical"} historyMode="none" {...(leading ? { renderLeading: () => <svg viewBox="0 0 18 18"><path d="M3 4h12M3 9h12M3 14h12" fill="none" stroke="currentColor" strokeWidth="2" /></svg> } : {})} />
     {/* A bounded document makes scroll tracking observable inside a component canvas. */}
     <div ref={setContainer} className="hjm-showcase-anchor-document" tabIndex={0} role="region" aria-label="기록 가이드 본문">
       {sections.map((section, index) => <section key={section.key} id={items[index]!.id} className="hjm-showcase-anchor-section">

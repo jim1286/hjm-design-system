@@ -1,3 +1,4 @@
+import { timePickerRecipe } from "./time-picker.js";
 import { affixRecipe } from "./affix.js";
 import { watermarkRecipe } from "./watermark.js";
 import { colorPickerRecipe } from "./color-picker.js";
@@ -70,7 +71,7 @@ export const componentCatalog = [
     { name: "Masonry", label: "높이가 다른 카드 배치", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "masonryRecipe" },
     // Stable after the real Web matrix and focused separator keyboard proof pass; collapse and N-pane stay out of the contract.
     { name: "Splitter", label: "분할 영역 조절", category: "layout", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), aliases: ["SplitPane"], recipe: "splitterRecipe", behavior: "splitter", ...evidenceNeeded("Web long-copy, environment, accessibility, drag and focused keyboard proofs pass.") },
-    { name: "Button", label: "버튼", companions: ["ClipboardButton"], extensions: ["ReactionPicker", "InlineConfirm"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "buttonRecipe" },
+    { name: "Button", label: "버튼", companions: ["ClipboardButton", "ButtonLink"], extensions: ["ReactionPicker", "InlineConfirm"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "buttonRecipe" },
     { name: "IconButton", label: "아이콘 버튼", companions: ["ClipboardIconButton"], extensions: ["NotificationBell"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "iconButtonRecipe" },
     // Web anchor Enter activation and Native router activation are now asserted at the renderer boundary.
     { name: "Link", label: "링크", category: "action", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "linkRecipe", behavior: "link" },
@@ -99,7 +100,7 @@ export const componentCatalog = [
     // Web Space and Native host press now prove the checked state transition.
     { name: "Switch", label: "스위치", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "switchRecipe", behavior: "switch" },
     // Web Space and Native host press now verify selectable Chip state changes.
-    { name: "Chip", label: "선택 칩", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chipRecipe", behavior: "chip" },
+    { name: "Chip", label: "선택 칩", companions: ["ShortcutRail"], category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chipRecipe", behavior: "chip" },
     // Image tile single/multiple selection (2026-10-17 registration: independent radio/checkbox semantics).
     // Beta until renderer behavior matrices cover it; unit tests cover toggle and validation only.
     { name: "ImageChoiceGroup", label: "이미지 선택", category: "input", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "imageChoiceRecipe" },
@@ -118,6 +119,7 @@ export const componentCatalog = [
     // Long labels and Web filter/ArrowDown/Enter plus Native option/after-dismiss actions now have renderer proofs.
     { name: "Combobox", label: "검색형 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "comboboxRecipe", behavior: "combobox", ...evidenceNeeded("걸러진 목록에서 고르는 동작을 웹·앱 각각 검증했습니다. 앱은 시트가 닫힌 뒤 선택한 값을 확정하고, 웹 키보드 선택은 별도 상호작용 계약으로 남습니다.") },
     // Product adoption and device QA follow the consumer release; both renderer contracts now have complete required proofs.
+    { name: "TimePicker", label: "시각 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timePickerRecipe", behavior: "timePicker" },
     { name: "DatePicker", label: "날짜 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
     { name: "DateRangePicker", label: "기간 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "calendarRecipe", behavior: "dateRange" },
     { name: "ColorPicker", label: "색상 선택기", category: "input", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "colorPickerRecipe" },
@@ -157,9 +159,9 @@ export const componentCatalog = [
     { name: "Badge", label: "배지", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "badgeRecipe" },
     // This component renders a bounded number or dot, not arbitrary visible prose.
     { name: "CounterBadge", label: "숫자 배지", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "counterBadgeRecipe" },
-    { name: "Card", label: "카드", extensions: ["DocumentResource"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "cardRecipe" },
+    { name: "Card", label: "카드", companions: ["QuoteCard"], extensions: ["DocumentResource"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "cardRecipe" },
     // The list's visible rows own variable-length titles, now covered by each renderer's matrix.
-    { name: "List", label: "목록", companions: ["CollectionRail"], extensions: ["TaskList"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRecipe" },
+    { name: "List", label: "목록", companions: ["CollectionRail", "ListSeparator"], extensions: ["TaskList"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRecipe" },
     { name: "ListRow", label: "목록 행", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRowRecipe" },
     { name: "VirtualList", label: "가상 목록", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Listy"], recipe: "virtualListRecipe" },
     { name: "Collapsible", label: "접기와 펼치기", companions: ["CollapsibleMarker"], extensions: ["FolderPreview"], category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Disclosure"], recipe: "collapsibleRecipe", behavior: "collapsible" },
@@ -185,7 +187,7 @@ export const componentCatalog = [
     { name: "Progress", label: "진행 표시", extensions: ["ScrollProgress"], category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "progressRecipe" },
     // Both renderer matrices and installed iOS/Android Skia smoke pass; optional host linkage remains explicit (docs/thinking-orb.md).
     { name: "ThinkingOrb", label: "생각 중 표시", category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "thinkingOrbRecipe" },
-    { name: "Spinner", label: "로딩 표시", category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "spinnerRecipe" },
+    { name: "Spinner", companions: ["PendingContent"], label: "로딩 표시", category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "spinnerRecipe" },
     { name: "Skeleton", label: "스켈레톤", category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "skeletonRecipe" },
     // Product adoption is tracked separately from the complete renderer matrix (docs/stable-core.md).
     { name: "Result", label: "결과 안내", category: "feedback", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "resultRecipe" },
@@ -196,7 +198,7 @@ export const componentCatalog = [
     { name: "Watermark", label: "워터마크", category: "feedback", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "watermarkRecipe" },
     { name: "Dialog", label: "대화상자", companions: ["OverlayStackProvider", "ImmersiveOverlay"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dialogRecipe", behavior: "dialog" },
     { name: "AlertDialog", label: "확인 대화상자", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "alertDialogRecipe", behavior: "alertDialog" },
-    { name: "Sheet", label: "시트", extensions: ["GestureSheet", "GestureSheetProvider"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "sheetRecipe", behavior: "sheet" },
+    { name: "Sheet", label: "시트", extensions: ["GestureSheet", "GestureSheetProvider", "SheetPanel"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "sheetRecipe", behavior: "sheet" },
     { name: "SidePanel", label: "측면 패널", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "sidePanelRecipe", behavior: "sidePanel" },
     { name: "Popover", label: "팝오버", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "popoverRecipe", behavior: "popover" },
     { name: "Tooltip", label: "툴팁", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "tooltipRecipe", behavior: "tooltip" },
@@ -271,6 +273,7 @@ import { gridRecipe } from "./grid.js";
 import { screenPatternRecipe, searchScreenRecipe, chatMessageRecipe, commentThreadRecipe, notificationRowRecipe, profileSummaryRecipe, iconTileRecipe, composerQuickInsertRecipe, typingIndicatorRecipe, chatDateSeparatorRecipe } from "./screen-patterns.js";
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export const recipeRegistry = {
+    timePickerRecipe,
     imageChoiceRecipe,
     affixRecipe,
     watermarkRecipe,

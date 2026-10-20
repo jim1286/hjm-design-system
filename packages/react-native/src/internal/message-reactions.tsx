@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { AccessibilityInfo, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, useWindowDimensions } from "react-native";
 import { control, scrim } from "@hjmds/design-contracts/foundations";
@@ -38,8 +39,8 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
   const insets = useHjmNativeSafeAreaInsets();
   const { height } = useWindowDimensions();
   const [anchor, setAnchor] = useState<number>();
-  const trigger = useRef<View>(null);
-  const firstAction = useRef<View>(null);
+  const trigger = useRef<ComponentRef<typeof View>>(null);
+  const firstAction = useRef<ComponentRef<typeof View>>(null);
   const open = anchor !== undefined && !picker.disabled;
   // Android does not deliver Modal.onDismiss; restore after removing its native surface.
   const close = () => setAnchor(undefined);

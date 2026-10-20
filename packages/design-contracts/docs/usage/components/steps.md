@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 여러 단계로 된 **선형 흐름에서 지금 어디인지** 보여 줄 때 쓴다. 온보딩(환영 → 구단 → 알림 → 완료),
-가입·주문 처리 단계가 여기에 속한다. 기본은 표시 전용이고, `onStepPress`를 주면 **이미 지난 단계만** 눌러 그 단계로
+가입·주문 처리 단계가 여기에 속한다. 순서가 있는 설계 설명은 `navigationMode: "free"`로 자유롭게 탐색할 수 있다. 기본은 표시 전용이고, `onStepPress`를 주면 **이미 지난 단계만** 눌러 그 단계로
 돌아갈 수 있다(1.31.0, 단계형 작성).
 
 ## 쓰지 않을 때
@@ -69,26 +69,27 @@ import { Steps } from "@hjmds/react-native/steps";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `descriptor.currentStepId` | 단계 `id` | — (필수) | 상태는 단계별로 넘기지 않는다. 앞은 `complete`, 커서는 지정 상태, 뒤는 `pending`이 유도된다 |
+| `descriptor.navigationMode` | `linear` · `free` | `linear` | `free`는 읽기 흐름에서 모든 단계 선택. 입력 검증이 필요한 흐름은 기본값 유지 |
 | `descriptor.currentStepStatus` | `current` · `error` · `complete` | `current` | 커서 단계의 상태 |
 | `descriptor.steps` | 단계 배열 | — (필수) | 2개 이상, `id`는 고유하고 앞뒤 공백이 없어야 한다. 어기면 `RangeError`/`TypeError` |
 | `descriptor.steps[]` | `{ id, label, description? }` | — | — |
 | `statusLabels` | `{ pending, current, complete, error }`(모두 `string`) | — (필수) | 상태를 읽는 문구 |
 | `composeAccessibleName` | `(info: { position: number, total: number, label: string }) => string` | — (필수) | `position`은 1부터 |
 | `renderMark` | `(status: StepStatus, position: number) => ReactNode` | `✓`·`!`·번호 | 원 안 표시를 바꾼다 |
-| `onStepPress` | `(id) => void` | 없음 | 1.31.0. 커서 앞 단계(`revisitable`, 상태는 늘 `complete`)만 원·라벨 전체가 한 버튼이 되고 누르면 그 `id`를 넘긴다. 현재·다음 단계는 표시 전용으로 남는다(앞으로 건너뛰면 검증을 지나친다). 버튼 이름은 `composeAccessibleName` 결과, 상태 문구는 설명(Web `aria-describedby`·Native `accessibilityHint`). 흐름이 잠긴 동안(제출 중)은 prop을 빼면 모두 표시 전용이 된다 |
+| `onStepPress` | `(id) => void` | 없음 | 1.31.0. 기본 linear에서 커서 앞 단계(`revisitable`, 상태는 늘 `complete`)만 원·라벨 전체가 한 버튼이 되고 누르면 그 `id`를 넘긴다. linear의 현재·다음 단계는 표시 전용으로 남는다. free에서는 현재·다음도 버튼이다. 버튼 이름은 `composeAccessibleName` 결과, 상태 문구는 설명(Web `aria-describedby`·Native `accessibilityHint`). 흐름이 잠긴 동안(제출 중)은 prop을 빼면 모두 표시 전용이 된다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
 | `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
 | `StepPlayer` `progress`·`playing` | `number`(0~1)·`boolean` | — (필수) | 호스트 소유 |
 | `StepPlayer` `onPlayingChange`·`onReplay` | `(playing: boolean) => void`·`() => void` | — (필수) | 재생/일시정지·다시 보기 요청 |
 | `StepPlayer` `labels` | `{ play, pause, replay, progress }` | — (필수) | — |
 
-방향·variant 축과 앞으로 건너뛰는 이동은 없다(계약에서 배제). 항상 가로 한 줄이다.
+방향·variant 축은 없다. 항상 가로 한 줄이다. `descriptor.navigationMode`는 기본 `linear`이며 앞 단계만 이동한다. `free`는 검증을 건너뛰어도 되는 읽기 흐름에서 모든 단계 선택을 허용한다. 선택된 단계의 본문은 제품이 controlled state로 연결한다.
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 단계마다 같은 폭(`minmax(0, 1fr)`, Native `flex: 1`). 원(indicator) 24(`glyph.md`), 연결선 1(`stroke.default`), 현재·오류 단계의 원 테두리 2(`stroke.strong`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
+| 크기 | Web은 연결선이 있는 앞 단계가 남은 폭을 균등하게 나누고 마지막 단계는 내용 폭(전체 폭/단계 수 이내)만 사용한다. 첫·마지막 표지는 양끝에 맞춘다. Native는 `flex: 1`. 원(indicator) 24(`glyph.md`), 연결선 1(`stroke.default`), 현재·오류 단계의 원 테두리 2(`stroke.strong`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
 | 간격 | 단계 사이·원과 글자 사이 `spacing.xs` 8(`stepsRecipe.gap`) | `stepsRecipe.gap` |
 | 순서·정렬 | 흐름 화면의 맨 위(머리 아래, 본문 위)에 가로 한 줄. 화면 아래 행동 버튼과 떨어뜨리고, 같은 수준 화면 사이 이동(탭)으로 쓰지 않는다 | — |
 | 고정·스크롤 | — | — |
@@ -115,3 +116,9 @@ import { Steps } from "@hjmds/react-native/steps";
 ## 근거
 
 - `onStepPress`(1.31.0): 2026-10-18 spint 작성(색 → 이모지 → 글)이 지난 단계를 눌러 돌아가려고 단계 레일 전체를 PressableScale로 직접 그렸다. 계약은 "필요해지면 추가"로 clickable을 미뤄 두었고([계약](../../steps.md#공개한-축--배제한-축)), 앞으로 건너뛰기는 검증을 지나치므로 커서 앞 단계만 연다.
+
+2026-10-19 포트폴리오 폭 확인: Web 마지막 단계에 연결선 없는 균등 칸이 남아 표지가 본문 오른쪽 끝보다 한 칸 안쪽에 보였다. Web renderer가 단계 수를 전달하고 끝 칸만 내용 폭으로 배치하도록 수정했다. 제품별 CSS 보정이나 공개 prop 추가는 하지 않는다.
+
+2026-10-19 포트폴리오: 사용자가 단계 클릭 시 해당 설명만 표시하도록 요청했다. `navigationMode: "free"`를 명시한 읽기 흐름에 한해 모든 단계가 버튼이 된다. 기본 linear와 handler 생략 시 표시 전용 동작은 유지한다. Web 현재 버튼은 aria-current, Native는 selected를 제공한다.
+
+2026-10-19 스핀트 실제 화면 피드백: 수평 행 gap으로 끊기던 연결선을 없애고 마지막 표지 앞의 연결 구간을 유지한다. Native도 마지막 열에 균등 여분 폭을 남기지 않아 첫·마지막 표지가 본문 양끝에 맞는다. 내부 문구 간격과 기본 이동 계약은 유지한다.

@@ -60,6 +60,8 @@ export type AccordionItem = Readonly<{
   title: ReactNode;
   panel: ReactNode;
   disabled?: boolean;
+  /** Include domain values when a decorative indicator carries more than expansion. */
+  accessibilityLabel?: string;
 }>;
 
 export type AccordionProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> &
@@ -71,6 +73,8 @@ export type AccordionProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> &
     allowsMultipleExpanded?: boolean;
     density?: AccordionDensity;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Decorative replacement; interaction and expanded state remain owned by Accordion. */
+    renderIndicator?: (props: Readonly<{ value: string; expanded: boolean; disabled: boolean }>) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -116,6 +120,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
       allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded,
       density = accordionRecipe.defaults.density,
       headingLevel = 3,
+      renderIndicator,
       className,
       layoutStyle,
       ...props
@@ -197,6 +202,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
               type="button"
               className="hjm-accordion__trigger"
               aria-expanded={expanded}
+              aria-label={item.accessibilityLabel}
               aria-controls={panelId}
               disabled={item.disabled}
               onClick={() => toggle(item.id)}
@@ -209,7 +215,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
             >
               <span className="hjm-accordion__title">{item.title}</span>
               <span className="hjm-accordion__indicator" aria-hidden="true">
-                {expanded ? "−" : "+"}
+                {renderIndicator ? renderIndicator({ value: item.id, expanded, disabled: item.disabled === true }) : expanded ? "−" : "+"}
               </span>
             </button>
           );
@@ -390,6 +396,22 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
   });
 });
 
+export type ListSeparatorProps = Readonly<{
+  separator?: keyof typeof listRecipe.separators;
+  leading?: boolean;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/** Decorative separator for a product-owned virtual collection. List owns separators for finite rows. */
+export function ListSeparator({ separator = "content", leading = false, layoutStyle }: ListSeparatorProps) {
+  if (!listRecipe.separators[separator]) return null;
+  return <div aria-hidden="true" role="presentation" className="hjm-list-separator" style={{
+    marginInlineStart: `var(--hjm-list-separator-${separator}-${leading ? "leading-start" : "start"})`,
+    marginInlineEnd: `var(--hjm-list-separator-${separator}-end)`,
+    ...layoutStyle,
+  }} />;
+}
+
 export type ListAppearance = "grouped" | "plain";
 
 export type ListProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
@@ -465,6 +487,9 @@ export type StatisticProps<Id extends string = string> = Omit<
   contextLabel?: string;
   accessibilityLabel?: string;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  leading?: ReactNode;
+  /** Product-owned series/category color; value text and decorative leading share it. */
+  valueColor?: string;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
   /** Optional visual adapter; the descriptor remains the accessible value source. */
   renderValue?: (value: string) => ReactNode;
@@ -472,19 +497,26 @@ export type StatisticProps<Id extends string = string> = Omit<
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function Statistic<Id extends string = string>({
+export function Statistic<Id extends string = string>(props: StatisticProps<Id>) {
+  return <StatisticView {...props} />;
+}
+
+function StatisticView<Id extends string = string>({
   descriptor,
   density = "comfortable",
   presentation = "plain",
   contextLabel,
   accessibilityLabel,
   composeAccessibilityLabel,
+  leading,
+  valueColor,
+  bar = false,
   renderTrendMark,
   renderValue,
   className,
   layoutStyle,
   ...props
-}: StatisticProps<Id>) {
+}: StatisticProps<Id> & { bar?: boolean }) {
   const resolved = resolveStatisticDescriptor(descriptor);
   const valueText = `${resolved.prefix ?? ""}${resolved.value}${resolved.suffix ?? ""}`;
   const announcement = accessibilityLabel ?? composeAccessibilityLabel?.({
@@ -501,14 +533,16 @@ export function Statistic<Id extends string = string>({
   return (
     <article
       {...props}
-      style={{ ...props.style, ...layoutStyle }}
+      style={{ ...props.style, ...layoutStyle, ...(valueColor ? { "--hjm-statistic-value-color": valueColor } : {}) } as CSSProperties}
       aria-label={announcement}
       className={classNames("hjm-statistic", className)}
+      data-arrangement={bar ? "bar" : undefined}
       data-density={density}
       data-presentation={presentation}
     >
       <span aria-hidden="true" className="hjm-statistic__label">{resolved.label}</span>
       <span aria-hidden="true" className="hjm-statistic__value-row">
+        {leading === undefined ? null : <span className="hjm-statistic__leading">{leading}</span>}
         {resolved.prefix ? <span className="hjm-statistic__affix">{resolved.prefix}</span> : null}
         <strong className="hjm-statistic__value">{renderValue?.(resolved.value) ?? resolved.value}</strong>
         {resolved.suffix ? <span className="hjm-statistic__affix">{resolved.suffix}</span> : null}
@@ -537,6 +571,10 @@ export type StatisticGroupProps<Id extends string = string> = Omit<
   density?: StatisticDensity;
   presentation?: StatisticPresentation;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  /** A bar is a single equal-width row for a few short counts; grid retains responsive columns. */
+  arrangement?: "grid" | "bar";
+  renderLeading?: (item: StatisticDescriptor<Id>, context: { color: string; size: number }) => ReactNode;
+  getValueColor?: (item: StatisticDescriptor<Id>) => string | undefined;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -548,6 +586,9 @@ export function StatisticGroup<Id extends string = string>({
   density,
   presentation,
   composeAccessibilityLabel,
+  arrangement = "grid",
+  renderLeading,
+  getValueColor,
   renderTrendMark,
   className,
   style,
@@ -562,11 +603,17 @@ export function StatisticGroup<Id extends string = string>({
       aria-label={label}
       className={classNames("hjm-statistic-group", className)}
       role="list"
-      style={{ ...style, ...layoutStyle, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns } as CSSProperties}
+      data-arrangement={arrangement}
+      style={{ ...style, ...layoutStyle, "--hjm-statistic-columns": arrangement === "bar" ? descriptor.items.length : descriptor.columns ?? statisticRecipe.defaults.columns } as CSSProperties}
     >
-      {descriptor.items.map((item) => (
+      {descriptor.items.map((item) => {
+        const valueColor = getValueColor?.(item);
+        return (
         <div key={item.id} role="listitem">
-          <Statistic
+          <StatisticView
+            bar={arrangement === "bar"}
+            {...(valueColor ? { valueColor } : {})}
+            {...(renderLeading ? { leading: renderLeading(item, { color: valueColor ?? "currentColor", size: statisticRecipe.group.bar.iconSize }) } : {})}
             contextLabel={label}
             descriptor={item}
             {...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel })}
@@ -575,7 +622,7 @@ export function StatisticGroup<Id extends string = string>({
             {...(renderTrendMark === undefined ? {} : { renderTrendMark })}
           />
         </div>
-      ))}
+      ); })}
     </div>
   );
 }
@@ -766,6 +813,8 @@ export type TimelineProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
+    renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -774,6 +823,8 @@ function TimelineInner<Id extends string = string>(
   {
     items,
     composeAccessibleName,
+    renderMetadata,
+    renderActions,
     className,
     layoutStyle,
     ...props
@@ -791,11 +842,14 @@ function TimelineInner<Id extends string = string>(
       ref={ref}
       className={classNames("hjm-timeline", className)}
     >
-      {resolved.map((item, index) => (
+      {resolved.map((item, index) => {
+        const actions = renderActions?.(item);
+        return (
         <li
           aria-label={item.accessibleName}
           className="hjm-timeline__item"
           data-tone={item.tone}
+          data-emphasized={item.emphasized || undefined}
           key={item.id}
         >
           <span className="hjm-timeline__rail" aria-hidden="true">
@@ -807,16 +861,16 @@ function TimelineInner<Id extends string = string>(
           <span className="hjm-timeline__content">
             <span className="hjm-timeline__heading">
               <strong className="hjm-timeline__label">{item.label}</strong>
-              {item.timestamp ? (
-                <time className="hjm-timeline__timestamp">{item.timestamp}</time>
-              ) : null}
+              {renderMetadata?.(item)}
             </span>
             {item.description ? (
               <span className="hjm-timeline__description">{item.description}</span>
             ) : null}
+            {item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime}>{item.timestamp}</time> : null}
           </span>
+          {actions ? <div className="hjm-timeline__actions">{actions}</div> : null}
         </li>
-      ))}
+      ); })}
     </ol>
   );
 }

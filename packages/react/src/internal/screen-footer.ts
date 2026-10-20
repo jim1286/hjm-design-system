@@ -1,8 +1,8 @@
 import { createContext } from "react";
 
 /**
- * True inside ScreenLayout's footer. The footer already owns the bar chrome (top border, screen padding, safe area), so
+ * Set inside a padded ScreenLayout or Sheet footer. The parent owns the bar chrome and safe area, so
  * BottomCTA placed there renders only its copy and actions; drawing its own bar too doubled the border, inset the
  * buttons twice and (Native) added a shadowed surface inside the footer (2026-10-17 screen review, common-screen-shell).
  */
-export const ScreenFooterContext = createContext(false);
+export const ScreenFooterContext = createContext<Readonly<{ bottomPadding: string }> | null>(null);

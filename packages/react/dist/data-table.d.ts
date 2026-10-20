@@ -16,6 +16,8 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     rows: readonly DataTableRowDescriptor<RowKey>[];
     labels: DataTableLabels;
     renderCell: (rowId: RowKey, columnId: ColumnKey) => ReactNode;
+    /** Text for rich cells. Native composes the row name; Web labels each cell. Omit to use visible primitive text. */
+    getCellText?: (rowId: RowKey, columnId: ColumnKey) => string | undefined;
     selection?: DataTableSelection<RowKey>;
     sortState?: DataTableSortState<ColumnKey>;
     sortCycle?: DataTableSortCycle;

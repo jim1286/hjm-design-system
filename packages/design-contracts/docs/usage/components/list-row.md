@@ -77,6 +77,9 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 
 - 상호작용: Web은 `href`면 `<a>`(selected는 `aria-current="page"`), `onClick`이면 `<button>`(selected는 `aria-pressed`),
   둘 다 없으면 `<div>`. Native는 `onPress`가 있으면 누를 수 있는 행이 된다.
+- Web의 `selected`를 생략하면 일반 행동 버튼이며 `aria-pressed`를 붙이지 않는다.
+  선택 가능한 행에만 `selected={true|false}`를 명시한다. 프로필 이동 행까지 토글로 읽히던 문제를
+  2026-10-19에 수정했으며, 선택되지 않은 기본 모양은 그대로다.
 
 ## 배치
 

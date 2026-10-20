@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { useKeyboardOverlap } from "./keyboard.js";
 import { FieldErrorText, NativeFieldFrame } from "./internal/field-frame.js";
@@ -194,7 +195,7 @@ export type FormProps<Values> = Readonly<{
    * The product-selected first invalid input, or null when client validation passes.
    * Form uses it to focus the control and move screen-reader focus before submitting.
    */
-  firstInvalidFieldRef?: RefObject<TextInput | null>;
+  firstInvalidFieldRef?: RefObject<ComponentRef<typeof TextInput> | null>;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -490,8 +491,18 @@ export function Select<
     if (open === undefined) setUncontrolledOpen(next);
     onOpenChange?.(next, reason);
   }, [onOpenChange, open, visible]);
-  const triggerRef = useRef<View>(null);
-  const optionRefs = useRef(new Map<Value, View>());
+  const triggerRef = useRef<ComponentRef<typeof View>>(null);
+  const optionRefs = useRef(new Map<Value, ComponentRef<typeof View>>());
+  const optionsScroll = useRef<ComponentRef<typeof ScrollView>>(null);
+  const optionsContent = useRef<ComponentRef<typeof View>>(null);
+  const optionViewport = useRef({ height: 0, contentHeight: 0, presented: false, positioned: false, measuring: false, epoch: 0 });
+  useLayoutEffect(() => {
+    const viewport = optionViewport.current;
+    viewport.epoch += 1;
+    viewport.presented = false;
+    viewport.positioned = false;
+    viewport.measuring = false;
+  }, [visible]);
   const modalDismiss = useAfterModalDismiss(visible);
   const sizeContract = selectRecipe.sizes[size];
   const densityContract = selectRecipe.density[density];
@@ -513,6 +524,25 @@ export function Select<
     if (initialValue === undefined) return;
     const target = optionRefs.current.get(initialValue);
     focusAccessibleHost(target);
+  };
+  const revealInitialOption = () => {
+    const viewport = optionViewport.current;
+    const scroll = optionsScroll.current;
+    const content = optionsContent.current;
+    const key = reconciledSelected ?? collectionItems.find(option => !option.disabled)?.id;
+    const target = key === undefined ? undefined : optionRefs.current.get(key);
+    if (!visible || !viewport.presented || viewport.positioned || viewport.measuring || !scroll || !content || !target || viewport.height <= 0 || viewport.contentHeight <= 0) return;
+    // Accessibility focus does not scroll a native Select. Measure actual rows (including section headings and
+    // wrapped descriptions) instead of estimating an index offset; late measurements must not move a reopened list.
+    viewport.measuring = true;
+    const epoch = viewport.epoch;
+    target.measureLayout(content, (_left, top, _width, height) => {
+      if (epoch !== viewport.epoch) return;
+      viewport.measuring = false;
+      viewport.positioned = true;
+      scroll.scrollTo({ y: Math.max(0, Math.min(top - (viewport.height - height) / 2, viewport.contentHeight - viewport.height)), animated: false });
+      focusInitialOption();
+    });
   };
   const leadingColor = resolveColorReference(selectRecipe.leading.color, theme.palette);
   const triggerLeading = renderLeading?.(resolvedSelectedItem, {
@@ -646,7 +676,7 @@ export function Select<
             // Same frame border source as TextField and Web .hjm-field__control (it drew the lighter divider color).
             borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
             borderRadius: tokens.radius.md,
-            borderWidth: error ? 2 : 1,
+            borderWidth: error ? fieldRecipe.states.invalid.borderWidth : fieldRecipe.borderWidth,
             direction: environment.direction,
             flexDirection: "row",
             gap: selectRecipe.value.gap,
@@ -682,6 +712,8 @@ export function Select<
         onRequestClose={() => close("escape")}
         onShow={() => {
           modalDismiss.onShow();
+          optionViewport.current.presented = true;
+          revealInitialOption();
           focusInitialOption();
         }}
         transparent
@@ -717,7 +749,10 @@ export function Select<
             }}
           >
             <CollectionSheetHeader title={label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => close("programmatic")} />
-            <ScrollView>
+            <ScrollView ref={optionsScroll}
+              onLayout={event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }}
+              onContentSizeChange={(_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }}>
+              <View ref={optionsContent} collapsable={false}>
               {blockingState ? (
                 <View accessibilityLabel={asyncState.status === "loading" ? asyncState.message : undefined} accessibilityRole={asyncState.status === "loading" ? "progressbar" : undefined} style={{ alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }}>
                   {asyncState.status === "loading" ? <ActivityIndicator /> : null}
@@ -738,6 +773,7 @@ export function Select<
                   <ActivityIndicator />
                 </View>
               ) : null}
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -943,13 +979,13 @@ export function Combobox<
     onOpenChange?.(next, reason);
   }, [onOpenChange, open, visible]);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
   const refocusGuardRef = useRef(false);
   const refocusGuardTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
     if (refocusGuardTimer.current !== null) clearTimeout(refocusGuardTimer.current);
   }, []);
-  const optionRefs = useRef(new Map<Key, View>());
+  const optionRefs = useRef(new Map<Key, ComponentRef<typeof View>>());
   const modalDismiss = useAfterModalDismiss(visible);
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const resultsAreCurrent = filtering !== "external" ||
@@ -1165,7 +1201,7 @@ export function Combobox<
     );
   }) : filteredItems.map(renderOption);
 
-  const modalRoot = useRef<View>(null);
+  const modalRoot = useRef<ComponentRef<typeof View>>(null);
   const modalKeyboardOverlap = useKeyboardOverlap(modalRoot, visible);
   return (
     <View style={[{ gap: spacing.xs }, layoutStyle]}>
@@ -1178,7 +1214,7 @@ export function Combobox<
           backgroundColor: colors.bg,
           borderColor: colors[error ? fieldRecipe.states.invalid.border : fieldRecipe.states.idle.border],
           borderRadius: tokens.radius.md,
-          borderWidth: error ? 2 : 1,
+          borderWidth: error ? fieldRecipe.states.invalid.borderWidth : fieldRecipe.borderWidth,
           direction: environment.direction,
           flexDirection: "row",
           minHeight: sizeContract.minHeight,

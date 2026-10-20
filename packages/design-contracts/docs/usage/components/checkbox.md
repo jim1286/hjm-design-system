@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-19
 - 근거: recipe `selectionControlRecipe`(`src/component-recipes.ts`), behavior `checkbox`
 - 스토리북: `배포/컴포넌트/입력/체크박스`
 
@@ -57,7 +57,7 @@ import { Checkbox } from "@hjmds/react-native/inputs";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `presentation` | `card` · `plain` · `grouped` | `card` | — |
+| `presentation` | `card` · `plain` · `grouped` · `chips` | `card` | — |
 | `size` | `medium` · `small` | `medium` | — |
 | `checked` · `defaultChecked` | Web `boolean` · Native `boolean \| "mixed"` | `defaultChecked` `false` | `checked`를 주면 제어, 없으면 비제어다 |
 | 부분 선택 | Web `indeterminate: boolean` · Native `checked="mixed"` | Web `false` | Native에서 `mixed`를 누르면 `true`가 된다 |
@@ -101,3 +101,9 @@ import { Checkbox } from "@hjmds/react-native/inputs";
 
 - Web은 `className`·`layoutStyle`이 바깥 `label`에, 나머지 HTML 속성(`style`, `name`, `onFocus` 등)은 숨은
   `input`에 붙는다. 배치용 `style`을 넘기면 보이는 행이 아니라 input에 적용되므로 `layoutStyle`을 쓴다.
+
+
+`presentation="chips"`는 같은 선택 의미를 칩 모양으로 표시한다. 기본 원/체크 표시 대신
+선택 테두리·전경색·굵기를 쓰며 실제 radio/checkbox 의미와 disabled/readOnly를 유지한다.
+여러 항목의 줄바꿈·그룹 이름·선택 관리는 제품이 직접 조립하지 말고 해당 Group의
+`presentation="chips"`를 사용한다([RadioGroup](radio-group.md#미선택다중-선택의-칩-묶음), [CheckboxGroup](checkbox-group.md#미선택다중-선택의-칩-묶음)).

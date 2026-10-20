@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import type { Meta, StoryObj } from "@storybook/react-native";
@@ -9,7 +10,7 @@ import { pageIndicatorExample } from "../../../shared/navigation-layout-examples
 // A product-owned paging ScrollView with HJM's position dots (Carousel's dot row, 2026-10-18).
 function PageIndicatorPreview() {
   const [page, setPage] = useState(0), [width, setWidth] = useState(320);
-  const pager = useRef<ScrollView>(null);
+  const pager = useRef<ComponentRef<typeof ScrollView>>(null);
   const reducedMotion = useHjmNativeTheme().environment.reducedMotion;
   const go = (index: number) => { setPage(index); pager.current?.scrollTo({ x: index * width, animated: !reducedMotion }); };
   return <View style={{ gap: 8 }}>
@@ -22,6 +23,9 @@ function PageIndicatorPreview() {
     </ScrollView>
     <PageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page}
       onCurrentIndexChange={go} composeAccessibleName={pageIndicatorExample.pageName} labels={pageIndicatorExample.labels} />
+    {/* The same confirmed pager position can also be displayed without another set of targets. */}
+    <PageIndicator label={pageIndicatorExample.label} count={pageIndicatorExample.count} currentIndex={page}
+      interactive={false} maxVisibleDots={2} onCurrentIndexChange={go} composeAccessibleName={pageIndicatorExample.pageName} labels={pageIndicatorExample.labels} />
   </View>;
 }
 

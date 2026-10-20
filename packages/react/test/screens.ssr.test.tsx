@@ -37,3 +37,11 @@ it("omits supporting copy from the web top bar", () => {
   expect(html).toContain("들판");
   expect(html).not.toContain("상단 보조 문구");
 });
+
+it("exposes the top bar scene surface without losing its actions", () => {
+  for (const surface of ["default", "transparent"] as const) {
+    const html = renderToStaticMarkup(<HjmProvider><TopBar surface={surface} actions={<button>설정</button>} /></HjmProvider>);
+    expect(html).toContain(`data-surface="${surface}"`);
+    expect(html).toContain("설정</button>");
+  }
+});

@@ -1,9 +1,10 @@
-import { type HTMLAttributes, type MouseEvent } from "react";
+import { type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
 import { type AnchorItem } from "@hjmds/design-contracts/components/anchor";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     label: string;
     items: readonly AnchorItem[];
+    renderLeading?: (item: AnchorItem) => ReactNode;
     /** undefined observes the document; null waits for a custom scroll ref. */
     container?: HTMLElement | null;
     offset?: number;
@@ -17,6 +18,7 @@ export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readon
 export declare const Anchor: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     label: string;
     items: readonly AnchorItem[];
+    renderLeading?: (item: AnchorItem) => ReactNode;
     /** undefined observes the document; null waits for a custom scroll ref. */
     container?: HTMLElement | null;
     offset?: number;

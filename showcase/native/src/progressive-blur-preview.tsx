@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useId, useRef, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, UIManager, View } from 'react-native';
 import { requireOptionalNativeModule } from 'expo';
@@ -17,7 +18,7 @@ const available = Boolean(requireOptionalNativeModule('ExpoBlur') && UIManager.g
 const blur = available ? require('expo-blur') as typeof import('expo-blur') : null;
 const Mask = available ? (require('@react-native-masked-view/masked-view') as typeof import('@react-native-masked-view/masked-view')).default : null;
 
-function Layer({ layer, target }: { layer: ProgressiveBlurHostLayer; target: React.RefObject<View | null> }) {
+function Layer({ layer, target }: { layer: ProgressiveBlurHostLayer; target: React.RefObject<ComponentRef<typeof View> | null> }) {
   const { environment } = useHjmNativeTheme();
   const id = useId().replace(/:/g, '');
   if (!blur || !Mask) return null;
@@ -39,7 +40,7 @@ export function ProgressiveBlurPreview() {
   const [enabled, setEnabled] = useState(true);
   const [count, setCount] = useState(12);
   const [saved, setSaved] = useState('');
-  const target = useRef<View>(null);
+  const target = useRef<ComponentRef<typeof View>>(null);
   const Target = blur?.BlurTargetView ?? View;
   return <Stack gap="lg">
     <Text>목록 끝에서는 효과가 사라져 마지막 항목까지 읽을 수 있어요. 메모에 입력하는 동안에도 가리지 않아요.</Text>

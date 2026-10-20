@@ -1,3 +1,6 @@
+import { Grid } from "./layout.js";
+import type { GridDescriptor } from "@hjmds/design-contracts/grid";
+import { Button } from "./actions.js";
 import { useDesignProfileDefaults } from "./internal.js";
 import {
   chipRecipe,
@@ -350,6 +353,10 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   );
 });
 
+function ChoiceItems({ grid, className, children }: Readonly<{ grid: GridDescriptor | undefined; className: string; children: ReactNode }>) {
+  return grid ? <Grid {...grid}>{children}</Grid> : <div className={className}>{children}</div>;
+}
+
 export type CheckboxGroupItem<Key extends string = string> =
   SelectionItemDescriptor<Key>;
 
@@ -364,6 +371,8 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<
     description?: ReactNode;
     error?: ReactNode;
     orientation?: SelectionGroupOrientation;
+    /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
+    grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
     size?: SelectionControlSize;
     name?: string;
@@ -388,6 +397,7 @@ function CheckboxGroupInner<Key extends string>(
     description,
     error,
     orientation = selectionGroupRecipe.defaults.orientation,
+    grid,
     presentation = selectionGroupRecipe.defaults.presentation,
     size = selectionControlRecipe.defaults.size,
     name,
@@ -448,7 +458,7 @@ function CheckboxGroupInner<Key extends string>(
       {description && !error ? (
         <div id={descriptionId} className="hjm-field__description">{description}</div>
       ) : null}
-      <div className="hjm-checkbox-group__items">
+      <ChoiceItems grid={grid} className="hjm-checkbox-group__items">
         {items.map((item) => {
           const checked = reconciledValue.has(item.id);
           return (
@@ -496,7 +506,7 @@ function CheckboxGroupInner<Key extends string>(
             </label>
           );
         })}
-      </div>
+      </ChoiceItems>
       <FieldError id={errorId} error={error} />
     </fieldset>
   );
@@ -511,6 +521,8 @@ export type RadioGroupItem = Readonly<{
   label: ReactNode;
   description?: ReactNode;
   disabled?: boolean;
+  /** Independent sibling action; activating it never selects the option. */
+  action?: Readonly<{ label: string; accessibilityLabel?: string; onAction: () => void; disabled?: boolean }>;
 }>;
 
 type RadioGroupLabelProps =
@@ -528,13 +540,19 @@ export type RadioGroupProps = Omit<
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
+    grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
     size?: SelectionControlSize;
+    /** Hide the decorative dot when a product preview already communicates the choice. */
+    indicator?: "default" | "none";
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
     required?: boolean;
     readOnly?: boolean;
+    /** Visual preview only; the item label remains the accessible name. */
+    renderLabel?: (item: RadioGroupItem) => ReactNode;
     renderLeading?: (
       item: RadioGroupItem,
       appearance: ChoiceLeadingRenderProps,
@@ -572,6 +590,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       defaultValue = null,
       onValueChange,
       orientation = selectionGroupRecipe.defaults.orientation,
+      grid,
       presentation = selectionGroupRecipe.defaults.presentation,
       size = selectionControlRecipe.defaults.size,
       description,
@@ -579,7 +598,9 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       name,
       required = false,
       readOnly = false,
+      indicator = "default",
       renderLeading,
+      renderLabel,
       disabled,
       className,
       layoutStyle,
@@ -651,13 +672,13 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
           {resolvedLabel}
         </legend>
         {description && !error ? <div id={descriptionId} className="hjm-field__description">{description}</div> : null}
-        <div className="hjm-radio-group__items">
+        <ChoiceItems grid={grid} className="hjm-radio-group__items">
           {items.map((item) => {
             const selected = item.value === value;
-            return (
+            const choice = (
               <label
                 key={item.value}
-                className="hjm-choice"
+                className={item.action ? "hjm-choice__target" : "hjm-choice"}
                 data-kind="radio"
                 data-state={selected ? "checked" : "unchecked"}
                 data-disabled={item.disabled || undefined}
@@ -673,13 +694,14 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                   checked={selected}
                   disabled={item.disabled}
                   required={required}
+                  {...(renderLabel && typeof item.label === "string" ? { "aria-label": item.label } : {})}
                   aria-readonly={readOnly || undefined}
                   onClick={readOnly ? (event) => event.preventDefault() : undefined}
                   onChange={() => {
                     if (!readOnly) setValue(item.value);
                   }}
                 />
-                <span className="hjm-choice__indicator" aria-hidden="true" />
+                {indicator === "default" ? <span className="hjm-choice__indicator" aria-hidden="true" /> : null}
                 {renderLeading ? (
                   <span className="hjm-choice__leading" aria-hidden="true">
                     {renderLeading(item, {
@@ -690,15 +712,27 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                   </span>
                 ) : null}
                 <span className="hjm-choice__copy">
-                  <span>{item.label}</span>
+                  <span>{renderLabel?.(item) ?? item.label}</span>
                   {item.description ? (
                     <span className="hjm-choice__description">{item.description}</span>
                   ) : null}
                 </span>
               </label>
             );
+            if (!item.action) return choice;
+            // A button inside a label can activate its radio. Keep two independent targets
+            // inside one recipe-owned frame, including when the group is read-only.
+            return <div key={item.value} className="hjm-choice hjm-choice--with-action"
+              data-kind="radio" data-state={selected ? "checked" : "unchecked"}
+              data-disabled={item.disabled || undefined} data-readonly={readOnly || undefined}
+              data-presentation={presentation} data-size={size}>
+              {choice}
+              <span className="hjm-choice__action"><Button tone="ghost" size="small"
+                disabled={disabled || item.disabled || item.action.disabled}
+                aria-label={item.action.accessibilityLabel} onClick={item.action.onAction}>{item.action.label}</Button></span>
+            </div>;
           })}
-        </div>
+        </ChoiceItems>
         <FieldError id={errorId} error={error} />
       </fieldset>
     );
@@ -794,6 +828,8 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
 export type SegmentedControlItem = Readonly<{
   value: string;
   label: ReactNode;
+  /** Full spoken name when the visible label is abbreviated. */
+  accessibilityLabel?: string;
   disabled?: boolean;
 }>;
 
@@ -812,6 +848,8 @@ export type SegmentedControlProps = Omit<
     textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
+    overflow?: "wrap" | "scroll";
+    actions?: ReactNode;
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -832,6 +870,7 @@ export const SegmentedControl = forwardRef<
     textEmphasis = "strong",
     selectionMotion: suppliedSelectionMotion,
     name,
+    overflow = "wrap", actions,
     disabled = false,
     className,
     layoutStyle,
@@ -904,13 +943,24 @@ export const SegmentedControl = forwardRef<
     document.addEventListener("visibilitychange", visibility);
     return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };
   }, [value, items, presentation, selectionMotion, disabled]);
-  return (
+  const revealOption = (option: Element | null) => {
+    if (overflow !== "scroll" || !option) return;
+    const viewport = trackRef.current?.parentElement;
+    if (!viewport) return;
+    const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
+    const delta = bounds.left < frame.left ? bounds.left - frame.left : bounds.right > frame.right ? bounds.right - frame.right : 0;
+    if (delta) viewport.scrollBy({ left: delta, behavior: "instant" });
+  };
+  useLayoutEffect(() => { revealOption(trackRef.current?.querySelector('[data-state="checked"]') ?? null); }, [value, items, overflow]);
+  const group = (
     <fieldset
       {...props}
       disabled={disabled}
       ref={ref}
-      style={{ ...style, ...layoutStyle }}
+      style={{ ...style, ...(actions == null ? layoutStyle : { flex: 1, minInlineSize: 0 }) }}
       className={classNames("hjm-segmented", className)}
+      data-overflow={overflow}
+      onFocusCapture={event => { props.onFocusCapture?.(event); revealOption((event.target as HTMLElement).closest(".hjm-segmented__item")); }}
       data-size={size}
       data-presentation={presentation}
       data-text-emphasis={presentation === "text" ? textEmphasis : undefined}
@@ -935,6 +985,7 @@ export const SegmentedControl = forwardRef<
               type="radio"
               name={name ?? generatedName}
               value={item.value}
+              aria-label={item.accessibilityLabel}
               checked={item.value === value}
               disabled={item.disabled || disabled}
               required
@@ -947,4 +998,5 @@ export const SegmentedControl = forwardRef<
       </div>
     </fieldset>
   );
+  return actions == null ? group : <div className="hjm-segmented-rail" style={layoutStyle}>{group}{actions}</div>;
 });

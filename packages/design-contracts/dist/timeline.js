@@ -10,12 +10,20 @@ function assertNonEmpty(value, field) {
 }
 export function validateTimelineItemDescriptor(item) {
     assertNonEmpty(item.id, "item id");
+    if (item.emphasized !== undefined && typeof item.emphasized !== "boolean") {
+        throw new TypeError("Timeline item emphasized must be a boolean");
+    }
     if (item.id !== item.id.trim()) {
         throw new TypeError("Timeline item id must not start or end with whitespace");
     }
     assertNonEmpty(item.label, "item label");
     if (item.timestamp !== undefined) {
         assertNonEmpty(item.timestamp, "item timestamp");
+    }
+    if (item.dateTime !== undefined) {
+        assertNonEmpty(item.dateTime, "item dateTime");
+        if (item.timestamp === undefined)
+            throw new TypeError("Timeline dateTime requires timestamp");
     }
     if (item.description !== undefined) {
         assertNonEmpty(item.description, "item description");
@@ -82,7 +90,9 @@ export const timelineRecipe = {
         "label",
         "description",
     ],
-    gap: spacing.md,
+    gap: spacing.lg,
+    // A record remains passive: emphasis highlights its history without implying progress.
+    item: { padding: spacing.sm, emphasisBackground: semanticColors.feedback.info.background },
     dot: {
         diameter: 10,
         borderWidth: stroke.default,

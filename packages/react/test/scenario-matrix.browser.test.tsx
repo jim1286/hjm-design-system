@@ -49,6 +49,7 @@ const themeInvariantPaint: Readonly<Record<string, string>> = {
  * needs a reason; everything else must inherit the provider direction.
  */
 const ltrIsolates: Readonly<Record<string, string>> = {
+  "hjm-time-picker__readout": "HH:mm numeric order is left to right in every locale.",
   "hjm-otp-field__control": "Numeric verification codes are entered left to right in RTL locales (docs/otp-field.md).",
   "hjm-otp-field__slots": "One-time codes are entered and read left to right in RTL locales too.",
 };

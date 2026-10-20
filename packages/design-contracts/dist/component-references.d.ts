@@ -186,8 +186,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "TimePicker";
     readonly category: "data-entry";
-    readonly targets: readonly ["Select"];
-    readonly relationship: "adapted";
+    readonly targets: readonly ["TimePicker"];
+    readonly relationship: "direct";
 }, {
     readonly name: "Transfer";
     readonly category: "data-entry";

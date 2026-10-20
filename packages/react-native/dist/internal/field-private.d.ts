@@ -7,5 +7,6 @@
  */
 export type FieldPrivateProps = Readonly<{
     hjmCompactMultiline?: boolean;
+    hjmDescriptionAlign?: "start" | "end";
 }>;
 //# sourceMappingURL=field-private.d.ts.map

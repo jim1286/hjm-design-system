@@ -296,3 +296,13 @@ available to receiving applications; deleting them immediately after the Promise
 race a recipient read. QA removes only verified fixture files after recording their hash. Removing
 this example also removes its two Showcase dependencies. Sources: the installed packages' public
 types/native implementations and https://docs.expo.dev/versions/v57.0.0/sdk/sharing/ .
+
+## 2026-10-19 라이브러리 업데이트
+
+사용자의 포트폴리오 의존성 갱신 요청으로 manifest와 lock을 함께 갱신했다. 주요 변경: expo ~58.0.14, react-native 0.88.0, vitest ^5.0.5, vite ^7.3.7 / 8.3.4.
+
+Vitest 5의 Vite 필수 peer를 실제 검사 소비처에 devDependency로 선언한다. Node 타입은 지원 Node 계열에 맞추고 native 라이브러리는 Expo SDK의 조합을 우선한다. TypeScript compiler API 소비와 SDK peer 검토 없이 TypeScript 7을 강제하지 않는다. 기존 앱 버전·배포·스토어 제출 상태는 이 작업에서 올리지 않는다.
+
+검증 결과·설치 가능한 버전 선택 근거·미완료 항목은 [중앙 업데이트 기록](https://github.com/jim1286/app-portfolio/blob/main/docs/design/LIBRARY_UPDATE_2026-10-19.md)에 구분한다. 현재 기록은 로컬 작업이며 해당 중앙 Git URL의 원격 게시를 뜻하지 않는다.
+
+SDK 58의 RN 0.88은 InteractionManager와 NativeMethods를 제거하고 host instance 타입을 바꿨다. renderer는 공개 ComponentRef 기반으로 이관하며 emitted declaration에 RN private 경로를 노출하지 않는다. masked-view 0.3.2의 제거된 타입 참조는 타입 전용 patch로 직접 수정했고 upstream이 해당 선언을 고친 버전을 게시하면 제거한다. 공식 SDK 58 scene template과 겹치는 HJM의 SDK 57 전용 플러그인은 제거했다. 소스·JS 번들 확인과 새 native binary·기기 QA·npm 게시는 별개다.

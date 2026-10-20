@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import {
   keyboardTransitionDuration,
   resolveKeyboardAvoidanceBehavior,
@@ -17,6 +18,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import { inputVisibilityFrame } from "./internal/field-visibility.js";
 
 export type KeyboardAvoidingProps = KeyboardAvoidanceDescriptor &
   Readonly<{
@@ -41,7 +43,7 @@ export const KeyboardAvoidanceContext = createContext(false);
  * Height of the keyboard overlapping `host`'s bottom edge. Padding only the real overlap keeps hosts above
  * a tab bar or toolbar from showing an empty band (2026-10-16).
  */
-export function useKeyboardOverlap(host: RefObject<Pick<View, "measureInWindow"> | null>, enabled = true): number {
+export function useKeyboardOverlap(host: RefObject<Pick<ComponentRef<typeof View>, "measureInWindow"> | null>, enabled = true): number {
   const [overlap, setOverlap] = useState(0);
   useEffect(() => {
     if (!enabled) { setOverlap(0); return; }
@@ -70,13 +72,14 @@ export function useKeyboardOverlap(host: RefObject<Pick<View, "measureInWindow">
  * does not do this by itself, so lower fields stayed hidden (2026-10-16 keyboard audit).
  * Returns an onScroll handler that tracks the offset; merge it with any host handler.
  */
-export function useScrollFocusedInputIntoView(scroll: RefObject<ScrollView | null>, enabled = true, margin = 16) {
+export function useScrollFocusedInputIntoView(scroll: RefObject<ComponentRef<typeof ScrollView> | null>, enabled = true, margin = 16) {
   const offset = useRef(0);
   useEffect(() => {
     if (!enabled) return;
     const shown = Keyboard.addListener("keyboardDidShow", () => {
-      const input = TextInput.State.currentlyFocusedInput?.() as unknown as View | null;
-      const view = scroll.current as unknown as View | null;
+      const focused = TextInput.State.currentlyFocusedInput?.();
+      const input = focused ? inputVisibilityFrame(focused) : null;
+      const view = scroll.current as unknown as ComponentRef<typeof View> | null;
       if (!input || !view || typeof input.measureInWindow !== "function") return;
       view.measureInWindow((_sx, scrollTop, _sw, scrollHeight) => {
         input.measureInWindow((_ix, inputTop, _iw, inputHeight) => {
@@ -93,7 +96,7 @@ export function useScrollFocusedInputIntoView(scroll: RefObject<ScrollView | nul
 }
 
 export function KeyboardAvoiding({ children, offset, safeAreaBottom, style }: KeyboardAvoidingProps) {
-  const host = useRef<View>(null);
+  const host = useRef<ComponentRef<typeof View>>(null);
   const height = useKeyboardOverlap(host);
   const inset = resolveKeyboardInset(height, {
     ...(offset === undefined ? {} : { offset }),

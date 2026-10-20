@@ -38,7 +38,7 @@ it("hides all actions, preserves the card bounds and centres one loader until au
     expect(document.activeElement).not.toBe(hiddenButton);
     const loader = card.querySelector<HTMLElement>('[role="status"]')!;
     expect(loader.getAttribute("aria-label")).toBe("로그인 중");
-    expect(card.querySelectorAll(".hjm-auth-provider-button__spinner")).toHaveLength(1);
+    expect(card.querySelectorAll(".hjm-spinner__glyph")).toHaveLength(1);
     const spinner = loader.firstElementChild!.getBoundingClientRect();
     expect(Math.abs(spinner.x + spinner.width / 2 - (after.x + after.width / 2))).toBeLessThan(1);
     expect(Math.abs(spinner.y + spinner.height / 2 - (after.y + after.height / 2))).toBeLessThan(1);

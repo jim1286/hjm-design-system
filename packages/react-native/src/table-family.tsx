@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text as NativeText, View } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -45,7 +46,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   const header = color(dataTableRecipe.header.color), live = color(dataTableRecipe.sortButton.activeColor);
   // Extra innings overflow the period strip. Open it at the live period (or the latest one) and flash the scroll
   // indicator; starting at inning 1 hid the 9th–11th and read as an eight-inning game (2026-10-17 review N4).
-  const strip = useRef<ScrollView>(null), viewport = useRef(0);
+  const strip = useRef<ComponentRef<typeof ScrollView>>(null), viewport = useRef(0);
   const focusIndex = score.currentPeriod ?? periods.length;
   const revealPeriod = (contentWidth: number) => {
     const overflow = contentWidth - viewport.current;

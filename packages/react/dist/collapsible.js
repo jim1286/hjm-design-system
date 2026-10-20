@@ -3,7 +3,8 @@ import { collapsibleRecipe, validateCollapsibleOpenState, } from "@hjmds/design-
 import { forwardRef, useId, useLayoutEffect, useRef, useState } from "react";
 import { assignRef, classNames } from "./internal.js";
 import { Icon } from "./supplemental-display.js";
-export const Collapsible = forwardRef(function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", className, layoutStyle, ...openState }, forwardedRef) {
+import { Spinner } from "./internal/spinner.js";
+export const Collapsible = forwardRef(function Collapsible({ trigger, triggerLabel, title, pendingLabel, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", className, layoutStyle, ...openState }, forwardedRef) {
     validateCollapsibleOpenState(openState);
     const controlled = openState.open !== undefined;
     const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
@@ -12,33 +13,34 @@ export const Collapsible = forwardRef(function Collapsible({ trigger, children, 
     const button = useRef(null);
     const content = useRef(null);
     const focusedContent = useRef(false);
-    const wasOpen = useRef(open);
+    const contentOpen = open && pendingLabel === undefined;
+    const wasOpen = useRef(contentOpen);
     useLayoutEffect(() => {
         // A controlled close can remove or hide the currently focused input without
         // activating the trigger. Recover only that focus, never an outside control.
         const active = host.current?.ownerDocument.activeElement;
-        if (wasOpen.current && !open && focusedContent.current &&
+        if (wasOpen.current && !contentOpen && focusedContent.current &&
             (content.current?.contains(active ?? null) || active === host.current?.ownerDocument.body)) {
-            (disabled ? host.current : button.current)?.focus();
+            (disabled || pendingLabel !== undefined ? host.current : button.current)?.focus();
         }
-        if (!open)
+        if (!contentOpen)
             focusedContent.current = false;
-        wasOpen.current = open;
-    }, [open, disabled]);
+        wasOpen.current = contentOpen;
+    }, [contentOpen, disabled, pendingLabel]);
     const id = `${useId().replaceAll(":", "")}-collapsible`;
-    return (_jsxs("div", { ref: node => { host.current = node; assignRef(forwardedRef, node); }, tabIndex: -1, className: classNames("hjm-collapsible", className), "data-state": open ? "open" : "closed", style: { ...layoutStyle, "--hjm-collapsible-gap": `${collapsibleRecipe.gap}px` }, children: [_jsxs("button", { ref: button, hidden: presentation === "inline", type: "button", className: "hjm-collapsible__trigger", "aria-expanded": open, "aria-controls": `${id}-content`, disabled: disabled, onClick: event => {
-                    if (disabled || presentation === "inline")
-                        return;
-                    // Safari does not focus buttons on pointer activation; keep the closing
-                    // disclosure as the keyboard origin before its focused content disappears.
-                    if (open)
-                        event.currentTarget.focus();
-                    const next = !open;
-                    if (!controlled)
-                        setInternalOpen(next);
-                    openState.onOpenChange?.(next);
-                }, children: [trigger, marker === "end" ? _jsx(CollapsibleMarker, { open: open }) : null] }), open || keepMounted ? (_jsx("div", { ref: content, onFocusCapture: () => { focusedContent.current = true; }, onBlurCapture: event => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget))
-                    focusedContent.current = false; }, hidden: !open, id: `${id}-content`, role: "region", className: "hjm-collapsible__content", children: children })) : null] }));
+    return (_jsxs("div", { ref: node => { host.current = node; assignRef(forwardedRef, node); }, tabIndex: -1, className: classNames("hjm-collapsible", className), "data-state": open ? "open" : "closed", "aria-busy": pendingLabel === undefined ? undefined : true, style: { ...layoutStyle, "--hjm-collapsible-gap": `${collapsibleRecipe.gap}px` }, children: [_jsxs("div", { className: "hjm-collapsible__header", "data-titled": title == null ? undefined : true, hidden: presentation === "inline", children: [title == null ? null : _jsx("div", { className: "hjm-collapsible__title", children: title }), pendingLabel === undefined ? _jsxs("button", { ref: button, hidden: presentation === "inline", type: "button", className: "hjm-collapsible__trigger", "aria-label": triggerLabel, "aria-expanded": open, "aria-controls": `${id}-content`, disabled: disabled, onClick: event => {
+                            if (disabled || presentation === "inline")
+                                return;
+                            // Safari does not focus buttons on pointer activation; keep the closing
+                            // disclosure as the keyboard origin before its focused content disappears.
+                            if (open)
+                                event.currentTarget.focus();
+                            const next = !open;
+                            if (!controlled)
+                                setInternalOpen(next);
+                            openState.onOpenChange?.(next);
+                        }, children: [trigger, marker === "end" ? _jsx(CollapsibleMarker, { open: open }) : null] }) : _jsx("span", { className: "hjm-collapsible__pending", children: _jsx(Spinner, { label: pendingLabel, size: "small" }) })] }), contentOpen || keepMounted ? (_jsx("div", { ref: content, onFocusCapture: () => { focusedContent.current = true; }, onBlurCapture: event => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget))
+                    focusedContent.current = false; }, hidden: !contentOpen, id: `${id}-content`, role: "region", className: "hjm-collapsible__content", children: children })) : null] }));
 });
 /** The decorative open/closed mark; the expanded state itself travels through the trigger's aria-expanded. */
 export function CollapsibleMarker({ open }) {

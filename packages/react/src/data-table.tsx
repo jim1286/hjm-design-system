@@ -46,6 +46,8 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   rows: readonly DataTableRowDescriptor<RowKey>[];
   labels: DataTableLabels;
   renderCell: (rowId: RowKey, columnId: ColumnKey) => ReactNode;
+  /** Text for rich cells. Native composes the row name; Web labels each cell. Omit to use visible primitive text. */
+  getCellText?: (rowId: RowKey, columnId: ColumnKey) => string | undefined;
   selection?: DataTableSelection<RowKey>;
   sortState?: DataTableSortState<ColumnKey>;
   sortCycle?: DataTableSortCycle;
@@ -121,6 +123,7 @@ export const DataTable = forwardRef(function DataTable<
     rows,
     labels,
     renderCell,
+    getCellText,
     selection,
     sortState = null,
     sortCycle = dataTableDefaults.sortCycle,
@@ -327,6 +330,7 @@ export const DataTable = forwardRef(function DataTable<
                 return (
                   <td
                     key={column.id}
+                    aria-label={getCellText?.(row.id, column.id)}
                     className={classNames(sticky.className, emphasis.heat && "hjm-table-family__heat")}
                     data-tone={emphasis.tone}
                     data-heat={emphasis.heat}

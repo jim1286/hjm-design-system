@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { type ReactNode, type RefObject } from "react";
 import { TextInput } from "react-native";
@@ -42,6 +43,12 @@ export declare function InitialFocusProvider({ scope, children }: {
     children: ReactNode;
 }): import("react").JSX.Element;
 /** Registers a text field with the nearest scope. `preference` is the field's public `initialFocusTarget`. */
-export declare function useInitialFocusTarget(input: RefObject<TextInput | null>, preference: boolean | undefined, focusable: () => boolean): void;
+export declare function useInitialFocusTarget(input: RefObject<ComponentRef<typeof TextInput> | null>, preference: boolean | undefined, focusable: () => boolean): void;
+/** Page footer inputs are bottom-anchored, so entry must not open their keyboard (2026-10-18 user request).
+ * Keep the boundary through nested screens; a separately opened overlay owns its own focus policy.
+ */
+export declare function BottomEntryFocusBoundary({ children }: {
+    children: ReactNode;
+}): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=initial-focus.d.ts.map

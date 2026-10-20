@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { formRecipe, type FormSubmitStatus } from "@hjmds/design-contracts/components/form";
 import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollectionState, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjmds/design-contracts/components/collection";
@@ -55,7 +56,7 @@ export type FormProps<Values> = Readonly<{
      * The product-selected first invalid input, or null when client validation passes.
      * Form uses it to focus the control and move screen-reader focus before submitting.
      */
-    firstInvalidFieldRef?: RefObject<TextInput | null>;
+    firstInvalidFieldRef?: RefObject<ComponentRef<typeof TextInput> | null>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;

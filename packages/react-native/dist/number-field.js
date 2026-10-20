@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { commitNumberFieldInput, numberFieldRecipe, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjmds/design-contracts/components/number-field";
@@ -118,7 +119,7 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                             ? numberFieldRecipe.frame.focusBorder
                             : numberFieldRecipe.frame.border, palette),
                     borderRadius: tokens.radius[numberFieldRecipe.frame.radius],
-                    borderWidth: error || focused ? 2 : numberFieldRecipe.frame.borderWidth,
+                    borderWidth: error ? fieldRecipe.states.invalid.borderWidth : focused ? 2 : numberFieldRecipe.frame.borderWidth,
                     direction: environment.direction,
                     flexDirection: "row",
                     minHeight: recipe.minHeight,

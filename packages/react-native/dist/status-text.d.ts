@@ -1,3 +1,5 @@
+import type { ComponentRef } from "react";
+import { forwardRef } from "react";
 import { type Text as NativeText } from "react-native";
 import { type TextProps } from "./primitives.js";
 import type { AnnouncementMode } from "./feedback.js";
@@ -8,10 +10,5 @@ export type StatusTextProps = Omit<TextProps, "children" | "accessibilityLiveReg
     /** iOS: opt in for a conditionally mounted result. Persistent initial hints stay quiet. */
     announceOnMount?: boolean;
 }>;
-export declare const StatusText: import("react").ForwardRefExoticComponent<Omit<TextProps, "children" | "accessibilityLiveRegion" | "aria-live"> & Readonly<{
-    children: string;
-    announcement?: AnnouncementMode;
-    /** iOS: opt in for a conditionally mounted result. Persistent initial hints stay quiet. */
-    announceOnMount?: boolean;
-}> & import("react").RefAttributes<NativeText>>;
+export declare const StatusText: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>, StatusTextProps>>;
 //# sourceMappingURL=status-text.d.ts.map

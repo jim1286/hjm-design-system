@@ -124,15 +124,42 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
     const [visited, setVisited] = useState(() => new Set([value]));
     const tabRefs = useRef(new Map());
     const focusedTabRef = useRef(null);
-    const generatedId = useId().replaceAll(":", "");
-    const baseId = id ?? `hjm-${generatedId}`;
+    const stripDrag = useRef(null);
+    const suppressDragClick = useRef(false);
+    const itemOrder = JSON.stringify(items.map(item => item.id));
     const theme = useOptionalHjmTheme();
     const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
+    // Native touch scrolling already works; mouse dragging needs an explicit path
+    // so narrow desktop previews can reach the same offscreen tabs without selecting them.
+    useLayoutEffect(() => {
+        if (overflow !== "scroll" || orientation !== "horizontal")
+            return;
+        const tab = tabRefs.current.get(value);
+        const list = tab?.parentElement;
+        if (!tab || !list)
+            return;
+        const reveal = () => {
+            const rect = tab.getBoundingClientRect(), viewport = list.getBoundingClientRect();
+            if (rect.left < viewport.left)
+                list.scrollLeft += rect.left - viewport.left;
+            else if (rect.right > viewport.right)
+                list.scrollLeft += rect.right - viewport.right;
+        };
+        reveal();
+        // Responsive widths and translated labels can hide an unchanged selection.
+        // Adjust only the rail, preserving page scroll and deliberate manual browsing.
+        const observer = new ResizeObserver(reveal);
+        observer.observe(list);
+        for (const node of tabRefs.current.values())
+            observer.observe(node);
+        return () => observer.disconnect();
+    }, [value, overflow, orientation, itemOrder, direction]);
+    const generatedId = useId().replaceAll(":", "");
+    const baseId = id ?? `hjm-${generatedId}`;
     const appearance = resolveTabsAppearance(suppliedAppearance, theme?.designProfile?.interactions.selectionMotion, orientation);
     const movingIndicator = appearance !== "standard" || (orientation === "horizontal" && swipePosition !== undefined);
     // Recreated label/panel elements must not cancel motion on unrelated draft edits;
     // resize observation covers their geometry, while stable IDs detect reordering.
-    const itemOrder = JSON.stringify(items.map(item => item.id));
     const indicatorRef = useRef(null);
     const previousIndicator = useRef(null);
     const interruptedIndicator = useRef(null);
@@ -273,7 +300,34 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         }
     };
     const panelId = (value) => getTabPanelId(baseId, value, panelMode);
-    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": appearance, "data-indicator": indicator, "data-indicator-motion": movingIndicator ? "moving" : "static", "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [movingIndicator ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey") }) : null, items.map((item) => {
+    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": appearance, "data-indicator": indicator, "data-indicator-motion": movingIndicator ? "moving" : "static", "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", onPointerDown: (event) => {
+                    suppressDragClick.current = false;
+                    if (event.pointerType !== "mouse" || event.button !== 0 || overflow !== "scroll" || orientation !== "horizontal")
+                        return;
+                    stripDrag.current = { pointer: event.pointerId, x: event.clientX, start: event.currentTarget.scrollLeft, moved: false };
+                }, onPointerMove: (event) => {
+                    const drag = stripDrag.current;
+                    if (!drag || drag.pointer !== event.pointerId || event.buttons !== 1)
+                        return;
+                    const delta = event.clientX - drag.x;
+                    if (!drag.moved && Math.abs(delta) < 5)
+                        return;
+                    drag.moved = true;
+                    suppressDragClick.current = true;
+                    event.currentTarget.setPointerCapture(event.pointerId);
+                    event.preventDefault();
+                    event.currentTarget.scrollLeft = drag.start - delta;
+                }, onPointerUp: (event) => {
+                    stripDrag.current = null;
+                    if (event.currentTarget.hasPointerCapture(event.pointerId))
+                        event.currentTarget.releasePointerCapture(event.pointerId);
+                }, onPointerCancel: () => { stripDrag.current = null; suppressDragClick.current = false; }, onLostPointerCapture: () => { stripDrag.current = null; }, onClickCapture: (event) => {
+                    if (!suppressDragClick.current)
+                        return;
+                    suppressDragClick.current = false;
+                    event.preventDefault();
+                    event.stopPropagation();
+                }, role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [movingIndicator ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey") }) : null, items.map((item) => {
                         const selected = item.id === value;
                         const tabId = getTabId(baseId, item.id);
                         const leadingSize = iconRecipe.sizes[tabsRecipe.icon.glyph];

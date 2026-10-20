@@ -9,10 +9,13 @@ import { ScreenFooterContext } from "./internal/screen-footer.js";
 function Action({ action, tone }) {
     if (!action.label.trim())
         throw new TypeError("BottomCTA action label must not be empty");
-    return _jsx(Button, { ref: action.buttonRef, onClick: action.onClick, tone: action.tone ?? tone, size: action.size ?? "medium", disabled: action.disabled, loading: action.loading ?? false, "aria-label": action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel, children: action.label });
+    const type = action.type ?? "button";
+    if (type === "button" && !action.onClick)
+        throw new TypeError("BottomCTA button action requires onClick");
+    return _jsx(Button, { ref: action.buttonRef, type: type, form: action.form, onClick: action.onClick, tone: action.tone ?? tone, size: action.size ?? "medium", disabled: action.disabled, loading: action.loading ?? false, leading: action.leading, trailing: action.trailing, "aria-label": action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel, children: action.label });
 }
 function isAction(value) {
-    return typeof value === "object" && value !== null && "label" in value && "onClick" in value;
+    return typeof value === "object" && value !== null && "label" in value && typeof value.label === "string";
 }
 /** One primary action with optional supporting copy and a secondary action, matching Native's slots. */
 export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, position = "flow", className, style, layoutStyle, ...props }, ref) {
@@ -28,6 +31,7 @@ export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondar
             "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
             "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
             "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
+            "--hjm-bottom-cta-parent-padding": inScreenFooter?.bottomPadding ?? "0px",
         }, children: [description ? _jsx("p", { className: "hjm-bottom-cta__description", children: description }) : null, _jsxs("div", { className: "hjm-bottom-cta__actions", children: [secondaryAction == null ? null : _jsx("div", { className: "hjm-bottom-cta__secondary", children: isAction(secondaryAction) ? _jsx(Action, { action: secondaryAction, tone: "secondary" }) : secondaryAction }), _jsx("div", { className: "hjm-bottom-cta__primary", children: _jsx(Action, { action: primaryAction, tone: "primary" }) })] })] });
 });
 //# sourceMappingURL=bottom-cta.js.map

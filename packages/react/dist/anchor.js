@@ -1,10 +1,10 @@
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { getAnchorCurrentId, resolveAnchorItems } from "@hjmds/design-contracts/components/anchor";
+import { anchorRecipe, getAnchorCurrentId, resolveAnchorItems } from "@hjmds/design-contracts/components/anchor";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Same-document table of contents; sticky positioning belongs to its host layout. */
-export const Anchor = forwardRef(function Anchor({ label, items, container, offset = 0, orientation = "vertical", historyMode = "push", onNavigate, className, layoutStyle, ...props }, ref) {
+export const Anchor = forwardRef(function Anchor({ label, items, container, offset = 0, orientation = "vertical", historyMode = "push", onNavigate, renderLeading, className, layoutStyle, ...props }, ref) {
     const resolved = resolveAnchorItems(items);
     if (!label.trim())
         throw new TypeError("Anchor label must not be empty");
@@ -92,7 +92,7 @@ export const Anchor = forwardRef(function Anchor({ label, items, container, offs
         window.addEventListener("popstate", restoreHash);
         return () => { cancelAnimationFrame(frame); resize.disconnect(); mutation.disconnect(); source.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); window.removeEventListener("hashchange", restoreHash); window.removeEventListener("popstate", restoreHash); };
     }, [idsKey, container, offset]);
-    return _jsx("nav", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, "aria-label": label, className: classNames("hjm-anchor", className), "data-orientation": orientation, children: _jsx("ul", { className: "hjm-anchor__list", children: resolved.map((item) => _jsx("li", { children: _jsx("a", { href: item.href, className: "hjm-anchor__link", "aria-current": current === item.id ? "location" : undefined, onClick: (event) => {
+    return _jsx("nav", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, "aria-label": label, className: classNames("hjm-anchor", className), "data-orientation": orientation, children: _jsx("ul", { className: "hjm-anchor__list", children: resolved.map((item) => _jsx("li", { children: _jsxs("a", { href: item.href, className: "hjm-anchor__link", "aria-current": current === item.id ? "location" : undefined, onClick: (event) => {
                         onNavigate?.(item.id, event);
                         if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey)
                             return;
@@ -105,6 +105,6 @@ export const Anchor = forwardRef(function Anchor({ label, items, container, offs
                         focusTarget(target);
                         if (historyMode !== "none" && window.location.hash !== item.href)
                             window.history[historyMode === "replace" ? "replaceState" : "pushState"](window.history.state, "", item.href);
-                    }, children: item.label }) }, item.id)) }) });
+                    }, children: [renderLeading ? _jsx("span", { className: "hjm-anchor__leading", "aria-hidden": "true", style: { inlineSize: anchorRecipe.link.leadingSize, blockSize: anchorRecipe.link.leadingSize }, children: renderLeading(item) }) : null, _jsx("span", { children: item.label })] }) }, item.id)) }) });
 });
 //# sourceMappingURL=anchor.js.map

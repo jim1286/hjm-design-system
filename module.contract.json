@@ -7,7 +7,7 @@
   "documentation": [
     "README.md",
     "CONTRIBUTING.md",
-    "packages/flutter/README.md"
+    "docs/FLUTTER_LEGACY.md"
   ],
   "interfaces": [
     {
@@ -24,11 +24,6 @@
       "name": "react-native",
       "path": "packages/react-native/src/index.ts",
       "versionSource": "packages/react-native/package.json"
-    },
-    {
-      "name": "flutter",
-      "path": "packages/flutter/lib/hjm_flutter.dart",
-      "versionSource": "packages/flutter/pubspec.yaml"
     }
   ],
   "compatibility": {

@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
+import { ScreenFooterContext } from "./internal/screen-footer.js";
 // Overlays cover the bottom bar, so screens inside them must not pad for it.
 import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset.js";
 import { InitialFocusProvider, useInitialFocusScope, useOverlayLayer } from "./internal/initial-focus.js";
@@ -11,7 +12,7 @@ import {} from "./composition-style.js";
 import { KeyboardAvoidanceContext } from "./keyboard.js";
 import { canDismissSheet, createSheetLifecycle, resolveSheetCloseButton, resolveSheetDismissPolicy, sheetDragRecipe, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, control, easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { actionGroupRecipe, alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { Animated, Easing, Keyboard, Modal, PanResponder, Platform, ScrollView, Pressable, StatusBar, View, useWindowDimensions, } from "react-native";
@@ -28,9 +29,9 @@ import { resolveNativeShadowElevation } from "./internal/styles.js";
 function CloseGlyph() {
     return _jsx(FixedGlyph, { fontSize: glyph.sm, children: "\u00D7" });
 }
-// Keep interaction visibility off native-driven animation hosts. In iOS 26.5,
-// Dialog/AlertDialog/Sheet lost their AX descendants on a second presentation
-// while still painting; a non-animated boundary preserves reopen accessibility.
+// Keep interaction visibility off native-driven animation hosts: closing content becomes inert while its host exits.
+// This boundary does not reset UIKit state leaked by Fabric's native view recycling (react/react-native#58361);
+// that dependency defect needs a prepareForRecycle correction, not another JS visibility/animation toggle.
 function ModalInteractionBoundary({ visible, onTouchStart, children }) {
     return _jsx(View, { onTouchStart: onTouchStart, accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: { flex: 1 }, children: children });
 }
@@ -439,7 +440,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                                                         }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, scrollEnabled: scrollEnabled, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, _jsx(KeyboardAvoidanceContext.Provider, { value: true, children: children })] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }), overlayLayer ? _jsx(Animated.View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { bottom: 0, left: 0, opacity: motionProgress, position: "absolute", right: 0, top: 0 }, children: overlayLayer }) : null] }) }) }) }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
-export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = alertDialogRecipe.defaults.size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
+export function AlertDialog({ open, defaultOpen, onOpenChange, request, confirmDisabled = false, size = alertDialogRecipe.defaults.size, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
     // Prompt-style content with one text entry is focused on open; confirm-only dialogs have no field to choose.
     const initialFocus = initialFocusDefaults.overlay;
     validateAlertDialogRequest(request);
@@ -644,6 +645,8 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
         requestClose(session, reason);
     };
     const confirm = () => {
+        if (confirmDisabled)
+            return;
         void session.confirm().then((closing) => {
             if (closing)
                 requestClose(session, "confirm");
@@ -666,7 +669,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
     const confirmBackground = resolveColorReference(toneRecipe.confirm, palette);
     const confirmContent = resolveColorReference(toneRecipe.confirmContent, palette);
     const errorColor = resolveColorReference(alertDialogRecipe.error.color, palette);
-    const confirmAction = (_jsx(Pressable, { ref: confirmRef, accessibilityLabel: request.confirmLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: busy }, disabled: busy, onPress: confirm, style: ({ pressed }) => [
+    const confirmAction = (_jsx(Pressable, { ref: confirmRef, accessibilityLabel: request.confirmLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: busy || confirmDisabled }, disabled: busy || confirmDisabled, onPress: confirm, style: ({ pressed }) => [
             minimumTargetStyle,
             {
                 alignItems: "center",
@@ -675,7 +678,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
                 flex: stackActions ? undefined : 1,
                 justifyContent: "center",
                 minWidth: alertDialogRecipe.actions.minButtonWidth,
-                opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+                opacity: busy || confirmDisabled ? 0.5 : pressed ? 0.86 : 1,
                 paddingHorizontal: spacing.md,
             },
         ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) }));
@@ -742,7 +745,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, size = a
                                                     ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }) }) }) }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, 
+export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, swipeDirection, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, 
 // Default on since the 2026-10-16 keyboard audit: input sheets that forgot the opt-in were covered.
 keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = initialFocusDefaults.overlay, ...modalProps }) {
     const { environment, palette, tokens, designProfile } = useHjmNativeTheme();
@@ -968,7 +971,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     // release past the distance or velocity threshold closes with reason "swipe", otherwise it springs back.
     const [dragOffset] = useState(() => new Animated.Value(0));
     const sheetHeight = useRef(0);
-    const showHandle = !side && policy.dismissible && policy.swipeDismiss;
+    const showHandle = (!side || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
     const closeBlocked = busy && !policy.dismissWhileBusy;
     const canSwipe = showHandle && !closeBlocked;
     const requestCloseRef = useRef(requestClose);
@@ -1058,15 +1061,15 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                             transform: environment.reducedMotion
                                                 ? undefined
                                                 : side
-                                                    ? [{ translateX: translate }]
+                                                    ? [{ translateX: translate }, { translateY: dragOffset }]
                                                     // Two translateY entries compose: the enter/exit motion plus the live drag offset.
                                                     : [{ translateY: translate }, { translateY: dragOffset }],
                                             width: side ? "88%" : "100%",
                                         },
                                         contentStyle,
                                     ], children: [_jsx(View, { accessible: true, accessibilityRole: "header", accessibilityLabel: accessibleTitle, style: { position: "absolute", top: 0, start: 0, width: 1, height: 1, overflow: "hidden" } }), _jsxs(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { flexShrink: 0 }, children: [showHandle && sheetRecipe.handle.visibleByDefault ? (
-                                                // The handle doubles as a close control so switch and screen-reader users need no drag.
-                                                _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: closeLabel, accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("close-action"), hitSlop: spacing.sm, style: { alignSelf: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) })) : null, description || (policy.dismissible && closeVisible) ? (_jsxs(View, { style: {
+                                                // An explicit × owns the close command; its handle remains a drag affordance.
+                                                closeVisible ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { alignSelf: "center", minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) })) : (_jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: closeLabel, accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("close-action"), hitSlop: spacing.sm, style: { alignSelf: "center", minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center", paddingVertical: spacing.xs }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) }))) : null, description || (policy.dismissible && closeVisible) ? (_jsxs(View, { style: {
                                                         alignItems: "center",
                                                         minHeight: sheetRecipe.header.minHeight,
                                                         flexShrink: 0,
@@ -1083,11 +1086,13 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                             // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
                                             // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
                                             // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
-                                            style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, contentContainerStyle: { gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }), footer ? (_jsx(View, { style: {
+                                            style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, 
+                                            // Fill the scroll viewport so a CompositionLayout state can center in the sheet body.
+                                            contentContainerStyle: { flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }), footer ? (_jsx(View, { style: {
                                                 gap: sheetRecipe.footer.gap,
                                                 flexShrink: 0,
                                                 paddingTop: sheetRecipe.footer.paddingTop,
-                                            }, children: footer })) : null] })] }) }) }) }) }) }));
+                                            }, children: _jsx(ScreenFooterContext.Provider, { value: { bottomPadding: sheetRecipe.content.paddingBottom + bottomInset }, children: footer }) })) : null] })] }) }) }) }) }) }));
 }
 /**
  * Edge-to-edge presentation (Dialog companion): a full-screen Modal with the status bar hidden and rotation allowed,

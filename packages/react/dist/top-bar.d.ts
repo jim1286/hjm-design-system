@@ -18,6 +18,8 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Share a product scene behind the bar without replacing its layout or controls. */
+    surface?: "default" | "transparent";
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -39,6 +41,8 @@ export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTML
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Share a product scene behind the bar without replacing its layout or controls. */
+    surface?: "default" | "transparent";
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;

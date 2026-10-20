@@ -513,7 +513,7 @@ export const statisticExample = { id: "orders", label: "오늘 주문", value: "
 export const timelineExample = {
   items: [
     { id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" },
-    { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" },
+    { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success", emphasized: true },
   ],
   accessibleName: ({ position, total, label }: { position: number; total: number; label: string }) => `${total}개 중 ${position}번째, ${label}`,
 } as const;

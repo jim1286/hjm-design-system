@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { isWebRenderer, webOnly } from "./internal/web-a11y.js";
 import { useImperativeHandle, useRef, useEffect, useState, type ReactNode, type Ref } from "react";
@@ -44,7 +45,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     ...(descriptor.onSelectionChange ? { onChange: descriptor.onSelectionChange } : {}),
   });
   const cells = resolveCalendarGridDescriptor(descriptor.grid, selected, { composeAccessibleName });
-  const targets = useRef(new Map<string, View>());
+  const targets = useRef(new Map<string, ComponentRef<typeof View>>());
   const pending = useRef<string | undefined>(undefined);
   const [request, setRequest] = useState(0);
   useImperativeHandle(ref, () => ({ focusDate(date) { pending.current = date; setRequest((value) => value + 1); } }), []);

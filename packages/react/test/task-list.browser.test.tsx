@@ -7,7 +7,7 @@ it('keeps row actions outside selection and preserves them in a custom collectio
   const root = createRoot(host); const changes: unknown[] = []; const actions: string[] = [];
   const contexts: boolean[] = [];
   try {
-    await act(() => root.render(<HjmProvider><TaskList label="Tasks"
+    await act(() => root.render(<HjmProvider><TaskList label="Tasks" itemPresentation="plain"
       items={[{id:'a',label:'First',completed:false},{id:'b',label:'Second',completed:false,disabled:true}]}
       onCompletedChange={(...args) => changes.push(args)}
       renderItemAction={({item,disabled}) => { contexts.push(disabled); return <button disabled={disabled} onClick={() => actions.push(item.id)}>Remove {item.label}</button>; }}
@@ -15,6 +15,7 @@ it('keeps row actions outside selection and preserves them in a custom collectio
     /></HjmProvider>));
     const buttons = host.querySelectorAll('button');
     expect(buttons[0]!.closest('label')).toBeNull();
+    expect(host.querySelectorAll('label[data-presentation="plain"]')).toHaveLength(2);
     await act(() => buttons[0]!.click());
     await act(() => buttons[1]!.click());
     expect(actions).toEqual(['a']); expect(changes).toEqual([]);

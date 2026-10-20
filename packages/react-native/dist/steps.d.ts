@@ -8,7 +8,8 @@ export type StepsProps<Id extends string = string> = Readonly<{
     renderMark?: (status: StepStatus, position: number) => ReactNode;
     /**
      * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-     * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+     * later steps stay static in default linear mode. Free reading mode makes every step selectable.
+     * Omit the handler while the flow is locked.
      */
     onStepPress?: (id: Id) => void;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */

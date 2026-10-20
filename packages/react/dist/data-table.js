@@ -38,7 +38,7 @@ function bodySections(items) {
     // An empty table still renders one (empty) tbody, as before row groups existed.
     return sections.length > 0 ? sections : [{ group: null, rows: [] }];
 }
-export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, summaryRow, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, className, layoutStyle, }, forwardedRef) {
+export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, getCellText, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, summaryRow, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, className, layoutStyle, }, forwardedRef) {
     // Unconditional: `??` on the hook call would break the rules of hooks.
     const densityDefault = useHjmDensityDefault({ comfortable: "regular", compact: "compact" });
     const density = densityProp ?? densityDefault;
@@ -158,7 +158,7 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
                                             const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatColors);
                                             // Sub-rows (TanStack `depth`) indent only the first column, which is the pinned one when pinning.
                                             const depth = columnIndex === 0 ? row.depth ?? 0 : 0;
-                                            return (_jsx("td", { className: classNames(sticky.className, emphasis.heat && "hjm-table-family__heat"), "data-tone": emphasis.tone, "data-heat": emphasis.heat, "data-depth": depth > 0 ? depth : undefined, style: {
+                                            return (_jsx("td", { "aria-label": getCellText?.(row.id, column.id), className: classNames(sticky.className, emphasis.heat && "hjm-table-family__heat"), "data-tone": emphasis.tone, "data-heat": emphasis.heat, "data-depth": depth > 0 ? depth : undefined, style: {
                                                     textAlign: column.align ?? dataTableColumnDefaults.align,
                                                     ...emphasis.style,
                                                     ...(depth > 0 ? { "--hjm-data-table-indent": `${depth * dataTableFamilyRecipe.depthIndent}px` } : {}),

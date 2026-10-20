@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable } from "react-native";
+import { Modal, Pressable, ScrollView } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { Select } from "../src/forms.js";
 import { CheckboxGroup } from "../src/inputs.js";
@@ -22,4 +22,21 @@ it("reconciles Native group removal and blocks actions after readOnly changes",(
  const changed=vi.fn();const ui=(next:typeof items,locked=false)=><CheckboxGroup label="Group" items={next} defaultValue={new Set(["b"])} onValueChange={changed} readOnly={locked}/>;
  render(ui(items));render(ui([items[0]!]));expect(changed).toHaveBeenLastCalledWith(new Set());render(ui([items[0]!],true));
  act(()=>tree!.root.findByType(Pressable).props.onPress());expect(changed).toHaveBeenCalledTimes(1);
+});
+
+it("reveals the selected row after actual modal and list layout, including section offsets",()=>{
+ const scrollTo=vi.fn(); const measure=vi.fn((_content: unknown, done: (...args: number[])=>void)=>done(0,900,200,80));
+ const ui=(open:boolean)=><HjmNativeProvider><Select label="Pick" sections={[{id:"group",label:"Group",items}]} selectedKey="b" open={open} onSelectionChange={()=>{}} placeholder="Choose" dismissLabel="Close"/></HjmNativeProvider>;
+ act(()=>{tree=create(ui(true),{createNodeMock: node=>node.type==="ScrollView"?{scrollTo}:(node.props as {accessibilityLabel?:string}).accessibilityLabel==="Beta"?{measureLayout:measure}:{} });});
+ const scroll=()=>tree!.root.findByType(ScrollView);
+ act(()=>{scroll().props.onLayout({nativeEvent:{layout:{height:300}}});scroll().props.onContentSizeChange(200,1200);});
+ expect(scrollTo).not.toHaveBeenCalled();
+ act(()=>tree!.root.findByType(Modal).props.onShow());
+ expect(measure).toHaveBeenCalledOnce(); expect(scrollTo).toHaveBeenCalledWith({y:790,animated:false});
+ scrollTo.mockClear();
+ act(()=>scroll().props.onContentSizeChange(200,1300));
+ expect(scrollTo).not.toHaveBeenCalled();
+ act(()=>tree!.update(ui(false))); act(()=>tree!.update(ui(true)));
+ act(()=>tree!.root.findByType(Modal).props.onShow());
+ expect(scrollTo).toHaveBeenCalledOnce();
 });

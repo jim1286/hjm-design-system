@@ -11,7 +11,7 @@ const DEFAULT_WIDTH = 72, PINNED_WIDTH = 96;
 // React Native textAlign has no logical start/end; mirror through the provider direction so RTL tables read
 // from the right like the Web renderer's logical alignment (2026-10-18 scenario-matrix rtl proof).
 const alignOf = (align, direction) => align === "center" ? "center" : (align === "end") !== (direction === "rtl") ? "right" : "left";
-export function DataTable({ columns, rows, labels, renderCell, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, }) {
+export function DataTable({ columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, }) {
     validateDataTableColumns(columns);
     validateDataTableRows(rows);
     validateDataTableSortState(sortState, columns);
@@ -60,9 +60,21 @@ export function DataTable({ columns, rows, labels, renderCell, sortState = null,
         const cells = _jsx(View, { style: { flexDirection: "row" }, children: list.map((column, index) => cell(renderCell(rowDescriptor.id, column.id), column, part === "pinned", part === "pinned" || sortState?.columnId === column.id, `${rowDescriptor.id}-${column.id}`, cellStyle?.(rowDescriptor.id, column.id) ?? null, index === 0 && (part === "pinned" || pinned.length === 0) ? (rowDescriptor.depth ?? 0) * dataTableFamilyRecipe.depthIndent : 0)) });
         const style = { height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), backgroundColor: rowBackground(rowDescriptor.id), opacity: rowDescriptor.disabled ? 0.5 : 1 };
         // Only the pinned half carries the accessible row button so a row is announced once.
-        const name = part === "pinned" ? columns.map(column => { const value = renderCell(rowDescriptor.id, column.id); return typeof value === "string" || typeof value === "number" ? `${column.header} ${value}` : column.header; }).join(", ") : undefined;
+        // Rich cells may contain portraits or other components whose text cannot be
+        // safely inferred. The product supplies their readable value instead of a
+        // recursive React-node guess (Today Baseball player identities, 2026-10-19).
+        const ownsRowAccessibility = part === "pinned" || pinned.length === 0;
+        const name = ownsRowAccessibility ? columns.map(column => {
+            const text = getCellText?.(rowDescriptor.id, column.id);
+            if (text !== undefined)
+                return `${column.header} ${text}`;
+            const value = renderCell(rowDescriptor.id, column.id);
+            return typeof value === "string" || typeof value === "number" ? `${column.header} ${value}` : column.header;
+        }).join(", ") : undefined;
         return onRowPress && !rowDescriptor.disabled
-            ? _jsx(Pressable, { accessible: part === "pinned" || pinned.length === 0, accessibilityRole: "button", accessibilityState: { selected: selectedRowId === rowDescriptor.id }, accessibilityLabel: name, onPressIn: () => setPressed(rowDescriptor.id), onPressOut: () => setPressed(null), onPress: () => onRowPress(rowDescriptor.id), style: style, children: cells }, rowDescriptor.id)
+            // accessible=false alone does not remove RN Web's role or default tab stop. The
+            // pinned target already names every column; its visual scrolling half remains pointer-active only.
+            ? _jsx(Pressable, { accessible: ownsRowAccessibility, accessibilityRole: ownsRowAccessibility ? "button" : undefined, "aria-hidden": !ownsRowAccessibility, accessibilityElementsHidden: !ownsRowAccessibility, importantForAccessibility: ownsRowAccessibility ? "auto" : "no-hide-descendants", tabIndex: ownsRowAccessibility ? 0 : -1, accessibilityState: { selected: selectedRowId === rowDescriptor.id }, accessibilityLabel: name, onPressIn: () => setPressed(rowDescriptor.id), onPressOut: () => setPressed(null), onPress: () => onRowPress(rowDescriptor.id), style: style, children: cells }, rowDescriptor.id)
             : _jsx(View, { accessible: part === "pinned" || pinned.length === 0, accessibilityLabel: name, style: style, children: cells }, rowDescriptor.id);
     }
     const summary = (list, part) => summaryRow ? _jsx(View, { style: { flexDirection: "row", height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.header.borderBottom), backgroundColor: color(dataTableRecipe.header.background) }, children: list.map(column => cell(summaryRow(column.id), column, part === "pinned", true, `summary-${column.id}`)) }) : null;

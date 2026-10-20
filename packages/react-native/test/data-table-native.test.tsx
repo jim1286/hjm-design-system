@@ -56,3 +56,36 @@ it("fits full sortable headers and innings values in both header and body column
     expect(tree.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.children) && n.props.children.join("") === "평균자책점 ▲").length).toBeGreaterThan(0);
   } finally { act(() => tree.unmount()); }
 });
+
+
+it.each([true, false])("names rich-cell rows once and preserves activation, pinned=%s", pinned => {
+  let tree!: ReactTestRenderer;
+  const pressed: string[] = [];
+  const richColumns = columns.map(column => { const { pinned: _pinned, ...unpinned } = column; return pinned ? column : unpinned; });
+  act(() => { tree = create(<HjmNativeProvider><DataTable columns={richColumns} rows={[{ id: "a" }]}
+    labels={{ table: "선수 기록", sortColumn: header => header }}
+    renderCell={(row, column) => column === "name" ? <View accessibilityLabel={data[row]!.name} /> : data[row]![column]!}
+    getCellText={(row, column) => column === "name" ? data[row]!.name : undefined}
+    onRowPress={id => pressed.push(id)} /></HjmNativeProvider>); });
+  try {
+    const named = tree.root.findAll(node => typeof node.type === "string" && node.props.accessible === true
+      && node.props.accessibilityLabel === "선수 구자욱, 타율 .361");
+    expect(named).toHaveLength(1);
+    act(() => named[0]!.props.onPress());
+    expect(pressed).toEqual(["a"]);
+    const scrollingTargets = tree.root.findAll(node => typeof node.type === "string" && node.props.accessible === false && typeof node.props.onPress === "function");
+    expect(scrollingTargets).toHaveLength(pinned ? 1 : 0);
+    if (pinned) {
+      const scrolling = scrollingTargets[0]!;
+      expect(scrolling.props.accessibilityRole).toBeUndefined();
+      expect(scrolling.props["aria-hidden"]).toBe(true);
+      expect(scrolling.props.accessibilityElementsHidden).toBe(true);
+      expect(scrolling.props.importantForAccessibility).toBe("no-hide-descendants");
+      expect(scrolling.props.tabIndex).toBe(-1);
+      expect(named[0]!.props.tabIndex).toBe(0);
+      // Pointer activation on the visible stats still opens the same row.
+      act(() => scrolling.props.onPress());
+      expect(pressed).toEqual(["a", "a"]);
+    }
+  } finally { act(() => tree.unmount()); }
+});

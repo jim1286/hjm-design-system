@@ -1,1 +1,1 @@
-{"version":3,"file":"screen-footer.d.ts","sourceRoot":"","sources":["../../src/internal/screen-footer.ts"],"names":[],"mappings":"AAEA;;;;GAIG;AACH,eAAO,MAAM,mBAAmB,kCAAuB,CAAC"}
+{"version":3,"file":"screen-footer.d.ts","sourceRoot":"","sources":["../../src/internal/screen-footer.ts"],"names":[],"mappings":"AAEA;;;;GAIG;AACH,eAAO,MAAM,mBAAmB;mBAA2C,MAAM;UAAiB,CAAC"}

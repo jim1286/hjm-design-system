@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import type { ButtonProps } from "./actions.js";
 import {
   floatingActionButtonRecipe as recipe,
@@ -38,7 +39,7 @@ export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" 
 }>;
 
 /** Place after the ScrollView in a positioned screen; reserve the reported content clearance. */
-export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(function FloatingActionButton({
+export const FloatingActionButton: ReturnType<typeof forwardRef<ComponentRef<typeof View>, FloatingActionButtonProps>> = forwardRef<ComponentRef<typeof View>, FloatingActionButtonProps>(function FloatingActionButton({
   descriptor, renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, ...props
 }, ref) {
   const { colors, environment, designProfile } = useHjmNativeTheme();
@@ -57,7 +58,7 @@ export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(
       easing: Easing.bezier(...easing[recipe.transition.easing]), useNativeDriver: true });
     animation.start(); return () => animation.stop();
   }, [collapsed, environment.reducedMotion, labelOpacity]);
-  return <RecipeButton {...props} ref={ref} size="large" tone="primary" shape="pill" growWithContent
+  return <RecipeButton {...props} appearance="flat" ref={ref} size="large" tone="primary" shape="pill" growWithContent
     accessibilityLabel={resolved.resolvedAccessibilityLabel}
     onLayout={({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance,
       nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset))}

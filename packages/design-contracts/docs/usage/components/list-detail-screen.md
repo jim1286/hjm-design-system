@@ -64,13 +64,17 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `list` | `ReactNode` | 필수 | 목록 pane 본문. 상세가 열려도 mount를 유지한다 |
-| `detail` | `{ title; content; state?; stateAction?; notice? }` | 없음 | 있으면 상세 pane을 보이고 목록 pane을 숨긴다. 닫힌 상태는 prop을 빼서 표현한다(`undefined`를 넘기지 않는다) |
+| `detail` | `{ title; content; state?; stateAction?; notice?; actions?; footer? }` | 없음 | 있으면 상세 pane을 보이고 목록 pane을 숨긴다. 닫힌 상태는 prop을 빼서 표현한다(`undefined`를 넘기지 않는다) |
 | `back` | `ScreenFlowAction`(`{ label, onAction(), disabled?, pending? }`) | 필수 | 상세 pane 헤더 시작 쪽 ‹ 아이콘 버튼(`ScreenLayout` `exit` `back`). `label`은 보조기술 이름이고 글자는 보이지 않는다. 2026-10-17부터 글자 버튼 대신 아이콘이며 Native `detail.leading`(제품 뒤로 아이콘 대체)은 제거됐다 |
-| `refresh` | `ScreenFlowAction` | 없음 | 목록 pane `actions` 자리의 ghost 버튼. 주면 `actions`를 덮는다 |
-| `loadMore` | `ScreenFlowAction` | 없음 | 목록 pane footer의 ghost 버튼 |
+| `refresh` | `ScreenFlowIconAction` | 없음 | 목록 헤더 끝의 ghost 아이콘 도구. 기존 `actions` 뒤에 함께 배치한다 |
+| `loadMore` | `ScreenFlowAction` | 없음 | 스크롤 본문의 목록 바로 아래 중앙 ghost 버튼 |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0` | 목록·상세 pane **둘 다**의 ScreenLayout에 넘긴다(두 pane이 같은 창 아래에 닿는다). 1.28.0까지 상세 pane에는 전달되지 않아 상세 본문 끝이 홈 인디케이터 아래에 놓였다(야잘알, 2026-10-17). Web은 `env()`로 자동 |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | Web·Native 모두 목록·상세 pane을 함께 담는 **바깥 틀**에 적용한다(안쪽 목록 ScreenLayout이 아니다). 목록/상세 전환과 상관없이 같은 루트에 남는다(1.13.0) |
 | 나머지 | `ScreenLayout`과 같음(`children`·`footer` 제외) | — | 목록 pane에만 적용된다(`title` 필수, `state`, `scroll` 등) |
+
+## 상세 행동 슬롯 (checkout 변경·미게시)
+
+`detail.actions`는 상세 헤더 끝의 도구(`IconButton`), `detail.footer`는 고정된 하단 행동(`BottomCTA`)이다. 목록의 actions/footer와 독립이며 상세가 닫히면 함께 사라진다. 선택의창이 상세 공개 슬롯 부족으로 지도/공유 행동을 결과 본문 안에서 직접 배치하던 공통 구조를 이관하기 위해 추가했다. 데이터·공유 캡처·실행 콜백은 제품이 소유한다. 실행 예시: [Web 상세 복구 예제](../../../../../showcase/web/src/patterns/list-detail-recovery-preview.tsx), [Native 상세 복구 예제](../../../../../showcase/native/src/list-detail-recovery-preview.tsx).
 
 ## 배치
 
@@ -78,7 +82,7 @@ import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
 | --- | --- | --- |
 | 크기 | 목록 또는 상세 pane 하나만 표시하고 각 pane이 host 높이 100%(Native `flex: 1`)를 채운다; 각 pane은 ScreenLayout 폭(최대 720) | Web `height: 100%`, Native `Pane` |
 | 간격 | 각 pane의 ScreenLayout padding `spacing.md` 16; 추가 간격 없음, 목록 행 간격은 `list`(제품·List) 소유 | `ScreenLayout`, `screen-flows.tsx` |
-| 순서·정렬 | 목록 pane: 헤더(제목 → 새로고침) → 목록 → footer(더 보기); 상세 pane: 헤더(뒤로 → 제목) → `detail.content` 아이콘이 있는 새로고침은 헤더 끝에서 `edge="end"`로 그린다. 제품 `actions`는 그 앞에 오므로 `edge`를 주지 않는다(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | `ListDetailScreen` 렌더 순서 |
+| 순서·정렬 | 목록 pane: 헤더(제목 → 기존 actions → 새로고침) → 목록 → 본문 더 보기; 상세 pane: 헤더(뒤로 → 제목 → `detail.actions`) → `detail.content` → 고정 `detail.footer` 아이콘이 있는 새로고침은 헤더 끝에서 `edge="end"`로 그린다. 제품 `actions`는 그 앞에 오므로 `edge`를 주지 않는다(2026-10-17 실측 감사, [IconButton `edge`](icon-button.md#배치)) | `ListDetailScreen` 렌더 순서 |
 | 고정·스크롤 | 두 pane 모두 헤더 고정·본문 스크롤; 숨긴 목록 pane은 mount를 유지해 스크롤·입력이 남는다(Web `hidden`, Native `display: "none"`) | Web·Native `ListDetailScreen` |
 | 좁은 폭·큰 글자 | 제목 열 최소 폭 120 × 글자 배율, 모자라면 새로고침 버튼이 다음 줄로 내려간다; 넓은 폭에서도 두 pane을 나란히 두지 않는다 | `screenPatternRecipe.headerMinWidth` |
 

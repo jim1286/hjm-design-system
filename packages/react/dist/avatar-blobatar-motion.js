@@ -22,8 +22,9 @@ function Artwork({ size, options }) {
             observer?.observe(host.current);
         return () => { observer?.disconnect(); document.removeEventListener('visibilitychange', update); };
     }, []);
+    // Omitted animate is the SDK's static default; only the active branch requests inline SVG motion.
     const active = spec.active && spec.visible && visible && foreground && !environment.reducedMotion;
-    return _jsx("span", { ref: host, "aria-hidden": "true", style: { display: 'block' }, children: _jsx(Blobatar, { name: spec.seed, size: size, normalize: false, expression: expressions[spec.expression], animate: active ? 'always' : false, alt: "", "aria-hidden": "true" }) });
+    return _jsx("span", { ref: host, "aria-hidden": "true", style: { display: 'block' }, children: _jsx(Blobatar, { name: spec.seed, size: size, normalize: false, expression: expressions[spec.expression], ...(active ? { animate: 'always' } : {}), alt: "", "aria-hidden": "true" }) });
 }
 /** Optional animated entry. Static avatar imports never load motion CSS. */
 export function createAnimatedBlobatarFallback(options) { resolveBlobatarMotion(options); return ({ size }) => _jsx(Artwork, { size: size, options: options }); }

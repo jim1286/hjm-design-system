@@ -5,6 +5,7 @@ import { resolveBlobatarFallback } from "@hjmds/design-contracts/avatar-fallback
 /** Optional, local artwork. Avatar owns naming and image-error recovery. */
 export function createBlobatarFallback(options) {
     const { seed, expression } = resolveBlobatarFallback(options);
-    return ({ size }) => _jsx(Blobatar, { name: seed, size: size, normalize: false, animate: false, ...(expression === "happy" ? { expression: happy } : {}), alt: "", "aria-hidden": "true", style: { display: "block" } });
+    // Omit animate for the documented static default; blobatar 2.7 intersects its false branch with Animate.
+    return ({ size }) => _jsx(Blobatar, { name: seed, size: size, normalize: false, ...(expression === "happy" ? { expression: happy } : {}), alt: "", "aria-hidden": "true", style: { display: "block" } });
 }
 //# sourceMappingURL=avatar-blobatar.js.map

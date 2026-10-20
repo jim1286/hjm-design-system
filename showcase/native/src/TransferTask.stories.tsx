@@ -5,7 +5,9 @@ import {TransferTask}from "@hjmds/react-native/transfer-task";
 import {Container,Stack,Text}from "@hjmds/react-native/primitives";
 import {transferLabels,formatTransfer,receiveTransfer,transferCaption}from "../../shared/transfer-task-example";
 function Preview(){return <Stack gap="md"><TransferTask labels={transferLabels} formatProgress={formatTransfer} onTransfer={async context=>{
- const uri=Image.resolveAssetSource(require("../../shared/assets/reference-video/preview.mp4")).uri;
+ const source=Image.resolveAssetSource(require("../../shared/assets/reference-video/preview.mp4"));
+ if(!source)throw new Error("Bundled transfer preview could not be resolved");
+ const uri=source.uri;
  const response=await fetch(uri,{signal:context.signal});await receiveTransfer(response,context);
  }}/><Text variant="caption">{transferCaption}</Text></Stack>;}
 const meta={title:"배포/구성/피드백과 복구/전송 진행과 취소",component:Preview,decorators:[Story=><Container size="reading"><Story/></Container>]} satisfies Meta<typeof Preview>;

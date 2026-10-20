@@ -34,6 +34,7 @@ export type ThemeColors = {
   danger: string;
   onPrimary: string;
   /** Opaque status plates keep white badge copy legible in both themes. */
+  onStatusFill: string;
   neutralFill: string;
   strongFill: string;
   dangerFill: string;
@@ -57,6 +58,7 @@ const light = {
   contentBrand: "#075985",
   danger: "#b71919",
   onPrimary: "#ffffff",
+  onStatusFill: "#ffffff",
   neutralFill: "#4e5968",
   strongFill: "#333d4b",
   dangerFill: "#b91c1c",
@@ -80,6 +82,7 @@ const dark = {
   contentBrand: "#51bff6",
   danger: "#f87171",
   onPrimary: "#ffffff",
+  onStatusFill: "#ffffff",
   neutralFill: "#4e5968",
   strongFill: "#333d4b",
   dangerFill: "#b91c1c",

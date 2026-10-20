@@ -331,8 +331,9 @@ describe("Native collection surfaces", () => {
     );
     expect(localized.root.findByType(TextInput).props.accessibilityHint)
       .toBe("두 번 탭하여 선수 찾기를 열어요");
-    expect(localized.root.findAll((node) => node.children.includes("비교 선수")))
-      .toHaveLength(1);
+    // Collection sheets keep their title in the accessibility tree, following the shared no-visible-title policy.
+    expect(byLabel(localized, "비교 선수").props.accessibilityRole).toBe("header");
+    expect(localized.root.findAll((node) => node.children.includes("비교 선수"))).toHaveLength(0);
 
     const onRetry = vi.fn();
     const error = render(

@@ -12,11 +12,14 @@ afterEach(() => {
   Object.defineProperty(Native.Platform, "OS", { configurable: true, value: originalOS });
   Object.defineProperty(Native.Keyboard, "metrics", { configurable: true, value: originalMetrics });
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   vi.useRealTimers();
 });
 
 it("focuses a Select option and restores its trigger without native handles on web", async () => {
   vi.useFakeTimers();
+  vi.stubGlobal("setImmediate", undefined);
+  vi.stubGlobal("clearImmediate", undefined);
   Object.defineProperty(Native.Platform, "OS", { configurable: true, value: "web" });
   const handle = vi.spyOn(Native, "findNodeHandle").mockImplementation(() => { throw new Error("web handle"); });
   const focus = vi.fn();

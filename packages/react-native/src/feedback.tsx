@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { easing, glyph, spacing } from "@hjmds/design-contracts/foundations";
@@ -8,6 +9,7 @@ import {
   emptyStateRecipe,
   noticeRecipe,
   progressRecipe,
+  resolveProgressSegments,
   skeletonRecipe,
   textRecipe,
   toastRecipe,
@@ -483,7 +485,11 @@ type ProgressName =
 export type ProgressProps = ProgressName & Readonly<{
   value?: number;
   max?: number;
+  /** Equal visual units for determinate linear progress; fractions fill a partial unit. */
+  segments?: number;
   valueText?: string;
+  /** Hide only the visible auxiliary value when the label already contains a count; accessibility keeps its value. */
+  showValue?: boolean;
   accessibilityHint?: string;
   size?: ProgressSize;
   /**
@@ -506,6 +512,8 @@ export function Progress({
   label,
   accessibilityLabel,
   valueText,
+  segments,
+  showValue = progressRecipe.defaults.showValue,
   accessibilityHint,
   size = progressRecipe.defaults.size,
   tone = progressRecipe.defaults.tone,
@@ -520,12 +528,14 @@ export function Progress({
   if (value !== undefined && (!Number.isFinite(value) || value < 0 || value > max)) {
     throw new RangeError("Progress value must be between zero and max");
   }
+  const segmentFills = resolveProgressSegments(value, max, segments, shape);
   const theme = useHjmNativeTheme();
   const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Progress");
   const percentage = value === undefined ? undefined : Math.round((value / max) * 100);
   const resolvedValueText = valueText ?? (percentage === undefined ? undefined : `${percentage}%`);
   return (
     <View
+      accessible
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibleName}
       accessibilityRole="progressbar"
@@ -550,7 +560,7 @@ export function Progress({
           }}
         >
           <Text variant="label">{label}</Text>
-          {resolvedValueText ? (
+          {showValue && resolvedValueText ? (
             <Text tone="muted" variant="caption">{resolvedValueText}</Text>
           ) : null}
         </View>
@@ -587,6 +597,13 @@ export function Progress({
             </View>;
           })}
           {children}
+        </View>
+      ) : segmentFills ? (
+        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+          style={{ flexDirection: "row", direction: theme.environment.direction, gap: progressRecipe.segmented.gap }}>
+          {segmentFills.map((fill, index) => <View key={index} style={{ flex: 1, height: progressRecipe.sizes[size], borderRadius: theme.tokens.radius[progressRecipe.radius], overflow: "hidden", backgroundColor: resolveColorReference(progressRecipe.track, theme.palette) }}>
+            <View style={{ height: "100%", width: `${fill * 100}%`, backgroundColor: resolveColorReference(progressRecipe.tones[tone], theme.palette) }} />
+          </View>)}
         </View>
       ) : (
       <View
@@ -1387,7 +1404,7 @@ export function ToastRegion({
   }, [store]);
   const [appActive, setAppActive] = useState(AppState.currentState === "active");
   const dimensions = useWindowDimensions();
-  const viewportRef = useRef<View>(null);
+  const viewportRef = useRef<ComponentRef<typeof View>>(null);
   const [viewportWidth, setViewportWidth] = useState<number | null>(null);
   const [windowOrigin, setWindowOrigin] = useState<{ x: number; y: number }>();
   const rawDescriptors = useRef(new Map<string, ToastDescriptor>());
@@ -1479,7 +1496,7 @@ export function ToastRegion({
   }, [pruneRaw, store, toasts]);
 
   useEffect(() => {
-    const updateWindowPause = (state: string) => {
+    const updateWindowPause = (state: string | null | undefined) => {
       flushTime();
       setAppActive(state === "active");
       if (state === "active") store.resumeAll("window");
@@ -1614,3 +1631,5 @@ export function useToastRegion(): ToastRegionController {
 // apps can import it from an existing subpath: Next dev with HJM_LOCAL_SOURCE rejected the new ./activity-chip
 // subpath before aliasing because the installed release lacks it (BurnTok 2026-10-10).
 export { ActivityChip, type ActivityChipProps } from "./activity-chip.js";
+
+export { PendingContent, type PendingContentProps } from "./internal/pending-content.js";

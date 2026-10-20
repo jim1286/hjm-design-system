@@ -1,3 +1,4 @@
+import { buttonRecipe, type ButtonAppearance, type ButtonShape } from "./base-recipes.js";
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { radius, fontFamily, typography, heading, shadow, fontWeight, type FontWeightValue, type FontFamilyRoles } from "./foundations.js";
 import { checkPaletteContrast, resolveSurfaceFillOpacity } from "./palette-contrast.js";
@@ -24,6 +25,8 @@ type SurfaceMaterial = Readonly<{
 type Palette = Readonly<Record<ResolvedTheme, Readonly<ThemeColors>>>;
 export type HjmDesignProfile = Readonly<{
   id: string;
+  /** Optional brand defaults. The shared renderer still owns behavior, dimensions and states. */
+  controls?: Readonly<{ button?: Readonly<{ appearance: ButtonAppearance; shape: ButtonShape }> }>;
   palette: Palette;
   tokens: Readonly<{
     radius: RadiusTokens;
@@ -49,6 +52,7 @@ export type HjmDesignProfile = Readonly<{
 export type HjmDesignProfileInput = Readonly<{
   extends?: HjmDesignPreset;
   id?: string;
+  controls?: Readonly<{ button?: Readonly<{ appearance?: ButtonAppearance; shape?: ButtonShape }> }>;
   palette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
   tokens?: Readonly<{
     radius?: Readonly<Partial<RadiusTokens>>;
@@ -258,6 +262,10 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
   const reading = requestedFonts?.reading ?? base.tokens.fontFamily.reading;
   const profile: HjmDesignProfile = {
     id: input.id ?? base.id, palette,
+    ...(input.controls || base.controls ? { controls: { button: {
+      appearance: input.controls?.button?.appearance ?? base.controls?.button?.appearance ?? buttonRecipe.defaults.appearance,
+      shape: input.controls?.button?.shape ?? base.controls?.button?.shape ?? buttonRecipe.defaults.shape,
+    } } } : {}),
     tokens: {
       radius: { ...base.tokens.radius, ...input.tokens?.radius },
       // Copy caller-owned arrays: freezing the resolved profile must never freeze app input.
@@ -272,6 +280,12 @@ function merge(base: HjmDesignProfile, input: HjmDesignProfileInput): HjmDesignP
     compositions: { ...base.compositions, ...input.compositions },
     screens: { ...base.screens, ...input.screens },
   };
+  for (const key of Object.keys(input.controls ?? {})) if (key !== "button") throw new TypeError("Unsupported design profile control");
+  for (const key of Object.keys(input.controls?.button ?? {})) if (key !== "appearance" && key !== "shape") throw new TypeError("Unsupported design profile button setting");
+  if (profile.controls?.button) {
+    choose(profile.controls.button.appearance, ["flat", "raised"], "button appearance");
+    choose(profile.controls.button.shape, ["rounded", "pill"], "button shape");
+  }
   if (!profile.id.trim()) throw new TypeError("Design profile id must not be empty");
   for (const mode of ["light", "dark"] as const) {
     for (const [key, value] of Object.entries(palette[mode])) {

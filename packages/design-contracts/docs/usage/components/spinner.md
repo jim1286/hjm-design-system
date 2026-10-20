@@ -27,6 +27,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Spinner` | 기본 | `@hjmds/react`, `/feedback` | `@hjmds/react-native`, `/feedback` |
+| `PendingContent` | 입력·높이를 보존하는 영역 대기(미게시) | `@hjmds/react`, `/feedback` | `@hjmds/react-native`, `/feedback` |
 
 ## 최소 사용 예
 
@@ -84,3 +85,12 @@ import { Spinner } from "@hjmds/react-native/feedback";
 | tone | 있음 | 없음(항상 brand 색) |
 | reduced motion | 회전 멈춤(CSS) | 별도 처리 없음(`ActivityIndicator` 그대로) |
 | `style` | HTML 속성(`layoutStyle`과 합쳐지고 `layoutStyle`이 이김) | 제거된 속성 |
+
+
+## 입력을 보존하는 대기 영역
+
+`PendingContent`는 Spinner의 보조 구성이다. 다에리 로그인 카드가 영역 높이 측정·입력 숨김·로딩 중앙 배치를 제품에서 복제한 것이 추가 계기다. Web·Native의 `/feedback`과 root에서 제공하며 현재 개발 소스의 미게시 API다.
+
+`pending`, 지역화한 `label`, `children`을 전달한다. 대기 중 자식은 언마운트하지 않고 마지막 준비 상태 높이를 유지하며 입력·접근성 탐색에서 제외한다. 한 Spinner를 그 영역의 가로·세로 중앙에 표시한다. 처리 결과·인증·취소는 제품이 소유한다. 화면 전체 인증은 기존 AuthScreenLayout의 pendingLabel을 사용하고, 개별 버튼은 Button.loading을 사용한다.
+
+실행 예제는 Web·Native의 기존 Spinner 스토리 `PendingRegion`이다. 입력 후 대기 시작→취소로 값이 보존되는지 확인한다. 로컬 소스 예제이며 게시본 제공을 뜻하지 않는다.

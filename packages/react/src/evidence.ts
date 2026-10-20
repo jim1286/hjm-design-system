@@ -62,6 +62,7 @@ const keyboard = (file: ProofFile = stableCoreProofFile): ClaimExtras => ({ proo
 const keyboardAndLongCopy = (file: ProofFile): ClaimExtras => ({ proofs: [{ scenarios: ["keyboard", "long-copy"], file }] });
 
 const claimExtras: Readonly<Record<string, ClaimExtras>> = {
+  "time-picker": keyboard("test/time-picker.browser.test.tsx"),
   "design-system-provider": { exportNames: ["useHjmTheme"] },
   layout: keyboard(),
   link: keyboard(),

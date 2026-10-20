@@ -134,13 +134,21 @@ export function validatePageIndicatorDescriptor(descriptor) {
         descriptor.currentIndex >= descriptor.count) {
         throw new RangeError(`PageIndicator currentIndex is out of range: ${String(descriptor.currentIndex)}`);
     }
+    if (descriptor.maxVisibleDots !== undefined && (!Number.isSafeInteger(descriptor.maxVisibleDots) || descriptor.maxVisibleDots < 1)) {
+        throw new RangeError("PageIndicator maxVisibleDots must be a positive integer");
+    }
 }
 export function resolvePageIndicator(descriptor, composeAccessibleName) {
     validatePageIndicatorDescriptor(descriptor);
     if (typeof composeAccessibleName !== "function") {
         throw new TypeError("PageIndicator composeAccessibleName must be a function");
     }
-    return Array.from({ length: descriptor.count }, (_, index) => {
+    // Product-owned launchers can contain many pages. Keep the current page in a bounded window without
+    // renumbering it: accessibility names and navigation still address the complete pager.
+    const length = Math.min(descriptor.count, descriptor.maxVisibleDots ?? descriptor.count);
+    const start = Math.max(0, Math.min(descriptor.currentIndex - Math.floor(length / 2), descriptor.count - length));
+    return Array.from({ length }, (_, offset) => {
+        const index = start + offset;
         const accessibleName = composeAccessibleName({ position: index + 1, total: descriptor.count });
         if (typeof accessibleName !== "string" || accessibleName.trim().length === 0) {
             throw new TypeError("PageIndicator composeAccessibleName must return a non-empty string");
@@ -177,6 +185,7 @@ export const carouselRecipe = {
     },
     dot: {
         diameter: 8,
+        compactGap: spacing.xs,
         hitTarget: control.minTouchTarget,
         color: {
             inactive: semanticColors.border.strong,

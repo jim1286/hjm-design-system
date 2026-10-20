@@ -1,4 +1,4 @@
-import { spacing } from "./foundations.js";
+import { control, glyph, spacing } from "./foundations.js";
 import {
   buttonRecipe,
   type SurfacePadding,
@@ -15,6 +15,11 @@ export const cardRecipe = {
   slots: [
     "root",
     "media",
+    "backgroundMedia",
+    "backgroundInteraction",
+    "mediaBadges",
+    "badges",
+    "mediaAction",
     "body",
     "header",
     "leading",
@@ -36,12 +41,20 @@ export const cardRecipe = {
   // BurnTok's compact 3-column picker (2026-10-10) needs the whole card to activate.
   // Reuse control state opacity instead of a product Pressable with a second visual contract.
   interaction: { disabledOpacity: buttonRecipe.opacity.disabled, pressedOpacity: buttonRecipe.opacity.pressed },
+  // A playable cover is one target beside independent creator/comment actions (BurnTok screen migration).
+  mediaAction: { inset: spacing.sm, diameter: control.minTouchTarget, iconSize: glyph.sm },
+  // Decorative artwork needs fixed contrast independent of brand onPrimary (which can be dark).
+  // A 60% black scrim keeps white card text readable even over a white source image.
+  backgroundMedia: { scrim: "rgba(0, 0, 0, 0.6)", foreground: "#ffffff" },
+  quotation: { gap: spacing.xs, markSize: glyph.md },
   body: {
     padding: spacing.md,
     gap: spacing.xs,
   },
   header: {
     gap: spacing.sm,
+    // Short copy and independent commands share one vertical center (BurnTok profile, 2026-10-20).
+    alignItems: "center",
   },
   title: {
     variant: "title",
@@ -62,6 +75,11 @@ export const cardRecipe = {
   slots: readonly [
     "root",
     "media",
+    "backgroundMedia",
+    "backgroundInteraction",
+    "mediaBadges",
+    "badges",
+    "mediaAction",
     "body",
     "header",
     "leading",
@@ -79,8 +97,11 @@ export const cardRecipe = {
   };
   selectedTone: SurfaceTone;
   interaction: { disabledOpacity: number; pressedOpacity: number };
+  mediaAction: { inset: number; diameter: number; iconSize: number };
+  backgroundMedia: { scrim: string; foreground: string };
+  quotation: { gap: number; markSize: number };
   body: { padding: number; gap: number };
-  header: { gap: number };
+  header: { gap: number; alignItems: "center" };
   title: {
     variant: "title";
     tone: "primary";

@@ -20,3 +20,9 @@ it("preserves independent center control activation in TopBar",()=>{
  const control=tree!.root.findAllByType(Pressable).find(node=>node.props.accessibilityLabel==="작업 상태")!;
  act(()=>control.props.onPress());expect(toggle).toHaveBeenCalledOnce();act(()=>tree!.unmount());
 });
+
+it.each([['', 'now'], ['  ', 'now'], ['hello', ''], ['', '']])('omits orphan separators around missing conversation fields: %j/%j', (preview, metadata) => {
+ let tree:ReactTestRenderer;
+ act(()=>{tree=create(<HjmNativeProvider><ConversationRow title="Peer" preview={preview} metadata={metadata} avatar={null}/></HjmNativeProvider>);});
+ const rendered=JSON.stringify(tree!.toJSON());expect(rendered).not.toContain(' · ');if(metadata)expect(rendered).toContain(metadata);if(preview.trim())expect(rendered).toContain(preview);act(()=>tree!.unmount());
+});

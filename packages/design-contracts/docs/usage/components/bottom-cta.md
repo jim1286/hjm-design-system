@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-20
 - 근거: [화면 제목과 마지막 행동](../../screen-chrome.md), recipe `bottomCtaRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/동작/하단 실행 버튼`
 
@@ -62,9 +62,10 @@ const insets = useSafeAreaInsets();
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `primaryAction` | Web `{ label, onClick, accessibilityLabel?, disabled?, loading?, loadingLabel?, size?, tone? }` · Native `{ label, onPress, accessibilityLabel?, accessibilityHint?, disabled?, loading?, loadingLabel?, size?, tone? }` | 필수, tone `primary`, size `medium` | Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress: (event: GestureResponderEvent) => void` |
+| `primaryAction` | Web `{ label, onClick?, type?, form?, accessibilityLabel?, disabled?, loading?, loadingLabel?, size?, tone? }` · Native `{ label, onPress, accessibilityLabel?, accessibilityHint?, disabled?, loading?, loadingLabel?, size?, tone? }` | 필수, tone `primary`, size `medium` | Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress: (event: GestureResponderEvent) => void`. Web의 기본 `type="button"`은 onClick이 필수다 |
+| Web action `type` · `form` | `button` · `submit` · `reset`, HTML form ID | `button`, 없음 | 미게시. submit/reset은 onClick 없이 브라우저 기본 동작을 사용한다. Sheet 본문의 form과 footer 버튼을 같은 ID로 연결하면 Enter·입력 검증·폼 제출/초기화를 유지한다. Native에는 이 HTML 속성이 없다 |
 | action `buttonRef` | Web `Ref<HTMLButtonElement>` · Native `Ref<View>` | — | 미게시. 그 행동의 버튼 자체를 가리킨다(컴포넌트 `ref`는 Web에서 바 `div`). 이 행동으로 연 Dialog·Sheet·`ImmersiveOverlay`가 닫힐 때 포커스를 돌려줄 곳으로 Native `returnFocusRef`에 넘긴다. Web Dialog는 연 요소로 스스로 돌아가므로 필요할 때만 쓴다 |
-| `secondaryAction` | 같은 action 객체 또는 제품이 만든 `ReactNode` | tone `secondary` | 객체면 HJM Button으로 그린다. Web은 `label`과 `onClick`이 있어야 객체로 본다 |
+| `secondaryAction` | 같은 action 객체 또는 제품이 만든 `ReactNode` | tone `secondary` | 객체면 HJM Button으로 그린다. Web은 문자열 `label`이 있는 action 객체로 판단하며 callback 없는 submit/reset도 지원한다 |
 | `description` | `string` | — | 행동 위 caption 한 줄 |
 | `accessibilityLabel` | `string` | — | 바 전체(Web `role="group"`, Native `toolbar`)의 이름 |
 | `safeAreaBottom` | 0 이상의 유한수 | `0` | 음수·무한대는 `RangeError` |
@@ -74,13 +75,29 @@ const insets = useSafeAreaInsets();
 
 ## 배치
 
+2026-10-20 번뚝 작성 화면은 BottomCTA에 HTML 제출 연결이 없어 버튼 묶음을 직접 유지했다.
+Web은 기존 form의 onSubmit/IME·검증을 유지하고 아래처럼 footer의 버튼을 form ID로 연결한다.
+onClick에서 requestSubmit을 흉내 내거나 빈 콜백을 넣을 필요가 없다. 여러 편집기가 함께 있으면 React useId로 ID를 만든다.
+
+```tsx
+<Sheet title={title} open={open} onOpenChange={setOpen} closeLabel={closeLabel}
+  footer={<BottomCTA primaryAction={{ label: saveLabel, type: "submit", form: formId }} />}>
+  <form id={formId} onSubmit={submit}>
+    <TextField name="title" label={titleLabel} required />
+  </form>
+</Sheet>
+```
+
+독립형 바의 버튼·설명 최대 폭은 `layout.readingMaxWidth - spacing.md × 2`다. ScreenLayout의 최대 폭에는 본문 양쪽 여백이 포함되므로 그 안쪽 경계에 맞춘다(2026-10-20 바깥 여백 정렬 수정·미게시).
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 화면 폭을 꽉 채우는 하단 바. 최소 높이 64(Native는 64 + `safeAreaBottom`). 행동 버튼은 칸을 꽉 채우고 높이는 Button `size`를 따른다(기본 medium 44) | `bottomCtaRecipe.minHeight`, `.hjm-bottom-cta__actions .hjm-button`, `react-native/src/actions.tsx` |
-| 간격 | 좌우 `layout.pagePadding.regular` 20, 위 `spacing.sm` 12, 아래 `spacing.sm` 12와 하단 inset 중 큰 값(Web은 `env(safe-area-inset-bottom)`·`safeAreaBottom`도 비교). 설명↔행동, 행동 사이 `spacing.sm` 12. 위 경계는 `border.default` 1px(`stroke.default`), Native는 위로 드리우는 그림자(opacity 0.08, radius 8) | `bottomCtaRecipe`, `.hjm-bottom-cta` |
+| 간격 | 좌우 `spacing.md` 16으로 ScreenLayout 본문 경계와 일치(2026-10-20 비행중 화면 리뷰에서 독립 하단 바만 4pt 더 들어간 문제 수정·미게시), 위 `spacing.sm` 12, 아래 `spacing.sm` 12와 하단 inset 중 큰 값(Web은 `env(safe-area-inset-bottom)`·`safeAreaBottom`도 비교). 설명↔행동, 행동 사이 `spacing.sm` 12. 위 경계는 `border.default` 1px(`stroke.default`), Native는 위로 드리우는 그림자(opacity 0.08, radius 8) | `bottomCtaRecipe`, `.hjm-bottom-cta` |
 | 순서·정렬 | 위→아래 [설명 한 줄(caption, muted)] → 행동 줄. 행동 줄은 [보조][주] 순서로 같은 폭을 나눈다. 주 행동은 하나다 | `react/src/bottom-cta.tsx`, `react-native/src/actions.tsx` |
 | 고정·스크롤 | 본문 스크롤 영역 아래에 붙는다. Web은 `flow`(문서 흐름 끝) 또는 `sticky`(아래 0에 붙음, z-index `layer.sticky` 100). Native는 제품 화면 레이아웃이 스크롤 영역 밖 아래에 둔다. 키보드가 열리는 폼은 `KeyboardAvoiding` 또는 `KeyboardDock`으로 감싼다 | `.hjm-bottom-cta[data-position="sticky"]`, `react-native/src/keyboard-controller.tsx` |
 | `ScreenLayout` `footer` 안 | footer가 위 경계·`screenPatternRecipe.padding` 16·바탕·safe area를 맡으므로 BottomCTA는 바(경계·여백·바탕·그림자·최소 높이)를 그리지 않고 설명과 행동 줄만 그린다. 버튼 아래 여백은 `max(footer 아래 여백, safeAreaBottom)`이다 — 직접 넘긴 `safeAreaBottom`은 footer가 이미 준 여백을 넘는 만큼만 더한다(16 + 34가 아니라 34). Native는 화면 inset을 ScreenLayout `safeAreaBottom`으로 넘기는 것이 기본이다. 2026-10-17 화면 리뷰: footer 안의 BottomCTA가 경계를 두 겹 긋고 버튼을 한 번 더 들였으며 Native는 footer 안에 그림자 있는 흰 상자를 하나 더 그렸다 | 내부 `ScreenFooterContext`, Web `.hjm-bottom-cta[data-placement="screen-footer"]`, Native `BottomCTA` |
+| `Sheet` `footer` 안 | 시트가 본문과 같은 좌우 여백·바탕·safe area를 소유한다. BottomCTA는 별도 여백·경계·그림자 없이 행동 줄을 footer 폭에 채운다. 직접 넘긴 `safeAreaBottom`은 시트가 확보한 아래 여백을 넘는 만큼만 더한다. 2026-10-20 선택의창 장소 편집의 입력칸/저장 버튼 폭 차이를 수정했다(미게시). 시트 본문에 둔 BottomCTA는 독립형 바다 | 내부 `ScreenFooterContext`, Web/Native `Sheet` |
 | 좁은 폭·큰 글자 | Web은 행동 칸 기준 폭 132(`control.minTouchTarget` × 3)보다 좁으면 줄바꿈한다. 큰 글자에서는 세로로 쌓고 주 행동이 위에 온다 | `.hjm-bottom-cta__actions > div`, `.hjm-bottom-cta[data-large-text="true"]` |
 
 ```text
@@ -103,6 +120,14 @@ const startRef = useRef<View>(null);
 <ScreenLayout footer={<BottomCTA primaryAction={{ label: t("display.start"), onPress: open, buttonRef: startRef }} />}>…</ScreenLayout>
 <ImmersiveOverlay open={presenting} onOpenChange={setPresenting} returnFocusRef={startRef} label={t("display.title")} exitLabel={t("common.close")}>…</ImmersiveOverlay>
 ```
+
+### 행동 아이콘 연결 (미게시)
+
+`primaryAction`과 descriptor 형태의 `secondaryAction`은 `leading`·`trailing` ReactNode를
+Button에 그대로 전달한다. 아이콘 크기·그림은 제품이 공급하고 장식 슬롯의 배치·간격·loading 교체는
+공통 Button이 소유한다. 이름은 필수 `label`과 선택 `accessibilityLabel`이며 아이콘을 이름 대신 쓰지 않는다.
+번뚝 이야기 하단이 아이콘 때문에 자체 버튼 행을 만들던 것을 기존 BottomCTA로 이관하려고 보완했다.
+같은 폭의 주·보조 행동 배치와 ScreenLayout footer의 여백 소유는 유지한다.
 
 ## 꼭 지킬 것
 

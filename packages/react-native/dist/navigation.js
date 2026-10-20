@@ -220,7 +220,7 @@ export function Tabs(props) {
                 return;
             }
             const handle = findNodeHandle(node);
-            if (handle !== null)
+            if (typeof handle === "number")
                 AccessibilityInfo.setAccessibilityFocus(handle);
         });
     };
@@ -459,6 +459,9 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     const badgeTone = counterBadgeRecipe.tones.danger;
     const badgeVariant = counterBadgeRecipe.variants[bottomNavigationRecipe.badge.variant];
     const [focusedKey, setFocusedKey] = useState(null);
+    const destinationRefs = useRef(new Map());
+    const keyboardFocusKey = resolved.items.some(item => item.id === focusedKey && !item.disabled)
+        ? focusedKey : resolved.selectedKey ?? resolved.items.find(item => !item.disabled)?.id;
     const iconSize = presentation.iconSize === "standard"
         ? glyph[density.icon]
         : bottomNavigationRecipe.iconSizes[presentation.iconSize];
@@ -546,7 +549,24 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                             // (RCTViewManager.m), so `accessibilityRole` alone leaves the
                             // item with no trait: VoiceOver reads the name and never says
                             // it can be activated. Same branch `Tabs` above already uses.
-                            role: Platform.OS === "ios" ? "button" : "tab", accessibilityLabel: item.resolvedAccessibilityLabel, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled, selected }, disabled: item.disabled, onBlur: () => {
+                            role: Platform.OS === "ios" ? "button" : "tab", accessibilityLabel: item.resolvedAccessibilityLabel, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled, selected }, ref: node => { if (node)
+                                destinationRefs.current.set(item.id, node);
+                            else
+                                destinationRefs.current.delete(item.id); }, ...webOnly(webTabProps({ selected, disabled: item.disabled, controls: undefined,
+                                focused: keyboardFocusKey === item.id, orientation: "horizontal", direction: presentation.direction,
+                                onActivate: () => {
+                                    const activation = resolveBottomNavigationActivation(descriptor, item.id);
+                                    if (activation)
+                                        onActivate(activation);
+                                },
+                                onMoveFocus: intent => {
+                                    const target = getTabNavigationTarget(resolved.items, item.id, intent, tabsBehaviorDefaults.loop);
+                                    if (target === undefined)
+                                        return;
+                                    setFocusedKey(target);
+                                    queueMicrotask(() => destinationRefs.current.get(target)?.focus?.());
+                                },
+                            })), disabled: item.disabled, onBlur: () => {
                                 setFocusedKey((current) => current === item.id ? null : current);
                             }, onFocus: () => setFocusedKey(item.id), onLongPress: onLongActivate
                                 ? () => {
@@ -782,7 +802,7 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, ...removedProps }) {
+export function TopBar({ title, titleContent: customTitleContent, subtitle, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, exit, leading: leadingSlot, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, surface = "default", layoutStyle, ...removedProps }) {
     assertNoRemovedStyleProps("TopBar", removedProps, ["style", "leadingStyle", "titleStyle", "trailingStyle"]);
     if (exit)
         validateScreenExit(exit, leadingSlot !== undefined);
@@ -864,7 +884,7 @@ export function TopBar({ title, titleContent: customTitleContent, subtitle, titl
     return (_jsx(View, { accessibilityRole: "toolbar", style: [
             {
                 alignItems: largeText ? "stretch" : "center",
-                backgroundColor: resolveColorReference(topBarRecipe.background, theme.palette),
+                backgroundColor: surface === "transparent" ? "transparent" : resolveColorReference(topBarRecipe.background, theme.palette),
                 direction: theme.environment.direction,
                 flexDirection: largeText ? "column" : "row",
                 gap: topBarRecipe.gap,
@@ -1046,7 +1066,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
     const close = useCallback((reason, after) => {
         modalDismiss.queue(async () => {
             const handle = findNodeHandle(triggerRef.current);
-            if (handle !== null)
+            if (typeof handle === "number")
                 AccessibilityInfo.setAccessibilityFocus(handle);
             onDismiss?.(reason);
             await after?.();
@@ -1064,7 +1084,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
         const target = itemRefs.current.get(first.id);
         if (target) {
             const handle = findNodeHandle(target);
-            if (handle !== null)
+            if (typeof handle === "number")
                 AccessibilityInfo.setAccessibilityFocus(handle);
         }
     };

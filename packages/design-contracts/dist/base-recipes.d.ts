@@ -1,6 +1,7 @@
 import { control, radius, spacing } from "./foundations.js";
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
 /** Corner geometry of the control frame. Mirrors `IconButtonShape`. */
+export type ButtonAppearance = "flat" | "raised";
 export type ButtonShape = "rounded" | "pill";
 /**
  * Where the label sits inside the frame. `center` is the action default;
@@ -15,12 +16,22 @@ export type FieldVariant = "surface" | "inset";
 export type FieldShape = "medium" | "large" | "full";
 /** Small renderer entry point for the three foundational visual recipes. */
 export declare const buttonRecipe: {
-    readonly slots: readonly ["root", "leading", "label", "trailing", "spinner"];
+    readonly slots: readonly ["root", "face", "side", "leading", "label", "trailing", "spinner"];
     readonly defaults: {
         readonly tone: "primary";
         readonly size: "medium";
         readonly shape: "rounded";
         readonly align: "center";
+        readonly appearance: "flat";
+    };
+    readonly raised: {
+        readonly depths: {
+            readonly small: 3;
+            readonly medium: 4;
+            readonly large: 5;
+        };
+        readonly sideShade: 0.25;
+        readonly settleDuration: 120;
     };
     readonly tones: {
         readonly primary: {
@@ -116,6 +127,8 @@ export declare const buttonRecipe: {
         readonly liftCapOnLargeText: true;
     };
 };
+/** Raised paint never adds a frame to a frameless ghost/link action. */
+export declare function resolveButtonDepth(appearance: ButtonAppearance, tone: ButtonTone, size: ButtonSize): number;
 /**
  * Edge alignment for a ghost text Button at a row/header edge (2026-10-17 measured audit: a sort trigger's chevron
  * sat 29px from the edge against a 16px inset). Same rule as `resolveIconButtonEdgeOverhang`: a frameless control
@@ -199,6 +212,7 @@ export declare const fieldRecipe: {
         };
         readonly invalid: {
             readonly border: "danger";
+            readonly borderWidth: 2;
         };
     };
     readonly minHeight: 44;

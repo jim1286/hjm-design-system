@@ -268,6 +268,16 @@
         "role": "canonical"
       },
       {
+        "name": "ButtonLink",
+        "source": "packages/react/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions"
+        ],
+        "canonicalComponent": "Button",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Calendar",
         "source": "packages/react/src/calendar.tsx",
         "entries": [
@@ -1009,6 +1019,16 @@
         "role": "canonical"
       },
       {
+        "name": "ListSeparator",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "List",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "LoadMore",
         "source": "packages/react/src/supplemental-navigation.tsx",
         "entries": [
@@ -1295,6 +1315,16 @@
         "role": "supplemental"
       },
       {
+        "name": "PendingContent",
+        "source": "packages/react/src/internal/pending-content.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Spinner",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "PermissionScreen",
         "source": "packages/react/src/screen-flows.tsx",
         "entries": [
@@ -1385,6 +1415,16 @@
         ],
         "canonicalComponent": "QRCode",
         "role": "canonical"
+      },
+      {
+        "name": "QuoteCard",
+        "source": "packages/react/src/display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Card",
+        "role": "companion-or-alternative"
       },
       {
         "name": "RadarChart",
@@ -1582,6 +1622,15 @@
         ],
         "canonicalComponent": "Sheet",
         "role": "canonical"
+      },
+      {
+        "name": "ShortcutRail",
+        "source": "packages/react/src/shortcut-rail.tsx",
+        "entries": [
+          "./shortcut-rail"
+        ],
+        "canonicalComponent": "Chip",
+        "role": "companion-or-alternative"
       },
       {
         "name": "ShortcutRecorder",
@@ -1931,6 +1980,16 @@
           "./display"
         ],
         "canonicalComponent": "Timeline",
+        "role": "canonical"
+      },
+      {
+        "name": "TimePicker",
+        "source": "packages/react/src/time-picker.tsx",
+        "entries": [
+          ".",
+          "./time-picker"
+        ],
+        "canonicalComponent": "TimePicker",
         "role": "canonical"
       },
       {
@@ -3114,6 +3173,16 @@
         "role": "canonical"
       },
       {
+        "name": "ListSeparator",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "List",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "LoadMore",
         "source": "packages/react-native/src/navigation.tsx",
         "entries": [
@@ -3371,6 +3440,16 @@
         "role": "supplemental"
       },
       {
+        "name": "PendingContent",
+        "source": "packages/react-native/src/internal/pending-content.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Spinner",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "PermissionScreen",
         "source": "packages/react-native/src/screen-flows.tsx",
         "entries": [
@@ -3451,6 +3530,16 @@
         ],
         "canonicalComponent": "QRCode",
         "role": "canonical"
+      },
+      {
+        "name": "QuoteCard",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Card",
+        "role": "companion-or-alternative"
       },
       {
         "name": "RadarChart",
@@ -3666,6 +3755,24 @@
         ],
         "canonicalComponent": "Sheet",
         "role": "canonical"
+      },
+      {
+        "name": "SheetPanel",
+        "source": "packages/react-native/src/sheet-panel.tsx",
+        "entries": [
+          "./sheet-panel"
+        ],
+        "canonicalComponent": "Sheet",
+        "role": "optional-extension"
+      },
+      {
+        "name": "ShortcutRail",
+        "source": "packages/react-native/src/shortcut-rail.tsx",
+        "entries": [
+          "./shortcut-rail"
+        ],
+        "canonicalComponent": "Chip",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Skeleton",
@@ -3947,6 +4054,16 @@
           "./data-display"
         ],
         "canonicalComponent": "Timeline",
+        "role": "canonical"
+      },
+      {
+        "name": "TimePicker",
+        "source": "packages/react-native/src/time-picker.tsx",
+        "entries": [
+          ".",
+          "./time-picker"
+        ],
+        "canonicalComponent": "TimePicker",
         "role": "canonical"
       },
       {

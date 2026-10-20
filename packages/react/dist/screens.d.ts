@@ -164,7 +164,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, descriptionAlign, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;
@@ -251,9 +251,17 @@ export type NotificationRowProps = Readonly<{
     avatarBadge?: ReactNode;
     thumbnail?: ReactNode;
     unread?: boolean;
+    /** The section/list supplies the boundary; HJM aligns its divider with the preview column. */
+    separator?: boolean;
+    /** One optional command around the passive preview; the product retains routing/permission decisions. */
+    action?: Readonly<{
+        label: string;
+        onActivate(): void;
+        disabled?: boolean;
+    }>;
 }>;
-/** Router host owns the sole target and localized accessible name, as with ConversationRow. */
-export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread }: NotificationRowProps): import("react").JSX.Element;
+/** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
+export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread, separator, action }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
     /**
      * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image
@@ -270,9 +278,14 @@ export type IconTileProps = Readonly<{
     shape?: IconTileShape;
     /** `fill`: the icon spans the grid cell between iconTileRecipe.fillMinSize and fillMaxSize. */
     size?: IconTileSize;
+    /** Simple activation is HJM-owned; omit for product drag/long-press gesture hosts. */
+    onActivate?: () => void;
+    activationLabel?: string;
+    disabled?: boolean;
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-/** Presentation shared by launcher and profile grids; the host owns navigation or drag behavior. */
-export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size }: IconTileProps): import("react").JSX.Element;
+/** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
+export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, disabled, layoutStyle }: IconTileProps): import("react").JSX.Element;
 export type TypingIndicatorProps = Readonly<{
     /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
     label: string;

@@ -81,6 +81,8 @@ import { Carousel } from "@hjmds/react-native/carousel";
 | `composeAccessibleName` | `(info: { position: number; total: number; label: string }) => string` | 필수 | `position`은 1부터 |
 | `labels` | `{ previous: string; next: string; pause: string; resume: string; navigation: string }` | 필수 | 다섯 값 모두 비우면 `TypeError` |
 | `currentKey` + `onCurrentKeyChange` · `defaultCurrentKey` | 슬라이드 `id`, `(key: string) => void` | 첫 슬라이드 | 제어(둘 다 필수)·비제어 중 하나만 타입이 허용한다. 값은 인덱스가 아니라 `id`다 |
+| Native `swipeEnabled` | `boolean` | `true` | 지도 등 콘텐츠가 가로 제스처를 소유할 때 `false`로 둔다. 이전·다음·점과 접근성 이동은 유지한다. 미게시 |
+| `slideMaxHeight` | 유한한 양수 `number` | 없음 | 가용 높이가 제한된 host에서 슬라이드 본문만 세로 스크롤한다. 이전·다음·점은 스크롤 밖에 남는다. Web은 px, Native는 pt. 미게시 |
 | `autoplay` | `{ intervalMs: number }`(0보다 큼) | 없음 | 주면 일시정지/재개 버튼이 생긴다. 마지막 슬라이드, reduced motion, 사용자 조작 뒤에는 멈추고 명시적인 재개 전까지 다시 돌지 않는다 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`은 제거된 속성 — `layoutStyle`로 배치하고 내부 표현은 recipe를 따른다 |
 | `CarouselMotion` 탐색 | `navigation?: "buttons" \| "counter"` | `buttons` | `buttons`는 이전·다음 아이콘 버튼(`previousLabel`·`nextLabel`이 이름)을 슬라이드 아래 끝 정렬 한 줄에 `spacing.sm` 간격으로 둔다. `counter`는 이전 아이콘·현재/전체·다음 아이콘을 한 줄에 둔다. 아이콘은 읽기 방향을 따라 좌우가 바뀐다. 끝에서는 해당 버튼을 비활성화한다. Web/Native 동일, 미게시 |
@@ -95,7 +97,7 @@ import { Carousel } from "@hjmds/react-native/carousel";
 | 크기 | 부모 폭을 채우고 슬라이드 높이는 내용이 정한다(현재 슬라이드만 보인다). 이전·다음은 문구를 접근성 이름으로 받는 ghost IconButton(chevronStart/chevronEnd, `carouselRecipe.sizes.medium.controlIcon`), 점은 지름 8에 터치 영역 44(`control.minTouchTarget`), 색은 `carouselRecipe.dot.color`. 두 플랫폼 동일 | `carouselRecipe.dot`, `.hjm-carousel__dot` |
 | 간격 | 영역 사이(재생 버튼·슬라이드·조작 줄) `spacing.sm` 12, 조작 줄 안 `spacing.xs` 8 | `carouselRecipe.sizes.medium.gap`, `.hjm-carousel__controls` |
 | 순서·정렬 | 위→아래 [일시정지/재개(autoplay일 때, 시작 쪽)] → [슬라이드] → [이전][점 · · ·][다음] 가운데 정렬. Native 점 줄은 하나의 adjustable 요소(플랫폼 page control과 같은 방식)라 화면 낭독기는 위·아래 쓸기로 넘긴다. 위치 문구는 화면에 쓰지 않고 접근성 값으로만 전한다(2026-10-17) | `react/src/carousel.tsx`, `react-native/src/carousel.tsx` |
-| 고정·스크롤 | 고정 영역이 없다. 슬라이드 넘김은 버튼·점(또는 `CarouselMotion` 스와이프)으로 하고 가로 스크롤 영역을 만들지 않는다 | `.hjm-carousel__slide[hidden]` |
+| 고정·스크롤 | 기본은 내용 높이. `slideMaxHeight`가 있으면 본문만 해당 높이까지 커지고 세로 스크롤한다. Web 본문은 키보드로 초점을 받을 수 있으며 숨긴 페이지는 inert를 유지한다. 슬라이드 넘김은 버튼·점(또는 `CarouselMotion` 스와이프)으로 하고 가로 스크롤 영역을 만들지 않는다 | `.hjm-carousel__slide[hidden]`, 양 renderer `Carousel` |
 | 좁은 폭·큰 글자 | [이전][점][다음]은 한 줄을 유지하고 점 묶음만 줄바꿈된다. 아이콘 버튼이라 큰 글자에서도 폭이 늘지 않는다 | `.hjm-carousel__controls`, `react-native/src/carousel.tsx` |
 
 ## 꼭 지킬 것
@@ -104,6 +106,7 @@ import { Carousel } from "@hjmds/react-native/carousel";
 - 슬라이드 id는 유일하고 앞뒤 공백이 없어야 한다. 빈 배열은 던지므로 로딩·빈 상태는 마운트 전에 제품이 처리한다.
 - `composeAccessibleName`의 어순·조사는 제품 문구다. HJM은 위치 정보만 넘긴다.
 - 슬라이드 안의 시각 콘텐츠(카드·이미지)는 제품 소유다. 컨트롤·점·접근성 구조는 HJM 소유라 다시 만들지 않는다.
+- 지도 위 추천 카드처럼 가용 높이가 제한된 경우 제품은 허용할 본문 높이를 `slideMaxHeight`로 전달한다. 선택의창의 앱별 ScrollView wrapper를 없애기 위해 본문 스크롤과 탐색 줄의 경계를 공통화했다(2026-10-19). 제품에서 같은 스크롤 틀을 다시 감싸지 않는다.
 - 2026-10-07 [Motion 네 변형 검토](../../../../../docs/qa/2026-10-07-motion-reference-page-review.md)와
   [Cedar Filmstrip 대조](../../../../../docs/qa/2026-10-07-reference-parallel-c.md)에서 여러 카드가
   동시에 보이는 strip은 단일 active panel과 다른 계약임을 확인했다. 현재 Carousel에 임의

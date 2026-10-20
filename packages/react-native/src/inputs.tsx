@@ -1,4 +1,7 @@
+import type { ComponentRef } from "react";
+import { Button } from "./actions.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
+import { setInputVisibilityFrame } from "./internal/field-visibility.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
@@ -94,14 +97,15 @@ import {
 } from "react-native";
 
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
-import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
+import { isWebRenderer, webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
   resolveNativeFontStyle,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
-import { Text } from "./primitives.js";
+import { Grid, Text } from "./primitives.js";
+import type { GridDescriptor } from "@hjmds/design-contracts/grid";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -198,7 +202,7 @@ type FieldRendererProps = AccessibleFieldProps & FieldPrivateProps &
     leadingAction?: ReactNode; trailing?: ReactNode;
   }>;
 
-const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
+const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererProps>(
   function FieldRenderer(
     {
       label,
@@ -231,6 +235,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       trailing,
     leadingAction,
       hjmCompactMultiline = false,
+      hjmDescriptionAlign = "start",
       initialFocusTarget,
       onBlur,
       onFocus,
@@ -246,12 +251,15 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
     const [contentHeight, setContentHeight] = useState(0);
-    const inputRef = useRef<TextInput>(null);
+    const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
+    const fieldFrameRef = useRef<ComponentRef<typeof View>>(null);
     const restoreFocusRef = useRef(false);
     const selectionRef = useRef<{ start: number; end: number } | null>(null);
-    const attachInput = useCallback((node: TextInput | null) => {
+    const attachInput = useCallback((node: ComponentRef<typeof TextInput> | null) => {
       if (node === null) restoreFocusRef.current = inputRef.current?.isFocused?.() ?? false;
+      if (inputRef.current) setInputVisibilityFrame(inputRef.current, null);
       inputRef.current = node;
+      if (node) setInputVisibilityFrame(node, fieldFrameRef);
     }, []);
     const [currentValue, setCurrentValue] = useControllableState({
       ...(value === undefined ? {} : { value }),
@@ -273,9 +281,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
     const searchSizing = searchFieldRecipe.sizes[searchSize];
     const resolvedMaxVisibleLines =
       maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-    const borderWidth = search
-      ? searchFieldRecipe.borderWidth
-      : fieldRecipe.borderWidth;
+    const borderWidth = error || invalid ? fieldRecipe.states.invalid.borderWidth
+      : search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
     const borderColor = search
       ? resolveColorReference(
           error || invalid
@@ -322,7 +329,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       ? `multiline-${frameTextScale}`
       : "field";
     // Deps: only an editorKey remount changes the handle; none re-attached callback refs every render.
-    useImperativeHandle(ref, () => inputRef.current as TextInput, [editorKey]);
+    useImperativeHandle(ref, () => inputRef.current as ComponentRef<typeof TextInput>, [editorKey]);
     useLayoutEffect(() => {
       if (restoreFocusRef.current) {
         inputRef.current?.focus?.();
@@ -433,6 +440,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
 
     return (
       <NativeFieldFrame
+        frameRef={fieldFrameRef}
+        descriptionAlign={hjmDescriptionAlign}
         {...(visibleLabel === undefined ? {} : { label: visibleLabel })}
         required={required}
         {...(error === undefined ? {} : { error })}
@@ -493,13 +502,13 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
 
 export type TextFieldProps = AccessibleFieldProps;
 
-export const TextField = forwardRef<TextInput, TextFieldProps>(function TextField(props, ref) {
+export const TextField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>(function TextField(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline={false} search={false} />;
 });
 
 export type TextAreaProps = AccessibleFieldProps & Readonly<{ trailing?: ReactNode; leadingAction?: ReactNode }>;
 
-export const TextArea = forwardRef<TextInput, TextAreaProps>(function TextArea(props, ref) {
+export const TextArea: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextAreaProps>> = forwardRef<ComponentRef<typeof TextInput>, TextAreaProps>(function TextArea(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline search={false} />;
 });
 
@@ -526,7 +535,7 @@ export type SearchFieldProps = AccessibleFieldProps &
     renderBusyIndicator?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
   }>;
 
-export const SearchField = forwardRef<TextInput, SearchFieldProps>(function SearchField(
+export const SearchField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, SearchFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, SearchFieldProps>(function SearchField(
   {
     clearLabel,
     busyLabel,
@@ -546,9 +555,9 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
   },
   ref,
 ) {
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
   // Single-line child editor never remounts.
-  useImperativeHandle(ref, () => inputRef.current as TextInput, []);
+  useImperativeHandle(ref, () => inputRef.current as ComponentRef<typeof TextInput>, []);
   const theme = useHjmNativeTheme();
   const searchSizing = searchFieldRecipe.sizes[size];
   const iconProps: SearchFieldAffordanceRenderProps = {
@@ -695,7 +704,7 @@ function DefaultPasswordToggleIcon({
 }
 
 /** Password input with independent reveal state and native autofill translation. */
-export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function PasswordField(
+export const PasswordField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, PasswordFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, PasswordFieldProps>(function PasswordField(
   {
     revealed: revealedProp,
     defaultRevealed = false,
@@ -712,9 +721,9 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
   forwardedRef,
 ) {
   const theme = useHjmNativeTheme();
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
   // Single-line child editor never remounts.
-  useImperativeHandle(forwardedRef, () => inputRef.current as TextInput, []);
+  useImperativeHandle(forwardedRef, () => inputRef.current as ComponentRef<typeof TextInput>, []);
   const selectionRef = useRef({ start: 0, end: 0 });
   const [revealed, setRevealed] = useControllableState({
     ...(revealedProp === undefined ? {} : { value: revealedProp }),
@@ -815,7 +824,7 @@ export type OtpFieldProps = Omit<
   }>;
 
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
-export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
+export const OtpField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, OtpFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, OtpFieldProps>(function OtpField(
   {
     label,
     accessibilityLabel,
@@ -1028,6 +1037,8 @@ type ChoiceVisualProps = Readonly<{
 type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   kind: "checkbox" | "radio";
   label: string;
+  labelContent?: ReactNode;
+  action?: Readonly<{ label: string; accessibilityLabel?: string; onAction: () => void; disabled?: boolean }>;
   description?: string | undefined;
   checked: CheckboxState;
   disabled: boolean;
@@ -1050,6 +1061,8 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
 function ChoiceRow({
   kind,
   label,
+  labelContent,
+  action,
   description,
   checked,
   disabled,
@@ -1072,10 +1085,13 @@ function ChoiceRow({
 }: ChoiceRowProps) {
   const theme = useHjmNativeTheme();
   const metrics = selectionControlRecipe.sizes[size];
+  const chips = presentation === "chips", chipMetrics = chipRecipe.sizes[size];
+  const rowMinHeight = chips ? visibleControlHeight(chipMetrics.height, theme.environment.minimumVisualTarget) : metrics.rowMinHeight;
   const plate = selectionControlRecipe.presentations[presentation];
   const selected = checked === true || checked === "mixed";
+  const chipState = chipRecipe.states[selected ? "selected" : "idle"];
   const indicatorColor = resolveColorReference(
-    selectionControlRecipe.states.indicator,
+    chips ? chipState.content : selectionControlRecipe.states.indicator,
     theme.palette,
   );
   const appearance: ChoiceVisualRenderProps = {
@@ -1087,21 +1103,28 @@ function ChoiceRow({
     size: metrics.control,
   };
   const resolvedLeading = leading ?? renderLeading?.(appearance);
-  const plateBackground = selected
+  const plateBackground = chips ? chipState.background : selected
     ? selectionControlRecipe.states.selectedBackground
     : plate.background ?? selectionControlRecipe.states.idleBackground;
   const plateBorder = invalid
     ? selectionControlRecipe.states.invalidBorder
-    : selected
+    : chips ? chipState.border : selected
       ? selectionControlRecipe.states.selectedBorder
       : plate.border;
+  const frameStyle = {
+    ...(chips ? { maxWidth: "100%" as const } : {}),
+    backgroundColor: resolveColorReference(plateBackground, theme.palette),
+    borderColor: plateBorder ? resolveColorReference(plateBorder, theme.palette) : "transparent",
+    borderRadius: theme.tokens.radius[plate.radius],
+    borderWidth: plate.borderWidth,
+  };
   const resolvedHint = [
     accessibilityHint ?? description,
     required ? requiredLabel : undefined,
     readOnly ? readOnlyLabel : undefined,
     invalid ? invalidLabel : undefined,
   ].filter(Boolean).join(". ") || undefined;
-  return (
+  const target = (
     <Pressable
       accessibilityHint={resolvedHint}
       accessibilityLabel={label}
@@ -1117,36 +1140,35 @@ function ChoiceRow({
         ...(webTabIndex === undefined ? {} : { tabIndex: webTabIndex }),
       }))}
       disabled={disabled || readOnly}
-      hitSlop={plate.useSizePadding ? 0 : metrics.hitSlop}
+      hitSlop={chips ? chipMetrics.hitSlop : plate.useSizePadding ? 0 : metrics.hitSlop}
       onPress={() => {
         if (!readOnly) onActivate();
       }}
       style={({ pressed }) => [
         {
           alignItems: "center",
-          alignSelf: "stretch",
-          backgroundColor: resolveColorReference(plateBackground, theme.palette),
-          borderColor: plateBorder
-            ? resolveColorReference(plateBorder, theme.palette)
-            : "transparent",
-          borderRadius: theme.tokens.radius[plate.radius],
-          borderWidth: plate.borderWidth,
+          alignSelf: chips ? "flex-start" : "stretch",
+          // Grid cells stretch to the tallest sibling; the visible card must fill that cell too.
+          flexGrow: presentation === "card" ? 1 : undefined,
+          ...frameStyle,
           direction: theme.environment.direction,
           flexDirection: "row",
-          gap: metrics.gap,
-          minHeight: metrics.rowMinHeight,
+          gap: chips ? chipMetrics.gap : metrics.gap,
+          minHeight: rowMinHeight,
           opacity: disabled
             ? selectionControlRecipe.states.disabledOpacity
             : pressed && !readOnly
               ? 0.86
               : 1,
-          paddingHorizontal: plate.useSizePadding ? metrics.paddingHorizontal : 0,
-          paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
+          paddingHorizontal: chips ? chipMetrics.paddingHorizontal : plate.useSizePadding ? metrics.paddingHorizontal : 0,
+          paddingVertical: chips ? 0 : plate.useSizePadding ? metrics.paddingVertical : 0,
         },
-        layoutStyle,
+        action ? { flex: 1, minWidth: 0, backgroundColor: "transparent", borderWidth: 0, borderRadius: 0, opacity: pressed && !readOnly && !disabled ? 0.86 : 1 } : layoutStyle,
       ]}
     >
-      {indicator === "default" ? (
+      {chips && indicator === "default" && renderIndicator ? (
+        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{renderIndicator(appearance)}</View>
+      ) : !chips && indicator === "default" ? (
         <SelectionMark kind={kind} checked={checked} size={size} invalid={invalid ?? false}>
           {renderIndicator?.(appearance)}
         </SelectionMark>
@@ -1160,23 +1182,23 @@ function ChoiceRow({
           {resolvedLeading}
         </View>
       ) : null}
-      {/* flexBasis auto, not flex: 1 (basis 0): in a horizontal group the row is content-sized, and a zero basis
-          collapsed the label to nothing (2026-10-17 EventAttendance review). Stretched vertical rows still grow. */}
-      <View style={[{ flexGrow: 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }]}>
-        <Text
+      {/* Keep an intrinsic basis: basis 0 collapsed horizontal labels (2026-10-17 review).
+          Chip copy must also stop growing, or it expands each content-sized chip to the entire group width. */}
+      <View style={[{ flexGrow: chips ? 0 : 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }]}>
+        {labelContent != null && typeof labelContent !== "string" && typeof labelContent !== "number" ? labelContent : <Text
               fontRole="ui"
           style={[
             {
-              color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
+              color: resolveColorReference(chips ? chipState.content : selectionControlRecipe.label.color, theme.palette),
               fontWeight: selected
                 ? selectionControlRecipe.label.checkedFontWeight
                 : selectionControlRecipe.label.fontWeight,
             },
           ]}
-          variant={metrics.labelVariant}
+          variant={chips ? chipMetrics.textVariant : metrics.labelVariant}
         >
-          {label}
-        </Text>
+          {labelContent ?? label}
+        </Text>}
         {description ? (
           <Text
             style={[
@@ -1195,6 +1217,20 @@ function ChoiceRow({
       </View>
     </Pressable>
   );
+  if (!action) return target;
+  // The selection target owns its accessible label; the action is a separate sibling
+  // so rename/manage never changes the selected option or nests a button in a radio.
+  return <View style={[{
+    alignItems: "center", alignSelf: chips ? "flex-start" : "stretch", flexDirection: "row", direction: theme.environment.direction,
+    minHeight: rowMinHeight,
+    flexGrow: presentation === "card" ? 1 : undefined,
+    ...frameStyle,
+    opacity: disabled ? selectionControlRecipe.states.disabledOpacity : 1,
+  }, layoutStyle]}>
+    {target}
+    <View style={{ paddingEnd: spacing.xs }}><Button tone="ghost" size="small"
+      disabled={disabled || action.disabled === true} accessibilityLabel={action.accessibilityLabel} onPress={action.onAction}>{action.label}</Button></View>
+  </View>;
 }
 
 export type CheckboxProps = ChoiceVisualProps & Readonly<{
@@ -1343,10 +1379,13 @@ export type RadioGroupItem<Value extends string = string> = Readonly<{
   disabled?: boolean;
   accessibilityHint?: string;
   leading?: ReactNode;
+  action?: Readonly<{ label: string; accessibilityLabel?: string; onAction: () => void; disabled?: boolean }>;
 }>;
 
 type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
   orientation?: SelectionOrientation;
+  /** Equal-width responsive options, measured and arranged by the shared Grid. */
+  grid?: GridDescriptor;
   disabled?: boolean;
   readOnly?: boolean;
   invalid?: boolean;
@@ -1367,6 +1406,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     value?: Value | null;
     defaultValue?: Value | null;
     onValueChange?: (value: Value | null) => void;
+    /** Visual preview only; the string label remains the accessible name. */
+    renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
   }>;
@@ -1384,6 +1425,7 @@ function ChoiceGroupFrame({
   role,
   orientation,
   presentation,
+  grid,
   layoutStyle,
   children,
 }: Readonly<{
@@ -1398,6 +1440,7 @@ function ChoiceGroupFrame({
   error?: string | undefined;
   role?: "radiogroup" | undefined;
   orientation: SelectionOrientation;
+  grid?: GridDescriptor | undefined;
   presentation: SelectionControlPresentation;
   layoutStyle?: HjmCompositionStyleProp | undefined;
   children: ReactNode;
@@ -1434,17 +1477,16 @@ function ChoiceGroupFrame({
       {description && !error ? (
         <Text tone="muted" variant={selectionGroupRecipe.description.textVariant}>{description}</Text>
       ) : null}
-      <View
-        style={{
+      {grid ? <Grid {...grid}>{children}</Grid> : (
+        <View style={{
           direction: theme.environment.direction,
-          flexDirection: orientation === "horizontal" && theme.environment.textScale < 1.6
-            ? "row"
-            : "column",
+          flexDirection: presentation === "chips" || (orientation === "horizontal" && theme.environment.textScale < 1.6) ? "row" : "column",
+          flexWrap: presentation === "chips" ? "wrap" : undefined,
           gap,
-        }}
-      >
-        {children}
-      </View>
+        }}>
+          {children}
+        </View>
+      )}
       {error ? (
         <Text accessibilityLiveRegion="assertive" accessibilityRole="alert" tone="danger" variant={selectionGroupRecipe.error.textVariant}>
           {error}
@@ -1472,10 +1514,12 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   readOnlyLabel,
   invalidLabel,
   orientation = selectionGroupBehaviorDefaults.orientation,
+  grid,
   presentation = selectionGroupRecipe.defaults.presentation,
   size = selectionControlRecipe.defaults.size,
   indicator = "default",
   renderLeading,
+  renderLabel,
   renderIndicator,
   layoutStyle,
   ...slotStyles
@@ -1516,6 +1560,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
       error={error}
       label={label}
       orientation={orientation}
+      grid={grid}
       presentation={presentation}
       readOnly={readOnly}
       readOnlyLabel={readOnlyLabel}
@@ -1540,6 +1585,8 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
             invalidLabel={invalidLabel ?? error}
             kind="radio"
             label={item.label}
+            labelContent={renderLabel?.(item)}
+            {...(item.action ? { action: item.action } : {})}
             leading={item.leading}
             onActivate={() => setSelected(item.value)}
             webTabIndex={!optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1}
@@ -1585,6 +1632,7 @@ export function CheckboxGroup<Value extends string = string>({
   readOnlyLabel,
   invalidLabel,
   orientation = selectionGroupBehaviorDefaults.orientation,
+  grid,
   presentation = selectionGroupRecipe.defaults.presentation,
   size = selectionControlRecipe.defaults.size,
   indicator = "default",
@@ -1613,6 +1661,7 @@ export function CheckboxGroup<Value extends string = string>({
       error={error}
       label={label}
       orientation={orientation}
+      grid={grid}
       presentation={presentation}
       readOnly={readOnly}
       readOnlyLabel={readOnlyLabel}
@@ -1743,6 +1792,8 @@ export function Switch({
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole="switch"
       accessibilityState={{ checked: enabled, disabled }}
+      {...webOnly(webChoiceProps({ kind: "checkbox", checked: enabled, disabled, readOnly: false,
+        onActivate: () => setEnabled(!enabled) }))}
       disabled={disabled}
       onPress={() => setEnabled(!enabled)}
       style={({ pressed }) => [
@@ -1789,7 +1840,19 @@ export function Switch({
           which overrode this row's `alignItems: center` and pinned the track to the
           row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
           the row's cross-axis alignment explicitly. */}
-      <NativeSwitch
+      {/* RN Web's Switch always creates a focusable input, even with accessible=false.
+          The row owns activation, so web draws the recipe's decorative track instead. */}
+      {isWebRenderer ? <View {...props} aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants" pointerEvents="none"
+        style={{ width: dimensions.width, height: dimensions.height, flexDirection: "row", alignItems: "center",
+          justifyContent: enabled ? "flex-end" : "flex-start", direction: environment.direction,
+          borderRadius: dimensions.height / 2, borderWidth: 1, padding: dimensions.inset - 1,
+          borderColor: resolveColorReference(disabled ? enabled ? switchColors.trackOnBorderDisabled : switchColors.trackOffBorderDisabled : enabled ? switchColors.trackOnBorder : switchColors.trackOffBorder, palette),
+          backgroundColor: enabled ? trackOn : trackOff }}>
+        <View style={{ width: dimensions.thumb, height: dimensions.thumb, borderRadius: dimensions.thumb / 2,
+          borderWidth: enabled && !disabled ? 0 : 1,
+          borderColor: resolveColorReference(disabled ? switchColors.thumbDisabledBorder : switchColors.thumbOffBorder, palette),
+          backgroundColor: resolveColorReference(disabled ? switchColors.thumbDisabled : enabled ? switchColors.thumbOn : switchColors.thumbOff, palette) }} />
+      </View> : <NativeSwitch
         {...props}
         accessible={false}
         disabled={disabled}
@@ -1801,7 +1864,7 @@ export function Switch({
         thumbColor={thumb}
         trackColor={{ false: trackOff, true: trackOn }}
         value={enabled}
-      />
+      />}
     </Pressable>
   );
 }
@@ -1809,6 +1872,8 @@ export function Switch({
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
+  /** Full spoken name when the visible label is abbreviated. */
+  accessibilityLabel?: string;
   disabled?: boolean;
   leading?: ReactNode;
   renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
@@ -1856,6 +1921,10 @@ export type SegmentedControlProps<Value extends string = string> =
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";
     disabled?: boolean;
+    /** Pills wrap by default; a rail keeps one row while actions remain outside the selection group. */
+    overflow?: "wrap" | "scroll";
+    actions?: ReactNode;
+    testID?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -1873,6 +1942,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   selectionMotion: suppliedSelectionMotion,
   disabled = false,
   layoutStyle,
+  overflow = "wrap", actions, testID,
 } = props;
   // Removed aliases must not silently change the selected collection in JavaScript callers.
   if ("options" in props || !Array.isArray(items)) throw new TypeError("SegmentedControl requires items; options was removed");
@@ -1931,8 +2001,18 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   // Connected rows follow Web .hjm-segmented__items: items never shrink below their label (min-inline-size:
   // max-content), spare width is shared, and an over-wide row scrolls instead of breaking labels mid-word
   // (2026-10-17 review N6). Labels are not truncated; the horizontal scroll content leaves them unconstrained.
-  const scrollRow = !stacked && !pills && !textOnly;
+  const scrollRow = overflow === "scroll" || (!stacked && !pills && !textOnly);
   const [trackWidth, setTrackWidth] = useState(0);
+  const railRef = useRef<ComponentRef<typeof ScrollView>>(null);
+  const railOffset = useRef(0);
+  const reveal = (rect: SelectionHighlightRect | undefined) => {
+    if (!scrollRow || !rect || trackWidth <= 0) return;
+    const offset = railOffset.current;
+    const next = rect.x < offset ? Math.max(0, rect.x) : rect.x + rect.width > offset + trackWidth
+      ? Math.max(0, rect.x + rect.width - trackWidth) : offset;
+    if (next !== offset) { railOffset.current = next; railRef.current?.scrollTo({ x: next, animated: false }); }
+  };
+  useEffect(() => { reveal(selectedRect); }, [selectedRect, trackWidth, scrollRow]);
   const borderWidth = pills || textOnly ? 0 : segmentedControlRecipe.container.borderWidth;
   const containerStyle = {
           backgroundColor: pills || textOnly ? "transparent" : resolveColorReference(
@@ -1949,7 +2029,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   } as const;
   const rowStyle = {
           flexDirection: stacked ? "column" : "row",
-          flexWrap: pills ? "wrap" : "nowrap",
+          flexWrap: pills && !scrollRow ? "wrap" : "nowrap",
           gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
           padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
   } as const;
@@ -1973,7 +2053,8 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         return (
           <Pressable
             key={item.value}
-            onLayout={selectionMotion === "slide" ? event => {
+            onFocus={() => reveal(itemRects[item.value])}
+            onLayout={selectionMotion === "slide" || scrollRow ? event => {
               const { x, y, width, height } = event.nativeEvent.layout;
               if (width <= 0 || height <= 0) return;
               setItemRects(previous => {
@@ -1981,9 +2062,14 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                 return old && old.x === x && old.y === y && old.width === width && old.height === height ? previous : { ...previous, [item.value]: { x, y, width, height } };
               });
             } : undefined}
-            accessibilityLabel={item.label}
+            accessibilityLabel={item.accessibilityLabel ?? item.label}
             accessibilityRole="radio"
             accessibilityState={{ checked: isSelected, disabled: optionDisabled }}
+            // RN Web does not forward checked state from accessibilityState. Share the
+            // existing choice adapter so filter rails expose selection and one keyboard entry.
+            {...webOnly(webChoiceProps({ kind: "radio", checked: isSelected, disabled: optionDisabled,
+              readOnly: false, tabIndex: isSelected && !optionDisabled ? 0 : -1,
+              onActivate: () => setSelected(item.value) }))}
             disabled={optionDisabled}
             hitSlop={pills || textOnly ? undefined : { top: itemHitSlop, bottom: itemHitSlop }}
             onPress={() => setSelected(item.value)}
@@ -2007,20 +2093,20 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   ? segmentedControlRecipe.item.selectedBorderWidth
                   : 0,
                 flexBasis: scrollRow ? "auto" : undefined,
-                flexGrow: scrollRow ? 1 : undefined,
+                flexGrow: scrollRow && !pills && !textOnly ? 1 : undefined,
                 flexShrink: scrollRow ? 0 : undefined,
                 maxWidth: pills ? "100%" : undefined,
                 // Leading artwork and its label share a row; column layout squeezed theme options.
                 flexDirection: textOnly ? "column" : "row",
                 gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
-                minHeight: pills ? segmentedControlRecipe.pills.minHeight : textOnly ? segmentedControlRecipe.text.minHeight : itemMinHeight,
+                minHeight: pills ? Math.max(segmentedControlRecipe.pills.minHeight, outerHeight + 2 * segmentedControlRecipe.pills.inset) : textOnly ? segmentedControlRecipe.text.minHeight : itemMinHeight,
                 opacity: optionDisabled
                   ? segmentedControlRecipe.item.disabledOpacity
                   : pressed
                     ? segmentedControlRecipe.item.pressedOpacity
                     : 1,
-                paddingHorizontal: textOnly ? 0 : pills ? spacing.md : sizeContract.paddingHorizontal,
+                paddingHorizontal: textOnly ? 0 : pills ? chipRecipe.sizes[size].paddingHorizontal : sizeContract.paddingHorizontal,
                 paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                 width: stacked ? "100%" : undefined,
               },
@@ -2046,7 +2132,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                   : segmentedControlRecipe.item.fontWeight,
               }}
               tone={isSelected ? "brand" : "muted"}
-              variant={textOnly ? "bodyLarge" : sizeContract.textVariant}
+              variant={textOnly ? "bodyLarge" : pills ? chipRecipe.sizes[size].textVariant : sizeContract.textVariant}
             >
               {item.label}
             </Text>
@@ -2057,23 +2143,31 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   </>);
   // The scroller clips its content, so it reaches `outerSlop` past the 36 track on each block side (negative
   // margin, no layout growth) and the options' vertical slop can complete the 44 target like Chip's hitSlop.
-  return scrollRow ? (
-    <View accessibilityLabel={label} accessibilityRole="radiogroup" style={[{ flexGrow: 0 }, layoutStyle]}>
+  // An explicit flexGrow:0 overrides Yoga's flex:1 shorthand. Apply it only without actions,
+  // otherwise the radio rail collapses to zero while its fixed actions remain visible.
+  const group = scrollRow ? (
+    <View accessibilityLabel={label} accessibilityRole="radiogroup" testID={actions == null ? testID : undefined} style={[actions == null ? { flexGrow: 0 } : { flex: 1, minWidth: 0 }, actions == null ? layoutStyle : undefined]}>
       <ScrollView
+        ref={railRef}
         horizontal
+        keyboardShouldPersistTaps="handled"
+        onScroll={event => { railOffset.current = event.nativeEvent.contentOffset.x; }}
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         onLayout={event => setTrackWidth(event.nativeEvent.layout.width)}
-        style={{ flexGrow: 0, marginVertical: -outerSlop }}
-        contentContainerStyle={{ minWidth: trackWidth, paddingVertical: outerSlop }}
+        style={{ direction: "ltr", flexGrow: 0, marginVertical: pills || textOnly ? 0 : -outerSlop }}
+        contentContainerStyle={{ minWidth: pills || textOnly ? undefined : trackWidth, paddingVertical: pills || textOnly ? 0 : outerSlop }}
       >
         <View style={[containerStyle, rowStyle, { flexGrow: 1 }]}>{content}</View>
       </ScrollView>
     </View>
   ) : (
-    <View accessibilityLabel={label} accessibilityRole="radiogroup" style={[containerStyle, rowStyle, layoutStyle]}>
+    <View accessibilityLabel={label} accessibilityRole="radiogroup" testID={actions == null ? testID : undefined} style={[containerStyle, rowStyle, actions == null ? layoutStyle : { flex: 1, minWidth: 0 }]}>
       {content}
     </View>
   );
+  // Actions are siblings, not radio options, and stay visible while the filter row scrolls (Spint spot rail).
+  return actions == null ? group : <View testID={testID} style={[{ flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.xs }, layoutStyle]}>{group}{actions}</View>;
 }
 
 type ChipBaseProps = Readonly<{
@@ -2113,7 +2207,7 @@ export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 
 /** Action/filter chip with role-specific, controlled selection semantics. */
 /** Forwards the host View ref so a chip can be a focus-return target (2026-10-16, DiscoveryGallery). */
-export const Chip = forwardRef<View, ChipProps>(function Chip({
+export const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipProps>> = forwardRef<ComponentRef<typeof View>, ChipProps>(function Chip({
   label,
   size = chipRecipe.defaults.size,
   disabled = false,

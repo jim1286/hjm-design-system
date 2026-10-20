@@ -3,7 +3,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Text } from "./layout.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { typography } from "@hjmds/design-contracts/foundations";
-import { imageChoiceRecipe, resolveImageChoiceCaptionLines, resolveImageChoiceColumns, resolveImageChoiceTileHeight, resolveImageChoiceToggle, validateImageChoiceItemLabelLines, validateImageChoiceItems, } from "@hjmds/design-contracts/components/image-choice";
+import { imageChoiceRecipe, resolveImageChoiceCaptionLines, resolveImageChoiceColumns, resolveImageChoiceOuterSize, resolveImageChoiceTileHeight, resolveImageChoiceToggle, validateImageChoiceItemLabelLines, validateImageChoiceItems, } from "@hjmds/design-contracts/components/image-choice";
 import { resolveVirtualWindow, virtualListRecipe } from "@hjmds/design-contracts/components/virtual-list";
 /**
  * Picks avatars or photos by image (2026-10-16). Tiles are square, wrap to the available width, and show
@@ -62,7 +62,7 @@ function VirtualTileRows({ items, renderTile, label, role, height, overscan, est
         if (rendered > 0 && rendered !== measuredTileHeight)
             setMeasuredTileHeight(rendered);
     });
-    const columns = width > 0 ? resolveImageChoiceColumns(width) : 0;
+    const columns = width > 0 ? Math.min(items.length, resolveImageChoiceColumns(width)) : 0;
     const stride = (measuredTileHeight || estimatedTileHeight) + imageChoiceRecipe.gap;
     const rowCount = columns ? Math.ceil(items.length / columns) : 0;
     const range = resolveVirtualWindow(rowCount, stride, height, scrollTop, overscan);
@@ -71,7 +71,7 @@ function VirtualTileRows({ items, renderTile, label, role, height, overscan, est
     if (focusedRow !== null && focusedRow < rowCount && !rows.includes(focusedRow))
         rows.push(focusedRow);
     rows.sort((first, second) => first - second); // DOM order is the tab order
-    return _jsx("div", { ref: host, className: "hjm-image-choice__viewport", role: role, "aria-label": label, style: { height }, onScroll: event => setScrollTop(event.currentTarget.scrollTop), children: columns ? _jsx("div", { style: { position: "relative", height: Math.max(0, range.totalHeight - imageChoiceRecipe.gap) }, children: rows.map(row => _jsx("div", { className: "hjm-image-choice__row", style: { top: row * stride }, onFocusCapture: () => setFocusedRow(row), onBlurCapture: event => { if (!event.currentTarget.contains(event.relatedTarget))
+    return _jsx("div", { ref: host, className: "hjm-image-choice__viewport", role: role, "aria-label": label, style: { height }, onScroll: event => setScrollTop(event.currentTarget.scrollTop), children: columns ? _jsx("div", { style: { position: "relative", height: Math.max(0, range.totalHeight - imageChoiceRecipe.gap) }, children: rows.map(row => _jsx("div", { className: "hjm-image-choice__row", style: { top: row * stride, display: "grid", gridTemplateColumns: `repeat(${columns}, ${resolveImageChoiceOuterSize()}px)`, justifyContent: "space-between" }, onFocusCapture: () => setFocusedRow(row), onBlurCapture: event => { if (!event.currentTarget.contains(event.relatedTarget))
                     setFocusedRow(current => current === row ? null : current); }, children: items.slice(row * columns, row * columns + columns).map((item, offset) => renderTile(item, row * columns + offset)) }, row)) }) : null });
 }
 //# sourceMappingURL=image-choice.js.map

@@ -1,5 +1,5 @@
 import type { BehaviorContract } from "./behaviors.js";
-import { spacing, stroke } from "./foundations.js";
+import { control, glyph, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 
@@ -27,9 +27,9 @@ export function getAnchorCurrentId(positions: readonly Readonly<{ id: string; to
 }
 
 export const anchorRecipe = {
-  slots: ["root", "list", "link", "indicator"] as const,
+  slots: ["root", "list", "link", "leading", "indicator"] as const,
   gap: spacing.xxs,
-  link: { padding: spacing.xs, color: semanticColors.content.secondary },
+  link: { padding: spacing.xs, minHeight: control.minTouchTarget, gap: spacing.xs, leadingSize: glyph.sm, color: semanticColors.content.secondary },
   current: { color: semanticColors.content.brand, border: semanticColors.border.focus, width: stroke.strong },
   focus: focusIndicatorContract,
 } as const;

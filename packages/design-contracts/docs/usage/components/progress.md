@@ -75,7 +75,9 @@ Native `ScrollProgress`는 제품 ScrollView의 `onScroll`(contentOffset.y)·`on
 | `value` | `0`~`max` | — | 생략하면 불확정 진행 |
 | `size` | `small` · `medium` · `large` | `medium` | 두께 4 · 8 · 12, circular 지름 24 · 40 · 64 |
 | `tone` | `brand` · `success` · `warning` · `danger` | `brand` | — |
+| `segments` | 2 이상 정수 | 없음 | 미게시. determinate linear만 지원. 같은 수량을 같은 폭의 칸으로 나눈다. `max={5} segments={5} value={2.5}`는 두 칸과 셋째 칸 절반이다. 불확정·circular와 함께 쓰면 오류 |
 | `shape` | `linear` · `circular` | `linear` | `circular`일 때만 `children`(링 안 내용)을 그린다 |
+| `showValue` | `boolean` | `true` | 미게시. 라벨에 수량이 이미 있으면 false로 보이는 보조 값만 숨긴다. progress의 접근성 값·비율·label은 유지한다 |
 | `valueText` | 지역화 문구 | 백분율 문구 | 단위가 다른 문구가 필요하면 지역화해 넘긴다 |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 여백·폭만 |
 | `metrics`(ScrollProgress) | `{ offset: number; contentSize: number; viewportSize: number }` | 필수 | 타입 `ScrollMetrics`(`@hjmds/design-contracts/scroll-progress`). `viewportSize` 0이면 0%, 내용이 화면보다 짧으면 100% |
@@ -148,3 +150,25 @@ const { before, after } = resolveScrollEdges(metrics);
 Web은 useScrollMetrics의 resize/mutation 관찰, Native는 ScrollView의 onLayout·
 onContentSizeChange·onScroll을 연결한다. 길이를 줄인 뒤 예전 offset을 그대로 제품 상태로
 저장하지 않는다. 측정 전 viewport=0은 0, 측정 후 화면 안에 들어오는 내용은 1이다.
+
+## 수량이 라벨에 들어 있는 진도
+
+다에리 도감은 이미 라벨이 `만난 친구 1/30`을 말하므로 보조 백분율을 중복 표시하지 않도록 `showValue={false}`를 쓴다. 기존 제품 막대의 최소 6% 보정은 실제 비율을 바꾸므로 사용하지 않는다. HJM이 전달된 값의 실제 비율을 그린다. Native는 라벨/값을 하나의 accessible progress 대상으로 노출한다.
+
+<!-- usage-example: Web ../../../../../showcase/web/src/components/Progress.stories.tsx -->
+<!-- usage-example: Native ../../../../../showcase/native/src/components/Progress.stories.tsx -->
+
+## 수량의 단위 칸(미게시)
+
+2026-10-19 다에리 활동일 보상은 5일 중 며칠을 모았는지 단위 칸으로 표시한다.
+단계별 화면을 탐색하는 Steps와 의미가 달라 Progress의 `segments` 표현으로 추가했다.
+분할 간격은 `spacing.xxs` 4이고 높이·tone·rounding은 기존 recipe를 공유한다.
+`resolveProgressSegments`(`@hjmds/design-contracts/recipes`)가 양 renderer의 분할 비율과 입력 검증을 소유한다.
+칸은 장식이며 보조기술에는 하나의 실제 진행량만 전달한다.
+
+```tsx
+<Progress label={t("activity.days", { count: days })} value={days} max={5} segments={5} showValue={false} />
+```
+
+실행 예제는 양 Showcase의 `Progress.stories.tsx` ActivityUnits다.
+Web circular/segments의 native progress는 시각적으로만 숨기며 접근성 트리에서 제거하지 않는다.

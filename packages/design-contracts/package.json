@@ -804,6 +804,18 @@
       "react-native": "./dist/conversation-row.js",
       "import": "./dist/conversation-row.js",
       "default": "./dist/conversation-row.js"
+    },
+    "./shortcut-rail": {
+      "types": "./dist/shortcut-rail.d.ts",
+      "react-native": "./dist/shortcut-rail.js",
+      "import": "./dist/shortcut-rail.js",
+      "default": "./dist/shortcut-rail.js"
+    },
+    "./components/time-picker": {
+      "types": "./dist/time-picker.d.ts",
+      "react-native": "./dist/time-picker.js",
+      "import": "./dist/time-picker.js",
+      "default": "./dist/time-picker.js"
     }
   },
   "files": [
@@ -829,10 +841,11 @@
   },
   "packageManager": "pnpm@11.18.0",
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@types/node": "^24.19.2",
     "jsqr": "1.4.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11",
-    "qrcode-generator": "2.0.4"
+    "vitest": "^5.0.5",
+    "qrcode-generator": "2.0.4",
+    "vite": "8.3.4"
   }
 }

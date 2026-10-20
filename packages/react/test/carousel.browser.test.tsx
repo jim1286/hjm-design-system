@@ -39,6 +39,26 @@ async function render(props: Partial<Omit<CarouselProps, "currentKey" | "default
 }
 
 describe("Carousel interaction", () => {
+  it("scrolls bounded slide content without moving the navigation or exposing hidden slides", async () => {
+    await render({ slideMaxHeight: 180, renderSlide: ({ label }) => <div style={{ height: 600 }}>{label}<button type="button">슬라이드 행동</button></div> });
+    const panel = host.querySelector<HTMLElement>('.hjm-carousel__slide:not([hidden])')!;
+    const next = button("다음");
+    expect(panel.clientHeight).toBe(180);
+    expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
+    panel.focus();
+    expect(document.activeElement).toBe(panel);
+    const controlsTop = next.getBoundingClientRect().top;
+    panel.scrollTop = 120;
+    expect(panel.scrollTop).toBe(120);
+    expect(next.getBoundingClientRect().top).toBe(controlsTop);
+    await act(async () => { next.focus(); next.click(); });
+    expect(current()).toBe("2/3 둘째 소식");
+    expect(panel.inert).toBe(true);
+    panel.focus();
+    expect(document.activeElement).toBe(next);
+    await act(async () => button("이전").click());
+    expect(panel.scrollTop).toBe(120);
+  });
   it("keeps keyed card state while hiding its links from focus and accessibility", async () => {
     await render();
     const input = host.querySelector<HTMLInputElement>("input")!; input.value = "남겨둔 메모";
@@ -177,4 +197,34 @@ describe("Web PageIndicator", () => {
     await act(async () => { dots[1]!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true })); });
     expect(onChange).toHaveBeenLastCalledWith(0);
   });
+});
+
+
+it("renders a bounded position-only PageIndicator without small buttons or keyboard navigation", async () => {
+  const { PageIndicator } = await import("../src/carousel.js");
+  const change = vi.fn();
+  await act(async () => root.render(<HjmProvider systemTheme="light"><PageIndicator label="Home pages" count={9} currentIndex={8}
+    maxVisibleDots={5} interactive={false} onCurrentIndexChange={change}
+    composeAccessibleName={({ position, total }) => `Page ${position} of ${total}`} /></HjmProvider>));
+  const indicator = host.querySelector<HTMLElement>('[role="img"]')!;
+  expect(indicator.getAttribute("aria-label")).toBe("Page 9 of 9");
+  expect(indicator.querySelectorAll("button")).toHaveLength(0);
+  expect(indicator.querySelectorAll(".hjm-page-indicator__marker")).toHaveLength(5);
+  expect(indicator.lastElementChild?.getAttribute("data-current")).toBe("true");
+  expect(indicator.getBoundingClientRect().height).toBe(8);
+  await act(async () => { indicator.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true })); });
+  expect(change).not.toHaveBeenCalled();
+});
+
+
+it("recovers focus when a bounded PageIndicator window removes its focused dot", async () => {
+  const { PageIndicator } = await import("../src/carousel.js");
+  const renderIndicator = (currentIndex: number) => <HjmProvider systemTheme="light"><PageIndicator label="Home pages" count={9}
+    maxVisibleDots={5} currentIndex={currentIndex} onCurrentIndexChange={() => {}}
+    composeAccessibleName={({ position }) => `Page ${position}`} /></HjmProvider>;
+  await act(async () => root.render(renderIndicator(0)));
+  host.querySelector<HTMLButtonElement>('button[aria-label="Page 1"]')!.focus();
+  await act(async () => root.render(renderIndicator(4)));
+  expect(document.activeElement?.getAttribute("aria-label")).toBe("Page 5");
+  expect(host.querySelectorAll("button")).toHaveLength(5);
 });

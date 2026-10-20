@@ -12,6 +12,13 @@
 
 2~4개의 짧은 보기 중 **항상 하나가 선택된** 전환에 쓴다. 같은 화면의 목록·기간·보기 방식을
 바꾸는 필터(오늘/이번 주/이번 달, 목록/지도)가 전형이다. 선택하면 곧바로 화면이 바뀐다.
+짧은 지표·시즌처럼 선택지가 더 많은 목록은 `presentation="pills" overflow="scroll"`로 한 줄에 둔다.
+`items[].accessibilityLabel`은 축약된 화면 라벨 대신 읽을 전체 이름이다(Web radio의 aria-label, Native radio 이름).
+생략하면 기존 label을 읽는다. 예: `{ value: "OPS", label: "OPS", accessibilityLabel: "출루율과 장타율의 합 OPS" }`.
+
+2026-10-19 오늘야구 이관에서 지표 설명이 공통 레일의 이름에 전달되지 않던 공백을 보완했다.
+필터 패널을 여는 행동은 선택 항목으로 섞지 않고 `actions`에 Button으로 공급한다. 이미 고른 시즌의
+이전 연도 창도 다시 열 수 있어야 하며, 창을 여는 것만으로 선택 값이 바뀌면 안 된다.
 
 ## 쓰지 않을 때
 
@@ -72,6 +79,8 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | `onValueChange` | Web `(value: string) => void` · Native `(value: Value) => void` | — | 다른 항목을 고를 때. `null`은 오지 않는다 |
 | `label` | `string` | 필수 | 화면에 보이지 않는 접근성 이름. 보이는 제목은 바깥에 둔다 |
 | `disabled` | `boolean` | `false` | 전체 비활성(Web은 fieldset 속성) |
+| `overflow` | `wrap` · `scroll` | `wrap` | 미게시. pills는 기본 줄바꿈, scroll은 유한 가로 목록으로 배치한다. connected의 기존 내부 스크롤은 유지한다. 선택/포커스 항목을 최소 이동으로 노출한다 |
+| `actions` | `ReactNode` | 없음 | 미게시. 스크롤 밖 끝 쪽 고정 행동. radio 그룹과 형제이며 선택 값에 포함하지 않는다. 도구는 IconButton으로 연결한다 |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 배치 |
 
 `connected`는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로로 쌓는다. `pills`는 쌓지 않는다(`pills.largeTextLayout` `wrap`, 1.13.1 변경).
@@ -122,8 +131,8 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 기존 단일 선택 계약을 재사용하고 버튼마다 별도 selected 상태를 조립하는 대안은 제외했다.
 
 - `presentation="pills"`: 카테고리·작성자·기간처럼 같은 목록의 범위를 좁힐 때 쓴다.
-- 터치 영역은 크기 옵션과 관계없이 최소 `control.minTouchTarget` 44, 안쪽 표면은 위아래 `spacing.xs` 8만큼 들어간다. 눈에 보이는 모양을 작게 해도 터치 영역을 줄이지 않는다.
-- 좌우 `spacing.md` 16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surfaceAlt`, 선택은 `content.body`/`canvas` 반전이다. 색은 제품 provider에서 따라온다.
+- 표면 높이·좌우 여백·글자는 같은 size의 Chip과 맞춘다. 터치 영역은 최소 `control.minTouchTarget` 44이며 안쪽 표면은 위아래 `spacing.xxs` 4만큼 들어간다. 2026-10-20 Utilverse 혼합 필터 행에서 작은 Chip36과 pill28의 불일치가 확인돼 공통 크기로 정렬했다(미게시). 누름 영역은 줄이지 않는다.
+- 좌우 여백은 Chip과 같이 small12/medium16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surfaceAlt`, 선택은 `content.body`/`canvas` 반전이다. 색은 제품 provider에서 따라온다.
 - 항목은 내용 폭이며 좁아지면 줄바꿈한다. 큰 글자에서도 세로로 쌓지 않는다(`pills.largeTextLayout` `wrap`): 블록 안에서는 줄바꿈하고, 가로 스크롤 줄 안에서는 한 줄로 남아 스크롤된다. 라벨 높이만큼 항목도 늘어난다. 선택 상태(radio)와 포커스 이동(Web 화살표, Native 접근성 순서)은 배치와 관계없이 같다.
 - 그룹 이름은 `label`, 하나의 선택은 `value`/`onValueChange`. 복수 조건은 ToggleGroup, 화면 이동은 Tabs/Navigation을 쓴다.
 - 예제의 전체 선택값도 실제 항목으로 넣는다. 선택된 항목을 다시 눌러도 선택을 해제하지 않는다.
@@ -160,7 +169,7 @@ Web은 항목과 바깥 선택 영역의 크기를 함께 관찰한다. 2026-10-
 - 모션 감소와 비활성 화면에서는 이동 효과를 중지한다. 동작 중인 입력·선택 값은 그대로다.
 - 조작 가능 영역·글자는 움직이거나 확대하지 않는다. 새 사용 예제는 [선택 배경 이동](../compositions/selection-motion.md)이다.
 
-2026-10-07 큰 글자 UI 확인에서 Web 2배 글자 줄은 40px인데 pill 배경은 28px였다. Native처럼 세로 padding에도 pills.inset(spacing.xs=8px)을 적용해 배경이 전체 줄을 감싸게 했다. 고정 높이를 늘리는 대신 줄 높이를 따라가므로 3배·줄바꿈도 유지한다.
+2026-10-07에는 Web 배경이 글자를 감싸도록 세로 padding과 pills.inset을 함께 적용했다. 2026-10-20에는 같은 원리를 유지하며 inset을4로 정렬하고 size별 Chip 높이를 표면의 최소값으로 사용한다.
 
 ### Text presentation (미게시, 1.23.0 이후)
 
@@ -168,3 +177,10 @@ Web은 항목과 바깥 선택 영역의 크기를 함께 관찰한다. 2026-10-
 기본 strong이며 조용한 관계 목록은 regular다. 기존 `items/value/onValueChange`와 키보드·disabled 계약을 유지한다.
 글자 탭의 radio 의미를 제품에서 재구현하던 문제를 없애기 위해 추가했다(2026-10-15 BurnTok 전사 이관).
 선택 표시는 16×2, 목표 높이는 44, 항목 간격은 md이며 text 모드는 slide artwork를 사용하지 않는다.
+
+## 가로 필터와 고정 행동
+
+Spint 스팟 필터가 제품 ScrollView와 고정 추가 행을 재조립하던 공통 배치 공백을 `overflow="scroll"`과 `actions`로 보완했다(미게시). 제품은 값·목록·문구·추가 권한과 콜백을 소유하고 HJM이 줄 배치, 스크롤, 선택/포커스 항목 노출과 별도 행동의 위치를 소유한다. 이름이 긴 선택지를 탐색하는 폼은 여전히 Select를 쓰고, 화면 목록에 직접 적용하는 유한 필터가 이 rail의 대상이다.
+
+<!-- usage-example: Web ../../../../../showcase/web/src/components/SegmentedControl.stories.tsx -->
+<!-- usage-example: Native ../../../../../showcase/native/src/components/SegmentedControl.stories.tsx -->

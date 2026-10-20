@@ -10,10 +10,13 @@ export declare function getAnchorCurrentId(positions: readonly Readonly<{
     top: number;
 }>[], offset?: number, atEnd?: boolean): string | undefined;
 export declare const anchorRecipe: {
-    readonly slots: readonly ["root", "list", "link", "indicator"];
+    readonly slots: readonly ["root", "list", "link", "leading", "indicator"];
     readonly gap: 4;
     readonly link: {
         readonly padding: 8;
+        readonly minHeight: 44;
+        readonly gap: 8;
+        readonly leadingSize: 20;
         readonly color: Readonly<{
             source: "theme";
             key: "textMuted";

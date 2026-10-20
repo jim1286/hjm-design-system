@@ -588,6 +588,16 @@
       "types": "./dist/conversation-row.d.ts",
       "import": "./dist/conversation-row.js",
       "default": "./dist/conversation-row.js"
+    },
+    "./shortcut-rail": {
+      "types": "./dist/shortcut-rail.d.ts",
+      "import": "./dist/shortcut-rail.js",
+      "default": "./dist/shortcut-rail.js"
+    },
+    "./time-picker": {
+      "types": "./dist/time-picker.d.ts",
+      "import": "./dist/time-picker.js",
+      "default": "./dist/time-picker.js"
     }
   },
   "files": [
@@ -624,27 +634,28 @@
   },
   "devDependencies": {
     "@hjmds/design-contracts": "workspace:*",
-    "@types/node": "^24.13.3",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
-    "@vitest/browser-playwright": "^4.1.11",
-    "playwright": "^1.63.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/browser-playwright": "^5.0.5",
+    "playwright": "^1.64.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.5",
     "@number-flow/react": "0.6.2",
     "bloom-menu": "0.1.0",
-    "framer-motion": "13.4.4",
+    "framer-motion": "13.5.1",
     "qrcode-generator": "2.0.4",
-    "@dnd-kit/react": "0.5.0",
+    "@dnd-kit/react": "0.5.1",
     "embla-carousel-react": "8.6.0",
     "canvas-confetti": "1.9.4",
     "@types/canvas-confetti": "1.9.0",
-    "@dnd-kit/dom": "0.5.0",
+    "@dnd-kit/dom": "0.5.1",
     "blobatar": "2.7.0",
     "@blobatar/react": "2.7.0",
-    "lucide-react": "1.49.0"
+    "lucide-react": "1.59.0",
+    "vite": "8.3.4"
   },
   "peerDependenciesMeta": {
     "@number-flow/react": {

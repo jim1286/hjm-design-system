@@ -30,7 +30,7 @@ export const FloatingActionButton = forwardRef(function FloatingActionButton({ d
         animation.start();
         return () => animation.stop();
     }, [collapsed, environment.reducedMotion, labelOpacity]);
-    return _jsx(RecipeButton, { ...props, ref: ref, size: "large", tone: "primary", shape: "pill", growWithContent: true, accessibilityLabel: resolved.resolvedAccessibilityLabel, onLayout: ({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance, nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset)), style: { position: "absolute", bottom: recipe.margin + safeAreaBottomInset,
+    return _jsx(RecipeButton, { ...props, appearance: "flat", ref: ref, size: "large", tone: "primary", shape: "pill", growWithContent: true, accessibilityLabel: resolved.resolvedAccessibilityLabel, onLayout: ({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance, nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset)), style: { position: "absolute", bottom: recipe.margin + safeAreaBottomInset,
             ...(environment.direction === "rtl" ? { left: recipe.margin } : { right: recipe.margin }),
             maxWidth: width - recipe.margin * 2, minHeight: recipe.circle.diameter,
             shadowColor: surfaceShadow.color, shadowOpacity: surfaceShadow.opacity,

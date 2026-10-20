@@ -19,6 +19,9 @@ export function validateStepItemDescriptor(step) {
     }
 }
 export function validateStepsDescriptor(descriptor) {
+    if (descriptor.navigationMode !== undefined && descriptor.navigationMode !== "linear" && descriptor.navigationMode !== "free") {
+        throw new TypeError(`Unsupported Steps navigationMode: ${String(descriptor.navigationMode)}`);
+    }
     if (descriptor.steps.length < 2) {
         throw new RangeError("Steps must contain at least two steps");
     }

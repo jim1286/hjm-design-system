@@ -137,8 +137,15 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
                 scale: resolved.environment.textScale,
             },
             fonts,
-            // A design profile's own fontFamily still wins; Pretendard replaces only the neutral system stack.
-            tokens: { spacing, radius, typography, shadow, fontFamily: fonts === "pretendard" ? { ...fontFamily, ui: [pretendardNativeFaces["400"]] } : fontFamily, ...resolved.designProfile?.tokens },
+            // A profile that only selects controls inherits the neutral font stack. Keep the host's loaded
+            // Pretendard there; a custom profile UI stack still wins (including separately registered assets).
+            tokens: { spacing, radius, typography, shadow, ...resolved.designProfile?.tokens,
+                fontFamily: {
+                    ...(resolved.designProfile?.tokens.fontFamily ?? fontFamily),
+                    ...(fonts === "pretendard" && (resolved.designProfile?.tokens.fontFamily.ui ?? fontFamily.ui).join("\0") === fontFamily.ui.join("\0")
+                        ? { ui: [pretendardNativeFaces["400"]] } : {}),
+                },
+            },
         };
     }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme, surfaceEffects, reducedTransparency, fonts]);
     return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(HjmNativeSafeAreaContext.Provider, { value: safeAreaInsets, children: children }) }) }));

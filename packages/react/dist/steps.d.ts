@@ -8,7 +8,8 @@ export type StepsProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOLi
     renderMark?: (status: StepStatus, position: number) => ReactNode;
     /**
      * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-     * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+     * later steps stay static in default linear mode. Free reading mode makes every step selectable.
+     * Omit the handler while the flow is locked.
      */
     onStepPress?: (id: Id) => void;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
@@ -24,6 +25,7 @@ export declare const Steps: import("react").ForwardRefExoticComponent<Omit<HTMLA
         }>[];
         currentStepId: string;
         currentStepStatus?: import("@hjmds/design-contracts/components/steps").StepCursorStatus;
+        navigationMode?: "linear" | "free";
     }>;
     statusLabels: Readonly<{
         pending: string;
@@ -35,7 +37,8 @@ export declare const Steps: import("react").ForwardRefExoticComponent<Omit<HTMLA
     renderMark?: (status: StepStatus, position: number) => ReactNode;
     /**
      * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-     * later steps stay static so the flow never skips forward past validation. Omit it while the flow is locked.
+     * later steps stay static in default linear mode. Free reading mode makes every step selectable.
+     * Omit the handler while the flow is locked.
      */
     onStepPress?: (id: string) => void;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */

@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Heading } from "@hjmds/react-native/heading";
 import { ProfileEditFields } from "./saved-profile-previews";
 import { PreviewPhoto, PhotoTile, ProfileSummary, PermissionPreview, IntroPreview } from "./reference-screen-parts";
@@ -60,7 +61,7 @@ function FlowPreview({kind,stateKind="ready",tools=false,initialEditing=false,in
  const [failed,setFailed]=useState(false);
  const jobs=useRef<ReturnType<typeof setTimeout>[]>([]);
  const pendingMutation=useRef(false), failureArmed=useRef(false), nextRecordId=useRef(entries.length+1);
- const accountTrigger=useRef<View>(null);
+ const accountTrigger=useRef<ComponentRef<typeof View>>(null);
  const armFailure=()=>{if(pendingMutation.current)return;failureArmed.current=true;setFailNext(true);};
  const startRecord=()=>{setTitle("");setBody("");setSnapshot({title:"",body:""});setSelected(null);setNotice("");setFailed(false);setEditing(true);};
  useEffect(()=>()=>jobs.current.forEach(clearTimeout),[]);

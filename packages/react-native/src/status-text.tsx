@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { forwardRef, useEffect, useRef } from "react";
 import { AccessibilityInfo, AppState, Platform, type Text as NativeText } from "react-native";
 import { Text, type TextProps } from "./primitives.js";
@@ -11,7 +12,7 @@ export type StatusTextProps = Omit<TextProps, "children" | "accessibilityLiveReg
   announceOnMount?: boolean;
 }>;
 
-export const StatusText = forwardRef<NativeText, StatusTextProps>(function StatusText(
+export const StatusText: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>, StatusTextProps>> = forwardRef<ComponentRef<typeof NativeText>, StatusTextProps>(function StatusText(
   { children, announcement = "polite", announceOnMount = false, ...props }, ref,
 ) {
   const previous = useRef<string | undefined>(announceOnMount ? undefined : children);

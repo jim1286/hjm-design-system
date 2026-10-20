@@ -183,3 +183,10 @@ export function useInitialFocusTarget(element: RefObject<HTMLElement | null>, pr
     }, mounted);
   }, [registry, preference, element]);
 }
+
+/** Page footer inputs are bottom-anchored, so entry must not open their keyboard (2026-10-18 user request).
+ * Keep the boundary through nested screens; a separately opened overlay owns its own focus policy.
+ */
+export function BottomEntryFocusBoundary({ children }: { children: ReactNode }) {
+  return <EntryFocusEnabledContext.Provider value={false}><InitialFocusContext.Provider value={null}>{children}</InitialFocusContext.Provider></EntryFocusEnabledContext.Provider>;
+}

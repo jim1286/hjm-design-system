@@ -176,3 +176,14 @@ that the earlier device evidence covers Blobatar.
 ### 사진 앨범 탐색과 로딩 (2026-10-12)
 
 `CarouselMotion`의 선택적 `navigation="counter"`는 이전·현재/전체·다음 한 줄 컨트롤을 Web/Native에 제공한다. 기존 기본 버튼 탐색·유한한 keyed selection·숨겨진 항목의 초점 차단·동작 줄이기 계약은 유지한다. 번뚝의 사진 넘김을 기존 모션 어댑터에 연결하기 위한 표현이며 새 어댑터/peer를 만들지 않는다. `ImageViewer`의 loading 상태는 액자 중앙 Spinner와 접근성 전용 loadingLabel을 사용한다. 제품의 private query·Expo onDisplay·cachePolicy=none은 host 책임이다.
+
+
+## Persistent map panel — 2026-10-20 (unpublished)
+
+`@hjmds/react-native/sheet-panel` exports `SheetPanel`, an optional Sheet extension using
+Gesture Handler, Reanimated and Worklets already declared by the native adapter. Unlike
+GestureSheet it has no Gorhom dependency, backdrop, modal provider or modal focus boundary.
+It owns the shared sheet frame, fold/unfold handle, cancellation, resize snap preservation and
+scroll-versus-drag arbitration. Products supply map geometry, content and domain paging through
+public slots. Web inline map content uses Card; this native gesture adapter has no Web export.
+See [Sheet usage](usage/components/sheet.md#지도와-함께-조작하는-하단-패널--미게시).

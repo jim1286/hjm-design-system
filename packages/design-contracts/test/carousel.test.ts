@@ -219,3 +219,23 @@ describe("PageIndicator", () => {
     expect(getPageIndicatorTarget({ count: 3, currentIndex: 0 }, "next")).toBe(1);
   });
 });
+
+
+describe("PageIndicator bounded windows", () => {
+  const name = ({ position, total }: { position: number; total: number }) => `Page ${position} of ${total}`;
+  it("keeps absolute positions and the current dot at both ends and in the middle", () => {
+    for (const [currentIndex, expected] of [[0, [0, 1, 2, 3, 4]], [4, [2, 3, 4, 5, 6]], [8, [4, 5, 6, 7, 8]]] as const) {
+      const dots = resolvePageIndicator({ count: 9, currentIndex, maxVisibleDots: 5 }, name);
+      expect(dots.map(dot => dot.index)).toEqual(expected);
+      expect(dots.filter(dot => dot.current).map(dot => dot.accessibleName)).toEqual([`Page ${currentIndex + 1} of 9`]);
+    }
+    expect(resolvePageIndicator({ count: 2, currentIndex: 1, maxVisibleDots: 5 }, name)).toHaveLength(2);
+    expect(resolvePageIndicator({ count: 9, currentIndex: 8, maxVisibleDots: 1 }, name)[0]?.index).toBe(8);
+    expect(getPageIndicatorTarget({ count: 9, currentIndex: 4, maxVisibleDots: 3 }, "last")).toBe(8);
+  });
+  it("rejects invalid windows rather than silently changing their size", () => {
+    for (const maxVisibleDots of [0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => resolvePageIndicator({ count: 9, currentIndex: 0, maxVisibleDots }, name)).toThrow(/maxVisibleDots/);
+    }
+  });
+});

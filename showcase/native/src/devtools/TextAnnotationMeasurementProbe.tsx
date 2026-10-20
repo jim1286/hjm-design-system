@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState } from 'react';
 import { Text as NativeText, View, type TextLayoutEvent } from 'react-native';
 import { Button } from '@hjmds/react-native/actions';
@@ -8,7 +9,7 @@ import { Stack, Text } from '@hjmds/react-native/primitives';
  * Keep the fixture because character-count estimates cannot prove glyph geometry.
  */
 export function TextAnnotationMeasurementProbe() {
-  const fragment = useRef<NativeText>(null);
+  const fragment = useRef<ComponentRef<typeof NativeText>>(null);
   const [narrow, setNarrow] = useState(false);
   const [parent, setParent] = useState('대기');
   const [nested, setNested] = useState('대기');

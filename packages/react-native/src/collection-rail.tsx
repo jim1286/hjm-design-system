@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useContext, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -15,8 +16,8 @@ import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollectionRailLabels = Readonly<{ previous: string; next: string; navigation: string }>;
-export type CollectionRailProps = Readonly<{
-  label: string; items: readonly CollectionRailItem[]; renderItem: (item: CollectionRailItem) => ReactNode;
+export type CollectionRailProps<Item extends CollectionRailItem = CollectionRailItem> = Readonly<{
+  label: string; items: readonly Item[]; renderItem: (item: Item) => ReactNode;
   labels: CollectionRailLabels; density?: CollectionRailDensity; emptyContent?: ReactNode;
   /** Initial scroll anchor, not a selected item or an open detail target. */
   defaultStartKey?: string; onStartKeyChange?: (key: string | null) => void;
@@ -29,13 +30,13 @@ export type CollectionRailProps = Readonly<{
   layoutStyle?: HjmCompositionStyleProp; testID?: string;
 }>;
 
-export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, testID }: CollectionRailProps) {
+export function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, testID }: CollectionRailProps<Item>) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const { environment, palette, tokens } = useHjmNativeTheme(), direction = environment.direction;
   const chevronColor = resolveIconButtonPresentation("ghost", palette, false).content;
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   // Same viewport/content room rule as the ListRow bleed, with the screen gutter as the outset. Item geometry keeps
   // using the gutter-aligned width, so offsets and item widths are unchanged by the bleed.
   const bodyInset = useContext(ScreenBodyInsetContext);

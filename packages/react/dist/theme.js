@@ -219,6 +219,7 @@ export function createHjmThemeStyle(value) {
     style["--hjm-button-pressed-opacity"] = buttonRecipe.opacity.pressed;
     style["--hjm-button-disabled-opacity"] = buttonRecipe.opacity.disabled;
     style["--hjm-field-border-width"] = `${fieldRecipe.borderWidth}px`;
+    style["--hjm-field-invalid-border-width"] = `${fieldRecipe.states.invalid.borderWidth}px`;
     style["--hjm-field-focus-ring-width"] = `${fieldRecipe.focusRingWidth}px`;
     style["--hjm-field-disabled-opacity"] = fieldRecipe.disabledOpacity;
     style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;

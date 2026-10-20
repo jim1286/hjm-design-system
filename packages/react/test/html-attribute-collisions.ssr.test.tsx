@@ -16,6 +16,15 @@ import type { TopBarProps } from "../src/top-bar.js";
 // heading elements (BurnTok EmptyState, 2026-09-27 audit). These assertions pin the
 // slot type on every component that owns a `title` slot over an HTML element type.
 describe("HTML attribute name collisions", () => {
+  it("honors Notice live-region overrides while retaining its tone defaults", () => {
+    for (const mode of [undefined, "polite", "off"] as const) {
+      const markup = renderToStaticMarkup(<Notice tone="danger" title="Refresh failed" aria-live={mode} />);
+      expect(markup).toContain(`aria-live="${mode ?? "assertive"}"`);
+      expect(markup).toContain('data-tone="danger"');
+    }
+    expect(renderToStaticMarkup(<Notice tone="info" title="Information" />)).toContain('aria-live="polite"');
+  });
+
   it("keeps every title slot a ReactNode instead of the HTML tooltip string", () => {
     expectTypeOf<EmptyStateProps["title"]>().toEqualTypeOf<ReactNode>();
     expectTypeOf<NoticeProps["title"]>().toEqualTypeOf<ReactNode>();

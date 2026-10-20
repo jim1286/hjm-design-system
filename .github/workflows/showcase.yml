@@ -17,6 +17,18 @@ concurrency:
   cancel-in-progress: false
   queue: max
 jobs:
+  # These three packages are one fixed Changesets group. Dependency/export edits are development pushes;
+  # only a group version change (or explicit dispatch) selects public Showcase delivery (2026-10-20).
+  version-change:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      deploy: ${{ steps.decide.outputs.deploy }}
+    steps:
+      - id: decide
+        uses: jim1286/app-release-hub/.github/actions/version-change-decision@v1.4.2
+        with:
+          manifest: packages/design-contracts/package.json
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
@@ -33,6 +45,8 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
   build:
+    needs: version-change
+    if: needs.version-change.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

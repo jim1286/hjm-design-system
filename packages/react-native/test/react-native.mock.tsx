@@ -105,6 +105,7 @@ export const Easing = {
   bezier: (..._coordinates: readonly number[]) => (value: number) => value,
 };
 export const StyleSheet = {
+  absoluteFill: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0 },
   create: <Styles extends Readonly<Record<string, unknown>>>(styles: Styles) => styles,
   // Merge nested arrays like RN; the identity stub hid style-composition logic from tests (2026-10-17).
   flatten: function flatten(style: unknown): unknown {

@@ -14,9 +14,13 @@ export type TimelineItemDescriptor<Id extends string = string> = Readonly<{
     label: string;
     /** Product-formatted "when" copy, e.g. "3회 초" or "2024-01-15". Timeline never formats a clock, inning, or date itself. */
     timestamp?: string;
+    /** Machine-readable date for the formatted timestamp; products retain the original instant. */
+    dateTime?: string;
     /** Product-formatted supplementary detail, e.g. "안타로 1루 진출". */
     description?: string;
     tone?: TimelineItemTone;
+    /** Passive emphasis for a notable record, not a progress cursor or selection. */
+    emphasized?: boolean;
 }>;
 export type TimelineDescriptor<Id extends string = string> = Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
@@ -55,7 +59,15 @@ export declare function validateTimelineDescriptor<Id extends string>(descriptor
 export declare function resolveTimelineDescriptor<Id extends string>(descriptor: TimelineDescriptor<Id>, options: ResolveTimelineOptions): readonly ResolvedTimelineItemDescriptor<Id>[];
 export declare const timelineRecipe: {
     readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];
-    readonly gap: 16;
+    readonly gap: 20;
+    readonly item: {
+        readonly padding: 12;
+        readonly emphasisBackground: Readonly<{
+            source: "accent";
+            key: "info";
+            alpha?: number;
+        }>;
+    };
     readonly dot: {
         readonly diameter: 10;
         readonly borderWidth: 1;

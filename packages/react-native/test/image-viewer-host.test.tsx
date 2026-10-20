@@ -4,7 +4,7 @@ import { Image, Modal, StyleSheet, View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
-import { Button } from "../src/actions.js";
+import { Button, IconButton } from "../src/actions.js";
 import { ImageViewer, type ImageViewerImageRenderProps, type ImageViewerProps } from "../src/image-viewer.js";
 
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
@@ -107,17 +107,16 @@ it("resets the session when collection IDs and URIs collide under delimiter join
 });
 
 it("forwards product orientation and keeps controls and feedback inside asymmetric cutouts", () => {
-  render({ safeAreaInsets: { top: 0, bottom: 21, left: 59, right: 0 }, supportedOrientations: ["portrait", "landscape"] });
+  render({ items: [...base.items, { id: "second", uri: "file:///B.png", label: "두 번째" }], safeAreaInsets: { top: 0, bottom: 21, left: 59, right: 0 }, supportedOrientations: ["portrait", "landscape"] });
   const modal = tree!.root.findByType(Modal);
   expect(modal.props.presentationStyle).toBe("fullScreen");
   expect(modal.props.supportedOrientations).toEqual(["portrait", "landscape"]);
-  const close = tree!.root.findAllByType(Button).find(node => node.props.children === "닫기")!;
-  const next = tree!.root.findAllByType(Button).find(node => node.props.children === "다음")!;
+  const close = tree!.root.findAllByType(IconButton).find(node => node.props.label === "닫기")!;
+  const next = tree!.root.findAllByType(IconButton).find(node => node.props.label === "다음")!;
   for (const node of [close, next]) {
     const style = StyleSheet.flatten(node.parent!.props.style);
     expect(style.paddingLeft - style.paddingRight).toBe(59);
     expect(style.paddingRight).toBeGreaterThan(0);
-    expect(node.props.growWithContent).toBe(true);
   }
   const feedback = tree!.root.find(node => node.props.pointerEvents === "box-none");
   const style = StyleSheet.flatten(feedback.props.style);
@@ -138,4 +137,21 @@ it("shows a centered loading icon without a visible loading sentence", () => {
   render({ renderImage: () => <View /> });
   expect(tree!.root.findAllByType(View).some(node => node.props.accessibilityRole === "progressbar" && node.props.accessibilityLabel === base.loadingLabel)).toBe(true);
   expect(tree!.root.findAllByType(Text).some(node => node.props.children === base.loadingLabel)).toBe(false);
+});
+
+
+it("pages with explicit accessible controls, shows position and removes navigation for a single photo", () => {
+  const close = vi.fn();
+  render({ onClose: close, items: [...base.items, { id: "second", uri: "file:///B.png", label: "두 번째" }] });
+  const action = (label: string) => tree!.root.findAllByType(IconButton).find(node => node.props.label === label)!;
+  expect(action("이전").props.disabled).toBe(true);
+  expect(action("다음").props.disabled).toBe(false);
+  act(() => action("다음").props.onPress());
+  expect(action("이전").props.disabled).toBe(false);
+  expect(action("다음").props.disabled).toBe(true);
+  expect(tree!.root.findAllByType(Text).some(node => node.props.children === "2/2")).toBe(true);
+  act(() => action("닫기").props.onPress());
+  expect(close).toHaveBeenCalledTimes(1);
+  render();
+  expect(tree!.root.findAllByType(IconButton).map(node => node.props.label)).toEqual(["닫기"]);
 });

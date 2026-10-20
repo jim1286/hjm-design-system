@@ -9,13 +9,20 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type BottomCTAAction = Readonly<{
   label: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  /** A regular button requires a handler; submit/reset may use the browser's native form action. */
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset";
+  /** HTML form owner, including a form in a Sheet body while this action is in its footer. */
+  form?: string;
   accessibilityLabel?: string;
   disabled?: boolean;
   loading?: boolean;
   loadingLabel?: string;
   size?: ButtonSize;
   tone?: ButtonTone;
+  /** Decorative Button adornments; label remains the action name. */
+  leading?: ReactNode;
+  trailing?: ReactNode;
   /**
    * Ref to this action's button. The component `ref` names the bar; a dialog or overlay opened from the primary
    * action needs the button itself to return focus to on close (2026-10-18 Utilverse display board).
@@ -37,15 +44,17 @@ export type BottomCTAProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & 
 
 function Action({ action, tone }: { action: BottomCTAAction; tone: ButtonTone }) {
   if (!action.label.trim()) throw new TypeError("BottomCTA action label must not be empty");
-  return <Button ref={action.buttonRef} onClick={action.onClick} tone={action.tone ?? tone} size={action.size ?? "medium"}
-    disabled={action.disabled} loading={action.loading ?? false}
+  const type = action.type ?? "button";
+  if (type === "button" && !action.onClick) throw new TypeError("BottomCTA button action requires onClick");
+  return <Button ref={action.buttonRef} type={type} form={action.form} onClick={action.onClick} tone={action.tone ?? tone} size={action.size ?? "medium"}
+    disabled={action.disabled} loading={action.loading ?? false} leading={action.leading} trailing={action.trailing}
     aria-label={action.loading ? action.loadingLabel ?? action.accessibilityLabel ?? action.label : action.accessibilityLabel}>
     {action.label}
   </Button>;
 }
 
 function isAction(value: BottomCTAAction | ReactNode): value is BottomCTAAction {
-  return typeof value === "object" && value !== null && "label" in value && "onClick" in value;
+  return typeof value === "object" && value !== null && "label" in value && typeof value.label === "string";
 }
 
 /** One primary action with optional supporting copy and a secondary action, matching Native's slots. */
@@ -68,6 +77,7 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function Bot
       "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
       "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
       "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
+      "--hjm-bottom-cta-parent-padding": inScreenFooter?.bottomPadding ?? "0px",
     } as CSSProperties}>
     {description ? <p className="hjm-bottom-cta__description">{description}</p> : null}
     <div className="hjm-bottom-cta__actions">

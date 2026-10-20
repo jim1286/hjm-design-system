@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 화면에 항상 펼쳐진 한 달 격자에서 날짜 하나를 고를 때 쓴다. 날짜마다 점·개수 같은 짧은
-제품 콘텐츠를 붙일 수 있다. 월 계산·로케일·오늘 날짜는 제품이 만들어 넘긴다.
+제품 콘텐츠를 붙일 수 있다. 표시 월·로케일·오늘 날짜는 제품이 정하고 평범한 Gregorian 격자는 공용 생성기로 만들 수 있다.
 
 ## 쓰지 않을 때
 
@@ -27,6 +27,13 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Calendar` | 기본 | `@hjmds/react`, `/calendar` | `@hjmds/react-native`, `/calendar` |
+
+평범한 Gregorian 월의 `grid.cells`는 개발 소스의 미게시
+`createCalendarMonthCells(month, { weekStartsOn?: 0..6, outsideMonth?: "adjacent" | "blank" })`로 만든다.
+import는 `@hjmds/design-contracts/components/calendar`이며 Web/Native가 같은 배열을 소비한다.
+기본은 일요일 시작/인접 월 날짜 포함이다. 다른 주 시작을 쓰면 weekdayLabels도 같은 순서로 공급한다.
+월·오늘·시간대·업무별 선택 제한과 콘텐츠는 제품이 정하고 함수는 시계를 읽지 않는다.
+실행 예제는 양 renderer가 공유하는 `showcase/shared/calendar-example.ts`다(2026-10-19 중복 월 계산 제거).
 
 ## 최소 사용 예
 

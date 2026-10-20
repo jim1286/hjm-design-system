@@ -6,7 +6,7 @@ import { Button } from '../src/actions.js';
 it('provides independent actions and effective disabled state through custom collections', () => {
  let tree!: ReactTestRenderer; const change=vi.fn(), action=vi.fn();
  try {
-  act(() => { tree=create(<HjmNativeProvider><TaskList label="Tasks"
+  act(() => { tree=create(<HjmNativeProvider><TaskList label="Tasks" itemPresentation="plain"
    items={[{id:'a',label:'First',completed:false},{id:'b',label:'Second',completed:true,disabled:true}]}
    onCompletedChange={change}
    renderItemAction={({item,disabled}) => <Button disabled={disabled} onPress={() => action(item.id)}>Remove {item.label}</Button>}
@@ -15,6 +15,7 @@ it('provides independent actions and effective disabled state through custom col
   const buttons=tree.root.findAllByType(Button), checks=tree.root.findAllByType(Checkbox);
   expect(buttons[0]!.props.disabled).toBe(false); expect(buttons[1]!.props.disabled).toBe(true);
   expect(checks[0]!.findAllByType(Button)).toHaveLength(0);
+  expect(checks.map(check => check.props.presentation)).toEqual(["plain", "plain"]);
   act(() => buttons[0]!.props.onPress()); expect(action).toHaveBeenCalledWith('a'); expect(change).not.toHaveBeenCalled();
   act(() => checks[0]!.props.onCheckedChange(true)); expect(change).toHaveBeenCalledWith('a',true); expect(action).toHaveBeenCalledTimes(1);
  } finally { act(() => tree.unmount()); }

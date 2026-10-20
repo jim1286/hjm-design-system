@@ -136,3 +136,10 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 ## 근거
 
 - NavigationBar 양끝 여백: 2026-10-17 정렬 실측(Web 1280). 브랜드에 `spacing.xs` 8이 더해져 시작 21, 끝 행동 13으로 비대칭이었다. Native 브랜드에는 추가 inset이 없었다. Web 브랜드 inset을 없앤 뒤 양끝 13/13으로 측정됐다.
+
+### 장면과 배경 연결 (checkout 변경·미게시)
+
+`surface="transparent"`는 Web/Native에서 상단 바의 배경만 투명하게 한다. 기본값 `default`는 기존 canvas 배경이다.
+상태바와 본문 장면 사이에 별도 색 띠가 생기는 경우 부모가 같은 장면의 윗색/배경을 제공하고 `ScreenLayout.header`에 연결한다.
+바의 배치·높이·행동·터치 영역은 HJM을 유지한다. 제품별 배경색을 layoutStyle로 덮지 않는다.
+다에리 둥지의 하늘색 상태바와 장면 사이에 짙은 헤더 띠가 생긴 2026-10-20 사용자 지적을 반영했다.

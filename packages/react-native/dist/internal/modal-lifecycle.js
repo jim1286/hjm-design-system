@@ -1,4 +1,4 @@
-import { InteractionManager, Platform } from "react-native";
+import { Platform } from "react-native";
 /**
  * iOS reports removal of a Modal that reached `onShow`; Android does not.
  * A same-commit open/close never reached a native presentation on either OS.
@@ -12,6 +12,9 @@ export function shouldAwaitNativeModalDismiss(wasShown) {
  * an estimator for React Native's built-in fade/slide animation.
  */
 export function scheduleAfterNativeModalTeardown(complete) {
-    return InteractionManager.runAfterInteractions(complete);
+    // RN 0.88 removed InteractionManager, while Expo browser hosts lack setImmediate.
+    // A cancellable zero-delay timer preserves the post-removal turn on both hosts.
+    const task = setTimeout(complete, 0);
+    return { cancel: () => clearTimeout(task) };
 }
 //# sourceMappingURL=modal-lifecycle.js.map

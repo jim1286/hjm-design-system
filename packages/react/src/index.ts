@@ -53,11 +53,14 @@ export {
 
 export {
   Button,
+  ButtonLink,
+  type ButtonLinkProps,
   IconButton,
   Link,
   type ButtonAlign,
   type ButtonProps,
   type ButtonShape,
+  type ButtonAppearance,
   type ButtonSize,
   type ButtonTone,
   type IconButtonProps,
@@ -192,12 +195,14 @@ export {
 export {
   Badge,
   Card,
+  QuoteCard,
   ListRow,
   Tag,
   type BadgeProps,
   type BadgeVariant,
   type CardHeadingLevel,
   type CardProps,
+  type QuoteCardProps,
   type ListRowProps,
   type TagProps,
   type TagTone,
@@ -221,6 +226,7 @@ export {
   DescriptionList,
   Divider,
   List,
+  ListSeparator,
   Statistic,
   StatisticGroup,
   Table,
@@ -234,6 +240,7 @@ export {
   type DividerProps,
   type ListAppearance,
   type ListProps,
+  type ListSeparatorProps,
   type StatisticProps,
   type StatisticGroupProps,
   type StatisticTrendMarkRenderProps,
@@ -256,6 +263,8 @@ export {
   Result,
   Skeleton,
   Spinner,
+  PendingContent,
+  type PendingContentProps,
   type EmptyStateProps,
   type NoticeProps,
   type ProgressProps,
@@ -342,3 +351,5 @@ export { Menubar, type MenubarProps } from "./menubar.js";
 export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";
 
 export { StatusText, type StatusTextProps } from "./status-text.js";
+
+export { TimePicker, type TimePickerProps } from "./time-picker.js";

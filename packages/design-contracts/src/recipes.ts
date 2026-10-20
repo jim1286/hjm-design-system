@@ -1,5 +1,6 @@
 export {
   buttonRecipe,
+  resolveButtonDepth,
   fieldRecipe,
   surfaceDefaults,
   surfaceGeometry,
@@ -38,6 +39,7 @@ export {
   menuRecipe,
   noticeRecipe,
   progressRecipe,
+  resolveProgressSegments,
   searchFieldRecipe,
   selectRecipe,
   selectionGroupRecipe,
@@ -59,6 +61,7 @@ export {
   type AlertDialogTone,
   type AvatarShape,
   type AvatarSize,
+  type BadgeAdornmentContext,
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant,

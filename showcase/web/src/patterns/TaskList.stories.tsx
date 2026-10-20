@@ -14,7 +14,7 @@ function Preview(){
   const target=pendingFocus.current===null?reset.current?.querySelector("button"):actions.current.get(pendingFocus.current);
   target?.focus();pendingFocus.current=undefined;
  },[items]);
- return <><TaskList label="오늘 할 일" items={items}
+ return <><TaskList label="오늘 할 일" itemPresentation="plain" items={items}
  onCompletedChange={(id,completed)=>setItems(old=>old.map(item=>item.id===id?{...item,completed}:item))}
  renderItemAction={({item,disabled})=><IconButton ref={node=>{if(node)actions.current.set(item.id,node);else actions.current.delete(item.id);}} tone="ghost" disabled={disabled} label={`${item.label} 삭제`} onClick={()=>{
   const index=items.findIndex(task=>task.id===item.id);

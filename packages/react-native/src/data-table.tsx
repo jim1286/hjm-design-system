@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, Text as NativeText, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -34,6 +35,8 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   labels: NativeDataTableLabels;
   /** Strings and numbers render with the recipe's cell text; any other node is placed as-is. */
   renderCell: (rowId: RowKey, columnId: ColumnKey) => ReactNode;
+  /** Text for rich cells. Native composes the row name; Web labels each cell. Omit to use visible primitive text. */
+  getCellText?: (rowId: RowKey, columnId: ColumnKey) => string | undefined;
   sortState?: DataTableSortState<ColumnKey>;
   sortCycle?: DataTableSortCycle;
   onSortChange?: (next: DataTableSortState<ColumnKey>) => void;
@@ -66,7 +69,7 @@ const alignOf = (align: DataTableColumnDescriptor["align"], direction: "ltr" | "
   align === "center" ? "center" : (align === "end") !== (direction === "rtl") ? "right" : "left";
 
 export function DataTable<ColumnKey extends string = string, RowKey extends string = string>({
-  columns, rows, labels, renderCell, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
+  columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
   summaryRow, asyncState = { status: "idle" }, emptyLabel, density = dataTableRecipe.defaults.density, footer, layoutStyle,
   columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight,
 }: DataTableProps<ColumnKey, RowKey>) {
@@ -128,16 +131,30 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const cells = <View style={{ flexDirection: "row" }}>{list.map((column, index) => cell(renderCell(rowDescriptor.id, column.id), column, part === "pinned", part === "pinned" || sortState?.columnId === column.id, `${rowDescriptor.id}-${column.id}`, cellStyle?.(rowDescriptor.id, column.id) ?? null, index === 0 && (part === "pinned" || pinned.length === 0) ? (rowDescriptor.depth ?? 0) * dataTableFamilyRecipe.depthIndent : 0))}</View>;
     const style = { height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom), backgroundColor: rowBackground(rowDescriptor.id), opacity: rowDescriptor.disabled ? 0.5 : 1 };
     // Only the pinned half carries the accessible row button so a row is announced once.
-    const name = part === "pinned" ? columns.map(column => { const value = renderCell(rowDescriptor.id, column.id); return typeof value === "string" || typeof value === "number" ? `${column.header} ${value}` : column.header; }).join(", ") : undefined;
+    // Rich cells may contain portraits or other components whose text cannot be
+    // safely inferred. The product supplies their readable value instead of a
+    // recursive React-node guess (Today Baseball player identities, 2026-10-19).
+    const ownsRowAccessibility = part === "pinned" || pinned.length === 0;
+    const name = ownsRowAccessibility ? columns.map(column => {
+      const text = getCellText?.(rowDescriptor.id, column.id);
+      if (text !== undefined) return `${column.header} ${text}`;
+      const value = renderCell(rowDescriptor.id, column.id);
+      return typeof value === "string" || typeof value === "number" ? `${column.header} ${value}` : column.header;
+    }).join(", ") : undefined;
     return onRowPress && !rowDescriptor.disabled
-      ? <Pressable key={rowDescriptor.id} accessible={part === "pinned" || pinned.length === 0} accessibilityRole="button" accessibilityState={{ selected: selectedRowId === rowDescriptor.id }} accessibilityLabel={name}
+      // accessible=false alone does not remove RN Web's role or default tab stop. The
+      // pinned target already names every column; its visual scrolling half remains pointer-active only.
+      ? <Pressable key={rowDescriptor.id} accessible={ownsRowAccessibility} accessibilityRole={ownsRowAccessibility ? "button" : undefined}
+          aria-hidden={!ownsRowAccessibility} accessibilityElementsHidden={!ownsRowAccessibility}
+          importantForAccessibility={ownsRowAccessibility ? "auto" : "no-hide-descendants"} tabIndex={ownsRowAccessibility ? 0 : -1}
+          accessibilityState={{ selected: selectedRowId === rowDescriptor.id }} accessibilityLabel={name}
           onPressIn={() => setPressed(rowDescriptor.id)} onPressOut={() => setPressed(null)} onPress={() => onRowPress(rowDescriptor.id)} style={style}>{cells}</Pressable>
       : <View key={rowDescriptor.id} accessible={part === "pinned" || pinned.length === 0} accessibilityLabel={name} style={style}>{cells}</View>;
   }
   const summary = (list: readonly DataTableColumnDescriptor<ColumnKey>[], part: "pinned" | "scrolling") => summaryRow ? <View style={{ flexDirection: "row", height: rowHeight, borderTopWidth: 1, borderColor: color(dataTableRecipe.header.borderBottom), backgroundColor: color(dataTableRecipe.header.background) }}>
     {list.map(column => cell(summaryRow(column.id), column, part === "pinned", true, `summary-${column.id}`))}
   </View> : null;
-  const headerScroll = useRef<ScrollView>(null);
+  const headerScroll = useRef<ComponentRef<typeof ScrollView>>(null);
   function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
     // The header lives outside the body so it can stay fixed vertically; it follows the body horizontally.

@@ -78,6 +78,22 @@ function semanticOrder(toolbar: ReactTestInstance): string[] {
 }
 
 describe("Native TopBar product API", () => {
+  it("shares the scene through a transparent surface while preserving action targets", () => {
+    for (const surface of ["default", "transparent"] as const) {
+      const onPress = vi.fn();
+      const renderer = render(<TopBar surface={surface} actions={<TopBarAction label="설정" onPress={onPress}><View /></TopBarAction>} />);
+      const toolbar = renderer.root.findAll(node => typeof node.type === "string" && node.props.accessibilityRole === "toolbar")[0]!;
+      const style = flattenStyle(toolbar.props.style);
+      expect(style.backgroundColor === "transparent").toBe(surface === "transparent");
+      expect(style.minHeight).toBe(topBarRecipe.minHeight);
+      const action = renderer.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "설정")!;
+      expect(resolvedPressableStyle(action).minHeight).toBeGreaterThanOrEqual(44);
+      act(() => action.props.onPress());
+      expect(onPress).toHaveBeenCalledOnce();
+      act(() => renderer.unmount());
+    }
+  });
+
   it("supports title-optional action-only and back-only toolbars with 44pt targets", () => {
     const renderer = render(
       <>

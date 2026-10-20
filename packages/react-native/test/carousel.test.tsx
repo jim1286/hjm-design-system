@@ -1,7 +1,7 @@
 import type { CarouselSelection } from "@hjmds/design-contracts/components/carousel";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { AccessibilityInfo, View } from "react-native";
+import { AccessibilityInfo, ScrollView, View } from "react-native";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { Carousel, type CarouselProps } from "../src/carousel.js";
 import { IconButton } from "../src/actions.js";
@@ -25,6 +25,18 @@ const position = () => renderer.root.findAllByType(View).find((node) => node.pro
 const next = () => renderer.root.findAllByType(IconButton).find((node) => node.props.label === "다음")!;
 
 describe("Native Carousel", () => {
+  it("keeps bounded slide content scrollable while navigation remains outside it", async () => {
+    await render({ slideMaxHeight: 180, swipeEnabled: false });
+    const panels = renderer.root.findAllByType(ScrollView);
+    expect(panels).toHaveLength(2);
+    expect(panels[0]!.props.style.maxHeight).toBe(180);
+    expect(panels[0]!.findAllByType(IconButton)).toHaveLength(0);
+    expect(panels[0]!.findAllByType(Text).some(node => node.props.children === "첫 소식")).toBe(true);
+    act(() => next().props.onPress());
+    expect(position().props.accessibilityValue.now).toBe(2);
+    expect(panels[0]!.parent!.props.accessibilityElementsHidden).toBe(true);
+    expect(panels[1]!.parent!.props.accessibilityElementsHidden).toBe(false);
+  });
   it("keeps hidden content out of the accessibility tree and clamps adjustable actions", async () => {
     vi.spyOn(AccessibilityInfo, "isScreenReaderEnabled").mockResolvedValue(true);
     const announce = vi.spyOn(AccessibilityInfo, "announceForAccessibility");
@@ -75,6 +87,14 @@ describe("Native Carousel", () => {
     expect(track.props.onMoveShouldSetResponder({}, { dx: 60, dy: 5 })).toBe(true);
     act(() => track.props.onResponderRelease({}, { dx: direction === "ltr" ? -60 : 60 }));
     expect(position().props.accessibilityValue.now).toBe(2);
+  });
+  it("leaves horizontal gestures to content while retaining button and adjustable navigation", async () => {
+    await render({ swipeEnabled: false });
+    expect(renderer.root.findAllByType(View).some(node => node.props.onMoveShouldSetResponder)).toBe(false);
+    act(() => next().props.onPress());
+    expect(position().props.accessibilityValue.now).toBe(2);
+    act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
+    expect(position().props.accessibilityValue.now).toBe(1);
   });
   it("reports controlled intent and retains the owner's current key", async () => {
     const change = vi.fn(); await render({ currentKey: "a", onCurrentKeyChange: change });
@@ -136,4 +156,26 @@ describe("Native PageIndicator", () => {
     expect(onChange).toHaveBeenLastCalledWith(0);
     expect(renderer.root.findAllByType(Pressable)).toHaveLength(3);
   });
+});
+
+
+it("keeps a bounded PageIndicator current page absolute in compact and adjustable modes", async () => {
+  const { PageIndicator } = await import("../src/carousel.js");
+  const { Pressable } = await import("react-native");
+  const change = vi.fn();
+  const props = { label: "Home pages", count: 9, currentIndex: 8, maxVisibleDots: 5, onCurrentIndexChange: change,
+    labels: { previous: "Previous", next: "Next" }, composeAccessibleName: ({ position, total }: { position: number; total: number }) => `Page ${position} of ${total}` };
+  await act(async () => { renderer = create(<HjmNativeProvider><PageIndicator {...props} interactive={false} /></HjmNativeProvider>); });
+  const compact = renderer.root.findAllByType(View).find(node => node.props.accessibilityRole === "image")!;
+  expect(compact.props.accessibilityLabel).toBe("Page 9 of 9");
+  expect(compact.findAllByType(View)).toHaveLength(6);
+  expect(renderer.root.findAllByType(Pressable)).toHaveLength(0);
+  expect(compact.props.onAccessibilityAction).toBeUndefined();
+  await act(async () => { renderer.update(<HjmNativeProvider><PageIndicator {...props} /></HjmNativeProvider>); });
+  expect(position().props.accessibilityValue).toMatchObject({ min: 1, max: 9, now: 9, text: "Page 9 of 9" });
+  expect(renderer.root.findAllByType(Pressable)).toHaveLength(5);
+  act(() => renderer.root.findAllByType(Pressable)[0]!.props.onPress());
+  expect(change).toHaveBeenLastCalledWith(4);
+  act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
+  expect(change).toHaveBeenLastCalledWith(7);
 });

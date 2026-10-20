@@ -84,6 +84,9 @@ export const publicExportEntries = {
     Button: [
         "./actions"
     ],
+    ButtonLink: [
+        "./actions"
+    ],
     Calendar: [
         "./calendar"
     ],
@@ -320,6 +323,9 @@ export const publicExportEntries = {
     ListRow: [
         "./display"
     ],
+    ListSeparator: [
+        "./display"
+    ],
     LoadMore: [
         "./navigation"
     ],
@@ -414,6 +420,9 @@ export const publicExportEntries = {
     PasswordRulesField: [
         "./task-controls"
     ],
+    PendingContent: [
+        "./feedback"
+    ],
     PermissionScreen: [
         "./screen-flows"
     ],
@@ -443,6 +452,9 @@ export const publicExportEntries = {
     ],
     QRCode: [
         "./qr-code"
+    ],
+    QuoteCard: [
+        "./display"
     ],
     RadarChart: [
         "./chart"
@@ -506,6 +518,9 @@ export const publicExportEntries = {
     ],
     Sheet: [
         "./overlays"
+    ],
+    ShortcutRail: [
+        "./shortcut-rail"
     ],
     ShortcutRecorder: [
         "./authoring-tools"
@@ -616,6 +631,9 @@ export const publicExportEntries = {
     ],
     Timeline: [
         "./display"
+    ],
+    TimePicker: [
+        "./time-picker"
     ],
     Toast: [
         "./toast"

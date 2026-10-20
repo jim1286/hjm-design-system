@@ -1,19 +1,17 @@
-// Example product owns Gregorian UTC arithmetic. The renderer receives date keys
-// and localized copy so neither device time zone nor its clock changes this demo.
+import { createCalendarMonthCells, type CalendarGridDescriptor } from "@hjmds/design-contracts/components/calendar";
+// The example owns record data, locale and clock. Shared civil cells own month padding/leap years.
 export function shiftCalendarMonth(month: string, delta: number): string {
   const [year, number] = month.split("-").map(Number);
   return new Date(Date.UTC(year!, number! - 1 + delta, 1)).toISOString().slice(0, 7);
 }
-export function calendarExampleGrid(month: string) {
-  const [year, number] = month.split("-").map(Number);
-  const leading = new Date(Date.UTC(year!, number! - 1, 1)).getUTCDay();
-  const length = new Date(Date.UTC(year!, number!, 0)).getUTCDate();
+export function calendarExampleGrid(month: string): CalendarGridDescriptor<string> {
   return {
     todayDate: "2026-09-16",
     weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"] as const,
-    cells: Array.from({ length: Math.ceil((leading + length) / 7) * 7 }, (_, index) => {
-      const day = index - leading + 1;
-      return day < 1 || day > length ? {} : { date: `${month}-${String(day).padStart(2, "0")}`, disabled: day === 20, content: day % 3 === 0 ? "기록 있음" : "" };
+    cells: createCalendarMonthCells(month, { outsideMonth: "blank" }).map(cell => {
+      if (!cell.date) return {};
+      const day = Number(cell.date.slice(-2));
+      return { ...cell, disabled: day === 20, content: day % 3 === 0 ? "기록 있음" : "" };
     }),
   };
 }

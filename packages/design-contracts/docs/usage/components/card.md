@@ -6,9 +6,11 @@
 - 적용: 1.12.1
 - 검토일: 2026-10-18
 - 근거: recipe `cardRecipe`(`src/card.ts`), 바탕 `surfaceRecipe`(`src/base-recipes.ts`). 별도 계약 문서는 없다
-- 스토리북: `배포/컴포넌트/데이터 표시/카드`
+- 스토리북: `배포/컴포넌트/데이터 표시/카드` · `실험/컴포넌트/데이터 표시/인용 카드`
 
 ## 언제 쓰나
+
+인용문과 출처를 묶으면 미게시 동반 API [`QuoteCard`](#인용문과-출처quotecard-미게시)를 사용한다. 일반 카드에 인용 표시·출처 여백을 다시 조립하지 않는다.
 
 문서 metadata·미리보기·내보내기 상태는 실험 구성 [DocumentResource](../compositions/document-resource.md)를
 먼저 대조한다. 2026-10-07 파일 사례에서 일반 카드만으로 다운로드/저장 상태까지 동등하다고
@@ -17,7 +19,7 @@
 
 제목·설명·본문·행동이 한 덩어리로 읽히는 독립된 콘텐츠 단위에 쓴다. 주문 요약, 설정 묶음,
 미리보기처럼 화면 안에서 경계가 보여야 하는 블록이 여기에 속한다. 위에서부터
-`media` → `leading`+`title`+`description` → `children` → `actions` 순서가 고정이다.
+`media` → `badges` → `leading`+`title`+`description` → `children` → `actions` 순서가 고정이다.
 
 ## 쓰지 않을 때
 
@@ -35,6 +37,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Card` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
+| `QuoteCard` | 미게시 인용문·출처 동반 API | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `DocumentResource` | 실험 문서 구성 | `@hjmds/react/document-resource` | `@hjmds/react-native/document-resource` |
 
 ## 최소 사용 예
@@ -82,10 +85,47 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 | `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |
 | `selected` | `boolean` | `false` | `true`면 tone이 `accent`로 바뀐다(`cardRecipe.selectedTone`) |
 | `headingLevel`(Web만) | `2` · `3` · `4` | `3` | 제목이 `h3`로 렌더되므로 문서 위계에 맞춰 고른다 |
-| `title` · `description` · `leading` · `media` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
+| `title` · `description` · `leading` · `media` · `badges` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
+| `headerActions` | `ReactNode` | 없음 | 미게시. 제목 줄 끝의 배지·독립 명령. 카드 열기와 별도 대상으로 남으며 HJM이 위치와 제목 여유 폭을 소유한다 |
 | `onActivate` | `() => void` | — | 카드 전체가 하나의 행동일 때 사용(미게시). Web `aria-label`, Native `accessibilityLabel` 필수. `actions`와 함께 쓰면 행동은 별도 대상으로 남는다(1.31.0 추가) |
+| `href` · `renderLink` (Web) | 문자열 목적지 · anchor props 렌더러 | 없음 | 미게시. 전체 카드 링크. `aria-label` 필수, onActivate/mediaAction/backgroundMedia와 배타. Next 등 라우팅·제품 부수 효과는 renderLink로 연결한다. 비활성은 href 제거·tab 제외로 차단한다 |
+| `backgroundInteraction` · `mediaBadges` | `ReactNode` | 없음 | 미게시. 배경 카드 전용 제스처/접근성 대상과 상단 끝 분류 배지. 아래 설명 참조 |
+| `backgroundMedia` | `ReactNode` | 없음 | 장식용 배경 그림. 아래 미게시 배경 카드 계약 참조 |
+| `mediaAction` | `{ label, onActivate, icon?: ({ color, size }) => ReactNode }` | 없음 | 커버만 누를 때 사용. `media`는 수동 콘텐츠이며 별도 버튼을 넣지 않는다. 전체 `onActivate`와 함께 쓰지 않는다. 아이콘은 HJM이 커버 끝 아래의 원형 판에 장식으로 배치한다. 미게시 |
 | `disabled` | `boolean` | `false` | 전체 카드 행동 차단·비활성 피드백(미게시) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. 두 플랫폼 모두 root Surface에 적용된다 |
+
+2026-10-20 번뚝 내 뚝의 짧은 안내와 편집 버튼에서 세로 중심이 어긋나는 것을 확인했다.
+머리줄의 leading·제목/설명 묶음·headerActions는 같은 세로 중심을 사용한다. 긴 문구가 줄바꿈돼도
+명령은 해당 머리줄의 중앙에 남으며, Native에서도 카드 열기와 별도의 접근성 대상으로 유지한다.
+
+같은 날 다에리 여정 카드 이관에서 부모가 부여한 높이가 수동 카드의 본문까지 전달되지 않는 것을
+확인했다. 카드가 할당 높이를 받으면 본문과 content 슬롯도 남은 높이를 채운다. 머리줄·media·actions는
+내용 높이를 유지한다. 제품은 content 안의 Stack 등 공개 배치로 하단 요소를 정렬할 수 있다.
+배경 그림 카드의 본문은 기존처럼 내용 높이로 아래에 놓인다.
+
+### 그림을 배경으로 쓰는 카드(미게시)
+
+2026-10-18 번뚝 추천/피드 머리에서 카드 위 배지·제목·그늘을 제품마다 별도로 조립하고 있었다.
+`backgroundMedia`는 기존 Card의 `badges` → 제목/설명 → 본문 → 행동 순서를 장식용 그림 위에 놓는다.
+`media`는 본문 위의 독립 커버이고 `backgroundMedia`는 카드 전체의 배경이다. 새 카드 이름을 만들지 않는다.
+
+- `backgroundMedia`는 수동 장식 ReactNode이며 접근성 트리와 포인터 대상에서 제외한다. 의미 있는 설명은 title/description에 전달한다.
+- `media`, `mediaAction`, 전체 `onActivate`와 함께 쓰지 않는다. 실행·작성자·댓글 등은 본문/`actions`의 독립 행동으로 제공한다.
+- Web/Native 모두 recipe의 60% 검은 그늘과 흰 제목/설명을 사용한다. 브랜드 onPrimary가 어두워도 배경 그림 위 글자를 바꾸지 않는다.
+- 배지 슬롯은 본문 시작에 가로·줄바꿈·8 간격으로 놓인다. 각 배지의 의미/값은 제품이 `Badge`로 공급한다.
+- 높이는 콘텐츠 또는 호스트 viewport가 공급한다. 정해진 영역을 채울 때 호스트 안에서 `layoutStyle={{ flex: 1 }}`을 사용한다. 카드 자체의 클리핑·간격·모서리를 제품 CSS로 덮지 않는다.
+- `backgroundInteraction`은 미게시 배경 카드의 독립 제스처·접근성 host다. `backgroundMedia`가 필수이며 장식 그림 위, 본문/행동 아래에 놓인다. 번뚝의 adjustable 넘기기 대상을 수동 그림에 넣으면 접근성 트리에서 사라지는 문제 때문에 분리했다. 제품의 경로/제스처 판정만 연결하며 제목·작성자·행동 배치를 이 슬롯에 복제하지 않는다.
+- `mediaBadges`는 미게시 배경 카드 상단 끝의 비대화형 분류 표시다. HJM이 inset·간격·겹침 순서를 맡고 제품은 Badge/브랜드 분류 콘텐츠만 공급한다. `backgroundMedia` 없이 쓰면 오류다. 일반 상태는 본문 시작 `badges`를 사용한다.
+- 커버 이미지의 구도·crop·브랜드 artwork는 제품 콘텐츠다. 카드의 그늘·제목·배지·행동 위치는 HJM이다.
+
+```tsx
+// Web
+<Card backgroundMedia={<Artwork />} title={t("featured.title")}
+  badges={<Badge tone="neutral">{t("featured.status")}</Badge>}
+  actions={<Button onClick={open}>{t("featured.open")}</Button>} />
+// Native: 같은 slots. Badge는 label={t("featured.status")}, Button은 onPress={open}
+```
 
 ### 카드 전체 누름(미게시)
 
@@ -105,7 +145,14 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 ```
 
 children·media·leading에는 입력/링크/버튼을 넣지 않는다. 카드를 여는 행동과 별도 명령(삭제·더보기)이
-함께 필요하면 명령을 `actions`에 둔다.
+함께 필요하면 하단 명령은 `actions`, 제목 오른쪽의 명령은 `headerActions`에 둔다.
+
+2026-10-19 번뚝 목록은 제목·상태 배지·신고를 제품의 Surface/Button과 절대 위치로 다시 조립하고 있었다.
+`headerActions`는 이 우상단 독립 영역을 제공한다. Web은 header flex 행 끝, Native는 실제 측정한 명령 폭과
+헤더 위치를 기준으로 본문 활성 대상 밖에 배치한다. 앱에서 신고 크기만큼 제목 padding을 다시 계산하지 않는다.
+예를 들어 `headerActions={<><Badge label={statusLabel} /><IconButton label={reportLabel} onClick={report} /></>}`처럼 연결한다
+(Native는 `onPress`). 카드 열기에는 별도의 `aria-label`/`accessibilityLabel`과 `onActivate`를 전달한다.
+명령을 `children`, `leading`, `title`에 넣지 않는다. 슬롯이 있으면 카드 활성 대상은 명령과 독립되므로 버튼이 중첩되지 않는다.
 
 ### 카드 열기와 별도 행동(1.31.0 추가)
 
@@ -127,7 +174,7 @@ children·media·leading에는 입력/링크/버튼을 넣지 않는다. 카드�
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 구조 | root는 `<article>`로 남고, 카드 전체를 덮는 투명 `<button>`(`data-slot="activator"`)이 이름·`aria-pressed`·`disabled`를 가진다. 행동 영역만 그 위에 놓인다 | media+본문이 하나의 `Pressable`(버튼 role·이름·선택/비활성 상태), 행동 줄은 그 형제다 |
+| 구조 | root는 `<article>`로 남고, 카드 전체를 덮는 투명 `<button>`(`data-slot="activator"`)이 이름·명시된 선택 상태(`aria-pressed`)·`disabled`를 가진다. 행동 영역만 그 위에 놓인다 | media+본문이 하나의 `Pressable`(버튼 role·이름·선택/비활성 상태), 행동 줄은 그 형제다 |
 | 누르는 영역 | 행동 버튼을 뺀 카드 전체(행동 줄의 빈 자리 포함) | media+본문. 행동 줄의 빈 자리는 누름 대상이 아니다 |
 | 초점·낭독 순서 | 카드 → 행동 | 카드 → 행동(각각 별도 접근성 요소) |
 | 눌림·비활성 피드백 | media·본문만 흐려진다. 행동은 자기 상태를 쓴다 | 같음 |
@@ -170,13 +217,13 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
 - 색·radius·padding은 `tone`·`radius`·`padding` 축으로만 바꾼다. 카드마다 브랜드 색을 칠하지 않는다.
 - 배치는 두 플랫폼 모두 `layoutStyle`로 한다. Native `CardProps`에는 `style`이 없다. Web의 `className`·`style`로 recipe 값을 덮지 않는다.
   카드 목록 사이 간격은 바깥 [Stack](stack.md)·[Grid](grid.md)이 정한다.
-- 카드 전체 행동은 `onActivate`만 사용한다. 카드 안 별도 명령은 `actions`에 두고 children에 버튼을 넣지 않는다.
+- 카드 전체 명령은 `onActivate`, Web 목적지 이동은 `href`·`renderLink`를 사용한다. 카드 안 별도 명령은 `actions`에 두고 children에 버튼을 넣지 않는다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| root | 기본 `<article>`, 전체 행동은 `<button type="button">`, 전체 행동+`actions`는 `<article>` + 덮개 `<button>` | 기본 `View`(Surface), 전체 행동은 `Pressable`, 전체 행동+`actions`는 media·본문 `Pressable` + 형제 행동 줄 |
+| root | 기본 `<article>`, 전체 행동은 `<button type="button">`, 전체 행동+`actions`는 `<article>` + 덮개 `<button>`, `href`는 이름 있는 별도 `<a>` | 기본 `View`(Surface), 전체 행동은 `Pressable`, 전체 행동+`actions`는 media·본문 `Pressable` + 형제 행동 줄 |
 | 제목 | `h{headingLevel}` | `Text` + `accessibilityRole="header"`, 수준 지정 없음 |
 | 배치 | `layoutStyle` | `layoutStyle` |
 | 내용 clip | tone의 `clipsContent`(`raised`는 그림자 때문에 clip 안 함) | 내부 `View`가 항상 clip, 그림자는 바깥에 남는다. frame과 clip이 같은 Provider radius token을 사용 |
@@ -188,3 +235,60 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
   Surface만 테마를 따르고 내부 media clip은 foundation 값을 쓰는 누락을 발견해 같은 token으로 연결했다.
 
 - passive Card의 `selected`는 tone 표시다. 전체 행동 Card는 Web `aria-pressed`, Native `accessibilityState.selected`로도 선택을 알린다.
+  Web에서 `selected`를 생략한 일반 행동 카드에는 `aria-pressed`를 붙이지 않는다. 선택형 카드만
+  `true|false`를 명시한다(2026-10-19 일반 이동이 토글로 읽히던 결함 수정). 기본 모양은 선택되지 않은 상태다.
+
+커버 실행·작성자·댓글/공유처럼 목적지가 여러 개인 카드는 전체 `onActivate` 대신 `mediaAction`으로 커버 실행을 연결하고 본문/`actions`의 공개 버튼을 독립 대상으로 둔다. 번뚝 Web/Native가 각각 버튼·재생 판 위치를 조립하던 중복을 보완했다(2026-10-18). 커버의 색과 그림·비율은 제품 `media` 슬롯에 남는다.
+
+
+## 인용문과 출처(QuoteCard, 미게시)
+
+### 선택과 소유권
+
+요청 원문·작성자의 발언처럼 다른 내용과 구분되는 인용문을 출처/시각과 함께 보여 줄 때 사용한다.
+2026-10-18 번뚝 피드와 이야기 화면이 인용 표시·본문·출처·카드 여백을 반복 구현하던 문제에서 분리했다.
+일반 정보 묶음은 Card, 라벨–값 목록은 DescriptionList, 펼침은 Collapsible을 그대로 쓴다.
+QuoteCard는 새 표면 엔진이 아니라 Card의 인용 의미와 본문/출처 순서를 고정하는 동반 API다.
+
+### QuoteCard import
+
+| API | Web | Native |
+| --- | --- | --- |
+| QuoteCard · QuoteCardProps | `@hjmds/react/display` 또는 root | `@hjmds/react-native/data-display` 또는 root |
+
+### 배치와 props
+
+위→아래: 장식 인용 표시 → 본문(children) → 출처(attribution). Card의 기본 raised 표면·테두리·모서리·본문 여백을 재사용한다.
+본문과 출처 사이는 `spacing.xs` 8이다. 출처는 caption/muted이며 제품이 이름·버전·시각·locale을 포맷한다.
+Web은 실제 blockquote와 footer를 사용한다. Native는 같은 순서를 유지하고, 본문에 넣은 원문 펼침 버튼을 별도 대상으로 남긴다.
+장식 표시는 읽기 트리에서 제외한다. 왼쪽 인용 선은 그리지 않는다.
+
+| prop | 의미 |
+| --- | --- |
+| children | 제품의 인용문 또는 HJM 구조(List·DescriptionList·Collapsible) |
+| attribution? | 포맷된 출처 문자열. 없으면 출처 줄도 없음 |
+| renderMark? | `(context: { color, size }) => ReactNode`. 기본은 인용 부호. 제공된 색/크기로 제품 아이콘을 연결할 수 있다. Web 색은 currentColor, Native는 contentBrand. 크기는 glyph.md |
+| layoutStyle? | 공통 배치 전용 속성. 표면/글자/간격을 덮지 않는다 |
+
+```tsx
+// Web
+import { QuoteCard } from "@hjmds/react/display";
+import { Text } from "@hjmds/react/layout";
+<QuoteCard attribution={formattedAttribution}><Text>{quote}</Text></QuoteCard>;
+```
+
+```tsx
+// Native
+import { QuoteCard } from "@hjmds/react-native/data-display";
+import { Text } from "@hjmds/react-native/primitives";
+<QuoteCard attribution={formattedAttribution}><Text>{quote}</Text></QuoteCard>;
+```
+
+조회/권한/원문 소유권·요약 규칙은 제품에 둔다. 원문을 접고 펼칠 때 Collapsible을 children에 연결하며,
+QuoteCard가 자동으로 원문을 자르거나 열지 않는다. 이 API의 소스 적용·검증과 npm 게시를 구분한다.
+
+### 전체 목적지 링크 (미게시)
+
+다에리 편지·장소 기록은 새 탭·가운데 클릭·링크 미리보기를 보존해야 하므로 버튼 callback으로 바꾸지 않는다. `href`는 공통 카드의 media·본문을 덮는 별도 이름 있는 anchor를 만들고, `actions`는 그 위의 독립 대상으로 남긴다. 본문/그림은 링크 이름에 모두 합치지 않고 `aria-label`에 제품이 고른 짧은 이름을 준다. 프레임워크 링크·소리·초안 정리는 `renderLink`가 받은 href/className/접근성 props를 그대로 전달하면서 연결한다. 카드·배지 위치·표면·누름 피드백을 제품 CSS로 다시 조립하지 않는다. Native 목적지 이동은 기존 `onActivate` 콜백으로 연결한다.
+
+<!-- usage-example: Web ../../../../../showcase/web/src/components/Card.stories.tsx -->

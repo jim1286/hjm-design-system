@@ -8,6 +8,7 @@ import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlay
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 import { Select } from "../src/forms.js";
+import { BottomCTA } from "../src/actions.js";
 
 // The evidence registry points to this test because it exercises Sheet viewport and dismissal actions directly.
 // componentId: "sheet"
@@ -46,6 +47,16 @@ afterEach(() => {
 });
 
 describe("Sheet input viewport", () => {
+  it("lets the Sheet own composed footer chrome and safe-area padding", () => {
+    render(tree({ footer: <BottomCTA testID="sheet-cta" safeAreaBottom={24}
+      primaryAction={{label: "Save", onPress: () => {}}} /> }));
+    const cta = renderer!.root.findAllByType(View).find(node => node.props.testID === "sheet-cta")!;
+    const ctaStyle = StyleSheet.flatten(cta.props.style);
+    expect(ctaStyle.paddingHorizontal).toBeUndefined();
+    expect(ctaStyle.borderTopWidth).toBeUndefined();
+    expect(ctaStyle.paddingBottom).toBe(0);
+    expect(style().paddingBottom).toBe(sheetRecipe.content.paddingBottom + 24);
+  });
   it("reserves the notch outside the sheet and preserves its accessible string title", () => {
     render(tree());
     expect(positioner().props.style.paddingTop).toBe(40);
@@ -111,6 +122,7 @@ describe("Sheet input viewport", () => {
 
   it("keeps header/footer outside the scrolling body and disables duplicate UIKit clearance", () => {
     render(tree({ keyboardAvoidance: true, scrollable: true }));
+    expect(renderer!.root.findByType(ScrollView).props.contentContainerStyle.flexGrow).toBe(1);
     const scroll = renderer!.root.findByType(ScrollView);
     expect(scroll.props).toMatchObject({ keyboardShouldPersistTaps: "handled", automaticallyAdjustKeyboardInsets: false });
     expect(scroll.findAllByType(Text).map((node) => node.props.children)).toEqual(["입력 본문"]);
@@ -231,10 +243,14 @@ describe("Sheet title and backdrop", () => {
 
   it("keeps the × at the header end without a title when showClose is on", () => {
     render(tree({ title: "필터", showClose: true }));
+    // The decorative handle also has a minimum touch height; identify the header by its close command.
     const header = renderer!.root.findAllByType(View).find((view) =>
-      view.props.style?.minHeight === sheetRecipe.header.minHeight)!;
+      view.props.style?.minHeight === sheetRecipe.header.minHeight &&
+      view.findAllByType(Pressable).some(node => node.props.accessibilityLabel === "닫기"))!;
     expect(header.props.style).toMatchObject({ alignItems: "center", flexShrink: 0, justifyContent: "flex-end" });
     expect(visibleTexts()).not.toContain("필터");
+    // The backdrop is outside this dialog; only the × is a close command inside it.
+    expect(dialog().findAllByType(Pressable).filter((node) => node.props.accessibilityLabel === "닫기")).toHaveLength(1);
     expect(header.findAll((node) => node.props.accessibilityLabel === "닫기" && node.props.accessibilityRole === "button").length).toBeGreaterThan(0);
   });
 
@@ -281,5 +297,31 @@ describe("Native Select sheet title", () => {
     expect(sheet.findAll((node) => node.props.accessibilityRole === "header" && node.props.accessibilityLabel === "기간").length).toBeGreaterThan(0);
     expect(sheet.findAllByType(NativeText).some((node) => node.props.children === "기간")).toBe(false);
     expect(sheet.findAll((node) => node.props.accessibilityRole === "button" && node.props.accessibilityLabel === "닫기").length).toBeGreaterThan(0);
+  });
+});
+
+
+describe('side Sheet downward reading-panel dismissal', () => {
+  it('opts into the shared handle and swipe lifecycle without changing side geometry', () => {
+    const onOpenChange = vi.fn();
+    render(tree({ placement: 'end', swipeDirection: 'down', showClose: false, onOpenChange }));
+    expect(style().width).toBe('88%');
+    const handle = renderer!.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === '닫기' && StyleSheet.flatten(node.props.style)?.alignSelf === 'center')!;
+    expect(StyleSheet.flatten(handle.props.style).minHeight).toBeGreaterThanOrEqual(44);
+    expect(StyleSheet.flatten(handle.props.style).minWidth).toBeGreaterThanOrEqual(44);
+    const zone = renderer!.root.findAllByType(View).find(view => typeof view.props.onMoveShouldSetResponder === 'function')!;
+    expect(zone).toBeDefined();
+    expect(zone.props.onMoveShouldSetResponder({}, { dy: 100, dx: 0 })).toBe(true);
+    expect(zone.props.onMoveShouldSetResponder({}, { dy: 10, dx: 100 })).toBe(false);
+    act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+    act(() => zone.props.onResponderRelease({}, { dy: 200, vy: 0.1 }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: 'swipe' });
+  });
+  it('does not install a swipe responder on an ordinary or busy side Sheet', () => {
+    render(tree({ placement: 'end' }));
+    const zones = () => renderer!.root.findAllByType(View).filter(view => typeof view.props.onMoveShouldSetResponder === 'function');
+    expect(zones()).toHaveLength(0);
+    act(() => renderer!.update(tree({ placement: 'end', swipeDirection: 'down', busy: true })));
+    expect(zones()).toHaveLength(0);
   });
 });

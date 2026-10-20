@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { Heading } from "@hjmds/react-native/heading";
 // Platform views share data/validation and the existing action-session demo; no new public engine.
 import { useEffect, useRef, useState } from "react";
@@ -45,7 +46,7 @@ function Editor({ kind }: { kind: EditorKind }) {
   const { session, state, request, busy, failureArmed, toggleFailure } = useDemoAction<Draft>(initialDraft(kind));
   const dirty = !sameDraft(draft, state.value);
   const done = state.status === "success" && !dirty;
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<ComponentRef<typeof TextInput>>(null);
   // Host callbacks may have been queued before disabled rendered; the session is the live lock.
   const locked = () => session.getSnapshot().status === "pending";
   const change = (patch: Partial<Draft> | ((previous: Draft) => Partial<Draft>)) => {
@@ -69,8 +70,8 @@ function Editor({ kind }: { kind: EditorKind }) {
     });
     return () => subscription.remove();
   }, [paused, confirmLeave, busy, dirty]);
-  const stageRef = useRef<View>(null);
-  const returnFocusRef = useRef<View>(null);
+  const stageRef = useRef<ComponentRef<typeof View>>(null);
+  const returnFocusRef = useRef<ComponentRef<typeof View>>(null);
   const navigation = `${stage}:${paused}:${done}:${viewResult}`;
   const previousNavigation = useRef(navigation);
   useEffect(() => {
@@ -80,7 +81,7 @@ function Editor({ kind }: { kind: EditorKind }) {
       const target = stageRef.current;
       if (!target) return;
       const handle = findNodeHandle(target);
-      if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
+      if (typeof handle === "number") AccessibilityInfo.setAccessibilityFocus(handle);
     });
     return () => cancelAnimationFrame(frame);
   }, [navigation]);
@@ -117,8 +118,8 @@ export function ServiceIntroduction({ editorial = false }: { editorial?: boolean
   const [draft, setDraft] = useState("");
   const [note, setNote] = useState("");
   // The sheet returns focus to whichever CTA opened it.
-  const introCta = useRef<View>(null); const closingCta = useRef<View>(null); const returnFocusRef = useRef<View>(null);
-  const start = (cta: View | null) => { returnFocusRef.current = cta; setOpen(true); };
+  const introCta = useRef<ComponentRef<typeof View>>(null); const closingCta = useRef<ComponentRef<typeof View>>(null); const returnFocusRef = useRef<ComponentRef<typeof View>>(null);
+  const start = (cta: ComponentRef<typeof View> | null) => { returnFocusRef.current = cta; setOpen(true); };
   // Both CTAs open the same sheet, so the screen still has one primary intent.
   const intro = <Stack gap="lg"><Text tone="brand" variant="label">오늘의 한 장면</Text><Text>대단한 이야기일 필요 없어요. 지금 기억하고 싶은 순간부터 시작해요.</Text><Button ref={introCta} onPress={() => start(introCta.current)}>첫 장면 남기기</Button></Stack>;
   const preview = <Surface padding="lg"><Stack gap="lg"><Text variant="label">{note ? "방금 남긴 장면" : "직접 만든 기록 예시"}</Text><Art label="산책의 빛" /><Heading level="level5">{note || records[0].title}</Heading><Text>{note ? "이 미리보기에 저장했어요." : records[0].body}</Text></Stack></Surface>;
@@ -143,7 +144,7 @@ export function RecordComparison() {
   const [saved, setSaved] = useState<string[]>([]);
   const [selected, setSelected] = useState<typeof records[number] | null>(null);
   // Each record's read button is the sheet's return-focus target for that record.
-  const readButtons = useRef(new Map<string, View>()); const returnFocusRef = useRef<View>(null);
+  const readButtons = useRef(new Map<string, ComponentRef<typeof View>>()); const returnFocusRef = useRef<ComponentRef<typeof View>>(null);
   const results = filterRecords(query, emptyFilters());
   const cards = results.map(record => <Surface key={record.id} padding="lg"><Stack gap={mode === "list" ? "sm" : "lg"}>{mode === "image" && record.image && <Art label={record.category} />}<Text tone="muted" variant="caption">{record.category}</Text><Heading level={mode === "reading" ? "level4" : "level5"}>{record.title}</Heading>{mode !== "list" && <Text>{record.body}</Text>}<Stack axis="inline" wrap gap="sm" align="center"><Button tone="secondary" ref={node => { if (node) readButtons.current.set(record.id, node); else readButtons.current.delete(record.id); }} onPress={() => { returnFocusRef.current = readButtons.current.get(record.id) ?? null; setSelected(record); }} accessibilityLabel={comparisonActionCopy.readName(record.title)}>{comparisonActionCopy.read}</Button><IconButton tone="secondary" selected={saved.includes(record.id)} label={comparisonActionCopy.saveName(record.title)} onPress={() => setSaved(current => current.includes(record.id) ? current.filter(id => id !== record.id) : [...current, record.id])}><Bookmark size={20} color={saved.includes(record.id) ? colors.contentBrand : colors.text} fill={saved.includes(record.id) ? colors.contentBrand : "none"} /></IconButton></Stack></Stack></Surface>);
   return <View style={{ flex: 1 }}><ScreenLayout title="무엇을 먼저 보고 싶나요?" description="데이터와 행동은 유지하고 정보의 밀도와 순서를 비교해 보세요." scrollProps={{ keyboardDismissMode: "on-drag" }}><Stack gap="xl">

@@ -15,6 +15,10 @@ export type CarouselProps = CarouselSelection & Readonly<{
     composeAccessibleName: ComposeCarouselAccessibleName;
     labels: CarouselLabels;
     autoplay?: CarouselAutoplayConfig;
+    /** Available content height in a bounded host, such as a map overlay. Navigation stays outside the scrolling slide. */
+    slideMaxHeight?: number;
+    /** Disable the slide gesture when content owns horizontal gestures, such as an interactive map. Buttons and accessibility navigation remain available. */
+    swipeEnabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -28,6 +32,10 @@ export type PageIndicatorProps = Readonly<{
     count: number;
     /** Zero-based current page; the product pager owns it. */
     currentIndex: number;
+    /** Limit visible dots while retaining absolute page names and navigation. */
+    maxVisibleDots?: number;
+    /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
+    interactive?: boolean;
     /** Requested page from a dot press or an adjustable action. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -41,6 +49,6 @@ export type PageIndicatorProps = Readonly<{
  * Carousel's position dots for a product-owned pager. The row is one adjustable element, like a platform page
  * control, so a screen reader hears "label: page name" and swipes up/down to move; each dot is a 44pt target.
  */
-export declare function PageIndicator({ label, count, currentIndex, onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }: PageIndicatorProps): import("react").JSX.Element;
-export declare function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle }: CarouselProps): import("react").JSX.Element;
+export declare function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive, onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }: PageIndicatorProps): import("react").JSX.Element;
+export declare function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, swipeEnabled, slideMaxHeight }: CarouselProps): import("react").JSX.Element;
 //# sourceMappingURL=carousel.d.ts.map

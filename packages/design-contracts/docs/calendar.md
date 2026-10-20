@@ -23,7 +23,8 @@ Calendar는 항상 표시되는 한 달의 격자다. DatePicker는 날짜 필�
 같은 Calendar를 담는다. 날짜 선택·접근성·큰 글자 수정이 양쪽에 동시에 반영되도록 렌더링을
 공유한다. DatePicker의 선택 후 닫기·trigger copy·clear·읽기 전용은 바깥 필드가 맡는다.
 
-- `grid.cells`: 제품이 만든 7열 row-major 배열. 길이는 양의 7의 배수다.
+- `grid.cells`: 7열 row-major 배열. 길이는 양의 7의 배수다. 평범한 Gregorian 월은 아래 공용 생성기를
+  사용하고 업무 달력의 콘텐츠·선택 가능 날짜·시간대·표시 월 제약은 제품이 공급한다.
 - `date`: ISO `YYYY-MM-DD` stable key. 빈 셀은 `{}`이며 focus나 접근성 이름을 갖지 않는다.
 - `weekdayLabels`, `todayDate`, `monthLabel`: 제품이 정한 로케일·시계의 결과를 받는다.
 - `selectedDate` / `defaultSelectedDate` / `onSelectionChange`: 단일 선택. 월 이동과 독립이다.
@@ -35,6 +36,23 @@ Calendar는 항상 표시되는 한 달의 격자다. DatePicker는 날짜 필�
   내용 의미는 `composeAccessibleName`에 포함한다. 중복 낭독 방지를 위해 slot은 접근성에서 숨긴다.
 
 ## 공개 API
+
+2026-10-19 비행중/선택의창/양 플랫폼 예제에서 같은 월 격자 계산을 반복하는 것을 확인해
+`createCalendarMonthCells`를 추가했다(개발 소스·미게시). 기존 descriptor 입력은 그대로 유지한다.
+함수는 주어진 civil month의 배치만 생성하고 현재 시각이나 제품 시간대를 읽지 않는다.
+
+```ts
+import { createCalendarMonthCells } from "@hjmds/design-contracts/components/calendar";
+const cells = createCalendarMonthCells("2026-10");
+// 기본 일요일 시작/인접 월 날짜. 월요일 시작·빈 칸도 지원한다.
+const blankCells = createCalendarMonthCells("2026-10", { weekStartsOn: 1, outsideMonth: "blank" });
+```
+
+`weekStartsOn`은0(일)부터6(토), 기본0이며 weekdayLabels도 같은 순서로 공급한다.
+`outsideMonth`는 기본 adjacent(인접 월/선택 가능), blank(날짜 없는 filler)다.
+4자리 지원 연도0000~9999 바깥에 걸친 인접 칸은 filler다. 일광절약시간과 기기 시간대가
+날짜 수를 바꾸지 않도록 UTC를 civil 격자의 좌표로만 사용한다. 기존 제품의 업무 날짜 계산·
+비 Gregorian 달력·제품 clock을 이 helper로 대체하지 않는다. 결과에 content/disabled를 연결할 수 있다.
 
 ```tsx
 import { Calendar } from "@hjmds/react/calendar";

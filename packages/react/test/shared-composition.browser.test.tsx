@@ -65,10 +65,11 @@ it("announces custom loading artwork with shared copy and returns to real conten
   await act(async () => render(false));
   expect(host.querySelector('[data-brand-loader]')).toBeNull(); expect(host.textContent).toBe("결과");
 });
-it("keeps a toolbar subtitle separate from its named title action", async () => {
+it("preserves a named title action while omitting the retired toolbar subtitle", async () => {
   const open = vi.fn();
   await act(async () => root.render(<HjmProvider><TopBar title="도구" subtitle="설명" onTitleClick={open} titleAccessibilityLabel="도구 상세" /></HjmProvider>));
-  expect(host.querySelector(".hjm-top-bar__subtitle")?.textContent).toBe("설명");
+  expect(host.querySelector(".hjm-top-bar__subtitle")).toBeNull();
+  expect(host.textContent).not.toContain("설명");
   await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="도구 상세"]')!.click());
   expect(open).toHaveBeenCalledOnce();
 });

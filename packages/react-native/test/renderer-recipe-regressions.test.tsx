@@ -625,6 +625,23 @@ describe("Recipe axes that replace product style overrides", () => {
 });
 
 describe("Native canonical recipe bindings", () => {
+  it("keeps status foreground independent from brand foreground and supplies both icon slots", () => {
+    const value = { ...lightValue, palette: { ...lightValue.palette, theme: { ...lightValue.palette.theme, onPrimary: "#102030", onStatusFill: "#ffffff" } } };
+    const brand = render(<Badge label="브랜드" tone="brand" />, value);
+    expect(flattenStyle(copy(brand, "브랜드").props.style).color).toBe("#102030");
+    act(() => brand.unmount());
+    for (const variant of ["filled", "outline"] as const) {
+      const renderer = render(<Badge label="완료" tone="neutral" variant={variant}
+        leading={({ color, size }) => <View testID="leading-context" style={{ backgroundColor: color, width: size }} />}
+        trailing={({ color, size }) => <View testID="trailing-context" style={{ backgroundColor: color, width: size }} />} />, value);
+      const color = flattenStyle(copy(renderer, "완료").props.style).color;
+      if (variant === "filled") expect(color).toBe("#ffffff");
+      for (const testID of ["leading-context", "trailing-context"]) {
+        expect(renderer.root.findByProps({ testID }).props.style).toEqual({ backgroundColor: color, width: 14 });
+      }
+      act(() => renderer.unmount());
+    }
+  });
   it("binds Badge tone, size, copy, and leading/label slots to badgeRecipe", () => {
     const renderer = render(
       <Badge

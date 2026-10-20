@@ -132,6 +132,8 @@ export type PageIndicatorDescriptor = Readonly<{
     count: number;
     /** Zero-based current page. */
     currentIndex: number;
+    /** Limit the visible window around the current page; omitted shows every page. */
+    maxVisibleDots?: number;
 }>;
 export type PageIndicatorAccessibleNameInfo = Readonly<{
     position: number;
@@ -166,6 +168,7 @@ export declare const carouselRecipe: {
     };
     readonly dot: {
         readonly diameter: 8;
+        readonly compactGap: 8;
         readonly hitTarget: 44;
         readonly color: {
             readonly inactive: Readonly<{

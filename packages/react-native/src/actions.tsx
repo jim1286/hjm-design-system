@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   resolveLinkDescriptor,
@@ -18,6 +19,7 @@ import {
 } from "@hjmds/design-contracts/recipes";
 import {
   type ButtonAlign as ContractButtonAlign,
+  type ButtonAppearance as ContractButtonAppearance,
   type ButtonEdge as ContractButtonEdge,
   type ButtonShape as ContractButtonShape,
   type ButtonSize as ContractButtonSize,
@@ -44,6 +46,7 @@ import { useHjmNativeTheme } from "./provider.js";
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
 export type ButtonShape = ContractButtonShape;
+export type ButtonAppearance = ContractButtonAppearance;
 export type ButtonAlign = ContractButtonAlign;
 export type ButtonEdge = ContractButtonEdge;
 export type {
@@ -62,6 +65,7 @@ export type ButtonProps = Omit<
     size?: ButtonSize;
     /** Frame geometry. `pill` replaces product code that overrode `borderRadius`. */
     shape?: ButtonShape;
+    appearance?: ButtonAppearance;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
     /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
@@ -91,7 +95,7 @@ export type ButtonProps = Omit<
   }>;
 
 // Public callers compose placement through layoutStyle; visual overrides stay inside HJM recipes.
-export const Button = forwardRef<NativeView, ButtonProps>(function Button(props, ref) {
+export const Button: ReturnType<typeof forwardRef<ComponentRef<typeof NativeView>, ButtonProps>> = forwardRef<ComponentRef<typeof NativeView>, ButtonProps>(function Button(props, ref) {
   // Untyped JS callers must not reach the private recipe override through a spread.
   if ("style" in props || "labelStyle" in props) {
     throw new TypeError("Button style/labelStyle were removed; use layoutStyle and semantic props");
@@ -138,7 +142,7 @@ export type IconButtonProps = Omit<
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconButton({
+export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof NativeView>, IconButtonProps>> = forwardRef<ComponentRef<typeof NativeView>, IconButtonProps>(function IconButton({
   label,
   children,
   tone = iconButtonRecipe.defaults.tone,
@@ -353,12 +357,15 @@ export type BottomCTAAction = Readonly<{
   loadingLabel?: ReactNode;
   size?: ButtonSize;
   tone?: ButtonTone;
+  /** Decorative Button adornments; label remains the action name. */
+  leading?: ReactNode;
+  trailing?: ReactNode;
   /**
    * Ref to this action's button. Native overlays return focus only to an explicit target
    * (`ImmersiveOverlay`/`Dialog` `returnFocusRef`), so the action that opens one must expose its button
    * (2026-10-18 Utilverse display board: focus did not come back after closing the board).
    */
-  buttonRef?: Ref<NativeView>;
+  buttonRef?: Ref<ComponentRef<typeof NativeView>>;
 }>;
 
 export type BottomCTAProps = Readonly<{
@@ -385,6 +392,8 @@ function BottomCTAButton({
       {...(action.disabled === undefined ? {} : { disabled: action.disabled })}
       {...(action.loading === undefined ? {} : { loading: action.loading })}
       {...(action.loadingLabel === undefined ? {} : { loadingLabel: action.loadingLabel })}
+      leading={action.leading}
+      trailing={action.trailing}
       fullWidth
       onPress={action.onPress}
       {...(action.size === undefined ? {} : { size: action.size })}

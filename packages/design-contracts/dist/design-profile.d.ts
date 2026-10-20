@@ -1,3 +1,4 @@
+import { type ButtonAppearance, type ButtonShape } from "./base-recipes.js";
 import { type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { radius, typography, heading, shadow, type FontWeightValue, type FontFamilyRoles } from "./foundations.js";
 import { type EffectSurfaceDescriptor } from "./effect-surface.js";
@@ -33,6 +34,13 @@ type SurfaceMaterial = Readonly<{
 type Palette = Readonly<Record<ResolvedTheme, Readonly<ThemeColors>>>;
 export type HjmDesignProfile = Readonly<{
     id: string;
+    /** Optional brand defaults. The shared renderer still owns behavior, dimensions and states. */
+    controls?: Readonly<{
+        button?: Readonly<{
+            appearance: ButtonAppearance;
+            shape: ButtonShape;
+        }>;
+    }>;
     palette: Palette;
     tokens: Readonly<{
         radius: RadiusTokens;
@@ -61,6 +69,12 @@ export type HjmDesignProfile = Readonly<{
 export type HjmDesignProfileInput = Readonly<{
     extends?: HjmDesignPreset;
     id?: string;
+    controls?: Readonly<{
+        button?: Readonly<{
+            appearance?: ButtonAppearance;
+            shape?: ButtonShape;
+        }>;
+    }>;
     palette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
     tokens?: Readonly<{
         radius?: Readonly<Partial<RadiusTokens>>;

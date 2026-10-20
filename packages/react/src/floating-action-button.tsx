@@ -39,7 +39,7 @@ export const FloatingActionButton = forwardRef<HTMLButtonElement, FloatingAction
     window.addEventListener("resize", measure);
     return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
   }, [minimumClearance, safeAreaBottomInset, onContentClearanceChange]);
-  return <Button {...props} ref={(node) => { buttonRef.current = node; assignRef(forwardedRef, node); }}
+  return <Button {...props} appearance="flat" ref={(node) => { buttonRef.current = node; assignRef(forwardedRef, node); }}
     className={classNames("hjm-fab", className)} size="large" tone="primary" shape="pill"
     data-mode={resolved.layoutMode} data-direction={theme?.environment.direction ?? "ltr"} data-reduced-motion={theme?.environment.reducedMotion ?? false} aria-label={resolved.resolvedAccessibilityLabel}
     style={{ "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,

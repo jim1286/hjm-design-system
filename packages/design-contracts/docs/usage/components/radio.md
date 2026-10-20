@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-19
 - 근거: `src/component-recipes.ts`(`selectionControlRecipe`). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/입력/라디오 버튼`
 
@@ -62,7 +62,7 @@ import { Radio } from "@hjmds/react-native/inputs";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `label` | Web `ReactNode` · Native `string` | 필수 | 현지화 |
-| `presentation` | `plain` · `card` · `grouped` | `card` | — |
+| `presentation` | `plain` · `card` · `grouped` · `chips` | `card` | — |
 | `size` | `small` · `medium` | `medium` | — |
 | `checked` · `defaultChecked` | `boolean` | `false` | Web은 제어하면 `onCheckedChange` 필수 |
 | `onCheckedChange` | `(checked: true) => void` | — | 라디오는 스스로 해제되지 않아 항상 `true`로만 불린다. 해제는 제품이 다른 항목을 선택해 `checked`를 내려서 한다 |
@@ -101,3 +101,9 @@ import { Radio } from "@hjmds/react-native/inputs";
 | 앞 아이콘 | `renderLeading` | `leading`, `renderLeading` |
 | 이벤트 | `onCheckedChange`, 원시 `onChange` | `onCheckedChange` |
 | 배치 | `layoutStyle`(루트 `<label>`), `style`은 안쪽 input | `layoutStyle`(행) |
+
+
+`presentation="chips"`는 같은 선택 의미를 칩 모양으로 표시한다. 기본 원/체크 표시 대신
+선택 테두리·전경색·굵기를 쓰며 실제 radio/checkbox 의미와 disabled/readOnly를 유지한다.
+여러 항목의 줄바꿈·그룹 이름·선택 관리는 제품이 직접 조립하지 말고 해당 Group의
+`presentation="chips"`를 사용한다([RadioGroup](radio-group.md#미선택다중-선택의-칩-묶음), [CheckboxGroup](checkbox-group.md#미선택다중-선택의-칩-묶음)).

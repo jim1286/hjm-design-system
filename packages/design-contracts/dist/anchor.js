@@ -1,4 +1,4 @@
-import { spacing, stroke } from "./foundations.js";
+import { control, glyph, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 export function resolveAnchorItems(items) {
@@ -28,9 +28,9 @@ export function getAnchorCurrentId(positions, offset = 0, atEnd = false) {
     return ordered.filter(({ top }) => top <= offset).at(-1)?.id ?? ordered[0]?.id;
 }
 export const anchorRecipe = {
-    slots: ["root", "list", "link", "indicator"],
+    slots: ["root", "list", "link", "leading", "indicator"],
     gap: spacing.xxs,
-    link: { padding: spacing.xs, color: semanticColors.content.secondary },
+    link: { padding: spacing.xs, minHeight: control.minTouchTarget, gap: spacing.xs, leadingSize: glyph.sm, color: semanticColors.content.secondary },
     current: { color: semanticColors.content.brand, border: semanticColors.border.focus, width: stroke.strong },
     focus: focusIndicatorContract,
 };

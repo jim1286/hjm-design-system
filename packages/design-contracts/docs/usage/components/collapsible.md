@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-20
 - 근거: [Collapsible](../../collapsible.md), `FolderPreview`는 [Folder preview](../../folder-preview.md), recipe `collapsibleRecipe`(`src/collapsible.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/접기와 펼치기` · `배포/컴포넌트/데이터 표시/폴더 미리보기`
 
@@ -73,6 +73,9 @@ import { FolderPreview } from "@hjmds/react-native/folder-preview";
 | `open` + `onOpenChange` | `boolean` + `(open: boolean) => void` | — | 제어. `open`만 주고 `onOpenChange`를 빼면 `TypeError`를 던진다 |
 | `defaultOpen` · `onOpenChange` | `boolean` · `(open: boolean) => void` | `defaultOpen` `false` | 비제어. `open`과 `defaultOpen`을 함께 주면 `TypeError`를 던진다 |
 | `trigger` | `ReactNode` | 필수 | 버튼 문구. Native는 문자열이면 HJM `Text`로 감싼다 |
+| `triggerLabel` | `string` | — | 미게시 로컬 소스. 그림뿐인 trigger 또는 보이는 문구보다 자세한 행동 이름. Web aria-label·Native accessibilityLabel에 연결하며 생략하면 기존 자식 문구를 사용한다 |
+| `title` | `ReactNode` | — | 미게시 로컬 소스. 버튼 밖 정적 제목. 제목 시작 쪽·펼침 행동 끝 쪽으로 공통 헤더가 배치한다. heading 위계는 제품이 title 슬롯에 지정한다 |
+| `pendingLabel` | `string` | — | 미게시 로컬 소스. 준비 중 펼침 버튼을 작은 Spinner로 교체하고 본문을 숨긴다. 제목/최소 높이44는 유지하며 root는 busy다. 완료해도 자동으로 펼치지 않는다 |
 | `disabled` | `boolean` | `false` | trigger 옆의 펼침 표시(닫힘 `chevronEnd`·열림 `chevronDown`, glyph.sm 20)는 HJM이 그리며 장식으로 숨겨진다. 닫힘 표시는 RTL에서 읽기 끝 쪽으로 뒤집힌다 |
 | `marker` | `end` · `none` | `end` | `none`이면 표시를 그리지 않고, 한 줄이 아닌 trigger가 `CollapsibleMarker`(`open`)를 직접 둔다(FolderPreview가 사용) |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 |
@@ -126,3 +129,15 @@ Web에서 외부 상태 변경으로 닫힐 때 내부에 있던 초점은 trigg
 
 - `edge` 축을 두지 않는다: 2026-10-17 1.27.2 채택 점검. 포트폴리오 사이트 헤더 끝 메뉴 트리거(402)의 펼침 표시 칸 끝은 화면 끝에서 36이었는데, 트리거 자체는 좌우 padding 0이고 표시 칸 끝이 트리거 끝과 같다(Storybook 측정: 표시 칸 끝 = 트리거 끝 = 루트 끝). 36은 제품이 TopBar(자기 여백 16)를 `Container gutter="regular"`(20) 안에 둔 결과다. IconButton/Button `edge`는 frameless 컨트롤의 안쪽 padding만큼 바깥으로 내미는 규칙인데 이 트리거는 내밀 padding이 없어 `edge`는 아무것도 바꾸지 못한다. 위치는 제품의 겹친 여백에서 고친다.
 - 2026-10-17 구성 리뷰: 텍스트 표시 ▸가 약 8px로 그려져 트리거가 정적 문구처럼 보였다. 그래서 두 플랫폼 모두 glyph.sm 20 chevron 아이콘으로 바꿨다.
+
+2026-10-20 번뚝 평가 영역의 제목/펼치기·로딩 헤더 복제를 없애기 위해 `title`과 `pendingLabel`을 양 renderer에 제공한다. 제목은 버튼 이름과 분리하고, 준비 중에도 같은 행동 위치·최소 높이를 유지한다. 기존 제목 없는 trigger와 inline은 유지한다. Web에서 열린 내용에 초점이 있는 동안 준비 상태로 바뀌면 trigger도 없으므로 host로 복구한다.
+
+
+2026-10-20 Spint의 꽃 비율은 제품 그림을 눌러 설명을 펼치면서 자체 Pressable·expanded·조건부 본문을 소유했다. 그림만 있는 trigger의 행동 이름을 `triggerLabel`로 지정하고 `marker="none"`으로 기존 그림을 유지한다. HJM은 최소44 target·펼침 상태·숨긴 본문 경계를 소유하며, 꽃/색상 비율 계산과 햅틱은 제품에 남긴다. 기존 문자열 trigger의 이름은 변하지 않는다.
+
+```tsx
+<Collapsible trigger={<DistributionArtwork />} triggerLabel={t(open ? "distribution.hide" : "distribution.show")}
+  marker="none" open={open} onOpenChange={setOpen}>
+  <DistributionLegend />
+</Collapsible>
+```

@@ -92,3 +92,17 @@ it("wraps long title and description inside a narrow viewport", async () => {
   expect(description.scrollWidth).toBeLessThanOrEqual(description.clientWidth + 2);
   expect(dialog.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
 });
+
+
+it("locks only external confirmation without resetting an error session or blocking cancel", async () => {
+  const run=vi.fn().mockRejectedValue(new Error('temporary failure')), close=vi.fn();
+  const request={mode:'confirm' as const,title:'Locked choice',description:'Keep this request',confirmLabel:'Confirm',cancelLabel:'Cancel',onConfirm:run,fallbackErrorMessage:'Try again'};
+  const node=(locked:boolean)=><HjmProvider reducedMotion><AlertDialog open request={request} confirmDisabled={locked} onOpenChange={close}/></HjmProvider>;
+  const action=(label:string)=>document.body.querySelector<HTMLButtonElement>(`[role="alertdialog"] button[aria-label="${label}"]`)??[...document.body.querySelectorAll<HTMLButtonElement>('[role="alertdialog"] button')].find(n=>n.textContent===label)!;
+  await act(async()=>root.render(node(true)));
+  expect(action('Confirm').disabled).toBe(true);await act(async()=>action('Confirm').click());expect(run).not.toHaveBeenCalled();
+  await act(async()=>root.render(node(false)));await act(async()=>action('Confirm').click());expect(run).toHaveBeenCalledOnce();
+  expect(document.body.textContent).toContain('Try again');
+  await act(async()=>root.render(node(true)));expect(document.body.textContent).toContain('Try again');
+  expect(action('Cancel').disabled).toBe(false);await act(async()=>action('Cancel').click());expect(close).toHaveBeenCalledWith(false,expect.anything());
+});

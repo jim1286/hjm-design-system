@@ -68,7 +68,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `keyboardAvoidance` (Native) | `boolean` | `true`(미게시) | 키보드와 실제로 겹치는 만큼 footer·본문을 올리고 포커스된 입력칸을 스크롤해 보인다. `KeyboardAvoiding`·키보드 처리 Sheet/Dialog 안에서는 건너뛴다 |
+| `keyboardAvoidance` (Native) | `boolean` | `true`(미게시) | 키보드와 실제로 겹치는 만큼 footer·본문을 올리고 포커스된 입력칸을 스크롤해 보인다. Native TextField·TextArea·SearchField는 라벨·입력·도움말/오류를 포함한 필드 전체를 측정한다(Spint 작성 화면의 글자 수 안내가 고정 footer에 가린 2026-10-18 재현). `KeyboardAvoiding`·키보드 처리 Sheet/Dialog 안에서는 건너뛴다 |
 | `title` | `string` | 필수 | 화면 제목. `header`를 주면 접근성 이름으로만 쓴다 |
 | `titleVisibility` | `"visible"` · `"hidden"` | `"visible"` | 하단 탭·상단 탐색으로 이미 식별되는 최상위 화면명은 `hidden`. 대상·하위 작업 이름은 식별에 필요하고 본문과 중복되지 않을 때 유지. 기본값이나 뒤로가기 유무로 목적지를 추정하지 않으며 제품이 맥락에 맞게 선택한다. `title` 값은 유지한다 |
 | `titleBadge` | `ReactNode` | 없음 | 기본 제목 바로 옆 배지. 값·의미는 제품, 간격·정렬은 HJM. `header` 교체 또는 제목 숨김이면 그리지 않는다. 1.23.0 추가 API |
@@ -89,6 +89,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 입력 하나에 한 번 포커스한다. 기본값 변경은 1.33.0부터 제공. 하단 시트 안에서는 자동 포커스하지 않는다. 아래 [진입 포커스](#진입-포커스) |
+| `pullToDismiss` (Native) | `boolean` | `false` | 미게시. 읽기 route 본문의 손잡이·본문 맨 위에서 새로 시작한 아래 당김을 기존 `exit.onPress`로 연결한다. `exit.kind="close"`, 기본 헤더, `scroll="screen"`이 필요하다. 손잡이는 보조기술에서 숨기고 헤더 닫기 하나를 유지한다. `exit.disabled`면 당김/손잡이/접근성 escape도 비활성이다. Web 읽기 패널은 Sheet의 `swipeDirection="down"`을 사용한다 |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
@@ -107,16 +108,21 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 ## 진입 포커스
 
+2026-10-18 후속 사용자 요청("input이 상단에 있을때만"): 상단 검색·본문 입력에만 페이지 진입 포커스를 적용한다.
+위치는 화면 슬롯 기준으로 구분한다. `ScreenLayout.footer`의 하단 고정 입력(채팅·댓글 작성창 포함)은
+`initialFocusTarget`이나 중첩 `ScreenLayout`이 있어도 자동 포커스하지 않는다. 직접 눌러 입력하는 동작은 유지한다.
+이 변경은 checkout 소스에 반영했으며 npm 게시 버전은 아직 지정하지 않았다.
+
 2026-10-18 후속 사용자 지시: “페이지 진입에만 적용하고 하단 시트에는 폐지해 포커스”. 일반·대화·인증 페이지의 기존 `none`과 시트의 단일 입력 자동 포커스를 이 기준으로 교체한다. **1.33.0에서 제공한다.**
 
 2026-10-18 사용자 요청("input이 있는 화면에 진입하면 포커스되도록, 웹앱 둘 다"). 앱마다 `autoFocus`·지연 `ref.focus()`를 붙이던 것을 화면 골격이 맡는다. 입력 칸(TextField·TextArea·SearchField·PasswordField, 작성창의 TextArea)은 가장 가까운 화면·시트 범위에 자신을 등록하고, 범위가 진입 뒤 한 칸을 고른다. 규칙의 정본은 contracts `resolveInitialFocusTarget`·`resolveEntryFocus`·`initialFocusDefaults`(`screen-patterns`)다.
 
 | 구성 | 기본값 | 이유 |
 | --- | --- | --- |
-| `ScreenLayout`(일반 화면) | `first-input` | 페이지 진입 시 입력이 있으면 첫 유효 입력 선택 |
+| `ScreenLayout`(일반 화면) | `first-input` | 페이지 진입 시 상단·본문의 첫 유효 입력 선택. `footer`는 제외 |
 | `SearchScreen` | `first-input`(검색어) | 검색이 화면의 목적 |
 | `EditorScreen` | `first-input` | 작성·편집이 화면의 목적 |
-| `ChatScreen`·`CommentThreadScreen` | `first-input` | 별도 페이지로 진입하면 작성창도 같은 규칙 적용 |
+| `ChatScreen`·`CommentThreadScreen` | `first-input` | 하단 `composer`는 자동 포커스 제외. 본문의 상단 입력만 대상 |
 | 하단 `Sheet` | 자동 입력 포커스 없음 | 입력 개수·`initialFocus`·중첩 화면·`initialFocusTarget`과 무관하게 자동 포커스하지 않음. Web은 모달 컨테이너에 초점 유지 |
 | `Dialog`·`AlertDialog`·측면 `Sheet` | 기존 모달 규칙 | `single-input` 등 기존 모달 포커스 계약 유지 |
 | `AuthScreenLayout` | `first-input` | 페이지 진입 시 텍스트 입력이 있으면 선택. 제공자 버튼만 있으면 입력 포커스 없음 |
@@ -190,3 +196,40 @@ dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽�
 - 오버레이 안의 화면 진입 포커스: 2026-10-18 번뚝 검색 오버레이. Web은 화면을 감싼 제품 `aria-modal`을 화면 위의 모달로 보고 진입 포커스를 막았고, HJM Sheet 안에 둔 ScreenLayout은 Sheet의 첫 컨트롤(닫기)에 포커스를 빼앗겼다. Native는 오버레이 표시 전에 칸을 포커스해 무시될 수 있었다. 감싸는 모달은 막지 않고 오버레이 안의 화면은 오버레이와 함께 진입하도록 고쳤다(1.31.0 patch).
 
 2026-10-18 사용자 결정: 빈 상태 문구는 화면·부분 영역 모두 `body`(14)로 표시한다. 오류·접근 제한의 제목은 기존 위계를 유지한다. 상단 보조 문구는 Spint 헤더 교체 중 커지고 강조된 문제를 계기로 표시를 제거했다. `state.description`과 본문의 안내는 유지한다.
+
+### Native 읽기 화면 당겨 닫기 (미게시)
+
+다에리 편지 상세가 ScreenLayout 밖에서 손잡이·Animated.View·PanResponder와 본문 상단 당김을
+재조립하던 경로를 공통 골격으로 옮겼다. `pullToDismiss`를 켜도 경로 선택·봉투 역재생·중복 navigation은
+제품의 기존 `exit.onPress`가 소유한다. ScreenLayout은 host가 준 본문 크기와 키보드·safe area·상태 배치를 유지한다. native route의 formSheet 안에서도 모달 형상을 다시 만들지 않는다.
+입력/미저장 확인은 기존 EditorScreen 또는 제품 닫기 소유자에서 처리하며, 손잡이에 별도 닫기 콜백을 넣지 않는다.
+
+`screenPatternRecipe.pullDismiss`는 수직 시작6pt, 닫기80pt 또는 최소32pt+속도0.65pt/ms,
+최대 이동160pt·복귀140ms(동작 줄이기는0)·본문 상단 오차1pt를 소유한다. 중간에서 위로 돌아온 스크롤은
+닫지 않고, 이미 위에 있던 상태에서 새로 시작해 -80pt 이상 당겼을 때만 닫는다. 소유 제스처가 취소되면
+이동을 풀고 늦은 release는 무시한다. 본문 `scrollProps`의 시작/종료 콜백과 interactive 키보드는 함께 유지한다.
+네이티브 route/modal의 제스처와 연결할 때 해당 host에서 실제 손잡이·본문 당김·닫기 왕복을 확인해야 한다.
+
+```tsx
+// Native — route state and its close callback remain with the product.
+<ScreenLayout title="편지" titleVisibility="hidden" pullToDismiss
+  exit={{ kind: "close", label: "닫기", onPress: closeLetter }}
+  safeAreaBottom={insets.bottom}
+  scrollProps={{ keyboardDismissMode: "interactive", automaticallyAdjustKeyboardInsets: true }}>
+  {letterContent}
+</ScreenLayout>
+```
+
+양쪽 화면 골격을 별도로 복제하지 않는다. Native Showcase `PullToDismiss`는 전체 화면에서 다시 열 수 있는
+실행 예제이며 Web은 기존 Sheet ReadingPanel 예제를 참조한다.
+
+### Native에서 콘텐츠 위에 띄우는 상단 바 (checkout 변경·미게시)
+
+`headerPosition="overlay"`와 custom `header`를 사용하면 공통 host가 헤더를 콘텐츠 위에 띄우고 실제 측정 높이를 본문 시작 padding에 반영한다.
+배경 장면은 스크롤 영역 전체를 채워 헤더 뒤로 이어지며, 본문 첫 요소는 헤더를 피해서 시작한다. 기본값 `flow`는 기존 배치다.
+제품에서 absolute 좌표나 고정 높이 보정으로 복제하지 않는다. Web은 기존 페이지/브라우저의 스크롤 host를 사용하며 이 Native host prop을 제공하지 않는다.
+다에리의 고정 색 띠가 스크롤 중 다시 끊기는 2026-10-20 사용자 지적과 React Navigation의 transparent overlay/header height 연결 방식을 근거로 한다.
+
+Native의 제목/도구 헤더가 없는 edge-to-edge 화면은 `safeAreaTop`에 시스템 inset을 전달한다. 공통 host가 본문 시작만 그만큼 보호하고 스크롤 배경은 상태바 뒤까지 이어진다. 헤더가 있으면 그 헤더의 측정/inset 경로를 사용해 중복 적용하지 않는다(checkout 변경·미게시, 2026-10-20 다에리 작성 화면).
+
+`scrollEdgeEffect`는 Native 상단 경계의 장식 재질 슬롯이다. 공통 host가 실측 헤더(헤더가 없으면 safeAreaTop)와 기본 여백만큼 프레임을 제공하고 입력/접근성 대상에서 제외한다. 제품은 브랜드 배경의 gradient/재질 노드만 연결한다. 고정 색 띠가 아니라 내용 뒤로 사라지는 가독성 경계를 만들 때 사용한다(checkout 변경·미게시).

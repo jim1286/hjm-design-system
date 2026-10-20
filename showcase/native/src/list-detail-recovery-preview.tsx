@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react-native";
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { Notice } from "@hjmds/react-native/feedback";
 import { ListDetailScreen } from "@hjmds/react-native/screen-flows";
-import { Button } from "@hjmds/react-native/actions";
+import { BottomCTA, Button, IconButton } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
 import { ListRow } from "@hjmds/react-native/data-display";
 import { Stack, Text } from "@hjmds/react-native/primitives";
@@ -10,10 +13,12 @@ import { PreviewTools, PreviewToolButton } from "./preview-tools";
 /** The list owns its filter; detail requests never replace that mounted pane. */
 export function ListDetailRecoveryPreview() {
   const [filter, setFilter] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const { colors } = useHjmNativeTheme();
   const [open, setOpen] = useState(false);
   const { session, state, request, failureArmed, toggleFailure } = useDemoAction("");
   useEffect(() => () => session.reset(""), [session]);
-  const load = () => { setOpen(true); void session.run(() => request("상세 내용을 불러왔어요."), { retryable: true }); };
+  const load = () => { setConfirmed(false); setOpen(true); void session.run(() => request("상세 내용을 불러왔어요."), { retryable: true }); };
   const close = () => { session.reset(""); setOpen(false); };
   return <ListDetailScreen title="목록을 유지하는 상세 복구"
     notice={<Stack gap="sm"><Text tone="muted">실제 서버 없이 지연과 실패를 재현해요. 목록에 입력한 값은 상세에서 돌아와도 남아요.</Text><PreviewTools><PreviewToolButton selected={failureArmed} onPress={toggleFailure}>다음 상세 조회 실패시키기</PreviewToolButton></PreviewTools></Stack>}
@@ -24,6 +29,9 @@ export function ListDetailRecoveryPreview() {
     back={{ label: "목록으로", onAction: close }}
     {...(open ? { detail: {
       title: "산책 기록",
+      actions: <IconButton label="상세 새로고침" tone="ghost" edge="end" disabled={state.status === "pending"} onPress={load}><RefreshCw size={20} color={colors.textMuted}/></IconButton>,
+      footer: <BottomCTA primaryAction={{ label: "이 기록 선택", onPress: () => setConfirmed(true), disabled: state.status !== "success" }} />,
+      notice: confirmed ? <Notice title="이 기록을 선택했어요" tone="success" /> : null,
       state: state.status === "error" ? { kind: "error" as const, title: "상세를 불러오지 못했어요" }
         : state.status === "pending" ? { kind: "loading" as const, title: "상세를 불러오는 중" } : { kind: "ready" as const },
       stateAction: state.status === "error" ? <Button tone="secondary" onPress={() => { void session.retry(); }}>상세 다시 불러오기</Button> : null,

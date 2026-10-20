@@ -85,11 +85,14 @@ import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 | `nextLabel`, `backLabel` | 다음·이전 문구. 첫 단계에는 이전이 없다 |
 | `complete` | 마지막 단계의 주 행동 `{ label, onAction, disabled?, pending? }` |
 | `skip` | 선택. Web은 헤더 actions, Native는 본문 진행 문구 다음에 보조 버튼으로 놓인다 |
+| `exit` (미게시) | 선택. ScreenLayout과 같은 플랫폼별 exit. 재보기의 저장 없는 닫기/뒤로는 헤더 시작 쪽 아이콘으로 연결한다. `complete`/`skip` pending이면 함께 비활성이다. 생략하면 기존 첫 실행 흐름을 유지한다 |
 | `progressLabel(current, total)` | 1부터 센 현재 단계와 전체 수로 진행 문구를 만든다 |
 | `layoutStyle` | 선택. ScreenLayout 루트의 공개 배치 슬롯 |
 | `safeAreaBottom` (Native) | 선택, 기본 0. ScreenLayout에 그대로 넘겨 footer(다음·이전) 아래 여백이 `max(16, inset)`이 된다. 바깥 SafeAreaView bottom·`16 + inset` 패딩 래퍼 대신 쓴다(1.28.1, 2026-10-17 야잘알·다에리가 각자 감쌌다) |
 
 ## 배치
+
+2026-10-19 오늘야구의 설정→시작 안내 재보기에는 완료 이력 저장 없이 나가는 경로가 없었다. 양 renderer의 기존 ScreenLayout exit를 공개하고 제품은 재보기 경로에서만 연결한다. 닫기는 complete/skip을 호출하지 않으며 Native는 이때 공통 헤더에 exit만 두고 단계 제목·안내는 본문에 유지한다. 첫 실행에서 exit를 허용할지는 제품이 결정한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

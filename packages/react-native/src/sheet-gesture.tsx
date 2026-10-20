@@ -12,7 +12,7 @@ type GestureSheetInputProps = ComponentProps<typeof BottomSheetTextInput>;
  * The keyboard-aware input with the HJM field frame. The raw library input had no
  * border or padding, so it read as plain text (2026-09-30 audit).
  */
-export const GestureSheetInput = forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>(
+export const GestureSheetInput: ReturnType<typeof forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>> = forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>(
   function GestureSheetInput({ style, ...props }, ref) {
     const { colors, textScaling, tokens } = useHjmNativeTheme();
     const metrics = tokens.typography[fieldRecipe.textVariant];

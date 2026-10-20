@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ScrollView, View } from "react-native";
@@ -13,8 +14,8 @@ import { componentIds } from "@hjmds/design-contracts";
 // Not exported: CSF registers every named export as a story, which showed an unnamed menu entry (2026-10-06).
 function FloatingNotesPreview() {
   // A controlled dialog needs its opening host to restore accessibility focus after dismissal.
-  const composerTrigger = useRef<View>(null);
-  const scroll = useRef<ScrollView>(null);
+  const composerTrigger = useRef<ComponentRef<typeof View>>(null);
+  const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const { layoutMode, onScroll } = useFloatingActionButtonScroll();
   const [clearance, setClearance] = useState(resolveFloatingActionButtonContentClearance(0));
   const [notes, setNotes] = useState(Array.from({ length: 18 }, (_, index) => `기억하고 싶은 순간 ${index + 1}`));

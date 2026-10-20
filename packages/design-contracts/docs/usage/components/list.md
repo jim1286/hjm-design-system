@@ -40,6 +40,7 @@
 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
+| `ListSeparator` | 동반 — 가상화 host의 장식 선(checkout·미게시) | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `List` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `TaskList` | 확장 — 완료 체크 목록(optional) | `/task-list` | `/task-list` |
 | `CollectionRail` | 동반·대안 — 독립 행동을 가진 유한 가로 목록([구성 지침](../compositions/collection-detail.md)) | `/collection-rail` | `/collection-rail` |
@@ -73,12 +74,13 @@ import { Text } from "@hjmds/react-native/primitives";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `label` | 현지화 문자열(필수) | — | 목록의 접근성 이름. 비면 `TypeError` |
-| `separator` | `indented` · `full` · `none` | `indented` | `indented`는 위 행의 글자 열에서 시작(leading이 있으면 52, 없으면 0) |
+| `separator` | `indented` · `full` · `content` · `none` | `indented` | `indented`는 위 행의 글자 열에서 시작(leading이 있으면 52, 없으면 0) |
 | `appearance` | `plain` · `grouped` | `plain` | `grouped`는 배경과 둥근 모서리로 한 덩어리 |
 | `layoutStyle` | 배치 key만 | — | 목록 루트 배치. Native `style`은 제거된 속성 — `layoutStyle`, 모양은 `appearance`·`separator` |
 | TaskList `items` | `readonly TaskItem[]` — `{ id, label, completed, description?, disabled? }` | — | `id`·`label`이 비거나 `id`가 중복되거나 `completed`가 boolean이 아니면 `TypeError` |
 | TaskList `onCompletedChange` | `(id: string, completed: boolean) => void` | — | 필수. 체크 하나마다 한 번. 목록 순서·저장은 제품이 정한다 |
 | TaskList `disabled` | `true` · `false` | `false` | 전체 체크박스를 끈다 |
+| TaskList `itemPresentation` | `plain` · `card` | Checkbox 기본값(`card`) | 기존 표면 안의 항목은 `plain`으로 중복 테두리를 피한다. 행·체크·별도 행동 배치는 TaskList가 유지한다(checkout 변경·미게시). |
 | TaskList `renderItemAction` | `({ item, disabled }) => ReactNode` | — | 체크 아래 별도 행동. disabled는 전체/항목 잠금의 합이며 제품 버튼에 전달한다. 간격 spacing.sm 12, 체크 안에 중첩하지 않음 |
 | TaskList `emptyContent` | ReactNode | — | `items`가 비면 `List` 안에 그린다 |
 | TaskList `renderCollection` | `(context: { items, renderItem: (item: TaskItem) => ReactNode }) => ReactNode` | — | SortableCollection을 합성할 수 있다. 이때 목록 루트는 제품이 그린다 |
@@ -86,9 +88,13 @@ import { Text } from "@hjmds/react-native/primitives";
 
 - List 자체에는 이벤트 콜백이 없다. 행의 누름은 각 [ListRow](list-row.md)가 받는다.
 
+2026-10-19 Utilverse 체크리스트는 단순한 체크 행을 유지하려고 항목·삭제 버튼 배치를 제품에서 재조립하고 있었다. `TaskList itemPresentation="plain"`과 기존 `renderItemAction`으로 연결한다. Web/Native 모두 같은 Checkbox 표현 옵션을 전달하며 생략한 소비자의 모양·완료 콜백은 유지한다. 기존 양쪽 TaskList 실행 예제에서 단순 행과 독립 삭제 행동을 함께 보여준다.
+
 ## 배치
 
 Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain 목록과 separator 의미는 변하지 않는다.
+
+2026-10-19 오늘야구 순위 행은 공개 `leadingStyle`로 순위+사진 슬롯을 넓혔지만 Native 구분선은 기본 40+12만 사용해 사진 아래에서 시작했다. Native는 앞쪽 프레임의 실제 layout 폭+recipe gap을 항목에 전달해 구분선을 글자 열에 맞춘다(checkout 변경·미게시). 기본 40폭은 여전히52이며 leading 없는 행은0이다. RTL은 논리적 시작 쪽에 적용하고 `full`/`none`은 변하지 않는다. Web은 고정된 기본 leading 프레임을 사용하므로 기존 CSS를 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
@@ -112,6 +118,8 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 ### CollectionRail 가로 배치
 
 새 `CollectionRail`은 1.16.0 추가 실험 companion이다. 기존 List의 배포/호환 계약은 유지한다.
+
+2026-10-18 미게시 타입 보완: Web/Native의 `CollectionRailProps<Item>`은 `Item extends CollectionRailItem`의 제품 필드를 `renderItem(item)`까지 보존한다. 항목은 `id`·`label`을 계속 제공하며 추가 데이터는 제품 소유다. 기존 타입이 추가 필드를 지워 소비 앱이 ID 역조회나 type assertion을 해야 하던 번뚝 추천 카드 이관에서 확인했다. 스크롤·측정·안정 ID 계약은 바뀌지 않는다.
 
 #### 언제 쓰나
 
@@ -227,3 +235,27 @@ const room = useScreenBodyScrollRoom();
 ## 근거
 - 구분선 시작은 위 행의 글자 열: 2026-10-17 사용자 보고(leading 없는 행에서 구분선이 중간에서 잘린 것처럼 보임). 고정 시작 52가 leading 없는 행에도 적용돼 Web 402 대시보드 기록 목록에서 행 글자 16 / 구분선 68~394(콘텐츠 끝 386보다 8 더 나감)였다. 위 행의 leading 여부로 시작을 정하고 끝을 콘텐츠 가장자리로 맞춘 뒤 글자 16 / 구분선 16~386, leading 있는 목록은 글자 85 / 구분선 85~369(콘텐츠 끝 369), RTL도 대칭으로 측정됐다.
 - 구분선·grouped 여백: 2026-10-17 사용자 결정(행 글자는 여백 선 16, 표면만 바깥으로 8). 행 콘텐츠 상자가 목록 콘텐츠 가장자리로 옮겨져 `indented` 시작이 60 → 52가 되어도 화면에서 보이는 위치(글자 시작)는 같다. 기본 화면에서 행 글자가 24, 섹션 제목이 16이던 실측은 [ListRow 근거](list-row.md#근거)에 있다. 이전 plain 목록의 `overflow: hidden`은 grouped 모서리만을 위한 것이라 grouped로 옮겼다.
+
+## 가변 높이 가상 목록의 구분선 (checkout·미게시)
+
+2026-10-20 번뚝 가변 높이 FlatList는 공개 VirtualList의 고정 rowHeight 계약으로 바꿀 수 없어
+자체 선을 그리고 있었다. `ListSeparator`는 List와 같은 recipe/테마의 장식 선만 제공한다.
+가상화·키보드·측정은 기존 host가 유지하고, 전체 목록의 의미/이름과 행은 해당 host가 제공한다.
+유한 목록은 List를 쓰며 각 행에 ListSeparator를 직접 반복하지 않는다.
+
+- `separator`: `content`(기본, 이미 자체 padding이 있는 행의 본문 양 끝), `full`(ListRow 표면까지 확장),
+  `indented`(글자 열), `none`(아무것도 그리지 않음). List에도 content를 선택할 수 있다.
+- `leading`: 기본 false. indented에서만 ListRow 기본 leading 폭+간격을 예약한다.
+  List 내부의 사용자 지정 leading 실측은 기존 List가 계속 처리한다.
+- `layoutStyle`: 바깥 host에 맞추는 배치 전용 속성. 색/두께는 recipe가 소유한다.
+- 선은 장식이며 별도 초점·접근성 항목·클릭 행동을 만들지 않는다. 마지막 행 뒤에는 host가 생략한다.
+
+```tsx
+import { ListSeparator } from "@hjmds/react-native/data-display";
+
+<FlatList data={rows} keyExtractor={row => row.id} renderItem={renderRow}
+  ItemSeparatorComponent={ListSeparator} />
+```
+
+양 renderer의 기존 List 스토리 `독립 구분선`은 공개 API의 세 가지 경계를 보여준다.
+Web 가상 host도 같은 ListSeparator를 행 사이에 연결하며, 고정 높이를 쓰는 host는 선의 두께를 행 높이에 포함한다.

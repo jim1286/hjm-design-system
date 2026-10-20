@@ -7,9 +7,11 @@
 
 적용: 이 저장소 전체 · 검토일: 2026-10-17
 
-이 checkout은 app-portfolio의 독립 Git 저장소다. 상위 작업 지침과 함께
-[README](README.md), [기여 지침](CONTRIBUTING.md),
-[검증·릴리스 계약](docs/RELEASE_GOVERNANCE.md)을 읽고 `main`에서 작업한다.
+이 checkout은 app-portfolio의 독립 Git 저장소다. 상위 작업 지침을 따르고 `main`에서 작업한다.
+UI 작업은 [작업 시작](packages/design-contracts/docs/usage/SELECTION.md#작업-시작-수정-위치--공개-api--확인-범위)에서
+수정 위치·공개 API·확인 범위를 고른다. 저장소 설치·구조가 필요하면 [README](README.md),
+게시 작업이면 [검증·릴리스 계약](docs/RELEASE_GOVERNANCE.md)을 읽는다.
+2026-10-18 사용자 요청으로 일상 수정마다 관련 없는 정본까지 읽던 진입 경로를 작업별로 나눴다.
 공유 checkout의 기존 미커밋 변경은 보존하고 stage할 경로를 명시한다.
 
 ## 변경 종류에 따른 개발
@@ -28,11 +30,8 @@ VPS에 전달한다. 특정 Codex/Sites 계정은 요건이 아니다. 기존 Gi
 
 ## 컴포넌트 중복과 소유권
 
-2026-10-15 사용자 요청: 모든 화면·구성의 기본 레이아웃·항목·배지·상태 표시·공통 상호작용은
-HJM이 제공한다. 제품은 데이터·문구·브랜드·권한·서버 요청·추가 기능만 공개 슬롯/콜백으로 연결한다.
-공개 API가 부족하면 HJM의 기존 구현을 확장·분리하며 제품에 공통 틀을 복제하지 않는다.
-메시지·댓글에서 앱별 재조립으로 UI가 갈라진 것이 계기다. 상세 소유권과 가상화/플랫폼 경계는
-[선택 지침](packages/design-contracts/docs/usage/SELECTION.md)을 따른다.
+공통 구조와 제품의 소유권·합성 경계는 [선택 지침](packages/design-contracts/docs/usage/SELECTION.md#소유권)이 소유한다.
+아래는 새 API와 중복 구현을 검토할 때 추가로 확인하는 내용이다.
 
 
 2026-10-01 전수 조사에서 catalog 밖 공개 API와 메뉴·필드·표·캐러셀의 공통 행동이

@@ -264,3 +264,15 @@ it("keeps the original DOM for tables without pinned columns", async () => {
   expect(document.querySelector(".hjm-data-table__scroll")).toBeNull();
   expect(document.querySelector("tfoot")).toBeNull();
 });
+
+
+it("labels rich cells without replacing their visual nodes or selection controls", async () => {
+  await act(async () => root.render(<HjmProvider><DataTable columns={columns} rows={rows} labels={labels}
+    renderCell={(row, column) => column === "title" ? <strong data-rich-name>{cells[row]![column]}</strong> : cells[row]![column]}
+    getCellText={(row, column) => column === "title" ? cells[row]![column] : undefined}
+    selection={{ mode: "multiple", selectedKeys: new Set<string>(), onSelectionChange: () => {} }} /></HjmProvider>));
+  const rich = host.querySelector("td[aria-label='느리게 걸었던 오후']")!;
+  expect(rich.querySelector("strong[data-rich-name]")?.textContent).toBe("느리게 걸었던 오후");
+  expect(check("느리게 걸었던 오후 선택").getAttribute("role")).toBe("checkbox");
+  expect([...host.querySelectorAll("td")].some(cell => cell.textContent === "9월 12일" && !cell.hasAttribute("aria-label"))).toBe(true);
+});

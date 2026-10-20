@@ -1,3 +1,4 @@
+import type { ComponentRef } from "react";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import {
   alertDialogRecipe,
@@ -83,7 +84,7 @@ describe("cross-platform native Modal completion", () => {
   it("restores Dialog focus only after Android host teardown", () => {
     vi.useFakeTimers();
     const focus = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
-    const returnFocusRef = { current: {} as View };
+    const returnFocusRef = { current: {} as ComponentRef<typeof View> };
     const renderer = render(
       <Dialog closeLabel="닫기" open returnFocusRef={returnFocusRef} title="설정" />,
     );
@@ -110,7 +111,7 @@ describe("cross-platform native Modal completion", () => {
   it("suppresses stale Dialog focus restoration during a rapid reopen", () => {
     vi.useFakeTimers();
     const focus = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
-    const returnFocusRef = { current: {} as View };
+    const returnFocusRef = { current: {} as ComponentRef<typeof View> };
     const renderer = render(
       <Dialog closeLabel="닫기" open returnFocusRef={returnFocusRef} title="설정" />,
     );

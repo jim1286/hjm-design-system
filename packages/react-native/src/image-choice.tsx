@@ -72,7 +72,7 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
     return <Pressable key={item.id} accessibilityRole={role} accessibilityLabel={item.label} accessibilityHint={item.description} accessibilityState={{ checked: selected, disabled: off }} disabled={off} onPress={() => choose(item.id)}
       style={({ pressed }) => ({ width: outer, minHeight: tileHeight, gap: recipe.itemLabelGap, opacity: off ? 0.5 : pressed ? 0.8 : 1 })}>
       <View style={{ width: outer, height: outer, padding: recipe.ringOffset, borderWidth: recipe.ringWidth, borderColor: selected ? colors.contentBrand : "transparent", borderRadius: recipe.radius + recipe.ringOffset + recipe.ringWidth }}>
-        <View style={{ flex: 1, borderRadius: recipe.radius, overflow: "hidden", backgroundColor: colors.surface }}>{item.image}</View>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", borderRadius: recipe.radius, overflow: "hidden", backgroundColor: colors.surface }}>{item.image}</View>
         {selected ? <View pointerEvents="none" style={{ position: "absolute", top: 0, end: 0, width: recipe.checkSize, height: recipe.checkSize, borderRadius: recipe.checkSize / 2, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}>
           <FixedGlyph color={colors.onPrimary} fontSize={12} lineHeight={14}>✓</FixedGlyph>
         </View> : null}
@@ -83,13 +83,18 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
       {item.description === undefined ? null : <Text variant={recipe.itemDescriptionVariant} tone={recipe.itemDescriptionTone} align="center" numberOfLines={recipe.itemDescriptionLines} accessible={false} importantForAccessibility="no">{item.description}</Text>}
     </Pressable>;
   };
+  const columns = width > 0 ? Math.min(items.length, resolveImageChoiceColumns(width)) : 0;
+  const rows = columns ? Array.from({ length: Math.ceil(items.length / columns) }, (_, row) => items.slice(row * columns, row * columns + columns)) : [];
+  // Keep the first/last column on the group edges. Empty slots preserve the same columns in the final partial row.
+  const renderRow = (row: readonly ImageChoiceItem[]) => <>
+    {row.map(renderTile)}
+    {Array.from({ length: columns - row.length }, (_, index) => <View key={`empty-${index}`} accessible={false} style={{ width: outer }} />)}
+  </>;
   if (virtualized) {
     // Validates the viewport and overscan with the VirtualList window contract before the first layout.
     const overscan = virtualized.overscan ?? virtualListRecipe.overscan;
     const stride = tileHeight + recipe.gap;
     resolveVirtualWindow(0, stride, virtualized.height, 0, overscan);
-    const columns = width > 0 ? resolveImageChoiceColumns(width) : 0;
-    const rows = columns ? Array.from({ length: Math.ceil(items.length / columns) }, (_, row) => items.slice(row * columns, row * columns + columns)) : [];
     // A FlatList of tile rows, not VirtualList: VirtualList exposes a plain list, and this group must stay the
     // radiogroup/list that names its radio/checkbox tiles. Row height is fixed, so getItemLayout skips measuring.
     return <View style={{ gap: tokens.spacing.xs }}>
@@ -98,14 +103,14 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
         {columns ? <FlatList data={rows} keyExtractor={(row) => row[0]!.id} accessibilityLabel={label} accessibilityRole={groupRole}
           style={{ height: virtualized.height, flexGrow: 0 }} initialNumToRender={Math.ceil(virtualized.height / stride) + overscan}
           getItemLayout={(_data, index) => ({ length: stride, offset: index * stride, index })}
-          renderItem={({ item: row }) => <View style={{ flexDirection: "row", gap: recipe.gap, height: stride, paddingBottom: recipe.gap }}>{row.map(renderTile)}</View>} /> : null}
+          renderItem={({ item: row }) => <View style={{ flexDirection: "row", justifyContent: "space-between", gap: recipe.gap, height: stride, paddingBottom: recipe.gap }}>{renderRow(row)}</View>} /> : null}
       </View>
     </View>;
   }
   return <View style={{ gap: tokens.spacing.xs }}>
     {showLabel ? <Text variant="label">{label}</Text> : null}
-    <View accessibilityLabel={label} accessibilityRole={groupRole} style={{ flexDirection: "row", flexWrap: "wrap", gap: recipe.gap }}>
-      {items.map(renderTile)}
+    <View accessibilityLabel={label} accessibilityRole={groupRole} onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ gap: recipe.gap }}>
+      {rows.map(row => <View key={row[0]!.id} style={{ flexDirection: "row", justifyContent: "space-between", gap: recipe.gap }}>{renderRow(row)}</View>)}
     </View>
   </View>;
 }

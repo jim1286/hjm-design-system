@@ -4,7 +4,7 @@ export type CardHeadingLevel = 2 | 3 | 4;
  * `View` on Native), while these slots and defaults stay identical.
  */
 export declare const cardRecipe: {
-    readonly slots: readonly ["root", "media", "body", "header", "leading", "title", "description", "content", "actions"];
+    readonly slots: readonly ["root", "media", "backgroundMedia", "backgroundInteraction", "mediaBadges", "badges", "mediaAction", "body", "header", "leading", "title", "description", "content", "actions"];
     readonly defaults: {
         readonly tone: "raised";
         readonly selected: false;
@@ -17,12 +17,26 @@ export declare const cardRecipe: {
         readonly disabledOpacity: 0.5;
         readonly pressedOpacity: 0.86;
     };
+    readonly mediaAction: {
+        readonly inset: 12;
+        readonly diameter: 44;
+        readonly iconSize: 20;
+    };
+    readonly backgroundMedia: {
+        readonly scrim: "rgba(0, 0, 0, 0.6)";
+        readonly foreground: "#ffffff";
+    };
+    readonly quotation: {
+        readonly gap: 8;
+        readonly markSize: 24;
+    };
     readonly body: {
         readonly padding: 16;
         readonly gap: 8;
     };
     readonly header: {
         readonly gap: 12;
+        readonly alignItems: "center";
     };
     readonly title: {
         readonly variant: "title";

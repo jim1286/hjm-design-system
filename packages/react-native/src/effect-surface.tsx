@@ -39,7 +39,7 @@ function EffectDecoration({ effect, visible }: { effect: ReturnType<typeof resol
     // Native list/screen owners pass visibility; AppState additionally suspends it.
     let animation: Animated.CompositeAnimation | undefined;
     let failed = false;
-    const sync = (state: string) => { animation?.stop(); progress.setValue(0); if (state === "active" && !failed) {
+    const sync = (state: string | null | undefined) => { animation?.stop(); progress.setValue(0); if (state === "active" && !failed) {
       // AppState callbacks run outside React error boundaries. A failed start keeps
       // the static layer and must not crash when the app returns to the foreground.
       try {

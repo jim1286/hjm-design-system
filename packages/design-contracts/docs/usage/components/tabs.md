@@ -95,6 +95,10 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | 고정·스크롤 | 기본 `overflow="scroll"`로 탭 목록이 가로 스크롤한다. 목록은 스크롤 영역 안에서 고정되지 않으며 상단에 붙여야 하면 제품이 sticky 영역에 넣는다 | `tabsRecipe.overflow`, `styles.css` `.hjm-tabs__list` |
 | 좁은 폭·큰 글자 | 라벨은 줄바꿈하지 않는다(`white-space: nowrap`). 좁은 폭·큰 글자에서는 가로 스크롤로 받는다 | `styles.css` `.hjm-tabs__tab` |
 
+Web의 가로 `overflow="scroll"`은 선택 변경뿐 아니라 목록 폭·라벨 크기 변경 후에도 선택된 탭을 목록 안으로 드러낸다.
+포트폴리오의 데스크톱→모바일 폭 변경에서 선택된 발전 이력 탭이 가려진 사례(2026-10-20)를 수정한 동작이다.
+페이지의 세로 위치와 선택값은 바꾸지 않으며, 사용자가 다른 탭을 찾아 목록을 직접 스크롤하는 동작은 유지한다.
+
 ```text
 ┌────────────────────────────────────┐
 │ TopBar                             │
