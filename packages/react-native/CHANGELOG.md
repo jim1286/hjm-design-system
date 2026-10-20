@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.37.2
+
+### Patch Changes
+
+- e07240e: Composite Notice panel tints over an opaque theme canvas so map and photo content cannot show through feedback. Preserve unframed status feedback and title-only layout.
+
 ## 1.37.1
 
 ### Patch Changes

@@ -1,5 +1,7 @@
 # @hjmds/react
 
+## 1.37.2
+
 ## 1.37.1
 
 ### Patch Changes

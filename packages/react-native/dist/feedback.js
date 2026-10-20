@@ -36,7 +36,9 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
     const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
     return (_jsxs(View, { ...props, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, style: [
             {
-                backgroundColor: appearance === "status" ? "transparent" : resolveColorReference(toneContract.background, theme.palette),
+                // Feedback tints carry alpha. Give them an opaque canvas, as Web's
+                // color-mix does, so map/photo content cannot show through the message.
+                backgroundColor: appearance === "status" ? "transparent" : theme.palette.theme.bg,
                 borderColor: resolveColorReference(toneContract.border, theme.palette),
                 borderRadius: theme.tokens.radius[noticeRecipe.radius],
                 borderWidth: noticeRecipe.appearances[appearance].borderWidth,
@@ -44,7 +46,9 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                 padding: noticeRecipe.appearances[appearance].padding,
             },
             layoutStyle,
-        ], children: [_jsxs(View, { style: {
+        ], children: [appearance === "panel" ? _jsx(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
+                    borderRadius: theme.tokens.radius[noticeRecipe.radius],
+                    backgroundColor: resolveColorReference(toneContract.background, theme.palette) } }) : null, _jsxs(View, { style: {
                     alignItems: "flex-start",
                     direction: theme.environment.direction,
                     flexDirection: "row",
