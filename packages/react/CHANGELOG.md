@@ -1,5 +1,16 @@
 # @hjmds/react
 
+## 1.35.0
+
+### Minor Changes
+
+- Release the shared card, badge, action sizing, entry-focus, message composition, and screen layout improvements adopted by portfolio products. Reserve prominent inline bottom-navigation clearance inside the painted bar so footers and navigation remain continuous.
+- 2be1c34: Add stable TimePicker contracts and Web/Native renderers with a shared two-column draft, explicit confirmation/cancellation, unavailable times, and inline form composition. The approved design replaces the earlier independent Select composition for new consumers. Development source only; no versioning or package publication was performed.
+
+### Patch Changes
+
+- 2be1c34: Exclude bottom-anchored ScreenLayout footer inputs, including chat/comment composers and nested footer screens, from page-entry focus. Preserve entry focus for upper search and body inputs.
+
 ## 1.34.0
 
 ### Minor Changes

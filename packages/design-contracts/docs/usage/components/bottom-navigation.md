@@ -158,6 +158,9 @@ Web Provider는 같은 값을 `--hjm-bottom-navigation-inset` CSS 변수로도 �
 행동만 하고 화면이 바뀌지 않으면 `primaryAction`이다. 원은 선택 여부와 관계없이 브랜드 면(`action.brand`)으로 칠하고,
 선택 표시는 다른 항목처럼 라벨 굵기·색이 맡는다. 원은 `지름 − 표시 자리 높이`만큼 위로 올라가 세 라벨이 한 줄에 선다.
 
+Native `inline`은 원이 막대 위로 솟는 높이도 상단 padding으로 확보해 막대 배경을 연결한다. 바깥 margin으로 장면 배경 띠를 노출하지 않는다. `overlay`는 같은 높이를 Provider에 포함해 알린다.
+2026-10-20 다에리 Send footer와 가운데 Echo 원이 겹친 원인은 inline 막대가 돌출 높이를 배치에 반영하지 않은 것이었다(개발 소스 수정·미게시).
+
 ```tsx
 // Native
 <BottomNavigation

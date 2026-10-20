@@ -1,5 +1,5 @@
 import { act, create } from "react-test-renderer";
-import { Text as NativeText } from "react-native";
+import { Text as NativeText, View } from "react-native";
 import { __setWindowDimensions } from "./react-native.mock.js";
 import { typography } from "@hjmds/design-contracts/foundations";
 import { bottomNavigationRecipe } from "@hjmds/design-contracts/recipes";
@@ -210,6 +210,29 @@ it("publishes an overlay bar's covered height so ScreenLayout pads its last regi
   });
   expect(seen.at(-1)).toBe(0);
   expect(renderer.root.findByType(ScrollView).props.contentContainerStyle.paddingBottom).toBe(16);
+});
+
+it.each([
+  { placement: "inline" as const, prominent: true, clearance: 20 },
+  { placement: "inline" as const, prominent: false, clearance: 0 },
+  { placement: "overlay" as const, prominent: true, clearance: 0 },
+])("reserves $clearance points above $placement navigation (prominent=$prominent)", ({ placement, prominent, clearance }) => {
+  let renderer!: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(<HjmNativeProvider reducedMotion theme="light">
+      <BottomNavigation placement={placement}
+        descriptor={{ accessibilityLabel: "Main", selectedKey: "write", items: [
+          { id: "trail", label: "Trail", icon: { name: "home" } },
+          { id: "write", label: "Write", icon: { name: "add" }, prominent },
+          { id: "nest", label: "Nest", icon: { name: "person" } },
+        ] }} onActivate={() => {}} renderIcon={() => null} />
+    </HjmNativeProvider>);
+  });
+  const bar = renderer.root.findByType(BottomNavigation).findAllByType(View)[0]!;
+  // Only inline navigation participates in the preceding footer's flow; overlays use the inset reporter.
+  expect(bar.props.style[0].paddingTop).toBe(clearance);
+  expect(bar.props.style[0].marginTop ?? 0).toBe(0);
+  act(() => renderer.unmount());
 });
 
 it("draws a prominent center destination as a selectable lifted circle and sizes app-icon slots", () => {

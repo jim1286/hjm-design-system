@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.34.0",
+  "designSystemVersion": "1.35.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.34.0",
+      "packageVersion": "1.35.0",
       "activeComponents": 131,
       "claimedComponents": 131,
       "completeScenarioComponents": 130,
@@ -779,7 +779,8 @@
           "claimed": true,
           "subpath": "./actions",
           "exportNames": [
-            "Button"
+            "Button",
+            "ButtonLink"
           ],
           "proofs": [
             {
@@ -2285,7 +2286,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "keyboard"
           ],
           "claimedScenarios": [
             "default",
@@ -3811,7 +3813,8 @@
           "claimed": true,
           "subpath": "./display",
           "exportNames": [
-            "List"
+            "List",
+            "ListSeparator"
           ],
           "proofs": [
             {
@@ -4929,7 +4932,8 @@
           "claimed": true,
           "subpath": "./feedback",
           "exportNames": [
-            "Spinner"
+            "Spinner",
+            "PendingContent"
           ],
           "proofs": [
             {
@@ -7058,7 +7062,7 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.34.0",
+      "packageVersion": "1.35.0",
       "activeComponents": 113,
       "claimedComponents": 113,
       "completeScenarioComponents": 110,
@@ -9218,7 +9222,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ],
           "claimedScenarios": [
             "default",
@@ -10384,7 +10389,8 @@
           "claimed": true,
           "subpath": "./data-display",
           "exportNames": [
-            "List"
+            "List",
+            "ListSeparator"
           ],
           "proofs": [
             {
@@ -11378,7 +11384,8 @@
           "claimed": true,
           "subpath": "./feedback",
           "exportNames": [
-            "Spinner"
+            "Spinner",
+            "PendingContent"
           ],
           "proofs": [
             {

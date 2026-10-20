@@ -271,7 +271,7 @@ const semanticOnlyBehaviors: ReadonlySet<NonNullable<ComponentCatalogEntry["beha
 const webKeyboardBehaviors: ReadonlySet<BehaviorName> = new Set([
   "agreement", "alertDialog", "anchor", "authProviderButton", "bottomNavigation", "breadcrumb",
   "calendar", "carousel", "chart", "checkbox", "checkboxGroup", "chip", "collapsible", "combobox",
-  "commandPalette", "contextMenu", "dataTable", "datePicker", "dateRange", "dialog",
+  "commandPalette", "contextMenu", "dataTable", "datePicker", "dateRange", "timePicker", "dialog",
   "disclosureGroup", "field", "filePicker", "floatingActionButton", "form", "layout", "link",
   "loadMore", "menu", "menubar", "numberField", "otpField", "pagination", "passwordField",
   "popover", "radioGroup", "searchField", "segmentedControl", "select", "sheet", "sidePanel",
@@ -280,7 +280,7 @@ const webKeyboardBehaviors: ReadonlySet<BehaviorName> = new Set([
 ]);
 const nativeActionBehaviors: ReadonlySet<BehaviorName> = new Set([
   "agreement", "alertDialog", "authProviderButton", "bottomNavigation", "calendar", "carousel",
-  "checkbox", "checkboxGroup", "chip", "collapsible", "combobox", "datePicker", "dateRange",
+  "checkbox", "checkboxGroup", "chip", "collapsible", "combobox", "datePicker", "dateRange", "timePicker",
   "dialog", "disclosureGroup", "field", "filePicker", "floatingActionButton", "form", "link",
   "loadMore", "menu", "numberField", "otpField", "passwordField", "radioGroup", "searchField",
   "segmentedControl", "select", "sheet", "slider", "switch", "tabs", "tagsInput", "toast",

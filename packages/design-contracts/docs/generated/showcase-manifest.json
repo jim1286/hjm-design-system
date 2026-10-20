@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "1.34.0",
+  "designSystemVersion": "1.35.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
@@ -752,7 +752,8 @@
       "name": "Button",
       "label": "버튼",
       "companions": [
-        "ClipboardButton"
+        "ClipboardButton",
+        "ButtonLink"
       ],
       "extensions": [
         "ReactionPicker",
@@ -2160,7 +2161,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "keyboard"
           ]
         },
         {
@@ -2172,7 +2174,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "native-actions"
           ]
         }
       ],
@@ -3533,7 +3536,8 @@
       "name": "List",
       "label": "목록",
       "companions": [
-        "CollectionRail"
+        "CollectionRail",
+        "ListSeparator"
       ],
       "extensions": [
         "TaskList"
@@ -4619,7 +4623,9 @@
       "storyId": "feedback/spinner",
       "name": "Spinner",
       "label": "로딩 표시",
-      "companions": [],
+      "companions": [
+        "PendingContent"
+      ],
       "extensions": [],
       "category": "feedback",
       "platform": "shared",
@@ -5026,7 +5032,8 @@
       "companions": [],
       "extensions": [
         "GestureSheet",
-        "GestureSheetProvider"
+        "GestureSheetProvider",
+        "SheetPanel"
       ],
       "category": "overlay",
       "platform": "adaptive",

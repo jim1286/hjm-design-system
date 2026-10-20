@@ -876,7 +876,7 @@ export function BottomNavigation<
   // Lifting by (diameter - indicator height) keeps the prominent label on the other labels' line; an app-icon
   // slot taller than the indicator minimum raises that height.
   const prominentLift = prominentRecipe.diameter - Math.max(bottomNavigationRecipe.indicator.minHeight, iconSize);
-  // The circle can rise above the bar's own box; an overlay reports that part too so content clears it.
+  // The lifted circle extends beyond the bar: overlays report it, while inline bars reserve it in flow.
   const prominentOverflow = resolved.items.some((item) => item.prominent)
     ? Math.max(0, prominentLift - density.padding - presentationRecipe.outerPaddingTop)
     : 0;
@@ -906,7 +906,8 @@ export function BottomNavigation<
           paddingBottom:
             safeAreaBottom + bottomNavigationRecipe.safeArea.minimumBottomPadding,
           paddingHorizontal: presentationRecipe.outerPaddingHorizontal,
-          paddingTop: presentationRecipe.outerPaddingTop,
+          // Reserve the circle inside the painted box: margin exposed the scene as a strip below the footer.
+          paddingTop: presentationRecipe.outerPaddingTop + (overlay ? 0 : prominentOverflow),
           width: "100%",
         },
         layoutStyle,
