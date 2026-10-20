@@ -6,5 +6,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "컴팩트 토스트" };
 export const Summary: Story = { name: "대상 요약 토스트", args: { variant: "summary" } };
-export const Inline: Story = { name: "저장 카드에 바로 반영", args: { variant: "inline" } };
-export const Dark: Story = { name: "어두운 테마", args: { variant: "inline" }, globals: { theme: "dark" } };
+export const Dark: Story = { name: "어두운 테마", args: { variant: "compact" }, globals: { theme: "dark" } };
+export const SummaryDark: Story = { name: "대상 요약 · 어두운 테마", args: { variant: "summary" }, globals: { theme: "dark" } };

@@ -10,8 +10,8 @@
 
 ## 언제 쓰나
 
-저장 완료의 한 줄형·대상 요약형과 화면 안 상태 표시의 선택은 [저장 결과 구성](../compositions/save-feedback.md)을 따른다.
-한 줄형은 `description`, 요약형은 기존 `title` + `description`을 사용한다. 저장된 카드가 보이면 같은 성공 토스트를 겹치지 않는다.
+저장 완료의 한 줄형·대상 요약형 선택은 [저장 결과 구성](../compositions/save-feedback.md)을 따른다.
+한 줄형은 `description`, 요약형은 기존 `title` + `description`을 사용한다. 카드형 저장 완료 예시는 제거했다.
 
 방금 한 행동의 결과처럼 **무시해도 안전한 짧은 알림**에 쓴다. 저장 완료, 복사 완료, 백그라운드 작업 완료
 알림이 여기에 속한다. 화면 흐름 밖에 떠서 3초 뒤 스스로 닫히고, 큐에 쌓인 다음 알림이 이어서 뜬다.
@@ -103,8 +103,8 @@ function useProfileSavedToast() {
 ### 디자인 프로필 상속
 
 2026-10-07 테마 소비 경로 점검에서 고정 foundation/recipe 값이 남은 곳을 보완했다.
-모서리의 recipe 역할은 유지하고 값은 가장 가까운 Provider의 `designProfile.tokens.radius`를
-읽는다. Dialog/AlertDialog/Sheet/일반 Toast의 그림자는 `tokens.shadow.floating`을 읽으며
+Dialog/AlertDialog/Sheet의 모서리는 가장 가까운 Provider의 `designProfile.tokens.radius`를 읽는다.
+일반 Toast는 승인된 알림 시안의 `toastRecipe.material.radius` 24를 사용한다. Dialog/AlertDialog/Sheet/일반 Toast의 그림자는 `tokens.shadow.floating`을 읽으며
 프로필 없는 소비자의 기본값은 유지한다. 상태·초안·선택·Modal teardown은 이 축의 소유가 아니다.
 플랫폼 근사와 미검증 범위는 [프로필 계약](../../design-profile.md#오버레이선택-입력의-프로필-연결-보완)을 따른다.
 
@@ -121,7 +121,7 @@ Native의 선택형 `/toast-liquid`도 가장 가까운 프로필의 `radius.xl`
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 카드 최대 폭 420(Web `min(420px, 100vw − 2×spacing.md)`, Native 화면 폭 − 안전 영역 − 2×16에서 420으로 자름). 최소 높이 56(`layout.rowHeight.singleLine`). 모서리 `radius.xl` 24(패널, 미게시 1.17.2 이후. 그전 `lg` 16). 열은 [아이콘 배지 32 또는 `media` 44][문구][닫기 44]. `action`은 높이 44(`control.minTouchTarget`), 좌우 여백 `spacing.md` 16의 pill. `progress` 점 6(현재 단계 1.4배) | `toastRecipe.viewport`·`surface`·`icon`·`action`, `.hjm-toast`, `react-native/src/feedback.tsx` |
+| 크기 | 카드 최대 폭 420(Web `min(420px, 100vw − 2×spacing.md)`, Native 화면 폭 − 안전 영역 − 2×16에서 420으로 자름). 최소 높이 56(`layout.rowHeight.singleLine`). 모서리 `toastRecipe.material.radius` 24. 한 줄 열은 [장식 아이콘 32 또는 `media` 44][문구][닫기 44]. 요약형은 장식 아이콘 없이 [제목·설명][닫기 44]이며 제품 `media`는 유지한다. `action`은 높이 44(`control.minTouchTarget`), 좌우 여백 `spacing.md` 16의 pill. `progress` 점 6(현재 단계 1.4배) | `toastRecipe.viewport`·`surface`·`icon`·`action`, `.hjm-toast`, `react-native/src/feedback.tsx` |
 | 안쪽 여백 | 카드 위아래 `spacing.sm` 12, 좌우 양쪽 `spacing.md` 16(`toastRecipe.surface.padding`, 미게시). 닫기는 44 터치 영역을 유지하되 끝 쪽으로 (44 − 글리프 14)/2 = 15만큼 여백에 겹쳐(`close.inlineOverhang`) × 글리프 끝이 카드 끝에서 16 — 배지의 시작 여백 16과 같다. RTL에서도 논리 방향(시작·끝)으로 대칭이다. `action`·`progress`는 문구 열에 맞춘다 | `toastRecipe.surface`·`close`, `.hjm-toast`·`.hjm-toast__close`, `react-native/src/feedback.tsx` |
 | 첫 줄 기준 | 배지 32 상자(`toastRecipe.anchor.blockSize`)가 기준선이다. 첫 줄(제목, 없으면 설명)은 (32 − 그 줄의 행간)/2만큼 내려 배지 가운데에 맞추고, 닫기는 위아래 −(44 − 32)/2 = −6(`close.blockOverhang`)으로 같은 가운데에 둔 채 행을 늘리지 않는다. 한 줄이면 12 + 32 + 12 = 56에 배지·글자·닫기 가운데가 모두 28. 여러 줄이면 배지·닫기는 첫 줄 옆에 남고 나머지 줄은 아래로 자란다(문구 덩어리 전체의 가운데에 맞추지 않는다). `media` 44는 같은 위쪽에서 시작하고 기준 상자가 아니다 — 제목을 media 가운데에 맞추면 설명이 아바타 아래로 밀려나서다. Web은 첫 줄의 `1lh`, Native는 body 토큰 행간 × 현재 글자 배율로 계산해 프로필·글자 확대에서도 맞는다 | `toastRecipe.anchor`·`close`, `.hjm-toast__content`, `react-native/src/feedback.tsx` |
 | 간격 | 화면 가장자리에서 `spacing.md` 16 + 안전 영역(`safeAreaMode: "additive"`). 여러 장 사이 `spacing.sm` 12. 카드 안 열 간격 `spacing.sm` 12 | `toastRecipe.viewport`, `.hjm-toast-viewport` |
@@ -219,3 +219,12 @@ Web은 전체 영역의 투명한 button과 두 제어 버튼을 형제로, Nati
 닫기 글리프 30이 서로 달랐고(배지 `start`·문구 `center`·닫기 `start`−4의 세 정렬), 시작 여백 16과 닫기 글리프 끝 여백 22가 비대칭이었다
 (여백 12/8/12/16 안에 44 터치 영역). Native는 사방 16 여백과 문구 `center` 정렬로 따로 어긋났다. 첫 줄 기준과 대칭 여백을 recipe 값으로 두고
 두 renderer가 같은 값을 읽게 바꿨다. 수정 후 한 줄·여러 줄·action·media·RTL 모두 가운데 28(테두리 포함 29), 양쪽 여백 16으로 측정됐다.
+
+## 2026-10-20 라이트·다크 표면 갱신 (개발 소스)
+
+승인된 알림 시안을 따라 일반 Toast는 프로필의 큰 모서리 대신 `toastRecipe.material.radius` 24를 사용한다.
+위의 과거 프로필 모서리 설명은 선택형 리퀴드 표현에만 적용된다. 배지 색 면을 제거하고 한 줄의 아이콘과 본문은 primary 색,
+제목 아래의 설명은 secondary 색으로 구분한다. 요약형은 장식 아이콘을 생략한다. 문구·타이머·큐·닫기·행동 API는 유지한다.
+라이트는 우윳빛, 다크는 차콜이며 같은 material 값과 floating 그림자를 두 renderer가 사용한다.
+웹은 지원 환경에서 backdrop blur와 0.96 fill을 사용한다. Native 기본 표현은 blur host를 요구하지 않는 불투명 표면이다.
+이는 새 npm 게시나 운영 제품 배포를 뜻하지 않는다.

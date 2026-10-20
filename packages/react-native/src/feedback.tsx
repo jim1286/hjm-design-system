@@ -879,17 +879,18 @@ function ToastSurface({
   const surfaceShadow = theme.designProfile?.tokens.shadow.floating ?? toastRecipe.surface.shadow;
   // RN content clipping and the optional Skia card must resolve the same corner;
   // preserve the liquid recipe for existing consumers without a profile.
-  const surfaceRadius = managedMotion ? theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius];
+  const surfaceRadius = managedMotion ? theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? liquidToastRecipe.radius : toastRecipe.material.radius;
   const [motionProgress] = useState(
     () => new Animated.Value(theme.environment.reducedMotion ? 1 : 0),
   );
   const exitCompleteRef = useRef(onExitComplete);
   exitCompleteRef.current = onExitComplete;
   const tone = toastRecipe.tones[resolved.tone];
-  const accent = resolveColorReference(tone.accent, theme.palette);
-  const badge = resolveColorReference(tone.badge, theme.palette);
-  const background = resolveColorReference(toastRecipe.surface.background, theme.palette);
-  const border = resolveColorReference(toastRecipe.surface.border, theme.palette);
+  const material = toastRecipe.material[theme.environment.theme];
+  const accent = material.foreground;
+  // Core Native has no backdrop host: keep the same neutral paint opaque and readable.
+  const background = material.background;
+  const border = material.border;
   const pauseFocus = () => onPause("focus");
   const resumeFocus = () => onResume("focus");
   const blockEdge = toastRecipe.placements[placement].blockEdge;
@@ -954,7 +955,7 @@ function ToastSurface({
     // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
     layoutStyle={{ marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }}
   >
-    <NativeText accessible={false} allowFontScaling={false} style={{ color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }}>×</NativeText>
+    <NativeText accessible={false} allowFontScaling={false} style={{ color: material.close, fontSize: glyph[toastRecipe.close.glyph] }}>×</NativeText>
   </IconButton>;
 
   return (
@@ -975,7 +976,8 @@ function ToastSurface({
           maxWidth: toastRecipe.surface.maxWidth,
           minHeight: managedMotion ? liquidToastRecipe.minHeight : toastRecipe.surface.minHeight,
           opacity: managedMotion ? 1 : motionProgress,
-          overflow: "hidden",
+          // The surface owns its shadow; clip only media so the floating shadow remains visible.
+          overflow: "visible",
           paddingHorizontal: toastRecipe.surface.padding.inline,
           paddingVertical: toastRecipe.surface.padding.block,
           shadowColor: surfaceShadow.color,
@@ -1050,14 +1052,14 @@ function ToastSurface({
           >
             {resolved.media as ReactNode}
           </View>
-        ) : renderedToneIcon === undefined ? null : (
+        ) : resolved.title || renderedToneIcon === undefined ? null : (
           <View
             pointerEvents={resolved.press ? "none" : "auto"}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
             style={{
               alignItems: "center",
-              backgroundColor: badge,
+              backgroundColor: "transparent",
               borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
               flexShrink: 0,
               height: toastRecipe.icon.badgeDiameter,
@@ -1073,7 +1075,7 @@ function ToastSurface({
             {resolved.title ? (
               <Text
                 style={{
-                  color: resolveColorReference(toastRecipe.title.color, theme.palette),
+                  color: material.foreground,
                   fontWeight: toastRecipe.title.fontWeight,
                 }}
                 variant={toastRecipe.title.textVariant}
@@ -1082,7 +1084,7 @@ function ToastSurface({
               </Text>
             ) : null}
             <Text
-              style={{ color: resolveColorReference(toastRecipe.description.color, theme.palette) }}
+              style={{ color: resolved.title ? material.secondary : material.foreground }}
               variant={toastRecipe.description.textVariant}
             >
               {resolved.description}

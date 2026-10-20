@@ -158,6 +158,15 @@ export function createHjmThemeStyle(value) {
         // dialogs, sheets and toasts cannot retain neutral shadows after a theme switch.
         style[`--hjm-${name}-shadow`] = shadowCss(profileTokens?.shadow.floating ?? chrome.shadow);
     }
+    const toastMaterial = toastRecipe.material[value.environment.theme];
+    style["--hjm-toast-background"] = toastMaterial.background;
+    style["--hjm-toast-border"] = toastMaterial.border;
+    style["--hjm-toast-radius"] = `${toastRecipe.material.radius}px`;
+    style["--hjm-toast-foreground"] = toastMaterial.foreground;
+    style["--hjm-toast-secondary"] = toastMaterial.secondary;
+    style["--hjm-toast-close-color"] = toastMaterial.close;
+    style["--hjm-toast-blur"] = `${toastRecipe.material.blur}px`;
+    style["--hjm-toast-fill-opacity"] = toastRecipe.material.opacity;
     style["--hjm-immersive-background"] = resolveColorReference(dialogRecipe.immersive.background, palette);
     style["--hjm-sheet-max-height"] = `${sheetRecipe.content.maxHeightRatio * 100}dvh`;
     style["--hjm-sheet-max-width"] = `${sheetRecipe.web.maxWidth}px`;
@@ -186,7 +195,7 @@ export function createHjmThemeStyle(value) {
     style["--hjm-toast-close-inline-overhang"] = `${toastRecipe.close.inlineOverhang}px`;
     style["--hjm-toast-action-background"] = resolveColorReference(toastRecipe.action.background, palette);
     style["--hjm-toast-action-color"] = resolveColorReference(toastRecipe.action.color, palette);
-    style["--hjm-toast-description-color"] = resolveColorReference(toastRecipe.description.color, palette);
+    style["--hjm-toast-description-color"] = toastMaterial.secondary;
     // Panel toast (2026-10-10): media column, step progress and action alignment come from the same recipe Native reads.
     style["--hjm-toast-media-size"] = `${toastRecipe.media.size}px`;
     style["--hjm-toast-action-align"] = toastRecipe.action.align;

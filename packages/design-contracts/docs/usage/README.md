@@ -196,7 +196,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [ThinkingOrb](components/thinking-orb.md) | 상태와 알림 | AI 에이전트가 실제로 검색·생성·듣기 같은 작업을 하는 동안 그 단계를 보여 줄 때만 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Timeline](components/timeline.md) | 데이터 표시 | 이미 일어난 일을 시간 순서대로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [TimePicker](components/time-picker.md) | 입력 | 하루 중 시각 하나를 시·분 두 열에서 고를 때 쓴다. | 미게시(1.34.0 이후) | Web · Native | Web stable / Native stable | 배포 |
-| [Toast](components/toast.md) | 상태와 알림 | 저장 완료의 한 줄형·대상 요약형과 화면 안 상태 표시의 선택은 저장 결과 구성을 따른다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Toast](components/toast.md) | 상태와 알림 | 저장 완료의 한 줄형·대상 요약형 선택은 저장 결과 구성을 따른다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ToggleFeedbackButton](components/toggle-feedback-button.md) | 구성/직접 조작과 모션 | 좋아요·저장·알림 받기처럼 켜고 끄는 선택에 반응 모션과 개수를 붙인다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ToggleGroup](components/toggle-group.md) | 입력 | 여러 개를 동시에 켜고 끄는 짧은 버튼 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Tooltip](components/tooltip.md) | 오버레이 | Web에서 이미 이름과 focus를 가진 컨트롤(대개 IconButton)에 **짧은 보충 설명 한 문장**을 붙일 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |

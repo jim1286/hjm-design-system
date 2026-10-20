@@ -328,15 +328,16 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
     const surfaceShadow = theme.designProfile?.tokens.shadow.floating ?? toastRecipe.surface.shadow;
     // RN content clipping and the optional Skia card must resolve the same corner;
     // preserve the liquid recipe for existing consumers without a profile.
-    const surfaceRadius = managedMotion ? theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? liquidToastRecipe.radius : theme.tokens.radius[toastRecipe.surface.radius];
+    const surfaceRadius = managedMotion ? theme.designProfile?.tokens.radius[toastRecipe.surface.radius] ?? liquidToastRecipe.radius : toastRecipe.material.radius;
     const [motionProgress] = useState(() => new Animated.Value(theme.environment.reducedMotion ? 1 : 0));
     const exitCompleteRef = useRef(onExitComplete);
     exitCompleteRef.current = onExitComplete;
     const tone = toastRecipe.tones[resolved.tone];
-    const accent = resolveColorReference(tone.accent, theme.palette);
-    const badge = resolveColorReference(tone.badge, theme.palette);
-    const background = resolveColorReference(toastRecipe.surface.background, theme.palette);
-    const border = resolveColorReference(toastRecipe.surface.border, theme.palette);
+    const material = toastRecipe.material[theme.environment.theme];
+    const accent = material.foreground;
+    // Core Native has no backdrop host: keep the same neutral paint opaque and readable.
+    const background = material.background;
+    const border = material.border;
     const pauseFocus = () => onPause("focus");
     const resumeFocus = () => onResume("focus");
     const blockEdge = toastRecipe.placements[placement].blockEdge;
@@ -395,7 +396,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
     const closeControl = _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), 
         // The 44 target overhangs: block so it centres on the anchor without stretching the row, inline-end so the glyph
         // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
-        layoutStyle: { marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }, children: _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }, children: "\u00D7" }) });
+        layoutStyle: { marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }, children: _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: material.close, fontSize: glyph[toastRecipe.close.glyph] }, children: "\u00D7" }) });
     return (_jsxs(Animated.View, { accessible: false, onTouchCancel: () => onResume("pointer"), onTouchEnd: () => onResume("pointer"), onTouchStart: () => onPause("pointer"), style: [
             {
                 alignItems: "stretch",
@@ -408,7 +409,8 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 maxWidth: toastRecipe.surface.maxWidth,
                 minHeight: managedMotion ? liquidToastRecipe.minHeight : toastRecipe.surface.minHeight,
                 opacity: managedMotion ? 1 : motionProgress,
-                overflow: "hidden",
+                // The surface owns its shadow; clip only media so the floating shadow remains visible.
+                overflow: "visible",
                 paddingHorizontal: toastRecipe.surface.padding.inline,
                 paddingVertical: toastRecipe.surface.padding.block,
                 shadowColor: surfaceShadow.color,
@@ -444,18 +446,18 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                             justifyContent: "center",
                             overflow: "hidden",
                             width: toastRecipe.media.size,
-                        }, children: resolved.media })) : renderedToneIcon === undefined ? null : (_jsx(View, { pointerEvents: resolved.press ? "none" : "auto", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                        }, children: resolved.media })) : resolved.title || renderedToneIcon === undefined ? null : (_jsx(View, { pointerEvents: resolved.press ? "none" : "auto", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                             alignItems: "center",
-                            backgroundColor: badge,
+                            backgroundColor: "transparent",
                             borderRadius: theme.tokens.radius[toastRecipe.icon.badgeRadius],
                             flexShrink: 0,
                             height: toastRecipe.icon.badgeDiameter,
                             justifyContent: "center",
                             width: toastRecipe.icon.badgeDiameter,
                         }, children: renderedToneIcon })), _jsxs(View, { pointerEvents: resolved.press ? "box-none" : "auto", style: { flex: 1, gap: toastRecipe.content.gap, minHeight: toastRecipe.anchor.blockSize, minWidth: 0 }, children: [_jsxs(View, { pointerEvents: resolved.press ? "none" : "auto", style: { gap: toastRecipe.content.gap, marginTop: firstLineInset }, children: [resolved.title ? (_jsx(Text, { style: {
-                                            color: resolveColorReference(toastRecipe.title.color, theme.palette),
+                                            color: material.foreground,
                                             fontWeight: toastRecipe.title.fontWeight,
-                                        }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null] }), resolved.action ? (
+                                        }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolved.title ? material.secondary : material.foreground }, variant: toastRecipe.description.textVariant, children: resolved.description }), resolved.progress ? _jsx(ToastProgressRow, { progress: resolved.progress }) : null] }), resolved.action ? (
                             // 1.10.0 tinted pill; 1.20 panel: under the copy at the start edge (toastRecipe.action.align).
                             _jsx(Pressable, { accessibilityLabel: resolved.action.accessibilityLabel, accessibilityRole: "button", onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, style: ({ pressed }) => ({
                                     alignItems: "center",

@@ -3832,6 +3832,25 @@ export declare const toastRecipe: {
             readonly mark: "alert";
         };
     };
+    readonly material: {
+        readonly radius: 24;
+        readonly blur: 20;
+        readonly opacity: 0.96;
+        readonly light: {
+            readonly background: "#FAFBFE";
+            readonly border: "#E3E6EB";
+            readonly foreground: "#202124";
+            readonly secondary: "#626873";
+            readonly close: "#696F79";
+        };
+        readonly dark: {
+            readonly background: "#27282B";
+            readonly border: "#4D4F54";
+            readonly foreground: "#F6F7F9";
+            readonly secondary: "#B4B8C0";
+            readonly close: "#B4B8C0";
+        };
+    };
     readonly surface: {
         readonly background: Readonly<{
             source: "theme";

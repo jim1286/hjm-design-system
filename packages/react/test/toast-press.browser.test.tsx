@@ -23,7 +23,11 @@ it.each(["light", "dark"] as const)("keeps full-card hit area and sibling contro
   await act(async () => root.render(<HjmProvider theme={theme}><div style={{ width: 320 }}><Toast descriptor={descriptor} onDismissRequest={onDismiss} /></div></HjmProvider>));
   const card = host.querySelector<HTMLElement>(".hjm-toast")!, button = host.querySelector<HTMLButtonElement>(".hjm-toast__press")!;
   expect(button.querySelector("button")).toBeNull();
-  for (const selector of [".hjm-toast__content", ".hjm-toast__icon"]) {
+  // Text-only summaries must keep secondary actions aligned with the copy column.
+  const copyBox = card.querySelector(".hjm-toast__content")!.getBoundingClientRect();
+  const actionBox = card.querySelector(".hjm-toast__action")!.getBoundingClientRect();
+  expect(Math.abs(actionBox.left - copyBox.left)).toBeLessThanOrEqual(1);
+  for (const selector of [".hjm-toast__title", ".hjm-toast__description"]) {
     const rect = card.querySelector(selector)!.getBoundingClientRect();
     expect(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)).toBe(button);
   }

@@ -149,6 +149,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
       ref={ref}
       className={classNames("hjm-toast", className)}
       data-tone={descriptor.tone}
+      data-summary={descriptor.title ? "true" : undefined}
       data-state={phase}
       lang={locale ?? htmlProps?.lang}
       role="group"
@@ -180,7 +181,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
           onClick={onPress}
         />
       ) : null}
-      {descriptor.media === null ? (
+      {descriptor.media === null ? descriptor.title ? null : (
         <span className="hjm-toast__icon" aria-hidden="true">
           <ToneGlyph tone={descriptor.tone} />
         </span>

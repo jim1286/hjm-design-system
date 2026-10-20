@@ -592,7 +592,16 @@ describe("Toast visual and behavior identity", () => {
     ]);
   });
 
-  it("keeps text, actions, marks, and boundary contrast in both themes", () => {
+  it("keeps light and dark notification copy readable on the new material", () => {
+    for (const themeName of ["light", "dark"] as const) {
+      const material = toastRecipe.material[themeName];
+      for (const color of [material.foreground, material.secondary, material.close]) {
+        expect(contrast(color, material.background)).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+
+  it("keeps legacy semantic color references compatible in both themes", () => {
     for (const themeName of ["light", "dark"] as const) {
       const palette = {
         theme: THEMES[themeName],

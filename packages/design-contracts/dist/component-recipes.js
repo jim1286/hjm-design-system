@@ -1645,9 +1645,18 @@ export const toastRecipe = {
             mark: "alert",
         },
     },
+    // 2026-10-20 approved light/dark notification reference: neutral glass chrome,
+    // a quiet hairline and a bare glyph replace the heavy outline and coloured badge.
+    material: {
+        radius: 24,
+        blur: 20,
+        opacity: 0.96,
+        light: { background: "#FAFBFE", border: "#E3E6EB", foreground: "#202124", secondary: "#626873", close: "#696F79" },
+        dark: { background: "#27282B", border: "#4D4F54", foreground: "#F6F7F9", secondary: "#B4B8C0", close: "#B4B8C0" },
+    },
     surface: {
         background: semanticColors.canvas,
-        // Strong border stays: the card boundary must keep 3:1 against the page (toast.test.ts, WCAG 1.4.11).
+        // Legacy semantic references remain available; renderers resolve the theme material above.
         // 1.10.0 softened the shape to lg; 1.20 makes every toast the "panel" (xl) that BurnTok designed for its
         // review status, by user request on 2026-10-10 ("패널이 토스트가 되는거지").
         border: semanticColors.border.strong,
