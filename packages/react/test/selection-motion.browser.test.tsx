@@ -14,7 +14,8 @@ function alignment(){const indicator=host.querySelector<HTMLElement>(".hjm-segme
 it("moves artwork while native radio keyboard, disabled options and form data stay intact",async()=>{
  function Fixture(){const[value,set]=useState("day");return <HjmProvider><form><SegmentedControl label="기간" name="period" selectionMotion="slide" items={items} value={value} onValueChange={set}/></form></HjmProvider>;}
  await act(async()=>root.render(<Fixture/>));alignment();
- await page.getByRole("radio",{name:"하루",exact:true}).click();await userEvent.keyboard("{ArrowRight}");
+ // This case verifies native keyboard navigation; the label owns the expanded pointer target.
+ await act(async()=>host.querySelector<HTMLInputElement>('input[value="day"]')!.focus());await userEvent.keyboard("{ArrowRight}");
  expect(new FormData(host.querySelector("form")!).get("period")).toBe("month");
  expect(host.querySelectorAll('input[type="radio"]')).toHaveLength(3);await settle();alignment();
  await userEvent.keyboard("{ArrowRight}");await userEvent.keyboard("{ArrowLeft}");await settle();alignment();
@@ -54,5 +55,34 @@ it.skip("keeps the pill background behind the entire label at large text",async(
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
   const text=host.querySelector('[data-state="checked"] > span')!.getBoundingClientRect();const marker=host.querySelector('.hjm-segmented__highlight')!.getBoundingClientRect();
   expect(marker.height).toBeGreaterThanOrEqual(text.height);expect(marker.top).toBeLessThanOrEqual(text.top);expect(marker.bottom).toBeGreaterThanOrEqual(text.bottom);
+ }
+});
+
+
+it("keeps first and last pill focus rings inside every clipping ancestor", async () => {
+ for (const width of [360, 160]) {
+  host.style.width = `${width}px`;
+  for (const theme of ["light", "dark"] as const) {
+   await act(async()=>root.render(<HjmProvider theme={theme}><SegmentedControl label="기간" presentation="pills" items={items} value="day"/></HjmProvider>));
+   for (const input of [host.querySelector<HTMLInputElement>('input[value="day"]')!, host.querySelector<HTMLInputElement>('input[value="month"]')!]) {
+    input.focus();
+    const pill = input.closest<HTMLElement>(".hjm-segmented__item")!;
+    const style = getComputedStyle(pill);
+    const reach = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+    expect(reach).toBeGreaterThan(0);
+    const ring = pill.getBoundingClientRect();
+    for (let ancestor = pill.parentElement; ancestor && ancestor !== document.body; ancestor = ancestor.parentElement) {
+     const css = getComputedStyle(ancestor), bounds = ancestor.getBoundingClientRect();
+     if (css.overflowX !== "visible") {
+      expect(ring.left - reach).toBeGreaterThanOrEqual(bounds.left);
+      expect(ring.right + reach).toBeLessThanOrEqual(bounds.right);
+     }
+     if (css.overflowY !== "visible") {
+      expect(ring.top - reach).toBeGreaterThanOrEqual(bounds.top);
+      expect(ring.bottom + reach).toBeLessThanOrEqual(bounds.bottom);
+     }
+    }
+   }
+  }
  }
 });
