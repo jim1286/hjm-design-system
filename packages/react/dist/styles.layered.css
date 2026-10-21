@@ -3627,6 +3627,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* Filter pills keep the same native radio semantics and 44px hit target. The inner
    surface is compact; the group wraps at large type instead of clipping labels. */
 .hjm-segmented[data-presentation="pills"] { background:transparent; border:0; padding:0; }
+/* Pills wrap instead of scrolling. The connected track's scrollport would clip the outer focus outline at the first/last option. */
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__scroller { overflow:visible; }
 /* Keep the inset pill behind the whole line at large text (40px text / 28px fill was observed). Native already includes this inset as vertical padding. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xxs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:max(var(--hjm-control-min-touch-target), calc(var(--hjm-segmented-height) + 2 * var(--hjm-space-xxs))); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); font-size:var(--hjm-type-label-size); line-height:var(--hjm-type-label-line-height); color:var(--hjm-color-text-muted); }

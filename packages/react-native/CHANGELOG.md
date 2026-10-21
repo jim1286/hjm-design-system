@@ -1,5 +1,7 @@
 # @hjmds/react-native
 
+## 1.38.1
+
 ## 1.38.0
 
 ### Minor Changes

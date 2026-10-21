@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.38.1
+
+### Patch Changes
+
+- 01c7628: Prevent the wrapping SegmentedControl pills scrollport from clipping the first and last option focus outline.
+
 ## 1.38.0
 
 ### Minor Changes

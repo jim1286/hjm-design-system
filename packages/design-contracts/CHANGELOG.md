@@ -1,5 +1,7 @@
 # @hjmds/design-contracts
 
+## 1.38.1
+
 ## 1.38.0
 
 ### Patch Changes
