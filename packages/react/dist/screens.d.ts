@@ -238,13 +238,17 @@ export type CompositionLayoutProps = Readonly<{
     notice?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
+    /** Passive supporting artwork beside the heading and body; never a header action. */
+    aside?: ReactNode;
+    /** Secondary footer metadata; wraps rather than squeezing the main footer. */
+    footerAside?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
     /** Brand visual only; the shared state group owns copy, centering and announcement. */
     loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;

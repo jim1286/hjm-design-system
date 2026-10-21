@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, actionGroupRecipe } from "@hjmds/design-contracts/recipes";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { forwardRef, useContext } from "react";
 import { Button } from "./actions.js";
@@ -29,6 +29,7 @@ export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondar
             "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
             "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
             "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
+            "--hjm-bottom-cta-actions-gap": `${actionGroupRecipe.inlineGap}px`,
             "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
             "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
             "--hjm-bottom-cta-parent-padding": inScreenFooter?.bottomPadding ?? "0px",

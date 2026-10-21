@@ -7,7 +7,7 @@ import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { useHjmNativeTheme } from "../provider.js";
 /** Shared native screen dismissal; navigation, reverse artwork and pending exit remain product-owned. */
-export function useScreenPullDismiss(enabled, onClose, testID) {
+export function useScreenPullDismiss(enabled, onClose, testID, closeLabel) {
     const { environment, palette, tokens } = useHjmNativeTheme();
     const [offset] = useState(() => new Animated.Value(0));
     const held = useRef(false);
@@ -56,7 +56,7 @@ export function useScreenPullDismiss(enabled, onClose, testID) {
     };
     return {
         offset, close, onScrollBeginDrag, onScrollEndDrag,
-        handle: enabled ? _jsx(View, { ...responder?.panHandlers, children: _jsx(Pressable, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", testID: `${testID ?? "hjm-screen"}-dismiss-handle`, onPress: close, style: { minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center" }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) }) }) : null,
+        handle: enabled ? _jsx(View, { ...responder?.panHandlers, children: _jsx(Pressable, { accessible: true, accessibilityRole: "button", accessibilityLabel: closeLabel, testID: `${testID ?? "hjm-screen"}-dismiss-handle`, onPress: close, style: { minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center" }, children: _jsx(View, { style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) }) }) : null,
     };
 }
 //# sourceMappingURL=screen-dismiss.js.map

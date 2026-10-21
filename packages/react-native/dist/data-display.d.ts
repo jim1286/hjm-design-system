@@ -45,6 +45,8 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Centre short metadata beneath artwork without product-owned badge layout. */
+    badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
     mediaAction?: Readonly<{
         label: string;
@@ -69,7 +71,7 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
 export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     children: ReactNode;
     attribution?: string;

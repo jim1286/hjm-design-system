@@ -1,5 +1,19 @@
 # @hjmds/react-native
 
+## 1.38.0
+
+### Minor Changes
+
+- 035799a: Add CompositionLayout aside and footerAside slots so passive supporting artwork stays beside wrapped heading/body copy and secondary metadata uses the full-width footer. Adopted by Diairy postcard letter lists in local development; publishing remains separate.
+
+  Add primary/onPrimary selection through SegmentedControl selectionTone="brand" and Tabs indicator="solid" on Web and Native. Keep neutral defaults, align compact statistics and comment spacing with current product compositions, and resolve neutral/strong status fills through semantic palette roles.
+
+### Patch Changes
+
+- 035799a: Apply the shared 8px button-group spacing to Card, Result, ProfileSummary, BottomCTA and inline action controls in both renderers. Keep body spacing and the dedicated geometry of composite controls unchanged, and align usage guidance with the corrected action groups.
+- 035799a: Use 36pt screen exits and header tools with a 4pt gap. TopBarAction and notification bells have no added hit area. Web Button and IconButton now accept an explicit hitSlop, matching Native; their existing size defaults and non-header hit expansion remain unchanged.
+- 035799a: Enlarge step indicators to 44px and inset the rail by 16px on each side so custom marks have room and endpoint steps stay away from the screen edges.
+
 ## 1.37.2
 
 ### Patch Changes

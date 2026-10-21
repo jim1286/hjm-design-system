@@ -268,6 +268,8 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills" | "text";
+    /** Opaque primary/onPrimary selection, independent of presentation geometry. */
+    selectionTone?: "neutral" | "brand";
     textEmphasis?: "regular" | "strong";
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";

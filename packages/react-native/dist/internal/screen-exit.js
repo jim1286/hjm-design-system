@@ -11,7 +11,7 @@ export function ScreenExitButton({ kind, label, onPress, disabled = false }) {
     const glyph = kind === "back"
         ? _jsx(View, { style: { width: chevronSize, height: chevronSize, borderLeftWidth: stroke, borderBottomWidth: stroke, borderColor: colors.text, transform: [{ translateX: chevronSize / 4 * (rtl ? -1 : 1) }, { rotate: rtl ? "-135deg" : "45deg" }] } })
         : _jsx(View, { style: { width: closeSize, height: closeSize, alignItems: "center", justifyContent: "center" }, children: ["45deg", "-45deg"].map(rotate => _jsx(View, { style: { position: "absolute", width: closeSize * Math.SQRT2, height: stroke, borderRadius: stroke / 2, backgroundColor: colors.text, transform: [{ rotate }] } }, rotate)) });
-    // Always on the header/row leading edge: the glyph slot sits on the gutter, the 44 target overhangs (iconButtonRecipe.edge).
-    return _jsx(IconButton, { label: label, tone: "ghost", edge: "start", disabled: disabled, onPress: onPress, children: _jsx(View, { accessible: false, importantForAccessibility: "no-hide-descendants", children: glyph }) });
+    // The compact target aligns to the header gutter without an edge overhang (2026-10-21).
+    return _jsx(IconButton, { label: label, tone: "ghost", size: "small", hitSlop: 0, disabled: disabled, onPress: onPress, children: _jsx(View, { accessible: false, importantForAccessibility: "no-hide-descendants", children: glyph }) });
 }
 //# sourceMappingURL=screen-exit.js.map

@@ -1,3 +1,3 @@
 /** Package release shown by documentation surfaces. Kept in sync by a test. */
-export declare const designSystemVersion: "1.37.2";
+export declare const designSystemVersion: "1.38.0";
 //# sourceMappingURL=version.d.ts.map

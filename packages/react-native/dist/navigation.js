@@ -77,7 +77,7 @@ export function Tabs(props) {
     if (!(indicator in tabsRecipe.indicators))
         throw new TypeError(`Unsupported Tabs indicator: ${String(indicator)}`);
     const mark = tabsRecipe.indicators[indicator];
-    const filled = indicator === "filled";
+    const filled = (indicator === "filled" || indicator === "solid");
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
     const direction = directionProp ?? environment.direction;
@@ -764,6 +764,7 @@ export function TopBarAction(props) {
     };
     const controlProps = {
         ...hostProps,
+        hitSlop: topBarRecipe.action.hitSlop,
         accessible: true,
         accessibilityLabel: resolvedAccessibilityLabel,
         accessibilityRole: intent,

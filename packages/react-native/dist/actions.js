@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { glyph, spacing } from "@hjmds/design-contracts/foundations";
-import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, actionGroupRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef, useContext } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
@@ -168,7 +168,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
                     alignSelf: "center",
                     direction: environment.direction,
                     flexDirection: stackActions ? "column-reverse" : "row",
-                    gap: bottomCtaRecipe.gap,
+                    gap: actionGroupRecipe.inlineGap,
                     maxWidth: bottomCtaRecipe.contentMaxWidth,
                     width: "100%",
                 }, children: [renderedSecondary !== null ? (_jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: renderedSecondary })) : null, _jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: _jsx(BottomCTAButton, { action: primaryAction, fallbackTone: "primary" }) })] })] }));

@@ -1,5 +1,13 @@
 # @hjmds/design-contracts
 
+## 1.38.0
+
+### Patch Changes
+
+- 035799a: Apply the shared 8px button-group spacing to Card, Result, ProfileSummary, BottomCTA and inline action controls in both renderers. Keep body spacing and the dedicated geometry of composite controls unchanged, and align usage guidance with the corrected action groups.
+- 035799a: Use 36pt screen exits and header tools with a 4pt gap. TopBarAction and notification bells have no added hit area. Web Button and IconButton now accept an explicit hitSlop, matching Native; their existing size defaults and non-header hit expansion remain unchanged.
+- 035799a: Enlarge step indicators to 44px and inset the rail by 16px on each side so custom marks have room and endpoint steps stay away from the screen edges.
+
 ## 1.37.2
 
 ## 1.37.1

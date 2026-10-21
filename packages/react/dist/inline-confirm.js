@@ -47,7 +47,7 @@ export function InlineConfirm(props) {
     return _jsxs("div", { ref: group, role: "group", "aria-label": props.prompt, onKeyDown: event => { if (event.key === "Escape" && !busy) {
             event.stopPropagation();
             session.cancel("escape");
-        } }, style: { ...props.layoutStyle, display: "grid", gap: "var(--hjm-space-sm)" }, children: [_jsx("span", { children: props.prompt }), phase?.status === "error" && _jsx("span", { role: "alert", children: phase.message }), _jsxs("div", { style: { display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-sm)" }, children: [_jsx(Button, { ref: cancel, tone: "ghost", disabled: busy, onClick: () => session.cancel("cancel-action"), children: props.cancelLabel }), _jsx(Button, { ref: confirm, tone: "danger", loading: busy, disabled: props.disabled ?? false, onClick: event => {
+        } }, style: { ...props.layoutStyle, display: "grid", gap: "var(--hjm-space-sm)" }, children: [_jsx("span", { children: props.prompt }), phase?.status === "error" && _jsx("span", { role: "alert", children: phase.message }), _jsxs("div", { style: { display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }, children: [_jsx(Button, { ref: cancel, tone: "ghost", disabled: busy, onClick: () => session.cancel("cancel-action"), children: props.cancelLabel }), _jsx(Button, { ref: confirm, tone: "danger", loading: busy, disabled: props.disabled ?? false, onClick: event => {
                             // WebKit pointer activation can leave focus on the now-disabled cancel
                             // button. Transfer it before submitting; loading already blocks repeats.
                             if (event.detail > 0 || group.current?.contains(document.activeElement))

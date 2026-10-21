@@ -12,7 +12,7 @@ export function Steps({ descriptor, statusLabels, composeAccessibleName, renderM
     // made every reached step read as selected (2026-10-17 review N3).
     const { indicator, connector, label } = stepsRecipe;
     const color = (reference) => resolveColorReference(reference, palette);
-    return (_jsx(View, { accessibilityRole: "summary", style: [{ direction: environment.direction, flexDirection: "row" }, layoutStyle], children: steps.map((step, index) => {
+    return (_jsx(View, { accessibilityRole: "summary", style: [{ direction: environment.direction, flexDirection: "row", paddingHorizontal: stepsRecipe.paddingInline }, layoutStyle], children: steps.map((step, index) => {
             const terminal = index === steps.length - 1;
             // The final step reserves only its copy/marker width; connectors own all remaining rail width.
             const cell = { flexGrow: terminal ? 0 : 1, flexBasis: terminal ? "auto" : 0, flexShrink: 1, gap: stepsRecipe.gap, minWidth: indicator.size, ...(terminal ? { maxWidth: `${100 / steps.length}%` } : {}) };

@@ -52,7 +52,7 @@ function InlineEditBody(props) {
                                 event.stopPropagation();
                                 close();
                             }
-                        } }), _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: action.pending, onClick: close, children: props.cancelLabel }), _jsx(Button, { loading: action.pending, disabled: props.disabled === true || !!error, onClick: () => void save(), children: props.saveLabel })] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
+                        } }), _jsxs(Stack, { axis: "inline", gap: "xs", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: action.pending, onClick: close, children: props.cancelLabel }), _jsx(Button, { loading: action.pending, disabled: props.disabled === true || !!error, onClick: () => void save(), children: props.saveLabel })] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, isRemoveDisabled, onAdd, onRemove, ...props }) {
     const targets = useRef(new Map()), add = useRef(null);
@@ -97,7 +97,7 @@ export function SelectionActionBar(props) {
     snapshotSelection(props.selectedIds);
     if (!props.selectedIds.length && !props.recovery && !action.pending && !action.failed)
         return null;
-    return _jsx("div", { role: "group", "aria-label": props.selectionLabel(props.selectedIds.length), children: _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { role: "status", children: props.selectionLabel(props.selectedIds.length) }), _jsxs(Stack, { axis: "inline", gap: "sm", wrap: true, children: [props.actions.map(item => _jsx(Button, { tone: item.destructive ? "danger" : "secondary", loading: action.active === `action:${item.id}`, disabled: props.disabled === true || (action.pending && action.active !== `action:${item.id}`) || !props.selectedIds.length, onClick: () => {
+    return _jsx("div", { role: "group", "aria-label": props.selectionLabel(props.selectedIds.length), children: _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { role: "status", children: props.selectionLabel(props.selectedIds.length) }), _jsxs(Stack, { axis: "inline", gap: "xs", wrap: true, children: [props.actions.map(item => _jsx(Button, { tone: item.destructive ? "danger" : "secondary", loading: action.active === `action:${item.id}`, disabled: props.disabled === true || (action.pending && action.active !== `action:${item.id}`) || !props.selectedIds.length, onClick: () => {
                                 if (props.disabled)
                                     return;
                                 const scope = snapshotSelection(props.selectedIds);
@@ -111,8 +111,8 @@ export function SelectionActionBar(props) {
 export function FilterRecovery(props) {
     const action = useCompositionAction(props.disabled), options = recoverableFilters(props.options);
     // Fills the result area its host gives it (flex parent) and centers there, like Native.
-    return _jsx("div", { role: "group", "aria-label": props.title, style: { display: "grid", placeItems: "center", flexGrow: 1, textAlign: "center" }, children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { emphasis: "strong", children: props.title }), props.description ? _jsx(Text, { tone: "muted", children: props.description }) : null, options.map(option => _jsx(Button, { tone: "secondary", loading: action.active === option.id, disabled: props.disabled === true || (action.pending && action.active !== option.id), onClick: () => { if (!props.disabled)
-                        void action.run(option.id, () => props.onApply(option.id)); }, children: props.optionLabel(option) }, option.id)), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
+    return _jsx("div", { role: "group", "aria-label": props.title, style: { display: "grid", placeItems: "center", flexGrow: 1, textAlign: "center" }, children: _jsxs(Stack, { gap: "sm", align: "center", children: [_jsx(Text, { emphasis: "strong", children: props.title }), props.description ? _jsx(Text, { tone: "muted", children: props.description }) : null, _jsx(Stack, { gap: "xs", children: options.map(option => _jsx(Button, { tone: "secondary", loading: action.active === option.id, disabled: props.disabled === true || (action.pending && action.active !== option.id), onClick: () => { if (!props.disabled)
+                            void action.run(option.id, () => props.onApply(option.id)); }, children: props.optionLabel(option) }, option.id)) }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function TableColumnSettings(props) {
     assertDistinctIds(props.columns);

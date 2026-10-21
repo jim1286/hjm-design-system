@@ -8,6 +8,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
     shape?: ButtonShape;
     appearance?: ButtonAppearance;
@@ -35,6 +37,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
 export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
     shape?: ButtonShape;
     appearance?: ButtonAppearance;
@@ -80,6 +84,8 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
     label: string;
     tone?: IconButtonTone;
     size?: IconButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     shape?: IconButtonShape;
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
@@ -98,6 +104,8 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     label: string;
     tone?: IconButtonTone;
     size?: IconButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     shape?: IconButtonShape;
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;

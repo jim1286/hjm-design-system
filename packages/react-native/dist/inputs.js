@@ -667,7 +667,7 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     ? { alignSelf: stacked ? "flex-start" : "center" }
                     : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
-function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled }) {
+function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled, brand }) {
     const theme = useHjmNativeTheme();
     const positions = useRef({ x: new Animated.Value(rect.x), y: new Animated.Value(rect.y), width: new Animated.Value(rect.width), height: new Animated.Value(rect.height) }).current;
     const previousSelection = useRef(selection);
@@ -692,10 +692,10 @@ function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disab
             settle(); });
         return () => { animations.forEach(animation => animation.stop()); sub.remove(); };
     }, [rect.x, rect.y, rect.width, rect.height, selection, reducedMotion, positions]);
-    return _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : theme.tokens.radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 } });
+    return _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : theme.tokens.radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(brand ? segmentedControlRecipe.selectedBrand.background : pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 } });
 }
 export function SegmentedControl(props) {
-    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, disabled = false, layoutStyle, overflow = "wrap", actions, testID, } = props;
+    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionTone = "neutral", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, disabled = false, layoutStyle, overflow = "wrap", actions, testID, } = props;
     // Removed aliases must not silently change the selected collection in JavaScript callers.
     if ("options" in props || !Array.isArray(items))
         throw new TypeError("SegmentedControl requires items; options was removed");
@@ -785,11 +785,11 @@ export function SegmentedControl(props) {
         gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
         padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
     };
-    const content = (_jsxs(_Fragment, { children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled }) : null, resolvedItems.map((item) => {
+    const content = (_jsxs(_Fragment, { children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled, brand: selectionTone === "brand" }) : null, resolvedItems.map((item) => {
                 const isSelected = item.value === selected;
                 const optionDisabled = disabled || item.disabled === true;
                 const contentColor = resolveColorReference(isSelected
-                    ? (pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
+                    ? (selectionTone === "brand" && !textOnly ? segmentedControlRecipe.selectedBrand.content : pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
                     : segmentedControlRecipe.item.idleContent, theme.palette);
                 const leading = item.leading ?? item.renderLeading?.({
                     selected: isSelected,
@@ -811,7 +811,7 @@ export function SegmentedControl(props) {
                         {
                             alignItems: "center",
                             backgroundColor: !textOnly && !movingHighlight && !pills && isSelected
-                                ? resolveColorReference(segmentedControlRecipe.item.selectedBackground, theme.palette)
+                                ? resolveColorReference(selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.item.selectedBackground, theme.palette)
                                 : "transparent",
                             borderColor: isSelected && !movingHighlight
                                 ? resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette)
@@ -838,7 +838,7 @@ export function SegmentedControl(props) {
                             paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                             width: stacked ? "100%" : undefined,
                         },
-                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : resolveColorReference(segmentedControlRecipe.pills.background, theme.palette), borderWidth: segmentedControlRecipe.pills.borderWidth, borderColor: resolveColorReference(isSelected ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.pills.border, theme.palette) } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
+                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.pills.selectedBackground, theme.palette)) : resolveColorReference(segmentedControlRecipe.pills.background, theme.palette), borderWidth: segmentedControlRecipe.pills.borderWidth, borderColor: resolveColorReference(isSelected ? (selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.pills.selectedBackground) : segmentedControlRecipe.pills.border, theme.palette) } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: {
                                 color: textOnly ? (isSelected ? theme.colors.text : theme.colors.textMuted) : contentColor,
                                 fontWeight: textOnly ? segmentedControlRecipe.text[textEmphasis][isSelected ? "selected" : "idle"] : isSelected
                                     ? segmentedControlRecipe.item.selectedFontWeight
