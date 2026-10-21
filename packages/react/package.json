@@ -617,7 +617,7 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.38.0 <1.39.0",
+    "@hjmds/design-contracts": ">=1.39.0 <1.40.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",

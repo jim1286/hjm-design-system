@@ -43,3 +43,17 @@ it.each(["none", "dotted"] as const)("renders disconnected vertical drops withou
   }
   expect(markup).toContain("2023 기록 없음, 2024 기록 없음");
 });
+
+
+it("bridges only interior missing intervals while keeping their values absent", () => {
+  const markup = renderToString(<LineChart categories={["前", "A", "missing", "B", "後"]}
+    series={[{ id: "record", label: "기록", values: [null, 2, null, 4, null] }]} missingConnection="bridge"
+    accessibilityLabel="추이" formatValue={String} missingLabel="미수집" />);
+  const bridges = [...markup.matchAll(/<line[^>]*data-missing-bridge="true"[^>]*>/g)];
+  expect(bridges).toHaveLength(1);
+  const attr = (name: string) => Number(bridges[0]![0].match(new RegExp(`${name}="([^\"]+)"`))![1]);
+  expect(attr("x2")).toBeGreaterThan(attr("x1"));
+  expect(attr("y2")).toBeLessThan(attr("y1"));
+  expect(bridges[0]![0]).toContain('stroke-dasharray="1 5"');
+  expect(markup).toContain("前 미수집, A 2, missing 미수집, B 4, 後 미수집");
+});

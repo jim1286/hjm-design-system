@@ -273,8 +273,8 @@ function MotionBar({ bar, animate, vertical = true, rounded = true, ...rest }: R
 
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
   curve?: ChartCurve;
-  /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
-  missingConnection?: "none" | "dotted";
+  /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
+  missingConnection?: "none" | "dotted" | "bridge";
   /** Gradient area under each line. Defaults to on for a single series. */
   area?: boolean;
   stacked?: boolean;
@@ -363,6 +363,12 @@ export function LineChart({
                 {missingConnection === "dotted" && segments.slice(1).map((segment, index) => {
                   const before = segments[index]!.at(-1)!, after = segment[0]!;
                   return <g key={`gap${index}`}>{[before, after].map(point => <line key={point.index} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={chartRecipe.line.missingDash.join(" ")} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}</g>;
+                })}
+                {/* A faint connector guides the eye only; nulls remain absent from values,
+                    focus navigation and area geometry. Never extrapolate beyond observations. */}
+                {missingConnection === "bridge" && segments.slice(1).map((segment, index) => {
+                  const before = segments[index]!.at(-1)!, after = segment[0]!;
+                  return <line key={`bridge${index}`} data-missing-bridge="true" x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={chartRecipe.line.missingDash.join(" ")} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
                 })}
                 {showArea || stacked ? segments.map((segment, i) => (
                   <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lower ? segment.map((p) => lower[p.index]!) : undefined} key={`a${i}`} className="hjm-chart__area" fill={`url(#${id}-area-${s})`} />

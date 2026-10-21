@@ -77,14 +77,14 @@ it.each([false, true])("LineChart separates nearby extreme labels in a fixed dom
   } finally { act(() => tree.unmount()); }
 });
 
-it.each(["none", "dotted"] as const)("marks missing periods with disconnected dotted vertical drops (%s)", missingConnection => {
+it.each(["none", "dotted", "bridge"] as const)("marks missing periods with disconnected dotted vertical drops (%s)", missingConnection => {
   const tree = render(<LineChart categories={["앞", "2022", "2023", "2024", "2025", "뒤"]}
     series={[{ id: "record", label: "기록", values: [null, 2, null, null, 4, null] }]} missingConnection={missingConnection}
     accessibilityLabel="시즌 기록" formatValue={String} missingLabel="기록 없음" />);
   try {
     layout(tree);
     const bridges = tree.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.strokeDasharray) && n.props.strokeDasharray.join(",") === "1,5");
-    expect(bridges).toHaveLength(missingConnection === "dotted" ? 2 : 0);
+    expect(bridges).toHaveLength(missingConnection === "dotted" ? 2 : missingConnection === "bridge" ? 1 : 0);
     if (missingConnection === "dotted") {
       const floor = chartRecipe.heights.regular - chartRecipe.insets.plot.bottom;
       const { left, right } = chartRecipe.insets.plot;
@@ -95,6 +95,10 @@ it.each(["none", "dotted"] as const)("marks missing periods with disconnected do
       });
     }
     expect(adjustable(tree).props.accessibilityHint).toContain("2023 기록 없음, 2024 기록 없음");
+    if (missingConnection === "bridge") {
+      expect(bridges[0]!.props.x2).toBeGreaterThan(bridges[0]!.props.x1);
+      expect(bridges[0]!.props.y2).toBeLessThan(bridges[0]!.props.y1);
+    }
     // Missing seasons remain absent from focus navigation even when dotted drops are visible.
     act(() => adjustable(tree).props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
     expect(adjustable(tree).props.accessibilityValue.text).toBe("2022 2");

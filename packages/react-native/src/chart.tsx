@@ -183,7 +183,7 @@ export type LineChartProps = Readonly<{
   height?: number;
   curve?: ChartCurve;
   /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
-  missingConnection?: "none" | "dotted";
+  missingConnection?: "none" | "dotted" | "bridge";
   area?: boolean;
   stacked?: boolean;
   invert?: boolean;
@@ -232,6 +232,12 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
           {missingConnection === "dotted" && segments.slice(1).map((segment, index) => {
             const before = segments[index]!.at(-1)!, after = segment[0]!;
             return <G key={`gap${index}`}>{[before, after].map(point => <Line key={point.index} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}</G>;
+          })}
+          {/* A faint connector guides the eye only; nulls remain absent from values,
+              focus navigation and area geometry. Never extrapolate beyond observations. */}
+          {missingConnection === "bridge" && segments.slice(1).map((segment, index) => {
+            const before = segments[index]!.at(-1)!, after = segment[0]!;
+            return <Line key={`bridge${index}`} x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
           })}
           {(showArea || stacked) && segments.map((segment, i) => <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lowerSegments?.[i]} key={`a${i}`} fill={`url(#hjmArea${id}${s})`} />)}
           {segments.map((segment, i) => <G key={`l${i}`}>
