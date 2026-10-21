@@ -104,7 +104,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `missingLabel` | `string` | — (필수) | 텍스트 대안에서 빈 값을 읽는 문구 |
 | `height` | `number` | `chartRecipe.heights.regular` 180 | 가로는 부모 폭을 채운다 |
 | `curve` | `linear` · `monotone` · `step` | `linear` | `monotone`은 데이터 밖으로 넘지 않는 곡선 |
-| `missingConnection` | `none` · `dotted` · `bridge` | `none` | 빈 구간 양쪽 관측값에서 각자의 시즌/기간 x 위치를 유지한 채 plot 하단까지 수직 점선을 내린다. 양쪽 점선은 서로 연결하지 않는다. 하단은 결측 표시이며 0이 아니다. 값·포커스·영역 채움은 만들지 않으며 앞/뒤 결측을 외삽하지 않는다. Web·Native 지원. `bridge`는 관측 구간 끝과 다음 관측 시작을 옅은 점선으로 안내한다. 원본 null·포커스·영역 채움을 변경하지 않으며 제품은 점선이 미수집 구간이라는 설명을 표시한다. `bridge`는 1.39.0부터 |
+| `missingConnection` | `none` · `dotted` · `bridge` | `none` | `none`은 선을 끊어 둔다. `dotted`는 빈 구간 양쪽 관측값에서 각자의 x 위치를 유지한 채 plot 하단까지 수직 점선을 내리며 양쪽 점선을 서로 연결하지 않는다. 하단은 결측 표시이며 0이 아니다. 값·포커스·영역 채움은 만들지 않으며 앞/뒤 결측을 외삽하지 않는다. Web·Native 지원. `bridge`는 관측 구간 끝과 다음 관측 시작을 옅은 점선으로 안내한다. 원본 null·포커스·영역 채움을 변경하지 않으며 제품은 점선이 미수집 구간이라는 설명을 표시한다. `bridge`는 1.39.0부터 |
 | `area` | `boolean` | 계열이 하나면 `true` | 선 아래 그라데이션(0.32 → 0) |
 | `stacked` | `boolean` | `false` | 쌓은 영역. 0을 항상 포함 |
 | `invert` | `boolean` | `false` | 작을수록 위(순위·평균자책점) |

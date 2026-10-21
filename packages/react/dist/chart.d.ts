@@ -33,8 +33,8 @@ type CartesianCommon = ChartRootProps & Readonly<{
 }>;
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     curve?: ChartCurve;
-    /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
-    missingConnection?: "none" | "dotted";
+    /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
+    missingConnection?: "none" | "dotted" | "bridge";
     /** Gradient area under each line. Defaults to on for a single series. */
     area?: boolean;
     stacked?: boolean;

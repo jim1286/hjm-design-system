@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.39.0
+
+### Minor Changes
+
+- 94cfb13: Add an optional faint missing-interval bridge to LineChart without creating values, focus targets or filled areas for absent observations.
+
 ## 1.38.1
 
 ### Patch Changes

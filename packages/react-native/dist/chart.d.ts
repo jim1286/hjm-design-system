@@ -21,7 +21,7 @@ export type LineChartProps = Readonly<{
     height?: number;
     curve?: ChartCurve;
     /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
-    missingConnection?: "none" | "dotted";
+    missingConnection?: "none" | "dotted" | "bridge";
     area?: boolean;
     stacked?: boolean;
     invert?: boolean;
