@@ -40,7 +40,7 @@ export function ProfileFacePreview() {
       </Stack>
       <Stack gap="md"><Text variant="title" accessibilityRole="header">{copy.preferences}</Text><Switch label={copy.notification} description={copy.notificationHint} checked={draft.notifications} onCheckedChange={notifications => change({ notifications })} /></Stack>
       <PatternStatus tone="muted">{applied ? copy.saved : copy.draft}</PatternStatus>
-      <Stack gap="sm">
+      <Stack gap="xs">
         <Button disabled={!dirty || !draft.name.trim()} onPress={() => { setSaved(draft); setApplied(true); }}>{copy.save}</Button>
         <Button tone="secondary" disabled={!dirty} onPress={() => { setDraft(saved); setApplied(false); }}>{copy.reset}</Button>
       </Stack>

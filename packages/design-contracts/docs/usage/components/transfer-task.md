@@ -64,7 +64,7 @@ import { TransferTask } from "@hjmds/react-native/transfer-task";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 버튼은 [Button](button.md) 기본 `medium`(높이 44), 막대는 [Progress](progress.md) 기본 `medium` 두께 8, 부모 폭을 채운다 | `transfer-task.tsx` |
-| 간격 | 버튼 줄·막대·상태 사이 `spacing.md` 16, 버튼 사이 `spacing.sm` 12 | `Stack gap="md"`, 버튼 줄 `gap="sm"` |
+| 간격 | 버튼 줄·막대·상태 사이 `spacing.md` 16, 버튼 사이 `spacing.xs` 8 | `Stack gap="md"`, 버튼 줄 `gap="xs"` |
 | 순서·정렬 | [시작] [취소(진행 중만)] → 진행 막대 → 결과 문구(가운데) | 양 renderer |
 | 고정·스크롤 | 없음. 놓는 영역이 정한다 | — |
 | 좁은 폭·큰 글자 | 버튼 줄이 `wrap`으로 줄바꿈 | `Stack axis="inline" wrap` |

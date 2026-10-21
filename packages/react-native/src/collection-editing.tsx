@@ -55,7 +55,7 @@ function InlineEditBody(props: InlineEditProps) {
       : <Stack gap={collectionEditingRecipe.actionGap}>
         <TextField ref={input} label={props.label} value={draft} disabled={props.disabled === true || action.pending}
           {...(error ? { error, invalid: true } : {})} onValueChange={setDraft} onSubmitEditing={() => void save()} />
-        <Stack axis="inline" gap="sm" wrap><Button tone="ghost" disabled={action.pending} onPress={() => close()}>{props.cancelLabel}</Button>
+        <Stack axis="inline" gap="xs" wrap><Button tone="ghost" disabled={action.pending} onPress={() => close()}>{props.cancelLabel}</Button>
           <Button loading={action.pending} disabled={props.disabled === true || !!error} onPress={() => void save()}>{props.saveLabel}</Button></Stack>
         {action.failed ? <ErrorMessage>{props.errorLabel}</ErrorMessage> : null}
       </Stack>}
@@ -114,7 +114,7 @@ export function SelectionActionBar(props: SelectionActionBarProps) {
   if (!props.selectedIds.length && !props.recovery && !action.pending && !action.failed) return null;
   return <View accessible={false}><Stack gap="sm">
     <Text accessibilityLiveRegion="polite">{props.selectionLabel(props.selectedIds.length)}</Text>
-    <Stack axis="inline" gap="sm" wrap>
+    <Stack axis="inline" gap="xs" wrap>
       {props.actions.map(item => <Button key={item.id} tone={item.destructive ? "danger" : "secondary"} loading={action.active === `action:${item.id}`} disabled={props.disabled === true || (action.pending && action.active !== `action:${item.id}`) || !props.selectedIds.length} onPress={() => {
         if (props.disabled) return;
         const scope = snapshotSelection(props.selectedIds);
@@ -139,8 +139,8 @@ export function FilterRecovery(props: FilterRecoveryProps) {
   // Fills the result area its host gives it and centers there; a content-high host keeps it content-high.
   return <View style={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}><Stack gap="sm" align="center">
     <Text emphasis="strong" align="center">{props.title}</Text>{props.description ? <Text tone="muted" align="center">{props.description}</Text> : null}
-    {options.map(option => <Button key={option.id} tone="secondary" loading={action.active === option.id} disabled={props.disabled === true || (action.pending && action.active !== option.id)}
-      onPress={() => { if (!props.disabled) void action.run(option.id, () => props.onApply(option.id)); }}>{props.optionLabel(option)}</Button>)}
+    <Stack gap="xs">{options.map(option => <Button key={option.id} tone="secondary" loading={action.active === option.id} disabled={props.disabled === true || (action.pending && action.active !== option.id)}
+      onPress={() => { if (!props.disabled) void action.run(option.id, () => props.onApply(option.id)); }}>{props.optionLabel(option)}</Button>)}</Stack>
     {action.failed ? <ErrorMessage>{props.errorLabel}</ErrorMessage> : null}
   </Stack></View>;
 }

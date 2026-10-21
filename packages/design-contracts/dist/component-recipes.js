@@ -1,4 +1,4 @@
-import { solidAccentColor, themeColor } from "./color-references.js";
+import { solidAccentColor } from "./color-references.js";
 import { collectionItemContract, fieldFrameContract, floatingSurfaceContract, focusIndicatorContract, formSupportContract, } from "./component-contracts.js";
 import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, typography, } from "./foundations.js";
 import { buttonRecipe } from "./base-recipes.js";
@@ -153,8 +153,8 @@ export const badgeRecipe = {
     // 2026-10-18: match the Today Baseball status plate reference: solid fill,
     // white copy and compact rounded corners. Outline retains its tone-colored copy.
     tones: {
-        neutral: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.secondary, background: themeColor("neutralFill"), border: null },
-        strong: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.primary, background: themeColor("strongFill"), border: null },
+        neutral: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.secondary, background: semanticColors.surface.statusNeutral, border: null },
+        strong: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.content.primary, background: semanticColors.surface.statusStrong, border: null },
         brand: { content: semanticColors.content.inverse, outlineContent: semanticColors.content.brand, background: semanticColors.action.brand.background, border: null },
         info: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.info.foreground, background: solidAccentColor("info"), border: semanticColors.feedback.info.border },
         success: { content: semanticColors.content.statusInverse, outlineContent: semanticColors.feedback.success.foreground, background: solidAccentColor("success"), border: semanticColors.feedback.success.border },
@@ -641,6 +641,8 @@ export const segmentedControlRecipe = {
     // Match Chip's visible size step in mixed filter rails; the inset keeps a separate 44pt touch box.
     // The old 8pt inset drew 28pt pills next to a 36pt small action chip (Utilverse, 2026-10-20).
     // Spint review (2026-10-20): restore the original inset and use a smaller category label instead.
+    // Strong selection uses the product primary/onPrimary contrast pair (Diairy/Spint review, 2026-10-21).
+    selectedBrand: { background: semanticColors.action.brand.background, content: semanticColors.action.brand.content },
     pills: { textVariant: "label", paddingHorizontal: { small: spacing.sm, medium: spacing.md }, gap: spacing.xs, radius: radius.full, inset: spacing.xxs, minHeight: control.minTouchTarget,
         // Utilverse's pastel scene swallowed the sunken fill without an outline (2026-10-20).
         // Use the resting control border on the inset surface so touch geometry stays unchanged.
@@ -1133,6 +1135,7 @@ export const tabsRecipe = {
     indicators: {
         underline: { listDivider: true, background: null, selectedContent: semanticColors.content.primary, radius: null },
         filled: { listDivider: false, background: semanticColors.surface.brand, selectedContent: semanticColors.content.brand, radius: "full" },
+        solid: { listDivider: false, background: semanticColors.action.brand.background, selectedContent: semanticColors.action.brand.content, radius: "full" },
     },
     sizes: {
         small: {
@@ -1345,7 +1348,8 @@ export const statisticRecipe = {
             padding: spacing.sm,
             gap: spacing.xxs,
             labelVariant: "caption",
-            valueVariant: "title",
+            // Small summary cards need a quieter count (Diairy today log, 2026-10-21 user feedback).
+            valueVariant: "bodyLarge",
         },
         comfortable: {
             padding: spacing.md,
@@ -1501,7 +1505,7 @@ export const dialogRecipe = {
      */
     immersive: {
         background: semanticColors.canvas,
-        controls: { padding: spacing.md, gap: spacing.xs, actionGap: spacing.sm },
+        controls: { padding: spacing.md, gap: spacing.xs, actionGap: actionGroupRecipe.inlineGap },
         // A presentation is read from across a room: rotation follows the device even when the app is portrait-only.
         orientations: ["portrait", "landscape-left", "landscape-right"],
         statusBarHidden: true,
@@ -1783,9 +1787,9 @@ export const topBarRecipe = {
     ],
     defaults: { centered: true },
     minHeight: control.buttonHeight.large,
-    sideMinWidth: control.minTouchTarget,
+    sideMinWidth: control.buttonHeight.small,
     paddingHorizontal: spacing.md,
-    gap: spacing.xs,
+    gap: spacing.xxs,
     largeTextThreshold,
     title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: typography.title.fontWeight },
     titleAction: {
@@ -1794,9 +1798,12 @@ export const topBarRecipe = {
         gap: spacing.xs,
         pressedOpacity: opacity.pressed,
     },
+    // 2026-10-21: compact header tools approved after the Today Baseball home trial.
     action: {
-        minHeight: control.minTouchTarget,
-        minWidth: control.minTouchTarget,
+        size: "small",
+        hitSlop: 0,
+        minHeight: control.buttonHeight.small,
+        minWidth: control.buttonHeight.small,
         gap: spacing.xxs,
         paddingHorizontal: spacing.xxs,
         pressedOpacity: opacity.pressed,

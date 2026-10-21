@@ -7,6 +7,20 @@ import { CompositionLayout, ScreenLayout } from "../src/screens.js";
 import { CommentThreadRow, CommentThreadScreen } from "../src/screen-flows.js";
 import "../src/styles.css";
 let host: HTMLDivElement, root: Root;
+it('keeps supporting art beside wrapped copy and footer metadata below both columns', async () => {
+  host.style.width = '340px';
+  await act(async () => root.render(<HjmProvider><CompositionLayout title="A sender with a deliberately long name" titleSize="compact"
+    aside={<div data-art style={{width: 72, height: 112}}>Stamp</div>}
+    footer={<span data-footer>Courier · yesterday</span>} footerAside={<span>Delivered</span>}>
+    <p data-preview>A letter with enough text to wrap on this narrow mobile card.</p>
+  </CompositionLayout></HjmProvider>));
+  const art = host.querySelector<HTMLElement>('[data-art]')!.getBoundingClientRect();
+  const preview = host.querySelector<HTMLElement>('[data-preview]')!.getBoundingClientRect();
+  const footer = host.querySelector<HTMLElement>('[data-footer]')!.getBoundingClientRect();
+  expect(preview.right).toBeLessThanOrEqual(art.left);
+  expect(footer.top).toBeGreaterThanOrEqual(Math.max(art.bottom, preview.bottom));
+  expect(host.scrollWidth).toBeLessThanOrEqual(host.clientWidth);
+});
 beforeEach(() => {
   (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   host = document.createElement("div"); document.body.append(host); root = createRoot(host);
@@ -97,9 +111,11 @@ it('keeps profile commands independent and inbox previews under one named router
   expect(host.querySelector('[data-hjm-notification-row]')?.getAttribute('aria-hidden')).toBe('true');
   expect(host.querySelector('[data-hjm-unread-dot]')).not.toBeNull();
 });
-it('names loading status and keeps retry inside the announced failure group', async () => {
+it('names loading status and keeps retry outside the live error announcement', async () => {
   await act(async () => root.render(<ScreenLayout title="Search" state={{kind:'loading',title:'Loading'}} />));
   expect(host.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe('Loading');
   await act(async () => root.render(<ScreenLayout title="Search" state={{kind:'error',title:'Failed'}} stateAction={<button>Retry</button>} />));
-  expect(host.querySelector('[role="alert"] button')?.textContent).toBe('Retry');
+  expect(host.querySelector('[role="alert"]')?.textContent).toBe('Failed');
+  expect(host.querySelector('[role="alert"] button')).toBeNull();
+  expect(host.querySelector('.hjm-screen__state button')?.textContent).toBe('Retry');
 });

@@ -14,6 +14,6 @@ export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" 
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
 const raisedProfile = defineHjmDesignProfile({ controls: { button: { appearance: "raised", shape: "pill" } } });
-export const Raised: Story = { name: "입체 버튼 · 제품 기본값 · 미게시", render: () => <HjmNativeProvider designProfile={raisedProfile}><Stack gap="sm">
+export const Raised: Story = { name: "입체 버튼 · 제품 기본값 · 미게시", render: () => <HjmNativeProvider designProfile={raisedProfile}><Stack gap="xs">
   <Button>계속하기</Button><Button tone="secondary">돌아가기</Button><Button loading>저장하기</Button><Button tone="ghost">조용한 행동</Button>
 </Stack></HjmNativeProvider> };

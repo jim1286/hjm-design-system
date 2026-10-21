@@ -51,7 +51,7 @@
 │ [ 입력                             ] │ │ TextField 높이 44
 │ 안내 문구 / 저장 실패 문구           │ ↓ 간격 spacing.md 16
 ├──────────────────────────────────────┤
-│ Web:    [초안 버리기] [메모 저장]     │ ← footer 고정, 오른쪽 정렬, gap 12
+│ Web:    [초안 버리기] [메모 저장]     │ ← footer 고정, 오른쪽 정렬, gap 8
 │ Native: [ 메모 저장 ] / [ 초안 버리기 ]│ ← 세로, 주 행동 먼저
 │ ░░ 하단 안전 영역 / 키보드 위 ░░      │
 └──────────────────────────────────────┘
@@ -64,11 +64,11 @@
 | 트리거·상태 | `Button`, `Text` | 제목 아래 | 버튼 `medium` 44, `spacing.md` 16 |
 | 시트 머리 | `Sheet` header | 시트 위 고정 | Native 최소 높이 `control.minTouchTarget` 44 |
 | 입력 | `TextField` | 시트 body, 스크롤 | 높이 `control.fieldHeight` 44, 간격 `spacing.md` 16(Native `sheetRecipe.body.gap`, Web은 `Stack gap="md"`) |
-| 행동 | `Button` 저장·버리기 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.sm` 12(`sheetRecipe.footer.gap`) |
+| 행동 | `Button` 저장·버리기 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.xs` 8(`sheetRecipe.footer.gap`) |
 | 키보드 | `Sheet keyboardAvoidance`(Native) | 시트 전체가 키보드 위로 | 제품 키보드 listener·maxHeight를 두지 않는다 |
 
 - footer 순서는 [Sheet](../components/sheet.md) 배치 규칙을 따른다. Web은 가로 줄 **[버리기][저장]**, Native는 세로 열 **저장(primary) 먼저, 버리기(secondary) 아래**다.
-  renderer footer가 간격 12를 주므로 `Stack`으로 다시 감싸지 않는다.
+  renderer footer가 간격 8를 주므로 `Stack`으로 다시 감싸지 않는다.
 - 버리기가 되돌릴 수 없는 손실이면 `tone="danger"`와 [InlineConfirm](../components/button.md)으로 한 번 더 확인하는 것을 검토한다.
 
 근거: `src/component-recipes.ts`(`sheetRecipe`), `src/foundations.ts`(`control`, `layout`, `heading`), `packages/react/src/styles.css`(`.hjm-sheet__footer`), [Sheet 지침](../components/sheet.md)

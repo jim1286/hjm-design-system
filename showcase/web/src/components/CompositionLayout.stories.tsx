@@ -9,3 +9,12 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+
+import { CompositionLayout } from '@hjmds/react/screens';
+import { Text } from '@hjmds/react/layout';
+import { Badge } from '@hjmds/react/display';
+export const SupportingArtwork: Story = { name: '본문 옆 보조 그림', render: () => <CompositionLayout title="보낸 사람" titleSize="compact" description="출발 도시"
+  aside={<svg width="72" height="112" viewBox="0 0 72 112" aria-hidden="true"><rect x="8" y="4" width="56" height="64" rx="4" fill="currentColor" opacity="0.1" /></svg>}
+  footer={<Text variant="caption">배달 친구 · 어제</Text>} footerAside={<Badge size="small" variant="outline">전달 완료</Badge>}>
+  <Text>제목과 본문은 그림 옆의 남은 폭에서 자연스럽게 줄바꿈합니다.</Text>
+</CompositionLayout> };

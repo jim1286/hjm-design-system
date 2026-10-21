@@ -84,7 +84,7 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `direction` | `ltr` · `rtl` | `ltr` | — |
 | `textScale` | 연속값 | `1` | — |
 | `reducedMotion` | `true` · `false` | `false` | — |
-| `minimumVisualTarget` | `true` · `false` | `false` | — |
+| `minimumVisualTarget` | `true` · `false` | `false` | 작은 컨트롤의 표시 높이를 최소 44로 올리는 선택 기능. 2026-10-21 사용자 지시로 포트폴리오 앱·웹은 `false`를 사용한다. 터치 확장 `hitSlop`과 별개다 |
 | `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 20개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
 | `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필·표면 질감은 1.15.0 추가. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 글자 역할·관련 구성 개선은 1.16.0 변경. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
 | `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |

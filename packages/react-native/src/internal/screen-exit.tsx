@@ -16,6 +16,6 @@ export function ScreenExitButton({ kind, label, onPress, disabled = false }: Scr
     : <View style={{ width: closeSize, height: closeSize, alignItems: "center", justifyContent: "center" }}>
         {["45deg", "-45deg"].map(rotate => <View key={rotate} style={{ position: "absolute", width: closeSize * Math.SQRT2, height: stroke, borderRadius: stroke / 2, backgroundColor: colors.text, transform: [{ rotate }] }} />)}
       </View>;
-  // Always on the header/row leading edge: the glyph slot sits on the gutter, the 44 target overhangs (iconButtonRecipe.edge).
-  return <IconButton label={label} tone="ghost" edge="start" disabled={disabled} onPress={onPress}><View accessible={false} importantForAccessibility="no-hide-descendants">{glyph}</View></IconButton>;
+  // The compact target aligns to the header gutter without an edge overhang (2026-10-21).
+  return <IconButton label={label} tone="ghost" size="small" hitSlop={0} disabled={disabled} onPress={onPress}><View accessible={false} importantForAccessibility="no-hide-descendants">{glyph}</View></IconButton>;
 }

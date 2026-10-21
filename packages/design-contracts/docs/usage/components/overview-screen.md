@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.15.0
-- 검토일: 2026-10-17
+- 검토일: 2026-10-20
 - 근거: [디자인 프로필](../../design-profile.md), 양 renderer `src/design-profile.tsx`; 기존 ScreenLayout·Grid·Collapsible의 상태 엔진을 재사용한다.
 - 스토리북: `배포/컴포넌트/레이아웃/목록 화면 골격`
 
@@ -64,7 +64,7 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 | --- | --- | --- |
 | 크기 | editorial은 `layout.readingMaxWidth` 720, dashboard·landscape는 `layout.contentMaxWidth` 1200, host가 높이를 제공한다 | `resolveDesignProfileScreen`, ScreenLayout |
 | 본문 폭 | 도구와 목록이 한 열: 최대 `layout.readingMaxWidth` 720, header 제목·BottomCTA 내용과 같은 가운데 축(`overviewContentLayout`). 카드 끝과 입력 끝이 같은 선에 놓인다 | `@hjmds/design-contracts/design-profile-layout` |
-| 간격·항목 | 도구–목록 `spacing.xl` 24. rows는 테두리 없는 항목을 규칙선(Divider, `border`)으로 나누고 선 위아래 `spacing.md` 16, 안쪽 여백 0. cards/grid는 테두리·raised 카드, 간격 `spacing.lg` 20, 안쪽 `spacing.xl` 24 | `resolveDesignProfileCollection`·`resolveDesignProfileCollectionItem` |
+| 간격 | 도구–목록 `spacing.xl` 24. rows는 테두리 없는 항목을 규칙선(Divider, `border`)으로 나누고 선 위아래 `spacing.md` 16, 안쪽 여백 0. cards/grid는 테두리·raised 카드, 간격 `spacing.lg` 20, 안쪽 `spacing.xl` 24 | `resolveDesignProfileCollection`·`resolveDesignProfileCollectionItem` |
 | 순서·정렬 | 헤더 → notice → 도구 → 목록 → footer. leading은 뒤로, actions는 화면 도구, footer는 주 행동 | ScreenLayout 슬롯 |
 | 고정·스크롤 | 헤더·notice·footer 고정, 본문 스크롤. 가상 목록은 별도 ScreenLayout + `scroll="content"` | ScreenLayout 상태·스크롤 엔진 |
 | 좁은 폭·큰 글자 | rows 1/1/1, cards 1/2/2, grid 1/2/3(compact/medium/expanded). 최소 열 폭 226(720 열에 grid 3열과 간격 2개가 들어가는 값)이며 실제 컨테이너·글자 배율로 열 수를 줄인다 | `resolveDesignProfileCollection`·Grid |

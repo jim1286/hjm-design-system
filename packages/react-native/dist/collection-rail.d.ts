@@ -22,8 +22,10 @@ export type CollectionRailProps<Item extends CollectionRailItem = CollectionRail
      * Place the rail directly in the body; inside overlays or `body-edge`/`none` bodies there is no gutter to cross.
      */
     bleed?: boolean;
+    /** Hide the button row when touch scrolling is the intended navigation. */
+    showNavigation?: boolean;
     layoutStyle?: HjmCompositionStyleProp;
     testID?: string;
 }>;
-export declare function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, layoutStyle, testID }: CollectionRailProps<Item>): import("react").JSX.Element;
+export declare function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, showNavigation, layoutStyle, testID }: CollectionRailProps<Item>): import("react").JSX.Element;
 //# sourceMappingURL=collection-rail.d.ts.map

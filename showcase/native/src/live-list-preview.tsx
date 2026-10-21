@@ -17,7 +17,7 @@ export function LiveListPreview() {
  const { items, paused, setPaused, message, add, remove, reverse, edit } = useLiveList();
  // The Storybook canvas does not scroll; growing rows need an explicit input-aware host.
  return <KeyboardAvoiding style={{ flex: 1 }}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: spacing.md }}><Stack gap="lg"><Text>메모를 입력한 뒤 기록을 추가하거나 순서를 바꿔 보세요. 기존 입력은 그대로 남아요.</Text>
-  <Stack axis="inline" gap="sm" wrap><Button onPress={() => add(1)}>기록 추가</Button><Button tone="secondary" onPress={() => add(3)}>3개 함께 추가</Button>
+  <Stack axis="inline" gap="xs" wrap><Button onPress={() => add(1)}>기록 추가</Button><Button tone="secondary" onPress={() => add(3)}>3개 함께 추가</Button>
    <Button tone="secondary" disabled={items.length < 2} onPress={reverse}>순서 뒤집기</Button><Button tone="secondary" disabled={items.length === 0} onPress={remove}>첫 기록 삭제</Button></Stack>
   <PreviewTools><PreviewToolButton selected={paused} onPress={() => setPaused(value => !value)}>움직임 멈추기</PreviewToolButton></PreviewTools>
   <PatternStatus>{message}</PatternStatus>

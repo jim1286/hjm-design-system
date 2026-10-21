@@ -24,7 +24,7 @@ host: 남은 높이·safe area·키보드
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | MediaSelectionScreen | route 본문 | [API 배치 규칙](../components/media-selection-screen.md#배치), host 남은 높이 |
-| 내용 | 공개 슬롯(`library`를 주면 기본 격자 대신 그것을 그린다) | 추가(헤더) → 썸네일 격자 → 선택 요약 → 완료(footer) | 기본 격자는 `Grid` 2열, `breakpoint.expanded` 960 이상 3열, 칸 사이 `spacing.md` 16. 칸 안은 미리보기 → UploadItem → 이동·제거 행(`spacing.xs` 8 세로, 버튼 사이 `spacing.xxs` 4) |
+| 내용 | 공개 슬롯(`library`를 주면 기본 격자 대신 그것을 그린다) | 추가(헤더) → 썸네일 격자 → 선택 요약 → 완료(footer) | 기본 격자는 `Grid` 2열, `breakpoint.expanded` 960 이상 3열, 칸 사이 `spacing.md` 16. 칸 안은 미리보기 → UploadItem → 이동·제거 행(`spacing.xs` 8 세로, 버튼 사이 `spacing.xs` 8) |
 | 상태 | state 또는 해당 API 상태 | 본문 자리·비차단 notice | 입력 중 실패는 본문 높이와 초안을 유지 |
 
 ## 버튼과 행동 위치

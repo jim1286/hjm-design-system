@@ -23,8 +23,10 @@ export type CollectionRailProps<Item extends CollectionRailItem = CollectionRail
      * `body-edge` + per-section gutter, spint home 2026-10-17). Place the rail directly in the body.
      */
     bleed?: boolean;
+    /** Hide the button row when touch scrolling is the intended navigation. */
+    showNavigation?: boolean;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
-export declare function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, layoutStyle, ...props }: CollectionRailProps<Item>): import("react").JSX.Element;
+export declare function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density, emptyContent, defaultStartKey, onStartKeyChange, bleed, showNavigation, layoutStyle, ...props }: CollectionRailProps<Item>): import("react").JSX.Element;
 //# sourceMappingURL=collection-rail.d.ts.map

@@ -29,6 +29,16 @@ export declare const semanticColors: {
             key: "surfaceAccent";
             alpha?: number;
         }>;
+        readonly statusNeutral: Readonly<{
+            source: "theme";
+            key: "neutralFill";
+            alpha?: number;
+        }>;
+        readonly statusStrong: Readonly<{
+            source: "theme";
+            key: "strongFill";
+            alpha?: number;
+        }>;
         /**
          * Loading placeholder fill (Skeleton, ListRow `loading`). A translucent text tint instead of an opaque
          * neutral: it darkens/lightens whatever it sits on, so it stays visible on canvas, Card surfaces and

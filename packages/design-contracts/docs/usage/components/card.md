@@ -80,6 +80,7 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `raised` | 테두리와 공통 raised shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
+| `badgesAlign` | `start` · `center` | `start` | 미게시. 들판 대표 카드처럼 그림 아래의 배지 묶음을 가운데 배치할 때 `center` 사용. 줄바꿈된 행에도 적용 |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |
 | `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |
@@ -205,7 +206,7 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 부모 폭을 채우고 높이는 내용이 정한다. 모서리 `radius.lg` 16, 테두리 기본 있음. `media` 자식은 폭 100%(비율은 [AspectRatio](aspect-ratio.md)로) | `cardRecipe.defaults`, `.hjm-card__media > *` |
-| 간격 | 본문 안쪽 `spacing.md` 16, 본문 요소 사이 `spacing.xs` 8, leading↔제목 `spacing.sm` 12. 행동 영역은 좌우·아래 `spacing.md` 16, 버튼 사이 `spacing.sm` 12. 카드 목록 사이 간격은 부모 [Stack](stack.md)·[Grid](grid.md)이 정한다 | `cardRecipe.body`·`header`·`actions`, `.hjm-card*` |
+| 간격 | 본문 안쪽 `spacing.md` 16, 본문 요소 사이 `spacing.xs` 8, leading↔제목 `spacing.sm` 12. 행동 영역은 좌우·아래 `spacing.md` 16, 버튼 사이 `spacing.xs` 8. 카드 목록 사이 간격은 부모 [Stack](stack.md)·[Grid](grid.md)이 정한다 | `cardRecipe.body`·`header`·`actions`, `.hjm-card*` |
 | 순서·정렬 | 위→아래 `media` → [`leading` + `title`/`description`] → `children` → `actions` 고정. leading은 시작 쪽 위 정렬. 행동은 시작 쪽부터 한 줄로 놓인다 | `cardRecipe.slots`, `.hjm-card__header`·`__actions` |
 | 고정·스크롤 | 고정 영역이 없다. 카드 안에서 스크롤 영역을 만들지 않는다(넘치면 `overflow: hidden`으로 잘린다) | `.hjm-card { overflow: hidden }` |
 | 좁은 폭·큰 글자 | 제목·설명이 줄바꿈되고, 행동은 줄바꿈된다(`flex-wrap: wrap`) | `.hjm-card__title`, `.hjm-card__actions`, `react-native/src/data-display.tsx` |

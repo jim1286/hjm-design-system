@@ -52,7 +52,7 @@
 │ ( ) 크게 보기                        │ │
 │ 안내: 적용해야 바뀐다                │ ↓
 ├──────────────────────────────────────┤
-│ Web:    [선택 취소] [선택 적용]       │ ← footer 고정, 오른쪽 정렬, gap 12
+│ Web:    [선택 취소] [선택 적용]       │ ← footer 고정, 오른쪽 정렬, gap 8
 │ Native: [ 선택 적용 ] / [ 선택 취소 ] │ ← 세로, 주 행동 먼저
 │ ░░ 하단 안전 영역(시트가 더함) ░░    │
 └──────────────────────────────────────┘
@@ -66,11 +66,11 @@
 | 트리거 | `Button`(primary) | 현재 값 아래 | `medium` 44(`control.buttonHeight`) |
 | 시트 머리 | `Sheet` 손잡이(+ `showClose`일 때 끝 ×) | 시트 위 고정 | 보이는 제목 없음, `title`은 접근성 이름(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다). × 머리 최소 높이 `control.minTouchTarget` 44 |
 | 선택지 | `RadioGroup`(`presentation="card"`, `accessibilityLabel` = 시트 `title`) | 시트 body, 스크롤 | 행 최소 높이 56(`layout.rowHeight.singleLine`), 항목 사이 `spacing.xs` 8(`selectionGroupRecipe`). 안내 문구와는 `Stack gap="md"` 16. 설치한 버전의 Sheet body gap과 중첩 여부를 확인하며 checkout 상태를 npm 게시 증거로 삼지 않는다 |
-| 행동 | `Button` 적용·취소 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.sm` 12(`sheetRecipe.footer.gap`), Native 위 여백 `spacing.sm` 12 |
+| 행동 | `Button` 적용·취소 | 시트 footer, 스크롤 밖 고정 | 간격 `spacing.xs` 8(`sheetRecipe.footer.gap`), Native 위 여백 `spacing.sm` 12 |
 | 시트 틀 | `Sheet` | 하단, 모달 | Web 최대 폭 640(`sheetRecipe.web.maxWidth`)·최대 높이 90%, Native 가로 여백 `spacing.lg` 20·최대 높이 90%(`maxHeightRatio` 0.9), 하단 안전 영역 추가 |
 
 - footer 순서는 [Sheet](../components/sheet.md) 배치 규칙을 따른다. Web footer는 오른쪽 정렬 가로 줄 **[취소][적용]**(보조 → 주 행동), Native footer는 세로 열이라
-  **적용(primary) 먼저, 취소(secondary) 아래**다. 두 renderer의 footer가 이미 `gap` 12를 주므로 버튼을 `Stack`으로 다시 감싸지 않는다.
+  **적용(primary) 먼저, 취소(secondary) 아래**다. 두 renderer의 footer가 이미 `gap` 8를 주므로 버튼을 `Stack`으로 다시 감싸지 않는다.
 - primary 개수: 화면에서는 트리거 하나, 시트 안에서는 적용 하나를 센다. 선택지는 RadioGroup이라 버튼으로 세지 않는다.
 - 선택지를 `selected` Button 나열로 만들지 않는다. 2026-10-16 사용자 지적으로 선택 버튼 줄이 테두리 없는 글자처럼 보였다. 하나 고르기는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)대로 RadioGroup(선택지가 짧은 2~4개면 SegmentedControl)을 쓴다. 의미(임시 선택 → 적용)는 같다.
 
@@ -189,7 +189,7 @@ Web `gutter`는 [화면 여백과 너비](../tokens/layout.md)처럼 폭 구간�
 
 - 시트 안에서 바뀌는 값(임시 선택·초안)은 **시트 밖**, 시트를 여는 화면의 state에 둔다.
 - 확정은 footer의 주 행동 하나만 한다. 닫기·바깥 누름·back은 확정하지 않는다.
-- footer 버튼은 Web [보조][주], Native 주 → 보조 순서로 바로 넘긴다. renderer footer가 간격 12를 준다.
+- footer 버튼은 Web [보조][주], Native 주 → 보조 순서로 바로 넘긴다. renderer footer가 간격 8를 준다.
 - `returnFocusRef`로 닫힌 뒤 포커스를 트리거에 돌려준다. Native는 Button을 `View ref collapsable={false}`로 감싸 ref를 넘긴다.
 - 서버에 저장하는 확정이면 저장 중 Sheet `busy`로 닫기를 막고, 실패하면 시트와 시트 밖 값(임시 선택·초안)을 그대로 둔다.
 - 시트가 닫힌 뒤 다른 모달을 열거나 화면을 옮기면 `onDismissComplete`에서 한다.

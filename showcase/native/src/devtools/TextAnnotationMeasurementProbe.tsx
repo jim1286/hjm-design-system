@@ -29,8 +29,8 @@ export function TextAnnotationMeasurementProbe() {
         {' 뒤 문장'}
       </Text>
     </View>
-    <Button onPress={() => setNarrow(value => !value)}>폭 변경</Button>
-    <Button onPress={() => fragment.current?.measure((x, y, width, height) => { const value = JSON.stringify({ x, y, width, height }); setMeasure(value); console.log('HJM_ANNOTATION_MEASURE', value); })}>조각 측정</Button>
+    <Stack gap="xs"><Button onPress={() => setNarrow(value => !value)}>폭 변경</Button>
+    <Button onPress={() => fragment.current?.measure((x, y, width, height) => { const value = JSON.stringify({ x, y, width, height }); setMeasure(value); console.log('HJM_ANNOTATION_MEASURE', value); })}>조각 측정</Button></Stack>
     <Text>{`부모 줄 ${parent} / 조각 줄 ${nested}`}</Text>
     <Text>{`조각 layout ${layout}`}</Text>
     <Text>{`조각 measure ${measure}`}</Text>

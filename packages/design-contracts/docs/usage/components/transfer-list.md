@@ -80,7 +80,7 @@ import { TransferList } from "@hjmds/react-native/transfer-list";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 페이지 폭 전체. 패널 머리(Web)·전체 선택 행(Native)·항목 행 최소 높이 `control.minTouchTarget` 44. Web 패널 테두리 1px, `radius.md` 12. 이동 버튼은 Button `secondary` `medium`(44). 패널 높이 상한은 HJM이 정하지 않는다 | `transferListRecipe.panelHeader`, `.hjm-transfer-list__*`, `react-native/src/transfer-list.tsx` |
-| 간격 | Web 열 간격 `spacing.md` 16, 이동 버튼 열은 위에서 `spacing.xl` 24 내려와 버튼 사이 `moveControls.gap` `spacing.sm` 12. 머리 좌우 여백 `spacing.sm` 12, 목록 안쪽 여백 `spacing.xxs` 4, 행 좌우 여백·요소 사이 `collectionItemContract` `spacing.sm` 12(모서리 `radius.md`). Native 블록 사이·버튼 사이 `spacing.sm` 12 | `.hjm-transfer-list`, `.hjm-transfer-list__actions`, Native `gap: spacing.sm` |
+| 간격 | Web 열 간격 `spacing.md` 16, 이동 버튼 열은 위에서 `spacing.xl` 24 내려와 버튼 사이 `moveControls.gap` `spacing.xs` 8. 머리 좌우 여백 `spacing.sm` 12, 목록 안쪽 여백 `spacing.xxs` 4, 행 좌우 여백·요소 사이 `collectionItemContract` `spacing.sm` 12(모서리 `radius.md`). Native 블록 사이 `spacing.md` 16, 이동 버튼 사이 `spacing.xs` 8 | `.hjm-transfer-list`, `.hjm-transfer-list__actions`, Native `gap: transferListRecipe.moveControls.gap` |
 | 순서·정렬 | Web 넓은 폭: `[source 패널] [이동 버튼 열] [target 패널]`. Native: source 라벨 → source 패널 → 이동 버튼 줄(가운데 정렬) → target 라벨 → target 패널. 주 행동(저장)은 컴포넌트 밖 폼 하단 | `react/src/transfer-list.tsx`, `react-native/src/transfer-list.tsx` |
 | 고정·스크롤 | 화면 본문의 폼 영역에 두고 화면과 함께 스크롤한다 | — |
 | 좁은 폭·큰 글자 | Web은 폭 30rem(480) 이하에서 한 열로 쌓여 source → 버튼 → target. Native는 항상 세로 | `@media (max-width: 30rem)` |

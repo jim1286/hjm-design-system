@@ -30,8 +30,8 @@
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
 | `canvas` = `bg` | `#ffffff` / `#0d1116` | `--hjm-color-bg` | `theme.colors.bg` | 화면 바탕. 카드·패널(Surface·Card)도 모든 tone이 `bg`를 칠하고 층은 테두리·그림자로 나눈다 |
-| `surface.default` = `surface` | `#f2f4f6` / `#161b22` | `--hjm-color-surface` | `theme.colors.surface` | 바탕과 구분되는 옅은 면 |
-| `surface.sunken` = `surfaceAlt` | `#e5e8eb` / `#1e232a` | `--hjm-color-surface-alt` | `theme.colors.surfaceAlt` | 한 단계 더 들어간 면(CodeBlock 바탕) |
+| `surface.default` = `surface` | `#ffffff` / `#161b22` | `--hjm-color-surface` | `theme.colors.surface` | 바탕과 구분되는 옅은 면 |
+| `surface.sunken` = `surfaceAlt` | `#ebeef2` / `#1e232a` | `--hjm-color-surface-alt` | `theme.colors.surfaceAlt` | 한 단계 더 들어간 면(CodeBlock 바탕) |
 | `surface.brand` = `surfaceAccent` | `#c9e2ff` / `#224159` | `--hjm-color-surface-accent` | `theme.colors.surfaceAccent` | 브랜드가 드러나는 옅은 면 |
 
 ### 글자
@@ -156,3 +156,9 @@ import { HjmProvider } from "@hjmds/react/provider";
 컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
 직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
 프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.
+
+### 밝은 테마 표면 기본값 (2026-10-21)
+
+표·표면의 회색 면을 줄이려는 사용자 결정으로 `surface`는 흰색 `#ffffff`,
+`surfaceAlt`는 보조 회색 `#ebeef2`를 사용한다. 페이지 바탕 `bg`는 흰색이며,
+표 본문은 `surface`, `raised` 카드는 `bg`를 소비한다. 근거는 [팔레트 결정 기록](../../theme-palette.md)을 따른다.

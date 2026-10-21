@@ -33,8 +33,8 @@ export type SplitActionProps = Readonly<{
 export function SplitAction(props: SplitActionProps) {
   const mode = resolveTaskChoice(props.modes, props.modeId), action = useCompositionAction(props.disabled);
   const locked = props.disabled === true || action.pending;
-  // The mode menu is a chevron tool at the action's end, inline gap 12 (button.md); a second text button read as an unrelated action (2026-10-17 review).
-  return <Stack gap="sm"><Stack axis="inline" gap="sm" align="center">
+  // The mode menu is a chevron tool at the action's end, shared inline gap 8 (button.md); a second text button read as an unrelated action (2026-10-17 review).
+  return <Stack gap="sm"><Stack axis="inline" gap="xs" align="center">
     <Button loading={action.pending} disabled={props.disabled === true || mode.disabled === true} onClick={() => { if (!mode.disabled) void action.run(mode.id, () => props.onExecute(mode.id)); }}>{props.executeLabel(mode)}</Button>
     <ChoiceMenu trigger="icon" choices={props.modes} selectedId={mode.id} label={props.menuLabel} dismissLabel={props.dismissLabel} disabled={locked} onChoose={id => { if (!locked && !resolveTaskChoice(props.modes, id).disabled) props.onModeChange(id); }} />
   </Stack><Failure failed={action.failed} label={props.errorLabel} /></Stack>;

@@ -148,7 +148,7 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭(렌더 값): Native는 recipe 최대 폭 `small` 320 · `medium` 420 · `large` 640. Web은 `small` 28rem · `medium` 36rem · `large` 48rem이며 뷰포트 폭 − 32를 넘지 않는다. 닫기 버튼 44×44(`control.minTouchTarget`) | `src/component-recipes.ts`(`dialogRecipe`), `packages/react/src/styles.css` `.hjm-dialog*` |
-| 간격 | 화면 가장자리와 최소 `spacing.md` 16. Web: 머리 위·좌우 `spacing.lg` 20, 본문 사방 `spacing.lg` 20, footer 좌우·아래 `spacing.lg` 20, footer 버튼 간격 `spacing.sm` 12. Native: 안쪽 `small` `spacing.lg` 20 · `medium`/`large` `spacing.xl` 24, 영역 사이 `spacing.md` 16, 제목–설명 `spacing.xs` 8, 머리–닫기 `spacing.sm` 12, 버튼 간격 `spacing.sm` 12 | `packages/react/src/styles.css` `.hjm-overlay`, `packages/react-native/src/overlays.tsx`(`Dialog`, `OverlayActions`) |
+| 간격 | 화면 가장자리와 최소 `spacing.md` 16. Web: 머리 위·좌우 `spacing.lg` 20, 본문 사방 `spacing.lg` 20, footer 좌우·아래 `spacing.lg` 20, footer 버튼 간격 `spacing.xs` 8. Native: 안쪽 `small` `spacing.lg` 20 · `medium`/`large` `spacing.xl` 24, 영역 사이 `spacing.md` 16, 제목–설명 `spacing.xs` 8, 머리–닫기 `spacing.sm` 12, 버튼 간격 `spacing.xs` 8 | `packages/react/src/styles.css` `.hjm-overlay`, `packages/react-native/src/overlays.tsx`(`Dialog`, `OverlayActions`) |
 | 순서·정렬 | 화면 가운데에 뜨고 뒤는 scrim이 덮는다. 위에서 머리(제목·설명 \| 닫기) → 본문 → 행동 영역. 닫기 버튼은 머리 끝. 행동 순서는 **보조 → 주**. Web footer는 끝 정렬. Native는 두 버튼을 같은 폭으로 나란히 둔다. 버튼은 둘까지 둔다(Native `primaryAction`·`secondaryAction`). 파괴 행동은 `tone: "danger"`이지만 확인만 받는다면 [AlertDialog](alert-dialog.md)다 | 같은 파일 |
 | 고정·스크롤 | Web은 대화상자 전체 높이가 뷰포트 − 32이고 넘치면 대화상자 안에서 스크롤한다. Native는 safe area 안의 가용 높이를 제한하고 머리 줄(제목·닫기)을 스크롤 밖에 고정한다. 설명과 본문은 함께 내부 ScrollView(`DialogScrollBody`)에서 전체 폭으로 스크롤하고, 행동도 스크롤 밖에 유지한다. 그래서 긴 본문을 스크롤해도 닫기에 닿는다. 목록 탐색처럼 긴 작업은 [Sheet](sheet.md)를 선택한다 | `packages/react-native/src/overlays.tsx` `Dialog`·`DialogScrollBody` |
 | 좁은 폭·큰 글자 | Web footer는 넘치면 줄바꿈한다. Native는 `textScale ≥ 1.6`이거나 창 폭 < 480이면 버튼을 세로로 쌓고, 이때 보조가 위·주 행동이 아래다 | `packages/react-native/src/overlays.tsx` |
@@ -224,7 +224,7 @@ Native 입력 본문의 키보드 회피는 Dialog가 이미 맡는다(위 키�
 
 - Native는 `presentationStyle="fullScreen"` Modal에서 상태 표시줄을 숨기고 세로·가로 회전을 허용한다(`dialogRecipe.immersive.orientations`, 앱이 세로 고정이어도 이 표현은 회전한다). 무대는 화면 끝까지 그려지므로 읽어야 할 내용은 가운데 두거나 `useHjmNativeSafeAreaInsets`로 가장자리 절개를 피한다.
 - Web은 viewport 전체를 덮는 고정 층이다. 브라우저 Fullscreen API는 요청하지 않는다. 새 사용자 활성화가 필요하고, 그 Escape는 페이지가 받기 전에 전체 화면만 끝내 오버레이가 창 안에 남으며, iOS Safari는 요소 전체 화면을 지원하지 않는다.
-- 행동 줄 간격: 안쪽 `spacing.md` 16(아래·좌우는 safe area와 큰 값), 상태–행동 `spacing.xs` 8, 행동 사이 `spacing.sm` 12. 나가기 버튼은 `size="large"`로 남은 폭을 채운다.
+- 행동 줄 간격: 안쪽 `spacing.md` 16(아래·좌우는 safe area와 큰 값), 상태–행동 `spacing.xs` 8, 행동 사이 `spacing.xs` 8. 나가기 버튼은 `size="large"`로 남은 폭을 채운다.
 - 화면 꺼짐 방지·움직임 같은 무대 동작은 제품 소유다.
 
 ```tsx

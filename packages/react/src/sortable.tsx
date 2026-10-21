@@ -28,7 +28,7 @@ function Row({ item, index, children, disabled, reduced, labels, move, count }: 
     <Button ref={handleRef} tone="ghost" type="button" disabled={disabled || item.disabled} aria-label={labels.handle(item)}
       style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }}>⠿</Button>
     <div style={{ minWidth: 0, overflowWrap: "anywhere" }}>{children}</div>
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--hjm-space-xs)" }}>
       <IconButton tone="ghost" data-sortable-move="previous" label={labels.previous(item)} disabled={disabled || item.disabled || index === 0} onClick={() => move(index - 1)}><Icon name="chevronUp" /></IconButton>
       <IconButton tone="ghost" data-sortable-move="next" label={labels.next(item)} disabled={disabled || item.disabled || index === count - 1} onClick={() => move(index + 1)}><Icon name="chevronDown" /></IconButton>
     </div>

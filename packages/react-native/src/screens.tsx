@@ -1,6 +1,6 @@
 import type { ComponentRef } from "react";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { iconButtonRecipe, topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -120,8 +120,9 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("ScreenLayout safeAreaTop must be non-negative");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
   if (pullToDismiss && (exit?.kind !== "close" || scroll !== "screen" || header != null)) throw new TypeError("ScreenLayout pullToDismiss requires its own close exit and screen scrolling");
-  const dismissal = useScreenPullDismiss(pullToDismiss && !exit?.disabled, exit?.onPress, testID);
-  const leading = exit ? <ScreenExitButton {...exit} /> : null;
+  const dismissal = useScreenPullDismiss(pullToDismiss && !exit?.disabled, exit?.onPress, testID, exit?.label);
+  // A pull-dismiss sheet exposes its close action on the handle, without a second header row.
+  const leading = exit && !pullToDismiss ? <ScreenExitButton {...exit} /> : null;
   const insideAvoidance = useInsideKeyboardAvoidance();
   const avoidKeyboard = keyboardAvoidance && !insideAvoidance;
   const rootRef = useRef<ComponentRef<typeof View>>(null);
@@ -207,14 +208,14 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
         {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{mark}<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>{titleBadge}</Stack> : standaloneMark(true)}
       </View>
       <View style={{ minWidth: sideWidth, flexShrink: 0, alignItems: "flex-end" }}>
-        <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{actions}</View>
+        <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center", gap: topBarRecipe.gap }}>{actions}</View>
       </View>
     </View> : <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
         {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
         {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap>{mark}<Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>{titleBadge}</Stack> : standaloneMark(!!profileLayout?.centered)}
-      </View>{actions}
+      </View><Stack axis="inline" align="center" gap={topBarRecipe.gap}>{actions}</Stack>
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
     {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
@@ -482,16 +483,20 @@ export type CompositionLayoutProps = Readonly<{
   notice?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
+  /** Passive supporting artwork beside the heading and body; never a header action. */
+  aside?: ReactNode;
+  /** Secondary footer metadata; wraps rather than squeezing the main footer. */
+  footerAside?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   // Compact section titles follow the 2026-10-19 mobile typography direction; headingLevel still owns document semantics.
-  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+  const content = <>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
       {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
@@ -504,7 +509,18 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center", gap: screenPatternRecipe.itemGap }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant={resolved.titleVariant} align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
       {stateAction}
     </Stack>}
-    {footer}
+  </>;
+  // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
+  // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.
+  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+    {aside ? <Stack axis="inline" gap="md" align="start">
+      <Stack gap="md" layoutStyle={{flex: 1, minWidth: 0}}>{content}</Stack>
+      <Stack layoutStyle={{flexShrink: 0, maxWidth: "40%"}}>{aside}</Stack>
+    </Stack> : content}
+    {footerAside ? <Stack axis="inline" gap="xs" align="center" justify="between" wrap>
+      {footer ? <Stack layoutStyle={{flexGrow: 1, minWidth: 0}}>{footer}</Stack> : null}
+      {footerAside}
+    </Stack> : footer}
   </Stack>;
 }
 

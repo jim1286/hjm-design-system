@@ -59,7 +59,7 @@ import { ShortcutRecorder } from "@hjmds/react/authoring-tools";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 기록 영역 최소 높이 44, 기록 중 2px 외곽선 | Web `ShortcutRecorder` |
-| 간격 | 영역·버튼 줄·상태 사이 `Stack gap="md"`(16), 버튼 사이 `sm`(12) | 같은 구현 |
+| 간격 | 영역·버튼 줄·상태 사이 `Stack gap="md"`(16), 버튼 사이 `xs`(8) | 같은 구현 |
 | 순서·정렬 | 기록 영역(가운데 정렬: 기록 중 안내/초안/현재 값/빈 문구) → [기록] [등록] [취소] → 상태 문구 → 실패 문구(가운데) | 렌더 순서 |
 | 고정·스크롤 | 자체 고정·스크롤 없음 | 별도 scroller 없음 |
 | 좁은 폭·큰 글자 | 버튼 줄은 inline Stack(줄바꿈 미지정), 문구는 Text로 줄바꿈 | Web 구현 |

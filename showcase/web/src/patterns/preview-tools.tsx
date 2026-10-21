@@ -6,7 +6,7 @@ import { Chip } from "@hjmds/react/selection";
 // 2026-10-16 composition review: demo-only controls (failure toggles, motion switches) looked like product
 // actions. They live under one quiet "미리보기 도구" caption, separated from the composition itself.
 export function PreviewTools({ children }: { children: ReactNode }) {
-  return <Stack gap="xs" role="group" aria-label="미리보기 도구"><Text tone="muted" variant="caption">미리보기 도구</Text><Stack axis="inline" gap="sm" wrap>{children}</Stack></Stack>;
+  return <Stack gap="xs" role="group" aria-label="미리보기 도구"><Text tone="muted" variant="caption">미리보기 도구</Text><Stack axis="inline" gap="xs" wrap>{children}</Stack></Stack>;
 }
 /** The story canvas is the product route: tools and notices take their content height and the screen fills the rest,
  * as the Native preview host gives ScreenLayout its remaining height. Screen stories render edge-to-edge, so the route is

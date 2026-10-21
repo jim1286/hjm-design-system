@@ -3,6 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
+import { SegmentedControl } from "../src/selection.js";
 import { Tabs } from "../src/navigation.js";
 import { HjmProvider } from "../src/provider.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
@@ -154,4 +155,21 @@ it("moves the filled pill behind the labels when the indicator slides", async ()
   const tab = host.querySelector<HTMLElement>('[role="tab"]')!;
   expect(indicator.getBoundingClientRect().height).toBeCloseTo(tab.getBoundingClientRect().height, 0);
   expect(getComputedStyle(tab).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+});
+
+it("uses the same brand fill and contrasting content for solid tabs and pill selection", async () => {
+  await act(async () => root.render(<HjmProvider theme="light" reducedMotion brandPalette={{light:{primary:'#0B8045',onPrimary:'#FFFFFF'}}}>
+    <Tabs label="Letter views" indicator="solid" defaultValue="journey" items={[
+      {id:'letter',label:'Letter',panel:'Letter body'}, {id:'journey',label:'Journey log',panel:'Journey body'},
+    ]} />
+    <SegmentedControl label="Discovery" presentation="pills" selectionTone="brand" defaultValue="world" items={[
+      {value:'nearby',label:'Nearby'}, {value:'world',label:'World'},
+    ]} />
+  </HjmProvider>));
+  const tab=host.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')!;
+  const segment=host.querySelector<HTMLElement>('.hjm-segmented__item[data-state="checked"]')!;
+  expect(getComputedStyle(tab).backgroundColor).toBe('rgb(11, 128, 69)');
+  expect(getComputedStyle(tab).color).toBe('rgb(255, 255, 255)');
+  expect(getComputedStyle(segment,'::before').backgroundColor).toBe('rgb(11, 128, 69)');
+  expect(getComputedStyle(segment).color).toBe('rgb(255, 255, 255)');
 });

@@ -93,6 +93,12 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
 | `disabled`(NotificationBell) | `true` · `false` | `false` | — |
 | Web `layoutStyle`(NotificationBell) | `HjmCompositionStyleProp` | — | 루트 배치. 기본 `alignSelf: "flex-start"`보다 우선하지만 `width`는 무시된다(루트는 항상 `max-content`). 떠 있는 배지가 루트의 끝 모서리에 붙어 있어 루트가 넓어지면 아이콘에서 떨어지기 때문이다. margin·`alignSelf`로 배치한다. 1.13.0 변경 |
 
+### 상단 도구 예외
+
+2026-10-21 사용자 승인: 상단 도구 줄은 `size="small" hitSlop={0}`, 버튼 영역 사이 `spacing.xxs` 4를 사용한다. 제품 앱·웹 Provider의 `minimumVisualTarget`은 끈다. 일반 작은 버튼의 기본 확장 4와 본문·하단 행동 간격 8은 유지한다. [TopBar 공통 크기](top-bar.md#상단-도구의-공통-크기)를 따른다.
+
+`hitSlop`은 Web에서 0 이상의 px 수치, Native에서 RN `PressableProps['hitSlop']`다. Web은 포인터 확장용 pseudo-element에 반영하고 DOM 속성으로 전달하지 않는다. 생략하면 기존 크기 recipe의 확장을 유지한다.
+
 ## 배치
 
 | 항목 | 값 | 근거 |

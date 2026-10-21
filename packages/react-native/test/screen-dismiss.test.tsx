@@ -74,8 +74,9 @@ it('only dismisses a new scroll pull begun at the top and preserves host scrolli
 it('retains one accessible close action and cancels held input when exit becomes disabled', () => {
   const { close, config } = pan();
   const handle = tree!.root.findAllByType(Pressable).find(node => node.props.testID === 'hjm-screen-dismiss-handle')!;
-  expect(handle.props.accessible).toBe(false);
-  expect(handle.props.accessibilityElementsHidden).toBe(true);
+  expect(handle.props.accessible).toBe(true);
+  expect(handle.props.accessibilityRole).toBe("button");
+  expect(handle.props.accessibilityLabel).toBe("Close");
   expect(tree!.root.findAllByType(Pressable).filter(node => node.props.accessibilityLabel === 'Close')).toHaveLength(1);
   act(() => { config.onPanResponderGrant?.(event, gesture(0)); });
   render({ exit: { kind: 'close', label: 'Close', onPress: close, disabled: true } });

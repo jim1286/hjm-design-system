@@ -80,8 +80,9 @@ export declare function resolveStepsDescriptor<Id extends string>(descriptor: St
 export declare const stepsRecipe: {
     readonly slots: readonly ["root", "step", "indicator", "marker", "connector", "label", "description"];
     readonly gap: 8;
+    readonly paddingInline: 16;
     readonly indicator: {
-        readonly size: 24;
+        readonly size: 44;
         readonly borderWidth: 1;
         readonly activeBorderWidth: 2;
         /** null means the renderer shows the step's own position number instead of a glyph. */

@@ -42,7 +42,7 @@ export function AvatarFacePreview() {
           </Stack>
           <Stack gap="md"><Text variant="title" role="heading" aria-level={2}>{copy.preferences}</Text><Switch label={copy.notification} description={copy.notificationHint} checked={draft.notifications} onCheckedChange={notifications => change({ notifications })} /></Stack>
           <Stack gap="md"><Text as="p" role="status" tone="muted">{applied ? copy.saved : copy.draft}</Text>
-            <Stack axis="inline" wrap gap="sm" justify="end">
+            <Stack axis="inline" wrap gap="xs" justify="end">
               <Button type="button" tone="secondary" disabled={!dirty} onClick={() => { setDraft(saved); setApplied(false); }}>{copy.reset}</Button>
               <Button type="submit" disabled={!dirty || !draft.name.trim()}>{copy.save}</Button>
             </Stack></Stack>

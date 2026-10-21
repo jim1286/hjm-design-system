@@ -87,14 +87,15 @@ describe("Native TopBar product API", () => {
       expect(style.backgroundColor === "transparent").toBe(surface === "transparent");
       expect(style.minHeight).toBe(topBarRecipe.minHeight);
       const action = renderer.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "설정")!;
-      expect(resolvedPressableStyle(action).minHeight).toBeGreaterThanOrEqual(44);
+      expect(resolvedPressableStyle(action).minHeight).toBe(36);
+      expect(action.props.hitSlop).toBe(0);
       act(() => action.props.onPress());
       expect(onPress).toHaveBeenCalledOnce();
       act(() => renderer.unmount());
     }
   });
 
-  it("supports title-optional action-only and back-only toolbars with 44pt targets", () => {
+  it("supports title-optional action-only and back-only toolbars with 36pt targets", () => {
     const renderer = render(
       <>
         <TopBar

@@ -67,10 +67,10 @@ import { ConversionFunnel } from "@hjmds/react-native/data-workflows";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 가로 막대 차트(`orientation="horizontal"`), 높이는 BarChart 기본 `chartRecipe.heights.regular` 180 | 양 renderer, [Chart](chart.md) |
-| 간격 | 제목·차트·단계 버튼 행·상세 문구 사이 `spacing.md` 16, 단계 버튼 사이 `spacing.sm` 12 | `Stack gap="md"`, `Stack axis="inline" gap="sm"` |
-| 순서·정렬 | 제목(strong) → 막대 차트 → 단계 버튼(ghost, 선택 표시) → 상세 문구 | 양 renderer |
+| 간격 | 제목·차트·단계 선택·상세 문구 사이 `spacing.md` 16, 단계 선택은 SegmentedControl의 연결된 컨트롤 계약 | `Stack gap="md"`, `SegmentedControl` |
+| 순서·정렬 | 제목(strong) → 막대 차트 → SegmentedControl 단계 선택 → 상세 문구 | 양 renderer |
 | 고정·스크롤 | 자체 스크롤 없음 | — |
-| 좁은 폭·큰 글자 | 단계 버튼 행은 줄바꿈(`wrap`), 차트는 가로만 줄어든다 | `Stack wrap`, [Chart](chart.md) |
+| 좁은 폭·큰 글자 | 단계 선택은 SegmentedControl의 좁은 폭 배치를 따르고, 차트는 가로만 줄어든다 | [SegmentedControl](segmented-control.md), [Chart](chart.md) |
 
 ## 꼭 지킬 것
 

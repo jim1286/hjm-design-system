@@ -56,10 +56,10 @@ Grid columns {compact 1 · expanded 2}(창 폭 960 이상 두 열) gap xl 24
 | ② 미리보기 | Stack `gap="sm"` > Surface `padding="md"` > `canvas`(`role="img"`, `aria-label`=제목 + 프레임) + ③ | 왼쪽 열(한 열이면 맨 위) | 안쪽 `spacing.md` 16, 폭 100%, 최대 높이 70vh |
 | ④⑤ 파일·상태 | FilePicker ×2(화면 캡처: PNG·JPEG·WebP·20MB / 장면 설정: JSON·64KB) · Text `role="status"` | 오른쪽 열 맨 위 | 사이 24 |
 | 실패 | ScreenLayout `notice` > Notice `tone="danger"`(내보내기 실패면 `action` 다시 내보내기) | 헤더 아래 고정, 실패 동안 상태 문구 대신 | 거부된 파일도 읽기 실패와 같은 Notice. 본문 밖이라 재시도 버튼이 사라져도 본문 초점 복구가 PNG 행동 복귀를 가로채지 않는다 |
-| ⑥ 타임라인 | Stack `gap="md"` > Heading `level="level5"` `semanticLevel={2}` · 재생 줄(IconButton ×2 + Slider) · 설정 선택 · Button 줄 | 상태 아래 | 사이 `spacing.md` 16, 재생 줄 `Stack axis="inline" gap="sm" align="end"` 12(Slider가 남은 폭), 버튼 줄 `wrap gap="sm"` 12 |
+| ⑥ 타임라인 | Stack `gap="md"` > Heading `level="level5"` `semanticLevel={2}` · 재생 줄(IconButton ×2 + Slider) · 설정 선택 · Button 줄 | 상태 아래 | 사이 `spacing.md` 16, 재생 줄 `Stack axis="inline" gap="xs" align="end"` 8(Slider가 남은 폭), 버튼 줄 `wrap gap="xs"` 8 |
 | ⑦⑨ 텍스트 입력 | TextField ×4 | 타임라인 아래·선택 묶음 아래 | 높이 44(`control.fieldHeight`) |
 | ⑧ 선택 묶음 | Stack `gap="xs"` > Text `emphasis="strong"`(보이는 제목) + SegmentedControl(`label` = 같은 제목), 그림자는 Switch `presentation="row"` | 텍스트 입력 사이 | 제목과 컨트롤 사이 `spacing.xs` 8, 묶음 사이 24. SegmentedControl 항목 최소 44 |
-| ⑩ 내보내기 줄 | ScreenLayout `footer` > Stack `axis="inline" wrap gap="sm"` > Button ×3 | 화면 아래 고정 | 사이 12 |
+| ⑩ 내보내기 줄 | ScreenLayout `footer` > Stack `axis="inline" wrap gap="xs"` > Button ×3 | 화면 아래 고정 | 사이 8 |
 
 ## 버튼과 행동 위치
 

@@ -14,7 +14,7 @@ export function ThemeSample(){
  return <Surface padding="lg"><Stack gap="md">
  <Text variant="heading">오늘의 기록</Text><Text>한글과 English, 숫자 123을 함께 확인해요.</Text>
  <Stack axis="inline" gap="sm"><Icon name="notifications" decorative renderGlyph={glyph}/><Text>알림을 확인해요</Text></Stack>
- <Button onClick={()=>setSaved(true)}>기록 저장</Button><Button disabled>저장할 내용이 없어요</Button>
+ <Stack gap="xs"><Button onClick={()=>setSaved(true)}>기록 저장</Button><Button disabled>저장할 내용이 없어요</Button></Stack>
  <TextField label="기록 이름" value={name} onValueChange={setName}/><TextField label="공유 주소" value="" onValueChange={()=>{}} error="주소를 확인해 주세요."/>
  <Notice tone={saved?"success":"info"} title={saved?"미리보기 기록을 저장했어요":"변경 내용은 미리보기에서만 적용돼요"} description="실제 제품의 설정은 바뀌지 않아요."/>
  <Notice tone="warning" title="동기화 대기 중" description="연결되면 다시 시도할 수 있어요."/>

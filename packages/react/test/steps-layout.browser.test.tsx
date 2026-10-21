@@ -5,7 +5,7 @@ import { HjmProvider } from "../src/provider.js";
 import { Steps } from "../src/steps.js";
 import "../src/styles.css";
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT = true;
-it("aligns terminal markers to the container edges at narrow and wide widths", async () => {
+it("insets terminal markers and keeps them readable at narrow and wide widths", async () => {
   const host = document.createElement("div"); document.body.append(host);
   const root = createRoot(host);
   try {
@@ -18,8 +18,9 @@ it("aligns terminal markers to the container edges at narrow and wide widths", a
           composeAccessibleName={({label})=>label} /></HjmProvider>));
         const list = host.querySelector("ol")!, marks = host.querySelectorAll(".hjm-steps__indicator");
         const bounds = list.getBoundingClientRect();
-        expect(Math.abs(marks[0]!.getBoundingClientRect().left - bounds.left)).toBeLessThan(1);
-        expect(Math.abs(marks[count-1]!.getBoundingClientRect().right - bounds.right)).toBeLessThan(1);
+        expect(Math.abs(marks[0]!.getBoundingClientRect().left - bounds.left - 16)).toBeLessThan(1);
+        expect(Math.abs(marks[count-1]!.getBoundingClientRect().right - bounds.right + 16)).toBeLessThan(1);
+        expect(marks[0]!.getBoundingClientRect().width).toBe(44);
         expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth);
         expect(host.querySelectorAll('[aria-current="step"]')).toHaveLength(1);
       }

@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "reac
 import { AccessibilityInfo, Platform, View } from "react-native";
 import { ResumableZoom, type ResumableZoomRefType } from "react-native-zoom-toolkit";
 import { resolveImageInspectionGeometry, type ImageInspectionMode } from "@hjmds/design-contracts/components/image";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "../actions.js";
 import { Surface, Text } from "../primitives.js";
 
@@ -86,7 +87,7 @@ export function ImageInspection({ imageSize, config, controlsInset, feedbackLabe
       </View> : null}
     </View>
     <View style={controlsInset}>
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }}>
         <Button growWithContent tone="ghost" disabled={!ready || !geometry?.panBounds.x} onPress={() => move(-1, 0)}>{config.labels.left}</Button>
         <Button growWithContent tone="ghost" disabled={!ready || !geometry?.panBounds.x} onPress={() => move(1, 0)}>{config.labels.right}</Button>
         <Button growWithContent tone="ghost" disabled={!ready || !geometry?.panBounds.y} onPress={() => move(0, -1)}>{config.labels.up}</Button>

@@ -157,5 +157,6 @@ export const resultRecipe = {
     textVariant: "body",
     color: semanticColors.content.secondary,
   },
-  actionsGap: spacing.sm,
+  // Keep result actions on the shared 8px button-group rhythm.
+  actionsGap: spacing.xs,
 } as const;

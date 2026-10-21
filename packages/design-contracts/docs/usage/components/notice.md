@@ -96,7 +96,7 @@ import { Notice } from "@hjmds/react-native/feedback";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 1(`stroke.default`), radius `radius.md` 12 | `noticeRecipe` |
-| 간격 | 안쪽 `spacing.md` 16, 아이콘·문구·행동 사이 `spacing.sm` 12, 제목·설명 사이 `spacing.xxs` 4. 이웃 블록과는 `layout.contentGap` 16 | `noticeRecipe`, `.hjm-notice*` |
+| 간격 | 안쪽 `spacing.md` 16, 아이콘·문구·행동 사이 `spacing.xs` 8, 제목·설명 사이 `spacing.xxs` 4. 이웃 블록과는 `layout.contentGap` 16 | `noticeRecipe`, `.hjm-notice*` |
 | 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래**. Web은 제목·설명 전체 묶음과 행동의 세로 중심을 행 높이의 중앙에 맞춘다. 첫 줄에 버튼 높이 기반 여백을 더하지 않는다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
 | 고정·스크롤 | 본문 흐름 안. 먼저 읽어야 하는 경고·입력 오류는 영향을 받는 내용 바로 위(화면 상태는 제목 아래, 폼 검증은 제출 버튼 위). 제출 후 성공·실패 결과는 구성 지침이 지정한 행동 인접 위치에 둔다. 떠 있거나 고정되지 않고 함께 스크롤되며 여러 개 쌓지 않는다 | — |
 | 좁은 폭·큰 글자 | Web은 문구 칸이 60% 아래로 줄면 행동이 다음 줄로 감긴다. 제목·설명은 줄바꿈된다 | `.hjm-notice__content`(`flex: 1 1 60%`) |

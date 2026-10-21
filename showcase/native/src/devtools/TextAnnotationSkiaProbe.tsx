@@ -48,7 +48,7 @@ export function TextAnnotationSkiaProbe() {
   const geometry = resolveTextAnnotationGeometry(measured.merged, 'highlight');
   return <Stack gap="md">
     <Text>Skia 문장 범위 진단</Text>
-    <Stack axis="inline" wrap>
+    <Stack axis="inline" wrap gap="xs">
       <Button onPress={() => setSampleIndex(value => (value + 1) % samples.length)}>다음 문장</Button>
       <Button onPress={() => setNarrow(value => !value)}>폭 변경</Button>
     </Stack>

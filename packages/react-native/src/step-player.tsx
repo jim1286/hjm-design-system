@@ -28,7 +28,7 @@ export function StepPlayer({ descriptor, statusLabels, composeAccessibleName, pr
     <Steps descriptor={descriptor} statusLabels={statusLabels} composeAccessibleName={composeAccessibleName} />
     {children}
     <Progress label={labels.progress} value={progress} max={1} />
-    <Stack axis="inline" gap="sm">
+    <Stack axis="inline" gap="xs">
       <Button disabled={disabled} onPress={() => onPlayingChange(!playing)}>{playing ? labels.pause : labels.play}</Button>
       <Button disabled={disabled} tone="ghost" onPress={onReplay}>{labels.replay}</Button>
     </Stack>

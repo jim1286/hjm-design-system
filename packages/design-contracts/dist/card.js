@@ -28,6 +28,7 @@ export const cardRecipe = {
         selected: false,
         bordered: true,
         headingLevel: 3,
+        badgesAlign: "start",
         padding: "md",
     },
     selectedTone: "accent",
@@ -60,7 +61,8 @@ export const cardRecipe = {
         emphasis: "regular",
     },
     actions: {
-        gap: spacing.sm,
+        // Button groups share the 8px actionGroupRecipe contract in both renderers (2026-10-21 audit).
+        gap: spacing.xs,
         paddingHorizontal: spacing.md,
         paddingBottom: spacing.md,
     },

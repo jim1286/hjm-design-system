@@ -161,6 +161,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | `items` | `{id,label}[]` | 필수 | 안정·고유·빈 값 아닌 ID/label, empty 허용 |
 | `renderItem` | `(item) => ReactNode` | 필수 | 버튼·입력·카드는 기존 공개 API 사용 |
 | `labels` | previous/next/navigation string | 필수 | 스크롤 행동 이름, empty 금지 |
+| `showNavigation` | boolean | `true` | `false`면 이동 버튼 행과 그 여백을 제거하고 스와이프·스크롤·초점 노출을 유지한다. 2026-10-20 스핀트 요청: 터치 탐색과 중복되는 버튼 제거 |
 | `density` | compact/comfortable | comfortable | 최대 폭240/360, 실제 폭에서 clamp |
 | `defaultStartKey` | item ID | 첫 항목 | 초기 위치만. 선택/상세 값 아님 |
 | `onStartKeyChange` | `(key: string|null) => void` | 생략 | 앞쪽 항목 변화 관찰; 선택 확정 callback 아님 |

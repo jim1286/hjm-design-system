@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.26.1 이후)
-- 검토일: 2026-10-17
+- 검토일: 2026-10-20
 - 근거: `src/image-choice.ts`의 `imageChoiceRecipe`·`resolveImageChoiceToggle`; Web `src/image-choice.tsx`, Native `src/image-choice.tsx`
-- 스토리북: `배포/화면/계정/프로필`
+- 스토리북: `배포/컴포넌트/입력/이미지 선택`, `배포/화면/계정/프로필`
 
 ## 언제 쓰나
 

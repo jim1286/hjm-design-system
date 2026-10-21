@@ -26,7 +26,7 @@ function ExpoInteractionPreview() {
     <Heading level="level5">{copy.title}</Heading><Text>{copy.description}</Text>
     {/* 2026-10-16 assembly rule (SELECTION.md 조립 규칙): an on/off setting is a Switch, not a selected Button. */}
     <Switch presentation="row" label={copy.motion} checked={reduced} onCheckedChange={setReduced} />
-    <Stack gap="sm">
+    <Stack gap="xs">
       <Button onPress={() => setIndex(value => (value + 1) % copy.states.length)}>{copy.next}</Button>
       <Button tone="secondary" onPress={() => setIndex(0)}>{copy.cancel}</Button>
       <Button tone="ghost" onPress={() => setVisible(value => !value)}>{visible ? copy.hide : copy.show}</Button>

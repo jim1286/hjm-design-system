@@ -68,7 +68,7 @@ export function CarouselMotion(props: CarouselMotionProps) {
       <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}><Icon name="chevronStart" /></IconButton>
       <Text variant="caption" aria-live="polite">{index + 1}/{props.slides.length}</Text>
       <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}><Icon name="chevronEnd" /></IconButton>
-    </div> : <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }}>
+    </div> : <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--hjm-space-xs)", marginBlockStart: "var(--hjm-space-sm)" }}>
       <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous"))}><Icon name="chevronStart" /></IconButton>
       <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onClick={() => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next"))}><Icon name="chevronEnd" /></IconButton>
     </div>}

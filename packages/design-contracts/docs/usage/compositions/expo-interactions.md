@@ -55,7 +55,7 @@
 | 바깥 틀 | `ScrollView` > `Container size="reading"` | 화면 전체, 스크롤. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다. 입력이 없어 키보드 처리는 없다 | 위아래 `contentContainerStyle` `paddingVertical: spacing.lg` 20. 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)) |
 | 머리 | `Heading` + `Text` | Stack 맨 위 | 사이 `spacing.md` 16 |
 | 설정 토글 | `Switch presentation="row"` | 머리 아래 | 꽉 찬 폭 행, track `medium` 52×32. 큰 글자에서는 track이 라벨 아래로 내려간다 |
-| 행동 묶음 | `Stack gap="sm"` + Button ×3 세로 | 토글 아래, 주 행동이 위 | 버튼 사이 `spacing.sm` 12, 각 높이 44 |
+| 행동 묶음 | `Stack gap="xs"` + Button ×3 세로 | 토글 아래, 주 행동이 위 | 버튼 사이 `spacing.xs` 8, 각 높이 44 |
 | 바뀌는 내용 | `ContentTransition` | 행동 묶음 아래, 함께 스크롤 | `rise` 세로 12 이동, 시간 `motion.normal`, 곡선 `easing.enter`. 래퍼 자체 크기·여백 없음 |
 
 - 한 영역(구획 하나) 안이므로 요소 사이는 `layout.contentGap`(`Stack gap="md"` 16)이다([화면 여백](../tokens/layout.md)).

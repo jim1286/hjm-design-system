@@ -35,7 +35,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
   if (!session) return <Button tone="danger" disabled={props.disabled ?? false} onPress={() => setSession(createAlertDialogSession({ mode: "confirm", tone: "danger", title: props.label, description: props.prompt, confirmLabel: props.confirmLabel, cancelLabel: props.cancelLabel, onConfirm: () => confirmRef.current(), fallbackErrorMessage: props.errorLabel }))}>{props.label}</Button>;
   const busy = phase?.status === "busy";
   return <View style={{ gap: spacing.sm }}><Text accessibilityLiveRegion="polite">{props.prompt}</Text>{phase?.status === "error" && <Text accessibilityRole="alert" tone="danger">{phase.message}</Text>}
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }}>
       <Button tone="ghost" disabled={busy} onPress={() => session.cancel("cancel-action")}>{props.cancelLabel}</Button>
       <Button tone="danger" loading={busy} disabled={busy || (props.disabled ?? false)} onPress={() => { void session.confirm(); }}>{busy ? props.pendingLabel : props.confirmLabel}</Button>
     </View>

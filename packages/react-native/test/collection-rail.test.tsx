@@ -18,9 +18,9 @@ beforeEach(() => {
   });
 });
 afterEach(() => { if (renderer) { const active = renderer; act(() => active.unmount()); } });
-async function render(direction: "ltr" | "rtl", collection = items) {
+async function render(direction: "ltr" | "rtl", collection = items, showNavigation = true) {
   const element = <HjmNativeProvider direction={direction} reducedMotion>
-    <CollectionRail label="기록 모음" items={collection} labels={{ previous: "이전", next: "다음", navigation: "기록 탐색" }}
+    <CollectionRail showNavigation={showNavigation} label="기록 모음" items={collection} labels={{ previous: "이전", next: "다음", navigation: "기록 탐색" }}
       renderItem={item => <TextInput accessibilityLabel={item.label} defaultValue="초안" />} />
   </HjmNativeProvider>;
   await act(async () => { if (renderer) renderer.update(element); else renderer = create(element, { createNodeMock: node => node.type === "ScrollView" ? { scrollTo } : null }); });
@@ -29,6 +29,19 @@ const track = () => renderer!.root.findByType(ScrollView);
 const next = () => renderer!.root.findAllByType(IconButton).find(node => node.props.label === "다음")!;
 
 describe("Native finite collection host translation", () => {
+  it("keeps touch scrolling and focus reveal without a navigation row", async () => {
+    await render("ltr", items, false);
+    expect(renderer!.root.findAllByType(IconButton)).toHaveLength(0);
+    expect(renderer!.root.findAllByType(View).some(node => node.props.accessibilityLabel === "기록 탐색")).toBe(false);
+    act(() => track().props.onLayout({ nativeEvent: { layout: { width: 1000 } } }));
+    act(() => track().props.onTouchStart());
+    act(() => track().props.onScroll({ nativeEvent: { contentOffset: { x: 400 } } }));
+    scrollTo.mockClear();
+    const first = renderer!.root.findAllByType(View).find(node => node.props.onFocus)!;
+    act(() => first.props.onFocus());
+    expect(scrollTo.mock.lastCall?.[0]).toEqual({ x: 0, animated: false });
+    expect(renderer!.root.findAllByType(TextInput)).toHaveLength(5);
+  });
   it("waits for host observation before changing end state", async () => {
     scrollTo.mockImplementation(() => undefined);
     await render("ltr");

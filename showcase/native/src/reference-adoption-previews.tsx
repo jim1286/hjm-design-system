@@ -29,7 +29,7 @@ export function RatingPreview() {
 }
 export function ImageComparisonPreview() {
   const [value, setValue] = useState(50);
-  return <Stack gap="md"><Text variant="heading" emphasis="medium">같은 장면, 다른 색감</Text><ImageComparison decrementLabel="보정 전 비율 줄이기" incrementLabel="보정 전 비율 늘리기" label="보정 전 이미지 비율" before={beforeImage} after={afterImage} value={value} onValueChange={setValue} getValueText={n=>`${n}%`} /><Stack axis="inline" gap="sm" wrap><Button tone="secondary" onPress={()=>setValue(100)}>보정 전 전체 보기</Button><Button tone="secondary" onPress={()=>setValue(0)}>보정 후 전체 보기</Button></Stack></Stack>;
+  return <Stack gap="md"><Text variant="heading" emphasis="medium">같은 장면, 다른 색감</Text><ImageComparison decrementLabel="보정 전 비율 줄이기" incrementLabel="보정 전 비율 늘리기" label="보정 전 이미지 비율" before={beforeImage} after={afterImage} value={value} onValueChange={setValue} getValueText={n=>`${n}%`} /><Stack axis="inline" gap="xs" wrap><Button tone="secondary" onPress={()=>setValue(100)}>보정 전 전체 보기</Button><Button tone="secondary" onPress={()=>setValue(0)}>보정 후 전체 보기</Button></Stack></Stack>;
 }
 export function AdaptiveContentPreview() {
   const [panel, setPanel] = useState("summary");
@@ -69,7 +69,7 @@ export function UploadRecoveryPreview() {
     <PreviewTools><PreviewToolButton onPress={()=>select({accepted:[sampleFile],rejected:[]})}>예제 사진 추가</PreviewToolButton></PreviewTools>
     {notice ? <PatternStatus>{notice}</PatternStatus> : null}
     {items.map(item=><Surface key={item.id} padding="md"><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={()=>change(item,{status:"pending"})} onRetry={()=>change(item,{status:"uploading",progress:null})} />
-      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onPress={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onPress={()=>{if(itemsRef.current.find(current=>current.id===item.id)===item&&item.state.status!=="uploading")update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack>
+      <Stack axis="inline" wrap gap="xs">{item.state.status==="pending"?<Button onPress={()=>change(item,{status:"uploading",progress:null})}>전송 시작</Button>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onPress={()=>{if(itemsRef.current.find(current=>current.id===item.id)===item&&item.state.status!=="uploading")update(itemsRef.current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack>
       {/* Simulated server responses are demo-only tools, not file actions (2026-10-16 review). */}
       {item.state.status==="uploading"?<PreviewTools><PreviewToolButton onPress={()=>change(item,{status:"success"})}>성공 응답 보내기</PreviewToolButton><PreviewToolButton onPress={()=>change(item,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>실패 응답 보내기</PreviewToolButton></PreviewTools>:null}</Stack></Surface>)}
   </Stack></Container>;

@@ -23,12 +23,14 @@ export type CollectionRailProps<Item extends CollectionRailItem = CollectionRail
    * `body-edge` + per-section gutter, spint home 2026-10-17). Place the rail directly in the body.
    */
   bleed?: boolean;
+  /** Hide the button row when touch scrolling is the intended navigation. */
+  showNavigation?: boolean;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
 export function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }: CollectionRailProps<Item>) {
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, showNavigation = true, layoutStyle, ...props }: CollectionRailProps<Item>) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
@@ -147,11 +149,11 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
       </div>
       {items.length === 0 ? emptyContent : null}
     </div>
-    <div data-collection-rail-controls role="group" aria-label={labels.navigation}
-      style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }}>
+    {showNavigation && <div data-collection-rail-controls role="group" aria-label={labels.navigation}
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-xs)", marginBlockStart: "var(--hjm-space-sm)" }}>
       {/* Tool actions: icon buttons named by the localized label, as Carousel (2026-10-17 review E9). */}
       <IconButton label={labels.previous} tone="ghost" aria-disabled={resolved.atStart} onClick={() => navigate("previous")}><Icon name="chevronStart" /></IconButton>
       <IconButton label={labels.next} tone="ghost" aria-disabled={resolved.atEnd} onClick={() => navigate("next")}><Icon name="chevronEnd" /></IconButton>
-    </div>
+    </div>}
   </div>;
 }

@@ -33,8 +33,8 @@ function Adapters({ onClose }: { onClose: () => void }) {
     <View style={{ paddingTop: insets.top }}><Container gutter="compact"><Button tone="secondary" onPress={onClose}>쇼케이스로 돌아가기</Button></Container></View>
     <KeyboardFormScrollView contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md">
       <Text>네이티브 모듈을 포함한 개발 클라이언트 필요</Text>
-      <Button tone="secondary" onPress={() => setViewer(true)}>이미지 보기</Button>
-      <Button tone="secondary" onPress={() => setSheet(true)}>시트 열기</Button>
+      <Stack gap="xs"><Button tone="secondary" onPress={() => setViewer(true)}>이미지 보기</Button>
+      <Button tone="secondary" onPress={() => setSheet(true)}>시트 열기</Button></Stack>
       <NativeContextMenu items={[{ id: "save", label: "저장" }, { id: "delete", label: "삭제", tone: "danger" }]} onAction={setAction}>
         <Pressable accessibilityLabel="길게 눌러 작업 선택" accessibilityRole="button"><Text>길게 눌러 메뉴 열기</Text></Pressable>
       </NativeContextMenu>

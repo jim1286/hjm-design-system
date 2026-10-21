@@ -13,6 +13,9 @@ export const semanticColors = {
     sunken: themeColor("surfaceAlt"),
     raised: themeColor("bg"),
     brand: themeColor("surfaceAccent"),
+    // Opaque neutral status plates are surfaces, independent of notice severity.
+    statusNeutral: themeColor("neutralFill"),
+    statusStrong: themeColor("strongFill"),
     /**
      * Loading placeholder fill (Skeleton, ListRow `loading`). A translucent text tint instead of an opaque
      * neutral: it darkens/lightens whatever it sits on, so it stays visible on canvas, Card surfaces and

@@ -87,8 +87,8 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 최소 높이 `control.buttonHeight.large` 52 + 위쪽 안전 영역. Web은 `max(env(safe-area-inset-top), safeAreaTop)`을 위 여백으로, Native는 `safeAreaTop`을 `paddingTop`과 `minHeight`(52 + `safeAreaTop`)에 더한다. 좌우 열 최소 폭 `control.minTouchTarget` 44, Native `TopBarAction` 최소 44×44 | `topBarRecipe.minHeight`·`sideMinWidth`·`action`, `.hjm-top-bar` |
-| 간격 | 좌우 여백 `spacing.md` 16, 슬롯 사이·슬롯 안 행동 사이 `spacing.xs` 8. `NavigationBar`는 바 안쪽 여백 `spacing.sm` 12를 브랜드 시작과 끝 행동에 똑같이 쓰고 브랜드에 별도 inset을 두지 않는다(Web·Native). `TopBarAction` 아이콘–라벨 `spacing.xxs` 4, 좌우 여백 4. 배경 `canvas` | `topBarRecipe.paddingHorizontal`·`gap`·`action` |
+| 크기 | 최소 높이 `control.buttonHeight.large` 52 + 위쪽 안전 영역. Web은 `max(env(safe-area-inset-top), safeAreaTop)`을 위 여백으로, Native는 `safeAreaTop`을 `paddingTop`과 `minHeight`(52 + `safeAreaTop`)에 더한다. 좌우 열 최소 폭 `control.buttonHeight.small` 36, Native `TopBarAction` 최소 36×36 | `topBarRecipe.minHeight`·`sideMinWidth`·`action`, `.hjm-top-bar` |
+| 간격 | 좌우 여백 `spacing.md` 16, 슬롯 사이·슬롯 안 행동 사이 `spacing.xxs` 4. `NavigationBar`는 바 안쪽 여백 `spacing.sm` 12를 브랜드 시작과 끝 행동에 똑같이 쓰고 브랜드에 별도 inset을 두지 않는다(Web·Native). `TopBarAction` 아이콘–라벨 `spacing.xxs` 4, 좌우 여백 4. 배경 `canvas` | `topBarRecipe.paddingHorizontal`·`gap`·`action` |
 | 순서·정렬 | 세 열: `leading`(뒤로·닫기) · 제목 · `actions`(끝 정렬). `centered`(기본 `true`)는 남은 제목 영역 안에서 가운데 정렬. 왼쪽 정렬은 `centered={false}`로 고른다. 행동은 1~2개만 끝 열에, 넘치면 하나만 남기고 [Menu](menu.md)로 묶는다. 주 행동(저장·완료)은 끝 열의 마지막 | `.hjm-top-bar` grid, Native `TopBar` |
 | 고정·스크롤 | 화면 맨 위, 스크롤 영역 **밖**에 둔다. TopBar 자체는 `position: sticky`/고정을 걸지 않으므로 화면 골격이 그 아래에 스크롤 영역을 둬야 고정된다. 바로 아래 본문 첫 블록은 [Top](top.md) | `.hjm-top-bar`(position 없음) |
 | 좁은 폭·큰 글자 | 글자 배율 ≥ `largeTextThreshold` 1.6: Web은 첫 행 leading·행동, 둘째 행 제목(시작 정렬, 위아래 `spacing.xs` 8). Native는 첫 행 leading+제목, 둘째 행 행동(끝 정렬, 줄바꿈 허용) | `.hjm-top-bar[data-large-text]`, `react-native/src/navigation.tsx` `TopBar` |
@@ -98,9 +98,15 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 ┌──────────── safe area ───────────┐   ┌──────────────────────┐   ┌──────────────────────┐
 │ [<]        화면 이름       [⋯][✓]│   │ [<]           [⋯][✓] │   │ [<] 화면 이름        │
 └──────────────────────────────────┘   │ 화면 이름            │   │          [⋯][✓]      │
-  leading 44+  title(1fr)  actions 44+ └──────────────────────┘   └──────────────────────┘
+  leading 36+  title(1fr)  actions 36+ └──────────────────────┘   └──────────────────────┘
 ───────────── 아래부터 스크롤 영역 ─────────────
 ```
+
+## 상단 도구의 공통 크기
+
+2026-10-21 오늘야구 홈의 축소 시안 승인에 따라, 상단 도구는 Web·Native 모두 `size="small"`(36), `hitSlop={0}`을 명시한다. 아이콘은 36×36, 글자 버튼은 높이 36과 문구 폭을 사용한다. 인접 도구는 `Stack gap="xxs"`(4)로 묶고 `edge` 음수 여백을 주지 않는다. Native `TopBarAction`은 recipe에서 최소 36과 확장 0을 직접 읽는다. 명시적으로 표시하는 라벨 등 콘텐츠가 크면 필요한 만큼 높이가 늘어난다.
+
+제품 앱·웹 Provider는 `minimumVisualTarget={false}`로 설정해 작은 버튼이 44로 다시 커지는 것을 막는다. HJM의 선택 가능한 Provider 기능은 유지한다. 일반 본문·하단 행동 묶음의 8 간격과 작은 버튼 기본 터치 확장은 유지하며, 상단의 탭·필터·입력칸·내비게이션 링크는 각자의 계약을 따른다.
 
 ## 꼭 지킬 것
 
@@ -122,7 +128,7 @@ NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을
 | 제목 접근성 | `h1`~`h6` | `accessibilityRole="header"`, `titleAccessibilityHint`(`onTitlePress` 필수) |
 | 슬롯 스타일 | `className`·`style`, 배치는 `layoutStyle` | 배치는 `layoutStyle`(`style`·`leadingStyle`·`titleStyle`·`trailingStyle`은 제거된 속성) |
 | 큰 글자 | CSS가 제목을 다음 행으로 | 글자 배율이 `largeTextThreshold` 이상이면 leading+제목 행 아래에 행동 행 |
-| 행동 컴포넌트 | 일반 `IconButton`·`Link` | `TopBarAction`(아이콘 + 마이크로 라벨, 44pt) |
+| 행동 컴포넌트 | 일반 `IconButton`·`Link` | `TopBarAction`(아이콘 + 선택적 마이크로 라벨, 최소 36pt) |
 | `NavigationBar` 배경 | 지원 시 blur + 92% 불투명 | 불투명 surface(blur 없음) |
 
 ### 제품 제어를 중앙에 넣기

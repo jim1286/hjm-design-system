@@ -45,7 +45,7 @@ export function Steps<Id extends string>({
   const { indicator, connector, label } = stepsRecipe;
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, palette);
   return (
-    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row" }, layoutStyle]}>
+    <View accessibilityRole="summary" style={[{ direction: environment.direction, flexDirection: "row", paddingHorizontal: stepsRecipe.paddingInline }, layoutStyle]}>
       {steps.map((step, index) => {
         const terminal = index === steps.length - 1;
         // The final step reserves only its copy/marker width; connectors own all remaining rail width.

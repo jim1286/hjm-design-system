@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-20
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
-- 스토리북: `배포/화면/화면 틀과 도구/화면 골격과 상태`
+- 스토리북: `배포/컴포넌트/레이아웃/화면 골격`, `배포/화면/화면 틀과 도구/화면 골격과 상태`
 
 ## 언제 쓰나
 
@@ -89,7 +89,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | [디자인 프로필](../../design-profile.md)의 제공 범위를 따른다. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 입력 하나에 한 번 포커스한다. 기본값 변경은 1.33.0부터 제공. 하단 시트 안에서는 자동 포커스하지 않는다. 아래 [진입 포커스](#진입-포커스) |
-| `pullToDismiss` (Native) | `boolean` | `false` | 미게시. 읽기 route 본문의 손잡이·본문 맨 위에서 새로 시작한 아래 당김을 기존 `exit.onPress`로 연결한다. `exit.kind="close"`, 기본 헤더, `scroll="screen"`이 필요하다. 손잡이는 보조기술에서 숨기고 헤더 닫기 하나를 유지한다. `exit.disabled`면 당김/손잡이/접근성 escape도 비활성이다. Web 읽기 패널은 Sheet의 `swipeDirection="down"`을 사용한다 |
+| `pullToDismiss` (Native) | `boolean` | `false` | 미게시. 읽기 route 본문의 손잡이·본문 맨 위에서 새로 시작한 아래 당김을 기존 `exit.onPress`로 연결한다. `exit.kind="close"`, 기본 헤더, `scroll="screen"`이 필요하다. 손잡이가 `exit.label`을 가진 접근 가능한 닫기 버튼을 겸하며, 중복 X 헤더를 표시하지 않는다(2026-10-20 편지 시트 상단 정리 요청). `exit.disabled`면 당김/손잡이/접근성 escape도 비활성이다. Web 읽기 패널은 Sheet의 `swipeDirection="down"`을 사용한다 |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |

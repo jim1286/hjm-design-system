@@ -69,9 +69,11 @@ describe("IconButton / Button edge rule", () => {
 });
 
 describe("edge consumers", () => {
-  it("ScreenLayout exit overhangs the leading edge", () => {
+  it("ScreenLayout exit keeps its compact target inside the header gutter", () => {
     const tree = render(<ScreenLayout title="설정" exit={{ kind: "back", label: "뒤로", onPress: () => {} }}><NativeText>본문</NativeText></ScreenLayout>);
-    expect(pressable(tree, "뒤로").marginStart).toBe(-10);
+    expect(pressable(tree, "뒤로")).toMatchObject({ width: 36, height: 36 });
+    expect(pressable(tree, "뒤로").marginStart).toBeUndefined();
+    expect(tree.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "뒤로")!.props.hitSlop).toBe(0);
   });
 
   it("CommentThreadRow centres the trailing targets on the author line and ends the last glyph slot on the inset", () => {

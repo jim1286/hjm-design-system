@@ -334,8 +334,9 @@ export const commentThreadRecipe = {
     avatarSize: 32,
     replyAvatarSize: 24,
     avatarGap: spacing.xs,
-    lineGap: 2,
-    rowGap: spacing.sm,
+    // 2026-10-20 Spint feedback: separate comment blocks and identity/body/action lines for readability.
+    lineGap: spacing.xxs,
+    rowGap: spacing.lg,
     // Replies align with the parent's text column instead of an arbitrary section inset.
     replyIndent: 32 + spacing.xs,
     // The heart keeps the 44pt touch target even though the measured reference draws a smaller glyph.
@@ -344,7 +345,7 @@ export const commentThreadRecipe = {
     mediaMaxWidth: 160,
     mediaRadius: radius.md,
     // Inline per-comment panel (edit/report/block form) under the action row (2026-10-18, Utilverse): a form reads as its
-    // own block, so it sits a full spacing step below the reply line instead of the 2pt line gap.
+    // own block, so it sits a full spacing step below the reply line instead of the compact line gap.
     panelGap: spacing.xs,
     // The trailing vertical-dots menu glyph; the button keeps the shared 44pt IconButton target.
     menuGlyphSize: glyph.sm,
@@ -505,7 +506,7 @@ export const profileSummaryRecipe = Object.freeze({
     avatarSize: 72,
     avatarGlyphSize: glyph.xxl,
     actionsLayouts: Object.freeze({
-        inline: Object.freeze({ axis: "inline", gap: "sm" }),
+        inline: Object.freeze({ axis: "inline", gap: "xs" }),
         stacked: Object.freeze({ axis: "block", gap: "xs" }),
     }),
     /**

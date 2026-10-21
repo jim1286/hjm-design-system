@@ -25,7 +25,7 @@ function ThemeStudio(){
  {studioRoles.map(role=><Editor key={`${revision}-${role.key}`} theme={theme} role={role} value={palette[theme]?.[role.key]??THEMES[theme][role.key]} onApply={color=>setPalette(current=>applyStudioColor(current,theme,role.key,color))}/>)}
  <HjmNativeProvider theme={theme} brandPalette={palette}><ThemeSample/></HjmNativeProvider>
  <Text emphasis="strong">{copy.report}</Text>{studioReport(palette,theme).map(row=><Text key={`${row.foreground}-${row.background}`}>{row.pass?"통과":"미달"} · {row.foreground} / {row.background} · {row.ratio.toFixed(2)}:1 (기준 {row.minimum}:1)</Text>)}
- </Stack>)}<Text tone="muted">{copy.note}</Text><Button onPress={()=>{setPalette({});setRevision(value=>value+1);}}>{copy.reset}</Button><Button onPress={()=>void save()}>{copy.export}</Button>{exportError?<Text>{copy.failedExport}</Text>:null}<CodeBlock label="브랜드 팔레트 설정" code={exportStudioPalette(palette)} language="json" wrap/>
+ </Stack>)}<Text tone="muted">{copy.note}</Text><Stack gap="xs"><Button onPress={()=>{setPalette({});setRevision(value=>value+1);}}>{copy.reset}</Button><Button onPress={()=>void save()}>{copy.export}</Button></Stack>{exportError?<Text>{copy.failedExport}</Text>:null}<CodeBlock label="브랜드 팔레트 설정" code={exportStudioPalette(palette)} language="json" wrap/>
  </Stack></ScrollView>;
 }
 const meta={title: "배포/토큰/편집 도구/테마 편집",component:ThemeStudio} satisfies Meta<typeof ThemeStudio>;export default meta;type Story=StoryObj<typeof meta>;

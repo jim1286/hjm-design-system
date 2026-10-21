@@ -1,4 +1,4 @@
-import { bottomCtaRecipe } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, actionGroupRecipe } from "@hjmds/design-contracts/recipes";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { forwardRef, useContext, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode, type Ref } from "react";
 import { Button, type ButtonSize, type ButtonTone } from "./actions.js";
@@ -75,6 +75,7 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function Bot
       "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
       "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
       "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
+      "--hjm-bottom-cta-actions-gap": `${actionGroupRecipe.inlineGap}px`,
       "--hjm-bottom-cta-content-max-width": `${bottomCtaRecipe.contentMaxWidth}px`,
       "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
       "--hjm-bottom-cta-parent-padding": inScreenFooter?.bottomPadding ?? "0px",

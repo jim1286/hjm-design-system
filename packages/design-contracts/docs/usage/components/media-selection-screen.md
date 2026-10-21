@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-18
+- 검토일: 2026-10-20
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
-- 스토리북: `배포/화면/콘텐츠/사진 선택과 업로드`
+- 스토리북: `배포/컴포넌트/레이아웃/미디어 선택 화면`, `배포/화면/콘텐츠/사진 선택과 업로드`
 
 ## 언제 쓰나
 
@@ -106,7 +106,7 @@ Web의 `<img alt="">`는 장식용 미리보기다. 사진 이름은 `removeLabe
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 격자 열 compact(창 0~959) 2열 · expanded(창 960 이상) 3열, 열 폭은 ScreenLayout 폭(최대 720)을 나눈다; 미리보기는 열 폭, 항목 버튼은 `Button size="small"` | `Grid columns={{ compact: 2, expanded: 3 }}`, `breakpoint` |
-| 간격 | 화면 padding `spacing.md` 16; 격자 간격 `spacing.md` 16; 항목 안 미리보기–UploadItem–버튼 줄 `spacing.xs` 8; 버튼 사이 `spacing.xxs` 4; footer 요약–완료 `spacing.sm` 12 | Web·Native `MediaSelectionScreen` |
+| 간격 | 화면 padding `spacing.md` 16; 격자 간격 `spacing.md` 16; 항목 안 미리보기–UploadItem–버튼 줄 `spacing.xs` 8; 버튼 사이 `spacing.xs` 8; footer 요약–완료 `spacing.sm` 12 | Web·Native `MediaSelectionScreen` |
 | 순서·정렬 | 헤더(제목 → 추가) → 격자(항목마다 미리보기 → UploadItem → 위로·아래로·삭제) → footer(`selectionSummary` → 완료) | 렌더 순서 |
 | 고정·스크롤 | 헤더·footer 고정, 격자는 본문 스크롤(`scroll` 기본 `"screen"`) | `ScreenLayout` |
 | 좁은 폭 | 좁은 폭에서도 2열 유지; 항목 버튼 줄은 줄바꿈(`flexWrap: "wrap"`)해 버튼을 자르지 않는다 | `screen-flows.tsx` |

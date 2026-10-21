@@ -1890,7 +1890,7 @@ export type SegmentedControlLeadingRenderProps = Readonly<{
 type SegmentedControlCollectionProps<Value extends string> = Readonly<{ items: readonly SegmentedControlItem<Value>[] }>;
 
 type SelectionHighlightRect = Readonly<{ x: number; y: number; width: number; height: number }>;
-function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled }: Readonly<{ rect: SelectionHighlightRect; selection: string; reducedMotion: boolean; pills: boolean; disabled: boolean }>) {
+function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled, brand }: Readonly<{ brand: boolean; rect: SelectionHighlightRect; selection: string; reducedMotion: boolean; pills: boolean; disabled: boolean }>) {
   const theme = useHjmNativeTheme();
   const positions = useRef({ x: new Animated.Value(rect.x), y: new Animated.Value(rect.y), width: new Animated.Value(rect.width), height: new Animated.Value(rect.height) }).current;
   const previousSelection = useRef(selection);
@@ -1907,7 +1907,7 @@ function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disab
     const sub = AppState.addEventListener("change", state => { if (state !== "active") settle(); });
     return () => { animations.forEach(animation => animation.stop()); sub.remove(); };
   }, [rect.x, rect.y, rect.width, rect.height, selection, reducedMotion, positions]);
-  return <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : theme.tokens.radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 }} />;
+  return <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : theme.tokens.radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(brand ? segmentedControlRecipe.selectedBrand.background : pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 }} />;
 }
 
 export type SegmentedControlProps<Value extends string = string> =
@@ -1918,6 +1918,8 @@ export type SegmentedControlProps<Value extends string = string> =
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills" | "text";
+    /** Opaque primary/onPrimary selection, independent of presentation geometry. */
+    selectionTone?: "neutral" | "brand";
     textEmphasis?: "regular" | "strong";
     /** Move only decorative selection artwork, never labels or hit targets. */
     selectionMotion?: "none" | "slide";
@@ -1939,6 +1941,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
   presentation = "connected",
+  selectionTone = "neutral",
   textEmphasis = "strong",
   selectionMotion: suppliedSelectionMotion,
   disabled = false,
@@ -2035,13 +2038,13 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
           padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
   } as const;
   const content = (<>
-      {movingHighlight && highlightRect ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} /> : null}
+      {movingHighlight && highlightRect ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} brand={selectionTone === "brand"} /> : null}
       {resolvedItems.map((item) => {
         const isSelected = item.value === selected;
         const optionDisabled = disabled || item.disabled === true;
         const contentColor = resolveColorReference(
           isSelected
-            ? (pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
+            ? (selectionTone === "brand" && !textOnly ? segmentedControlRecipe.selectedBrand.content : pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
             : segmentedControlRecipe.item.idleContent,
           theme.palette,
         );
@@ -2079,7 +2082,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                 alignItems: "center",
                 backgroundColor: !textOnly && !movingHighlight && !pills && isSelected
                   ? resolveColorReference(
-                      segmentedControlRecipe.item.selectedBackground,
+                      selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.item.selectedBackground,
                       theme.palette,
                     )
                   : "transparent",
@@ -2113,7 +2116,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
               },
             ]}
           >
-            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?(movingHighlight?"transparent":resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette)):resolveColorReference(segmentedControlRecipe.pills.background,theme.palette),borderWidth:segmentedControlRecipe.pills.borderWidth,borderColor:resolveColorReference(isSelected?segmentedControlRecipe.pills.selectedBackground:segmentedControlRecipe.pills.border,theme.palette)}}/> : null}
+            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?(movingHighlight?"transparent":resolveColorReference(selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.pills.selectedBackground,theme.palette)):resolveColorReference(segmentedControlRecipe.pills.background,theme.palette),borderWidth:segmentedControlRecipe.pills.borderWidth,borderColor:resolveColorReference(isSelected?(selectionTone === "brand" ? segmentedControlRecipe.selectedBrand.background : segmentedControlRecipe.pills.selectedBackground):segmentedControlRecipe.pills.border,theme.palette)}}/> : null}
             {leading ? (
               <View
                 accessibilityElementsHidden

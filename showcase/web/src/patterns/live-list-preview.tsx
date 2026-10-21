@@ -15,7 +15,7 @@ export function LiveListPreview() {
  const addButton = useRef<HTMLButtonElement>(null);
  const { items, paused, setPaused, message, add, remove, reverse, edit } = useLiveList();
  return <Stack gap="lg"><Text>메모를 입력한 뒤 기록을 추가하거나 순서를 바꿔 보세요. 기존 입력은 그대로 남아요.</Text>
-  <Stack axis="inline" gap="sm" wrap><Button ref={addButton} onClick={() => add(1)}>기록 추가</Button><Button tone="secondary" onClick={() => add(3)}>3개 함께 추가</Button>
+  <Stack axis="inline" gap="xs" wrap><Button ref={addButton} onClick={() => add(1)}>기록 추가</Button><Button tone="secondary" onClick={() => add(3)}>3개 함께 추가</Button>
    <Button tone="secondary" disabled={items.length < 2} onClick={reverse}>순서 뒤집기</Button><Button tone="secondary" disabled={items.length === 0} onClick={event => { (items.length === 1 ? addButton.current : event.currentTarget)?.focus(); remove(); }}>첫 기록 삭제</Button></Stack>
   <PreviewTools><PreviewToolButton selected={paused} onClick={() => setPaused(value => !value)}>움직임 멈추기</PreviewToolButton></PreviewTools>
   <Text role="status">{message}</Text>

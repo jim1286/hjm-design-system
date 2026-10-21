@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { AccessibilityInfo, Pressable } from "react-native";
+import { AccessibilityInfo, Pressable, StyleSheet } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 
 import { Tabs } from "../src/navigation.js";
@@ -116,4 +116,17 @@ it("paints the filled indicator as a brand-tinted pill without the underline or 
   expect(() => act(() => {
     renderer.update(<HjmNativeProvider reducedMotion theme="light"><Tabs label="Sent" indicator={"boxed" as never} items={items} /></HjmNativeProvider>);
   })).toThrow("Unsupported Tabs indicator");
+});
+
+it("paints solid selection with the product primary/onPrimary pair", () => {
+  act(() => { renderer = create(<HjmNativeProvider theme="light" brandPalette={{light:{primary:'#0B8045',onPrimary:'#FFFFFF'}}}>
+    <Tabs label="Letter views" indicator="solid" defaultValue="journey" items={[
+      {id:'letter',label:'Letter',panel:<Text>Letter body</Text>},
+      {id:'journey',label:'Journey log',panel:<Text>Journey body</Text>},
+    ]} />
+  </HjmNativeProvider>); });
+  const styles = renderer.root.findAll(node => node.props.style && typeof node.props.style !== 'function')
+    .map(node => StyleSheet.flatten(node.props.style));
+  expect(styles.some(style => style.backgroundColor === '#0B8045')).toBe(true);
+  expect(styles.some(style => style.color === '#FFFFFF')).toBe(true);
 });

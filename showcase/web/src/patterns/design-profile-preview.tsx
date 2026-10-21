@@ -73,7 +73,7 @@ function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
     <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
     {toastOpen && <Toast descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close }} onDismissRequest={() => { setToastOpen(false); toastTrigger.current?.focus(); }} />}
     <Button ref={toastTrigger} tone="secondary" onClick={() => setToastOpen(true)}>{copy.showToast}</Button>
-    <Stack axis="inline" gap="sm" wrap><Button ref={dialogTrigger} onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button ref={sheetTrigger} onClick={() => setOpen("sheet")}>{copy.sheet}</Button><Popover open={open === "popover"} onOpenChange={next => setOpen(next ? "popover" : null)} title={copy.overlayTitle} closeLabel={copy.close} trigger={<Button>{copy.popover}</Button>}>{fields}</Popover></Stack>
+    <Stack axis="inline" gap="xs" wrap><Button ref={dialogTrigger} onClick={() => setOpen("dialog")}>{copy.dialog}</Button><Button ref={sheetTrigger} onClick={() => setOpen("sheet")}>{copy.sheet}</Button><Popover open={open === "popover"} onOpenChange={next => setOpen(next ? "popover" : null)} title={copy.overlayTitle} closeLabel={copy.close} trigger={<Button>{copy.popover}</Button>}>{fields}</Popover></Stack>
     <Dialog returnFocusRef={dialogTrigger} open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
     <Sheet returnFocusRef={sheetTrigger} open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Sheet>
   </Stack></Collapsible>;

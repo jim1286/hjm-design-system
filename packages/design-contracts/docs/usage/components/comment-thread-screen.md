@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-20
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
-- 스토리북: `배포/화면/소통/댓글`
+- 스토리북: `배포/컴포넌트/레이아웃/댓글 화면`, `배포/화면/소통/댓글`
 
 ## 언제 쓰나
 
@@ -121,7 +121,7 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | ScreenLayout 폭(최대 720); 아바타 `commentThreadRecipe.avatarSize` 32, 답글 아바타 `replyAvatarSize` 24(제품은 이 크기로 넘긴다); 본문 열이 남은 폭을 채우고(`flex: 1`, 최소 폭 0) 오른쪽 끝에 좋아요(44 터치 영역)·`actions`를 한 행으로, 좋아요 수는 하트 아래 가운데; 답글·펼침은 흐린 글자 버튼(caption, 굵게) | `commentThreadRecipe`, Web·Native `CommentThreadRow` |
-| 간격 | 화면 padding `spacing.md` 16; 댓글 행 사이 `rowGap` 12(최상위·답글 동일); 답글 묶음은 부모 글 열에 맞춰 `replyIndent` 40 들여쓰기; 아바타–본문 `avatarGap` 8; 작성자·본문·답글 줄 사이 `lineGap` 2; 작성자–시각 `spacing.xxs` 4; 좋아요–actions `spacing.xxs` 4 | `commentThreadRecipe` |
+| 간격 | 화면 padding `spacing.md` 16; 댓글 행 사이 `rowGap` = `spacing.lg` 20(최상위·답글 동일); 답글 묶음은 부모 글 열에 맞춰 `replyIndent` 40 들여쓰기; 아바타–본문 `avatarGap` 8; 작성자·본문·답글 줄 사이 `lineGap` = `spacing.xxs` 4; 작성자–시각 `spacing.xxs` 4; 좋아요–actions 추가 간격 0 | `commentThreadRecipe`, [변경 근거](comment-thread-row.md#근거) |
 | 순서·정렬 | 최상위 댓글(아바타 → 작성자·시각 → 본문 → 답글 달기) + 행 오른쪽 좋아요 → `actions` → `commentMenu` 세로 점 버튼(끝), 그 아래 좋아요 수 → 답글 펼침 → 펼친 repliesNotice → 답글 → repliesFooter → … → `threadFooter` → composer(footer) | 렌더 순서 |
 | 고정·스크롤 | 헤더·composer 고정, 댓글은 본문 화면 스크롤(`scroll` 기본 `"screen"`); composer는 `ready`·`empty`에서만 | `ScreenLayout`, `screen-flows.tsx` |
 | 좁은 폭·큰 글자 | 시각·좋아요 수·답글 버튼 줄과 작성자 줄은 줄바꿈(`flexWrap: "wrap"`); 답글은 한 단계만 들여써 좁은 폭에서도 본문 폭을 지킨다 | `screen-flows.tsx` |

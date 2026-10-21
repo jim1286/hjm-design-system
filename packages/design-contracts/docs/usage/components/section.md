@@ -79,7 +79,7 @@ import { Section } from "@hjmds/react-native/primitives";
 | --- | --- | --- |
 | 크기 | 자체 배경·테두리·여백이 없다. 폭은 부모를 따른다 | `.hjm-section` |
 | 글자 | 제목 `title` 18/26 500(제목 굵기), 설명 `caption` 11/16(두 플랫폼). 2026-10-06까지 Web은 둘 다 본문 14를 물려받았다(1.13.0 변경) | `sectionRecipe.title`·`description`, `.hjm-section__title`·`__description` |
-| 간격 | 머리와 본문 사이 `spacing.xs` 8, 글자 묶음과 행동 사이 `spacing.sm` 12, 제목과 설명 사이 `spacing.xxs` 4. Section끼리의 간격은 Section이 주지 않는다. 감싸는 [Stack](stack.md)이나 `layoutStyle`로 `layout.sectionGap`(`spacing.xl` 24)을 둔다 | `sectionRecipe.gap`·`headerGap`·`copyGap`, `layout.sectionGap` |
+| 간격 | 머리와 본문 사이 `spacing.xs` 8, 글자 묶음과 행동 사이 `spacing.xs` 8, 제목과 설명 사이 `spacing.xxs` 4. Section끼리의 간격은 Section이 주지 않는다. 감싸는 [Stack](stack.md)이나 `layoutStyle`로 `layout.sectionGap`(`spacing.xl` 24)을 둔다 | `sectionRecipe.gap`·`headerGap`·`copyGap`, `layout.sectionGap` |
 | 순서·정렬 | 머리 행동은 끝(LTR 오른쪽)에 하나, 글자 묶음과 세로 가운데 정렬. 보통 [Link](link.md) 또는 `tone="link"` [Button](button.md) | `.hjm-section__header`, Native `Section` |
 | 고정·스크롤 | 고정되지 않는다. 화면 본문 스크롤 안에 둔다 | — |
 | 좁은 폭·큰 글자 | 폭과 관계없이 한 행을 유지한다. 글자 크기 160% 이상(`largeTextThreshold`)에서만 머리 행이 세로로 쌓이고 행동이 글자 아래로 간다(두 플랫폼 같은 조건). 2026-10-17까지 Web은 폭 600 미만에서도 쌓여, 같은 휴대폰 폭에서 Native는 한 행인데 Web만 행동이 아래 줄로 늘어났다(화면 리뷰 S5#3) | Web `.hjm-root[data-large-text]`, Native `textScale >= 1.6` |

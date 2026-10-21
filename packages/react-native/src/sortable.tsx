@@ -73,7 +73,7 @@ export function SortableCollection(props: SortableCollectionProps) {
         </Sortable.Handle>
         <View style={{ flex: 1, minWidth: 0 }}>{props.renderItem(item)}</View>
         {/* Same as Web: one row, the move pair stacked as named icon buttons in the trailing column. */}
-        <View>
+        <View style={{ gap: tokens.spacing.xs }}>
           <IconButton tone="ghost" label={props.labels.previous(item)} disabled={props.disabled || item.disabled || index === 0} onPress={() => commit(item.id, index - 1, "accessibility-action")}><DrawnChevron direction="up" size={glyph.md} color={colors.text} /></IconButton>
           <IconButton tone="ghost" label={props.labels.next(item)} disabled={props.disabled || item.disabled || index === props.items.length - 1} onPress={() => commit(item.id, index + 1, "accessibility-action")}><DrawnChevron direction="down" size={glyph.md} color={colors.text} /></IconButton>
         </View>

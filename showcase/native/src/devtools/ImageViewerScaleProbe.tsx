@@ -37,7 +37,7 @@ export function ImageViewerScaleProbe() {
         <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
           <Surface padding="md"><Stack gap="xs">
             <Button onPress={() => setOpen(false)}>진단 닫기</Button>
-            <Stack axis="inline" wrap>
+            <Stack axis="inline" wrap gap="xs">
               <Button onPress={() => setEngine("gallery")}>Gallery</Button>
               <Button onPress={() => setEngine("resumable")}>Resumable</Button>
               <Button onPress={() => setMode("fit")}>맞춤</Button>

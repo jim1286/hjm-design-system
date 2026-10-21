@@ -3,8 +3,8 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.12.1 (`safeAreaBottom`·링크 `target`/`rel`/`accessibilityHint` 1.28.1)
-- 검토일: 2026-10-18
+- 적용: 1.12.1
+- 검토일: 2026-10-20
 - 근거: [로그인 화면 골격](../../auth-screen.md), [1.4 제품 채택 가이드](../../product-adoption-1.4.md), recipe `authScreenRecipe`(`src/auth-screen.ts`), 포트폴리오 상위 기준 루트 `docs/LOGIN_SCREEN_STANDARD.md`(LS)
 - 스토리북: `배포/컴포넌트/레이아웃/로그인 화면`
 
@@ -14,6 +14,8 @@
 `footer`(동의 고지·정책 링크)는 바닥에 붙는다. 내용이 화면보다 길면 스크롤로 바뀐다.
 `AuthScreenLayout`은 배치를 소유하고, 히어로 문구와 동의 고지·정책 링크는 같은 모듈의 `AuthScreenHero`·`AuthScreenFooter`가
 글자 단계·색·간격을 소유한다. 제품은 문자열·마크·링크 목적지만 넘긴다.
+
+기본 API 제공 기준은 1.12.1이며, Native `safeAreaBottom`과 링크 `target`·`rel`·`accessibilityHint`는 1.28.1부터 지원한다.
 
 ## 쓰지 않을 때
 

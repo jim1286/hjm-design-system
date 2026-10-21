@@ -45,7 +45,7 @@ function AnswerBody(props: StreamingAnswerProps) {
   return <Stack gap="md"><Text emphasis="strong">{props.label}</Text>
     {text ? (props.renderText ? props.renderText(text) : <Text>{text}</Text>) : null}
     {phase === "thinking" ? <Stack align="center" justify="center">{props.thinkingIndicator ?? <Progress label={props.labels.thinking} />}</Stack> : null}
-    <Stack axis="inline" gap="sm" wrap><Button loading={pending} disabled={props.disabled === true} onPress={generate}>{(pending ? requestWasRegenerate.current : phase !== "idle") ? props.labels.regenerate : props.labels.generate}</Button>
+    <Stack axis="inline" gap="xs" wrap><Button loading={pending} disabled={props.disabled === true} onPress={generate}>{(pending ? requestWasRegenerate.current : phase !== "idle") ? props.labels.regenerate : props.labels.generate}</Button>
       {pending ? <Button tone="secondary" disabled={props.disabled === true || phase === "stopping"} onPress={stop}>{props.labels.stop}</Button> : null}</Stack>
     {status && phase !== "thinking" ? <Text accessibilityRole={phase === "error" ? "alert" : "text"} accessibilityLiveRegion="polite" align="center" tone={phase === "error" ? "danger" : "primary"}>{status}</Text> : null}
   </Stack>;

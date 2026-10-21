@@ -22,8 +22,8 @@ export function DocumentResource({ preview, moreAction, ...props }: DocumentReso
         {resource.preview.status === "none" ? <Text tone="muted" align="center">{labels.previewUnavailable}</Text> : null}
         {resource.preview.status === "loading" ? <Text accessibilityLiveRegion="polite" align="center">{labels.previewLoading}</Text> : null}
         {previewFailed ? <Text tone="danger" accessibilityRole="alert" align="center">{resource.preview.status === "error" ? resource.preview.message : ""}</Text> : null}
-        {props.onPreview ? <Button growWithContent tone="secondary" disabled={!resource.canPreview} onPress={props.onPreview}>{labels.preview}</Button> : null}
-        {previewFailed && resource.preview.retryable ? <Button growWithContent tone="secondary" disabled={!resource.canRetryPreview} onPress={props.onRetryPreview}>{labels.retryPreview}</Button> : null}
+        <Stack gap="xs">{props.onPreview ? <Button growWithContent tone="secondary" disabled={!resource.canPreview} onPress={props.onPreview}>{labels.preview}</Button> : null}
+        {previewFailed && resource.preview.retryable ? <Button growWithContent tone="secondary" disabled={!resource.canRetryPreview} onPress={props.onRetryPreview}>{labels.retryPreview}</Button> : null}</Stack>
       </Stack> : null}
       <Stack gap="sm" justify="center">
         <Button growWithContent disabled={saveFailed ? !resource.canRetrySave : !resource.canSave}

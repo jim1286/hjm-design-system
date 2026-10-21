@@ -28,6 +28,9 @@ Native row만 RTL에서 역방향으로 배치하며 데이터/React key/읽기 
   삭제된 anchor는 첫 항목으로 대체한다. key/remount로 입력을 초기화하지 않는다.
 - 세부 모달은 `Card.actions`→기존 Dialog를 합성한다. rail은 body overflow·background lock·focus trap을 따로 구현하지 않는다.
 
+2026-10-20 스핀트 사용자 요청: 스와이프와 중복되는 버튼을 제거할 수 있도록 두 renderer에
+`showNavigation`(기본 `true`)을 제공한다. `false`는 버튼 행과 여백만 제거하며 host 스크롤·초점 노출·Web 키보드 탐색은 유지한다.
+
 ## 배치와 플랫폼 경계
 
 comfortable 최대 폭360은 `layout.readingMaxWidth / 2`, compact240은 `/3`이다. 실제 폭은 viewport와

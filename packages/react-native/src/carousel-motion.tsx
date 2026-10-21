@@ -81,7 +81,7 @@ export function CarouselMotion(props: CarouselMotionProps) {
       <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
       <Text align="center" variant="caption" accessibilityLiveRegion="polite">{index + 1}/{props.slides.length}</Text>
       <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
-    </View> : <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }}>
+    </View> : <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }}>
       <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
       <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
     </View>}

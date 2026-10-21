@@ -845,6 +845,8 @@ export type SegmentedControlProps = Omit<
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills" | "text";
+    /** Opaque primary/onPrimary selection, independent of presentation geometry. */
+    selectionTone?: "neutral" | "brand";
     textEmphasis?: "regular" | "strong";
     /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
     selectionMotion?: "none" | "slide";
@@ -867,6 +869,7 @@ export const SegmentedControl = forwardRef<
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
     presentation = "connected",
+    selectionTone = "neutral",
     textEmphasis = "strong",
     selectionMotion: suppliedSelectionMotion,
     name,
@@ -963,6 +966,7 @@ export const SegmentedControl = forwardRef<
       onFocusCapture={event => { props.onFocusCapture?.(event); revealOption((event.target as HTMLElement).closest(".hjm-segmented__item")); }}
       data-size={size}
       data-presentation={presentation}
+      data-selection-tone={selectionTone}
       data-text-emphasis={presentation === "text" ? textEmphasis : undefined}
       role={presentation === "text" ? "radiogroup" : undefined}
     >

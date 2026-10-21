@@ -1906,6 +1906,18 @@ export declare const segmentedControlRecipe: {
     readonly defaults: {
         readonly size: "medium";
     };
+    readonly selectedBrand: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "primary";
+            alpha?: number;
+        }>;
+        readonly content: Readonly<{
+            source: "theme";
+            key: "onPrimary";
+            alpha?: number;
+        }>;
+    };
     readonly pills: {
         readonly textVariant: "label";
         readonly paddingHorizontal: {
@@ -2708,6 +2720,20 @@ export declare const tabsRecipe: {
             }>;
             readonly radius: "full";
         };
+        readonly solid: {
+            readonly listDivider: false;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly selectedContent: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly radius: "full";
+        };
     };
     readonly sizes: {
         readonly small: {
@@ -3192,7 +3218,7 @@ export declare const statisticRecipe: {
             readonly padding: 12;
             readonly gap: 4;
             readonly labelVariant: "caption";
-            readonly valueVariant: "title";
+            readonly valueVariant: "bodyLarge";
         };
         readonly comfortable: {
             readonly padding: 16;
@@ -3484,7 +3510,7 @@ export declare const dialogRecipe: {
         readonly controls: {
             readonly padding: 16;
             readonly gap: 8;
-            readonly actionGap: 12;
+            readonly actionGap: 8;
         };
         readonly orientations: readonly ["portrait", "landscape-left", "landscape-right"];
         readonly statusBarHidden: true;
@@ -4087,9 +4113,9 @@ export declare const topBarRecipe: {
         readonly centered: true;
     };
     readonly minHeight: 52;
-    readonly sideMinWidth: 44;
+    readonly sideMinWidth: 36;
     readonly paddingHorizontal: 16;
-    readonly gap: 8;
+    readonly gap: 4;
     readonly largeTextThreshold: 1.6;
     readonly title: {
         readonly textVariant: "bodyLarge";
@@ -4107,8 +4133,10 @@ export declare const topBarRecipe: {
         readonly pressedOpacity: 0.86;
     };
     readonly action: {
-        readonly minHeight: 44;
-        readonly minWidth: 44;
+        readonly size: "small";
+        readonly hitSlop: 0;
+        readonly minHeight: 36;
+        readonly minWidth: 36;
         readonly gap: 4;
         readonly paddingHorizontal: 4;
         readonly pressedOpacity: 0.86;

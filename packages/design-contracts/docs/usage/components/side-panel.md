@@ -79,7 +79,7 @@ Native: 없음. Native는 [Sheet](sheet.md)를 쓴다.
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 높이 화면 전체(`100dvh`), 폭 `size`(`compact` 320 · `regular` 400 · `wide` 560), radius 0으로 가장자리에 붙는다. 머리 최소 높이 44(`control.minTouchTarget`) | `sidePanelRecipe.sizes`·`content.radius`·`header`, `.hjm-side-panel` |
-| 간격 | 머리 위 `spacing.sm` 12 · 좌우 `spacing.lg` 20, 제목–닫기 `spacing.md` 16. 본문 좌우 `spacing.lg` 20 · 상하 `spacing.md` 16, 자식 간격 `spacing.md` 16. footer 위 `spacing.sm` 12 · 좌우 20, 버튼 사이 `spacing.sm` 12 | `.hjm-side-panel__header`·`__body`·`__footer` |
+| 간격 | 머리 위 `spacing.sm` 12 · 좌우 `spacing.lg` 20, 제목–닫기 `spacing.md` 16. 본문 좌우 `spacing.lg` 20 · 상하 `spacing.md` 16, 자식 간격 `spacing.md` 16. footer 위 `spacing.sm` 12 · 좌우 20, 버튼 사이 `spacing.xs` 8 | `.hjm-side-panel__header`·`__body`·`__footer` |
 | 순서·정렬 | `edge` 쪽 가장자리. 머리(제목·설명 + 끝 쪽 닫기) → 본문 → `footer`. footer는 오른쪽 정렬 가로 줄 [보조][주] | `.hjm-side-panel-positioner`, `.hjm-side-panel__footer` |
 | 고정·스크롤 | 본문만 스크롤, 머리·footer 고정. footer 아래 여백 `max(spacing.sm 12, 아래 안전 영역)`. 비모달은 scrim 없이 `position: fixed`로 떠서 뒤 페이지 일부를 덮는다. 가려지면 안 되면 [Layout](layout.md)·[Splitter](splitter.md)로 고정 2단 | `.hjm-side-panel[data-modal="false"]` |
 | 좁은 폭·큰 글자 | 폭이 패널보다 좁으면 화면 폭 전체(`min(size, 100%)`). footer는 줄을 바꾼다. 모바일 폭이 주 대상이면 [Sheet](sheet.md) | `.hjm-side-panel` |

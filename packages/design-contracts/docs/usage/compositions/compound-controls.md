@@ -62,7 +62,7 @@
 | 바깥 틀 | Web 문서 스크롤 > `Container`. Native `ScrollView` > `Container` | 블록을 감싸는 제품 화면. 상단 안전 영역은 내비게이션 헤더(또는 [TopBar](../components/top-bar.md))가 맡는다 | 좌우 `Container gutter`: 폭 600 미만 `compact` 16, 이상 `regular` 20([화면 여백](../tokens/layout.md)). Native 위아래는 `contentContainerStyle` `paddingVertical: spacing.lg` 20 |
 | 블록 | `Stack gap="xl"` | 바깥 틀 안, 본문 흐름 | 자식 사이 `spacing.xl` 24 |
 | 소요 시간 | DurationField | 설명 아래 | NumberField 세 칸, 칸 사이 `spacing.md` 16. 세 칸이 모두 들어가면 한 줄(칸 최대 `fieldGroupRecipe.inline.maxWidth`), 아니면 세 칸 모두 세로([FieldGroup](field-group.md)) |
-| 확인 | InlineConfirm | 트리거 자리 그대로 | 트리거와 확인 행동이 같은 자리, Button 높이 44, 질문·버튼 줄 사이와 두 버튼 사이 `spacing.sm` 12 |
+| 확인 | InlineConfirm | 트리거 자리 그대로 | 트리거와 확인 행동이 같은 자리, Button 높이 44, 질문·버튼 줄 사이 `spacing.sm` 12, 두 버튼 사이 `spacing.xs` 8 |
 | 반응 | ReactionPicker | 제목 아래 | `ghost` `pill` Button 묶음, 사이 `spacing.xs` 8, 넘치면 줄바꿈 |
 | 알림 종 | NotificationBell | 블록 맨 위, 시작 쪽 정렬. TopBar·헤더 끝에 둘 때는 `edge="end"` | IconButton(기본 `medium` 44) + CounterBadge `floating`(끝·위 모서리). `edge`(`start`·`end`·`both`)는 IconButton `edge`와 같은 값(`resolveIconButtonEdgeOverhang`, 44−24)/2 = 10을 벨 루트에 적용해 glyph 칸이 여백 선(TopBar 16)에 오고 배지는 아이콘 모서리를 지킨다 |
 

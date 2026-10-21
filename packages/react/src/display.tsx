@@ -131,6 +131,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Centre short metadata beneath artwork without product-owned badge layout. */
+    badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
     mediaAction?: Readonly<{ label: string; onActivate(): void; icon?: (context: Readonly<{ color: string; size: number }>) => ReactNode }>;
     actions?: ReactNode;
@@ -166,6 +168,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     backgroundInteraction,
     mediaBadges,
     badges,
+    badgesAlign = cardRecipe.defaults.badgesAlign,
     mediaAction,
     actions,
     headerActions,
@@ -237,7 +240,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
         data-slot="body"
         style={{ padding: surfaceGeometry.paddings[padding] }}
       >
-        {badges === undefined ? null : <div className="hjm-card__badges" data-slot="badges">{badges}</div>}
+        {badges === undefined ? null : <div className="hjm-card__badges" data-slot="badges" data-align={badgesAlign}>{badges}</div>}
         {hasHeader ? (
           <div className="hjm-card__header" data-slot="header">
             {leading === undefined ? null : (

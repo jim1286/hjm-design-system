@@ -10,6 +10,7 @@ export declare const cardRecipe: {
         readonly selected: false;
         readonly bordered: true;
         readonly headingLevel: 3;
+        readonly badgesAlign: "start";
         readonly padding: "md";
     };
     readonly selectedTone: "accent";
@@ -49,7 +50,7 @@ export declare const cardRecipe: {
         readonly emphasis: "regular";
     };
     readonly actions: {
-        readonly gap: 12;
+        readonly gap: 8;
         readonly paddingHorizontal: 16;
         readonly paddingBottom: 16;
     };

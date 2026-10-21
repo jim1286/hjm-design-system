@@ -220,8 +220,10 @@ export const stepsRecipe = {
     "description",
   ] as const,
   gap: spacing.xs,
+  // Spint review (2026-10-21): keep endpoint marks inset and give illustrated marks breathing room.
+  paddingInline: spacing.md,
   indicator: {
-    size: glyph.md,
+    size: glyph.xxl,
     borderWidth: stroke.default,
     activeBorderWidth: stroke.strong,
     /** null means the renderer shows the step's own position number instead of a glyph. */
@@ -278,6 +280,7 @@ export const stepsRecipe = {
 } as const satisfies {
   slots: readonly string[];
   gap: number;
+  paddingInline: number;
   indicator: {
     size: number;
     borderWidth: number;

@@ -16,8 +16,8 @@ function TimeSelectionPreview() {
     <Select label="시" placeholder="시 선택" dismissLabel="시 선택 닫기" items={hourOptions} selectedKey={hour} onSelectionChange={(next) => { setHour(next); setSaved(null); }} />
     <Select label="분" placeholder="분 선택" dismissLabel="분 선택 닫기" items={minuteOptions} selectedKey={minute} onSelectionChange={(next) => { setMinute(next); setSaved(null); }} />
     <PatternStatus>{value ? `선택한 시각 ${value}` : "시와 분을 모두 선택해 주세요."}</PatternStatus>
-    <Button disabled={!value} onPress={() => setSaved(value)}>선택 완료</Button>
-    <Button tone="ghost" onPress={() => { setHour(null); setMinute(null); setSaved(null); }}>다시 고르기</Button>
+    <Stack gap="xs"><Button disabled={!value} onPress={() => setSaved(value)}>선택 완료</Button>
+    <Button tone="ghost" onPress={() => { setHour(null); setMinute(null); setSaved(null); }}>다시 고르기</Button></Stack>
     {saved ? <Notice tone="success" announcement="polite" title="시간을 정했어요" description={saved} /> : null}
   </Stack></Section></Container></ScrollView>;
 }

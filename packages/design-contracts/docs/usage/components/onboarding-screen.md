@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.14.0
-- 검토일: 2026-10-07
+- 검토일: 2026-10-20
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
-- 스토리북: `배포/화면/소개/온보딩`
+- 스토리북: `배포/컴포넌트/레이아웃/온보딩 화면`, `배포/화면/소개/온보딩`
 
 2026-10-07 Motion의 단계 카드 검토에서 새 상태 엔진을 추가하기 전에 npm 1.14.0의
 양 renderer `screen-flows.d.ts`·`screen-flows.js`·exports를 확인했다. 기존 `layoutStyle`과

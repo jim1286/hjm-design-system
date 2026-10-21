@@ -79,7 +79,7 @@ function LiveComposition() {
           <span /><span /><span /><span /><span /><span /><span />
         </div>
         <HjmSearchField label="빠른 찾기" clearLabel="검색어 지우기" placeholder="Button, Dialog, Listy…" />
-        <HjmStack axis="inline" gap="sm" wrap>
+        <HjmStack axis="inline" gap="xs" wrap>
           <HjmButton>컴포넌트 보기</HjmButton>
           <HjmButton tone="secondary">원칙 읽기</HjmButton>
         </HjmStack>

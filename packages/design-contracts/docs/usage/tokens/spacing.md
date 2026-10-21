@@ -18,8 +18,8 @@
 | 토큰 | 값 | Web CSS 변수 | Native 경로 | 용도 |
 | --- | --- | --- | --- | --- |
 | `spacing.xxs` | 4 | `--hjm-space-xxs` | `spacing.xxs` · `theme.tokens.spacing.xxs` | SegmentedControl 트랙 안쪽 여백·항목 간격 |
-| `spacing.xs` | 8 | `--hjm-space-xs` | `spacing.xs` · `theme.tokens.spacing.xs` | 필드 라벨과 입력 사이, 목록 팝업 안쪽 여백(Select·Menu), DatePicker 팝업과 입력 사이, EmptyState 안 요소 사이 |
-| `spacing.sm` | 12 | `--hjm-space-sm` | `spacing.sm` · `theme.tokens.spacing.sm` | 나란한 버튼 사이, Toast 사이, small 버튼 좌우·필드 위아래 안쪽 여백 |
+| `spacing.xs` | 8 | `--hjm-space-xs` | `spacing.xs` · `theme.tokens.spacing.xs` | 가로·세로 버튼 묶음 사이, 필드 라벨과 입력 사이, 목록 팝업 안쪽 여백(Select·Menu), DatePicker 팝업과 입력 사이, EmptyState 안 요소 사이 |
+| `spacing.sm` | 12 | `--hjm-space-sm` | `spacing.sm` · `theme.tokens.spacing.sm` | Toast 사이, small 버튼 좌우·필드 위아래 안쪽 여백 |
 | `spacing.md` | 16 | `--hjm-space-md` | `spacing.md` · `theme.tokens.spacing.md` | Stack·Grid 기본 gap, medium 버튼·필드 좌우 안쪽 여백, `layout.contentGap`, `layout.pagePadding.compact` |
 | `spacing.lg` | 20 | `--hjm-space-lg` | `spacing.lg` · `theme.tokens.spacing.lg` | large 버튼 좌우 안쪽 여백, `layout.pagePadding.regular`, Dialog 하단 여백 |
 | `spacing.xl` | 24 | `--hjm-space-xl` | `spacing.xl` · `theme.tokens.spacing.xl` | `layout.sectionGap`, `layout.pagePadding.spacious`, EmptyState·Result 좌우 여백 |

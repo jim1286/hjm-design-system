@@ -70,7 +70,7 @@ import { StreamingAnswer } from "@hjmds/react-native/streaming-answer";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 버튼은 [Button](button.md) 기본 `medium`(높이 44), 본문 폭은 부모를 채운다 | `streaming-answer.tsx` |
-| 간격 | 제목·본문·표시기·버튼 줄·상태 사이 `spacing.md` 16, 버튼 사이 `spacing.sm` 12 | `Stack gap="md"`, 버튼 줄 `gap="sm"` |
+| 간격 | 제목·본문·표시기·버튼 줄·상태 사이 `spacing.md` 16, 버튼 사이 `spacing.xs` 8 | `Stack gap="md"`, 버튼 줄 `gap="xs"` |
 | 순서·정렬 | 제목 → 답 본문 → (생각 중 표시기, 가로·세로 가운데) → [생성/다시 생성] [중지] → 상태 문구(가운데) | 양 renderer |
 | 고정·스크롤 | 자체 스크롤 없음. 긴 답의 스크롤은 놓는 영역이 소유한다 | — |
 | 좁은 폭·큰 글자 | 버튼 줄 `wrap`. Web 본문은 `pre-wrap`·`overflowWrap: anywhere`로 줄바꿈 | 양 renderer |

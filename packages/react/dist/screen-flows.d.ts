@@ -405,6 +405,7 @@ export type CommentThreadItem = Readonly<{
     id: string;
     parentId: string | null;
     author: string;
+    authorBadge?: ReactNode;
     body: ReactNode;
     bodyText?: string;
     timeLabel: string;

@@ -245,7 +245,7 @@
 .hjm-button[data-size="small"]::after {
   content: "";
   position: absolute;
-  inset: calc(-1 * var(--hjm-space-xxs));
+  inset: calc(-1 * var(--hjm-button-hit-slop, var(--hjm-space-xxs)));
 }
 /* Shape and label alignment are recipe axes; a product must not override
    border-radius or justify-content on the control itself. */
@@ -315,7 +315,7 @@
 }
 .hjm-icon-button[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
 .hjm-icon-button[data-size="small"] { inline-size: var(--hjm-control-button-small); block-size: var(--hjm-control-button-small); min-inline-size: 0; min-block-size: 0; }
-.hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-space-xxs)); }
+.hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-button-hit-slop, var(--hjm-space-xxs))); }
 .hjm-icon-button[data-size="large"] { inline-size: var(--hjm-control-button-large); block-size: var(--hjm-control-button-large); }
 /* Edge alignment (iconButtonRecipe.edge / resolveButtonEdgeOverhang, 2026-10-17 measured audit): a ghost control on a
    container edge keeps its hit area but overhangs that edge, so its glyph slot or label sits on the inset like text.
@@ -332,8 +332,8 @@
 :is(.hjm-icon-button, .hjm-button):is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-edge-overhang, 0px)); }
 /* NotificationBell wraps a default (ghost, medium) IconButton with a badge anchored to its own end, so the bell root
    takes the same overhang and the badge keeps the icon's corner (2026-10-17 1.27.2 adoption: Spint's top-bar bell). */
-.hjm-notification-bell:is([data-edge="start"], [data-edge="both"]) { margin-inline-start: calc(-1 * var(--hjm-icon-button-edge-medium)); }
-.hjm-notification-bell:is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-medium)); }
+.hjm-notification-bell:is([data-edge="start"], [data-edge="both"]) { margin-inline-start: calc(-1 * var(--hjm-icon-button-edge-small)); }
+.hjm-notification-bell:is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-small)); }
 .hjm-link { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; min-inline-size: 0; overflow-wrap: anywhere; color: var(--hjm-color-content-brand); text-underline-offset: 0.18em; }
 .hjm-link[data-tone="neutral"] { color: var(--hjm-color-text-body); }
 .hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); justify-content: center; text-decoration: none; }
@@ -1020,7 +1020,7 @@
 /* cardRecipe.title.emphasis "strong": without a weight the h2–h6 element fell back to the UA bold (700). */
 .hjm-card__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-text-emphasis-strong); overflow-wrap: anywhere; }
 .hjm-card__description { margin: 0; overflow-wrap: anywhere; }
-.hjm-card__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-sm); padding: 0 var(--hjm-space-md) var(--hjm-space-md); }
+.hjm-card__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); padding: 0 var(--hjm-space-md) var(--hjm-space-md); }
 /* Row rhythm reads the recipe density variables so the stylesheet does not
    carry a second copy of the same numbers. */
 /* Inline placement (listRowRecipe.surfaceBleed, 2026-10-17 user decision): the row text sits on the container's content
@@ -1135,14 +1135,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-statistic[data-density="compact"] { gap: var(--hjm-space-xxs); }
 .hjm-statistic[data-density="compact"][data-presentation="surface"] { padding: var(--hjm-space-sm); }
 /* Text variants follow statisticRecipe as Native does: label `label` (compact `caption`) semibold, value `heading`
-   (compact `title`) heavy, affix `body` semibold in content.body, hint and trend `caption` (trend bold). Until 2026-10-06
+   (compact `bodyLarge`) heavy, affix `body` semibold in content.body, hint and trend `caption` (trend bold). Until 2026-10-06
    Web drew a body-size medium label, a title-size value at both densities (scaled twice by --hjm-text-scale, which the
    --hjm-type-* sizes already include) and muted affixes. */
 .hjm-statistic__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 .hjm-statistic[data-density="compact"] .hjm-statistic__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-statistic__value-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--hjm-space-xxs); min-inline-size: 0; }
 .hjm-statistic__value { color: var(--hjm-statistic-value-color, var(--hjm-color-text)); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); font-weight: var(--hjm-font-weight-semibold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.hjm-statistic[data-density="compact"] .hjm-statistic__value { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+.hjm-statistic[data-density="compact"] .hjm-statistic__value { font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
 .hjm-statistic__affix { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-statistic__hint { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-statistic__trend { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
@@ -1186,7 +1186,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-result[data-status="info"] .hjm-result__icon { color: var(--hjm-accent-info); background: var(--hjm-color-bg); }
 .hjm-result__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-large-size); line-height: var(--hjm-type-title-large-line-height); font-weight: var(--hjm-type-title-large-weight); overflow-wrap: anywhere; }
 .hjm-result__description { max-inline-size: 40rem; margin: 0; color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
-.hjm-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--hjm-space-sm); margin-block-start: var(--hjm-space-xs); }
+.hjm-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--hjm-space-xs); margin-block-start: var(--hjm-space-xs); }
 .hjm-progress { display: grid; gap: var(--hjm-space-xs); }
 .hjm-progress__copy { display: flex; justify-content: space-between; gap: var(--hjm-space-md); color: var(--hjm-color-text-body); }
 /*
@@ -2583,7 +2583,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   flex: 0 0 auto;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: var(--hjm-space-sm);
+  gap: var(--hjm-space-xs);
   padding: var(--hjm-space-sm) var(--hjm-space-lg)
     max(var(--hjm-space-sm), env(safe-area-inset-bottom, 0px));
 }
@@ -2774,7 +2774,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-form__fields { display: grid; gap: var(--hjm-space-lg); }
 .hjm-form[data-density="compact"] .hjm-form__fields { gap: var(--hjm-space-sm); }
 .hjm-form__error { margin-block-start: var(--hjm-space-sm); color: var(--hjm-color-danger); }
-.hjm-form__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-sm); margin-block-start: var(--hjm-space-sm); }
+.hjm-form__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); margin-block-start: var(--hjm-space-sm); }
 
 /* Advanced display ------------------------------------------------------- */
 /* timelineRecipe label/description are `body`; binding it here lets the rail and timestamp derive from the same line box. */
@@ -2896,10 +2896,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-load-more__spinner { inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 
 /* Expansion renderers --------------------------------------------------- */
-.hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-connector-count), minmax(0, 1fr)) fit-content(calc(100% / var(--hjm-steps-count))); gap: 0; margin: 0; padding: 0; list-style: none; }
+.hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-connector-count), minmax(0, 1fr)) fit-content(calc(100% / var(--hjm-steps-count))); gap: 0; margin: 0; padding: 0 var(--hjm-steps-inset); list-style: none; }
 .hjm-steps__step { min-inline-size: 0; display: grid; align-content: start; gap: var(--hjm-space-xs); }
 .hjm-steps__rail { display: flex; align-items: center; min-inline-size: 0; }
-.hjm-steps__indicator { flex: 0 0 auto; inline-size: 1.5rem; block-size: 1.5rem; display: grid; place-items: center; border: 1px solid var(--hjm-color-border); border-radius: 50%; color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
+.hjm-steps__indicator { flex: 0 0 auto; inline-size: var(--hjm-steps-indicator-size); block-size: var(--hjm-steps-indicator-size); display: grid; place-items: center; border: 1px solid var(--hjm-color-border); border-radius: 50%; color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-steps__connector { flex: 1 1 auto; block-size: 1px; background: var(--hjm-color-border); }
 .hjm-steps__step[data-status="current"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-content-brand); color: var(--hjm-color-content-brand); }
 .hjm-steps__step[data-status="complete"] .hjm-steps__indicator { border-color: var(--hjm-accent-success); color: var(--hjm-accent-success); background: var(--hjm-color-bg); }
@@ -3076,7 +3076,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* TDS-inspired screen rhythm: shared Native recipes, content-driven height. See docs/screen-chrome.md. */
 /* Intrinsic action columns keep short labels readable at 320px; the title wraps
    in the remaining space instead of squeezing actions to equal-width tracks. */
-.hjm-top-bar { display: grid; grid-template-columns: minmax(var(--hjm-control-min-touch-target), auto) minmax(0, 1fr) minmax(var(--hjm-control-min-touch-target), auto); align-items: center; min-block-size: var(--hjm-top-bar-min-height); gap: var(--hjm-top-bar-gap); padding-inline: var(--hjm-top-bar-padding); padding-block-start: max(env(safe-area-inset-top, 0px), var(--hjm-top-bar-safe-area)); background: var(--hjm-color-bg); }
+.hjm-top-bar { display: grid; grid-template-columns: minmax(var(--hjm-control-button-small), auto) minmax(0, 1fr) minmax(var(--hjm-control-button-small), auto); align-items: center; min-block-size: var(--hjm-top-bar-min-height); gap: var(--hjm-top-bar-gap); padding-inline: var(--hjm-top-bar-padding); padding-block-start: max(env(safe-area-inset-top, 0px), var(--hjm-top-bar-safe-area)); background: var(--hjm-color-bg); }
 .hjm-top-bar[data-surface="transparent"] { background: transparent; }
 .hjm-top-bar__leading, .hjm-top-bar__trailing { display: flex; flex-wrap: wrap; align-items: center; min-inline-size: 0; gap: var(--hjm-top-bar-gap); }
 .hjm-top-bar__trailing { justify-content: flex-end; }
@@ -3097,7 +3097,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    the remainder so the gap is max(footer, inset), not their sum (2026-10-17 "버튼 아래 여백이 많아"). */
 .hjm-bottom-cta[data-placement="screen-footer"] { position: static; box-sizing: border-box; inline-size: 100%; min-inline-size: 0; min-block-size: 0; padding: 0 0 max(0px, calc(var(--hjm-bottom-cta-safe-area) - var(--hjm-bottom-cta-parent-padding))); border: 0; background: none; box-shadow: none; }
 .hjm-bottom-cta__description { margin: 0; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
-.hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-gap); }
+.hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-actions-gap); }
 /* bottomCtaRecipe.contentMaxWidth: the surface spans the viewport, its copy and actions stop at the reading width. */
 .hjm-bottom-cta__description, .hjm-bottom-cta__actions { box-sizing: border-box; inline-size: 100%; max-inline-size: var(--hjm-bottom-cta-content-max-width); margin-inline: auto; }
 .hjm-bottom-cta__actions > div { flex: 1 1 calc(var(--hjm-control-min-touch-target) * 3); min-inline-size: 0; }
@@ -3302,14 +3302,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tabs__indicator { position: absolute; bottom: 0; height: 2px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
 /* indicator="filled" (tabsRecipe.indicators.filled): a surface-accent pill behind the selected tab, no list divider.
    The moving pill spans the tab height and sits under the labels. */
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__list { border: 0; }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab { border-radius: var(--hjm-radius-full); }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-content-brand); }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab[data-state="selected"]::after { display: none; }
-.hjm-tabs[data-indicator="filled"]:not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"] { background: var(--hjm-color-surface-accent); }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__indicator { top: 0; bottom: 0; height: auto; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-accent); z-index: 0; }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__list { position: relative; }
-.hjm-tabs[data-indicator="filled"] .hjm-tabs__tab { z-index: 1; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__list { border: 0; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab { border-radius: var(--hjm-radius-full); }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-content-brand); }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab[data-state="selected"]::after { display: none; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]):not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"] { background: var(--hjm-color-surface-accent); }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__indicator { top: 0; bottom: 0; height: auto; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-accent); z-index: 0; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__list { position: relative; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab { z-index: 1; }
 .hjm-tabs__gooey { height: 6px; }
 
 /* Capsule destinations retain route/link semantics. At larger text sizes we show
@@ -3722,6 +3722,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-card__media-badges { position: absolute; inset-block-start: var(--hjm-space-sm); inset-inline-end: var(--hjm-space-sm); display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); z-index: 1; }
 .hjm-card__scrim { position: absolute; inset: 0; background: var(--hjm-card-background-scrim); }
 .hjm-card__badges { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+.hjm-card__badges[data-align="center"] { justify-content: center; }
 .hjm-card[data-background-media="true"] > .hjm-card__body { position: relative; flex: 0 1 auto; margin-block-start: auto; }
 .hjm-card[data-background-media="true"] > .hjm-card__actions { position: relative; }
 .hjm-card[data-background-media="true"] .hjm-card__title,
@@ -3820,3 +3821,14 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* Commands remain independent of the passive record and rail. */
 .hjm-timeline__item:has(> .hjm-timeline__actions) { grid-template-columns: 1rem minmax(0, 1fr) auto; }
 .hjm-timeline__actions { align-self: center; display: flex; align-items: center; gap: var(--hjm-space-xs); }
+
+/* Strong filled tabs use one opaque contrast pair for static and moving marks. */
+.hjm-tabs[data-indicator="solid"] .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-on-primary); }
+.hjm-tabs[data-indicator="solid"]:not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"],
+.hjm-tabs[data-indicator="solid"] .hjm-tabs__indicator { background: var(--hjm-color-primary); }
+.hjm-segmented[data-selection-tone="brand"]:not([data-presentation="text"]) .hjm-segmented__item[data-state="checked"] { color: var(--hjm-color-on-primary); background: var(--hjm-color-primary); }
+.hjm-segmented[data-selection-tone="brand"][data-presentation="pills"] .hjm-segmented__item[data-state="checked"] { background: transparent; }
+.hjm-segmented[data-selection-tone="brand"][data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background: var(--hjm-color-primary); border-color: var(--hjm-color-primary); }
+.hjm-segmented[data-selection-tone="brand"] .hjm-segmented__highlight { background: var(--hjm-color-primary); }
+.hjm-segmented[data-selection-tone="brand"] .hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"],
+.hjm-segmented[data-selection-tone="brand"][data-presentation="pills"] .hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"]::before { background: transparent; }

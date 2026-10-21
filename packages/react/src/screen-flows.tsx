@@ -203,7 +203,7 @@ export function MediaSelectionCell({item,index,count,labels,actionLabels,removeL
  const lock=disabled?{"aria-disabled":true as const}:{};
  return <Stack data-hjm-media-item={id} gap="xs">
   {item.preview}<UploadItem descriptor={item.descriptor} labels={labels} onRetry={onRetry} onCancel={onCancel}/>
-  <Stack axis="inline" gap="xxs" layoutStyle={{flexWrap:"wrap"}}>
+  <Stack axis="inline" gap="xs" layoutStyle={{flexWrap:"wrap"}}>
    <Button data-media-action="up" aria-label={moveUpLabel(item)} size="small" tone="ghost" disabled={index===0} {...lock} onClick={()=>onMove(id,-1)}>{actionLabels.moveUp}</Button>
    <Button data-media-action="down" aria-label={moveDownLabel(item)} size="small" tone="ghost" disabled={index===count-1} {...lock} onClick={()=>onMove(id,1)}>{actionLabels.moveDown}</Button>
    {/* Rotate edits the photo and stays before remove, so the destructive action keeps the trailing place. */}
@@ -520,7 +520,7 @@ function SearchFilterSheetView<F>({ sheet }: { sheet: SearchFilterSheet<F> }) {
   const count = sheet.count(draft);
   // Reset sits left of the primary action on Web (sheet.md [secondary][primary]) and is always present,
   // disabled at the default, so the primary action does not jump when the draft changes.
-  const footer = <Stack axis="inline" justify="end" gap="sm" wrap>
+  const footer = <Stack axis="inline" justify="end" gap="xs" wrap>
     <Button tone="secondary" disabled={sheet.isDefault(draft)} onClick={() => setDraft(sheet.reset(draft))}>{sheet.labels.reset}</Button>
     <Button disabled={count === 0} onClick={() => { sheet.onApply(draft); sheet.onOpenChange(false); }}>{sheet.labels.apply(count)}</Button>
   </Stack>;
@@ -642,7 +642,7 @@ export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,
 export type CommentThreadItem = Readonly<{
  /** Root-only reply branch. Total can exceed the loaded preview; HJM owns its indentation and expansion. */
  repliesCount?:number;repliesNotice?:ReactNode;repliesFooter?:ReactNode;
- id:string;parentId:string|null;author:string;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
+ id:string;parentId:string|null;author:string;authorBadge?:ReactNode;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
  /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
  reactions?:CommentReactions;reactionSummary?:ReactNode;
  /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
@@ -709,7 +709,7 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<div className="hjm-comment-row__avatar" style={{inlineSize:avatarSize}}>{item.avatar}</div>:null}<div className="hjm-comment-row__text" style={{gap:commentThreadRecipe.lineGap}}>
  {/* A definite media width resolves percentage-sized children; the parent cap preserves narrow comment columns (Spint photo adoption). */}
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
- {(()=>{const identity=<>{item.bodyText!==undefined?<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>:(item.author||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{timeInActions?null:time}</Stack>:null}
+ {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text>{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.authorBadge}{timeInActions?null:time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{inlineSize:commentThreadRecipe.mediaMaxWidth,maxInlineSize:"100%",borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {item.mediaAlbum?<MediaAlbumView className="hjm-comment-row__album" album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/>:null}
  {(timeInActions&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}

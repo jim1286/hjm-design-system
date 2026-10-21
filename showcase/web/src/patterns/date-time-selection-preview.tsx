@@ -42,8 +42,8 @@ export function DateTimeSelectionPreview(props: DateTimeSelectionProps) {
     <Select label={copy.minute} placeholder={copy.minutePlaceholder} emptySelectionLabel={copy.minuteClear} items={minuteOptions} selectedKey={model.minute} onSelectionChange={next => send({ type: "minute", value: next })} disabled={locked} />
     <Text role="status">{value ? dateTimeSelectionDisplay(value) : copy.missing}</Text>
     <Text tone="muted">{copy.timezone}</Text>
-    <Button ref={confirmRef} disabled={!!props.disabled || !value} loading={busy} onClick={() => send({ type: "confirm" })}>{busy ? copy.pending : model.status === "failed" ? copy.retry : copy.confirm}</Button>
-    <Button tone="ghost" disabled={locked} onClick={() => send({ type: "reset" })}>{copy.reset}</Button>
+    <Stack gap="xs"><Button ref={confirmRef} disabled={!!props.disabled || !value} loading={busy} onClick={() => send({ type: "confirm" })}>{busy ? copy.pending : model.status === "failed" ? copy.retry : copy.confirm}</Button>
+    <Button tone="ghost" disabled={locked} onClick={() => send({ type: "reset" })}>{copy.reset}</Button></Stack>
     {model.status === "failed" ? <Notice tone="danger" title={copy.failed} /> : null}
     {model.status === "saved" ? <Notice tone="success" title={copy.saved} description={dateTimeSelectionDisplay(model.saved!)} /> : null}
     {/* Theme cycling and the deterministic service response are demo-only; they stay after the composition (SELECTION.md 조립 규칙). */}

@@ -186,3 +186,7 @@ Spint 스팟 필터가 제품 ScrollView와 고정 추가 행을 재조립하던
 <!-- usage-example: Native ../../../../../showcase/native/src/components/SegmentedControl.stories.tsx -->
 
 2026-10-20 개발 소스·미게시: Spint 카테고리 재검토에서 사용자가 여백은 이전처럼 유지하고 글씨를 줄이도록 요청했다. pills 좌우 여백은 small 12, medium 16으로 복원하고 글씨는 label(12/18)로 통일한다. 높이와 터치 영역은 유지한다.
+
+### 진한 브랜드 선택 — 개발 소스, 미게시 (2026-10-21)
+
+다에리·스핀트의 선택 배경이 너무 옅다는 사용자 피드백에 따라 `selectionTone="brand"`로 선택 면에 `primary`, 글자·아이콘에 `onPrimary`를 쓴다. `pills`·`connected`의 크기와 선택 동작을 유지하며 `text`는 기존 표시를 유지한다.

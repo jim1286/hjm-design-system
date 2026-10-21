@@ -37,7 +37,7 @@ export function TransferTask(props: TransferTaskProps) {
   const status = action.pending ? cancelRequested ? props.labels.cancelling : observation ? props.labels.transferring : props.labels.queued
     : cancelled ? props.labels.cancelled : phase === "success" ? props.labels.success : action.failed ? props.labels.error : null;
   const known = observation !== null && observation.total !== null;
-  return <Stack gap="md"><Stack axis="inline" gap="sm" wrap>
+  return <Stack gap="md"><Stack axis="inline" gap="xs" wrap>
     <Button loading={action.pending} disabled={props.disabled === true} onPress={start}>{props.labels.start}</Button>
     {action.pending ? <Button tone="secondary" disabled={props.disabled === true || cancelRequested} onPress={cancel}>{props.labels.cancel}</Button> : null}</Stack>
     {action.pending || known ? <Progress label={status ?? props.labels.transferring} {...(known ? { value: observation.completed, max: observation.total! } : {})}

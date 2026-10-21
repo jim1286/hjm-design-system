@@ -89,8 +89,8 @@ import { Steps } from "@hjmds/react-native/steps";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | Web은 연결선이 있는 앞 단계가 남은 폭을 균등하게 나누고 마지막 단계는 내용 폭(전체 폭/단계 수 이내)만 사용한다. 첫·마지막 표지는 양끝에 맞춘다. Native는 `flex: 1`. 원(indicator) 24(`glyph.md`), 연결선 1(`stroke.default`), 현재·오류 단계의 원 테두리 2(`stroke.strong`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
-| 간격 | 단계 사이·원과 글자 사이 `spacing.xs` 8(`stepsRecipe.gap`) | `stepsRecipe.gap` |
+| 크기 | Web은 연결선이 있는 앞 단계가 남은 폭을 균등하게 나누고 마지막 단계는 내용 폭(전체 폭/단계 수 이내)만 사용한다. 첫·마지막 표지는 양끝에 맞춘다. Native도 마지막 칸은 내용 폭만 사용한다. 원(indicator) 44(`glyph.xxl`), 연결선 1(`stroke.default`), 현재·오류 단계의 원 테두리 2(`stroke.strong`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
+| 간격 | 좌우 안쪽 여백 `spacing.md` 16(`stepsRecipe.paddingInline`), 원과 글자 사이 `spacing.xs` 8(`stepsRecipe.gap`) | `stepsRecipe.gap` |
 | 순서·정렬 | 흐름 화면의 맨 위(머리 아래, 본문 위)에 가로 한 줄. 화면 아래 행동 버튼과 떨어뜨리고, 같은 수준 화면 사이 이동(탭)으로 쓰지 않는다 | — |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 라벨·설명은 줄바꿈된다(`overflow-wrap: anywhere`). 좁은 폭에서 라벨이 세 줄 이상이 되면 라벨을 줄이거나 [Progress](progress.md)로 바꾼다. 세로 배치 축은 없다 | `styles.css` `.hjm-steps__label` |
@@ -122,3 +122,5 @@ import { Steps } from "@hjmds/react-native/steps";
 2026-10-19 포트폴리오: 사용자가 단계 클릭 시 해당 설명만 표시하도록 요청했다. `navigationMode: "free"`를 명시한 읽기 흐름에 한해 모든 단계가 버튼이 된다. 기본 linear와 handler 생략 시 표시 전용 동작은 유지한다. Web 현재 버튼은 aria-current, Native는 selected를 제공한다.
 
 2026-10-19 스핀트 실제 화면 피드백: 수평 행 gap으로 끊기던 연결선을 없애고 마지막 표지 앞의 연결 구간을 유지한다. Native도 마지막 열에 균등 여분 폭을 남기지 않아 첫·마지막 표지가 본문 양끝에 맞는다. 내부 문구 간격과 기본 이동 계약은 유지한다.
+
+2026-10-21 스핀트 실제 화면 피드백: 24pt 원에 꽃 표시가 붙어 식별하기 어렵고 양끝이 화면 가장자리에 가까웠다. 공통 recipe의 원을 `glyph.xxl` 44pt로 키우고 좌우 안쪽 여백 `spacing.md` 16pt를 두었다. Web·Native에 동일 적용하며 제품 그림은 테두리 안 여유를 두고 배치한다. 개발 소스 변경이며 미게시다.

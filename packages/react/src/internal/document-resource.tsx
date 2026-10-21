@@ -46,8 +46,8 @@ export function DocumentResource({ preview, moreAction, ...props }: DocumentReso
         {resource.preview.status === "loading" ? <Text role="status" style={{ textAlign: "center" }}>{labels.previewLoading}</Text> : null}
         {previewFailed ? <Text tone="danger" role="alert" style={{ textAlign: "center" }}>{resource.preview.status === "error" ? resource.preview.message : ""}</Text> : null}
         {/* Independent buttons prevent preview navigation from swallowing save/menu interaction. */}
-        {props.onPreview ? <Button ref={previewButton} tone="secondary" disabled={!resource.canPreview} onClick={props.onPreview}>{labels.preview}</Button> : null}
-        {previewFailed && resource.preview.retryable ? <Button ref={attachRetry} tone="secondary" disabled={!resource.canRetryPreview} onClick={props.onRetryPreview}>{labels.retryPreview}</Button> : null}
+        <Stack gap="xs">{props.onPreview ? <Button ref={previewButton} tone="secondary" disabled={!resource.canPreview} onClick={props.onPreview}>{labels.preview}</Button> : null}
+        {previewFailed && resource.preview.retryable ? <Button ref={attachRetry} tone="secondary" disabled={!resource.canRetryPreview} onClick={props.onRetryPreview}>{labels.retryPreview}</Button> : null}</Stack>
       </Stack> : null}
       <Stack gap="sm" justify="center">
         <Button ref={saveButton} disabled={saveFailed ? !resource.canRetrySave : !resource.canSave}

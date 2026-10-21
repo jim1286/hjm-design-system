@@ -304,12 +304,12 @@ return (<AuthScreenLayout mainCard
 
 function ButtonExample({ variant }: { variant: PreviewVariant }) {
 const [message, setMessage] = useState("");
-return (<StoryFrame><Stack axis="inline" gap="md" wrap><Button disabled={variant === "disabled"} loading={variant === "loading"} onPress={() => setMessage(buttonExample.primary.result)}>{buttonExample.primary.label}</Button><Button tone="secondary" onPress={() => setMessage(buttonExample.secondary.result)}>{buttonExample.secondary.label}</Button><Button disabled>{buttonExample.disabled}</Button></Stack><PreviewResult message={message} /></StoryFrame>);
+return (<StoryFrame><Stack axis="inline" gap="xs" wrap><Button disabled={variant === "disabled"} loading={variant === "loading"} onPress={() => setMessage(buttonExample.primary.result)}>{buttonExample.primary.label}</Button><Button tone="secondary" onPress={() => setMessage(buttonExample.secondary.result)}>{buttonExample.secondary.label}</Button><Button disabled>{buttonExample.disabled}</Button></Stack><PreviewResult message={message} /></StoryFrame>);
 }
 
 function IconButtonExample({ variant }: { variant: PreviewVariant }) {
 const [message, setMessage] = useState("");
-return (<StoryFrame><Stack axis="inline" gap="md">{iconButtonExample.map(item => <IconButton key={item.icon} disabled={variant === "disabled"} loading={variant === "loading"} label={item.label} tone={item.tone} onPress={() => setMessage(item.result)}>
+return (<StoryFrame><Stack axis="inline" gap="xs">{iconButtonExample.map(item => <IconButton key={item.icon} disabled={variant === "disabled"} loading={variant === "loading"} label={item.label} tone={item.tone} onPress={() => setMessage(item.result)}>
           <Icon descriptor={{ name: item.icon }} renderGlyph={semanticGlyph} />
         </IconButton>)}</Stack><PreviewResult message={message} /></StoryFrame>);
 }
@@ -597,7 +597,7 @@ return (<StoryFrame><Steps composeAccessibleName={stepsExample.accessibleName} d
 }
 
 function TopBarExample({ variant }: { variant: PreviewVariant }) {
-return (<StoryFrame><TopBar title={topBarExample.title} leading={<IconButton label={topBarExample.back} tone="ghost"><Icon descriptor={{ name: "chevronStart" }} renderGlyph={semanticGlyph} /></IconButton>} actions={<Button tone="ghost">{topBarExample.done}</Button>} /></StoryFrame>);
+return (<StoryFrame><TopBar title={topBarExample.title} leading={<IconButton size="small" hitSlop={0} label={topBarExample.back} tone="ghost"><Icon descriptor={{ name: "chevronStart" }} renderGlyph={semanticGlyph} /></IconButton>} actions={<Button size="small" hitSlop={0} tone="ghost">{topBarExample.done}</Button>} /></StoryFrame>);
 }
 
 // Same trigger as Web: a tool action is an IconButton named "작업 더보기", not a brand-colored text link.

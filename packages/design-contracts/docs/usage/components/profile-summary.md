@@ -61,7 +61,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 원형 아바타 프레임 72. ProfileScreen 수정 행동은 `Button` `secondary` `small` | `profileSummaryRecipe.avatarSize`·`editAction` |
-| 간격 | 수치 칸 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.sm` 12. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
+| 간격 | 수치 칸 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.xs` 8. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
 | 순서·정렬 | 머리(아바타 → 이름·배지 → nameActions) → 수치 줄 → actions → children, 수치 칸은 균등 폭·가운데 | `CompositionLayout` + `flex: 1` 칸 |
 | 고정·스크롤 | 없음. ProfileScreen 본문 스크롤 안에 놓인다 | — |
 | 좁은 폭·큰 글자 | 수치 칸은 `minWidth: 0`으로 나눠 갖고, 행동 줄은 `wrap` | 양 renderer |

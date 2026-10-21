@@ -4,9 +4,9 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.23.0
-- 검토일: 2026-10-15
+- 검토일: 2026-10-20
 - 근거: 양 renderer `src/screens.tsx`, [소유권](../SELECTION.md#소유권). 제품별 제목·배지·상태·하단 영역 재조립을 줄이기 위해 기존 Stack·상태 계약을 합성한다.
-- 스토리북: `배포/화면/설정/알림 설정`
+- 스토리북: `배포/컴포넌트/레이아웃/구성 골격`, `배포/화면/설정/알림 설정`
 
 ## 언제 쓰나
 
@@ -57,6 +57,8 @@ import { CompositionLayout } from "@hjmds/react-native/screens";
 | notice | ReactNode | 없음 | 초안을 유지하는 비차단 안내 |
 | loadingIndicator | ReactNode | 기본 Spinner | loading 상태의 제품 브랜드 그림. HJM이 제목·설명을 접근성 이름으로 전달하고 중앙 배치를 소유하며 ready/error에는 표시하지 않는다(1.24.0) |
 | children | ReactNode | 없음 | 제품 도메인 콘텐츠 또는 HJM 전용 구성 |
+| aside | ReactNode | 없음 | 제목·본문 옆의 비상호작용 보조 그림. 머리글 actions로 장식을 넣어 다음 줄로 밀리던 Diairy 엽서 카드 문제에서 추가(2026-10-20). 최대 폭 40%, 본문은 남은 폭에서 줄바꿈 |
+| footerAside | ReactNode | 없음 | footer 끝의 짧은 보조 정보. 좁으면 다음 줄로 감싸며 본문 상태 교체와 독립 |
 | footer | ReactNode | 없음 | 본문 다음 보조/주 행동; 고정은 바깥 ScreenLayout 소유 |
 | state | ScreenContentState | ready | 본문 교체; loading은 Spinner만 표시. empty 제목은 body(14), 오류·접근 제한 제목은 title |
 | stateAction | ReactNode | 없음 | 본문 상태와 중앙 정렬되는 복구 행동 |
@@ -98,3 +100,5 @@ footer
 
 2026-10-19 사용자 지시: 앱·모바일 웹뷰의 큰 글씨를 지양하므로 구획 제목은 두 renderer 모두 18(level5)을 기본으로 쓴다.
 headingLevel은 문서 구조만 결정한다. 기존 24는 상한이며 일반 카드·선택 영역 제목의 기본값이 아니다.
+
+`aside`는 제목·본문 묶음의 끝 쪽에 놓이고 footer는 카드 전체 폭을 사용한다. 지원 그림 자체의 크기·브랜드는 제품이 결정하며, 위치·본문의 가변 폭·footer 줄바꿈은 이 구성이 소유한다.

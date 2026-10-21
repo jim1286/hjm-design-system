@@ -45,7 +45,7 @@
 | 바깥 틀 | Stack, 스토리 `Container size="reading"` | 화면 앞쪽 비교 도구부터 세로 | gap lg20, 최대 폭 720; Native는 바깥 ScrollView와 기존 테마 비교와 같은 640host-unit 화면 viewport |
 | 기록 항목 | OverviewScreen·Stack | items 본문 | gap sm12; rows/grid/cards와 화면은 profile 기본값 |
 | 줄무늬 | EffectSurface | 화면 canvas 뒤 SVG | 한 선 1host unit, spacing 기본24, 명시 비교40; userSpaceOnUse |
-| footer | Stack·Button | 기존 OverviewScreen footer | gap sm12, primary 확인 다음 secondary 상세 |
+| footer | Stack·Button | 기존 OverviewScreen footer | gap xs8, primary 확인 다음 secondary 상세 |
 | 상세 | Dialog·Text | 기존 modal | 현재 초안 읽기, close/Escape·초점 복귀는 기존 계약 |
 
 ## 흐름과 상태

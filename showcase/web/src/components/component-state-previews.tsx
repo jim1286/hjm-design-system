@@ -12,14 +12,14 @@ import { ProviderLogo } from "../patterns/provider-logo";
 
 // Moved from 배포/컴포넌트/동작/로딩 상태 (2026-10-06): a state is a story of its component, not an item of its own.
 export function ButtonStatePreview({ state }: { state: "pending" | "disabled" }) {
-  return <Stack axis="inline" gap="sm" wrap>
+  return <Stack axis="inline" gap="xs" wrap>
     <Button loading={state === "pending"} disabled={state === "disabled"}>저장</Button>
     <Button tone="secondary" loading={state === "pending"} disabled={state === "disabled"}>임시 저장</Button>
   </Stack>;
 }
 
 export function IconButtonStatePreview({ state }: { state: "pending" | "disabled" }) {
-  return <Stack axis="inline" gap="sm">
+  return <Stack axis="inline" gap="xs">
     <IconButton label="좋아요" loading={state === "pending"} disabled={state === "disabled"}>♡</IconButton>
     <IconButton label="닫기" tone="ghost" loading={state === "pending"} disabled={state === "disabled"}>×</IconButton>
   </Stack>;

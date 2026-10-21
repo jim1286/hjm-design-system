@@ -27,11 +27,13 @@ export type CollectionRailProps<Item extends CollectionRailItem = CollectionRail
    * Place the rail directly in the body; inside overlays or `body-edge`/`none` bodies there is no gutter to cross.
    */
   bleed?: boolean;
+  /** Hide the button row when touch scrolling is the intended navigation. */
+  showNavigation?: boolean;
   layoutStyle?: HjmCompositionStyleProp; testID?: string;
 }>;
 
 export function CollectionRail<Item extends CollectionRailItem = CollectionRailItem>({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density,
-  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, testID }: CollectionRailProps<Item>) {
+  emptyContent, defaultStartKey, onStartKeyChange, bleed = false, showNavigation = true, layoutStyle, testID }: CollectionRailProps<Item>) {
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const { environment, palette, tokens } = useHjmNativeTheme(), direction = environment.direction;
@@ -108,10 +110,10 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
       </View>)}
       {items.length === 0 ? emptyContent : null}
     </ScrollView>
-    <View accessibilityLabel={labels.navigation} style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.sm, marginTop: tokens.spacing.sm }}>
+    {showNavigation && <View accessibilityLabel={labels.navigation} style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }}>
       {/* Tool actions: icon buttons named by the localized label, matching Web (2026-10-17 review E9). */}
       <IconButton label={labels.previous} tone="ghost" disabled={state.atStart} onPress={() => navigate("previous")}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
       <IconButton label={labels.next} tone="ghost" disabled={state.atEnd} onPress={() => navigate("next")}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
-    </View>
+    </View>}
   </View>;
 }

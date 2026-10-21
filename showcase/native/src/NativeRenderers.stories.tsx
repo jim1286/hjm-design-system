@@ -172,7 +172,7 @@ function ActionsPreview() {
   return (
     <StoryFrame>
       <StoryHeading>Actions</StoryHeading>
-      <Stack axis="inline" gap="sm" wrap>
+      <Stack axis="inline" gap="xs" wrap>
         <Button onPress={() => setCount((value) => value + 1)}>Primary</Button>
         <Button tone="secondary" onPress={() => setAction("Secondary")}>Secondary</Button>
         <Button disabled onPress={() => setAction("Provider login requested")}>Disabled</Button>
@@ -572,10 +572,10 @@ function OverlaysPreview() {
   return (
     <StoryFrame>
       <StoryHeading>Overlays</StoryHeading>
-      <Button onPress={() => setDialogOpen(true)}>Open dialog</Button>
+      <Stack gap="xs"><Button onPress={() => setDialogOpen(true)}>Open dialog</Button>
       <Button tone="secondary" onPress={() => setAlertOpen(true)}>Open alert dialog</Button>
       <Button tone="secondary" onPress={() => setIntroOpen(true)}>Open info alert dialog</Button>
-      <Button tone="secondary" onPress={() => setSheetOpen(true)}>Open sheet</Button>
+      <Button tone="secondary" onPress={() => setSheetOpen(true)}>Open sheet</Button></Stack>
       <Dialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}

@@ -13,6 +13,7 @@ it("keeps composition content on notice, replaces it on restriction, and creates
   const render = (restricted: boolean) => <HjmNativeProvider><CompositionLayout title="구성"
     badge={<Text>배지</Text>} notice={<Text>저장 실패</Text>}
     state={restricted ? {kind: "restricted", title: "접근 제한"} : {kind: "ready"}}
+    aside={<Text>보조 그림</Text>} footerAside={<Text>전달 완료</Text>}
     footer={<Text>닫기</Text>}><Text>보존할 초안</Text></CompositionLayout></HjmNativeProvider>;
   act(() => { tree = create(render(false)); });
   expect(tree!.root.findAllByType(ScrollView)).toHaveLength(0);
@@ -20,6 +21,8 @@ it("keeps composition content on notice, replaces it on restriction, and creates
   act(() => tree!.update(render(true)));
   expect(JSON.stringify(tree!.toJSON())).not.toContain("보존할 초안");
   expect(JSON.stringify(tree!.toJSON())).toContain("닫기");
+  expect(JSON.stringify(tree!.toJSON())).toContain("보조 그림");
+  expect(JSON.stringify(tree!.toJSON())).toContain("전달 완료");
   act(() => tree!.unmount());
 });
 it("connects shared row actions to the actual item and renders the common screen badge", () => {

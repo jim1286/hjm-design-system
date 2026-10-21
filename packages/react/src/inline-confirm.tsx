@@ -39,7 +39,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
   const busy = phase?.status === "busy";
   return <div ref={group} role="group" aria-label={props.prompt} onKeyDown={event => { if (event.key === "Escape" && !busy) { event.stopPropagation();session.cancel("escape"); } }} style={{ ...props.layoutStyle, display: "grid", gap: "var(--hjm-space-sm)" }}>
     <span>{props.prompt}</span>{phase?.status === "error" && <span role="alert">{phase.message}</span>}
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-sm)" }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" }}>
       <Button ref={cancel} tone="ghost" disabled={busy} onClick={() => session.cancel("cancel-action")}>{props.cancelLabel}</Button>
       <Button ref={confirm} tone="danger" loading={busy} disabled={props.disabled ?? false} onClick={event => {
         // WebKit pointer activation can leave focus on the now-disabled cancel

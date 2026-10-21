@@ -7,7 +7,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { useHjmNativeTheme } from "../provider.js";
 
 /** Shared native screen dismissal; navigation, reverse artwork and pending exit remain product-owned. */
-export function useScreenPullDismiss(enabled: boolean, onClose: (() => void) | undefined, testID?: string) {
+export function useScreenPullDismiss(enabled: boolean, onClose: (() => void) | undefined, testID?: string, closeLabel?: string) {
   const { environment, palette, tokens } = useHjmNativeTheme();
   const [offset] = useState(() => new Animated.Value(0));
   const held = useRef(false);
@@ -51,8 +51,8 @@ export function useScreenPullDismiss(enabled: boolean, onClose: (() => void) | u
   return {
     offset, close, onScrollBeginDrag, onScrollEndDrag,
     handle: enabled ? <View {...responder?.panHandlers}>
-      {/* The header exit is the single accessible close action; the handle adds pointer affordance only. */}
-      <Pressable accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+      {/* The handle is the single close control for pull-dismiss sheets (2026-10-20 letter header cleanup). */}
+      <Pressable accessible accessibilityRole="button" accessibilityLabel={closeLabel}
         testID={`${testID ?? "hjm-screen"}-dismiss-handle`} onPress={close}
         style={{ minHeight: control.minTouchTarget, alignItems: "center", justifyContent: "center" }}>
         <View style={{ width: sheetRecipe.handle.width, height: sheetRecipe.handle.height, borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) }} />

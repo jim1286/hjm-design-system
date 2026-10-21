@@ -10,7 +10,7 @@ export function SaveFeedbackPreview({ variant = "compact" }: { variant?: SaveFee
   return <Stack gap="md">
     {saved ? <Toast descriptor={example[variant]} onDismiss={() => setSaved(false)}
       renderToneIcon={({ color, size }) => <Check color={color} size={size} accessible={false} />} /> : null}
-    <Stack axis="inline" gap="sm">
+    <Stack axis="inline" gap="xs">
       <Button tone="secondary" onPress={() => setSaved(false)}>수정</Button>
       <Button onPress={() => setSaved(true)} disabled={saved}>저장</Button>
     </Stack>

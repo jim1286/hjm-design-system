@@ -54,7 +54,7 @@ Native(하단 시트, 키보드 올라옴)              Web(하단 시트)
 | 머리 | 손잡이(+ `showClose`일 때 끝 × IconButton). 보이는 제목 없음, `title`은 접근성 이름(2026-10-17 사용자 결정: 시트는 보이는 제목 없이 `title`을 접근성 이름으로만 쓴다) | 시트 맨 위, 고정 | × 머리 최소 높이 `control.minTouchTarget` 44·좌우 `spacing.lg` 20(+좌우 inset)·위 `spacing.sm` 12(두 플랫폼 같음) |
 | 실패 알림 | `Notice tone="danger"` | 본문 맨 위(입력 위), 실패했을 때만, 스크롤 | 본문 항목 사이 `spacing.md` 16 |
 | 본문 | `TextField` + 설명 | 머리 아래, **스크롤** | 항목 사이 `sheetRecipe.body.gap` `spacing.md` 16. Web body padding `spacing.lg` 20 |
-| 완료 | footer `Button`(primary) | 본문 아래, **고정**(스크롤 밖) | 높이 `medium` 44. Native 위 `spacing.sm` 12, footer 세로 열이라 꽉 찬 폭(`fullWidth` 불필요). Web 오른쪽 정렬, 버튼 사이 `spacing.sm` 12, padding 0 `spacing.lg` 20 `spacing.lg` 20 |
+| 완료 | footer `Button`(primary) | 본문 아래, **고정**(스크롤 밖) | 높이 `medium` 44. Native 위 `spacing.sm` 12, footer 세로 열이라 꽉 찬 폭(`fullWidth` 불필요). Web 오른쪽 정렬, 버튼 사이 `spacing.xs` 8, padding 0 `spacing.lg` 20 `spacing.lg` 20 |
 | 하단 안전 영역 | Sheet가 처리 | 시트 맨 아래 | Native 아래 `spacing.sm` 12 + bottom inset(키보드가 붙어 있으면 inset 0, 대신 키보드 높이만큼 올라감). Web footer 아래 `spacing.lg` 20 + `env(safe-area-inset-bottom)` |
 
 - 주 행동(완료)은 footer 하나다. 취소는 머리의 닫기 버튼이 맡는다. 버튼을 둘 두면 [Sheet 배치](../components/sheet.md#배치)에 따라 Web 가로 footer는 보조 → 주, Native 세로 footer는 주 → 보조 순서다.

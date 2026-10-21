@@ -28,7 +28,7 @@ export function VoiceNote({ descriptor, labels, formatTime, artwork, onPlayingCh
     <Slider label={labels.seek} min={0} max={media.duration || 1} step={0.1} value={media.position} disabled={!media.canSeek} onValueChange={onSeek} getValueText={formatTime} decrementLabel={labels.backward} incrementLabel={labels.forward} />
     <Text tone="muted">{formatTime(media.position)}{media.duration === null ? "" : ` / ${formatTime(media.duration)}`}</Text>
     {error ? <Text accessibilityRole="alert">{labels.error}</Text> : null}
-    <Stack axis="inline" gap="sm">
+    <Stack axis="inline" gap="xs">
       <Button disabled={!media.canPlay} loading={media.state === "loading"} onPress={() => onPlayingChange(media.state !== "playing")}>{media.state === "loading" ? labels.loading : media.state === "playing" ? labels.pause : labels.play}</Button>
       {error && onRetry ? <Button disabled={media.disabled ?? false} onPress={onRetry}>{labels.retry}</Button> : null}
     </Stack>

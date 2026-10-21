@@ -386,8 +386,8 @@ export declare const commentThreadRecipe: {
     readonly avatarSize: 32;
     readonly replyAvatarSize: 24;
     readonly avatarGap: 8;
-    readonly lineGap: 2;
-    readonly rowGap: 12;
+    readonly lineGap: 4;
+    readonly rowGap: 20;
     readonly replyIndent: number;
     readonly likeColumnWidth: 44;
     readonly mediaMaxWidth: 160;
@@ -549,7 +549,7 @@ export declare const profileSummaryRecipe: Readonly<{
     actionsLayouts: Readonly<{
         inline: Readonly<{
             readonly axis: "inline";
-            readonly gap: "sm";
+            readonly gap: "xs";
         }>;
         stacked: Readonly<{
             readonly axis: "block";

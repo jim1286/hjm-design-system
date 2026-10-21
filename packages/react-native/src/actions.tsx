@@ -9,6 +9,7 @@ import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
 import { glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   bottomCtaRecipe,
+  actionGroupRecipe,
   linkRecipe,
   iconButtonRecipe,
   resolveIconButtonPresentation,
@@ -476,7 +477,7 @@ export function BottomCTA({
           alignSelf: "center",
           direction: environment.direction,
           flexDirection: stackActions ? "column-reverse" : "row",
-          gap: bottomCtaRecipe.gap,
+          gap: actionGroupRecipe.inlineGap,
           maxWidth: bottomCtaRecipe.contentMaxWidth,
           width: "100%",
         }}

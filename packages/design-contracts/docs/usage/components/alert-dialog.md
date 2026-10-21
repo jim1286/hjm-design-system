@@ -104,7 +104,7 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | Web `size` `medium` `min(36rem, 100%)` · `small` 28rem · `large` 48rem, 최대 높이 `100dvh − 32`. Native는 폭 100%, 최대 폭은 `small` 320 · `medium` 420 · `large` 640이며 기본은 `small`이다. 아이콘 원 44(`control.minTouchTarget`). Native 행동 버튼 최소 폭 96 | `.hjm-alert-dialog`, `alertDialogRecipe`·`dialogRecipe.sizes`, `react-native/src/overlays.tsx` |
-| 간격 | 화면 가장자리와 최소 `spacing.md` 16. 안쪽 여백은 Native `small` `spacing.lg` 20, `medium`·`large` `spacing.xl` 24이다. 요소 사이 Web `spacing.sm` 12 · Native `dialogRecipe.content.gap` `spacing.md` 16. 행동 사이 `spacing.sm` 12, 세로로 쌓이면 `spacing.xs` 8. Native 버튼 좌우 `spacing.md` 16 | `.hjm-overlay`, `.hjm-alert-dialog__actions`, `alertDialogRecipe.actions` |
+| 간격 | 화면 가장자리와 최소 `spacing.md` 16. 안쪽 여백은 Native `small` `spacing.lg` 20, `medium`·`large` `spacing.xl` 24이다. 요소 사이 Web `spacing.sm` 12 · Native `dialogRecipe.content.gap` `spacing.md` 16. 행동 사이 `spacing.xs` 8, 세로로 쌓이면 `spacing.xs` 8. Native 버튼 좌우 `spacing.md` 16 | `.hjm-overlay`, `.hjm-alert-dialog__actions`, `alertDialogRecipe.actions` |
 | 순서·정렬 | 화면 가운데. 위→아래 [아이콘] → 제목 → 설명 → 오류 문구 → 행동. 행동은 끝 정렬 한 줄 [취소][확인]. 버튼 수는 `mode`가 정한다(alert 1 · confirm 2) | `.hjm-overlay`, `alertDialogRecipe.slots` |
 | 고정·스크롤 | 배경막(`backdrop.modal`)이 화면 전체를 덮고 하단 고정 바보다 위에 쌓인다(Web z-index `layer.modal` 900). 내용이 길면 대화상자 안에서 스크롤한다 | `.hjm-overlay`, `.hjm-alert-dialog` |
 | 좁은 폭·큰 글자 | 폭 < 600(`breakpoint.medium`)이면 행동을 세로로 쌓고 **확인이 위**에 온다(Web DOM은 [취소][확인] 유지). Native는 글자 배율 1.6 이상(`largeTextThreshold`)에서도 쌓는다 | `alertDialogRecipe.actions.stackBelow`·`stackedOrder`, `react-native/src/overlays.tsx` |

@@ -115,6 +115,6 @@ export declare const resultRecipe: {
             alpha?: number;
         }>;
     };
-    readonly actionsGap: 12;
+    readonly actionsGap: 8;
 };
 //# sourceMappingURL=result.d.ts.map

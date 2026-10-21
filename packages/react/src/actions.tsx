@@ -47,6 +47,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
     shape?: ButtonShape;
     appearance?: ButtonAppearance;
@@ -90,6 +92,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   {
     tone = buttonRecipe.defaults.tone,
     size = buttonRecipe.defaults.size,
+    hitSlop,
     shape: suppliedShape,
     appearance: suppliedAppearance,
     fullWidth = false,
@@ -144,7 +147,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <button
       {...props}
       // The cap lives in the recipe, not in the stylesheet: one number, one place.
-      style={{ ...paintStyle, ...style, ...layoutStyle }}
+      style={{ ...paintStyle, ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle } as CSSProperties}
       ref={ref}
       type={type}
       className={classNames("hjm-button", className)}
@@ -225,6 +228,8 @@ export type IconButtonProps = Omit<
     label: string;
     tone?: IconButtonTone;
     size?: IconButtonSize;
+    /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
+    hitSlop?: number;
     shape?: IconButtonShape;
     /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
     selected?: boolean;
@@ -246,6 +251,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       label,
       tone = iconButtonRecipe.defaults.tone,
       size = iconButtonRecipe.defaults.size,
+      hitSlop,
       shape = iconButtonRecipe.defaults.shape,
       selected,
       loading = false,
@@ -275,7 +281,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     return (
       <button
         {...props}
-        style={{ ...style, ...layoutStyle }}
+        style={{ ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle } as CSSProperties}
         ref={ref}
         type={type}
         className={classNames("hjm-icon-button", className)}

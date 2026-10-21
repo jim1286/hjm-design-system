@@ -116,7 +116,7 @@ Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Pr
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | `presentation="surface"`의 안쪽 여백: `comfortable` `spacing.md` 16 · `compact` `spacing.sm` 12(두 플랫폼). 테두리 `stroke.default` 1, radius `md` 12 | `statisticRecipe.density`·`presentations`, `styles.css` `.hjm-statistic[data-presentation="surface"]` |
-| 글자 | 라벨 `label` 12 medium(`compact` `caption` 11), 값 `heading` 24 semibold(`fontWeight.semibold`, `compact` `title` 18. 2026-10-17 큰 글자 단계 폐지로 `heading.level2` 굵기 참조를 끊음), prefix·suffix `body` 14 medium 본문색, hint `caption`, 추세 `caption` medium(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.13.0 변경) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
+| 글자 | 라벨 `label` 12 medium(`compact` `caption` 11), 값 `heading` 24 semibold(`fontWeight.semibold`, `compact` `bodyLarge` 16. 2026-10-21 다에리 오늘의 기록 숫자가 크다는 사용자 피드백으로 compact 값을 한 단계 낮춤. 2026-10-17 큰 글자 단계 폐지로 `heading.level2` 굵기 참조를 끊음), prefix·suffix `body` 14 medium 본문색, hint `caption`, 추세 `caption` medium(두 플랫폼). 2026-10-06까지 Web은 라벨 본문 14 medium, 값은 밀도와 관계없이 18, prefix·suffix는 흐린색이었다(1.13.0 변경) | `statisticRecipe.density`·`label`·`value`·`affix`·`hint`·`trend`, `.hjm-statistic__*` |
 | 간격 | 그룹 간격 `statisticRecipe.group.gap` = `spacing.xs` 8. 지표 안 줄 간격(라벨·값·추세) `comfortable` `spacing.xs` 8 · `compact` `spacing.xxs` 4(두 플랫폼) | `styles.css` `.hjm-statistic`·`.hjm-statistic-group`, `statisticRecipe` |
 | 순서·정렬 | 화면 위쪽 요약 영역이나 카드 안에 둔다. 지표 여러 개는 [Grid](grid.md)를 직접 짜지 말고 `StatisticGroup`으로 묶는다 | — |
 | 고정·스크롤 | — | — |

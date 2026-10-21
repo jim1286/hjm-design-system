@@ -77,7 +77,7 @@ function ProfileChromeSample({ onNextTheme }: { onNextTheme: () => void }) {
     <Notice title={copy.chromeNotice} /><Skeleton animated={false} />
     <Toast key={toastRevision} descriptor={{ id: "profile-saved", description: copy.toastCopy, closeLabel: copy.close, durationMs: null }} />
     <Button tone="secondary" onPress={() => setToastRevision(current => current + 1)}>{copy.showToast}</Button>
-    <Stack axis="inline" gap="sm" wrap><Button ref={dialogTrigger} onPress={() => setOpen("dialog")}>{copy.dialog}</Button><Button ref={sheetTrigger} onPress={() => setOpen("sheet")}>{copy.sheet}</Button></Stack>
+    <Stack axis="inline" gap="xs" wrap><Button ref={dialogTrigger} onPress={() => setOpen("dialog")}>{copy.dialog}</Button><Button ref={sheetTrigger} onPress={() => setOpen("sheet")}>{copy.sheet}</Button></Stack>
     <Dialog returnFocusRef={dialogTrigger} open={open === "dialog"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close}>{fields}</Dialog>
     <Sheet returnFocusRef={sheetTrigger} open={open === "sheet"} onOpenChange={next => { if (!next) setOpen(null); }} title={copy.overlayTitle} closeLabel={copy.close} scrollable>{fields}</Sheet>
   </Stack></Collapsible>;

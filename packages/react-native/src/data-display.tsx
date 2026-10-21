@@ -281,6 +281,8 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Centre short metadata beneath artwork without product-owned badge layout. */
+    badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
     mediaAction?: Readonly<{ label: string; onActivate(): void; icon?: (context: Readonly<{ color: string; size: number }>) => ReactNode }>;
     actions?: ReactNode;
@@ -309,6 +311,7 @@ export function Card({
   backgroundInteraction,
   mediaBadges,
   badges,
+  badgesAlign = cardRecipe.defaults.badgesAlign,
   mediaAction,
   actions,
   headerActions,
@@ -384,7 +387,7 @@ export function Card({
           {mediaAction.icon ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", end: cardRecipe.mediaAction.inset, bottom: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.border }}>{mediaAction.icon({ color: colors.text, size: cardRecipe.mediaAction.iconSize })}</View> : null}
         </Pressable> : <View>{media}</View>}
         <View onLayout={({ nativeEvent: { layout } }) => setHeaderBodyTop(layout.y)} style={{ gap: cardRecipe.body.gap, padding: bodyPadding, flexGrow: backgroundMedia ? 0 : 1 }}>
-          {badges === undefined ? null : <View style={{ flexDirection: "row", flexWrap: "wrap", gap: cardRecipe.body.gap }}>{badges}</View>}
+          {badges === undefined ? null : <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: badgesAlign === "center" ? "center" : "flex-start", gap: cardRecipe.body.gap }}>{badges}</View>}
           {hasHeader ? (
             <View
               onLayout={({ nativeEvent: { layout } }) => setHeaderRow(current => current?.top === layout.y && current.height === layout.height ? current : { top: layout.y, height: layout.height })}

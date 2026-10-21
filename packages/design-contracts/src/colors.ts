@@ -43,8 +43,8 @@ export type ThemeColors = {
 
 const light = {
   bg: "#ffffff",
-  surface: "#f2f4f6",
-  surfaceAlt: "#e5e8eb",
+  surface: "#ffffff",
+  surfaceAlt: "#ebeef2",
   surfaceAccent: "#c9e2ff",
   border: "#e5e8eb",
   // Keeps the value the secondary control outline already resolved to.

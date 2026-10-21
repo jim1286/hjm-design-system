@@ -83,6 +83,12 @@ import { Button } from "@hjmds/react-native/actions";
 | `InlineConfirm` | `label`·`prompt`·`confirmLabel`·`cancelLabel`·`pendingLabel`·`successLabel`·`errorLabel`(모두 `string`), `onConfirm: () => void \| Promise<void>` | — | danger 버튼 → 같은 자리 확인 묶음. Promise가 거부되면 `errorLabel`을 alert로 보인다. Web만 `layoutStyle` |
 | `ReactionPicker` | `label: string`, `options: readonly { id; emoji; label; count?; disabled? }[]`, `value: string \| null`, `onValueChange: (value: string \| null) => void`, `layout?: "wrap" \| "strip"`, `more?: { label; options }` | `layout` `wrap` | 제어 전용. 같은 반응을 다시 누르면 `null`. 이모지는 `strip`(대화 반응 줄)에서만 `typography.title` 18/26으로 커지고 `wrap`은 버튼 글자 크기 그대로다. `more`를 주면 끝에 `+` 토글이 생겨 카탈로그를 펼치고, 카탈로그에만 있는 이모지를 고르면 접히면서 Web 키보드 포커스가 `+` 버튼으로 간다. Web만 `layoutStyle`(루트 기본 `minWidth`보다 우선). `layout`·`more`·`layoutStyle`은 1.13.0 변경 |
 
+### 상단 도구 예외
+
+2026-10-21 사용자 승인: 상단 도구 줄은 `size="small" hitSlop={0}`, 버튼 영역 사이 `spacing.xxs` 4를 사용한다. 제품 앱·웹 Provider의 `minimumVisualTarget`은 끈다. 일반 작은 버튼의 기본 확장 4와 본문·하단 행동 간격 8은 유지한다. [TopBar 공통 크기](top-bar.md#상단-도구의-공통-크기)를 따른다.
+
+`hitSlop`은 Web에서 0 이상의 px 수치, Native에서 RN `PressableProps['hitSlop']`다. Web은 포인터 확장용 pseudo-element에 반영하고 DOM 속성으로 전달하지 않는다. 생략하면 기존 크기 recipe의 확장을 유지한다.
+
 ## 배치
 
 | 항목 | 값 | 근거 |
@@ -177,7 +183,7 @@ Button의 loading은 표시와 UI 재실행을 막는 기능이다. 같은 프�
 
 ## 근거
 
-- 버튼 묶음 간격(세로 8·가로 12): 2026-10-17 사용자 지시 — 세로로 쌓은 하단 버튼의 12 간격이 벌어져 보였다.
+- 과거 버튼 묶음 간격(세로 8·가로 12, 2026-10-20 이후 가로도 8로 대체): 2026-10-17 사용자 지시 — 세로로 쌓은 하단 버튼의 12 간격이 벌어져 보였다.
 - Button은 Promise로 성공을 판정하지 않음: 2026-10-07 [Stateful Button 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)를 기존 [실행과 복구](../../action-session.md)와 비교했다.
 - `loading` 중앙 스피너·크기 유지: 2026-10-06 독립 검증에서 이 사용자 요구가 사용 지침에 빠져 있음을 확인해 명시했다.
 - `selected` 버튼 나열 금지: 2026-10-16 사용자 지적 — 예제의 선택 버튼 줄이 테두리 없는 글자처럼 보이고 폭이 제각각이었다.

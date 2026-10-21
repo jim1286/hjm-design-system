@@ -117,7 +117,7 @@ useEffect(() => { firstInvalidRef.current = nicknameError ? nicknameInputRef.cur
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | — | — |
-| 간격 | 필드 사이 간격: `comfortable` `spacing.lg`(20), `compact` `spacing.sm`(12). Web은 필드 묶음 아래 폼 오류와 `actions`가 각각 `spacing.sm`(12) 위 여백을 갖고, `actions` 안 버튼 간격은 `spacing.sm`(12)이다. Native는 필드·오류·내장 제출 버튼을 같은 `fieldGap`으로 세로로 쌓는다 | `form.ts` `formRecipe`, `styles.css` `.hjm-form__*`, `react-native/src/forms.tsx` `Form` |
+| 간격 | 필드 사이 간격: `comfortable` `spacing.lg`(20), `compact` `spacing.sm`(12). Web은 필드 묶음 아래 폼 오류와 `actions`가 각각 `spacing.sm`(12) 위 여백을 갖고, `actions` 안 버튼 간격은 `spacing.xs` 8이다. Native는 필드·오류·내장 제출 버튼을 같은 `fieldGap`으로 세로로 쌓는다 | `form.ts` `formRecipe`, `styles.css` `.hjm-form__*`, `react-native/src/forms.tsx` `Form` |
 | 순서·정렬 | 위→아래 순서는 필드들 → 폼 오류 → 제출 행동이다. 폼 오류는 항상 행동 바로 위에 온다(`formRecipe.formError.position` `beforeActions`). Web `actions`는 줄바꿈되는 가로 줄이다. 버튼 둘이면 [Button](button.md)의 순서(보조 → 주 행동)를 따른다. Native 기본 제출 버튼은 마지막에 있으며 actions 슬롯으로 교체하거나 숨길 수 있다 | `form.ts` `formRecipe`, `styles.css` `.hjm-form__actions` |
 | 고정·스크롤 | 폼 흐름 안에 둔다. 긴 화면에서 제출을 하단에 고정하려면 Web은 Form을 스크롤 영역에 두고 `actions` 대신 [BottomCTA](bottom-cta.md)로 뺀다. Native는 `actions={null}`로 내장 버튼을 숨기고 `FormHandle.submit()`으로 같은 제출을 호출한다 | `react-native/src/forms.tsx` `Form` |
 | 좁은 폭·큰 글자 | — | — |

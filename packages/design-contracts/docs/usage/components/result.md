@@ -79,7 +79,7 @@ import { Result } from "@hjmds/react-native/feedback";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 아이콘 원 56×56(Web `3.5rem`), `radius.full`. Web 설명 최대 폭 `40rem` | `.hjm-result__icon`, `.hjm-result__description`, Native `feedback.tsx` |
-| 간격 | 안쪽 여백 위아래 `spacing.xxxl` 40, 좌우 `spacing.xl` 24. 요소 사이 `spacing.sm` 12. 행동 줄은 `spacing.xs` 8을 더 띄우고 버튼 사이 `spacing.sm` 12. 목록·카드 사이에 넣을 때는 앞뒤 `layout.sectionGap` 24 | `resultRecipe.paddingVertical`·`paddingHorizontal`·`gap`·`actionsGap`, `.hjm-result__actions` |
+| 간격 | 안쪽 여백 위아래 `spacing.xxxl` 40, 좌우 `spacing.xl` 24. 요소 사이 `spacing.sm` 12. 행동 줄은 `spacing.xs` 8을 더 띄우고 버튼 사이 `spacing.xs` 8. 목록·카드 사이에 넣을 때는 앞뒤 `layout.sectionGap` 24 | `resultRecipe.paddingVertical`·`paddingHorizontal`·`gap`·`actionsGap`, `.hjm-result__actions` |
 | 순서·정렬 | 가운데 정렬 세로 묶음: 아이콘 → 제목 → 설명 → 행동. 행동은 [Button](button.md#배치) 규칙대로 **secondary(둘째) → primary(첫째)** 순서로 그린다(두 표면 동일. 1.12.1까지는 primary가 먼저였다) | `feedback.tsx`(Web·Native Result) |
 | 고정·스크롤 | 고정되지 않는다. 화면 전체를 채울 때는 Result를 세로 가운데에 두고 하단 고정 CTA를 따로 붙이지 않는다(행동은 `actions`) | — |
 | 좁은 폭·큰 글자 | 행동 줄은 가운데 정렬로 넘치면 다음 줄로 감긴다. 제목·설명은 줄바꿈된다(`overflow-wrap: anywhere`) | `.hjm-result__actions`(flex-wrap), Native `flexWrap: "wrap"` |
@@ -92,7 +92,7 @@ import { Result } from "@hjmds/react-native/feedback";
 │        결제를 마쳤어요         │  titleLarge
 │      영수증을 메일로 보냈어요    │  body, max 40rem(Web)
 │        gap 12 + 8            │
-│   [ 홈으로 ] [ 주문 보기 ]    │  secondary → primary, gap 12
+│   [ 홈으로 ] [ 주문 보기 ]    │  secondary → primary, gap 8
 │          (padding 40)        │
 └──────────────────────────────┘
 ```

@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { expect, it, vi } from "vitest";
 import { SegmentedControl } from "../src/inputs.js";
 import { HjmNativeProvider } from "../src/provider.js";
@@ -30,5 +30,21 @@ it("exposes one checked filter and keyboard entry, and Space selects through its
     expect(options().map(node => node.props.tabIndex)).toEqual([-1, 0, -1]);
     act(() => options()[2]!.props.onKeyDown(event));
     expect(changed).toHaveBeenCalledTimes(1);
+  } finally { act(() => tree?.unmount()); }
+});
+
+it.each(["pills", "connected"] as const)("uses the product primary contrast pair for %s brand selection without changing radio state", presentation => {
+  let tree!: ReactTestRenderer;
+  try {
+    act(() => { tree = create(<HjmNativeProvider theme="light" brandPalette={{light:{primary:'#0B8045',onPrimary:'#FFFFFF'}}}>
+      <SegmentedControl label="View" presentation={presentation} selectionTone="brand" defaultValue="journey"
+        items={[{value:'letter',label:'Letter'},{value:'journey',label:'Journey log'}]} />
+    </HjmNativeProvider>); });
+    const styles = tree.root.findAll(node => node.props.style)
+      .map(node => StyleSheet.flatten(typeof node.props.style === 'function' ? node.props.style({pressed:false}) : node.props.style));
+    expect(styles.some(style => style.backgroundColor === '#0B8045')).toBe(true);
+    expect(styles.some(style => style.color === '#FFFFFF')).toBe(true);
+    const options = tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === 'radio');
+    expect(options.map(node => node.props['aria-checked'])).toEqual([false,true]);
   } finally { act(() => tree?.unmount()); }
 });

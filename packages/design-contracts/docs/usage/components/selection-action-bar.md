@@ -72,7 +72,7 @@ import { SelectionActionBar } from "@hjmds/react-native/collection-editing";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | Button 기본 크기 | 양 renderer `SelectionActionBar` |
-| 간격 | 요약·버튼 줄·실패 문구 사이 `Stack gap="sm"`(12), 버튼 사이 `sm` | 같은 구현 |
+| 간격 | 요약·버튼 줄·실패 문구 사이 `Stack gap="sm"`(12), 버튼 사이 `xs`(8) | 같은 구현 |
 | 순서·정렬 | 선택 개수 요약 → [묶음 행동…] [선택 해제](ghost) [복구](ghost) → 실패 문구(가운데) | 렌더 순서 |
 | 고정·스크롤 | 자체 고정 없음. 대상 목록 바로 아래 또는 제품 footer 슬롯에 둔다 | [목록 편집과 복구](../compositions/collection-editing.md) |
 | 좁은 폭·큰 글자 | 버튼 줄은 `wrap`으로 다음 줄로 넘어간다 | `Stack axis="inline" wrap` |

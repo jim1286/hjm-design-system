@@ -3647,6 +3647,7 @@ export declare const recipeRegistry: {
             readonly selected: false;
             readonly bordered: true;
             readonly headingLevel: 3;
+            readonly badgesAlign: "start";
             readonly padding: "md";
         };
         readonly selectedTone: "accent";
@@ -3686,7 +3687,7 @@ export declare const recipeRegistry: {
             readonly emphasis: "regular";
         };
         readonly actions: {
-            readonly gap: 12;
+            readonly gap: 8;
             readonly paddingHorizontal: 16;
             readonly paddingBottom: 16;
         };
@@ -4446,7 +4447,7 @@ export declare const recipeRegistry: {
             readonly controls: {
                 readonly padding: 16;
                 readonly gap: 8;
-                readonly actionGap: 12;
+                readonly actionGap: 8;
             };
             readonly orientations: readonly ["portrait", "landscape-left", "landscape-right"];
             readonly statusBarHidden: true;
@@ -6238,7 +6239,7 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
         };
-        readonly actionsGap: 12;
+        readonly actionsGap: 8;
     };
     readonly searchFieldRecipe: {
         readonly slots: readonly ["root", "leading", "input", "trailing", "clear", "spinner"];
@@ -6765,6 +6766,18 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "item", "label", "indicator"];
         readonly defaults: {
             readonly size: "medium";
+        };
+        readonly selectedBrand: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
         };
         readonly pills: {
             readonly textVariant: "label";
@@ -8035,7 +8048,7 @@ export declare const recipeRegistry: {
                 readonly padding: 12;
                 readonly gap: 4;
                 readonly labelVariant: "caption";
-                readonly valueVariant: "title";
+                readonly valueVariant: "bodyLarge";
             };
             readonly comfortable: {
                 readonly padding: 16;
@@ -8147,8 +8160,9 @@ export declare const recipeRegistry: {
     readonly stepsRecipe: {
         readonly slots: readonly ["root", "step", "indicator", "marker", "connector", "label", "description"];
         readonly gap: 8;
+        readonly paddingInline: 16;
         readonly indicator: {
-            readonly size: 24;
+            readonly size: 44;
             readonly borderWidth: 1;
             readonly activeBorderWidth: 2;
             readonly marks: {
@@ -8440,6 +8454,20 @@ export declare const recipeRegistry: {
                 readonly selectedContent: Readonly<{
                     source: "theme";
                     key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly radius: "full";
+            };
+            readonly solid: {
+                readonly listDivider: false;
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly selectedContent: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
                     alpha?: number;
                 }>;
                 readonly radius: "full";
@@ -9168,9 +9196,9 @@ export declare const recipeRegistry: {
             readonly centered: true;
         };
         readonly minHeight: 52;
-        readonly sideMinWidth: 44;
+        readonly sideMinWidth: 36;
         readonly paddingHorizontal: 16;
-        readonly gap: 8;
+        readonly gap: 4;
         readonly largeTextThreshold: 1.6;
         readonly title: {
             readonly textVariant: "bodyLarge";
@@ -9188,8 +9216,10 @@ export declare const recipeRegistry: {
             readonly pressedOpacity: 0.86;
         };
         readonly action: {
-            readonly minHeight: 44;
-            readonly minWidth: 44;
+            readonly size: "small";
+            readonly hitSlop: 0;
+            readonly minHeight: 36;
+            readonly minWidth: 36;
             readonly gap: 4;
             readonly paddingHorizontal: 4;
             readonly pressedOpacity: 0.86;
@@ -9427,8 +9457,8 @@ export declare const recipeRegistry: {
         readonly avatarSize: 32;
         readonly replyAvatarSize: 24;
         readonly avatarGap: 8;
-        readonly lineGap: 2;
-        readonly rowGap: 12;
+        readonly lineGap: 4;
+        readonly rowGap: 20;
         readonly replyIndent: number;
         readonly likeColumnWidth: 44;
         readonly mediaMaxWidth: 160;
@@ -9462,7 +9492,7 @@ export declare const recipeRegistry: {
         actionsLayouts: Readonly<{
             inline: Readonly<{
                 readonly axis: "inline";
-                readonly gap: "sm";
+                readonly gap: "xs";
             }>;
             stacked: Readonly<{
                 readonly axis: "block";

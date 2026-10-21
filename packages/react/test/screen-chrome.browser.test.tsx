@@ -23,6 +23,30 @@ beforeEach(() => {
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); await page.viewport(1280, 720); });
 
 describe("screen chrome layout", () => {
+  it("keeps compact header targets separated by 4px while body hit expansion stays enabled", async () => {
+    await page.viewport(390, 844);
+    const first = vi.fn(), second = vi.fn();
+    await act(async () => root.render(<HjmProvider theme="light" minimumVisualTarget={false}>
+      <TopBar actions={<>
+        <IconButton label="Search" size="small" hitSlop={0} onClick={first}>⌕</IconButton>
+        <IconButton label="Settings" size="small" hitSlop={0} onClick={second}>⚙</IconButton>
+      </>} />
+      <Button size="small">Body action</Button>
+    </HjmProvider>));
+    const buttons = host.querySelectorAll<HTMLButtonElement>("button");
+    const a = buttons[0]!, b = buttons[1]!, body = buttons[2]!;
+    const left = a.getBoundingClientRect(), right = b.getBoundingClientRect();
+    expect(left.width).toBe(36); expect(left.height).toBe(36);
+    expect(right.left - left.right).toBe(4);
+    expect(getComputedStyle(a, "::after").inset).toBe("0px");
+    expect(getComputedStyle(body, "::after").inset).toBe("-4px");
+    // The gap itself must not activate either adjacent control's pseudo-element.
+    const gap = document.elementFromPoint(left.right + 2, left.top + left.height / 2);
+    expect(gap?.closest("button")).toBeNull();
+    await act(async () => { a.click(); b.click(); });
+    expect(first).toHaveBeenCalledOnce(); expect(second).toHaveBeenCalledOnce();
+  });
+
   // Historical maximum-text regression is excluded by the 2026-10-07 user scope.
   it.skip("restores the compact title after a live text-scale round trip", async () => {
     await page.viewport(390, 844);

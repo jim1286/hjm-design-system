@@ -38,7 +38,7 @@ export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
   const statusId = useId();
   return (
     <ol {...props} // The terminal step has no outgoing connector: reserve only its content width.
-      style={{ ["--hjm-steps-count" as string]: steps.length, ["--hjm-steps-connector-count" as string]: steps.length - 1, ["--hjm-steps-press-target" as string]: `${stepsRecipe.press.minTouchTarget}px`, ...props.style, ...layoutStyle }} ref={ref} className={classNames("hjm-steps", className)}>
+      style={{ ["--hjm-steps-inset" as string]: `${stepsRecipe.paddingInline}px`, ["--hjm-steps-indicator-size" as string]: `${stepsRecipe.indicator.size}px`, ["--hjm-steps-count" as string]: steps.length, ["--hjm-steps-connector-count" as string]: steps.length - 1, ["--hjm-steps-press-target" as string]: `${stepsRecipe.press.minTouchTarget}px`, ...props.style, ...layoutStyle }} ref={ref} className={classNames("hjm-steps", className)}>
       {steps.map((step, index) => {
         const content = <>
           <div className="hjm-steps__rail" aria-hidden="true">

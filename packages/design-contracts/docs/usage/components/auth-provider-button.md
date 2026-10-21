@@ -71,7 +71,7 @@ import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭을 꽉 채운다(Web `inline-size: 100%`). 최소 높이 44(`buttonRecipe` medium과 `control.minTouchTarget` 중 큰 쪽), 모서리 `radius.md` 12, 로고 20×20, 라벨 `typography.body` 14/20(제공자 가이드가 라벨·색 표현을 소유한다. 네이버 녹색 대비는 [제공자 색 예외](../../provider-button.md#제공자-색과-글자-대비)) | `authProviderButtonRecipe`, `.hjm-auth-provider-button` |
-| 간격 | 좌우 여백 `spacing.md` 16, 로고↔이름 `spacing.sm` 12. 버튼 사이는 스토리 기준 `Stack gap="sm"`(12) | `authProviderButtonRecipe`, `showcase/web/src/patterns/Agreement.stories.tsx`(`AuthScreenLayoutPreview`) |
+| 간격 | 좌우 여백 `spacing.md` 16, 로고↔이름 `spacing.sm` 12. 버튼 사이는 `Stack gap="xs"`(8) | `authProviderButtonRecipe`, `showcase/web/src/patterns/Agreement.stories.tsx`(`AuthScreenLayoutPreview`) |
 | 순서·정렬 | [AuthScreenLayout](auth-screen-layout.md) `main` 슬롯에 세로로 쌓는다. 안쪽은 [로고]+[제공자 이름]이 가운데 정렬. 순서는 제품이 정하고, 일반 Button(개발 로그인 등)은 제공자 사이가 아니라 목록 아래에 `tone="secondary"`로 둔다 | `.hjm-auth-provider-button`(`justify-content: center`) |
 | 고정·스크롤 | 고정되지 않는다. 진행 중에는 버튼 목록을 그대로 두고 카드 가운데에 로딩 하나만 보인다(`pendingLabel`). 버튼 자리·크기는 바뀌지 않는다 | `react/src/auth-screen.tsx`, `react-native/src/auth-screen.tsx` |
 | 좁은 폭·큰 글자 | 이름이 줄바꿈되고 버튼 높이가 늘어난다. 자르지 않는다 | `.hjm-auth-provider-button__label`(`overflow-wrap: anywhere`) |

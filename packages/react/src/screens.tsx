@@ -18,6 +18,7 @@ import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } fr
 import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
+import { topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { Section, Stack, Text, VisuallyHidden } from "./layout.js";
@@ -127,10 +128,10 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
           centered header (2026-10-17: the fixed 1:2:1 split with a level3 heading wrapped short titles). */}
       <div>{leading}</div><div className="hjm-screen__heading" style={{ textAlign: "center", minWidth: 0 }}>
         {titleRow(screenHeaderRecipe.centeredTitleLevel, "center")}
-        </div><div style={{ justifySelf: "end" }}>{actions}</div>
+        </div><div style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: topBarRecipe.gap }}>{actions}</div>
     </header> : <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
       {leading}<div className="hjm-screen__heading">{titleRow(screenHeaderRecipe.titleLevel, profileLayout?.centered ? "center" : "start")}
-        </div>{actions}
+        </div><div style={{ display: "flex", alignItems: "center", gap: topBarRecipe.gap }}>{actions}</div>
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
     {/* Scrollable read-only screens need a named keyboard entry point, including hidden/custom headers. */}
@@ -351,15 +352,19 @@ export type CompositionLayoutProps = Readonly<{
   notice?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
+  /** Passive supporting artwork beside the heading and body; never a header action. */
+  aside?: ReactNode;
+  /** Secondary footer metadata; wraps rather than squeezing the main footer. */
+  footerAside?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
-  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+  const content = <>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
       {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
@@ -372,7 +377,18 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant={resolved.titleVariant}>{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
       {stateAction}
     </Stack>}
-    {footer}
+  </>;
+  // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
+  // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.
+  return <Stack gap="md" {...(layoutStyle === undefined ? {} : {layoutStyle})}>
+    {aside ? <Stack axis="inline" gap="md" align="start">
+      <Stack gap="md" layoutStyle={{flex: 1, minWidth: 0}}>{content}</Stack>
+      <Stack layoutStyle={{flexShrink: 0, maxWidth: "40%"}}>{aside}</Stack>
+    </Stack> : content}
+    {footerAside ? <Stack axis="inline" gap="xs" align="center" justify="between" wrap>
+      {footer ? <Stack layoutStyle={{flexGrow: 1, minWidth: 0}}>{footer}</Stack> : null}
+      {footerAside}
+    </Stack> : footer}
   </Stack>;
 }
 

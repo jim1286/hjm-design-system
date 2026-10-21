@@ -5,7 +5,7 @@ import { IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Finite all-mounted list placement; Card, inputs and Dialog keep their own state. */
-export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, bleed = false, layoutStyle, ...props }) {
+export function CollectionRail({ label, items, renderItem, labels, density = collectionRailRecipe.defaults.density, emptyContent, defaultStartKey, onStartKeyChange, bleed = false, showNavigation = true, layoutStyle, ...props }) {
     validateCollectionRail(items);
     if (!label.trim() || Object.values(labels).some(value => !value.trim()))
         throw new TypeError("CollectionRail labels must not be empty");
@@ -126,6 +126,6 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                                     if (active instanceof HTMLElement && node.contains(active))
                                         detachedFocus.current = active;
                                 };
-                            }, style: { flex: "0 0 auto", width: position.layout.itemWidth || "auto", minWidth: 0 }, onFocusCapture: () => scrollToOffset(getCollectionRailRevealOffset(current.current.layout, current.current.offset, index), false), children: renderItem(item) }, item.id)) }), items.length === 0 ? emptyContent : null] }), _jsxs("div", { "data-collection-rail-controls": true, role: "group", "aria-label": labels.navigation, style: { display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", "aria-disabled": resolved.atStart, onClick: () => navigate("previous"), children: _jsx(Icon, { name: "chevronStart" }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", "aria-disabled": resolved.atEnd, onClick: () => navigate("next"), children: _jsx(Icon, { name: "chevronEnd" }) })] })] });
+                            }, style: { flex: "0 0 auto", width: position.layout.itemWidth || "auto", minWidth: 0 }, onFocusCapture: () => scrollToOffset(getCollectionRailRevealOffset(current.current.layout, current.current.offset, index), false), children: renderItem(item) }, item.id)) }), items.length === 0 ? emptyContent : null] }), showNavigation && _jsxs("div", { "data-collection-rail-controls": true, role: "group", "aria-label": labels.navigation, style: { display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "var(--hjm-space-sm)", marginBlockStart: "var(--hjm-space-sm)" }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", "aria-disabled": resolved.atStart, onClick: () => navigate("previous"), children: _jsx(Icon, { name: "chevronStart" }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", "aria-disabled": resolved.atEnd, onClick: () => navigate("next"), children: _jsx(Icon, { name: "chevronEnd" }) })] })] });
 }
 //# sourceMappingURL=collection-rail.js.map
