@@ -133,7 +133,7 @@ function TimeColumn({ part, label, draft, options, locked, onSelect, onMoving }:
       } : {})}>
       {items.map((item, itemIndex) => <Pressable key={item.value} accessibilityRole="radio" accessibilityLabel={`${item.value} ${label}`} accessibilityState={{ checked: draft[part] === item.value, disabled: locked || item.disabled }} disabled={locked || item.disabled}
         onPress={() => { if (!locked && !item.disabled) choose(itemIndex); }}
-        style={({ pressed }) => ({ height: rowHeight, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius[timePickerRecipe.radius], backgroundColor: draft[part] === item.value ? colors.surfaceAccent : "transparent", opacity: locked || item.disabled ? 0.4 : pressed ? 0.72 : 1 })}>
+        style={({ pressed }) => ({ height: rowHeight, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius[timePickerRecipe.radius], backgroundColor: draft[part] === item.value ? colors.surfaceSelected : "transparent", opacity: locked || item.disabled ? 0.4 : pressed ? 0.72 : 1 })}>
         <Text fontRole="ui" style={{ color: draft[part] === item.value ? colors.text : colors.textBody, fontWeight: draft[part] === item.value ? "500" : "400", fontVariant: ["tabular-nums"] }}>{item.value}</Text>
       </Pressable>)}
     </ScrollView>

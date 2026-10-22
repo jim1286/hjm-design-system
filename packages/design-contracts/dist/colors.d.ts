@@ -11,6 +11,8 @@ export type ThemeColors = {
     surface: string;
     surfaceAlt: string;
     surfaceAccent: string;
+    /** Selection is independent of brand surfaces and primary actions. */
+    surfaceSelected: string;
     border: string;
     /**
      * Outline of an interactive control that must read stronger than the shared

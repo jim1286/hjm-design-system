@@ -15,6 +15,8 @@ export type ThemeColors = {
   surface: string;
   surfaceAlt: string;
   surfaceAccent: string;
+  /** Selection is independent of brand surfaces and primary actions. */
+  surfaceSelected: string;
   border: string;
   /**
    * Outline of an interactive control that must read stronger than the shared
@@ -46,6 +48,7 @@ const light = {
   surface: "#ffffff",
   surfaceAlt: "#ebeef2",
   surfaceAccent: "#c9e2ff",
+  surfaceSelected: "#f0f1f3",
   border: "#e5e8eb",
   // Keeps the value the secondary control outline already resolved to.
   borderControl: "#6b7684",
@@ -71,6 +74,7 @@ const dark = {
   surface: "#161b22",
   surfaceAlt: "#1e232a",
   surfaceAccent: "#224159",
+  surfaceSelected: "#30343b",
   border: "#6a788a",
   borderControl: "#929faf",
   text: "#f3f5f7",

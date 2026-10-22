@@ -3885,17 +3885,17 @@ export declare const recipeRegistry: {
             readonly selected: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "bg";
+                    key: "surfaceSelected";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "text";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "borderControl";
                     alpha?: number;
                 }>;
             };
@@ -3911,7 +3911,7 @@ export declare const recipeRegistry: {
         readonly selectionIndicator: {
             readonly color: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly glyph: "xs";
@@ -6804,12 +6804,12 @@ export declare const recipeRegistry: {
             readonly borderWidth: 1;
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "textBody";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly selectedContent: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "text";
                 alpha?: number;
             }>;
             readonly largeTextLayout: "wrap";
@@ -6861,12 +6861,12 @@ export declare const recipeRegistry: {
             readonly fontWeight: "500";
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly selectedContent: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly selectedBorder: Readonly<{

@@ -484,9 +484,9 @@ export const chipRecipe = {
       border: semanticColors.border.default,
     },
     selected: {
-      background: semanticColors.canvas,
-      content: semanticColors.content.brand,
-      border: semanticColors.border.focus,
+      background: semanticColors.selection.background,
+      content: semanticColors.selection.content,
+      border: semanticColors.selection.border,
     },
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
@@ -496,7 +496,7 @@ export const chipRecipe = {
   // Selected keeps one step above idle (500 → 600) so the state still carries a weight cue on the lighter scale.
   label: { fontWeight: fontWeight.medium, selectedFontWeight: fontWeight.semibold },
   selectionIndicator: {
-    color: semanticColors.content.brand,
+    color: semanticColors.selection.content,
     glyph: "xs",
   },
   focus: focusIndicatorContract,
@@ -1011,7 +1011,7 @@ export const segmentedControlRecipe = {
     // Utilverse's pastel scene swallowed the sunken fill without an outline (2026-10-20).
     // Use the resting control border on the inset surface so touch geometry stays unchanged.
     background: semanticColors.surface.raised, border: semanticColors.border.control, borderWidth: stroke.subtle,
-    selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas,
+    selectedBackground: semanticColors.selection.background, selectedContent: semanticColors.selection.content,
     /**
      * Pills are content-width, so large text keeps the row: it wraps inside a block and stays one line
      * inside a horizontal scroller (SearchScreen `filtersOverflow="scroll"`, a product rail). `adaptive`
@@ -1029,7 +1029,7 @@ export const segmentedControlRecipe = {
     largeTextLayout: "stacked" as const,
     stackAtFontScale: largeTextThreshold,
   },
-  // Track and selected segment share the canvas; the blue ring identifies the chosen option.
+  // The neutral selected surface is shared with pills and Chip; the ring remains a separate selection cue.
   container: {
     background: semanticColors.canvas,
     border: semanticColors.border.default,
@@ -1066,8 +1066,8 @@ export const segmentedControlRecipe = {
     gap: spacing.xxs,
     idleContent: semanticColors.content.secondary,
     fontWeight: fontWeight.medium,
-    selectedBackground: semanticColors.canvas,
-    selectedContent: semanticColors.content.brand,
+    selectedBackground: semanticColors.selection.background,
+    selectedContent: semanticColors.selection.content,
     /**
      * The ring stays the selection signal so the control keeps a non-text
      * contrast of at least 3:1; a fill-only thumb cannot reach that against a

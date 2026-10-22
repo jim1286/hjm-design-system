@@ -102,3 +102,14 @@ Ant의 원시 색상이나 낮은 테두리 대비까지 복제하지 않고, HJ
 이전 제품 표면색을 HJM의 밝은 테마 기본값으로 채택한다. `surface`는 `#ffffff`,
 `surfaceAlt`는 `#ebeef2`다. `bg`는 기존 흰색을 유지하며 `raised` 카드도 기존처럼 `bg`를 쓴다.
 다크 테마와 브랜드·상태 강조색은 이번 결정의 변경 대상이 아니다. 웹·Native가 같은 `THEMES`를 소비한다.
+
+## 기본 선택 배경을 브랜드에서 분리한다 (2026-10-23)
+
+휠의 하늘색과 카테고리 선택색을 비교한 뒤 사용자가 기본 테마의 뉴트럴 안을 승인했다.
+`surfaceSelected`는 light `#f0f1f3`, dark `#30343b`이고 `semanticColors.selection`이 배경·글자·테두리를 묶는다.
+TimePicker, Chip(그룹의 chips 표현 포함)과 기본 neutral SegmentedControl이 같은 선택 배경을 쓴다.
+글자는 기존 `text`, Chip 테두리는 `borderControl`을 쓰며 체크·선택 테두리·포커스 표시를 보존한다.
+이 결정은 위 2026-09-29 기록의 해당 선택 배경을 대체하며 입력 필드 배경은 바꾸지 않는다.
+`surfaceAccent`는 브랜드 보조 배경, `primary`는 주요 동작으로 유지한다.
+명시적인 `selectionTone="brand"`와 solid 탭은 기존 브랜드 강조를 유지한다.
+제품은 `brandPalette`의 `surfaceSelected`로 선택 배경을 지정할 수 있다. 기존 팔레트 대비 검사에 `text`/`surfaceSelected` 4.5:1 쌍을 포함한다.

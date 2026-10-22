@@ -76,7 +76,7 @@ import { Chip } from "@hjmds/react-native/inputs";
 | --- | --- | --- |
 | 크기 | 내용 폭. 최소 높이 `small` 36 · `medium` 44(`control.chipHeight`, 두 플랫폼 모두 최소값이라 라벨이 크면 늘어난다), 모서리 `radius.full`. `small`은 위아래 4를 넓혀(Native hitSlop, Web `::after`) 터치 영역을 44에 맞춘다 | `chipRecipe.sizes`, `react-native/src/inputs.tsx` |
 | 간격 | 좌우 여백 `small` `spacing.sm` 12 · `medium` `spacing.md` 16, 아이콘↔라벨 `small` `spacing.xxs` 4 · `medium` `spacing.xs` 8(두 플랫폼). 칩 사이는 부모가 정한다(`spacing.xs` 8 권장) | `chipRecipe.sizes`, `.hjm-chip` |
-| 순서·정렬 | 필터 줄·태그 묶음으로 가로로 나란히 둔다. 안쪽은 [선택 표시] → [leading] → [라벨] → [trailing]. 선택 상태는 브랜드 테두리·글자색 | `chipRecipe.slots`, `.hjm-chip[data-selected]` |
+| 순서·정렬 | 필터 줄·태그 묶음으로 가로로 나란히 둔다. 안쪽은 [선택 표시] → [leading] → [라벨] → [trailing]. 선택 상태는 `surfaceSelected` 회색 배경·`text` 글자·`borderControl` 테두리와 체크 표시 | `chipRecipe.slots`, `.hjm-chip[data-selected]` |
 | 고정·스크롤 | 고정 영역이 없다. 칩이 많으면 부모가 줄바꿈하거나 가로 스크롤 영역을 둔다. 검색 화면의 필터 칩 줄은 [SearchScreen](search-screen.md) `filtersOverflow="scroll"`이 가로 스크롤을 소유한다 | `SearchScreen` |
 | 좁은 폭·큰 글자 | 라벨이 줄바꿈된다(Web `overflow-wrap: anywhere`). 높이는 최소값이라 라벨 높이만큼 늘어난다(Web `min-block-size`, Native `minHeight`) | `.hjm-chip__label`, Native `Chip` |
 

@@ -22,6 +22,12 @@ export const semanticColors = {
          */
         placeholder: themeColor("text", 0.12),
     },
+    // 2026-10-23: a neutral selection must not recolor brand surfaces or primary actions.
+    selection: {
+        background: themeColor("surfaceSelected"),
+        content: themeColor("text"),
+        border: themeColor("borderControl"),
+    },
     content: {
         primary: themeColor("text"),
         body: themeColor("textBody"),

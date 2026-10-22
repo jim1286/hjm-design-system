@@ -50,6 +50,23 @@ export declare const semanticColors: {
             alpha?: number;
         }>;
     };
+    readonly selection: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceSelected";
+            alpha?: number;
+        }>;
+        readonly content: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+        readonly border: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
+    };
     readonly content: {
         readonly primary: Readonly<{
             source: "theme";

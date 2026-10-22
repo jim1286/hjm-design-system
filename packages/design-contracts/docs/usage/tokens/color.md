@@ -32,6 +32,7 @@
 | `canvas` = `bg` | `#ffffff` / `#0d1116` | `--hjm-color-bg` | `theme.colors.bg` | 화면 바탕. 카드·패널(Surface·Card)도 모든 tone이 `bg`를 칠하고 층은 테두리·그림자로 나눈다 |
 | `surface.default` = `surface` | `#ffffff` / `#161b22` | `--hjm-color-surface` | `theme.colors.surface` | 바탕과 구분되는 옅은 면 |
 | `surface.sunken` = `surfaceAlt` | `#ebeef2` / `#1e232a` | `--hjm-color-surface-alt` | `theme.colors.surfaceAlt` | 한 단계 더 들어간 면(CodeBlock 바탕) |
+| `selection.background` = `surfaceSelected` | `#f0f1f3` / `#30343b` | `--hjm-color-surface-selected` | `theme.colors.surfaceSelected` | 기본 선택 배경 |
 | `surface.brand` = `surfaceAccent` | `#c9e2ff` / `#224159` | `--hjm-color-surface-accent` | `theme.colors.surfaceAccent` | 브랜드가 드러나는 옅은 면 |
 
 ### 글자
@@ -162,3 +163,11 @@ import { HjmProvider } from "@hjmds/react/provider";
 표·표면의 회색 면을 줄이려는 사용자 결정으로 `surface`는 흰색 `#ffffff`,
 `surfaceAlt`는 보조 회색 `#ebeef2`를 사용한다. 페이지 바탕 `bg`는 흰색이며,
 표 본문은 `surface`, `raised` 카드는 `bg`를 소비한다. 근거는 [팔레트 결정 기록](../../theme-palette.md)을 따른다.
+
+## 기본 선택 역할
+
+`semanticColors.selection.background` → `surfaceSelected`: light `#f0f1f3`, dark `#30343b`.
+Web은 `--hjm-color-surface-selected`, Native는 `theme.colors.surfaceSelected`로 읽는다.
+선택 글자는 `semanticColors.selection.content` → `text`, 경계는 `selection.border` → `borderControl`이다.
+휠·선택 Chip·neutral SegmentedControl에 쓰며, 주요 버튼의 `primary`나 브랜드 배경의
+`surfaceAccent`를 선택 배경으로 덮어쓰지 않는다. [결정 근거](../../theme-palette.md#기본-선택-배경을-브랜드에서-분리한다-2026-10-23).
