@@ -182,7 +182,7 @@ export type LineChartProps = Readonly<{
   missingLabel: string;
   height?: number;
   curve?: ChartCurve;
-  /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+  /** Dotted drops mark observed edges beside leading, interior or trailing gaps; bridge only joins interior edges. */
   missingConnection?: "none" | "dotted" | "bridge";
   area?: boolean;
   stacked?: boolean;
@@ -227,12 +227,11 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);
         const lowerSegments = g.lower ? splitSegments(g.lower[s]!) : null;
         return <G key={item.id}>
-          {/* Each observed edge drops at its own x-position. Leave the missing seasons
-              entirely disconnected; the floor is a visual absence marker, never zero. */}
-          {missingConnection === "dotted" && segments.slice(1).map((segment, index) => {
-            const before = segments[index]!.at(-1)!, after = segment[0]!;
-            return <G key={`gap${index}`}>{[before, after].map(point => <Line key={point.index} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}</G>;
-          })}
+          {/* Mark every observed edge next to missing periods, including leading/trailing gaps.
+              Keep the marker at the observed x; the floor indicates absence, never zero. */}
+          {missingConnection === "dotted" && segments.flatMap(segment => segment.filter((point, index) =>
+            (index === 0 && point.index > 0) || (index === segment.length - 1 && point.index < categories.length - 1)
+          )).map(point => <Line key={`gap${point.index}`} x1={point.x} y1={point.y} x2={point.x} y2={g.plot.bottom} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />)}
           {/* A faint connector guides the eye only; nulls remain absent from values,
               focus navigation and area geometry. Never extrapolate beyond observations. */}
           {missingConnection === "bridge" && segments.slice(1).map((segment, index) => {

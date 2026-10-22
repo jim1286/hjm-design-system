@@ -598,6 +598,11 @@
       "types": "./dist/time-picker.d.ts",
       "import": "./dist/time-picker.js",
       "default": "./dist/time-picker.js"
+    },
+    "./image-viewer": {
+      "types": "./dist/image-viewer.d.ts",
+      "import": "./dist/image-viewer.js",
+      "default": "./dist/image-viewer.js"
     }
   },
   "files": [

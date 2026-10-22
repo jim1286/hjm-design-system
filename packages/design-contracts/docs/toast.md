@@ -199,6 +199,17 @@ Web renderer:
 
 Native renderer:
 
+- 2026-10-22 리포트의 플랫폼별 완료 알림 명세를 기존 renderer와 대조했습니다.
+  Android는 `accessibilityLiveRegion`을 사용하며 `normal`은 `polite`, `high`는
+  `assertive`입니다. 이 속성은 Android 전용이므로 iOS 전달의 근거로 쓰지 않습니다
+  ([RN Accessibility](https://reactnative.dev/docs/accessibility#accessibilityliveregion-android)).
+- iOS는 `announceForAccessibilityWithOptions`로 `normal`에 `queue: true`, `high`에
+  `queue: false`를 전달합니다. RN의 기본 알림은 기존 발화를 중단하므로 비차단 완료에는
+  대기열을 명시합니다([RN AccessibilityInfo](https://reactnative.dev/docs/accessibilityinfo#announceforaccessibilitywithoptions)).
+  제품은 Toast와 같은 문구를 별도 announcement로 다시 보내지 않습니다. 패널 없는 짧은 결과는
+  기존 [StatusText](usage/components/text.md#statustext)를 사용합니다.
+- 시각 표시·보조기술 전달·기존 포커스 유지는 각각 확인합니다. 위 내용은 현재 소스의 매핑이며
+  실제 발화 순서·연속 갱신의 중복 여부·VoiceOver/TalkBack 검증 완료를 뜻하지 않습니다.
 - safe-area inset을 recipe inset에 additive로 적용하고 visual root 전체를 하나의 접근성
   요소로 병합하지 않습니다. announcement node와 action/close를 각각 독립 접근성 노드로
   유지하고, 비상호작용 copy만 필요할 때 묶습니다.

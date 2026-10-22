@@ -31,7 +31,7 @@
 | --- | --- | --- | --- |
 | `Image` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `GridReveal` | 확장 — 로드 완료 시 4×4 마스크 연출(optional) | `/grid-reveal` | `/grid-reveal` |
-| `ImageViewer` | 확장 — 전체 화면 넘겨 보기·확대(optional) | — | `/image-viewer` |
+| `ImageViewer` | 확장 — 전체 화면 넘겨 보기·확대 | `/image-viewer` (개발 소스) | `/image-viewer` (optional) |
 
 `GridReveal`은 추가 peer가 없다. `ImageViewer`는 granular subpath로만 import 되며 optional peer
 `react-native-zoom-toolkit` 5.1.1, `react-native-gesture-handler` 2.32.0과 Reanimated·Worklets 설치가 필요하다.
@@ -195,7 +195,7 @@ const geometry = resolveImageInspectionGeometry(
 | 정보 이미지 이름 | `accessibilityLabel` → `<img alt>`(`alt` prop은 받지 않는다) | `accessibilityLabel` |
 | 이미지 host 스타일 | `imageProps.style`/`className` | `style`(ImageStyle) |
 | 다른 이미지 엔진 | `renderImage`(받은 props를 `<img>`까지 전달) | `renderImage`(예: expo-image), `sourceAdapter`(헤더·캐시) |
-| 확대 보기 | — | `ImageViewer` |
+| 확대 보기 | `ImageViewer` (개발 소스) | `ImageViewer` |
 
 ## 함정
 
@@ -206,6 +206,21 @@ const geometry = resolveImageInspectionGeometry(
 
 ### Native 확대 화면의 행동 배치
 
-2026-10-20 번뚝 실제 첨부 사진 확인에서 큰 닫기/이전/다음 주 버튼이 사진 영역을 차지한 문제를 반영했다. ImageViewer는 우측 상단 닫기 IconButton과 하단의 이전·사진 이름/순서·다음 아이콘 행을 제공한다. 제품이 전달한 지역화 label을 접근성 이름으로 유지하고, 한 장이면 페이지 이동 버튼은 표시하지 않는다. 첫/마지막의 disabled, 전체 폭 사진·확대·오류 재시도·좌우 safe area는 유지한다. 현재 개발 소스의 표현 수정이며 공개 prop·플랫폼 지원 범위는 바뀌지 않는다.
+2026-10-20 번뚝 실제 첨부 사진 확인에서 큰 닫기/이전/다음 주 버튼이 사진 영역을 차지한 문제를 반영했다. ImageViewer는 왼쪽 상단 닫기 IconButton과 하단의 이전·사진 이름/순서·다음 아이콘 행을 제공한다. 제품이 전달한 지역화 label을 접근성 이름으로 유지하고, 한 장이면 페이지 이동 버튼은 표시하지 않는다. 첫/마지막의 disabled, 전체 폭 사진·확대·오류 재시도·좌우 safe area는 유지한다. 현재 개발 소스의 표현 수정이며 공개 prop·플랫폼 지원 범위는 바뀌지 않는다.
 
 2026-10-20 번뚝 사진 보기 확인: 고정 크기 뷰어 안에서는 원본 `width`·`height`와 `fit="contain"`을 유지하고 Image 루트의 공개 `style={{ inlineSize: "100%", blockSize: "100%" }}`로 주어진 슬롯을 채울 수 있다. 이 경우에도 실제 이미지의 fit은 HJM이 소유한다. `layoutStyle`은 배치용 `width`만 지원하며 `inlineSize`·`blockSize`를 받는 속성이 아니다.
+
+### 앱·웹 공통 사진 확대 — 2026-10-23 개발 소스
+
+사용자의 전사 사진 확대 요청에 따라 뷰어가 검은 전체 화면, 원본 비율 `contain`, 왼쪽 상단 닫기,
+하단 사진 이름·여러 장일 때 이전/다음·순서를 제공한다. `actions` 슬롯은 신고 등 제품 행동을 오른쪽 상단에 둔다. 제품별 테마 덮어쓰기는 필요하지 않다.
+사진·사진 선택 미리보기·도구 입력/결과가 대상이며 로고·장식·선택 행동을 가진 그림에는 자동 적용하지 않는다.
+
+Web은 `@hjmds/react/image-viewer`에서 `ImageViewer`를 import한다. Native와 같은 `open`,
+`items`(`id`, `uri`, `label`), `initialIndex`, `onClose`, `onIndexChange`, 라벨 6종을 받는다.
+Native의 inset/inspection/이미지 상태 callback은 Web에 전달하지 않는다.
+Web의 `renderImage(item)`은 현재 사진 하나만 마운트하며, 권한 있는 이미지 host가 조회·로딩·오류·재시도를 소유한다.
+기본 host는 img 로드/오류와 재시도를 제공한다. Dialog와 같은 모달 focus·배경 격리·Escape·초점 복귀를 사용한다.
+더블클릭은 맞춤↔2배, 두 손가락은 1~4배, 확대한 사진은 드래그한다. 사진 영역에서 +/− 키도 배율을 바꾼다.
+Native는 기존 Gallery 확대와 제품별 결과 검사 계약을 유지한다.
+새 Web 진입점과 Native 표현 변경은 미게시 개발 소스이며 설치 패키지·운영 배포 반영은 별도다.

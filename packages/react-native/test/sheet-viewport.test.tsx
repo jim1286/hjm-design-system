@@ -47,6 +47,16 @@ afterEach(() => {
 });
 
 describe("Sheet input viewport", () => {
+  it("keeps the docked bottom open while side sheets retain their complete outline", () => {
+    render(tree());
+    expect(style()).toMatchObject({ borderWidth: sheetRecipe.content.borderWidth, borderBottomWidth: 0,
+      borderBottomLeftRadius: 0, borderBottomRightRadius: 0 });
+    for (const placement of ["start", "end"] as const) {
+      act(() => renderer!.update(tree({ placement })));
+      expect(style().borderBottomWidth).toBe(sheetRecipe.content.borderWidth);
+      expect(style().borderBottomLeftRadius).toBeGreaterThan(0);
+    }
+  });
   it("lets the Sheet own composed footer chrome and safe-area padding", () => {
     render(tree({ footer: <BottomCTA testID="sheet-cta" safeAreaBottom={24}
       primaryAction={{label: "Save", onPress: () => {}}} /> }));

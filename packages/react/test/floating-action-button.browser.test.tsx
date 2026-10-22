@@ -26,6 +26,16 @@ function ScrollFixture({ scale = 1, direction = "ltr" as "ltr" | "rtl" }) {
 }
 
 describe("FloatingActionButton", () => {
+  it("renders the medium tier with matching measured clearance", async () => {
+    const clearance = vi.fn();
+    await act(async () => root.render(<FloatingActionButton size="medium"
+      descriptor={{ label: "번뜩 프로젝트 열기", icon: { name: "add" } }}
+      renderIcon={() => <span>＋</span>} onContentClearanceChange={clearance} />));
+    const button = host.querySelector("button")!;
+    expect(button.getBoundingClientRect().height).toBe(44);
+    expect(clearance).toHaveBeenLastCalledWith(76);
+    expect(button.getAttribute("aria-label")).toBe("번뜩 프로젝트 열기");
+  });
   it("inherits product floating depth without replacing the focused action and restores legacy depth", async () => {
     const flat = defineHjmDesignProfile({ tokens: { shadow: { floating: { opacity: 0 } } } });
     const deep = defineHjmDesignProfile({ tokens: { shadow: { floating: { color: "#123456", opacity: 0.5, radius: 13, offsetY: 7 } } } });

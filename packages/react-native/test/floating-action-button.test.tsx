@@ -12,6 +12,23 @@ let renderer: ReactTestRenderer;
 afterEach(() => { if (renderer) act(() => renderer.unmount()); });
 
 describe("Native FloatingActionButton", () => {
+  it("keeps the medium target and clearance when collapsing", () => {
+    const clearance = vi.fn();
+    const render = (layoutMode: "expanded" | "collapsed") => <HjmNativeProvider reducedMotion>
+      <FloatingActionButton size="medium" descriptor={{ label: "번뜩 프로젝트 열기", icon: { name: "add" }, layoutMode }}
+        renderIcon={() => <View />} onContentClearanceChange={clearance} />
+    </HjmNativeProvider>;
+    act(() => { renderer = create(render("expanded")); });
+    const button = renderer.root.findByType(Button);
+    expect(button.props.size).toBe("medium");
+    expect(StyleSheet.flatten(button.props.style).minHeight).toBe(44);
+    expect(renderer.root.findByType(Text).props.variant).toBe("body");
+    act(() => button.props.onLayout({ nativeEvent: { layout: { height: 44 } } }));
+    expect(clearance).toHaveBeenLastCalledWith(76);
+    act(() => renderer.update(render("collapsed")));
+    expect(StyleSheet.flatten(button.props.style).width).toBe(44);
+    expect(button.props.accessibilityLabel).toBe("번뜩 프로젝트 열기");
+  });
   it("inherits product floating depth without replacing the action and restores legacy depth", () => {
     const flat = defineHjmDesignProfile({ tokens: { shadow: { floating: { opacity: 0 } } } });
     const deep = defineHjmDesignProfile({ tokens: { shadow: { floating: { color: "#123456", opacity: 0.5, radius: 13, offsetY: 7 } } } });

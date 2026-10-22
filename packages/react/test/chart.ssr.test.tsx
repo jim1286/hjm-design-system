@@ -57,3 +57,25 @@ it("bridges only interior missing intervals while keeping their values absent", 
   expect(bridges[0]![0]).toContain('stroke-dasharray="1 5"');
   expect(markup).toContain("前 미수집, A 2, missing 미수집, B 4, 後 미수집");
 });
+
+it.each([
+  { values: [null, null, null, null, .35, .326, .363], edges: [4] },
+  { values: [.35, .326, .363, null, null, null, null], edges: [2] },
+  { values: [null, 2, 3, null, 4, 5, null], edges: [1, 2, 4, 5] },
+  { values: [null, null, 3, null], edges: [2] },
+  { values: [null, null, null], edges: [] },
+  { values: [1, 2, 3], edges: [] },
+])("marks all missing boundaries at observed points ($values)", ({ values, edges }) => {
+  const markup = renderToString(<LineChart categories={values.map((_, i) => String(i))}
+    series={[{ id: "record", label: "기록", values }]} missingConnection="dotted"
+    accessibilityLabel="시즌 기록" formatValue={String} missingLabel="기록 없음" />);
+  const lines = [...markup.matchAll(/<line[^>]*stroke-dasharray="1 5"[^>]*>/g)].map(match => match[0]);
+  expect(lines).toHaveLength(edges.length);
+  const { left, right } = chartRecipe.insets.plot;
+  lines.forEach((line, i) => {
+    const attr = (name: string) => Number(line.match(new RegExp(`${name}="([^"]+)"`))![1]);
+    expect(attr("x1")).toBe(attr("x2"));
+    expect(attr("x1")).toBeCloseTo(left + (320 - left - right) * edges[i]! / (values.length - 1));
+    expect(attr("y2")).toBe(chartRecipe.heights.regular - chartRecipe.insets.plot.bottom);
+  });
+});

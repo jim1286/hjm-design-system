@@ -12,7 +12,7 @@ import { Surface, Text } from "./primitives.js";
 import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
-import { useHjmNativeTheme } from "./provider.js";
+import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string; width?: number; height?: number };
 export type ImageViewerImageStatus = "loading" | "ready" | "error";
@@ -30,6 +30,8 @@ export type ImageViewerImageStatusEvent = Readonly<{
 }>;
 export type ImageViewerProps = {
   open: boolean;
+  /** Product photo actions, such as reporting; modal framing stays shared. */
+  actions?: ReactNode;
   items: readonly ImageViewerItem[];
   initialIndex?: number;
   /** Exact-size review requires positive intrinsic width/height on every item. */
@@ -77,7 +79,7 @@ function ViewerImage({ item, width, height, renderImage, onImageStatusChange }: 
   };
   const onReady = () => report("ready");
   const onError = () => report("error");
-  return <View style={{ width, height, justifyContent: "center" }}>
+  return <View style={{ width, height, justifyContent: "center", alignItems: "center" }}>
     {renderImage ? renderImage({ item, width, height, onReady, onError }) :
       <Image source={{ uri: item.uri }} accessibilityLabel={item.label}
         resizeMode="contain" style={{ width, height }} onLoad={onReady} onError={onError} />}
@@ -102,7 +104,8 @@ export function ImageViewer(props: ImageViewerProps) {
   }
   // Structured identity avoids delimiter collisions in product IDs/URIs. A replaced
   // collection must retire image callbacks as well as reset the gesture engine.
-  return <ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri, item.width, item.height]))} {...props} />;
+  // Photo presentation stays black in every product and system theme (2026-10-23 shared photo viewer request).
+  return <HjmNativeProvider theme="dark" brandPalette={{ dark: { bg: "#000000" } }}><ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri, item.width, item.height]))} {...props} /></HjmNativeProvider>;
 }
 
 function ImageViewerSession(props: ImageViewerProps) {
@@ -141,8 +144,9 @@ function ImageViewerSession(props: ImageViewerProps) {
         {/* Controls and caption share the page gutter (Container's default); they
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
-        <View style={{ ...controlInsets, flexDirection: "row", justifyContent: "flex-end" }}>
+        <View style={{ ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }}>
           <IconButton label={props.closeLabel} tone="ghost" onPress={props.onClose}><DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton>
+          {props.actions ? <View style={{ flex: 1, alignItems: "flex-end" }}>{props.actions}</View> : null}
         </View>
         {props.inspection ? <View style={controlInsets}><SegmentedControl label={props.inspection.labels.mode}
           value={props.inspection.mode} onValueChange={props.inspection.onModeChange}

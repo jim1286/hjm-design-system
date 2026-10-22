@@ -23,19 +23,21 @@
 뜨는 경우). 두 계약을 하나로 합치면 "화면의 결론"과 "콘텐츠 위 생성 행동"이라는
 서로 다른 두 의미를 한 recipe가 떠안게 되므로 분리를 유지한다.
 
+2026-10-23 번뜩 버튼 축소 요청: `size="medium"`은 기존 Button/IconButton 티어의 높이 44, 아이콘 `md`, 본문 라벨을 사용한다. 기본 `large`(52)는 유지한다. 두 renderer와 clearance 계산에 같은 크기를 전달하며 제품별 스타일 보정을 두지 않는다. 개발 소스 변경이며 미게시다.
+
 ## 일반화한 계약
 
 ### Button/IconButton recipe를 재사용한다 — 새 recipe를 얻지 못한다
 
 `floatingActionButtonRecipe`는 새 톤·크기·그림자를 선언하지 않는다.
 
-- `circle`은 `iconButtonRecipe.sizes.large`(diameter 52) 그대로.
+- 기본 `circle`은 `iconButtonRecipe.sizes.large`(diameter 52), `sizes`는 기존 `medium`(44)·`large`(52) 티어를 재사용한다.
 - `tone`은 `iconButtonRecipe.tones.primary` 그대로.
 - `shape`는 `iconButtonRecipe.shapes.circle`(`radius.full`) 그대로.
 - `expandedLabel`은 `buttonRecipe.sizes.large`의 `textVariant`/`paddingHorizontal` 그대로.
 
-두 모드(collapsed/expanded) 모두 `large` 티어를 공유하므로 모양이 원 ↔ 알약으로
-바뀌는 동안 높이(터치 타깃)는 52로 고정된다 — 라벨이 나타나거나 사라질 때 버튼
+두 모드(collapsed/expanded) 모두 선택한 티어(기본 `large`)를 공유하므로 모양이 원 ↔ 알약으로
+바뀌는 동안 높이(터치 타깃)는 기본 52, `medium`에서는 44로 고정된다 — 라벨이 나타나거나 사라질 때 버튼
 전체가 세로로 들썩이지 않는다. `docs/dropdown.md`가 "Menu와 거의 같은 anatomy를
 다시 선언하지 않는다"고 판정한 것과 같은 이유로, 이 모듈도 `Button`의 recipe를
 포크하지 않는다.
@@ -58,7 +60,7 @@ LoadMore의 `viewport` 신호, Popover의 `AnchoredOverlay`와 같은 경계를 
 
 FAB는 콘텐츠 위에 겹쳐 뜨므로, 스크롤 가능한 콘텐츠는 항상 FAB의 발자국만큼 하단
 여백을 예약해야 한다. 이 계산을 Web/RN 렌더러가 각자 다시 하면 어긋날 수 있으므로
-`resolveFloatingActionButtonContentClearance(safeAreaBottomInset)`이 한 곳에서
+`resolveFloatingActionButtonContentClearance(safeAreaBottomInset, size?)`이 한 곳에서
 `diameter + margin × 2 + safeAreaBottomInset`을 계산해 돌려준다. safe-area
 inset은 BottomNavigation·Sheet·Toast와 같은 **additive** 모드다(base 여백에
 더하지, `max()`로 대체하지 않는다).

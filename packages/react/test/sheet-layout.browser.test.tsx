@@ -22,6 +22,23 @@ afterEach(async () => { await act(async () => root.unmount()); container.remove(
 export const sheetKeyboardCases = [{ componentId: "sheet" }] as const;
 export const sheetLongCopyCases = [{ componentId: "sheet" }] as const;
 
+it("draws no closing rule on the docked bottom, preserving side-sheet outlines", async () => {
+  for (const width of [393, 1280]) {
+    await page.viewport(width, 852);
+    for (const placement of ["bottom", "start", "end"] as const) {
+      await act(async () => root.render(<HjmProvider reducedMotion>
+        <Sheet open onOpenChange={() => {}} title="Calendar" closeLabel="Close" placement={placement}>
+          <p>Calendar content</p>
+        </Sheet>
+      </HjmProvider>));
+      const sheet = document.querySelector<HTMLElement>(".hjm-sheet")!;
+      const style = getComputedStyle(sheet);
+      expect(parseFloat(style.borderBottomWidth)).toBe(placement === "bottom" ? 0 : parseFloat(style.borderTopWidth));
+      if (placement === "bottom") expect(sheet.getBoundingClientRect().bottom).toBe(852);
+    }
+  }
+});
+
 it("aligns a composed BottomCTA with the Sheet body without a second bar", async () => {
   await act(async () => root.render(<HjmProvider reducedMotion>
     <Sheet open onOpenChange={() => {}} title="Edit place" closeLabel="Close"

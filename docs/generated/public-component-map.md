@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 225개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 226개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -103,6 +103,7 @@
 | Image | Image | canonical | root, ./display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
+| ImageViewer | Image | optional-extension | ./image-viewer |
 | ImmersiveOverlay | Dialog | companion-or-alternative | root, ./overlays |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |

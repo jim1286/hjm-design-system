@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-23
 - 근거: [FloatingActionButton](../../floating-action-button.md), recipe `floatingActionButtonRecipe`(`src/floating-action-button.ts`)
 - 스토리북: `배포/컴포넌트/동작/플로팅 실행 버튼`
 
@@ -74,6 +74,7 @@ const [clearance, setClearance] = useState(0);
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
+| `size` | `medium` · `large` | `large` | 높이 44 / 52. 펼침·접힘 모두 같은 크기 티어를 사용한다(개발 소스, 미게시) |
 | `descriptor.layoutMode` | `expanded` · `collapsed` | `expanded` | 직접 고르지 말고 `useFloatingActionButtonScroll` 결과를 넘긴다 |
 | `descriptor.label` | 문구(필수) | — | `collapsed`에서도 접근성 이름은 항상 전체 `label`이다 |
 | `descriptor.icon` | `{ name }` | — | `name`만 받는다(`size`·`tone`·접근성 이름은 넣을 수 없다). 아이콘은 항상 장식이다 |
@@ -82,14 +83,14 @@ const [clearance, setClearance] = useState(0);
 | `onContentClearanceChange` | `(clearance: number) => void` | 필수 | 스크롤 콘텐츠 하단 padding으로 쓴다. 큰 글자·inset이 바뀌면 다시 불린다 |
 | Web `onClick` · Native `onPress` | Button의 같은 이벤트 | — | — |
 
-- 톤·크기·모양은 `primary`·`large`·`pill`로 고정이고 prop이 없다.
+- 톤·모양은 `primary`·`pill`로 고정이다. 2026-10-23 번뜩의 버튼 축소 요청으로 기존 Button/IconButton의 `medium` 티어를 선택할 수 있게 했다(개발 소스, 미게시).
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 높이·지름 52(IconButton `large`). `expanded`는 알약(아이콘 + 라벨, 라벨 좌우 여백 `spacing.lg` 20), `collapsed`는 지름 52 원이다. 최대 폭은 화면 폭 − 32(여백 양쪽)다 | `floating-action-button.ts` `floatingActionButtonRecipe`, `styles.css` `.hjm-fab` |
-| 간격 | 가장자리 여백 `spacing.md`(16). 하단 거리는 16 + 하단 안전 영역이다(Web은 `safeAreaBottomInset`과 `env(safe-area-inset-bottom)` 중 큰 값, Native는 `safeAreaBottomInset`). 스크롤 콘텐츠 하단에 `onContentClearanceChange` 값을 padding으로 둔다. 기본값은 52 + 16×2 + 하단 inset(= 84 + inset)이다 | `floating-action-button.ts` `resolveFloatingActionButtonContentClearance`, `styles.css` `.hjm-fab`, `react-native/src/floating-action-button.tsx` |
+| 크기 | 높이·지름 기본 52(IconButton `large`), `medium`은 44. `expanded`는 알약(아이콘 + 라벨, 라벨 좌우 여백 기본 `spacing.lg` 20, `medium`은 Button의 해당 티어), `collapsed`는 선택한 티어의 지름 44 / 52 원이다. 최대 폭은 화면 폭 − 32(여백 양쪽)다 | `floating-action-button.ts` `floatingActionButtonRecipe`, `styles.css` `.hjm-fab` |
+| 간격 | 가장자리 여백 `spacing.md`(16). 하단 거리는 16 + 하단 안전 영역이다(Web은 `safeAreaBottomInset`과 `env(safe-area-inset-bottom)` 중 큰 값, Native는 `safeAreaBottomInset`). 스크롤 콘텐츠 하단에 `onContentClearanceChange` 값을 padding으로 둔다. 기본값은 52 + 16×2 + 하단 inset(= 84 + inset), `medium`은 76 + inset이다 | `floating-action-button.ts` `resolveFloatingActionButtonContentClearance`, `styles.css` `.hjm-fab`, `react-native/src/floating-action-button.tsx` |
 | 순서·정렬 | 위치는 스크롤 영역의 **논리적 끝 쪽 하단 모서리**로 고정이다(RTL은 왼쪽) | `styles.css` `.hjm-fab`, `react-native/src/floating-action-button.tsx` |
 | 고정·스크롤 | Web은 `position: fixed`(z-index `layer.sticky` 100)로 창에 붙는다. Native는 positioned 부모(`flex: 1` View) 안에서 `absolute`다. [BottomNavigation](bottom-navigation.md)·도구막대 위에 띄울 때는 그 높이를 `safeAreaBottomInset`에 더한다(Native는 제품이 더한다) | `styles.css` `.hjm-fab`, `react-native/src/floating-action-button.tsx` |
 | 좁은 폭·큰 글자 | 큰 글자로 라벨이 여러 줄이 되면 clearance 값이 커진다 | `react-native/src/floating-action-button.tsx` |

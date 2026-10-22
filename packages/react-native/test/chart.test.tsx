@@ -116,3 +116,27 @@ it.each(["light", "dark"] as const)("keeps pie labels legible over custom series
     expect(contrastRatio(label.props.fill, plate.props.fill)).toBeGreaterThanOrEqual(4.5);
   } finally { act(() => tree.unmount()); }
 });
+
+it.each([
+  { values: [null, null, null, null, .35, .326, .363], edges: [4] },
+  { values: [.35, .326, .363, null, null, null, null], edges: [2] },
+  { values: [null, 2, 3, null, 4, 5, null], edges: [1, 2, 4, 5] },
+  { values: [null, null, 3, null], edges: [2] },
+  { values: [null, null, null], edges: [] },
+  { values: [1, 2, 3], edges: [] },
+])("marks all missing boundaries at observed points ($values)", ({ values, edges }) => {
+  const tree = render(<LineChart categories={values.map((_, i) => String(i))}
+    series={[{ id: "record", label: "기록", values }]} missingConnection="dotted"
+    accessibilityLabel="시즌 기록" formatValue={String} missingLabel="기록 없음" />);
+  try {
+    layout(tree);
+    const lines = tree.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.strokeDasharray) && n.props.strokeDasharray.join(",") === "1,5");
+    expect(lines).toHaveLength(edges.length);
+    const { left, right } = chartRecipe.insets.plot;
+    lines.forEach((line, i) => {
+      expect(line.props.x1).toBe(line.props.x2);
+      expect(line.props.x1).toBeCloseTo(left + (300 - left - right) * edges[i]! / (values.length - 1));
+      expect(line.props.y2).toBe(chartRecipe.heights.regular - chartRecipe.insets.plot.bottom);
+    });
+  } finally { act(() => tree.unmount()); }
+});

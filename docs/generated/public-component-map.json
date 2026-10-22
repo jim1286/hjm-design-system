@@ -915,6 +915,15 @@
         "role": "supplemental"
       },
       {
+        "name": "ImageViewer",
+        "source": "packages/react/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "ImmersiveOverlay",
         "source": "packages/react/src/overlays.tsx",
         "entries": [

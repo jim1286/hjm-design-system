@@ -13,6 +13,7 @@ export { resolveFloatingActionButtonContentClearance };
 // No `layoutStyle`: fixed to the viewport corner with safe-area and content-clearance math the recipe owns; margins would desync `onContentClearanceChange`.
 export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" | "onBlur" | "id" | "className"> & Readonly<{
   descriptor: FloatingActionButtonDescriptor;
+  size?: "medium" | "large";
   renderIcon: (icon: Readonly<{ name: string; size: number; color: string; decorative: true }>) => ReactNode;
   safeAreaBottomInset?: number;
   /** Apply this to the scroll content's bottom padding, including multiline labels. */
@@ -21,11 +22,11 @@ export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" 
 
 /** One persistent button preserves focus while its label collapses. */
 export const FloatingActionButton = forwardRef<HTMLButtonElement, FloatingActionButtonProps>(function FloatingActionButton({
-  descriptor, renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, className, ...props
+  descriptor, size = "large", renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, className, ...props
 }, forwardedRef) {
   const resolved = resolveFloatingActionButtonDescriptor(descriptor);
   const theme = useOptionalHjmTheme();
-  const minimumClearance = resolveFloatingActionButtonContentClearance(safeAreaBottomInset);
+  const minimumClearance = resolveFloatingActionButtonContentClearance(safeAreaBottomInset, size);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const button = buttonRef.current;
@@ -40,16 +41,16 @@ export const FloatingActionButton = forwardRef<HTMLButtonElement, FloatingAction
     return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
   }, [minimumClearance, safeAreaBottomInset, onContentClearanceChange]);
   return <Button {...props} appearance="flat" ref={(node) => { buttonRef.current = node; assignRef(forwardedRef, node); }}
-    className={classNames("hjm-fab", className)} size="large" tone="primary" shape="pill"
+    className={classNames("hjm-fab", className)} size={size} tone="primary" shape="pill"
     data-mode={resolved.layoutMode} data-direction={theme?.environment.direction ?? "ltr"} data-reduced-motion={theme?.environment.reducedMotion ?? false} aria-label={resolved.resolvedAccessibilityLabel}
-    style={{ "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
+    style={{ "--hjm-fab-diameter": `${recipe.sizes[size].diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
       "--hjm-fab-safe-area": `${safeAreaBottomInset}px`, "--hjm-fab-duration": `${recipe.transition.duration}ms`,
       "--hjm-fab-easing": `cubic-bezier(${easing[recipe.transition.easing].join(",")})`,
       // Match other floating chrome under a profile; keep the stylesheet-only
       // legacy path rather than requiring a Provider for existing consumers.
       boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)"
         : `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` } as CSSProperties}
-    leading={<span aria-hidden="true" className="hjm-fab__icon">{renderIcon({ name: resolved.icon.name, size: glyph[recipe.circle.glyph], color: "currentColor", decorative: true })}</span>}>
+    leading={<span aria-hidden="true" className="hjm-fab__icon">{renderIcon({ name: resolved.icon.name, size: glyph[recipe.sizes[size].glyph], color: "currentColor", decorative: true })}</span>}>
     {resolved.label}
   </Button>;
 });

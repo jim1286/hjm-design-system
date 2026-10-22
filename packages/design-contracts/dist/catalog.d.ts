@@ -7661,6 +7661,18 @@ export declare const recipeRegistry: {
             readonly hitSlop: 0;
             readonly glyph: "lg";
         };
+        readonly sizes: {
+            readonly medium: {
+                readonly diameter: 44;
+                readonly hitSlop: 0;
+                readonly glyph: "md";
+            };
+            readonly large: {
+                readonly diameter: 52;
+                readonly hitSlop: 0;
+                readonly glyph: "lg";
+            };
+        };
         readonly tone: {
             readonly background: Readonly<{
                 source: "theme";

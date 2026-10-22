@@ -178,6 +178,7 @@ export function resolveFloatingActionButtonLayoutMode(
  */
 export function resolveFloatingActionButtonContentClearance(
   safeAreaBottomInset: number,
+  size: "medium" | "large" = "large",
 ): number {
   if (!Number.isFinite(safeAreaBottomInset) || safeAreaBottomInset < 0) {
     throw new RangeError(
@@ -185,14 +186,14 @@ export function resolveFloatingActionButtonContentClearance(
     );
   }
   return (
-    floatingActionButtonRecipe.circle.diameter +
+    floatingActionButtonRecipe.sizes[size].diameter +
     floatingActionButtonRecipe.margin * 2 +
     safeAreaBottomInset
   );
 }
 
 /**
- * Both layout modes reuse Button/IconButton's `large` tier so the control
+ * Both layout modes reuse the selected Button/IconButton tier so the control
  * never changes height while morphing between a circle and a pill — only
  * shape and content change, per the brief's "don't fork the Button recipe."
  */
@@ -200,6 +201,8 @@ export const floatingActionButtonRecipe = {
   slots: ["root", "icon", "label"] as const,
   defaults: { layoutMode: "expanded" } as const,
   circle: iconButtonRecipe.sizes.large,
+  // BurnTok requested a smaller FAB; reuse existing control tiers rather than product overrides.
+  sizes: { medium: iconButtonRecipe.sizes.medium, large: iconButtonRecipe.sizes.large },
   tone: iconButtonRecipe.tones.primary,
   shape: iconButtonRecipe.shapes.circle,
   /**

@@ -23,7 +23,7 @@ The Native Modal accepts supportedOrientations in fullScreen presentation. Optio
 safe-area insets protect controls and feedback in landscape while the gallery remains full width.
 Products must supply updated insets and permit rotation in their manifests; OS rotation lock still applies.
 The additive Native-only props keep this optional subpath and its existing peers; the base Image
-renderers retain their own host APIs. There is no Web ImageViewer counterpart.
+renderers retain their own host APIs. The development Web `@hjmds/react/image-viewer` counterpart uses the shared modal focus engine and DOM pointer gestures without optional peers. Its `renderImage(item)` host mounts only the selected photo; Native host/inspection props remain platform-specific.
 
 ## Current evidence — 2026-09-30
 

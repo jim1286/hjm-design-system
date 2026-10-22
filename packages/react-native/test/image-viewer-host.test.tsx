@@ -28,6 +28,12 @@ function render(props: Partial<ImageViewerProps> = {}) {
   });
 }
 
+it("keeps photo presentation black and exposes product photo actions", () => {
+  render({ actions: <View testID="photo-report" /> });
+  expect(tree!.root.findByProps({ testID: "photo-report" })).toBeDefined();
+  expect(tree!.root.findAll(node => node.props.style?.backgroundColor === "#000000").length).toBeGreaterThan(0);
+});
+
 it("waits for the product display callback and delivers the host's item and viewport", () => {
   let host!: ImageViewerImageRenderProps;
   const notify = vi.fn();

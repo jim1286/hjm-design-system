@@ -71,9 +71,9 @@ export declare function resolveFloatingActionButtonLayoutMode(signal: FloatingAc
  * inset is additive, matching every other bottom-anchored recipe in this
  * package (BottomNavigation, Sheet, Toast) rather than a `max()` clamp.
  */
-export declare function resolveFloatingActionButtonContentClearance(safeAreaBottomInset: number): number;
+export declare function resolveFloatingActionButtonContentClearance(safeAreaBottomInset: number, size?: "medium" | "large"): number;
 /**
- * Both layout modes reuse Button/IconButton's `large` tier so the control
+ * Both layout modes reuse the selected Button/IconButton tier so the control
  * never changes height while morphing between a circle and a pill — only
  * shape and content change, per the brief's "don't fork the Button recipe."
  */
@@ -86,6 +86,18 @@ export declare const floatingActionButtonRecipe: {
         readonly diameter: 52;
         readonly hitSlop: 0;
         readonly glyph: "lg";
+    };
+    readonly sizes: {
+        readonly medium: {
+            readonly diameter: 44;
+            readonly hitSlop: 0;
+            readonly glyph: "md";
+        };
+        readonly large: {
+            readonly diameter: 52;
+            readonly hitSlop: 0;
+            readonly glyph: "lg";
+        };
     };
     readonly tone: {
         readonly background: Readonly<{

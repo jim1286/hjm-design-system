@@ -89,16 +89,16 @@ export function resolveFloatingActionButtonLayoutMode(signal, previousMode = flo
  * inset is additive, matching every other bottom-anchored recipe in this
  * package (BottomNavigation, Sheet, Toast) rather than a `max()` clamp.
  */
-export function resolveFloatingActionButtonContentClearance(safeAreaBottomInset) {
+export function resolveFloatingActionButtonContentClearance(safeAreaBottomInset, size = "large") {
     if (!Number.isFinite(safeAreaBottomInset) || safeAreaBottomInset < 0) {
         throw new RangeError("FloatingActionButton safeAreaBottomInset must be a non-negative finite number");
     }
-    return (floatingActionButtonRecipe.circle.diameter +
+    return (floatingActionButtonRecipe.sizes[size].diameter +
         floatingActionButtonRecipe.margin * 2 +
         safeAreaBottomInset);
 }
 /**
- * Both layout modes reuse Button/IconButton's `large` tier so the control
+ * Both layout modes reuse the selected Button/IconButton tier so the control
  * never changes height while morphing between a circle and a pill — only
  * shape and content change, per the brief's "don't fork the Button recipe."
  */
@@ -106,6 +106,8 @@ export const floatingActionButtonRecipe = {
     slots: ["root", "icon", "label"],
     defaults: { layoutMode: "expanded" },
     circle: iconButtonRecipe.sizes.large,
+    // BurnTok requested a smaller FAB; reuse existing control tiers rather than product overrides.
+    sizes: { medium: iconButtonRecipe.sizes.medium, large: iconButtonRecipe.sizes.large },
     tone: iconButtonRecipe.tones.primary,
     shape: iconButtonRecipe.shapes.circle,
     /**
