@@ -110,7 +110,7 @@ describe("Web core normalization", () => {
     expect(css).not.toContain(".hjm-field__input:focus-visible");
   });
 
-  it("emits shared IconButton defaults and preserves the small visual hit target", () => {
+  it("emits shared IconButton defaults", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">
         <IconButton label="메뉴">☰</IconButton>
@@ -121,16 +121,10 @@ describe("Web core normalization", () => {
     expect(markup).toContain('data-shape="rounded"');
     expect(markup).toContain('data-state="idle"');
 
-    const css = readFileSync(
-      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
-      "utf8",
-    );
-    expect(css).toContain(
-      '.hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-space-xxs)); }',
-    );
+    // Effective hit areas and hitSlop overrides are browser behavior, covered in screen-chrome.browser.test.tsx.
   });
 
-  it("maps every Button size to shared height and typography with a small hit target", () => {
+  it("maps every Button size to shared height and typography", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">
         <Button size="small">작게</Button>
@@ -162,9 +156,6 @@ describe("Web core normalization", () => {
     );
     expect(css).toMatch(
       /\.hjm-button\[data-size="large"\] \{[^}]*min-block-size: var\(--hjm-control-button-large\);[^}]*font-size: var\(--hjm-type-body-large-size\);[^}]*line-height: var\(--hjm-type-body-large-line-height\);/s,
-    );
-    expect(css).toMatch(
-      /\.hjm-button\[data-size="small"\]::after \{[^}]*position: absolute;[^}]*inset: calc\(-1 \* var\(--hjm-space-xxs\)\);/s,
     );
   });
 

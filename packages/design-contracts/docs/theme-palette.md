@@ -155,3 +155,10 @@ Combobox의 확정 선택과 활성 후보 분리), 관련 선택 동작, palett
 Web의 `core-normalization.ssr.test.tsx` 중 기존 small Button/IconButton hit-slop CSS 문자열 검사
 2건은 변경 전 HEAD에서도 불일치하며, 이번 선택색과 무관한 실패로 남겼다. 변경한 Card/선택 상태
 검사는 통과했다. 세 패키지 소스 빌드는 통과했으며 Native 실기기 확인·패키지 게시·소비 앱 채택은 미실행이다.
+
+같은 날 후속 수정에서 남겨 둔 실패를 해결했다. Web의 오래된 hit-slop CSS 문자열 기대는
+SSR 검사에서 제거하고 기존 브라우저 검사에서 Button/IconButton의 기본 확장·명시적 0·실제 포인터
+hit-test와 클릭 전달을 확인한다. Native 모션 검사는 기본 스크롤 레일의 필수 layout 측정을
+허용하되 선택 항목 노출·애니메이션 미설치·모션 미실행을 검증하도록 바로잡았다.
+Web core SSR 15건, 브라우저 대상 동작 1건, Native 모션 3건 모두 통과했다.
+런타임 구현 변경이나 검사 skip 추가 없이 테스트의 오래된 구현 가정을 수정한 결과다.

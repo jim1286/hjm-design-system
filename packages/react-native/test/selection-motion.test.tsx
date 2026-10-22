@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Animated, AppState, Pressable } from "react-native";
-import { afterEach, expect, it } from "vitest";
+import { Animated, AppState, Pressable, ScrollView } from "react-native";
+import { afterEach, expect, it, vi } from "vitest";
 import { SegmentedControl } from "../src/inputs.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { startedAnimatedTimings } from "./react-native.mock.js";
@@ -21,6 +21,19 @@ it("settles selection immediately for reduced motion and inactive apps",()=>{
  const radios=mount(true);startedAnimatedTimings.length=0;act(()=>radios[1]!.props.onPress());expect(startedAnimatedTimings).toHaveLength(0);
  act(()=>tree!.update(<Fixture/>));AppState.currentState="background";act(()=>radios[0]!.props.onPress());expect(startedAnimatedTimings).toHaveLength(0);
 });
-it("does not install layout work or decorative hosts by default",()=>{
- act(()=>{tree=create(<Fixture slide={false}/>);});expect(tree!.root.findAllByType(Animated.View)).toHaveLength(0);for(const item of tree!.root.findAllByType(Pressable))expect(item.props.onLayout).toBeUndefined();
+it("measures the default scrolling rail to reveal selection without moving artwork",()=>{
+ const scrollTo=vi.fn();
+ act(()=>{tree=create(<Fixture slide={false}/>,{createNodeMock:node=>node.type==="ScrollView"?{scrollTo}:{}});});
+ const rail=tree!.root.findByType(ScrollView), radios=tree!.root.findAllByType(Pressable);
+ startedAnimatedTimings.length=0;
+ // Layout is required for scrolling even with selectionMotion="none"; only animated artwork is opt-in.
+ act(()=>{
+  rail.props.onLayout({nativeEvent:{layout:{width:120}}});
+  radios.forEach((node,index)=>node.props.onLayout({nativeEvent:{layout:{x:index*100,y:0,width:90,height:44}}}));
+ });
+ act(()=>radios[1]!.props.onPress());
+ expect(scrollTo).toHaveBeenLastCalledWith({x:70,animated:false});
+ expect(radios[1]!.props.accessibilityState.checked).toBe(true);
+ expect(tree!.root.findAllByType(Animated.View)).toHaveLength(0);
+ expect(startedAnimatedTimings).toHaveLength(0);
 });

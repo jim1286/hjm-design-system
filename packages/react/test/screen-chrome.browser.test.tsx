@@ -25,21 +25,37 @@ afterEach(async () => { await act(async () => root.unmount()); host.remove(); aw
 describe("screen chrome layout", () => {
   it("keeps compact header targets separated by 4px while body hit expansion stays enabled", async () => {
     await page.viewport(390, 844);
-    const first = vi.fn(), second = vi.fn();
+    const first = vi.fn(), second = vi.fn(), bodyPress = vi.fn(), iconPress = vi.fn();
     await act(async () => root.render(<HjmProvider theme="light" minimumVisualTarget={false}>
       <TopBar actions={<>
         <IconButton label="Search" size="small" hitSlop={0} onClick={first}>⌕</IconButton>
         <IconButton label="Settings" size="small" hitSlop={0} onClick={second}>⚙</IconButton>
       </>} />
-      <Button size="small">Body action</Button>
+      <div style={{ display: "flex", gap: 16, padding: 16 }}>
+        <Button size="small" onClick={bodyPress}>Body action</Button>
+        <IconButton label="Body icon" size="small" onClick={iconPress}>⌕</IconButton>
+        <Button size="small" hitSlop={0}>Tight action</Button>
+      </div>
     </HjmProvider>));
     const buttons = host.querySelectorAll<HTMLButtonElement>("button");
-    const a = buttons[0]!, b = buttons[1]!, body = buttons[2]!;
+    const a = buttons[0]!, b = buttons[1]!, body = buttons[2]!, icon = buttons[3]!, tight = buttons[4]!;
     const left = a.getBoundingClientRect(), right = b.getBoundingClientRect();
     expect(left.width).toBe(36); expect(left.height).toBe(36);
     expect(right.left - left.right).toBe(4);
     expect(getComputedStyle(a, "::after").inset).toBe("0px");
     expect(getComputedStyle(body, "::after").inset).toBe("-4px");
+    expect(getComputedStyle(icon, "::after").inset).toBe("-4px");
+    expect(getComputedStyle(tight, "::after").inset).toBe("0px");
+    // Exercise actual pointer dispatch beyond the visible frame, rather than matching CSS source text.
+    for (const button of [body, icon]) {
+      const frame = button.getBoundingClientRect();
+      const target = document.elementFromPoint(frame.left + frame.width / 2, frame.top - 2) as HTMLElement;
+      expect(target.closest("button")).toBe(button);
+      await act(async () => target.click());
+    }
+    const tightFrame = tight.getBoundingClientRect();
+    expect(document.elementFromPoint(tightFrame.left + tightFrame.width / 2, tightFrame.top - 2)?.closest("button")).not.toBe(tight);
+    expect(bodyPress).toHaveBeenCalledOnce(); expect(iconPress).toHaveBeenCalledOnce();
     // The gap itself must not activate either adjacent control's pseudo-element.
     const gap = document.elementFromPoint(left.right + 2, left.top + left.height / 2);
     expect(gap?.closest("button")).toBeNull();
