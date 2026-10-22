@@ -23,13 +23,12 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
   // pill buttons were ~52pt and pushed the sixth reaction behind a horizontal scroll (2026-10-16 review).
   const stripItem = (option: ReactionOption) => <Pressable key={option.id} accessibilityRole="button" accessibilityLabel={option.label} accessibilityState={{ selected: value === option.id, disabled: disabled || (option.disabled ?? false) }}
     disabled={disabled || (option.disabled ?? false)} onPress={() => choose(option.id)}
-    style={({ pressed }) => ({ width: holdMenuRecipe.stripItemSize, height: holdMenuRecipe.stripItemSize, borderRadius: holdMenuRecipe.stripItemSize / 2, alignItems: "center", justifyContent: "center", backgroundColor: value === option.id ? colors.surfaceAccent : pressed ? colors.surface : "transparent" })}>
+    style={({ pressed }) => ({ width: holdMenuRecipe.stripItemSize, height: holdMenuRecipe.stripItemSize, borderRadius: holdMenuRecipe.stripItemSize / 2, alignItems: "center", justifyContent: "center", backgroundColor: value === option.id ? colors.surfaceSelected : pressed ? colors.surface : "transparent" })}>
     {/* Emoji keep the measured ~28pt glyph regardless of the reading text scale. */}
     <FixedGlyph fontSize={holdMenuRecipe.emojiSize} lineHeight={holdMenuRecipe.emojiSize + 6}>{option.emoji}</FixedGlyph>{option.count === undefined ? null : <Text variant="caption">{` ${option.count}`}</Text>}
   </Pressable>;
-  // The wrap layout sits on the page background, where a ghost Button's selected treatment (content color) cannot
-  // show on an emoji. Items use the chip frame instead — hairline at rest, brand border and accent fill when chosen —
-  // with toggle-button semantics, matching Web's wrap layout (2026-10-17 review).
+  // Wrap reactions keep Chip's compact frame for counted emoji. Both layouts use the shared
+  // selected surface because emoji cannot communicate a text-color change.
   const chipItem = (option: ReactionOption) => {
     const selected = value === option.id;
     const off = disabled || (option.disabled ?? false);
@@ -37,7 +36,7 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
     return <Pressable key={option.id} accessibilityRole="button" accessibilityLabel={option.label} accessibilityState={{ selected, disabled: off }}
       disabled={off} hitSlop={chipRecipe.sizes.small.hitSlop} onPress={() => choose(option.id)}
       style={({ pressed }) => ({ minHeight: chipRecipe.sizes.small.height, paddingHorizontal: chipRecipe.sizes.small.paddingHorizontal, borderRadius: tokens.radius[chipRecipe.radius], borderWidth: chipRecipe.borderWidth,
-        borderColor: resolveColorReference(state.border, palette), backgroundColor: selected ? colors.surfaceAccent : resolveColorReference(state.background, palette),
+        borderColor: resolveColorReference(state.border, palette), backgroundColor: selected ? colors.surfaceSelected : resolveColorReference(state.background, palette),
         alignItems: "center", justifyContent: "center", opacity: off ? chipRecipe.states.disabledOpacity : pressed ? chipRecipe.states.pressedOpacity : 1 })}>
       <Text variant="body">{`${option.emoji}${option.count === undefined ? "" : ` ${option.count}`}`}</Text>
     </Pressable>;

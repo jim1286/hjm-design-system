@@ -62,7 +62,7 @@ export function TransferList<Id extends string = string>({
   layoutStyle,
 }: TransferListProps<Id>) {
 
-  const { colors, designProfile, palette, environment } = useHjmNativeTheme();
+  const { colors, designProfile, palette, environment, tokens } = useHjmNativeTheme();
   // Panels share the Web md role; preserve the pre-profile frame when no profile is selected.
   const corner = designProfile?.tokens.radius[transferListRecipe.panel.radius] ?? 12;
   const [storedTargetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
@@ -145,7 +145,7 @@ export function TransferList<Id extends string = string>({
                   accessibilityState={{ checked, disabled: item.disabled === true }}
                   disabled={item.disabled === true}
                   onPress={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id as Id))}
-                  style={{ alignItems: "center", direction: environment.direction, flexDirection: "row", gap: transferListRecipe.item.gap, minHeight: control.minTouchTarget, opacity: item.disabled ? 0.5 : 1, paddingHorizontal: transferListRecipe.item.paddingHorizontal }}
+                  style={{ backgroundColor: checked ? resolveColorReference(transferListRecipe.item.selectedBackground, palette) : "transparent", borderRadius: tokens.radius[transferListRecipe.item.radius], alignItems: "center", direction: environment.direction, flexDirection: "row", gap: transferListRecipe.item.gap, minHeight: control.minTouchTarget, opacity: item.disabled ? 0.5 : 1, paddingHorizontal: transferListRecipe.item.paddingHorizontal }}
                 >
                   <SelectionMark checked={checked} />
                   <Text fontRole="ui" style={{ flex: 1 }}>{item.label}</Text>

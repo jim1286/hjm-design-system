@@ -13,7 +13,7 @@ const light = {
     text: "#191f28",
     textBody: "#333d4b",
     textMuted: "#4e5968",
-    textSub: "#65707d",
+    textSub: "#646f7c",
     textWeak: "#8b95a1",
     primary: "#0369a1",
     contentBrand: "#075985",

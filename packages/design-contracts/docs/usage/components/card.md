@@ -79,12 +79,12 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle`(Surface tone) | `raised` | 테두리와 공통 raised shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
+| `tone` | `default` · `raised` · `accent` · `sunken` · `subtle` · `selected`(Surface tone) | `raised` | 테두리와 공통 raised shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
 | `badgesAlign` | `start` · `center` | `start` | 미게시. 들판 대표 카드처럼 그림 아래의 배지 묶음을 가운데 배치할 때 `center` 사용. 줄바꿈된 행에도 적용 |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |
 | `radius` | radius 이름 | `lg`(foundation 16) | 선택한 designProfile의 같은 radius 역할로 frame과 media clip을 함께 변경 |
-| `selected` | `boolean` | `false` | `true`면 tone이 `accent`로 바뀐다(`cardRecipe.selectedTone`) |
+| `selected` | `boolean` | `false` | `true`면 tone이 `selected`로 바뀐다(`cardRecipe.selectedTone`) |
 | `headingLevel`(Web만) | `2` · `3` · `4` | `3` | 제목이 `h3`로 렌더되므로 문서 위계에 맞춰 고른다 |
 | `title` · `description` · `leading` · `media` · `badges` · `actions` · `children` | `ReactNode` | — | 슬롯. 순서는 HJM이 고정한다 |
 | `headerActions` | `ReactNode` | 없음 | 미게시. 제목 줄 끝의 배지·독립 명령. 카드 열기와 별도 대상으로 남으며 HJM이 위치와 제목 여유 폭을 소유한다 |

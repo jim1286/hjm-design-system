@@ -152,7 +152,7 @@ export declare const dataTableRecipe: {
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
     };

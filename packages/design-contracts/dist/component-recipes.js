@@ -398,7 +398,7 @@ export const listRowRecipe = {
     },
     states: {
         pressedBackground: semanticColors.canvas,
-        selectedBackground: semanticColors.canvas,
+        selectedBackground: semanticColors.selection.background,
         disabledOpacity: opacity.disabled,
     },
 };
@@ -547,8 +547,8 @@ export const selectRecipe = {
         collisionPadding: spacing.xs,
     },
     density: {
-        compact: { ...collectionItemContract, selectedBackground: semanticColors.canvas, highlightedBackground: semanticColors.canvas, minHeight: control.minTouchTarget },
-        comfortable: { ...collectionItemContract, selectedBackground: semanticColors.canvas, highlightedBackground: semanticColors.canvas, minHeight: layout.rowHeight.singleLine },
+        compact: { ...collectionItemContract, minHeight: control.minTouchTarget },
+        comfortable: { ...collectionItemContract, minHeight: layout.rowHeight.singleLine },
     },
     sectionLabel: {
         color: semanticColors.content.secondary,
@@ -558,7 +558,7 @@ export const selectRecipe = {
     },
     optionLeading: { color: semanticColors.content.secondary, glyph: "sm" },
     optionLabel: { fontWeight: fontWeight.medium, selectedFontWeight: fontWeight.semibold },
-    selectionIndicator: { color: semanticColors.border.focus, glyph: "sm" },
+    selectionIndicator: { color: semanticColors.selection.content, glyph: "sm" },
     stateMessage: {
         color: semanticColors.content.secondary,
         textVariant: "body",
@@ -883,9 +883,9 @@ export const selectionControlRecipe = {
         checkedBackground: semanticColors.action.brand.background,
         checkedBorder: semanticColors.border.focus,
         indicator: semanticColors.action.brand.content,
-        // Keep the entire choice plate white; border and checked indicator carry selection.
-        selectedBackground: semanticColors.canvas,
-        selectedBorder: semanticColors.border.focus,
+        // The full plate uses neutral selection; the compact checked glyph remains primary.
+        selectedBackground: semanticColors.selection.background,
+        selectedBorder: semanticColors.selection.border,
         hoverBackground: semanticColors.canvas,
         pressedBackground: semanticColors.canvas,
         invalidBorder: semanticColors.border.danger,
@@ -910,6 +910,8 @@ export const bottomNavigationRecipe = {
     ],
     defaults: bottomNavigationRecipeDefaults,
     // Selected full-item cards retain the existing navigation state engine (Spint, 2026-10-12).
+    // Capsule navigation is ordinary selection; tile is an explicit strong brand treatment.
+    selectionCapsule: { background: semanticColors.selection.background, content: semanticColors.selection.content },
     selectionTile: {
         background: semanticColors.surface.brand,
         selectedBackground: semanticColors.action.brand.background,
@@ -1134,7 +1136,7 @@ export const tabsRecipe = {
      */
     indicators: {
         underline: { listDivider: true, background: null, selectedContent: semanticColors.content.primary, radius: null },
-        filled: { listDivider: false, background: semanticColors.surface.brand, selectedContent: semanticColors.content.brand, radius: "full" },
+        filled: { listDivider: false, background: semanticColors.selection.background, selectedContent: semanticColors.selection.content, radius: "full" },
         solid: { listDivider: false, background: semanticColors.action.brand.background, selectedContent: semanticColors.action.brand.content, radius: "full" },
     },
     sizes: {

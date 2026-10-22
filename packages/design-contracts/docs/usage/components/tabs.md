@@ -194,3 +194,8 @@ source 객체는 렌더마다 바꾸지 않도록 `useMemo` 또는 제품 어댑
 ### 진한 브랜드 선택 — 개발 소스, 미게시 (2026-10-21)
 
 다에리·스핀트의 선택 배경이 너무 옅다는 사용자 피드백에 따라 `indicator="solid"`로 선택 탭을 `primary`로 채우고 글자·아이콘에 `onPrimary`를 쓴다. 기존 `filled`는 옅은 선택을 유지한다.
+
+### 기본 선택 면
+
+`indicator="filled"`는 neutral `selection.background`/`selection.content`를 쓴다.
+정적·slide·gooey의 이동 배경도 같은 역할이며 `solid`는 명시적 `primary`/`onPrimary` 강조다.

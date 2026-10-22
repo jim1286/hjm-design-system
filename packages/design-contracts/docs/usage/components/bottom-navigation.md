@@ -274,3 +274,8 @@ floating 그림자는 그리지 않는다. 옆면이 높이를 표현하므로 �
 개발 브라우저에서 Native renderer를 실행할 때도 현재 목적지의 선택 상태와 비활성 상태를 전달한다.
 Tab은 탐색 막대에 한 번 진입하고, 방향키·Home·End는 포커스만 옮긴다. Enter·Space로 목적지를
 활성화하며 실제 경로 선택은 계속 제품 navigator가 공급한다.
+
+### 기본 선택 면
+
+`presentation: "capsule"`의 선택 항목은 `selectionCapsule`의 neutral 선택 배경과 글자를 쓴다.
+기본 아이콘·글자 탐색의 위치 강조와 명시적 `selection: "tile"`의 브랜드 면은 기존 계약을 따른다.

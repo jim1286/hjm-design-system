@@ -102,7 +102,7 @@ export const semanticColors = {
         hover: themeColor("text", stateLayer.hover),
         focus: themeColor("contentBrand", stateLayer.focus),
         pressed: themeColor("text", stateLayer.pressed),
-        selected: themeColor("primary", stateLayer.selected),
+        selected: themeColor("surfaceSelected"),
         /**
          * Lower edge of a raised object, composited over its own fill so one shade
          * darkens any brand color (BottomNavigation raised tile, Spint 2026-10-13).

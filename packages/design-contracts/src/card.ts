@@ -38,7 +38,7 @@ export const cardRecipe = {
     badgesAlign: "start",
     padding: "md",
   },
-  selectedTone: "accent",
+  selectedTone: "selected",
   // BurnTok's compact 3-column picker (2026-10-10) needs the whole card to activate.
   // Reuse control state opacity instead of a product Pressable with a second visual contract.
   interaction: { disabledOpacity: buttonRecipe.opacity.disabled, pressedOpacity: buttonRecipe.opacity.pressed },

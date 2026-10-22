@@ -877,7 +877,7 @@ export declare const listRowRecipe: {
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
         readonly disabledOpacity: 0.5;
@@ -1043,12 +1043,12 @@ export declare const menuRecipe: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1094,12 +1094,12 @@ export declare const menuRecipe: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1150,7 +1150,7 @@ export declare const menuRecipe: {
     readonly indicator: {
         readonly color: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "text";
             alpha?: number;
         }>;
         readonly glyph: "sm";
@@ -1339,16 +1339,6 @@ export declare const selectRecipe: {
     };
     readonly density: {
         readonly compact: {
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
             readonly minHeight: 44;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1369,6 +1359,11 @@ export declare const selectRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1378,9 +1373,14 @@ export declare const selectRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "surfaceSelected";
+                alpha?: number;
+            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1390,16 +1390,6 @@ export declare const selectRecipe: {
             }>;
         };
         readonly comfortable: {
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
             readonly minHeight: 56;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1420,6 +1410,11 @@ export declare const selectRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1429,9 +1424,14 @@ export declare const selectRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "surfaceSelected";
+                alpha?: number;
+            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1466,7 +1466,7 @@ export declare const selectRecipe: {
     readonly selectionIndicator: {
         readonly color: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "text";
             alpha?: number;
         }>;
         readonly glyph: "sm";
@@ -1688,16 +1688,6 @@ export declare const comboboxRecipe: {
     };
     readonly density: {
         readonly compact: {
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
             readonly minHeight: 44;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1718,6 +1708,11 @@ export declare const comboboxRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1727,9 +1722,14 @@ export declare const comboboxRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "surfaceSelected";
+                alpha?: number;
+            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1739,16 +1739,6 @@ export declare const comboboxRecipe: {
             }>;
         };
         readonly comfortable: {
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "bg";
-                alpha?: number;
-            }>;
             readonly minHeight: 56;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1769,6 +1759,11 @@ export declare const comboboxRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1778,9 +1773,14 @@ export declare const comboboxRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "surfaceSelected";
+                alpha?: number;
+            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly danger: Readonly<{
@@ -1815,7 +1815,7 @@ export declare const comboboxRecipe: {
     readonly selectionIndicator: {
         readonly color: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "text";
             alpha?: number;
         }>;
         readonly glyph: "sm";
@@ -2296,12 +2296,12 @@ export declare const selectionControlRecipe: {
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
         readonly selectedBorder: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly hoverBackground: Readonly<{
@@ -2341,6 +2341,18 @@ export declare const bottomNavigationRecipe: {
         readonly presentation: "bar";
         readonly distribution: "equal";
         readonly density: "regular";
+    };
+    readonly selectionCapsule: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceSelected";
+            alpha?: number;
+        }>;
+        readonly content: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
     };
     readonly selectionTile: {
         readonly background: Readonly<{
@@ -2710,12 +2722,12 @@ export declare const tabsRecipe: {
             readonly listDivider: false;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly selectedContent: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly radius: "full";

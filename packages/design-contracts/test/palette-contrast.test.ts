@@ -44,6 +44,7 @@ describe("palette contrast checker", () => {
     expect(findings.map(({ foreground, background }) => `${foreground}/${background}`)).toEqual([
       "textMuted/bg",
       "textMuted/surface",
+      "textMuted/surfaceSelected",
       "onPrimary/primary",
     ]);
     expect(findings[0]!.ratio).toBeLessThan(4.5);

@@ -533,11 +533,12 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                 minimumTargetStyle,
                 {
                     alignItems: "center",
-                    backgroundColor: checked || active
+                    backgroundColor: checked
                         ? resolveColorReference(densityContract.selectedBackground, theme.palette)
-                        : pressed
-                            ? colors.bg
-                            : "transparent",
+                        : active ? resolveColorReference(densityContract.highlightedBackground, theme.palette)
+                            : pressed
+                                ? colors.bg
+                                : "transparent",
                     borderRadius: tokens.radius[densityContract.radius],
                     direction: environment.direction,
                     flexDirection: "row",

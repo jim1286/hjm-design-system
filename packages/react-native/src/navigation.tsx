@@ -845,11 +845,11 @@ export function BottomNavigation<
     theme.palette,
   );
   const selectedIconColor = resolveColorReference(
-    tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedIcon,
+    tile ? tileRecipe.selectedContent : capsule ? bottomNavigationRecipe.selectionCapsule.content : bottomNavigationRecipe.colors.selectedIcon,
     theme.palette,
   );
   const selectedLabelColor = resolveColorReference(
-    tile ? tileRecipe.selectedContent : bottomNavigationRecipe.colors.selectedLabel,
+    tile ? tileRecipe.selectedContent : capsule ? bottomNavigationRecipe.selectionCapsule.content : bottomNavigationRecipe.colors.selectedLabel,
     theme.palette,
   );
   const pressedBackground = resolveColorReference(
@@ -1027,7 +1027,7 @@ export function BottomNavigation<
                     alignItems: "center",
                     backgroundColor: tile && selected
                       ? resolveColorReference(tileRecipe.selectedBackground, theme.palette)
-                      : pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
+                      : pressed ? pressedBackground : capsule && selected ? resolveColorReference(bottomNavigationRecipe.selectionCapsule.background, theme.palette) : "transparent",
                     borderRadius: tile ? theme.tokens.radius[tileRecipe.radius] : capsule ? radius.full : theme.tokens.radius.lg,
                     // Every raised tile reserves the edge so selection never shifts icon/label rows.
                     // The translucent edge composites over the brand fill, darkening it.

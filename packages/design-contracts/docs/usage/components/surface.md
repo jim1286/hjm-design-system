@@ -62,7 +62,7 @@ import { Surface } from "@hjmds/react-native/primitives";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `tone` | `default` · `raised` · `sunken` · `accent` · `subtle` | `default` | `raised`는 그림자, `accent`는 primary 색 테두리. 모든 tone의 배경은 테마 `bg`이고 회색 채움 대신 테두리·그림자로 위계를 나타낸다 |
+| `tone` | `default` · `raised` · `sunken` · `accent` · `subtle` · `selected` | `default` | `raised`는 그림자, `accent`는 primary 색 테두리. `selected`는 `surfaceSelected` 배경, 나머지는 테마 `bg` 바탕에 테두리·그림자로 위계를 나타낸다 |
 | `padding` | `none` 또는 spacing 토큰(`xxs`~`xxxl`) | `none` | — |
 | `radius` | `sm` · `md` · `lg` · `xl` · `full` | `lg`(16) | — |
 | `bordered` | `boolean` | 생략 시 테두리 그림 | 모든 tone이 `borderAlways`. `bordered={false}`로만 끈다 |
@@ -104,3 +104,9 @@ subtree라 질감을 바꾸거나 host가 실패해도 본문/초안은 유지�
 | 그림자(`raised`) | CSS | `elevation: 4`와 iOS shadow |
 | ref | `forwardRef` | 없음 |
 | import 경로 | `/layout` | `/primitives` |
+
+### 선택 면
+
+`tone="selected"`는 `surfaceSelected` 배경과 `borderControl` 경계를 사용한다.
+선택 Card는 공통 `cardRecipe.selectedTone`을 통해 이 면을 사용한다.
+브랜드 `accent`나 포커스 위치를 일반 선택 면으로 대신하지 않는다.

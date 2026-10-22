@@ -11,10 +11,8 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
     const all = resolveReactionOptions(options, more);
     validateReactions(all, value);
     const showingAll = expanded && !!more;
-    // The wrap layout sits on the page background, where a ghost Button's selected treatment (content color on the
-    // canvas) cannot show: an emoji ignores text color. It uses the chip frame instead — hairline at rest, brand
-    // border and accent fill when chosen — with toggle-button semantics (aria-pressed), matching Native. The strip
-    // layout keeps ghost Buttons because the message bubble supplies its surface (2026-10-17 review).
+    // Wrap reactions keep Chip's compact frame for counted emoji; strip reactions use ghost Buttons.
+    // Both resolve the same neutral selected surface because emoji cannot communicate a text-color change.
     const chips = layout === "wrap";
     const visible = showingAll ? all : options;
     const choose = (id) => { if (!disabled) {

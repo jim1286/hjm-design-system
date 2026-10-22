@@ -42,7 +42,7 @@
 | `content.primary` = `text` | `#191f28` / `#f3f5f7` | `--hjm-color-text` | `theme.colors.text` | 제목·강조 글자. Text `tone="primary"`(기본) |
 | `content.body` = `textBody` | `#333d4b` / `#e1e5ea` | `--hjm-color-text-body` | `theme.colors.textBody` | 긴 본문. Text `tone="body"` |
 | `content.secondary` = `textMuted` | `#4e5968` / `#cad0d8` | `--hjm-color-text-muted` | `theme.colors.textMuted` | 보조 설명. Text `tone="muted"` |
-| `content.tertiary` = `textSub` | `#65707d` / `#9ba5b0` | `--hjm-color-text-sub` | `theme.colors.textSub` | 시간·출처 같은 약한 메타 정보. Text `tone="subtle"` |
+| `content.tertiary` = `textSub` | `#646f7c` / `#9ba5b0` | `--hjm-color-text-sub` | `theme.colors.textSub` | 시간·출처 같은 약한 메타 정보. Text `tone="subtle"` |
 | `content.decorative` = `textWeak` | `#8b95a1` / `#8b96a2` | `--hjm-color-text-weak` | `theme.colors.textWeak` | 비활성·placeholder·장식 표지. Text `tone="weak"`. 읽혀야 하는 글자에는 쓰지 않는다 |
 
 ### 브랜드
@@ -87,13 +87,13 @@
 | `border.control` = `borderControl` | `#6b7684` / `#929faf` | `--hjm-color-border-control` | `theme.colors.borderControl` | 쉬고 있는 컨트롤 윤곽(Button `secondary`, 필드) |
 | `border.strong` = `textWeak` | `#8b95a1` / `#8b96a2` | `--hjm-color-text-weak` | `theme.colors.textWeak` | 강한 경계 |
 | `border.focus` | `contentBrand` | `--hjm-color-focus` | `theme.colors.contentBrand` | 포커스 링. 컴포넌트가 그린다 |
-| `interaction.hover` · `focus` · `pressed` · `selected` | `text` 0.06 · `contentBrand` 0.08 · `text` 0.1 · `primary` 0.1 | — | `resolveColorReference(…, theme.palette)` | 상태 덧칠. 제품 고유 누름 영역에만 직접 쓴다 |
+| `interaction.hover` · `focus` · `pressed` | `text` 0.06 · `contentBrand` 0.08 · `text` 0.1 | — | `resolveColorReference(…, theme.palette)` | 상태 덧칠. 제품 고유 누름 영역에만 직접 쓴다 |
 
 ### 함께 쓰는 쌍과 최소 대비
 
 `checkBrandPaletteContrast`가 검사하는 쌍이다. 이 밖의 조합(예: `contentBrand` 글자를 `surfaceAccent` 위에)은 HJM이 대비를 보장하지 않는다.
 
-- 4.5 이상: `text`·`textBody`·`textMuted`·`textSub`·`contentBrand`·`danger` on `bg`·`surface`, `onPrimary` on `primary`, `onDanger` on `dangerFill`.
+- 4.5 이상: `text`·`textBody`·`textMuted`·`textSub`·`contentBrand`·`danger` on `bg`·`surface`·`surfaceSelected`, `onPrimary` on `primary`, `onDanger` on `dangerFill`.
 - 3 이상: `primary`·`borderControl` vs `bg`·`surface`(형태), `textWeak` vs `bg`.
 
 ## 쓰는 법
@@ -171,3 +171,8 @@ Web은 `--hjm-color-surface-selected`, Native는 `theme.colors.surfaceSelected`�
 선택 글자는 `semanticColors.selection.content` → `text`, 경계는 `selection.border` → `borderControl`이다.
 휠·선택 Chip·neutral SegmentedControl에 쓰며, 주요 버튼의 `primary`나 브랜드 배경의
 `surfaceAccent`를 선택 배경으로 덮어쓰지 않는다. [결정 근거](../../theme-palette.md#기본-선택-배경을-브랜드에서-분리한다-2026-10-23).
+
+기본 선택의 적용 범위와 예외는 [선택 상태 색상 기준](../../theme-palette.md#선택-상태-색상-기준-2026-10-23)을 따른다.
+
+`interaction.selected`는 이제 `surfaceSelected`를 가리킨다. 일반 선택 면에는 가능하면
+`semanticColors.selection.background`를 사용하고, hover/focus/pressed의 투명 상태 덧칠과 구분한다.

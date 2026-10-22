@@ -62,17 +62,17 @@ export declare const toggleGroupRecipe: {
     readonly pressed: {
         readonly background: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
         readonly color: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "text";
             alpha?: number;
         }>;
         readonly border: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "borderControl";
             alpha?: number;
         }>;
     };

@@ -12,7 +12,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle" | "selected";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -41,8 +41,8 @@ export const buttonRecipe = {
    * consumer painted the selected background in product styles.
    */
   states: {
-    // Selected reactions use content color, without adding an outline (2026-10-10 user request).
-    selected: { background: "bg", content: "contentBrand", border: null },
+    // Persistent toggles share the neutral selection pair (2026-10-23); focus stays independent.
+    selected: { background: "surfaceSelected", content: "text", border: null },
   },
   sizes: {
     small: {
@@ -161,8 +161,8 @@ export const surfaceRecipe = {
     // rounded corner, which consumers were fixing in product styles.
     clipsContent: false,
   },
-  // White surfaces retain a boundary; tonal fills were removed at the user
-  // review, so elevation and border now carry hierarchy.
+  // Resting surfaces keep canvas fills; elevation and borders carry hierarchy.
+  // Persistent selection has its own neutral tone below.
   sunken: {
     background: "bg",
     border: "border",
@@ -178,6 +178,11 @@ export const surfaceRecipe = {
     elevated: false,
     borderAlways: true,
     clipsContent: true,
+  },
+  // Selected cards need their own surface role, without repurposing a brand accent.
+  selected: {
+    background: "surfaceSelected", border: "borderControl", borderAlpha: 1,
+    elevated: false, borderAlways: true, clipsContent: true,
   },
   subtle: {
     background: "bg",

@@ -46,9 +46,9 @@ export const toggleGroupRecipe = {
         border: semanticColors.border.control,
     },
     pressed: {
-        background: semanticColors.canvas,
-        color: semanticColors.content.brand,
-        border: semanticColors.border.focus,
+        background: semanticColors.selection.background,
+        color: semanticColors.selection.content,
+        border: semanticColors.selection.border,
     },
     states: { focus: focusIndicatorContract },
 };

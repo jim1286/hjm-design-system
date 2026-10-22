@@ -101,3 +101,8 @@ import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 사용하고 없으면 기존 `toggleGroupRecipe.radius` 12를 유지한다. 새 style prop이나
 별도 토글 엔진을 추가하지 않는다. 중첩 Provider에서 별도 profile을 생략하면 상속하며,
 명시적인 neutral profile은 중립 모서리로 돌아간다. 테마 변경은 눌린 항목·비활성·초점을 초기화하지 않는다.
+
+### 선택 면
+
+지속되는 `pressedIds`는 `selection.background`/`selection.content`/`selection.border`를 쓴다.
+순간적인 포인터 누름과 키보드 포커스는 이 선택값과 별개다.

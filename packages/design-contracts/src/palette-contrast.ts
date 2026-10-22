@@ -18,7 +18,7 @@ export const paletteContrastRules: readonly PaletteContrastRule[] = [
     surfaces.map((background) => ({ foreground, background, minimum: 4.5, kind: "text" as const })),
   ),
   // Selected text must remain readable when a product overrides the shared neutral fill.
-  { foreground: "text", background: "surfaceSelected", minimum: 4.5, kind: "text" },
+  ...readable.map(foreground => ({ foreground, background: "surfaceSelected" as const, minimum: 4.5, kind: "text" as const })),
   { foreground: "onPrimary", background: "primary", minimum: 4.5, kind: "text" },
   { foreground: "onDanger", background: "dangerFill", minimum: 4.5, kind: "text" },
   // Filled badges use a separate ink/fill pair, independent of primary buttons.

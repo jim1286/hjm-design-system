@@ -45,6 +45,7 @@ theme별 병합 결과를 검사하고, theme별 기준 미달 쌍을 돌려준�
 | --- | --- | --- |
 | `text`·`textBody`·`textMuted`·`textSub` on `bg`·`surface` | 4.5 | WCAG 1.4.3 본문. `textSub`는 `Text tone="subtle"`의 실제 글자색이다 |
 | `contentBrand`·`danger` on `bg`·`surface` | 4.5 | 링크·현재 위치·오류 문구는 글자로 읽힌다 |
+| `text`·`textBody`·`textMuted`·`textSub`·`contentBrand`·`danger` on `surfaceSelected` | 4.5 | 일반 선택 면 위 글자. 선택색 분리와 적용 확대에 따른 실제 소비 쌍(2026-10-23) |
 | `onPrimary` on `primary`, `onDanger` on `dangerFill` | 4.5 | 채운 버튼의 라벨 |
 | `onStatusFill` on `neutralFill`·`strongFill`·고정 `accentFill.<tone>` | 4.5 | 채운 Badge의 실제 라벨·바탕 쌍 |
 | `primary`·`borderControl` vs `bg`·`surface` | 3 | WCAG 1.4.11. 채운 컨트롤과 쉬고 있는 컨트롤 윤곽선은 형태로 식별돼야 한다 |

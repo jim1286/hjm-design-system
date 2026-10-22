@@ -13,7 +13,7 @@ export declare const cardRecipe: {
         readonly badgesAlign: "start";
         readonly padding: "md";
     };
-    readonly selectedTone: "accent";
+    readonly selectedTone: "selected";
     readonly interaction: {
         readonly disabledOpacity: 0.5;
         readonly pressedOpacity: 0.86;

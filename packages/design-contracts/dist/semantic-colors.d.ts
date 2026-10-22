@@ -320,7 +320,7 @@ export declare const semanticColors: {
         }>;
         readonly selected: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
         /**

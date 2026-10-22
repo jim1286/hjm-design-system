@@ -255,7 +255,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                 : trailingAction
                     ? "transparent"
                     : visualState.backgroundColor,
-            borderColor: selected && !trailingAction ? theme.colors.contentBrand : "transparent",
+            borderColor: selected && !trailingAction ? theme.colors.borderControl : "transparent",
             borderWidth: trailingAction ? 0 : rowBorder,
             direction: visualState.direction,
             flex: trailingAction ? 1 : undefined,
@@ -282,7 +282,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
             {
                 alignItems: "center",
                 backgroundColor: visualState.backgroundColor,
-                borderColor: selected ? theme.colors.contentBrand : "transparent",
+                borderColor: selected ? theme.colors.borderControl : "transparent",
                 borderWidth: rowBorder,
                 direction: visualState.direction,
                 flexDirection: "row",

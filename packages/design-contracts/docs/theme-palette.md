@@ -113,3 +113,45 @@ TimePicker, Chip(그룹의 chips 표현 포함)과 기본 neutral SegmentedContr
 `surfaceAccent`는 브랜드 보조 배경, `primary`는 주요 동작으로 유지한다.
 명시적인 `selectionTone="brand"`와 solid 탭은 기존 브랜드 강조를 유지한다.
 제품은 `brandPalette`의 `surfaceSelected`로 선택 배경을 지정할 수 있다. 기존 팔레트 대비 검사에 `text`/`surfaceSelected` 4.5:1 쌍을 포함한다.
+
+## 선택 상태 색상 기준 (2026-10-23)
+
+기본 테마의 선택 토큰이 일부 컴포넌트에만 연결된 공백을 사용자 검토에서 확인했다.
+색 이름이나 HTML `aria-selected`만으로 일괄 치환하지 않고, 제품에서 유지하는 값인지
+현재 키보드/포인터 조작 위치인지에 따라 다음처럼 적용한다. 각 API의 기존 지원 플랫폼에 적용한다.
+
+| 의미 | 색상 기준 | 해당 공개 표면 |
+| --- | --- | --- |
+| 지속되는 일반 선택 면 | `selection.background`/`selection.content`, 경계가 필요하면 `selection.border` | Chip·칩 그룹, neutral SegmentedControl, TimePicker, filled Tabs, capsule BottomNavigation, ReactionPicker, ToggleGroup, selected Button·IconButton, 선택 Card·ListRow·Select·Combobox·Menu·Tree·TransferList·DataTable 행 |
+| 현재 조작 위치 | 기존 focus/hover/pressed 역할. 확정 선택과 합치지 않음 | CommandPalette·Mentions·TagsInput 제안의 active descendant, Select·Combobox의 active 항목, 포커스 링 |
+| 명시적인 진한 브랜드 면 | `primary`/`onPrimary` | `Tabs indicator="solid"`, `SegmentedControl selectionTone="brand"`, `BottomNavigation selection="tile"`, prominent destination |
+| 작은 값 표시·현재 위치 표시 | 기존 전용 체크·점·밑줄·테두리 계약 | Checkbox·Radio의 glyph, Switch on, Calendar 날짜 원, underline/text Tabs, 일반 BottomNavigation 아이콘·글자, Pagination·Steps·Anchor·Carousel 위치 표시, 읽기 전용 반응 요약 |
+| 브랜드·장식·업무 강조 | 기존 브랜드/상태 역할 | ChatMessage outgoing, 폴더 그림, liquid toast, 표의 `highlighted` 업무 강조, 브랜드 Surface/Badge, 오류·성공 등 상태 |
+| 미디어 위 선택 증거 | 읽을 수 있는 전용 링·스크림 유지 | ImageChoice·MediaSelection. 회색 면으로 사진을 덮지 않음 |
+
+### 적용 규칙
+
+- 선택 토큰은 현재 theme과 product palette로 해석한다. 제품별 직접 색상 분기는 추가하지 않는다.
+- 정적 면과 이동하는 선택 배경은 같은 역할을 쓴다. reduced motion은 이동만 바꾸며 색상 의미를 바꾸지 않는다.
+- 선택 값을 표현하는 체크·굵기·radio/pressed/selected 의미와 비활성·읽기 전용 동작은 보존한다.
+- `Surface tone="selected"`는 선택 Card의 공통 면이다. `accent`는 브랜드 면으로 유지한다.
+- 일반 선택을 브랜드로 보이게 하려고 primary를 바꾸거나, 포커스 위치를 확정 선택값처럼 칠하지 않는다.
+- 선택 면에서 본문·보조·브랜드·위험 글자의 대비는 기존 palette 검사에서 각각 4.5:1을 확인한다.
+  `textWeak`의 비활성/장식 용도는 기존 경계를 따른다.
+
+선택 Card로 적용 범위를 넓히면서 light `textSub`가 새 회색 위에서 4.46:1인 것을 확인했다.
+선택 면 `#f0f1f3`을 유지하고 `textSub`를 `#65707d`에서 `#646f7c`로 한 단계 조정해 4.52:1로 보완했다.
+위 2026-09-26 값은 과거 기록이며 현재 값의 근거는 이 절이다.
+
+### 확인 경계
+
+이 기준은 HJM 개발 소스의 의미·renderer 연결 기준이다. 새 패키지 게시, 소비 앱의 설치 버전 채택,
+각 제품 테마의 실기기 화면 확인을 대신하지 않는다. 브라우저의 light/dark·제품 선택색 override와
+Native host 검사를 수행한 범위를 기록하며 실기기 결과는 따로 구분한다.
+
+2026-10-23 개발 확인: Web/Native 선택색 회귀(정적·이동 면, 제품 override, 명시적 solid 강조,
+Combobox의 확정 선택과 활성 후보 분리), 관련 선택 동작, palette 대비 검사에서 총 123건 통과했다.
+기본 neutral을 포함한 11개 preset의 light/dark 22개 팔레트에서도 새 선택 면의 글자 대비 쌍을 확인했다.
+Web의 `core-normalization.ssr.test.tsx` 중 기존 small Button/IconButton hit-slop CSS 문자열 검사
+2건은 변경 전 HEAD에서도 불일치하며, 이번 선택색과 무관한 실패로 남겼다. 변경한 Card/선택 상태
+검사는 통과했다. 세 패키지 소스 빌드는 통과했으며 Native 실기기 확인·패키지 게시·소비 앱 채택은 미실행이다.

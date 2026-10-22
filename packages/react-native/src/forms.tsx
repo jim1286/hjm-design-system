@@ -1072,8 +1072,9 @@ export function Combobox<
           minimumTargetStyle,
           {
             alignItems: "center",
-            backgroundColor: checked || active
+            backgroundColor: checked
               ? resolveColorReference(densityContract.selectedBackground, theme.palette)
+              : active ? resolveColorReference(densityContract.highlightedBackground, theme.palette)
               : pressed
                 ? colors.bg
                 : "transparent",

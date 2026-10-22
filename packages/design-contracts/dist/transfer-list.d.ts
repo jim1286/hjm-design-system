@@ -138,12 +138,12 @@ export declare const transferListRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surfaceSelected";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "text";
             alpha?: number;
         }>;
         readonly danger: Readonly<{

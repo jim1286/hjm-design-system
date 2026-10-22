@@ -60,7 +60,7 @@ describe("Web core normalization", () => {
     );
     expect(markup).toContain('class="hjm-tag__label"');
     expect(markup).toContain('data-state="selected"');
-    expect(markup).toContain('data-tone="accent" data-bordered="true"');
+    expect(markup).toContain('data-tone="selected" data-bordered="true"');
     expect(markup).toContain('<h3 class="hjm-card__title" data-slot="title">제목</h3>');
     for (const slot of [
       "media",
@@ -210,7 +210,7 @@ describe("Web core normalization", () => {
       /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
     );
     expect(css).toMatch(
-      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-bg\);/s,
+      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-selected\);/s,
     );
   });
 

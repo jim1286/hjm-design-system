@@ -52,7 +52,7 @@ export const collectionItemContract = {
   },
   highlightedBackground: semanticColors.canvas,
   focus: focusIndicatorContract,
-  selectedBackground: semanticColors.canvas,
-  selectedIndicator: semanticColors.border.focus,
+  selectedBackground: semanticColors.selection.background,
+  selectedIndicator: semanticColors.selection.content,
   danger: semanticColors.content.danger,
 } as const;

@@ -9,7 +9,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle" | "selected";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -72,8 +72,8 @@ export declare const buttonRecipe: {
      */
     readonly states: {
         readonly selected: {
-            readonly background: "bg";
-            readonly content: "contentBrand";
+            readonly background: "surfaceSelected";
+            readonly content: "text";
             readonly border: null;
         };
     };
@@ -167,6 +167,14 @@ export declare const surfaceRecipe: {
     readonly accent: {
         readonly background: "bg";
         readonly border: "primary";
+        readonly borderAlpha: 1;
+        readonly elevated: false;
+        readonly borderAlways: true;
+        readonly clipsContent: true;
+    };
+    readonly selected: {
+        readonly background: "surfaceSelected";
+        readonly border: "borderControl";
         readonly borderAlpha: 1;
         readonly elevated: false;
         readonly borderAlways: true;

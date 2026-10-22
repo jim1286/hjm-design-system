@@ -105,12 +105,12 @@ export declare const iconButtonRecipe: {
         readonly selected: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "surfaceSelected";
                 alpha?: number;
             }>;
             readonly content: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly border: null;

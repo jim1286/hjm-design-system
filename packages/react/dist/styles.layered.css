@@ -1,5 +1,5 @@
 @layer hjm {
-/* Broad neutral and pale-brand surfaces use the theme canvas. Selection stays visible through borders; primary actions and compact state marks retain their semantic fills. */
+/* Persistent selection uses its neutral surface. Focus, primary actions and compact value marks retain their distinct semantic roles; see theme-palette.md. */
 .hjm-root,
 .hjm-root *,
 .hjm-root *::before,
@@ -269,7 +269,7 @@
 /* Toggle treatment: aria-pressed already carried the state, so without a paired
    visual every consumer painted the selected background in product styles.
    Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
-.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); border-color: transparent; }
+.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
 /* data-state="disabled" also covers focusable boundaries (aria-disabled, e.g. Carousel previous on the first slide),
    which looked enabled while Native dimmed them (2026-10-17 review E9). */
@@ -288,7 +288,7 @@
 .hjm-button[data-tone="primary"] { --hjm-button-face-fill: var(--hjm-color-primary); }
 .hjm-button[data-tone="secondary"] { --hjm-button-face-fill: var(--hjm-color-bg); --hjm-button-face-border: var(--hjm-color-border-control); }
 .hjm-button[data-tone="danger"] { --hjm-button-face-fill: var(--hjm-color-danger-fill); }
-.hjm-button[data-selected="true"] { --hjm-button-face-fill: var(--hjm-color-bg); --hjm-button-face-border: transparent; }
+.hjm-button[data-selected="true"] { --hjm-button-face-fill: var(--hjm-color-surface-selected); --hjm-button-face-border: transparent; }
 .hjm-button[data-raised="true"] { padding: 0 0 var(--hjm-button-depth); border: 0; gap: 0; flex-direction: column; background: color-mix(in srgb, var(--hjm-button-side), #000 var(--hjm-button-side-shade)); }
 .hjm-button__face { position: relative; display: flex; box-sizing: border-box; inline-size: 100%; min-block-size: inherit; flex: 1; align-items: center; justify-content: inherit; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-button-face-padding); border: 1px solid var(--hjm-button-face-border, transparent); border-radius: inherit; background: var(--hjm-button-face-fill); transition: transform var(--hjm-button-settle) ease-out; }
 .hjm-button[data-raised="true"]:active:not(:disabled):not([aria-disabled="true"]) { opacity: 1; }
@@ -814,7 +814,7 @@
 .hjm-choice[data-presentation="card"][data-state="checked"],
 .hjm-choice[data-presentation="card"][data-state="mixed"],
 .hjm-choice[data-presentation="grouped"][data-state="checked"],
-.hjm-choice[data-presentation="grouped"][data-state="mixed"] { border-color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
+.hjm-choice[data-presentation="grouped"][data-state="mixed"] { border-color: var(--hjm-color-border-control); background: var(--hjm-color-surface-selected); }
 .hjm-choice[data-size="small"] { min-block-size: 44px; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-space-sm); }
 .hjm-choice[data-size="small"][data-presentation="plain"] { padding: 0; }
 .hjm-choice__input { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; }
@@ -1038,7 +1038,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list-row[data-density="relaxed"][data-lines="two"] { min-block-size: var(--hjm-list-row-relaxed-two-line); }
 .hjm-list-row[data-density="spacious"] { --hjm-list-row-inline: var(--hjm-list-row-spacious-padding-inline); min-block-size: var(--hjm-list-row-spacious-one-line); padding-block: var(--hjm-list-row-spacious-padding-block); }
 .hjm-list-row[data-density="spacious"][data-lines="two"] { min-block-size: var(--hjm-list-row-spacious-two-line); }
-.hjm-list-row[data-state="selected"] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-list-row[data-state="selected"] { background: var(--hjm-color-surface-selected);  box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
 .hjm-list-row[data-state="disabled"] { opacity: 0.5; cursor: not-allowed; }
 /* trailingAction: one surface for the row command and its separate action, as Native. The frame takes the bleed; the
    command keeps the start padding and the action the end padding, so the action box ends on the content edge (an
@@ -1047,7 +1047,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-list-row-frame[data-density="compact"] { --hjm-list-row-inline: var(--hjm-list-row-compact-padding-inline); }
 .hjm-list-row-frame[data-density="relaxed"] { --hjm-list-row-inline: var(--hjm-list-row-relaxed-padding-inline); }
 .hjm-list-row-frame[data-density="spacious"] { --hjm-list-row-inline: var(--hjm-list-row-spacious-padding-inline); }
-.hjm-list-row-frame[data-state="selected"] { background: var(--hjm-color-bg); box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-list-row-frame[data-state="selected"] { background: var(--hjm-color-surface-selected); box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
 .hjm-list-row-frame[data-state="disabled"] { opacity: 0.5; }
 .hjm-list-row-frame > .hjm-list-row { flex: 1 1 auto; min-inline-size: 0; inline-size: auto; margin-inline: 0; padding-inline-end: 0; }
 .hjm-list-row-frame > .hjm-list-row[data-state] { background: transparent; box-shadow: none; opacity: 1; }
@@ -1612,7 +1612,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Panel headings and empty-state copy share the same narrow column as rows. */
 .hjm-transfer-list__title,
 .hjm-transfer-list__empty { min-inline-size: 0; overflow-wrap: anywhere; }
-.hjm-transfer-list__option[aria-selected="true"] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-transfer-list__option[aria-selected="true"] { background: var(--hjm-color-surface-selected);  box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
 .hjm-transfer-list__option[aria-disabled="true"] { color: var(--hjm-color-text-weak); }
 .hjm-transfer-list__option:focus-visible,
 .hjm-transfer-list__empty:focus-visible,
@@ -1974,9 +1974,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 }
 /* The pressed state is announced by aria-pressed; color only reinforces it. */
 .hjm-toggle-group__item[aria-pressed="true"] {
-  border-color: var(--hjm-color-focus);
-  background: var(--hjm-color-bg);
-  color: var(--hjm-color-content-brand);
+  border-color: var(--hjm-color-border-control);
+  background: var(--hjm-color-surface-selected);
+  color: var(--hjm-color-text);
   font-weight: var(--hjm-text-emphasis-strong);
 }
 .hjm-toggle-group__item:disabled { cursor: default; color: var(--hjm-color-text-weak); }
@@ -2209,7 +2209,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   color: var(--hjm-color-text);
   cursor: default;
 }
-.hjm-tree__node[aria-selected="true"] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-tree__node[aria-selected="true"] { background: var(--hjm-color-surface-selected);  box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
 .hjm-tree__node[aria-disabled="true"] { color: var(--hjm-color-text-weak); }
 .hjm-tree__node:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
 .hjm-tree__indent { flex: 0 0 auto; inline-size: calc(var(--hjm-tree-depth) * var(--hjm-tree-indent)); }
@@ -2675,7 +2675,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menu__item:hover,
 .hjm-menu__item[data-focus="true"] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
 .hjm-menu__item[data-tone="danger"] { color: var(--hjm-color-danger); }
-.hjm-menu__item[data-state="selected"] { color: var(--hjm-color-content-brand); font-weight: var(--hjm-text-emphasis-strong); }
+.hjm-menu__item[data-state="selected"] { background: var(--hjm-color-surface-selected); color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-strong); }
+.hjm-menu__item[data-state="selected"][data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-menu__item:disabled { opacity: 0.5; cursor: not-allowed; }
 .hjm-menu__state-message { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; padding: var(--hjm-space-xs) var(--hjm-space-sm); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-menu__section-label { padding: var(--hjm-space-xs) var(--hjm-space-sm); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
@@ -2729,7 +2730,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-select__listbox[data-density="comfortable"] .hjm-select__option { min-block-size: 3.5rem; }
 .hjm-select__option { cursor: pointer; }
 .hjm-select__option[data-active="true"] { box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
-.hjm-select__option[data-state="selected"] { color: var(--hjm-color-content-brand); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-select__option[data-state="selected"] { background: var(--hjm-color-surface-selected); color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-select__option[data-state="disabled"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-select__option-copy { min-inline-size: 0; flex: 1 1 auto; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-select__option-description, .hjm-select__message { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
@@ -2770,7 +2771,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-combobox__listbox[data-density="comfortable"] .hjm-combobox__option { min-block-size: 3.5rem; }
 .hjm-combobox__option { cursor: pointer; }
 .hjm-combobox__option[data-state="active"] { box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
-.hjm-combobox__option[data-state="selected"] { color: var(--hjm-color-content-brand); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-combobox__option[aria-selected="true"] { background: var(--hjm-color-surface-selected); color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-combobox__option[data-state="disabled"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-combobox__message { color: var(--hjm-color-text-muted); }
 .hjm-form__fieldset { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
@@ -3303,14 +3304,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__list { position: relative; }
 .hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__tab[data-state="selected"]::after { display: none; }
 .hjm-tabs__indicator { position: absolute; bottom: 0; height: 2px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
-/* indicator="filled" (tabsRecipe.indicators.filled): a surface-accent pill behind the selected tab, no list divider.
+/* indicator="filled" (tabsRecipe.indicators.filled): a neutral selection pill behind the selected tab, no list divider.
    The moving pill spans the tab height and sits under the labels. */
 .hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__list { border: 0; }
 .hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab { border-radius: var(--hjm-radius-full); }
-.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-content-brand); }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab[data-state="selected"] { color: var(--hjm-color-text); }
 .hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab[data-state="selected"]::after { display: none; }
-.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]):not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"] { background: var(--hjm-color-surface-accent); }
-.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__indicator { top: 0; bottom: 0; height: auto; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-accent); z-index: 0; }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]):not([data-indicator-motion="moving"]) .hjm-tabs__tab[data-state="selected"] { background: var(--hjm-color-surface-selected); }
+.hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__indicator { top: 0; bottom: 0; height: auto; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-selected); z-index: 0; }
 .hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__list { position: relative; }
 .hjm-tabs:is([data-indicator="filled"],[data-indicator="solid"]) .hjm-tabs__tab { z-index: 1; }
 .hjm-tabs__gooey { height: 6px; }
@@ -3333,7 +3334,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 }
 .hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] .hjm-bottom-navigation__item { flex-direction: row; }
 .hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] .hjm-bottom-navigation__item:not([data-state="selected"]) .hjm-bottom-navigation__label { display: none; }
-.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-surface-accent); }
+.hjm-bottom-navigation[data-presentation="capsule"]:not([data-selection="tile"]) .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-surface-selected); color: var(--hjm-color-text); }
 .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__primary-action { position: static; translate: none; flex-shrink: 0; }
 @media (prefers-reduced-motion: reduce) { .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item { transition: none; } }
 
@@ -3608,9 +3609,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* Only the chat strip enlarges glyphs, to the title type step Native's strip uses. The default
    wrap layout keeps the button's own size, as published before the strip existed. */
 .hjm-reaction-picker[data-layout="strip"] .hjm-reaction-picker__glyph { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
-/* Wrap reactions reuse the chip frame (chipRecipe). Emoji ignore the brand content color, so the chosen reaction
-   also takes the accent fill that Native's strip and wrap items use. */
-.hjm-reaction-picker__chip[data-selected] { background: var(--hjm-color-surface-accent); }
+/* Emoji ignore text color; wrap and strip both retain the shared neutral selection fill. */
+.hjm-reaction-picker__chip[data-selected] { background: var(--hjm-color-surface-selected); }
 
 /* The embedded circle uses the small 36px recipe; centre it in the field rather than on the text baseline.
    Reduce only its trailing inset to 8px, preserving the text's 16px leading padding. */
@@ -3854,5 +3854,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer .hjm-icon-button { color: #fff; background: #222; }
 
 .hjm-image-viewer__actions { margin-inline-start: auto; }
+
+/* Persistent selection uses a neutral surface; active-descendant focus keeps its own treatment. */
+.hjm-surface[data-tone="selected"] { background: var(--hjm-color-surface-selected); }
+.hjm-surface[data-tone="selected"][data-bordered="true"] { border-color: var(--hjm-color-border-control); }
+.hjm-data-table__table tr[aria-selected="true"] > :is(td, th) { background-color: var(--hjm-color-surface-selected); }
 
 }
