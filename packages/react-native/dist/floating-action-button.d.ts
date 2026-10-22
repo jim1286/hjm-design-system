@@ -6,6 +6,7 @@ import { View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-n
 export { resolveFloatingActionButtonContentClearance };
 export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" | "onBlur" | "testID"> & Readonly<{
     descriptor: FloatingActionButtonDescriptor;
+    size?: "medium" | "large";
     renderIcon: (icon: Readonly<{
         name: string;
         size: number;

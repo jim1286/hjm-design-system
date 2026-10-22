@@ -24,6 +24,8 @@ export type ImageViewerImageStatusEvent = Readonly<{
 }>;
 export type ImageViewerProps = {
     open: boolean;
+    /** Product photo actions, such as reporting; modal framing stays shared. */
+    actions?: ReactNode;
     items: readonly ImageViewerItem[];
     initialIndex?: number;
     /** Exact-size review requires positive intrinsic width/height on every item. */

@@ -1030,6 +1030,9 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                             borderBottomLeftRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
                                             borderBottomRightRadius: physicalPlacement === "bottom" ? 0 : tokens.radius[sheetRecipe.content.radius],
                                             borderWidth: sheetRecipe.content.borderWidth,
+                                            // A bottom sheet continues into the screen/keyboard edge; closing its outline there
+                                            // leaves a clipped-looking horizontal rule (Utilverse calendar report, 2026-10-23).
+                                            borderBottomWidth: physicalPlacement === "bottom" ? 0 : sheetRecipe.content.borderWidth,
                                             ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, 8),
                                             gap: sheetRecipe.body.gap,
                                             // A fixed size ratio drives the height; `auto` lets the content decide

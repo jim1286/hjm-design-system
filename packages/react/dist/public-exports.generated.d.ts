@@ -94,6 +94,7 @@ export declare const publicExportEntries: {
     readonly Image: readonly ["./display"];
     readonly ImageChoiceGroup: readonly ["./image-choice"];
     readonly ImageComparison: readonly ["./image-comparison"];
+    readonly ImageViewer: readonly ["./image-viewer"];
     readonly ImmersiveOverlay: readonly ["./overlays"];
     readonly ImportFieldMapping: readonly ["./data-workflows"];
     readonly InlineConfirm: readonly ["./inline-confirm"];

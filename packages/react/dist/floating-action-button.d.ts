@@ -4,6 +4,7 @@ import { type ButtonProps } from "./actions.js";
 export { resolveFloatingActionButtonContentClearance };
 export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" | "onBlur" | "id" | "className"> & Readonly<{
     descriptor: FloatingActionButtonDescriptor;
+    size?: "medium" | "large";
     renderIcon: (icon: Readonly<{
         name: string;
         size: number;
@@ -17,6 +18,7 @@ export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" 
 /** One persistent button preserves focus while its label collapses. */
 export declare const FloatingActionButton: import("react").ForwardRefExoticComponent<Pick<ButtonProps, "id" | "className" | "onFocus" | "onBlur" | "onClick"> & Readonly<{
     descriptor: FloatingActionButtonDescriptor;
+    size?: "medium" | "large";
     renderIcon: (icon: Readonly<{
         name: string;
         size: number;

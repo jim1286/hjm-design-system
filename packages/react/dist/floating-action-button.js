@@ -7,10 +7,10 @@ import { assignRef, classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 export { resolveFloatingActionButtonContentClearance };
 /** One persistent button preserves focus while its label collapses. */
-export const FloatingActionButton = forwardRef(function FloatingActionButton({ descriptor, renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, className, ...props }, forwardedRef) {
+export const FloatingActionButton = forwardRef(function FloatingActionButton({ descriptor, size = "large", renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, className, ...props }, forwardedRef) {
     const resolved = resolveFloatingActionButtonDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
-    const minimumClearance = resolveFloatingActionButtonContentClearance(safeAreaBottomInset);
+    const minimumClearance = resolveFloatingActionButtonContentClearance(safeAreaBottomInset, size);
     const buttonRef = useRef(null);
     useEffect(() => {
         const button = buttonRef.current;
@@ -27,13 +27,13 @@ export const FloatingActionButton = forwardRef(function FloatingActionButton({ d
         window.addEventListener("resize", measure);
         return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
     }, [minimumClearance, safeAreaBottomInset, onContentClearanceChange]);
-    return _jsx(Button, { ...props, appearance: "flat", ref: (node) => { buttonRef.current = node; assignRef(forwardedRef, node); }, className: classNames("hjm-fab", className), size: "large", tone: "primary", shape: "pill", "data-mode": resolved.layoutMode, "data-direction": theme?.environment.direction ?? "ltr", "data-reduced-motion": theme?.environment.reducedMotion ?? false, "aria-label": resolved.resolvedAccessibilityLabel, style: { "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
+    return _jsx(Button, { ...props, appearance: "flat", ref: (node) => { buttonRef.current = node; assignRef(forwardedRef, node); }, className: classNames("hjm-fab", className), size: size, tone: "primary", shape: "pill", "data-mode": resolved.layoutMode, "data-direction": theme?.environment.direction ?? "ltr", "data-reduced-motion": theme?.environment.reducedMotion ?? false, "aria-label": resolved.resolvedAccessibilityLabel, style: { "--hjm-fab-diameter": `${recipe.sizes[size].diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
             "--hjm-fab-safe-area": `${safeAreaBottomInset}px`, "--hjm-fab-duration": `${recipe.transition.duration}ms`,
             "--hjm-fab-easing": `cubic-bezier(${easing[recipe.transition.easing].join(",")})`,
             // Match other floating chrome under a profile; keep the stylesheet-only
             // legacy path rather than requiring a Provider for existing consumers.
             boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)"
-                : `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` }, leading: _jsx("span", { "aria-hidden": "true", className: "hjm-fab__icon", children: renderIcon({ name: resolved.icon.name, size: glyph[recipe.circle.glyph], color: "currentColor", decorative: true }) }), children: resolved.label });
+                : `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` }, leading: _jsx("span", { "aria-hidden": "true", className: "hjm-fab__icon", children: renderIcon({ name: resolved.icon.name, size: glyph[recipe.sizes[size].glyph], color: "currentColor", decorative: true }) }), children: resolved.label });
 });
 /** Omit target for window scrolling; null waits for a custom scroll element to mount. */
 export function useFloatingActionButtonScroll(target) {

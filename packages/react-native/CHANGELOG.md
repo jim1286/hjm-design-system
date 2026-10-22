@@ -1,5 +1,15 @@
 # @hjmds/react-native
 
+## 1.40.0
+
+### Minor Changes
+
+- e47c49a: Add the web ImageViewer with full-screen black photo presentation, contained images, zoom/pan, selected-photo navigation and shared modal focus handling. Align Native ImageViewer with the same black presentation and leading close control while retaining existing image-host and inspection contracts.
+
+### Patch Changes
+
+- e47c49a: Leave the docked bottom edge of Sheet open instead of drawing a clipped-looking horizontal border against the viewport. Preserve side-sheet outlines, safe-area padding and the existing top corners.
+
 ## 1.39.0
 
 ### Minor Changes

@@ -1,5 +1,7 @@
 # @hjmds/design-contracts
 
+## 1.40.0
+
 ## 1.39.0
 
 ## 1.38.1

@@ -20,7 +20,7 @@ export type LineChartProps = Readonly<{
     missingLabel: string;
     height?: number;
     curve?: ChartCurve;
-    /** Separate dotted vertical drops at the observed edges of missing periods; no bridge or invented values. */
+    /** Dotted drops mark observed edges beside leading, interior or trailing gaps; bridge only joins interior edges. */
     missingConnection?: "none" | "dotted" | "bridge";
     area?: boolean;
     stacked?: boolean;

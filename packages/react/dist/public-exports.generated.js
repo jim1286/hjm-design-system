@@ -290,6 +290,9 @@ export const publicExportEntries = {
     ImageComparison: [
         "./image-comparison"
     ],
+    ImageViewer: [
+        "./image-viewer"
+    ],
     ImmersiveOverlay: [
         "./overlays"
     ],
