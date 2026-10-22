@@ -25,7 +25,7 @@ it("finds existing examples by everyday phrases while retaining category filters
     expect(host.textContent).toContain("SwipeActions");
     expect(page.getByRole("link", { name: "끌기·밀기 실행 예제" }).element().getAttribute("href")).toBe("?path=/story/experimental-interaction-adapters--default");
     await search("휠피커");
-    expect(host.textContent).toContain("휠 동작은 아직 제공하지 않습니다");
+    expect(host.textContent).toContain("selectionStyle=wheel");
     await search("  ＳＨＥＥＴ  ");
     expect(host.querySelectorAll(".hjm-component-card").length).toBeGreaterThan(0);
     await search("없는표현");

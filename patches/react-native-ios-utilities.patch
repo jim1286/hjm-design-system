@@ -32,3 +32,24 @@ index 09be306d5aa39337c5114c2ad6ba7513218e0751..0a650b65b4f127116f78dd057aef2f69
 +    #endif
    };
  };
+diff --git a/ios/Sources/Deprecated/RNIImage/RNIImageRemoteURLMaker.swift b/ios/Sources/Deprecated/RNIImage/RNIImageRemoteURLMaker.swift
+--- a/ios/Sources/Deprecated/RNIImage/RNIImageRemoteURLMaker.swift
++++ b/ios/Sources/Deprecated/RNIImage/RNIImageRemoteURLMaker.swift
+@@ -104,13 +104,15 @@ public class RNIImageRemoteURLMaker {
+   // MARK: - Properties
+   // ------------------
+   
+-  public lazy var imageLoader: RCTImageLoaderWithAttributionProtocol? = {
++  // Only base image loading is used here. RN 0.88's prebuilt Swift umbrella
++  // exposes the base protocol, not the C++ attribution extension.
++  public lazy var imageLoader: RCTImageLoaderProtocol? = {
+     guard let bridge = RCTBridge.current(),
+           let imageLoaderModuleRaw = bridge.module(forName: "ImageLoader")
+     else {
+       return nil
+     };
+     
+-    return imageLoaderModuleRaw as? RCTImageLoaderWithAttributionProtocol;
++    return imageLoaderModuleRaw as? RCTImageLoaderProtocol;
+   }();
+   

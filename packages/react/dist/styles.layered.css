@@ -3811,6 +3811,11 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-time-picker__list button:focus-visible,.hjm-time-picker__trigger:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:-2px; }
 .hjm-time-picker__description { color:var(--hjm-color-text-muted); }
 .hjm-time-picker__error { color:var(--hjm-color-danger); }
+.hjm-time-picker__viewport { position:relative; }
+.hjm-time-picker__center { position:absolute; inset-inline:0; inset-block-start:calc((var(--hjm-time-height) - var(--hjm-time-row)) / 2); block-size:var(--hjm-time-row); border:var(--hjm-stroke-default) solid var(--hjm-color-border-control); border-radius:var(--hjm-radius-md); pointer-events:none; z-index:1; }
+.hjm-time-picker__list[data-wheel] { box-sizing:border-box; padding-block:calc((var(--hjm-time-height) - var(--hjm-time-row)) / 2); scroll-snap-type:y mandatory; overflow-anchor:none; scrollbar-width:none; }
+.hjm-time-picker__list[data-wheel] button { block-size:var(--hjm-time-row); scroll-snap-align:center; }
+.hjm-time-picker__list[data-wheel][aria-disabled=true] { overflow-y:hidden; }
 
 /* IconTile's own target keeps the full artwork width; Button's face padding would squeeze narrow grid cells. */
 .hjm-icon-tile-action { display: block; box-sizing: border-box; width: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: transparent; color: inherit; font: inherit; cursor: pointer; }

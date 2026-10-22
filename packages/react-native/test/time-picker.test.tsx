@@ -1,6 +1,6 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { useState } from "react";
-import { Pressable, ScrollView } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { TimePicker, type TimePickerProps } from "../src/time-picker.js";
 import { HjmNativeProvider } from "../src/provider.js";
@@ -47,4 +47,52 @@ it.each(["disabled", "readOnly"] as const)("time-picker dismisses an open field 
 it.each(["light", "dark"] as const)("time-picker renders inline in %s RTL without adding a nested sheet", theme => {
   act(() => { tree = create(<HjmNativeProvider theme={theme} direction="rtl" reducedMotion><TimePicker presentation="inline" value="14:30" labels={labels} onValueChange={() => {}} /></HjmNativeProvider>, { createNodeMock: createHostNodeMock }); });
   expect(tree!.root.findAllByType(Sheet)).toHaveLength(0); expect(option("14 Hour").props.accessibilityState.checked).toBe(true);
+});
+
+it("wheel exposes adjustable columns and skips unavailable values without confirming", () => {
+  const changed = vi.fn();
+  render({ selectionStyle: "wheel", presentation: "inline", minuteStep: 15, isTimeUnavailable: value => value.endsWith(":15"), onValueChange: changed });
+  const minute = () => tree!.root.findAllByType(View).find(node => node.props.accessibilityRole === "adjustable" && node.props.accessibilityLabel === "Minute")!;
+  expect(changed).not.toHaveBeenCalled();
+  act(() => minute().props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
+  expect(changed).toHaveBeenLastCalledWith("14:00");
+  expect(minute().props.accessibilityValue.text).toBe("00 Minute");
+  act(() => minute().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
+  expect(changed).toHaveBeenLastCalledWith("14:30");
+  expect(tree!.root.findAllByType(ScrollView)[1]!.props.snapToOffsets).toEqual([0, 88, 132]);
+  render({ selectionStyle: "wheel", presentation: "inline", readOnly: true, onValueChange: changed });
+  changed.mockClear();
+  act(() => minute().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
+  expect(changed).not.toHaveBeenCalled();
+  expect(tree!.root.findAllByType(ScrollView)[1]!.props.scrollEnabled).toBe(false);
+});
+
+it("wheel preserves an empty draft and ignores initial scroll callbacks", () => {
+  const changed = vi.fn();
+  render({ value: null, presentation: "inline", selectionStyle: "wheel", onValueChange: changed });
+  const scroll = tree!.root.findAllByType(ScrollView)[0]!;
+  act(() => scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }));
+  act(() => scroll.props.onMomentumScrollEnd({ nativeEvent: { contentOffset: { y: 0 } } }));
+  expect(changed).not.toHaveBeenCalled();
+  press("00 Hour");
+  expect(changed).toHaveBeenLastCalledWith(null);
+  expect(option("00 Hour").props.accessibilityState.checked).toBe(true);
+});
+
+it("wheel keeps native momentum active through draft echoes and settles before confirmation", () => {
+  const changed = vi.fn();
+  render({ selectionStyle: "wheel", minuteStep: 15, onValueChange: changed });
+  press("Time, 14:30");
+  const hours = () => tree!.root.findAllByType(ScrollView)[0]!;
+  act(() => hours().props.onScrollBeginDrag());
+  act(() => hours().props.onScroll({ nativeEvent: { contentOffset: { y: 23 * 44 } } }));
+  expect(option("23 Hour").props.accessibilityState.checked).toBe(true);
+  expect(tree!.root.findAllByType(Button).find(node => node.props.children === "Confirm")!.props.disabled).toBe(true);
+  act(() => hours().props.onScrollEndDrag({ nativeEvent: { contentOffset: { y: 23 * 44 }, velocity: { y: 1 } } }));
+  expect(changed).not.toHaveBeenCalled();
+  act(() => hours().props.onMomentumScrollEnd({ nativeEvent: { contentOffset: { y: 23 * 44 } } }));
+  const confirm = tree!.root.findAllByType(Button).find(node => node.props.children === "Confirm")!;
+  expect(confirm.props.disabled).toBe(false);
+  act(() => confirm.props.onPress());
+  expect(changed).toHaveBeenLastCalledWith("23:30");
 });

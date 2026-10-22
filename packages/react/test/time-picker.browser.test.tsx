@@ -75,3 +75,72 @@ it("time-picker inherits two product palettes in both themes", async () => {
   expect(getComputedStyle(option("14 Hour")).fontWeight).toBe("500"); expected.remove();
  }
 });
+
+const scrollWheel = async (label: string, offset: number) => {
+  const list = document.querySelector<HTMLElement>(`[role="listbox"][aria-label="${label}"]`)!;
+  await act(async () => {
+    list.dispatchEvent(new WheelEvent("wheel", { bubbles: true, deltaY: offset - list.scrollTop }));
+    list.scrollTo({ top: offset, behavior: "instant" });
+  });
+  return list;
+};
+
+it("wheel scrolling snaps to available values, waits for confirmation, and cancels the draft", async () => {
+  const changed = vi.fn();
+  await render({ selectionStyle: "wheel", minuteStep: 15, isTimeUnavailable: value => value.endsWith(":15"), onValueChange: changed });
+  await click(trigger());
+  expect(changed).not.toHaveBeenCalled();
+  const hours = await scrollWheel("Hour", 23 * 44);
+  await expect.poll(() => option("23 Hour").getAttribute("aria-selected")).toBe("true");
+  await expect.poll(() => hours.scrollTop).toBe(23 * 44);
+  const minutes = await scrollWheel("Minute", 44);
+  await expect.poll(() => option("00 Minute").getAttribute("aria-selected")).toBe("true");
+  await expect.poll(() => minutes.scrollTop).toBe(0);
+  expect(changed).not.toHaveBeenCalled();
+  await act(async () => userEvent.keyboard("{Escape}"));
+  await click(trigger());
+  expect(option("14 Hour").getAttribute("aria-selected")).toBe("true");
+  expect(option("30 Minute").getAttribute("aria-selected")).toBe("true");
+  await scrollWheel("Hour", 0);
+  await expect.poll(() => option("00 Hour").getAttribute("aria-selected")).toBe("true");
+  const confirm = [...document.querySelectorAll<HTMLButtonElement>("button")].find(button => button.textContent === "Confirm")!;
+  await expect.poll(() => confirm.disabled).toBe(false);
+  await click(confirm);
+  expect(changed).toHaveBeenLastCalledWith("00:30");
+});
+
+it("wheel keeps empty and off-grid values uncommitted and preserves inline partial drafts", async () => {
+  const changed = vi.fn();
+  function Consumer() {
+    const [value, setValue] = useState<string | null>(null);
+    return <TimePicker presentation="inline" selectionStyle="wheel" value={value} labels={labels} minuteStep={15} onValueChange={next => { changed(next); setValue(next); }} />;
+  }
+  await act(async () => root.render(<HjmProvider reducedMotion><Consumer /></HjmProvider>));
+  expect(changed).not.toHaveBeenCalled();
+  await click(option("00 Hour"));
+  expect(changed).toHaveBeenLastCalledWith(null);
+  expect(option("00 Hour").getAttribute("aria-selected")).toBe("true");
+  await scrollWheel("Minute", 3 * 44);
+  await expect.poll(() => changed.mock.lastCall?.[0]).toBe("00:45");
+  await render({ presentation: "inline", selectionStyle: "wheel", value: "09:31", minuteStep: 15, onValueChange: changed });
+  expect(host.querySelector('[aria-label="Minute"] [aria-selected="true"]')).toBeNull();
+  expect(host.querySelector(".hjm-time-picker__readout")?.textContent).toBe("09:31");
+});
+
+it("wheel keyboard navigation centers enabled rows and follows external updates without emitting", async () => {
+  const changed = vi.fn();
+  const props = { presentation: "inline", selectionStyle: "wheel", minuteStep: 15, isTimeUnavailable: (value: string) => value.endsWith(":15"), onValueChange: changed } as const;
+  await render(props);
+  await act(async () => option("30 Minute").focus());
+  await act(async () => userEvent.keyboard("{ArrowUp}"));
+  expect(document.activeElement).toBe(option("00 Minute"));
+  expect(changed).toHaveBeenLastCalledWith("14:00");
+  changed.mockClear();
+  await render({ ...props, value: "09:45" });
+  expect(option("09 Hour").getAttribute("aria-selected")).toBe("true");
+  expect(document.querySelector<HTMLElement>('[aria-label="Minute"]')!.scrollTop).toBe(3 * 44);
+  expect(changed).not.toHaveBeenCalled();
+  await render({ ...props, value: "09:45", readOnly: true });
+  await scrollWheel("Minute", 0);
+  expect(changed).not.toHaveBeenCalled();
+});

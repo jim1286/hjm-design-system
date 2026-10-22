@@ -17,6 +17,8 @@ export type TimePickerOptions = Readonly<{
     labels: TimePickerLabels;
     /** Inline changes update the parent's draft; its enclosing form owns confirmation. */
     presentation?: "field" | "inline";
+    /** Keep tap-list behavior by default; wheel selection shares the same draft and confirmation. */
+    selectionStyle?: "list" | "wheel";
     minuteStep?: number;
     isTimeUnavailable?: (value: string) => boolean;
     disabled?: boolean;
@@ -33,12 +35,22 @@ export declare const timePickerRecipe: {
     readonly readoutSize: 20;
     readonly readoutLineHeight: 28;
     readonly panelWidth: 304;
+    readonly selectionStroke: 1;
     readonly defaults: {
         readonly presentation: "field";
+        readonly selectionStyle: "list";
         readonly minuteStep: 1;
     };
 };
 export declare function validateTimePicker(options: TimePickerOptions): void;
+/** Offset 0 centers the first row because both renderers add half a viewport of end padding. */
+export declare function resolveTimePickerWheelIndex(items: readonly Readonly<{
+    disabled: boolean;
+}>[], offset: number): number | null;
+/** Keyboard and native adjustable actions use the same available slots, without wrapping. */
+export declare function moveTimePickerWheelIndex(items: readonly Readonly<{
+    disabled: boolean;
+}>[], from: number, direction: 1 | -1): number | null;
 export declare function timePickerDraft(value: string | null): TimePickerDraft;
 export declare function resolveTimePickerValue(draft: TimePickerDraft, options: Pick<TimePickerOptions, "minuteStep" | "isTimeUnavailable">): string | null;
 export declare function timePickerItems(part: TimePickerPart, draft: TimePickerDraft, options: Pick<TimePickerOptions, "minuteStep" | "isTimeUnavailable">): {
@@ -47,7 +59,7 @@ export declare function timePickerItems(part: TimePickerPart, draft: TimePickerD
 }[];
 export declare const timePickerBehavior: {
     readonly controlled: readonly ["value", "onValueChange"];
-    readonly inputs: readonly ["labels", "minuteStep", "isTimeUnavailable", "presentation"];
+    readonly inputs: readonly ["labels", "minuteStep", "isTimeUnavailable", "presentation", "selectionStyle"];
     readonly stateAxes: {
         readonly availability: readonly ["enabled", "disabled", "readOnly"];
         readonly value: readonly ["empty", "partial", "selected"];
@@ -60,11 +72,11 @@ export declare const timePickerBehavior: {
         readonly dismiss: readonly ["action", "escape", "outside", "blur"];
     };
     readonly native: {
-        readonly roles: readonly ["button", "dialog", "radio"];
+        readonly roles: readonly ["button", "dialog", "radio", "adjustable"];
         readonly states: readonly ["disabled", "expanded", "checked"];
-        readonly actions: readonly ["activate", "dismiss"];
+        readonly actions: readonly ["activate", "dismiss", "increment", "decrement"];
         readonly dismiss: readonly ["action", "back", "outside"];
     };
-    readonly scenarios: readonly ["two-columns-share-one-draft-and-overlay", "column-selection-never-dismisses", "confirm-commits-a-complete-available-HH:mm", "cancel-discards-edits", "external-value-reconciles-draft", "inline-parent-owns-confirmation", "unavailable-options-never-activate", "midnight-is-a-valid-value"];
+    readonly scenarios: readonly ["two-columns-share-one-draft-and-overlay", "column-selection-never-dismisses", "confirm-commits-a-complete-available-HH:mm", "cancel-discards-edits", "external-value-reconciles-draft", "inline-parent-owns-confirmation", "unavailable-options-never-activate", "midnight-is-a-valid-value", "wheel-centers-available-slots-without-initial-commit", "wheel-adjustment-preserves-confirm-and-cancel"];
 };
 //# sourceMappingURL=time-picker.d.ts.map

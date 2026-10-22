@@ -1760,8 +1760,10 @@ export declare const recipeRegistry: {
         readonly readoutSize: 20;
         readonly readoutLineHeight: 28;
         readonly panelWidth: 304;
+        readonly selectionStroke: 1;
         readonly defaults: {
             readonly presentation: "field";
+            readonly selectionStyle: "list";
             readonly minuteStep: 1;
         };
     };

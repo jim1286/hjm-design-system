@@ -1343,7 +1343,7 @@ export declare const behaviorRegistry: {
     };
     readonly timePicker: {
         readonly controlled: readonly ["value", "onValueChange"];
-        readonly inputs: readonly ["labels", "minuteStep", "isTimeUnavailable", "presentation"];
+        readonly inputs: readonly ["labels", "minuteStep", "isTimeUnavailable", "presentation", "selectionStyle"];
         readonly stateAxes: {
             readonly availability: readonly ["enabled", "disabled", "readOnly"];
             readonly value: readonly ["empty", "partial", "selected"];
@@ -1356,12 +1356,12 @@ export declare const behaviorRegistry: {
             readonly dismiss: readonly ["action", "escape", "outside", "blur"];
         };
         readonly native: {
-            readonly roles: readonly ["button", "dialog", "radio"];
+            readonly roles: readonly ["button", "dialog", "radio", "adjustable"];
             readonly states: readonly ["disabled", "expanded", "checked"];
-            readonly actions: readonly ["activate", "dismiss"];
+            readonly actions: readonly ["activate", "dismiss", "increment", "decrement"];
             readonly dismiss: readonly ["action", "back", "outside"];
         };
-        readonly scenarios: readonly ["two-columns-share-one-draft-and-overlay", "column-selection-never-dismisses", "confirm-commits-a-complete-available-HH:mm", "cancel-discards-edits", "external-value-reconciles-draft", "inline-parent-owns-confirmation", "unavailable-options-never-activate", "midnight-is-a-valid-value"];
+        readonly scenarios: readonly ["two-columns-share-one-draft-and-overlay", "column-selection-never-dismisses", "confirm-commits-a-complete-available-HH:mm", "cancel-discards-edits", "external-value-reconciles-draft", "inline-parent-owns-confirmation", "unavailable-options-never-activate", "midnight-is-a-valid-value", "wheel-centers-available-slots-without-initial-commit", "wheel-adjustment-preserves-confirm-and-cancel"];
     };
     readonly sidePanel: {
         readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "dismissPolicy"];

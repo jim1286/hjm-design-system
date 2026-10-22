@@ -1,11 +1,25 @@
 import { expect, it } from "vitest";
-import { validateTimePicker, timePickerDraft, timePickerItems, resolveTimePickerValue } from "../src/time-picker.js";
+import { validateTimePicker, timePickerDraft, timePickerItems, resolveTimePickerValue, resolveTimePickerWheelIndex, moveTimePickerWheelIndex, timePickerRecipe } from "../src/time-picker.js";
 const labels = { label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose", confirm: "Confirm", cancel: "Cancel" };
 it("preserves midnight and requires both segments without a Date/timezone conversion", () => {
   expect(timePickerDraft("00:00")).toEqual({ hour: "00", minute: "00" });
   expect(resolveTimePickerValue(timePickerDraft("00:00"), {})).toBe("00:00");
   expect(resolveTimePickerValue({ hour: "00", minute: null }, {})).toBeNull();
   for (const value of ["24:00", "00:60", "9:30", "2026-10-19"]) expect(() => validateTimePicker({ value, labels, onValueChange() {} })).toThrow();
+});
+
+it("resolves wheel endpoints and unavailable rows without inventing a selection", () => {
+  const items = timePickerItems("minute", timePickerDraft("14:30"), { minuteStep: 15, isTimeUnavailable: value => value === "14:15" });
+  const row = timePickerRecipe.rowHeight;
+  expect(resolveTimePickerWheelIndex(items, -row)).toBe(0);
+  expect(resolveTimePickerWheelIndex(items, row * 1.2)).toBe(2);
+  expect(resolveTimePickerWheelIndex(items, row * 99)).toBe(3);
+  expect(resolveTimePickerWheelIndex(items.map(item => ({ ...item, disabled: true })), row)).toBeNull();
+  expect(moveTimePickerWheelIndex(items, 0, 1)).toBe(2);
+  expect(moveTimePickerWheelIndex(items, 2, -1)).toBe(0);
+  expect(moveTimePickerWheelIndex(items, 3, 1)).toBeNull();
+  expect(moveTimePickerWheelIndex(items, -1, 1)).toBe(0);
+  expect(() => validateTimePicker({ value: null, labels, onValueChange() {}, selectionStyle: "wheel" })).not.toThrow();
 });
 it("requires a consistent minute grid and preserves off-grid input until explicitly changed", () => {
   for (const minuteStep of [0, 7, 1.5, 61]) expect(() => validateTimePicker({ value: null, labels, minuteStep, onValueChange() {} })).toThrow();

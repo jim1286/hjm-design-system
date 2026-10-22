@@ -32,11 +32,15 @@ patchedDependencies:
   # RN 0.88 removes NativeMethods. Derive the actual host instance from the public View export.
   # Remove when masked-view ships this declaration fix; JS/native behavior is unchanged.
   '@react-native-masked-view/masked-view@0.3.2': patches/react-native-masked-view@0.3.2.patch
-  # RN 0.81+ Kotlin property bridge; remove after Zeego adopts a compatible upstream release.
+  # RN 0.81+ Kotlin property bridge; RN 0.88 prebuilt React requires the framework-qualified
+  # RCTBridge header import (Showcase iOS compile failure, 2026-10-23).
+  # Remove after Zeego adopts an upstream release with both fixes.
   '@react-native-menu/menu@1.2.2': patches/@react-native-menu__menu.patch
   # UIAction.subtitle availability guard; remove when upstream fixes iOS 16 annotation.
   'react-native-ios-context-menu@3.2.1': patches/react-native-ios-context-menu.patch
   # Legacy root view is absent from RN 0.86 Fabric; remove when upstream guards the legacy helper.
+  # RN 0.88's Swift umbrella exposes RCTImageLoaderProtocol, not its attribution extension;
+  # the deprecated remote loader only uses base loading. Remove that correction after upstream narrows its type.
   'react-native-ios-utilities@5.2.0': patches/react-native-ios-utilities.patch
   # Types must precede the react-native source condition; otherwise Expo typechecks upstream internals.
   # Guard optional teleport native views too: installed JS alone caused a red native placeholder.
