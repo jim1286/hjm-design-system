@@ -1,4 +1,5 @@
 import { storyLabels } from "../../../shared/story-labels.js";
+import { componentDiscovery, matchesComponentQuery } from "../../../shared/component-discovery.js";
 import { useEffect, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -15,7 +16,7 @@ import {
 } from "@hjmds/design-contracts";
 import { Badge as HjmBadge } from "@hjmds/react/display";
 import { SearchField as HjmSearchField, Select as HjmSelect } from "@hjmds/react/forms";
-import { Grid as HjmGrid, Surface as HjmSurface } from "@hjmds/react/layout";
+import { Grid as HjmGrid, Stack as HjmStack, Surface as HjmSurface } from "@hjmds/react/layout";
 
 import {
   summarizeWebShowcaseCoverage,
@@ -64,14 +65,10 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
   }, [initialCategory]);
 
   const filtered = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase();
     return catalog.filter((entry) => {
       const referenceNames = getAntDesignReferencesFor(entry.name).map(({ name }) => name);
-      const searchable = [storyLabels[entry.name] ?? entry.name, entry.name, entry.category, entry.platform, ...(entry.aliases ?? []), ...referenceNames]
-        .join(" ")
-        .toLocaleLowerCase();
       return (
-        (normalizedQuery.length === 0 || searchable.includes(normalizedQuery)) &&
+        matchesComponentQuery(query, entry, [storyLabels[entry.name] ?? entry.name, ...referenceNames]) &&
         (category === "all" || entry.category === category) &&
         (platform === "all" || entry.platform === platform) &&
         (status === "all" || entry.status === status)
@@ -93,8 +90,9 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
       <h1 className="hjm-title">전체 컴포넌트 탐색</h1>
       <p className="hjm-lead">
         컴포넌트의 역할과 지원 환경을 비교하고 예제를 열어 보세요.
-        한글 이름과 개발용 API 이름으로 검색할 수 있습니다.
+        이름·API뿐 아니라 “아래에서 올라오는 판”, “밀면 나오는 삭제 버튼” 같은 쉬운 말로 검색할 수 있습니다.
       </p>
+      <p><a href="https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/usage/FINDING.md" target="_blank" rel="noreferrer">비슷한 UI 선택 기준과 요청 예시</a></p>
 
       <section className="hjm-explorer-summary" aria-label="탐색 요약">
         <span><strong>{showcaseCoverage.canonical}</strong> 컴포넌트</span>
@@ -110,7 +108,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
           <HjmSearchField
             label="검색"
             clearLabel="검색어 지우기"
-            placeholder="이름 또는 API"
+            placeholder="쉬운 말, 이름 또는 API"
             value={query}
             onValueChange={setQuery}
           />
@@ -158,6 +156,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
           </div>
           <div className="hjm-component-card-grid">
             {entries.map((entry) => {
+              const discovery = componentDiscovery[entry.name];
               const references = getAntDesignReferencesFor(entry.name);
               const classification = getComponentStoryClassification(
                 entry.name as (typeof componentCatalog)[number]["name"],
@@ -174,6 +173,11 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                   </div>
                   <h3>{storyLabels[entry.name] ?? entry.name}</h3>
                   <code>{entry.name}</code>
+                  {discovery && <>
+                    <p className="hjm-muted">찾는 말: {discovery.terms.join(" · ")}</p>
+                    <p>{discovery.choose}</p>
+                    <p><strong>요청 예시: </strong>{discovery.request}</p>
+                  </>}
                   <p className="hjm-component-meta">{platformLabels[entry.platform]} · {entry.recipe ? "시각 레시피" : entry.nonVisualEvidence === "provider-adapter" ? "제공자 어댑터" : "범위 계약"}{entry.behavior ? <> · 동작 규칙 <code>{entry.behavior}</code></> : null}</p>
                   {entry.roadmap && <div className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><HjmBadge size="small" tone={roadmapStateTones[entry.roadmap.state]}>{roadmapStateLabels[entry.roadmap.state]}</HjmBadge><p>{entry.roadmap.summary}</p></div>}
                   {references.length > 0 && (
@@ -183,9 +187,11 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                       ))}
                     </div>
                   )}
-                  <div className="hjm-component-card-footer">
+                  <HjmStack axis="inline" gap="xs" wrap className="hjm-component-card-footer">
                     <a href={componentStoryHref(entry)}>{storyLinkLabel} <span aria-hidden>→</span></a>
-                  </div>
+                    {discovery && <a href={`https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/usage/${discovery.guide}`} target="_blank" rel="noreferrer">사용 지침</a>}
+                    {discovery?.relatedExample && <a href={`?path=/story/${discovery.relatedExample.story}`}>{discovery.relatedExample.label}</a>}
+                  </HjmStack>
                 </article>
               );
             })}
