@@ -32,6 +32,7 @@
 | `Image` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
 | `GridReveal` | 확장 — 로드 완료 시 4×4 마스크 연출(optional) | `/grid-reveal` | `/grid-reveal` |
 | `ImageViewer` | 확장 — 전체 화면 넘겨 보기·확대 | `/image-viewer` (개발 소스) | `/image-viewer` (optional) |
+| `ImageViewerTrigger` | 확장 — 사진을 눌러 `ImageViewer` 열기 | `/image-viewer` | `/image-viewer` (optional) |
 
 `GridReveal`은 추가 peer가 없다. `ImageViewer`는 granular subpath로만 import 되며 optional peer
 `react-native-zoom-toolkit` 5.1.1, `react-native-gesture-handler` 2.32.0과 Reanimated·Worklets 설치가 필요하다.
@@ -64,6 +65,30 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
   nextLabel={t("viewer.next")} loadingLabel={t("common.loading")}
   errorLabel={t("viewer.loadFailed")} retryLabel={t("common.retry")} />
 ```
+
+### 사진을 눌러 크게 보기 (`ImageViewerTrigger`, 2026-10-23)
+
+사진을 원시 `button`·`Pressable`로 감싸 뷰어를 열지 않는다(포트폴리오 사이트 `App.tsx`, Spint `MarkPhoto`·`ComposeScreen`이던 우회).
+트리거가 접근성 이름(`label`, Web `aria-haspopup="dialog"`, Native `imagebutton`), 포커스 링(이미지 액자 `radius.md`),
+Web `zoom-in` 커서, 눌림 투명도(`imageViewerTriggerRecipe.pressedOpacity`)를 소유한다. 안의 사진은 `decorative`로 둔다.
+뷰어의 `open` 상태와 항목은 제품이 갖는다. Web 트리거는 기본으로 부모 폭을 채우므로 썸네일은 `layoutStyle={{ width }}`를 준다.
+
+```tsx
+// Native — Web은 @hjmds/react/image-viewer에서 import하고 onClick을 쓴다
+import { ImageViewer, ImageViewerTrigger } from "@hjmds/react-native/image-viewer";
+
+<ImageViewerTrigger label={t("photo.preview")} onPress={() => setOpen(true)}>
+  <Image src={uri} width={w} height={h} decorative layoutStyle={{ width: "100%" }} />
+</ImageViewerTrigger>
+```
+
+| prop | 값 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `label` | `string` | 필수 | 지역화한 이름. 빈 문자열은 `TypeError` |
+| `children` | `ReactNode` | 필수 | 제품 사진(장식) |
+| Web `onClick` · Native `onPress` | 콜백 | Native 필수 | 뷰어 열기 |
+| `disabled` | `boolean` | `false` | 사진을 아직 못 불렀을 때 |
+| `layoutStyle` | 배치 전용 | — | Web은 기본 폭 100% |
 
 ## 축과 기본값
 

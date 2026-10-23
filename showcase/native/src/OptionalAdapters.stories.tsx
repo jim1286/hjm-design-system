@@ -7,7 +7,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "@hjmds/react-native/actions";
 import { Text, Container, Stack } from "@hjmds/react-native/primitives";
-import { ImageViewer } from "@hjmds/react-native/image-viewer";
+import { ImageViewer, ImageViewerTrigger } from "@hjmds/react-native/image-viewer";
+import { Image } from "@hjmds/react-native/data-display";
 import { KeyboardMotionProvider, KeyboardDock, KeyboardFormScrollView } from "@hjmds/react-native/keyboard-controller";
 import { GestureSheet, GestureSheetProvider, GestureSheetInput, dismissTopGestureSheet } from "@hjmds/react-native/sheet-gesture";
 import { NativeContextMenu } from "@hjmds/react-native/context-menu-native";
@@ -33,7 +34,10 @@ function Adapters({ onClose }: { onClose: () => void }) {
     <View style={{ paddingTop: insets.top }}><Container gutter="compact"><Button tone="secondary" onPress={onClose}>쇼케이스로 돌아가기</Button></Container></View>
     <KeyboardFormScrollView contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="md">
       <Text>네이티브 모듈을 포함한 개발 클라이언트 필요</Text>
-      <Stack gap="xs"><Button tone="secondary" onPress={() => setViewer(true)}>이미지 보기</Button>
+      <Stack gap="xs">{/* ImageViewerTrigger (2026-10-23): the photo itself opens the viewer instead of a separate button. */}
+      <ImageViewerTrigger label="숲속 사슴 크게 보기" onPress={() => setViewer(true)} layoutStyle={{ width: 160 }}>
+        <Image src="https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400" width={400} height={267} decorative layoutStyle={{ width: "100%" }} />
+      </ImageViewerTrigger>
       <Button tone="secondary" onPress={() => setSheet(true)}>시트 열기</Button></Stack>
       <NativeContextMenu items={[{ id: "save", label: "저장" }, { id: "delete", label: "삭제", tone: "danger" }]} onAction={setAction}>
         <Pressable accessibilityLabel="길게 눌러 작업 선택" accessibilityRole="button"><Text>길게 눌러 메뉴 열기</Text></Pressable>

@@ -3882,6 +3882,12 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-segmented[data-selection-tone="brand"][data-presentation="pills"] .hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"]::before { background: transparent; }
 
 /* Photo chrome is deliberately independent of the product theme: no card frame or crop. */
+/* ImageViewerTrigger: imageViewerTriggerRecipe (radius = imageRecipe.radius md so the ring follows the image frame). */
+.hjm-image-viewer-trigger { display: block; inline-size: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: none; color: inherit; font: inherit; text-align: inherit; cursor: var(--hjm-image-viewer-trigger-cursor, zoom-in); }
+.hjm-image-viewer-trigger > * { display: block; }
+.hjm-image-viewer-trigger:active:not(:disabled) { opacity: var(--hjm-image-viewer-trigger-pressed-opacity); }
+.hjm-image-viewer-trigger:disabled { cursor: default; opacity: var(--hjm-image-viewer-trigger-disabled-opacity); }
+.hjm-image-viewer-trigger:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-image-viewer { position: fixed; inset: 0; display: flex; flex-direction: column; min-inline-size: 0; background: #000; color: #fff; padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom); }
 .hjm-image-viewer__header, .hjm-image-viewer__footer { display: flex; align-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-left)) var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-right)); }
 .hjm-image-viewer__footer > span { flex: 1; text-align: center; }

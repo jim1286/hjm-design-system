@@ -1,4 +1,5 @@
 import { semanticColors } from "./semantic-colors.js";
+import { opacity } from "./foundations.js";
 /** Exact image inspection sizes use layout units, not device physical pixels (Utilverse ADR-0020). */
 export function resolveImageInspectionGeometry(image, viewport, mode) {
     if (![image.width, image.height, viewport.width, viewport.height].every(value => Number.isFinite(value) && value > 0)) {
@@ -116,4 +117,20 @@ export const imageRecipe = {
     },
     radius: "md",
 };
+/**
+ * Press target that opens ImageViewer from product media (ImageViewerTrigger). 2026-10-23: the portfolio site
+ * (`App.tsx` raw button) and Spint (`MarkPhoto`, `ComposeScreen` Pressable + Image) each wrapped an image to open the
+ * viewer, with their own name, focus ring and cursor. The trigger owns the button semantics, the image-frame
+ * radius for the focus ring, the zoom cursor and the pressed opacity; the media stays decorative inside it.
+ */
+export const imageViewerTriggerRecipe = {
+    radius: imageRecipe.radius,
+    cursor: "zoom-in",
+    pressedOpacity: opacity.pressed,
+    disabledOpacity: opacity.disabled,
+};
+export function validateImageViewerTriggerLabel(label) {
+    if (typeof label !== "string" || label.trim().length === 0)
+        throw new TypeError("ImageViewerTrigger needs a localized label");
+}
 //# sourceMappingURL=image.js.map

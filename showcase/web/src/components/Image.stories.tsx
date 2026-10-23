@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
 import { useState } from "react";
-import { ImageViewer } from "@hjmds/react/image-viewer";
+import { ImageViewer, ImageViewerTrigger } from "@hjmds/react/image-viewer";
 import { Image } from "@hjmds/react/display";
 import { revealImage } from "../../../shared/grid-reveal";
 
@@ -15,9 +15,10 @@ export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" 
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 function PhotoViewerExample() {
   const [open, setOpen] = useState(false);
-  return <><button type="button" aria-label="사진 크게 보기" onClick={() => setOpen(true)}>
+  // ImageViewerTrigger (2026-10-23) owns the name, focus ring, zoom cursor and pressed state of the photo button.
+  return <><ImageViewerTrigger label="사진 크게 보기" onClick={() => setOpen(true)} layoutStyle={{ width: 320 }}>
     <Image src={revealImage} width={320} height={200} decorative />
-  </button><ImageViewer open={open} onClose={() => setOpen(false)} items={[{ id: "mountains", uri: revealImage, label: "햇살과 겹친 산 능선" }]}
+  </ImageViewerTrigger><ImageViewer open={open} onClose={() => setOpen(false)} items={[{ id: "mountains", uri: revealImage, label: "햇살과 겹친 산 능선" }]}
     closeLabel="사진 닫기" previousLabel="이전 사진" nextLabel="다음 사진" loadingLabel="사진 불러오는 중" errorLabel="사진을 불러오지 못했어요" retryLabel="다시 시도" /></>;
 }
 export const FullScreenPhoto: Story = { name: "전체 화면 사진", render: () => <PhotoViewerExample /> };

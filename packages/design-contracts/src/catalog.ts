@@ -270,7 +270,7 @@ export const componentCatalog = [
   { name: "Carousel", label: "캐러셀", extensions: ["CarouselMotion"], category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "carouselRecipe", behavior: "carousel" },
   { name: "DescriptionList", label: "설명 목록", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "descriptionListRecipe", aliases: ["Descriptions"] },
   // Image alt is accessibility copy, not visible renderer text; load and fallback behavior remain covered.
-  { name: "Image", label: "이미지", extensions: ["GridReveal", "ImageViewer"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "imageRecipe", ...evidenceNeeded("웹은 불러오기·실패·대체 표시와 프레임워크 연결, 앱은 대체 표시와 최적화 호스트 연결이 기본 실행 증거입니다. 남은 렌더러 증거는 자동 생성 보고서에서 추적합니다.") },
+  { name: "Image", label: "이미지", extensions: ["GridReveal", "ImageViewer", "ImageViewerTrigger"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "imageRecipe", ...evidenceNeeded("웹은 불러오기·실패·대체 표시와 프레임워크 연결, 앱은 대체 표시와 최적화 호스트 연결이 기본 실행 증거입니다. 남은 렌더러 증거는 자동 생성 보고서에서 추적합니다.") },
   { name: "QRCode", label: "큐알 코드", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "qrCodeRecipe" },
   { name: "Tag", label: "태그", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "tagRecipe" },
   { name: "Tour", label: "사용 안내 둘러보기", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "tourRecipe", behavior: "tour", aliases: ["CoachMark"] },

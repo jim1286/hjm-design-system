@@ -1,6 +1,9 @@
 "use client";
 
-import { useRef, useState, type ReactNode, type PointerEvent } from "react";
+import { forwardRef, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode, type PointerEvent } from "react";
+import { imageViewerTriggerRecipe, validateImageViewerTriggerLabel } from "@hjmds/design-contracts/components/image";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { IconButton } from "./actions.js";
 
@@ -14,6 +17,32 @@ export type ImageViewerProps = {
   /** Authorized image hosts keep their fetching, loading and retry policy. Only the selected item mounts. */
   renderImage?: (item: ImageViewerItem) => ReactNode;
 };
+
+export type ImageViewerTriggerProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "aria-label" | "type" | "style"> & Readonly<{
+  /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
+  label: string;
+  /** Product media (HJM `Image` with `decorative`, `<img alt="">`). */
+  children: ReactNode;
+  /** Layout-only placement; the trigger fills its container width by default, set `width` for a thumbnail. */
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/**
+ * Button around product media that opens ImageViewer. The product keeps the viewer's `open` state and calls it from
+ * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
+ */
+export const ImageViewerTrigger = forwardRef<HTMLButtonElement, ImageViewerTriggerProps>(function ImageViewerTrigger(
+  { label, children, className, layoutStyle, ...props }, ref,
+) {
+  validateImageViewerTriggerLabel(label);
+  return <button {...props} ref={ref} type="button" aria-label={label} aria-haspopup="dialog"
+    className={classNames("hjm-image-viewer-trigger", className)}
+    style={{ ...layoutStyle, "--hjm-image-viewer-trigger-pressed-opacity": imageViewerTriggerRecipe.pressedOpacity,
+      "--hjm-image-viewer-trigger-disabled-opacity": imageViewerTriggerRecipe.disabledOpacity,
+      "--hjm-image-viewer-trigger-cursor": imageViewerTriggerRecipe.cursor } as CSSProperties}>
+    {children}
+  </button>;
+});
 
 /** Full viewport photo presentation; shares modal isolation, focus return and Escape with Dialog. */
 export function ImageViewer(props: ImageViewerProps) {

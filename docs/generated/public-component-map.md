@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 228개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 229개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -106,6 +106,7 @@
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
+| ImageViewerTrigger | Image | optional-extension | ./image-viewer |
 | ImmersiveOverlay | Dialog | companion-or-alternative | root, ./overlays |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
@@ -239,7 +240,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 215개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 216개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -335,6 +336,7 @@
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
 | ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
+| ImageViewerTrigger | Image | optional-extension | ./image-viewer |
 | ImmersiveOverlay | Dialog | companion-or-alternative | root, ./overlays |
 | ImportFieldMapping | 별도 보조 기능 | supplemental | ./data-workflows |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |

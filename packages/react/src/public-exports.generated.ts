@@ -299,6 +299,9 @@ export const publicExportEntries = {
   ImageViewer: [
     "./image-viewer"
   ],
+  ImageViewerTrigger: [
+    "./image-viewer"
+  ],
   ImmersiveOverlay: [
     "./overlays"
   ],

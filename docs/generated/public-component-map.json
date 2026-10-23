@@ -943,6 +943,15 @@
         "role": "optional-extension"
       },
       {
+        "name": "ImageViewerTrigger",
+        "source": "packages/react/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "ImmersiveOverlay",
         "source": "packages/react/src/overlays.tsx",
         "entries": [
@@ -3063,6 +3072,15 @@
       {
         "name": "ImageViewer",
         "source": "packages/react-native/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
+        "name": "ImageViewerTrigger",
+        "source": "packages/react-native/src/internal/image-viewer-trigger.tsx",
         "entries": [
           "./image-viewer"
         ],

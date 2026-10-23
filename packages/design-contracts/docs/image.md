@@ -77,6 +77,11 @@ Dialog·Sheet가 이미 소유한 문제입니다. 이 조합을 Image 자체에
 필요해지면 별도 Web 전용 `ImagePreview` overlay가 기존 `Dialog`/`AnchoredOverlay` 계약을
 조합해서 풀 문제이지, `Image`가 escape hatch로 열 문제가 아닙니다.
 
+2026-10-23: 같은 이유로 "누르면 크게 보기"의 트리거도 `Image` prop이 아니라 뷰어 쪽 `ImageViewerTrigger`
+(`/image-viewer`)에 둡니다. 포트폴리오 사이트와 Spint가 사진을 원시 button·Pressable로 감싸 이름·포커스 링·
+커서를 각자 정하던 우회를 대신합니다. 트리거는 button 의미와 `imageViewerTriggerRecipe`(액자 `radius.md`,
+`zoom-in` 커서, 눌림·비활성 투명도)를 소유하고, 뷰어의 `open` 수명주기는 여전히 `ImageViewer`와 제품이 가집니다.
+
 ## 플랫폼 번역
 
 `fit: cover | contain | fill`은 Web `object-fit`과 거의 그대로 대응합니다. RN

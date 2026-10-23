@@ -97,6 +97,9 @@ Expo Go cannot verify these linked native modules.
   paging without a swipe, and unmounts on close to reset its session. Failed images offer retry.
   Host-provided safe-area insets are required when placing it edge-to-edge. Remote image permission,
   URL lifetime and caching remain product responsibilities; the adapter does not fetch metadata.
+- ImageViewerTrigger (same subpath, 2026-10-23) is the button around product media that opens the viewer:
+  localized `label`, image-frame focus ring, zoom cursor and pressed opacity from `imageViewerTriggerRecipe`.
+  The product still owns `open`; the trigger adds no gesture code of its own.
 - KeyboardDock translates with the keyboard. `clearance` is an additional nonnegative gap above it;
   the host retains bottom safe-area ownership. Do not combine this with another keyboard avoidance
   wrapper around the same content. KeyboardFormScrollView handles focused form fields.

@@ -95,5 +95,18 @@ export declare const imageRecipe: {
     };
     readonly radius: "md";
 };
+/**
+ * Press target that opens ImageViewer from product media (ImageViewerTrigger). 2026-10-23: the portfolio site
+ * (`App.tsx` raw button) and Spint (`MarkPhoto`, `ComposeScreen` Pressable + Image) each wrapped an image to open the
+ * viewer, with their own name, focus ring and cursor. The trigger owns the button semantics, the image-frame
+ * radius for the focus ring, the zoom cursor and the pressed opacity; the media stays decorative inside it.
+ */
+export declare const imageViewerTriggerRecipe: {
+    readonly radius: "md";
+    readonly cursor: "zoom-in";
+    readonly pressedOpacity: 0.86;
+    readonly disabledOpacity: 0.5;
+};
+export declare function validateImageViewerTriggerLabel(label: string): void;
 export {};
 //# sourceMappingURL=image.d.ts.map
