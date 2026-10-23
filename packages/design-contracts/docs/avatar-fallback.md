@@ -79,3 +79,21 @@ or exhaustive geometry and screen-reader behavior.
 the last word, counted in code points. Web had taken the first two words and Native the first and last, so "Kim Min Jun"
 read "KM" on Web and "KJ" on Native; Native also split surrogate pairs. First+last was kept because it shows the family and
 given names instead of a middle name. Native `initials` still overrides (at most three code points).
+
+## Presentation axes (2026-10-23)
+
+Burntok's `UserAvatar` (about 70 call sites, 22/28/32/44, transparent circle filled by a generated SVG) and
+Yajalal's `PlayerAvatar` (rounded square with a team badge on the corner) could not adopt Avatar: `name` was
+required, Web had no image host, Web had four sizes, Native threw below 24, and the frame always drew a background
+and a 1px border. The axes now live in `avatarRecipe`:
+
+- `size`: named steps `xxsmall` 22 · `xsmall` 28 · `small` 32 · `medium` 40 · `touch` 44 · `large` 48 · `xlarge` 64
+  (`resolveAvatarSize`). Native keeps numeric points for existing callers; the floor is the smallest step (22),
+  where the label-size initials still fit.
+- `decorative`: hides the whole avatar and makes `name` optional. A meaningful avatar still requires `name`
+  (Web) or `name` + `accessibilityLabel` (Native).
+- `frame`: `outlined` (default, unchanged) · `surface` · `none`.
+- `shape`: `circle` · `rounded` on both renderers (Native was circle only).
+- `accessory` + `accessoryPlacement` (`bottom-end` default · `top-end`): a non-interactive corner mark outside the
+  clipping frame, inside the avatar's box (`avatarRecipe.accessory.offset` 0). IconTile uses the same placement names.
+- Web `renderImage`: product image host with a generation-guarded `onError`, exclusive with `imageProps`.

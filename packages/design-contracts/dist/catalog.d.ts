@@ -2102,16 +2102,53 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly size: "medium";
             readonly shape: "circle";
+            readonly frame: "outlined";
+            readonly accessoryPlacement: "bottom-end";
         };
         readonly sizes: {
+            readonly xxsmall: 22;
+            readonly xsmall: 28;
             readonly small: 32;
             readonly medium: 40;
+            readonly touch: 44;
             readonly large: 48;
             readonly xlarge: 64;
         };
         readonly shapes: {
             readonly rounded: "md";
             readonly circle: "full";
+        };
+        readonly frames: {
+            readonly outlined: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+                readonly borderWidth: 1;
+            };
+            readonly surface: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly border: null;
+                readonly borderWidth: 0;
+            };
+            readonly none: {
+                readonly background: null;
+                readonly border: null;
+                readonly borderWidth: 0;
+            };
+        };
+        readonly accessory: {
+            readonly offset: 0;
         };
         readonly background: Readonly<{
             source: "theme";

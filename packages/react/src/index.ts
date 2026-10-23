@@ -236,6 +236,7 @@ export {
   type AccordionItem,
   type AccordionProps,
   type AvatarProps,
+  type AvatarImageRenderProps,
   type DescriptionListProps,
   type DividerInset,
   type DividerOrientation,

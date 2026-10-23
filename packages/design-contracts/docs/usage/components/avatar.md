@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-23
 - 근거: [Avatar fallback and Blobatar](../../avatar-fallback.md), recipe `avatarRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/아바타` · `배포/컴포넌트/데이터 표시/블로바타 캐릭터` · `배포/컴포넌트/데이터 표시/움직이는 블로바타 캐릭터`
 
@@ -67,14 +67,17 @@ import { Avatar } from "@hjmds/react-native/data-display";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `name` | `string` | 필수 | 이니셜과 기본 접근성 이름의 원천. 공백뿐이면 `TypeError` |
+| `name` | `string` | 의미 있는 아바타는 필수 | 이니셜과 기본 접근성 이름의 원천. 공백뿐이면 `TypeError`. `decorative`이면 생략할 수 있다(이니셜 없이 액자·대체 그림만) |
+| `decorative` | `boolean` | `false` | 옆에 이름이 보이는 작성자 표시나 사람 없는 장식. Web은 루트 `aria-hidden`·`img alt=""`이고 `alt`를 함께 줄 수 없다. Native는 `accessibilityLabel`을 함께 줄 수 없다 |
 | Web `src` · Native `source` | `string` · `ImageSourcePropType` | — | 사진이 없으면 prop을 뺀다. 주소(Native는 source 내용)가 바뀌면 실패 상태를 지우고 다시 시도한다 |
-| Web `size` | `small`(32) · `medium`(40) · `large`(48) · `xlarge`(64) | `medium` | — |
-| Web `shape` | `circle` · `rounded` | `circle` | — |
-| Native `size` | 숫자(pt) | 44 | 24 미만이면 `RangeError`. 모양은 항상 원이다 |
+| `size` | `xxsmall`(22) · `xsmall`(28) · `small`(32) · `medium`(40) · `touch`(44) · `large`(48) · `xlarge`(64). Native는 기존 숫자(pt)도 받는다 | Web `medium` · Native 44(`touch`) | `avatarRecipe.sizes`. Native 숫자가 22 미만이면 `RangeError`(2026-10-23 전에는 24). 새 코드는 단계 이름을 쓴다 |
+| `shape` | `circle` · `rounded` | `circle` | `rounded`는 `radius.md`(가장 가까운 디자인 프로필) |
+| `frame` | `outlined` · `surface` · `none` | `outlined` | `avatarRecipe.frames`. `outlined`=canvas 바탕+1px 테두리(기존), `surface`=바탕만, `none`=바탕·테두리 없음(제품 그림이 액자를 채울 때) |
+| `accessory` · `accessoryPlacement` | `ReactNode` · `bottom-end` · `top-end` | — · `bottom-end` | 팀 배지·상태 점 같은 모서리 표식. 아바타 상자 안쪽 모서리(`avatarRecipe.accessory.offset` 0)에 붙고 액자에 잘리지 않는다. 누르는 요소를 넣지 않는다 |
 | `renderFallback` | `(context: { size: number; decorative: true }) => ReactNode` | — | 사진이 없거나 실패했을 때만 불린다. `size`는 px/pt 값. null·undefined를 돌려주면 기본 대체 표시(Web `fallback`→이니셜, Native 이니셜)를 쓴다 |
 | Web `alt` | `string` | `name` | `""`이면 보조기기에서 숨긴다 |
-| Web `imageProps` | `img` 속성(`alt`·`src` 제외) | — | `onError`는 `(event: SyntheticEvent<HTMLImageElement>) => void`이며 대체 표시로 바꾼 뒤 불린다 |
+| Web `imageProps` | `img` 속성(`alt`·`src` 제외) | — | `onError`는 `(event: SyntheticEvent<HTMLImageElement>) => void`이며 대체 표시로 바꾼 뒤 불린다. `renderImage`와 함께 주면 `TypeError` |
+| Web `renderImage` | `(props: AvatarImageRenderProps) => ReactNode` | 기본 `img` | `src`, `alt`(장식이면 `""`), `size`(px), `className`(`hjm-avatar__image`, 그대로 붙인다), 세대가 보호된 `onError`. `next/image` 등 제품 이미지 호스트를 연결한다(2026-10-23) |
 | Native `accessibilityLabel` · `decorative` | `{ accessibilityLabel: string }` 또는 `{ decorative: true }` | — | 둘 중 하나가 타입으로 강제된다 |
 | Native `renderImage` | `(context: AvatarImageRenderProps) => ReactNode` | 기본 Native Image | 제품의 이미지 캐시·표시 호스트를 연결한다(1.14.0 추가). `source`, `size`, HJM `fallback`, 세대가 보호된 `onError` 제공 |
 | Native `initials` | `string` | 이름에서 계산 | 앞뒤 공백을 지우고 최대 3자, 대문자 |
@@ -85,13 +88,16 @@ import { Avatar } from "@hjmds/react-native/data-display";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | Web `small` 32 · `medium` 40 · `large` 48 · `xlarge` 64, Native 숫자(기본 44). 목록 행에는 Web `medium`/Native 기본, 프로필 머리에는 `xlarge`. Avatar 자체는 터치 대상이 아니므로 누르는 프로필은 감싸는 행·버튼이 최소 44를 확보한다 | `.hjm-avatar[data-size]`, `react-native/src/data-display.tsx` |
+| 크기 | `xxsmall` 22 · `xsmall` 28 · `small` 32 · `medium` 40 · `touch` 44 · `large` 48 · `xlarge` 64. 댓글·칩 안 작은 작성자 표시는 `xxsmall`/`xsmall`, 목록 행에는 Web `medium`/Native 기본, 프로필 머리에는 `xlarge`. 감싼 요소 크기(`h-8` 등)로 맞추지 말고 단계를 고른다. Avatar 자체는 터치 대상이 아니므로 누르는 프로필은 감싸는 행·버튼이 최소 44를 확보한다 | `.hjm-avatar[data-size]`, `react-native/src/data-display.tsx` |
 | 간격 | 자체 바깥 여백이 없다. `AvatarGroup`은 크기의 30%만큼 겹치고 각 아바타에 `bg` 색 2px 테두리를 둘러 경계를 만든다 | `.hjm-avatar-group` |
 | 순서·정렬 | 행·카드·댓글 머리의 시작 쪽에 두고 이름·본문이 끝 쪽으로 이어진다. `AvatarGroup`의 넘친 수 표시는 맨 끝에 온다 | `.hjm-avatar-group__overflow` |
 | 고정·스크롤 | 고정 영역이 없다 | — |
 | 좁은 폭·큰 글자 | 아바타 크기는 그대로이고 옆 문구가 줄바꿈된다. 이니셜 글자는 Web `small`에서 label, `xlarge`에서 title 크기다 | `.hjm-avatar[data-size="small"]`·`[data-size="xlarge"]` |
 
 ## 꼭 지킬 것
+
+- 장식인지 먼저 정한다. 같은 줄에 이름이 보이면 `decorative`로 숨기고, 아바타만 사람을 나타내면 `name`(Web)·`accessibilityLabel`(Native)을 준다.
+- 크기·모양·테두리·모서리 표식을 감싸는 요소의 className·절대 좌표로 다시 만들지 않는다. `size`·`shape`·`frame`·`accessory`를 쓴다.
 
 - `name`은 빈 문자열이면 `TypeError`다. 접근성 이름은 Avatar가 소유하고, 대체 그림은 장식으로만 그린다(버튼 등 상호작용 금지).
 - Blobatar `seed`에는 공개 제품 식별자를 쓴다. 이름·이메일·자격증명은 seed로 쓰지 않는다.
@@ -103,9 +109,10 @@ import { Avatar } from "@hjmds/react-native/data-display";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 사진 | `src`(문자열), `imageProps`로 `img` 속성·`onError` 전달 | `source`(`ImageSourcePropType`). `imageStyle`은 제거된 속성 — layoutStyle 또는 `size` |
-| 접근성 이름 | `alt`(기본 `name`), `alt=""`이면 숨김 | `accessibilityLabel` 필수, 또는 `decorative` |
+| 접근성 이름 | `alt`(기본 `name`), `alt=""`이면 숨김, `decorative`면 루트까지 숨김 | `accessibilityLabel` 필수, 또는 `decorative` |
 | 대체 표시 | `fallback` 노드 또는 이니셜 | `initials`(최대 3자) 또는 이니셜 |
-| 크기·모양 축 | 4단 이름 · `circle`/`rounded` | 숫자 · 원만 |
+| 크기·모양 축 | 단계 이름 · `circle`/`rounded` | 단계 이름 또는 숫자 · `circle`/`rounded` |
+| 이미지 호스트 | `renderImage`(img 대신) 또는 `imageProps` | `renderImage`(HJM `fallback`도 전달) |
 | 묶음 | `AvatarGroup` | 없음 |
 
 2026-10-07 실제 Showcase 비교에서 `AvatarGroup`을 `ListRow.leading`에 넣으면 단일 이미지용
@@ -146,3 +153,17 @@ A→B→A로 되돌아와도 무시한다. source를 같은 값으로 재생성�
 기본 Native Image 경로는 그대로다. Web은 img/imageProps 경로를 사용하며 src가 바뀌면 요청 img 노드를 교체해 이전 DOM 오류가 새 사진의 대체 표시를 켜지 않도록 한다.
 
 Web animated Blobatar는 IntersectionObserver를 사용할 수 없으면 같은 seed·표정의 정적 그림을 유지한다. 장식의 관찰 기능 미지원 때문에 Avatar 본문을 실패시키지 않는다.
+
+### 작은 장식 아바타와 모서리 표식 (2026-10-23)
+
+번뚝 `UserAvatar`(22·28·32·44, 투명 원 안의 생성 SVG)와 야잘알 `PlayerAvatar`(둥근 사각형, 모서리 팀 배지)가
+Avatar를 쓰지 못한 이유(이름 필수, Web 이미지 호스트 없음, 4단 크기, Native 24 하한, 강제 테두리·바탕)를 공개 축으로 옮겼다.
+
+```tsx
+// Web: 작성자 이름 옆의 장식 아바타, 제품 SVG가 액자를 채운다
+<Avatar decorative size="xsmall" frame="none" {...(svgUrl ? { src: svgUrl } : {})} fallback={emoji} />
+
+// Native: 둥근 사각형 선수 사진 + 모서리 팀 배지
+<Avatar name={player.name} accessibilityLabel={player.name} size="large" shape="rounded"
+  {...(uri ? { source: { uri } } : {})} accessory={<TeamBadge team={team} />} />
+```

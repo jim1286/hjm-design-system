@@ -26,14 +26,18 @@ import {
 import {
   accordionRecipe,
   avatarRecipe,
+  resolveAvatarSize,
+  validateAvatarPresentation,
   dividerRecipe,
   listRecipe,
   validateDividerLineStyle,
   type DividerLineStyle,
   statisticRecipe,
   type AccordionDensity,
+  type AvatarFrame,
   type AvatarShape,
   type AvatarSize,
+  type CornerAccessoryPlacement,
   type StatisticDensity,
   type StatisticPresentation,
 } from "@hjmds/design-contracts/recipes";
@@ -41,6 +45,7 @@ import {
   Children,
   createElement,
   forwardRef,
+  Fragment,
   isValidElement,
   useId,
   useLayoutEffect,
@@ -251,15 +256,43 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
 );
 
 
+/** Props handed to a product image host (`next/image`, a cache-aware loader) that replaces Avatar's `<img>`. */
+export type AvatarImageRenderProps = Readonly<{
+  src: string;
+  /** `""` for a decorative avatar or `alt=""`; otherwise the avatar's accessible name. */
+  alt: string;
+  /** Diameter in px from the size step. */
+  size: number;
+  /** Avatar's image class (fill + cover); keep it so the frame's clipping and fit still apply. */
+  className: string;
+  /** Report a failure for this `src` generation; callbacks from a replaced `src` are ignored. */
+  onError: () => void;
+}>;
+
+/**
+ * Accessibility identity. A meaningful avatar is named by `name` (or `alt`); a decorative one — next to a visible
+ * author name, or ornament without a person — is hidden from assistive tech and may omit `name` (2026-10-23:
+ * Burntok's decorative avatars had no name to pass).
+ */
+type AvatarIdentity =
+  | Readonly<{ decorative?: false; name: string; alt?: string }>
+  | Readonly<{ decorative: true; name?: string; alt?: never }>;
+
 export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
+  AvatarIdentity &
   Readonly<{
-    name: string;
     src?: string;
-    alt?: string;
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
+    /** Product image host in place of the built-in `<img>`. Exclusive with `imageProps`. */
+    renderImage?: (props: AvatarImageRenderProps) => ReactNode;
     size?: AvatarSize;
     shape?: AvatarShape;
+    /** Border/background treatment from avatarRecipe.frames; `none` when product artwork fills the frame. */
+    frame?: AvatarFrame;
+    /** A small mark (team badge, status dot) on a corner of the avatar's box. It is not clipped by the frame. */
+    accessory?: ReactNode;
+    accessoryPlacement?: CornerAccessoryPlacement;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -269,11 +302,16 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   {
     name,
     src,
-    alt = name,
+    alt: altProp,
+    decorative = false,
     fallback,
     renderFallback,
+    renderImage,
     size = avatarRecipe.defaults.size,
     shape = avatarRecipe.defaults.shape,
+    frame = avatarRecipe.defaults.frame,
+    accessory,
+    accessoryPlacement = avatarRecipe.defaults.accessoryPlacement,
     imageProps,
     className,
     layoutStyle,
@@ -281,36 +319,50 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   },
   ref,
 ) {
-  if (name.trim().length === 0) throw new TypeError("Avatar name must not be empty");
+  if (!decorative && (name === undefined || name.trim().length === 0)) throw new TypeError("Avatar name must not be empty");
+  if (renderImage && imageProps) throw new TypeError("Avatar renderImage and imageProps are exclusive; pass image attributes to the host");
+  validateAvatarPresentation({ shape, frame, accessoryPlacement });
+  const diameter = resolveAvatarSize(size);
+  const alt = decorative ? "" : altProp ?? name ?? "";
   const generation = useMemo(() => ({}), [src]);
   const active = useRef<object | null>(generation);
   useLayoutEffect(() => { active.current = generation; return () => { active.current = null; }; }, [generation]);
   const [failed, setFailed] = useState<object | null>(null);
   const imageAvailable = Boolean(src) && failed !== generation;
   const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
+  const fail = () => { if (active.current === generation) setFailed(generation); };
+  const initials = name !== undefined && name.trim().length > 0 ? resolveAvatarInitials(name) : null;
   return (
     <span
       {...props}
-      style={{ ...props.style, ...layoutStyle }}
+      aria-hidden={decorative || props["aria-hidden"]}
+      style={{ ...props.style, ...layoutStyle, "--hjm-avatar-size": `${diameter}px`,
+        // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
+        "--hjm-avatar-accessory-inset": `${avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` } as CSSProperties}
       ref={ref}
       className={classNames("hjm-avatar", className)}
       data-size={size}
       data-shape={shape}
+      data-frame={frame}
       data-state={imageAvailable ? "image" : "fallback"}
     >
       {src && imageAvailable ? (
-        <img
-          {...restImageProps}
-          key={src}
-          src={src}
-          alt={alt}
-          className={classNames("hjm-avatar__image", imageClassName)}
-          onError={(event) => {
-            if (active.current !== generation) return;
-            setFailed(generation);
-            onError?.(event);
-          }}
-        />
+        renderImage ? (
+          <Fragment key={src}>{renderImage({ src, alt, size: diameter, className: "hjm-avatar__image", onError: fail })}</Fragment>
+        ) : (
+          <img
+            {...restImageProps}
+            key={src}
+            src={src}
+            alt={alt}
+            className={classNames("hjm-avatar__image", imageClassName)}
+            onError={(event) => {
+              if (active.current !== generation) return;
+              setFailed(generation);
+              onError?.(event);
+            }}
+          />
+        )
       ) : (
         <span
           className="hjm-avatar__fallback"
@@ -318,9 +370,10 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
           aria-label={alt.length > 0 ? alt : undefined}
           aria-hidden={alt.length === 0 || undefined}
         >
-          {renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? resolveAvatarInitials(name)}
+          {renderFallback?.({ size: diameter, decorative: true }) ?? fallback ?? initials}
         </span>
       )}
+      {accessory ? <span className="hjm-avatar__accessory" data-placement={accessoryPlacement}>{accessory}</span> : null}
     </span>
   );
 });

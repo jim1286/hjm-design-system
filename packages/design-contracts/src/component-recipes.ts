@@ -1819,9 +1819,27 @@ export const avatarRecipe = {
    * 픽셀로 적으면 네 벌이 되기 때문이다. 남은 인원은 제품이 문구로 만든다("+3").
    */
   overlapRatio: 0.3,
-  defaults: { size: "medium", shape: "circle" },
-  sizes: { small: 32, medium: 40, large: 48, xlarge: 64 },
+  defaults: { size: "medium", shape: "circle", frame: "outlined", accessoryPlacement: "bottom-end" },
+  /**
+   * 2026-10-23: 번뚝 UserAvatar(22·28·32·44)와 Native의 24 하한 때문에 Avatar를 쓰지 못했다. 임의 px 대신
+   * 실사용 지름을 단계로 둔다. `touch` 44는 터치 대상 지름이자 Native의 기존 기본값이다(Avatar 자체는 누르는 대상이 아님).
+   */
+  sizes: { xxsmall: 22, xsmall: 28, small: 32, medium: 40, touch: 44, large: 48, xlarge: 64 },
   shapes: { rounded: "md", circle: "full" },
+  /**
+   * 테두리·배경 표현. `outlined`가 기존 모습이다. `surface`는 테두리 없이 바탕만, `none`은 제품 그림(생성 SVG 등)이
+   * 액자를 채울 때 바탕·테두리를 모두 뺀다 — 번뚝은 투명한 원 안에 SVG를 채운다(2026-10-23).
+   */
+  frames: {
+    outlined: { background: semanticColors.canvas, border: semanticColors.border.default, borderWidth: 1 },
+    surface: { background: semanticColors.canvas, border: null, borderWidth: 0 },
+    none: { background: null, border: null, borderWidth: 0 },
+  },
+  /**
+   * 모서리 표식(팀 배지·상태 점·편집 표시). 아바타 **경계 상자 안쪽** 모서리에 붙여 행 배치가 바뀌지 않는다.
+   * 야잘알 PlayerAvatar가 `right: 0, bottom: 0`으로 팀 배지를 얹던 자리다(2026-10-23).
+   */
+  accessory: { offset: 0 },
   background: semanticColors.canvas,
   content: semanticColors.content.secondary,
   border: semanticColors.border.default,
@@ -1833,6 +1851,35 @@ export const avatarRecipe = {
  * Initials text step for an avatar diameter, shared by Web size tokens and Native numeric sizes
  * (2026-10-17 comparison: Native drew 12pt brand-colored initials at every size).
  */
+export type AvatarFrame = keyof typeof avatarRecipe.frames;
+/** Corner a small mark sits on. Shared by Avatar and IconTile so products name the corner the same way. */
+export type CornerAccessoryPlacement = "top-end" | "bottom-end";
+export const cornerAccessoryPlacements = ["top-end", "bottom-end"] as const satisfies readonly CornerAccessoryPlacement[];
+
+/**
+ * Diameter for an Avatar `size`: a named step, or (Native compatibility) a number of points. Numbers below the
+ * smallest step are rejected — the 24 floor rejected Burntok's 22 even though initials still fit at 22 (label 12).
+ */
+export function resolveAvatarSize(size: AvatarSize | number): number {
+  if (typeof size === "number") {
+    if (!Number.isFinite(size) || size < avatarRecipe.sizes.xxsmall) {
+      throw new RangeError(`Avatar size must be at least ${avatarRecipe.sizes.xxsmall}`);
+    }
+    return size;
+  }
+  const step = (avatarRecipe.sizes as Record<string, number>)[size];
+  if (step === undefined) throw new TypeError(`Unsupported Avatar size: ${String(size)}`);
+  return step;
+}
+
+export function validateAvatarPresentation(options: Readonly<{ shape?: string; frame?: string; accessoryPlacement?: string }>): void {
+  if (options.shape !== undefined && !(options.shape in avatarRecipe.shapes)) throw new TypeError(`Unsupported Avatar shape: ${options.shape}`);
+  if (options.frame !== undefined && !(options.frame in avatarRecipe.frames)) throw new TypeError(`Unsupported Avatar frame: ${options.frame}`);
+  if (options.accessoryPlacement !== undefined && !(cornerAccessoryPlacements as readonly string[]).includes(options.accessoryPlacement)) {
+    throw new TypeError(`Unsupported Avatar accessoryPlacement: ${options.accessoryPlacement}`);
+  }
+}
+
 export function resolveAvatarInitialsTextVariant(size: number): "label" | "body" | "title" {
   if (size < avatarRecipe.sizes.medium) return "label";
   if (size < avatarRecipe.sizes.xlarge) return "body";

@@ -2843,23 +2843,33 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-accordion__indicator { flex: 0 0 auto; color: var(--hjm-color-text-muted); }
 .hjm-accordion__panel { padding: 0 var(--hjm-space-xs) var(--hjm-space-md); color: var(--hjm-color-text-body); overflow-wrap: anywhere; }
 .hjm-avatar {
+  /* Diameter from avatarRecipe.sizes via --hjm-avatar-size (set inline by Avatar). The frame no longer clips
+     the root so a corner accessory can sit on the edge; the image and fallback clip to the shape themselves. */
+  position: relative;
+  box-sizing: border-box;
   display: inline-grid;
+  flex: 0 0 auto;
   place-items: center;
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  overflow: hidden;
+  inline-size: var(--hjm-avatar-size, 2.5rem);
+  block-size: var(--hjm-avatar-size, 2.5rem);
   border: 1px solid var(--hjm-color-border);
   border-radius: 50%;
   color: var(--hjm-color-text-muted);
   background: var(--hjm-color-bg);
   font-weight: var(--hjm-text-emphasis-strong);
 }
-.hjm-avatar[data-size="small"] { inline-size: 2rem; block-size: 2rem; font-size: var(--hjm-type-label-size); }
-.hjm-avatar[data-size="large"] { inline-size: 3rem; block-size: 3rem; }
-.hjm-avatar[data-size="xlarge"] { inline-size: 4rem; block-size: 4rem; font-size: var(--hjm-type-title-size); }
+.hjm-avatar[data-size="xxsmall"], .hjm-avatar[data-size="xsmall"], .hjm-avatar[data-size="small"] { font-size: var(--hjm-type-label-size); }
+.hjm-avatar[data-size="xlarge"] { font-size: var(--hjm-type-title-size); }
 .hjm-avatar[data-shape="rounded"] { border-radius: var(--hjm-radius-md); }
-.hjm-avatar__image { inline-size: 100%; block-size: 100%; object-fit: cover; }
-.hjm-avatar__fallback { display: grid; place-items: center; inline-size: 100%; block-size: 100%; }
+/* avatarRecipe.frames: surface drops the border, none drops border and background. */
+.hjm-avatar[data-frame="surface"] { border-width: 0; }
+.hjm-avatar[data-frame="none"] { border-width: 0; background: transparent; }
+.hjm-avatar__image { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; border-radius: inherit; }
+.hjm-avatar__fallback { display: grid; place-items: center; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: inherit; }
+/* avatarRecipe.accessory.offset 0: the mark sits inside the avatar's box so the row layout does not move. */
+.hjm-avatar__accessory { position: absolute; inset-inline-end: var(--hjm-avatar-accessory-inset, 0px); display: inline-flex; line-height: 0; }
+.hjm-avatar__accessory[data-placement="bottom-end"] { inset-block-end: var(--hjm-avatar-accessory-inset, 0px); }
+.hjm-avatar__accessory[data-placement="top-end"] { inset-block-start: var(--hjm-avatar-accessory-inset, 0px); }
 .hjm-divider { flex: 0 0 auto; margin: 0; border: 0; background: var(--hjm-color-border); }
 .hjm-divider[data-orientation="horizontal"] { inline-size: 100%; block-size: 1px; }
 .hjm-divider[data-orientation="vertical"] { align-self: stretch; inline-size: 1px; min-block-size: var(--hjm-control-min-touch-target); }

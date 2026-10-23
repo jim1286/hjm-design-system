@@ -44,7 +44,7 @@ import {
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
-import { avatarRecipe, resolveAvatarInitialsTextVariant, skeletonRecipe } from "@hjmds/design-contracts/recipes";
+import { avatarRecipe, resolveAvatarInitialsTextVariant, resolveAvatarSize, skeletonRecipe, validateAvatarPresentation, type AvatarFrame, type AvatarShape, type AvatarSize, type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import {
   accordionRecipe,
   counterBadgeRecipe,
@@ -866,10 +866,6 @@ export function ListRow({
   );
 }
 
-type AccessibleMedia =
-  | Readonly<{ decorative: true; accessibilityLabel?: never }>
-  | Readonly<{ decorative?: false; accessibilityLabel: string }>;
-
 export type AvatarImageRenderProps = Readonly<{
   source: ImageSourcePropType;
   size: number;
@@ -883,15 +879,32 @@ type AvatarBaseProps = Readonly<{
   source?: ImageSourcePropType;
   /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
   renderImage?: (props: AvatarImageRenderProps) => ReactNode;
-  name: string;
   initials?: string;
   renderFallback?: (context: AvatarFallbackContext) => ReactNode;
-  size?: number;
+  /**
+   * A step from avatarRecipe.sizes (`xxsmall` 22 … `xlarge` 64), or points for existing callers. Numbers below the
+   * smallest step (22) throw. The default stays 44 (`touch`).
+   */
+  size?: AvatarSize | number;
+  shape?: AvatarShape;
+  /** Border/background treatment from avatarRecipe.frames; `none` when product artwork fills the frame. */
+  frame?: AvatarFrame;
+  /** A small mark (team badge, status dot) on a corner of the avatar's box. It is not clipped by the frame. */
+  accessory?: ReactNode;
+  accessoryPlacement?: CornerAccessoryPlacement;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export type AvatarProps = AvatarBaseProps & AccessibleMedia;
+/**
+ * A meaningful avatar needs `name` (initials) and `accessibilityLabel`; a decorative one — next to a visible
+ * author name, or ornament with no person — is hidden and may omit `name` (2026-10-23 Burntok adoption).
+ */
+type AvatarIdentity =
+  | Readonly<{ decorative: true; accessibilityLabel?: never; name?: string }>
+  | Readonly<{ decorative?: false; accessibilityLabel: string; name: string }>;
+
+export type AvatarProps = AvatarBaseProps & AvatarIdentity;
 
 export function Avatar({
   source,
@@ -899,13 +912,18 @@ export function Avatar({
   name,
   initials,
   renderFallback,
-  size = 44,
+  size: sizeProp = avatarRecipe.sizes.touch,
+  shape = avatarRecipe.defaults.shape,
+  frame = avatarRecipe.defaults.frame,
+  accessory,
+  accessoryPlacement = avatarRecipe.defaults.accessoryPlacement,
   decorative = false,
   accessibilityLabel,
   layoutStyle,
 }: AvatarProps) {
-  if (!Number.isFinite(size) || size < 24) throw new RangeError("Avatar size must be at least 24");
-  const { palette } = useHjmNativeTheme();
+  const size = resolveAvatarSize(sizeProp);
+  validateAvatarPresentation({ shape, frame, accessoryPlacement });
+  const { palette, tokens } = useHjmNativeTheme();
   // Same colors and initials step as Web (avatarRecipe); Native previously used brand 12pt initials.
   const initialsColor = resolveColorReference(avatarRecipe.content, palette);
   const initialsVariant = resolveAvatarInitialsTextVariant(size);
@@ -923,43 +941,55 @@ export function Avatar({
   // content rather than object identity, since hosts commonly inline { uri }.
   const failed = failedSource === sourceKey;
   useEffect(() => setFailedSource(null), [sourceKey]);
-  const fallback = resolveAvatarInitials(name, initials);
+  // A decorative avatar without a name or initials shows only its frame (or the product fallback).
+  const fallback = decorative && !name?.trim() && !initials?.trim() ? null : resolveAvatarInitials(name ?? "", initials);
   const mediaAccessibility = decorative
     ? { accessible: false as const }
     : { accessible: true as const, accessibilityLabel, accessibilityRole: "image" as const };
+  const frameRecipe = avatarRecipe.frames[frame];
+  // Rounded follows the nearest design profile like Asset; circle keeps its geometry.
+  const cornerRadius = shape === "rounded" ? tokens.radius.md : radius.full;
+  const fallbackNode = renderFallback?.({ size, decorative: true }) ?? (fallback === null ? null
+    : <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text>);
+  const offset = avatarRecipe.accessory.offset;
   return (
     <View
       {...mediaAccessibility}
-      style={[
-        {
+      style={[{ height: size, position: "relative", width: size }, layoutStyle]}
+    >
+      <View
+        style={{
           alignItems: "center",
-          backgroundColor: resolveColorReference(avatarRecipe.background, palette),
-          borderColor: resolveColorReference(avatarRecipe.border, palette),
-          borderWidth: 1,
-          borderRadius: radius.full,
+          backgroundColor: frameRecipe.background ? resolveColorReference(frameRecipe.background, palette) : "transparent",
+          borderColor: frameRecipe.border ? resolveColorReference(frameRecipe.border, palette) : "transparent",
+          borderWidth: frameRecipe.borderWidth,
+          borderRadius: cornerRadius,
           height: size,
           justifyContent: "center",
           overflow: "hidden",
           width: size,
-        },
-        layoutStyle,
-      ]}
-    >
-      {source !== undefined && !failed ? (
-        renderImage ? (
-          <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: size, width: size }}>
-            {renderImage({ source, size, onError: failImage,
-              fallback: renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text> })}
-          </View>
+        }}
+      >
+        {source !== undefined && !failed ? (
+          renderImage ? (
+            <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: size, width: size }}>
+              {renderImage({ source, size, onError: failImage, fallback: fallbackNode })}
+            </View>
+          ) : (
+            <NativeImage accessible={false} onError={failImage} source={source}
+              style={[{ height: size, width: size }]} />
+          )
         ) : (
-          <NativeImage accessible={false} onError={failImage} source={source}
-            style={[{ height: size, width: size }]} />
-        )
-      ) : (
-        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          {renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text>}
+          <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            {fallbackNode}
+          </View>
+        )}
+      </View>
+      {accessory ? (
+        <View style={[{ position: "absolute", end: offset }, accessoryPlacement === "top-end" ? { top: offset } : { bottom: offset }]}>
+          {accessory}
         </View>
-      )}
+      ) : null}
     </View>
   );
 }

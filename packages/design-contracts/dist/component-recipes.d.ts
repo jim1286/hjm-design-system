@@ -3263,16 +3263,65 @@ export declare const avatarRecipe: {
     readonly defaults: {
         readonly size: "medium";
         readonly shape: "circle";
+        readonly frame: "outlined";
+        readonly accessoryPlacement: "bottom-end";
     };
+    /**
+     * 2026-10-23: 번뚝 UserAvatar(22·28·32·44)와 Native의 24 하한 때문에 Avatar를 쓰지 못했다. 임의 px 대신
+     * 실사용 지름을 단계로 둔다. `touch` 44는 터치 대상 지름이자 Native의 기존 기본값이다(Avatar 자체는 누르는 대상이 아님).
+     */
     readonly sizes: {
+        readonly xxsmall: 22;
+        readonly xsmall: 28;
         readonly small: 32;
         readonly medium: 40;
+        readonly touch: 44;
         readonly large: 48;
         readonly xlarge: 64;
     };
     readonly shapes: {
         readonly rounded: "md";
         readonly circle: "full";
+    };
+    /**
+     * 테두리·배경 표현. `outlined`가 기존 모습이다. `surface`는 테두리 없이 바탕만, `none`은 제품 그림(생성 SVG 등)이
+     * 액자를 채울 때 바탕·테두리를 모두 뺀다 — 번뚝은 투명한 원 안에 SVG를 채운다(2026-10-23).
+     */
+    readonly frames: {
+        readonly outlined: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+        };
+        readonly surface: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: null;
+            readonly borderWidth: 0;
+        };
+        readonly none: {
+            readonly background: null;
+            readonly border: null;
+            readonly borderWidth: 0;
+        };
+    };
+    /**
+     * 모서리 표식(팀 배지·상태 점·편집 표시). 아바타 **경계 상자 안쪽** 모서리에 붙여 행 배치가 바뀌지 않는다.
+     * 야잘알 PlayerAvatar가 `right: 0, bottom: 0`으로 팀 배지를 얹던 자리다(2026-10-23).
+     */
+    readonly accessory: {
+        readonly offset: 0;
     };
     readonly background: Readonly<{
         source: "theme";
@@ -3296,6 +3345,20 @@ export declare const avatarRecipe: {
  * Initials text step for an avatar diameter, shared by Web size tokens and Native numeric sizes
  * (2026-10-17 comparison: Native drew 12pt brand-colored initials at every size).
  */
+export type AvatarFrame = keyof typeof avatarRecipe.frames;
+/** Corner a small mark sits on. Shared by Avatar and IconTile so products name the corner the same way. */
+export type CornerAccessoryPlacement = "top-end" | "bottom-end";
+export declare const cornerAccessoryPlacements: readonly ["top-end", "bottom-end"];
+/**
+ * Diameter for an Avatar `size`: a named step, or (Native compatibility) a number of points. Numbers below the
+ * smallest step are rejected — the 24 floor rejected Burntok's 22 even though initials still fit at 22 (label 12).
+ */
+export declare function resolveAvatarSize(size: AvatarSize | number): number;
+export declare function validateAvatarPresentation(options: Readonly<{
+    shape?: string;
+    frame?: string;
+    accessoryPlacement?: string;
+}>): void;
 export declare function resolveAvatarInitialsTextVariant(size: number): "label" | "body" | "title";
 export type StatisticDensity = "compact" | "comfortable";
 export type StatisticPresentation = "plain" | "surface";
