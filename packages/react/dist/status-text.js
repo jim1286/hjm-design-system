@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { Text } from "./layout.js";

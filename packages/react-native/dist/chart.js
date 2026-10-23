@@ -4,7 +4,7 @@ import { AppState, Platform, PanResponder, Pressable, View } from "react-native"
 import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
-import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes, splitSegments, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
+import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes, splitSegments, stepChartIndex, validateChartLegendLayout, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 // Chart labels and values use the text emphasis scale, the same weight the Web `.hjm-chart__*` rules read.
 import { textRecipe } from "@hjmds/design-contracts/recipes";
@@ -213,13 +213,20 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
                         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && _jsx(ChartLabel, { x: g.centers[i], y: resolvedHeight - 4, fill: focus === i ? palette.legend : palette.label, textAnchor: "middle", children: category }, category + i)
                         : _jsx(ChartLabel, { x: g.plot.left - 8, y: g.centers[i] + 4, fill: focus === i ? palette.legend : palette.label, textAnchor: "end", children: category }, category + i))] }), g && scrubbing && focus !== null && vertical && _jsx(CursorBubble, { x: g.centers[focus], width: width, text: `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`, surface: palette.surface, color: palette.legend })] });
 }
-export function ChartLegend({ items, selectedId, onSelect, exclusion }) {
+export function ChartLegend({ items, selectedId, onSelect, exclusion, layout = "stack" }) {
     const palette = useChartPalette();
-    return _jsx(View, { style: { gap: spacing.xxs }, children: items.map(item => {
-            const content = _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: spacing.xs, minHeight: 32, opacity: selectedId && selectedId !== item.id ? 0.5 : 1 }, children: [_jsx(View, { style: { width: 10, height: 10, borderRadius: 3, backgroundColor: item.color } }), _jsx(Text, { variant: "body", layoutStyle: { flex: 1 }, numberOfLines: 1, children: item.label }), item.value !== undefined && _jsx(Text, { variant: "label", fontRole: "ui", emphasis: "medium", style: { color: palette.legend, fontVariant: ["tabular-nums"] }, children: item.value })] });
+    validateChartLegendLayout(layout);
+    const legend = chartRecipe.legend;
+    const inline = layout === "inline";
+    const rootStyle = inline
+        ? { flexDirection: "row", flexWrap: "wrap", alignItems: "center", rowGap: legend.layouts.inline.rowGap, columnGap: legend.layouts.inline.columnGap }
+        : { gap: legend.layouts.stack.rowGap };
+    return _jsx(View, { style: rootStyle, children: items.map(item => {
+            // Inline entries size to their content and wrap as a whole; stacked rows take the width and end-align the value.
+            const content = _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: legend.itemGap, ...(inline ? {} : { minHeight: legend.layouts.stack.rowMinHeight }), opacity: selectedId && selectedId !== item.id ? legend.dimmedOpacity : 1 }, children: [_jsx(View, { style: { width: legend.swatch.size, height: legend.swatch.size, borderRadius: legend.swatch.radius, backgroundColor: item.color } }), _jsx(Text, { variant: "body", ...(inline ? { layoutStyle: { flexShrink: 1 } } : { layoutStyle: { flex: 1 }, numberOfLines: 1 }), children: item.label }), item.value !== undefined && _jsx(Text, { variant: "label", fontRole: "ui", emphasis: "medium", style: { color: palette.legend, fontVariant: ["tabular-nums"] }, children: item.value })] });
             const selection = onSelect ? _jsx(Pressable, { accessibilityRole: "button", accessibilityState: { selected: selectedId === item.id }, accessibilityLabel: `${item.label}${item.value ? ` ${item.value}` : ""}`, onPress: () => onSelect(selectedId === item.id ? null : item.id), children: content }, item.id)
                 : _jsx(View, { accessible: true, accessibilityLabel: `${item.label}${item.value ? ` ${item.value}` : ""}`, children: content }, item.id);
-            return exclusion ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: spacing.sm }, children: [_jsx(Pressable, { style: { minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }, accessibilityRole: "checkbox", accessibilityState: { checked: !exclusion.excludedIds.includes(item.id) }, accessibilityLabel: exclusion.label(item, !exclusion.excludedIds.includes(item.id)), onPress: () => exclusion.onToggle(item.id), children: _jsx(Text, { children: exclusion.excludedIds.includes(item.id) ? "□" : "✓" }) }), _jsx(View, { style: { flex: 1 }, children: selection })] }, item.id) : selection;
+            return exclusion ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: spacing.sm }, children: [_jsx(Pressable, { style: { minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }, accessibilityRole: "checkbox", accessibilityState: { checked: !exclusion.excludedIds.includes(item.id) }, accessibilityLabel: exclusion.label(item, !exclusion.excludedIds.includes(item.id)), onPress: () => exclusion.onToggle(item.id), children: _jsx(Text, { children: exclusion.excludedIds.includes(item.id) ? "□" : "✓" }) }), _jsx(View, { style: inline ? {} : { flex: 1 }, children: selection })] }, item.id) : selection;
         }) });
 }
 export function PieChart({ data, accessibilityLabel, formatValue, donut = true, size = 180, centerContent, selectedId, defaultSelectedId = null, onSelect, showLegend = true, exclusion }) {

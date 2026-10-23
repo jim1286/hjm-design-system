@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { activityChipRecipe, resolveActivityChipDescriptor, } from "@hjmds/design-contracts/activity-chip";

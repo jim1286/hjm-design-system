@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
 import { resolveEffectSurface } from "@hjmds/design-contracts/effect-surface";

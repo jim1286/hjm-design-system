@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { resolveDocumentResourceControls } from "@hjmds/design-contracts/document-resource";

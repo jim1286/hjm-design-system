@@ -1,5 +1,5 @@
 import type { GridDescriptor } from "@hjmds/design-contracts/grid";
-import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
+import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupOverflow, type SelectionGroupPresentation, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 export type { SwitchSize, SwitchPresentation };
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
@@ -106,6 +106,12 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<FieldsetHTMLAttributes<HT
     /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
     grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
+    /**
+     * Chip line overflow, the same meaning as SegmentedControl `overflow`: `wrap` (default) breaks onto more lines,
+     * `scroll` keeps one horizontal line and scrolls a focused chip into view. Requires `presentation="chips"`
+     * without `grid`.
+     */
+    overflow?: SelectionGroupOverflow;
     size?: SelectionControlSize;
     name?: string;
     required?: boolean;

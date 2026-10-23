@@ -1,3 +1,4 @@
+"use client";
 import { useDesignProfileDefaults } from "./internal.js";
 import { headingRecipe, resolveHeadingSemanticLevel, validateHeadingDescriptor, } from "@hjmds/design-contracts/components/heading";
 import { createElement, forwardRef, } from "react";

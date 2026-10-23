@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveContentTransition } from "@hjmds/design-contracts/content-transition";
 import { motion } from "framer-motion";

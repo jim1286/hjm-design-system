@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { Button, IconButton } from "./actions.js";

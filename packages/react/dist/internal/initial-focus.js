@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveEntryFocus } from "@hjmds/design-contracts/screen-patterns";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef } from "react";

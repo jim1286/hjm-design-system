@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { getUploadItemAvailableAction, resolveUploadItemAnnouncement, } from "@hjmds/design-contracts/components/upload-item";
 import { forwardRef } from "react";

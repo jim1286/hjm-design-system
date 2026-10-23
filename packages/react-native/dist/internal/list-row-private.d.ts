@@ -8,5 +8,10 @@ export type ListRowPrivateProps = Readonly<{
     hjmTitleEmphasis?: "regular" | "strong";
     /** NotificationItem status·time line, drawn as a muted caption under the description like Web (2026-10-17). */
     hjmMeta?: string;
+    /**
+     * NotificationItem `unreadLabel`: draws the unread dot after the meta caption (notificationRowRecipe.unreadSize,
+     * content brand, as NotificationRow) and names it (2026-10-23: Spint drew a "•" glyph in `trailing`).
+     */
+    hjmUnreadLabel?: string;
 }>;
 //# sourceMappingURL=list-row-private.d.ts.map

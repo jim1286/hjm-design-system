@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { conversationRowRecipe as recipe } from "@hjmds/design-contracts/conversation-row";
 import { Text } from "./layout.js";

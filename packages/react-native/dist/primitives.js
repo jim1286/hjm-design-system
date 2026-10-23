@@ -6,7 +6,7 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, numeric as numericVariants, resolveTextFontRole, resolveFontFamilyStack, } from "@hjmds/design-contracts/foundations";
+import { glyph, numeric as numericVariants, resolveTextFontRole, resolveFontFamilyStack, validateElevationStep, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { resolveTextDefaultWeight, sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
@@ -14,7 +14,7 @@ import { PixelRatio, StyleSheet, Text as NativeText, View, useWindowDimensions, 
 import { useHjmNativeTheme } from "./provider.js";
 import { useInheritedTextAlign } from "./internal/text-align.js";
 import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/design-contracts/foundations";
-import { logicalTextAlign, resolveNativeFontStyle, resolveNativeShadowElevation, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeFontStyle, resolveNativeElevationStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
 export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
@@ -99,7 +99,9 @@ function resolveBundledFace(style) {
 function resolveThemeColor(colors, key) {
     return colors[key];
 }
-export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, children, ...props }) {
+export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, elevation, layoutStyle, children, ...props }) {
+    if (elevation !== undefined)
+        validateElevationStep(elevation, "Surface");
     const { colors, tokens, designProfile, environment, surfaceEffects, reducedTransparency, surfaceMaterial: material } = useHjmNativeTheme();
     const renderBackdrop = !reducedTransparency && material?.blurStrength ? surfaceEffects?.renderBackdrop : undefined;
     // The core supports RN 0.81's old architecture too: inset boxShadow must be
@@ -111,16 +113,9 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
     const contract = surfaceRecipe[normalizedTone];
     const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
     const borderColor = resolveThemeColor(colors, contract.border);
-    const elevatedStyle = contract.elevated
-        ? {
-            ...resolveNativeShadowElevation(tokens.shadow.raised, designProfile !== undefined, 4),
-            // Raised cards use the low elevation token; floating is reserved for floating controls and overlays.
-            shadowColor: tokens.shadow.raised.color,
-            shadowOffset: { width: 0, height: tokens.shadow.raised.offsetY },
-            shadowOpacity: tokens.shadow.raised.opacity,
-            shadowRadius: tokens.shadow.raised.radius,
-        }
-        : undefined;
+    // Raised cards use the low elevation token; floating is reserved for floating controls and overlays.
+    const step = elevation ?? (contract.elevated ? "raised" : "none");
+    const elevatedStyle = resolveNativeElevationStyle(step, tokens.shadow, designProfile !== undefined);
     return (_jsxs(View, { ...props, style: [
             {
                 backgroundColor: renderBackdrop ? "transparent" : resolveThemeColor(colors, contract.background),
@@ -133,7 +128,7 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
                 borderWidth: 1,
                 // A child image would otherwise spill past the rounded corner. An
                 // elevated tone opts out because clipping cuts off its own shadow.
-                overflow: contract.clipsContent ? "hidden" : "visible",
+                overflow: contract.clipsContent && step === "none" ? "hidden" : "visible",
                 padding: surfaceGeometry.paddings[padding],
             },
             elevatedStyle,

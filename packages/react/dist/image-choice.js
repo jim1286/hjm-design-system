@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Text } from "./layout.js";

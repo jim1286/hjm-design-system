@@ -1,7 +1,20 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
+import { imageViewerTriggerRecipe, validateImageViewerTriggerLabel } from "@hjmds/design-contracts/components/image";
+import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { IconButton } from "./actions.js";
+/**
+ * Button around product media that opens ImageViewer. The product keeps the viewer's `open` state and calls it from
+ * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
+ */
+export const ImageViewerTrigger = forwardRef(function ImageViewerTrigger({ label, children, className, layoutStyle, ...props }, ref) {
+    validateImageViewerTriggerLabel(label);
+    return _jsx("button", { ...props, ref: ref, type: "button", "aria-label": label, "aria-haspopup": "dialog", className: classNames("hjm-image-viewer-trigger", className), style: { ...layoutStyle, "--hjm-image-viewer-trigger-pressed-opacity": imageViewerTriggerRecipe.pressedOpacity,
+            "--hjm-image-viewer-trigger-disabled-opacity": imageViewerTriggerRecipe.disabledOpacity,
+            "--hjm-image-viewer-trigger-cursor": imageViewerTriggerRecipe.cursor }, children: children });
+});
 /** Full viewport photo presentation; shares modal isolation, focus return and Escape with Dialog. */
 export function ImageViewer(props) {
     if (!props.open)

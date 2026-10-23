@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Steps } from "./steps.js";
 import { Progress } from "./feedback.js";

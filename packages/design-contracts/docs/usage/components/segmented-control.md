@@ -74,6 +74,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | --- | --- | --- | --- |
 | `items` | Web `readonly { value: string; label: ReactNode; disabled? }[]` · Native `readonly { value: Value; label: string; disabled?; leading?; renderLeading? }[]` | 필수 | 값이 비거나 중복이면 던진다 |
 | `presentation` | `connected` · `pills` | `connected` | 연결된 보기 전환 / 독립된 카테고리 필터. `pills`는 1.13.0 변경 |
+| `selectionTone` | `neutral` · `brand` | `brand` | 기본 선택 면은 `primary`와 `onPrimary`. `neutral`은 `surfaceSelected`와 `text`로 차분하게 표시한다. `text` 표현은 채움 없이 기존 표시를 유지한다 |
 | `size` | `small` · `medium` | `medium` | 항목 최소 높이 36(+hitSlop 4) · 44 |
 | `value` · `defaultValue` | 항목 값 | 첫 번째 활성 항목 | 선택 해제 상태는 없다 |
 | `onValueChange` | Web `(value: string) => void` · Native `(value: Value) => void` | — | 다른 항목을 고를 때. `null`은 오지 않는다 |
@@ -99,7 +100,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 ┌───────────────────────────────┐  트랙: radius.lg 16, padding 4 (Native)
 │ ┌─────────┐                   │
 │ │  주간   │    월간     연간   │  44 (medium), 같은 폭
-│ └─────────┘                   │  선택 = focus 색 테두리
+│ └─────────┘                   │  선택 = 브랜드 배경 채움 + 반전 글자
 └───────────────────────────────┘
    gap layout.contentGap 16
 [ 전환되는 내용 ]
@@ -111,7 +112,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 - 활성 항목이 하나도 없거나 `value`가 비거나 중복이면 렌더 중 오류를 던진다. Native는 controlled
   `value`가 비활성 항목이어도 `RangeError`다.
 - 옛 Native `options` prop은 제거됐다. 넘기면 `TypeError`다([이관표](../../migration-native-legacy-removal.md)).
-- 연결형의 선택 표시는 focus 색 테두리(ring), `pills`는 본문색 채움과 반전 글자다. 제품에서 선택 배경을 직접 덮지 않는다. 배치는 `layoutStyle`로 하고, Native `style`은
+- 연결형과 `pills` 모두 기본 선택 배경은 `primary`, 글자·아이콘은 `onPrimary`다. `selectionTone="neutral"`이면 `selection.background`(`surfaceSelected`)와 `selection.content`(`text`)를 쓴다. 연결형의 선택 테두리(ring)는 추가 구분 수단으로 유지한다. 제품에서 선택 배경을 직접 덮지 않는다. 배치는 `layoutStyle`로 하고, Native `style`은
   제거된 속성이다.
 
 ## 플랫폼 차이
@@ -132,7 +133,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 
 - `presentation="pills"`: 카테고리·작성자·기간처럼 같은 목록의 범위를 좁힐 때 쓴다.
 - 표면 높이·좌우 여백·글자는 같은 size의 Chip과 맞춘다. 터치 영역은 최소 `control.minTouchTarget` 44이며 안쪽 표면은 위아래 `spacing.xxs` 4만큼 들어간다. 2026-10-20 Utilverse 혼합 필터 행에서 작은 Chip36과 pill28의 불일치가 확인돼 공통 크기로 정렬했다(미게시). 누름 영역은 줄이지 않는다.
-- 좌우 여백은 Chip과 같이 small12/medium16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surface.raised`(`canvas`) 바탕과 `border.control` 1pt 테두리, 기본 선택은 `selection.background`(`surfaceSelected`)/`selection.content`(`text`) 조합이다. 2026-10-20 Utilverse의 파스텔 배경에서 비선택 버튼 경계가 묻힌 사용자 지적에 따라 inset 표면을 공통으로 보완했다(미게시). 색은 제품 provider에서 따라온다.
+- 좌우 여백은 Chip과 같이 small12/medium16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surface.raised`(`canvas`) 바탕과 `border.control` 1pt 테두리, 기본 선택은 `primary`/`onPrimary`, `selectionTone="neutral"` 선택은 `selection.background`(`surfaceSelected`)/`selection.content`(`text`) 조합이다. 2026-10-20 Utilverse의 파스텔 배경에서 비선택 버튼 경계가 묻힌 사용자 지적에 따라 inset 표면을 공통으로 보완했다(미게시). 색은 제품 provider에서 따라온다.
 - 항목은 내용 폭이며 좁아지면 줄바꿈한다. 큰 글자에서도 세로로 쌓지 않는다(`pills.largeTextLayout` `wrap`): 블록 안에서는 줄바꿈하고, 가로 스크롤 줄 안에서는 한 줄로 남아 스크롤된다. 라벨 높이만큼 항목도 늘어난다. 선택 상태(radio)와 포커스 이동(Web 화살표, Native 접근성 순서)은 배치와 관계없이 같다.
 - 그룹 이름은 `label`, 하나의 선택은 `value`/`onValueChange`. 복수 조건은 ToggleGroup, 화면 이동은 Tabs/Navigation을 쓴다.
 - 예제의 전체 선택값도 실제 항목으로 넣는다. 선택된 항목을 다시 눌러도 선택을 해제하지 않는다.
@@ -190,3 +191,15 @@ Spint 스팟 필터가 제품 ScrollView와 고정 추가 행을 재조립하던
 ### 진한 브랜드 선택 — 개발 소스, 미게시 (2026-10-21)
 
 다에리·스핀트의 선택 배경이 너무 옅다는 사용자 피드백에 따라 `selectionTone="brand"`로 선택 면에 `primary`, 글자·아이콘에 `onPrimary`를 쓴다. `pills`·`connected`의 크기와 선택 동작을 유지하며 `text`는 기존 표시를 유지한다.
+
+### 선택 배경 기본값 — 개발 소스, 미게시 (2026-10-23)
+
+사용자가 공개 Storybook의 기록 표현 비교 화면에서 선택 배경이 없는 것처럼 보인다고 지적하고 기본 채움을 요청했다.
+같은 날 시각 비교 후 사용자가 강조안을 기본으로 선택했다. Web·Native 모두 별도 prop 없이 `selectionTone="brand"`를 사용해 `primary` 배경과 `onPrimary` 글자·아이콘을 그린다.
+중립색은 `selectionTone="neutral"` 옵션이며 light `#f0f1f3`, dark `#30343b` 및 브랜드 팔레트의 `surfaceSelected` 재정의를 따른다.
+`presentation="text"`는 캡슐 없는 탐색 표현을 선택할 때 명시하며 기존 글자·짧은 표시를 유지한다.
+선택 값은 배경·굵기·연결형 테두리로, 키보드 포커스는 별도 focus-visible 외곽선으로 구분한다.
+단일 선택과 짧은 라벨은 [Fluent](https://fluent2.microsoft.design/components/ios/core/segmentedcontrol/usage),
+선택 면의 구분은 [Material의 단일 선택 예시](https://developer.android.com/develop/ui/compose/components/segmented-button)를 참고한다.
+강조 기본값은 선택된 항목을 즉시 구분하려는 사용자 결정이며, 외부 지침이 특정 색상값을 요구한다는 뜻은 아니다.
+공개 Storybook 배포·패키지 게시와 개발 소스 적용은 구분한다.

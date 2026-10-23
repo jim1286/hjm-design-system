@@ -2,6 +2,7 @@ import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/desi
 import { type SearchFieldSize } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
+import { type CharacterCountOptions } from "@hjmds/design-contracts/character-count";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FieldCopyProps = Readonly<{
@@ -62,7 +63,16 @@ type SharedInputProps = FieldCopyProps & Readonly<{
      */
     initialFocusTarget?: boolean;
 }>;
-export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps & Readonly<{
+/** TextField and TextArea only; SearchField, PasswordField and OtpField have no free-text limit to count. */
+type CharacterCountProps = Readonly<{
+    /**
+     * Shows `length/max` and the product's sentence for the current status under the control
+     * (`resolveCharacterCount`). `overflow: "block"` (default) also sets the platform `maxLength`; do not pass
+     * `maxLength` together with it.
+     */
+    characterCount?: CharacterCountOptions;
+}>;
+export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps & CharacterCountProps & Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
      * Native TextField. Web TextArea retains the DOM `onChange` callback. Before 1.5.0 Web TextField only had
@@ -100,6 +110,13 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
     initialFocusTarget?: boolean;
 }> & Readonly<{
     /**
+     * Shows `length/max` and the product's sentence for the current status under the control
+     * (`resolveCharacterCount`). `overflow: "block"` (default) also sets the platform `maxLength`; do not pass
+     * `maxLength` together with it.
+     */
+    characterCount?: CharacterCountOptions;
+}> & Readonly<{
+    /**
      * Receives the next string value, the same callback name and shape as the
      * Native TextField. Web TextArea retains the DOM `onChange` callback. Before 1.5.0 Web TextField only had
      * the DOM `onChange`, so shared form code needed a platform branch. Both
@@ -107,7 +124,7 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
      */
     onValueChange?: (value: string) => void;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & CharacterCountProps & Readonly<{
     /**
      * Action before the text inside the field frame (for example a composer's camera button),
      * vertically centred while the text grows. Mirrors `trailing`; `leading` stays omitted because
@@ -123,6 +140,13 @@ export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<S
     maxVisibleLines?: number;
 }>;
 export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
+    /**
+     * Shows `length/max` and the product's sentence for the current status under the control
+     * (`resolveCharacterCount`). `overflow: "block"` (default) also sets the platform `maxLength`; do not pass
+     * `maxLength` together with it.
+     */
+    characterCount?: CharacterCountOptions;
+}> & Readonly<{
     /**
      * Action before the text inside the field frame (for example a composer's camera button),
      * vertically centred while the text grows. Mirrors `trailing`; `leading` stays omitted because
@@ -209,7 +233,7 @@ export type PasswordFieldToggleRenderProps = Readonly<{
     revealed: boolean;
     disabled: boolean;
 }>;
-export type PasswordFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue" | "size" | "trailing" | "type" | "value"> & Readonly<{
+export type PasswordFieldProps = Omit<TextFieldProps, "autoComplete" | "characterCount" | "defaultValue" | "size" | "trailing" | "type" | "value"> & Readonly<{
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
@@ -223,7 +247,7 @@ export type PasswordFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultV
     renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
 }>;
 /** Password input with an independently controlled, selection-safe reveal action. */
-export declare const PasswordField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "size" | "type" | "trailing" | "autoComplete"> & Readonly<{
+export declare const PasswordField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "size" | "type" | "trailing" | "autoComplete" | "characterCount"> & Readonly<{
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
@@ -236,7 +260,7 @@ export declare const PasswordField: import("react").ForwardRefExoticComponent<Om
     size?: PasswordFieldSize;
     renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue" | "leading" | "maxLength" | "shape" | "size" | "trailing" | "type" | "value" | "variant"> & Readonly<{
+export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "characterCount" | "defaultValue" | "leading" | "maxLength" | "shape" | "size" | "trailing" | "type" | "value" | "variant"> & Readonly<{
     length: number;
     value?: string;
     defaultValue?: string;
@@ -247,7 +271,7 @@ export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue"
     busy?: boolean;
 }>;
 /** One accessible numeric input rendered as decorative OTP slots. */
-export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "size" | "type" | "variant" | "leading" | "trailing" | "shape" | "autoComplete" | "maxLength"> & Readonly<{
+export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "size" | "type" | "variant" | "leading" | "trailing" | "shape" | "maxLength" | "autoComplete" | "characterCount"> & Readonly<{
     length: number;
     value?: string;
     defaultValue?: string;

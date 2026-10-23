@@ -1,4 +1,4 @@
-import { listRowRecipe, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type ListRowDensity, type ListRowLeadingShape } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type BadgeCategoryColor, type ListRowDensity, type ListRowLeadingShape, type ListRowTrailingAccessory } from "@hjmds/design-contracts/recipes";
 import { type TagTone } from "@hjmds/design-contracts/components/tag";
 import { type CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
@@ -9,6 +9,11 @@ export type { TagTone } from "@hjmds/design-contracts/components/tag";
 export type BadgeVariant = ContractBadgeVariant;
 export type BadgeProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     tone?: BadgeTone;
+    /**
+     * Product classification color per theme (series, grade…) in place of `tone`. HJM keeps the frame and picks the
+     * label ink; a color whose label cannot reach AA 4.5 throws instead of rendering unreadable.
+     */
+    categoryColor?: BadgeCategoryColor;
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
@@ -18,6 +23,11 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
 }>;
 export declare const Badge: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLSpanElement> & Readonly<{
     tone?: BadgeTone;
+    /**
+     * Product classification color per theme (series, grade…) in place of `tone`. HJM keeps the frame and picks the
+     * label ink; a color whose label cannot reach AA 4.5 throws instead of rendering unreadable.
+     */
+    categoryColor?: BadgeCategoryColor;
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
@@ -143,6 +153,11 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
+     * command (before any `trailingAction`), mirrored in RTL; size and color come from `listRowRecipe.accessories`.
+     */
+    trailingAccessory?: ListRowTrailingAccessory;
     /** Independent command outside the row's navigation target. */
     trailingAction?: ReactNode;
     /** Supply a framework Link without replacing the shared row layout. */
@@ -172,6 +187,11 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
+     * command (before any `trailingAction`), mirrored in RTL; size and color come from `listRowRecipe.accessories`.
+     */
+    trailingAccessory?: ListRowTrailingAccessory;
     /** Independent command outside the row's navigation target. */
     trailingAction?: ReactNode;
     /** Supply a framework Link without replacing the shared row layout. */

@@ -2087,7 +2087,8 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
   presentation = "connected",
-  selectionTone = "neutral",
+  // Match Web's brand-filled default (2026-10-23 user review); neutral remains opt-in.
+  selectionTone = "brand",
   textEmphasis = "strong",
   selectionMotion: suppliedSelectionMotion,
   disabled = false,

@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type ChartLegendLayout, type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FocusDetail = Readonly<{
     scrubbing: boolean;
@@ -84,9 +84,14 @@ export type ChartLegendProps = ChartRootProps & Readonly<{
     selectedId?: string | null;
     /** When given, rows are toggle buttons; pressing the selected row clears the selection. */
     onSelect?: (id: string | null) => void;
+    /**
+     * `stack`: one row per series. `inline`: entries flow on a line and wrap (chartRecipe.legend.layouts). Web default:
+     * `inline` without `onSelect`, `stack` once rows are selection buttons — the 1.41 behavior.
+     */
+    layout?: ChartLegendLayout;
 }>;
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export declare function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }: ChartLegendProps): import("react").JSX.Element;
+export declare function ChartLegend({ items, selectedId, onSelect, exclusion, layout: layoutProp, className, layoutStyle }: ChartLegendProps): import("react").JSX.Element;
 export type PieDatum = Readonly<{
     id: string;
     label: string;

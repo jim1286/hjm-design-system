@@ -1,7 +1,8 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
-import { prepareChartLineMorph, areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
+import { prepareChartLineMorph, areaPath, chartRecipe, validateChartLegendLayout, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices, resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, resolveRadarGeometry, resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries, } from "@hjmds/design-contracts/components/chart";
 import { spacing, typography } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
@@ -354,8 +355,10 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
                         : null] }), _jsx("p", { id: descriptionId, className: "hjm-visually-hidden", children: describeChart(categories, series, formatValue, missingLabel) })] }));
 }
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }) {
-    return (_jsx("ul", { className: classNames("hjm-chart-legend", className), style: { ...chromeStyle, ...layoutStyle }, "data-interactive": onSelect ? "" : undefined, children: items.map((item) => {
+export function ChartLegend({ items, selectedId, onSelect, exclusion, layout: layoutProp, className, layoutStyle }) {
+    const layout = layoutProp ?? (onSelect ? "stack" : "inline");
+    validateChartLegendLayout(layout);
+    return (_jsx("ul", { className: classNames("hjm-chart-legend", className), style: { ...chromeStyle, ...layoutStyle }, "data-interactive": onSelect ? "" : undefined, "data-layout": layout, children: items.map((item) => {
             const content = (_jsxs(_Fragment, { children: [_jsx("span", { className: "hjm-chart-legend__swatch", "aria-hidden": "true", style: { background: item.color } }), _jsx("span", { className: "hjm-chart-legend__label", children: item.label }), item.value !== undefined ? _jsx("span", { className: "hjm-chart-legend__value", children: item.value }) : null] }));
             const dimmed = selectedId != null && selectedId !== item.id;
             return (_jsxs("li", { className: "hjm-chart-legend__item", "data-dimmed": dimmed || undefined, children: [exclusion ? _jsx("input", { type: "checkbox", checked: !exclusion.excludedIds.includes(item.id), "aria-label": exclusion.label(item, !exclusion.excludedIds.includes(item.id)), onChange: () => exclusion.onToggle(item.id) }) : null, onSelect ? (_jsx("button", { type: "button", className: "hjm-chart-legend__button", "aria-pressed": selectedId === item.id, onClick: () => onSelect(selectedId === item.id ? null : item.id), children: content })) : content] }, item.id));

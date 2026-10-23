@@ -23,6 +23,9 @@ export const publicExportEntries = {
     AlertDialog: [
         "./overlays"
     ],
+    AlertDialogQueueProvider: [
+        "./alert-dialog-queue"
+    ],
     Anchor: [
         "./anchor"
     ],
@@ -281,6 +284,9 @@ export const publicExportEntries = {
     IconButton: [
         "./actions"
     ],
+    IconButtonLink: [
+        "./actions"
+    ],
     IconTile: [
         "./screens"
     ],
@@ -294,6 +300,9 @@ export const publicExportEntries = {
         "./image-comparison"
     ],
     ImageViewer: [
+        "./image-viewer"
+    ],
+    ImageViewerTrigger: [
         "./image-viewer"
     ],
     ImmersiveOverlay: [

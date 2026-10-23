@@ -375,9 +375,13 @@ export type PermissionScreenProps = Base & {
     request: ScreenFlowAction;
     settings: ScreenFlowAction;
     continueAction: ScreenFlowAction;
+    /** Re-read the OS permission after returning from settings. Shown only while `denied`, under the settings action. */
+    recheck?: ScreenFlowAction;
+    /** A path that works without the permission (pick a photo, enter it by hand). Shown until `granted`, above skip. */
+    alternative?: ScreenFlowAction;
     skip?: ScreenFlowAction;
 };
-export declare function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }: PermissionScreenProps): import("react").JSX.Element;
+export declare function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, recheck, alternative, skip, ...screen }: PermissionScreenProps): import("react").JSX.Element;
 export type OnboardingStep = {
     id: string;
     title: string;

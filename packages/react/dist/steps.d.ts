@@ -1,21 +1,22 @@
-import { type ComposeStepsAccessibleName, type StepStatus, type StepsDescriptor, type StepsStatusLabels } from "@hjmds/design-contracts/components/steps";
+import { type ComposeStepsAccessibleName, type StepStatus, type StepsDescriptor, type StepsPresentation, type StepsStatusLabels } from "@hjmds/design-contracts/components/steps";
 import { type HTMLAttributes, type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type StepsProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
     descriptor: StepsDescriptor<Id>;
     statusLabels: StepsStatusLabels;
     composeAccessibleName: ComposeStepsAccessibleName;
+    /** Focus rail is the default; compact reveals its overview, vertical expands the cursor's content. */
+    presentation?: StepsPresentation;
+    /** Required localized toggle label for compact presentation. */
+    overviewLabel?: string;
+    /** Vertical-only content slot. Products keep drafts outside this unmounted step content. */
+    renderStepContent?: (id: Id) => ReactNode;
     renderMark?: (status: StepStatus, position: number) => ReactNode;
-    /**
-     * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-     * later steps stay static in default linear mode. Free reading mode makes every step selectable.
-     * Omit the handler while the flow is locked.
-     */
+    /** Backward-only in linear forms; free reading permits any step. Omit while locked. */
     onStepPress?: (id: Id) => void;
-    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-/** Linear progress steps with one canonical cursor; steps before it can be pressed to go back. */
+/** Presentation never changes the shared single-cursor state or validation/navigation policy. */
 export declare const Steps: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
     descriptor: Readonly<{
         steps: readonly Readonly<{
@@ -34,14 +35,15 @@ export declare const Steps: import("react").ForwardRefExoticComponent<Omit<HTMLA
         error: string;
     }>;
     composeAccessibleName: ComposeStepsAccessibleName;
+    /** Focus rail is the default; compact reveals its overview, vertical expands the cursor's content. */
+    presentation?: StepsPresentation;
+    /** Required localized toggle label for compact presentation. */
+    overviewLabel?: string;
+    /** Vertical-only content slot. Products keep drafts outside this unmounted step content. */
+    renderStepContent?: (id: string) => ReactNode;
     renderMark?: (status: StepStatus, position: number) => ReactNode;
-    /**
-     * Return to a step before the cursor (2026-10-18, spint compose). Only those steps become buttons; the cursor and
-     * later steps stay static in default linear mode. Free reading mode makes every step selectable.
-     * Omit the handler while the flow is locked.
-     */
+    /** Backward-only in linear forms; free reading permits any step. Omit while locked. */
     onStepPress?: (id: string) => void;
-    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLOListElement>>;
 //# sourceMappingURL=steps.d.ts.map

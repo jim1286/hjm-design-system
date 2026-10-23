@@ -1,3 +1,4 @@
+"use client";
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { TableSortButton } from "./table-sort-button.js";
 import { dataTableColumnDefaults, dataTableDefaults, dataTableFamilyRecipe, dataTableFirstSortDirection, getNextDataTableSortState, resolveDataTableBody, resolveDataTableHeaderBands, splitPinnedDataTableColumns, resolveDataTableSelectAllState, validateDataTableColumns, validateDataTableRows, validateDataTableSortState, } from "@hjmds/design-contracts/components/data-table";

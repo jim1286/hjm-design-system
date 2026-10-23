@@ -33,11 +33,12 @@ it("exposes one checked filter and keyboard entry, and Space selects through its
   } finally { act(() => tree?.unmount()); }
 });
 
-it.each(["pills", "connected"] as const)("uses the product primary contrast pair for %s brand selection without changing radio state", presentation => {
+it.each(["light", "dark"] as const)("defaults to the product primary contrast pair in %s without changing radio state", theme => {
+ for (const presentation of ["pills", "connected"] as const) {
   let tree!: ReactTestRenderer;
   try {
-    act(() => { tree = create(<HjmNativeProvider theme="light" brandPalette={{light:{primary:'#0B8045',onPrimary:'#FFFFFF'}}}>
-      <SegmentedControl label="View" presentation={presentation} selectionTone="brand" defaultValue="journey"
+    act(() => { tree = create(<HjmNativeProvider theme={theme} brandPalette={{[theme]:{primary:'#0B8045',onPrimary:'#FFFFFF'}}}>
+      <SegmentedControl label="View" presentation={presentation} defaultValue="journey"
         items={[{value:'letter',label:'Letter'},{value:'journey',label:'Journey log'}]} />
     </HjmNativeProvider>); });
     const styles = tree.root.findAll(node => node.props.style)
@@ -46,5 +47,13 @@ it.each(["pills", "connected"] as const)("uses the product primary contrast pair
     expect(styles.some(style => style.color === '#FFFFFF')).toBe(true);
     const options = tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === 'radio');
     expect(options.map(node => node.props['aria-checked'])).toEqual([false,true]);
+    act(() => tree.update(<HjmNativeProvider theme={theme}>
+      <SegmentedControl label="View" presentation={presentation} selectionTone="neutral" defaultValue="journey"
+        items={[{value:'letter',label:'Letter'},{value:'journey',label:'Journey log'}]} />
+    </HjmNativeProvider>));
+    const neutralStyles = tree.root.findAll(node => node.props.style)
+      .map(node => StyleSheet.flatten(typeof node.props.style === 'function' ? node.props.style({pressed:false}) : node.props.style));
+    expect(neutralStyles.some(style => style.backgroundColor === (theme === 'light' ? '#f0f1f3' : '#30343b'))).toBe(true);
   } finally { act(() => tree?.unmount()); }
+ }
 });

@@ -107,11 +107,11 @@ Ant의 원시 색상이나 낮은 테두리 대비까지 복제하지 않고, HJ
 
 휠의 하늘색과 카테고리 선택색을 비교한 뒤 사용자가 기본 테마의 뉴트럴 안을 승인했다.
 `surfaceSelected`는 light `#f0f1f3`, dark `#30343b`이고 `semanticColors.selection`이 배경·글자·테두리를 묶는다.
-TimePicker, Chip(그룹의 chips 표현 포함)과 기본 neutral SegmentedControl이 같은 선택 배경을 쓴다.
+TimePicker, Chip(그룹의 chips 표현 포함)과 `selectionTone="neutral"` SegmentedControl이 같은 선택 배경을 쓴다.
 글자는 기존 `text`, Chip 테두리는 `borderControl`을 쓰며 체크·선택 테두리·포커스 표시를 보존한다.
 이 결정은 위 2026-09-29 기록의 해당 선택 배경을 대체하며 입력 필드 배경은 바꾸지 않는다.
 `surfaceAccent`는 브랜드 보조 배경, `primary`는 주요 동작으로 유지한다.
-명시적인 `selectionTone="brand"`와 solid 탭은 기존 브랜드 강조를 유지한다.
+SegmentedControl의 `selectionTone="brand"`와 solid 탭은 브랜드 강조를 쓴다. 같은 날 후속 시각 비교에서 사용자가 강조를 기본으로 선택했으므로 SegmentedControl은 `brand`가 기본이며 `neutral`은 옵션이다(Web·Native 개발 소스, 미게시). 다른 컴포넌트의 중립 선택 역할은 유지한다.
 제품은 `brandPalette`의 `surfaceSelected`로 선택 배경을 지정할 수 있다. 기존 팔레트 대비 검사에 `text`/`surfaceSelected` 4.5:1 쌍을 포함한다.
 
 ## 선택 상태 색상 기준 (2026-10-23)
@@ -124,7 +124,7 @@ TimePicker, Chip(그룹의 chips 표현 포함)과 기본 neutral SegmentedContr
 | --- | --- | --- |
 | 지속되는 일반 선택 면 | `selection.background`/`selection.content`, 경계가 필요하면 `selection.border` | Chip·칩 그룹, neutral SegmentedControl, TimePicker, filled Tabs, capsule BottomNavigation, ReactionPicker, ToggleGroup, selected Button·IconButton, 선택 Card·ListRow·Select·Combobox·Menu·Tree·TransferList·DataTable 행 |
 | 현재 조작 위치 | 기존 focus/hover/pressed 역할. 확정 선택과 합치지 않음 | CommandPalette·Mentions·TagsInput 제안의 active descendant, Select·Combobox의 active 항목, 포커스 링 |
-| 명시적인 진한 브랜드 면 | `primary`/`onPrimary` | `Tabs indicator="solid"`, `SegmentedControl selectionTone="brand"`, `BottomNavigation selection="tile"`, prominent destination |
+| 진한 브랜드 면 | `primary`/`onPrimary` | `Tabs indicator="solid"`, `SegmentedControl` 기본 `selectionTone="brand"`, `BottomNavigation selection="tile"`, prominent destination |
 | 작은 값 표시·현재 위치 표시 | 기존 전용 체크·점·밑줄·테두리 계약 | Checkbox·Radio의 glyph, Switch on, Calendar 날짜 원, underline/text Tabs, 일반 BottomNavigation 아이콘·글자, Pagination·Steps·Anchor·Carousel 위치 표시, 읽기 전용 반응 요약 |
 | 브랜드·장식·업무 강조 | 기존 브랜드/상태 역할 | ChatMessage outgoing, 폴더 그림, liquid toast, 표의 `highlighted` 업무 강조, 브랜드 Surface/Badge, 오류·성공 등 상태 |
 | 미디어 위 선택 증거 | 읽을 수 있는 전용 링·스크림 유지 | ImageChoice·MediaSelection. 회색 면으로 사진을 덮지 않음 |

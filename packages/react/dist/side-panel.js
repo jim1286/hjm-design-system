@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { canDismissSidePanel, sidePanelBehaviorDefaults, sidePanelRecipe, } from "@hjmds/design-contracts/components/side-panel";
 import { forwardRef, useEffect, useId, useRef, } from "react";

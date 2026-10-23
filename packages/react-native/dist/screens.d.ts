@@ -1,5 +1,6 @@
 import type { ComponentRef } from "react";
 import { type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
+import { type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { type MessageMenuAction } from "./internal/message-reactions.js";
@@ -8,15 +9,21 @@ export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-alb
 export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
-import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
+import { ScrollView, type RefreshControlProps, type TextInput, type ScrollViewProps } from "react-native";
 import { type ScreenExit } from "./internal/screen-exit.js";
-import { type MessageAttachmentDescriptor, type ChatReactionSummary, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { type MessageAttachmentDescriptor, type CompositionStateHeight, type ChatReactionSummary, type ScreenHostEdge, type ScreenHostSurface, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { type ListRowProps } from "./data-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
 type ScreenLayoutPrivateProps = Readonly<{
     hjmBodyInlinePadding?: number;
 }>;
+export type ScreenRefreshControlProps = Omit<RefreshControlProps, "refreshing" | "onRefresh" | "tintColor" | "colors" | "progressBackgroundColor" | "progressViewOffset">;
+/**
+ * The enclosing ScreenLayout's pull to refresh for a `scroll="content"` list: `<FlatList refreshControl={<ScreenRefreshControl />} />`.
+ * State, colors and the product indicator come from that ScreenLayout's `onRefresh`/`refreshing`/`loadingIndicator`.
+ */
+export declare function ScreenRefreshControl(props: ScreenRefreshControlProps): import("react").JSX.Element;
 export type ScreenLayoutProps = Readonly<{
     title: string;
     /** The shared header owns badge placement; the product supplies its meaning and label. */
@@ -92,9 +99,41 @@ export type ScreenLayoutProps = Readonly<{
      * Bottom sheets disable automatic focus for this screen and all nested inputs, regardless of this prop.
      */
     initialFocus?: ScreenInitialFocus;
+    /**
+     * Pull to refresh, owned by the screen (2026-10-23: spint Home/Notifications/Cell hid the system spinner with
+     * `tintColor="transparent"` and drew FlowerSpinner in a list header by hand). `scroll="screen"` attaches the control
+     * to the body; a `scroll="content"` list passes `<ScreenRefreshControl />` as its `refreshControl`. With
+     * `loadingIndicator` the system spinner is transparent and that product visual shows below the body top while
+     * `refreshing`; without it the system spinner uses `screenPatternRecipe.refresh`. Bind only the user's pull: a
+     * background refetch should not set `refreshing`. Requires `refreshLabel`; not with `pullToDismiss` or
+     * `scrollProps.refreshControl`.
+     */
+    onRefresh?: () => void;
+    /** The product's pull-refresh request is running (default false). */
+    refreshing?: boolean;
+    /** Spoken name of the refresh in progress, in the product language (e.g. "새 글을 불러오는 중"). */
+    refreshLabel?: string;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, onRefresh, refreshing, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export type { ScreenHostEdge, ScreenHostSurface } from "@hjmds/design-contracts/screen-patterns";
+export type ScreenHostProps = Readonly<{
+    children?: ReactNode;
+    /**
+     * Window edges padded by HjmNativeProvider `safeAreaInsets` (default top, right, left). Leave `bottom` to the
+     * screen's `safeAreaBottom`, which pads the last region max(gutter, inset) once; add it only around content that
+     * has no ScreenLayout/footer of its own.
+     */
+    edges?: readonly ScreenHostEdge[];
+    /** `default` paints the theme canvas behind the insets and beside the reading column; `transparent` keeps an outer wallpaper. */
+    surface?: ScreenHostSurface;
+    testID?: string;
+}>;
+/**
+ * The outer host of routes (around a navigator or one screen): the full window, painted with the canvas, padded by
+ * the provider's window insets for `edges`. Replaces product `SafeAreaView` + `colors.bg` wrappers (2026-10-23).
+ */
+export declare function ScreenHost({ children, edges, surface, testID }: ScreenHostProps): import("react").JSX.Element;
 /**
  * Styles for a product scroller that owns the body with `scroll="content"` (FlatList, SectionList): `style` reaches
  * across the ScreenLayout body gutter and `contentContainerStyle` pads it back, so items stay on the gutter while the
@@ -131,8 +170,10 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
     statusLabel: string;
     timestamp: string;
     description?: string;
+    /** Localized name of the unread dot. When given, an unread item draws the dot after the status·time line. */
+    unreadLabel?: string;
 }>;
-export declare function NotificationItem({ read, statusLabel, timestamp, description, ...props }: NotificationItemProps): import("react").JSX.Element;
+export declare function NotificationItem({ read, statusLabel, timestamp, description, unreadLabel, ...props }: NotificationItemProps): import("react").JSX.Element;
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
     composer: ReactNode;
     /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
@@ -269,11 +310,17 @@ export type CompositionLayoutProps = Readonly<{
     footerAside?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
+    /**
+     * Room the loading/empty/error/restricted replacement keeps in place so it centers without a parent height
+     * (`screenPatternRecipe.compositionState`: compact 96 · regular 160 · large 220; `fit` = its own height).
+     * Ready content is not affected.
+     */
+    stateHeight?: CompositionStateHeight;
     /** Brand visual only; the shared state group owns copy, centering and announcement. */
     loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;
@@ -316,10 +363,17 @@ export type IconTileProps = Readonly<{
     /** Native secondary gesture; the product supplies its preview/menu without recreating the press host. */
     onLongPress?: () => void;
     disabled?: boolean;
+    /** Pressable but dimmed (iconTileRecipe.locked) so `onActivate` can explain why. Requires `onActivate` and `lockedLabel`. */
+    locked?: boolean;
+    /** Localized lock reason appended to the accessible name ("Weather, sign-in required"). */
+    lockedLabel?: string;
+    /** Corner mark (lock, clock, count) on the icon frame, overhanging by iconTileRecipe.accessory.offset. */
+    accessory?: ReactNode;
+    accessoryPlacement?: CornerAccessoryPlacement;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
-export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, activationHint, onLongPress, disabled, layoutStyle }: IconTileProps): import("react").JSX.Element;
+export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, activationHint, onLongPress, disabled, locked, lockedLabel, accessory, accessoryPlacement, layoutStyle }: IconTileProps): import("react").JSX.Element;
 export type TypingIndicatorProps = Readonly<{
     /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
     label: string;

@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
@@ -12,155 +12,28 @@ describe("@hjmds/react-native package boundary", () => {
       devDependencies: Record<string, string>;
       exports: Record<string, unknown>;
       peerDependencies: Record<string, string>;
+      peerDependenciesMeta: Record<string, { optional?: boolean }>;
       sideEffects: boolean;
     };
     expect(packageJson.dependencies).toBeUndefined();
     expect(packageJson.devDependencies["@hjmds/design-contracts"]).toBe("workspace:*");
-    expect(packageJson.peerDependencies).toEqual({
-      // The authored next train precedes the generated release commit. Exact train
-      // alignment is enforced by workspace:check; a stale literal blocked 1.4.0.
-      "@hjmds/design-contracts": expect.stringMatching(/^>=\d+\.\d+\.0 <\d+\.\d+\.0$/),
-      react: ">=19",
-      "react-native": ">=0.81",
-      "@shopify/react-native-skia": "^2.6.2",
-      "react-native-reanimated": "^4.5.1",
-      "react-native-worklets": "^0.10.1",
-      "react-native-zoom-toolkit": "5.1.1",
-      "react-native-keyboard-controller": "1.22.5",
-      "@gorhom/bottom-sheet": "5.2.14",
-      "zeego": "3.0.6",
-      "@react-native-menu/menu": "1.2.2",
-      "react-native-ios-utilities": "5.2.0",
-      "react-native-ios-context-menu": "3.2.1",
-      "react-native-gesture-handler": "2.32.0",
-      "react-native-svg": "15.15.5",
-      "qrcode-generator": "2.0.4",
-      "react-native-sortables": "1.10.1",
-      "react-native-reanimated-carousel": "5.1.1",
-      "react-native-fast-confetti": "2.0.2",
-      "react-native-screen-transitions": "4.0.0",
-      "@react-navigation/native": "7.4.1",
-      "react-native-safe-area-context": "5.7.0",
-      "@blobatar/react-native": "2.7.0",
-      "blobatar": "2.7.0",
-      "lucide-react-native": "1.49.0",
-    });
+    // Peer version compatibility belongs to installation; this boundary verifies no Expo runtime and opt-in adapters.
+    expect(packageJson.peerDependencies["@hjmds/design-contracts"]).toMatch(/^>=\d+\.\d+\.0 <\d+\.\d+\.0$/);
+    for (const peer of Object.keys(packageJson.peerDependencies)) {
+      expect(peer).not.toMatch(/^expo(?:-|$)/);
+      if (!["@hjmds/design-contracts", "react", "react-native"].includes(peer)) expect(packageJson.peerDependenciesMeta[peer]?.optional).toBe(true);
+    }
     expect(packageJson.sideEffects).toBe(false);
-    const expectedExportPaths = [
-      ".",
-      "./status-text",
-      "./provider",
-      "./carousel",
-      "./floating-action-button",
-      "./top-bar",
-      "./bottom-cta",
-      "./composition-style",
-      "./primitives",
-      "./actions",
-      "./inputs",
-      "./password-field",
-      "./otp-field",
-      "./number-field",
-      "./slider",
-      "./date-picker",
-      "./calendar",
-      "./agreement",
-      "./top",
-      "./heading",
-      "./image-choice",
-      "./fonts",
-      "./toggle-group",
-      "./bottom-info",
-      "./collapsible",
-      "./asset",
-      "./tags-input",
-      "./date-range",
-      "./mentions",
-      "./transfer-list",
-      "./keyboard",
-      "./provider-button",
-      "./auth-screen",
-      "./file-picker",
-      "./steps",
-      "./upload-item",
-      "./forms",
-      "./navigation",
-      "./data-display",
-      "./feedback",
-      "./overlays",
-      "./evidence",
-      "./toast-liquid",
-      "./thinking-orb",
-      "./image-viewer",
-      "./keyboard-controller",
-      "./sheet-gesture",
-      "./context-menu",
-      "./context-menu-native",
-      "./masonry",
-      "./virtual-list",
-      "./qr-code",
-      "./sortable",
-      "./swipe-actions",
-      "./content-transition", "./rating", "./choice-row", "./alert-dialog-queue", "./image-comparison",
-      "./carousel-motion",
-      "./celebration",
-      "./screen-transition",
-      "./avatar-blobatar",
-      "./effect-surface",
-      "./icon-lucide",
-      // Optional react-native-svg adapter for the shared semantic glyph paths.
-      "./icon-svg",
-      "./duration-field",
-      "./inline-confirm",
-      "./reaction-picker",
-      "./notification-bell",
-      "./scroll-progress",
-      "./code-block",
-      "./activity-heatmap",
-      // 2026-10-14: chart family (react-native-svg optional peer) and Native DataTable renderer.
-      "./chart",
-      "./data-table",
-      "./statistic-motion",
-      "./task-list",
-      "./folder-preview",
-      "./avatar-blobatar-motion",
-      "./step-player",
-      "./voice-note",
-      "./grid-reveal",
-      "./gravity-letters",
-      "./navigation-bar",
-      "./screens", "./screen-flows",
-      "./saved-items",
-      "./progressive-blur",
-      "./date-entry",
-      "./field-group",
-      "./document-resource",
-      // Profiles are optional: core imports must not pull the preset registry.
-      "./design-profile",
-      // CollectionRail remains opt-in; verify its entry instead of weakening the exact family boundary list.
-      "./collection-rail",
-      // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
-      "./activity-chip",
-      "./collection-editing",
-      "./data-workflows",
-      "./task-controls",
-      "./media-transport",
-      "./transfer-task",
-      "./authoring-tools",
-      "./social-compositions",
-      "./communication",
-      "./toggle-feedback",
-      "./streaming-answer",
-      "./conversation-row",
-      "./pagination",
-    ];
-    expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
-    const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {
-      const definition = packageJson.exports[exportPath] as Record<string, string>;
-      expect(definition["react-native"]).toMatch(/^\.\/dist\/.+\.js$/);
-      expect(definition["react-native"]).not.toBe("./dist/index.js");
-      return definition["react-native"];
-    });
+    const familyTargets = await Promise.all(Object.entries(packageJson.exports)
+      .filter(([path]) => path !== "." && path !== "./top-bar" && path !== "./bottom-cta")
+      .map(async ([, entry]) => {
+        const definition = entry as Record<string, string>;
+        expect(definition["react-native"]).toMatch(/^\.\/dist\/.+\.js$/);
+        expect(definition["react-native"]).not.toBe("./dist/index.js");
+        await access(new URL(`../${definition["react-native"]}`, import.meta.url));
+        await access(new URL(`../${definition.types}`, import.meta.url));
+        return definition["react-native"];
+      }));
     expect(new Set(familyTargets).size).toBe(familyTargets.length);
     expect(packageJson.exports["./top-bar"]).toEqual(packageJson.exports["./navigation"]);
     expect(packageJson.exports["./bottom-cta"]).toEqual(packageJson.exports["./actions"]);

@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type PieVisibilitySummary, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 type FocusProps = Readonly<{
     focusIndex?: number | null;
     defaultFocusIndex?: number | null;
@@ -65,7 +65,7 @@ export type ChartLegendItem = Readonly<{
     color: string;
     value?: string;
 }>;
-export declare function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly<{
+export type ChartLegendProps = Readonly<{
     items: readonly ChartLegendItem[];
     exclusion?: Readonly<{
         excludedIds: readonly string[];
@@ -74,7 +74,10 @@ export declare function ChartLegend({ items, selectedId, onSelect, exclusion }: 
     }>;
     selectedId?: string | null;
     onSelect?: (id: string | null) => void;
-}>): import("react").JSX.Element;
+    /** `stack` (default): one row per series. `inline`: entries flow on a line and wrap (chartRecipe.legend.layouts). */
+    layout?: ChartLegendLayout;
+}>;
+export declare function ChartLegend({ items, selectedId, onSelect, exclusion, layout }: ChartLegendProps): import("react").JSX.Element;
 export type PieDatum = Readonly<{
     id: string;
     label: string;

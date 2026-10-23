@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from '@hjmds/design-contracts/foundations';
 import { mergeTextAnnotationFragments, resolveTextAnnotationGeometry } from '@hjmds/design-contracts/text-annotation';

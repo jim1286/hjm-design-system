@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { menubarRecipe, resolveMenubarNavigation, validateMenubarDescriptor, } from "@hjmds/design-contracts/components/menubar";

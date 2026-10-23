@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { emptyDateRange, isCompleteDateRange, resolveDateRangeCellState, resolveDateRangeSelection, validateDateRange, } from "@hjmds/design-contracts/components/date-range";
 import { useState } from "react";

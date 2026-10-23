@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { skipNavRecipe, validateSkipNavDescriptor, } from "@hjmds/design-contracts/components/skip-nav";
 import { forwardRef, useEffect, useRef } from "react";

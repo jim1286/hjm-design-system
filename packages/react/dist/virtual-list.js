@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { resolveVirtualWindow, validateListKeys } from "@hjmds/design-contracts/components/virtual-list";

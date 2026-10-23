@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveSwipeTabIndicator, resolveTabIndicator, resolveTabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
 import { easing } from "@hjmds/design-contracts/foundations";

@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useId, useRef } from "react";
 import { resolveRating } from "@hjmds/design-contracts/reference-controls";

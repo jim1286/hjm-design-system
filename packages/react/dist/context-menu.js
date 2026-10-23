@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { resolveContextMenuAnchor, } from "@hjmds/design-contracts/components/context-menu";

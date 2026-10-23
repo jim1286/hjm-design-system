@@ -1,6 +1,7 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { buttonRecipe, resolveButtonDepth, } from "@hjmds/design-contracts/recipes/base";
-import { iconButtonRecipe, linkRecipe, } from "@hjmds/design-contracts/recipes";
+import { iconButtonRecipe, linkRecipe, validateIconButtonElevation, } from "@hjmds/design-contracts/recipes";
 import { Children, useContext, forwardRef, } from "react";
 import { DesignProfileContext, classNames } from "./internal.js";
 // Both semantic hosts use the same recipe and product profile; navigation must not
@@ -80,7 +81,8 @@ export const ButtonLink = forwardRef(function ButtonLink({ href, disabled = fals
     };
     return renderAnchor ? renderAnchor(anchorProps) : _jsx("a", { ...anchorProps });
 });
-export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, hitSlop, shape = iconButtonRecipe.defaults.shape, selected, loading = false, edge, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, hitSlop, shape = iconButtonRecipe.defaults.shape, selected, loading = false, edge, elevation = iconButtonRecipe.elevation.default, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
+    validateIconButtonElevation(elevation, tone);
     // Preserve a focusable disabled action (e.g. a Carousel boundary).
     const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
     const unavailable = disabled === true || loading || ariaDisabled;
@@ -92,7 +94,42 @@ export const IconButton = forwardRef(function IconButton({ label, tone = iconBut
         }
         onClick?.(event);
     };
-    return (_jsx("button", { ...props, style: { ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-edge": edge, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": unavailable || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
+    return (_jsx("button", { ...props, style: { ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-edge": edge, "data-elevation": elevation === "none" ? undefined : elevation, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": unavailable || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
+});
+export const IconButtonLink = forwardRef(function IconButtonLink({ href, label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, hitSlop, shape = iconButtonRecipe.defaults.shape, edge, current = false, disabled = false, layoutStyle, children, className, style, onClick, onAuxClick, tabIndex, renderAnchor, ...props }, ref) {
+    if (!label.trim())
+        throw new TypeError("IconButtonLink label must not be empty");
+    const unavailable = disabled || props["aria-disabled"] === true || props["aria-disabled"] === "true";
+    const activate = (callback) => (event) => {
+        if (unavailable) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+        callback?.(event);
+    };
+    const anchorProps = {
+        ...props,
+        ref,
+        // Same guard as ButtonLink: an unavailable link gives adapters no href, so no framework can navigate it.
+        href: unavailable ? undefined : href,
+        role: unavailable ? "link" : props.role,
+        "aria-label": label,
+        "aria-current": current ? "page" : undefined,
+        "aria-disabled": unavailable || undefined,
+        tabIndex: unavailable ? -1 : tabIndex,
+        onClick: activate(onClick),
+        onAuxClick: activate(onAuxClick),
+        className: classNames("hjm-icon-button", className),
+        style: { ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle },
+        "data-tone": tone,
+        "data-size": size,
+        "data-shape": shape,
+        "data-edge": edge,
+        "data-state": unavailable ? "disabled" : "idle",
+        children,
+    };
+    return renderAnchor ? renderAnchor(anchorProps) : _jsx("a", { ...anchorProps });
 });
 export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, layoutStyle, ...props }, ref) {
     const handleClick = (event) => {

@@ -1,5 +1,5 @@
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
-import { type DesignSystemDirection, type DesignSystemDensity, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
+import { type ProviderBrandPaletteMode, type DesignSystemDirection, type DesignSystemDensity, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
@@ -36,6 +36,7 @@ export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
 }>;
 /** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
 export type HjmNativeBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
+export type HjmNativeBrandPaletteMode = ProviderBrandPaletteMode;
 type HjmNativeProviderEnvironmentProps = Readonly<{
     value?: never;
     theme?: ThemePreference;
@@ -50,6 +51,12 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
      * reduced-motion settings.
      */
     brandPalette?: HjmNativeBrandPalette;
+    /**
+     * How `brandPalette` meets the nearest ancestor's (default `replace`: only the supplied roles over the HJM
+     * defaults). `extend` merges the supplied roles over the inherited palette per theme, so a nested scope passes
+     * only the roles it changes. No effect without `brandPalette`.
+     */
+    brandPaletteMode?: HjmNativeBrandPaletteMode;
     /** Appearance and interaction defaults defined once by the product. Explicit props win. */
     designProfile?: HjmDesignProfile;
 }>;
@@ -63,6 +70,7 @@ type HjmNativeProviderValueProps = Readonly<{
     minimumVisualTarget?: never;
     density?: never;
     brandPalette?: never;
+    brandPaletteMode?: never;
     designProfile?: never;
 }>;
 /** Window insets in points, usually `useSafeAreaInsets()` from react-native-safe-area-context. */
@@ -93,7 +101,7 @@ export type HjmNativeProviderProps = Readonly<{
      * No Expo/Skia peer enters the core graph. `{}` opts this subtree out. */
     surfaceEffects?: NativeSurfaceEffects;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, brandPaletteMode, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 /** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
 export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;

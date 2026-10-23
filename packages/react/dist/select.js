@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { getCollectionNavigationIntent, getCollectionNavigationTarget, getCollectionTypeaheadMatch, reconcileSelectSelection, resolveCollectionItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";

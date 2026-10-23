@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveVoiceNote } from "@hjmds/design-contracts/voice-note";
 import { Asset } from "./asset.js";

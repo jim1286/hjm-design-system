@@ -88,6 +88,11 @@
    opts out because clipping cuts off its own shadow. */
 .hjm-surface[data-clips="true"] { overflow: hidden; }
 .hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-raised)); }
+/* Surface `elevation` (shadow token steps, 2026-10-23) overrides the tone's shadow; declared after the tone rule. */
+.hjm-surface[data-elevation="none"] { box-shadow: var(--hjm-surface-inset-shadow, none); }
+.hjm-surface[data-elevation="raised"] { box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-raised)); }
+.hjm-surface[data-elevation="floating"] { box-shadow: var(--hjm-shadow-floating); }
+.hjm-surface[data-elevation="overlay"] { box-shadow: var(--hjm-shadow-overlay); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="sunken"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
@@ -268,7 +273,8 @@
 /* Toggle treatment: aria-pressed already carried the state, so without a paired
    visual every consumer painted the selected background in product styles.
    Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
-.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
+/* IconButtonLink `current` (aria-current="page") reuses the selected surface: iconButtonRecipe.states.selected. */
+.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"], .hjm-icon-button[aria-current="page"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
 /* data-state="disabled" also covers focusable boundaries (aria-disabled, e.g. Carousel previous on the first slide),
    which looked enabled while Native dimmed them (2026-10-17 review E9). */
@@ -306,6 +312,8 @@
 }
 .hjm-icon-button {
   position: relative;
+  /* IconButtonLink draws the same frame on an anchor. */
+  text-decoration: none;
   inline-size: var(--hjm-control-button-medium);
   block-size: var(--hjm-control-button-medium);
   min-inline-size: var(--hjm-control-min-touch-target);
@@ -314,6 +322,10 @@
   border-radius: var(--hjm-radius-md);
 }
 .hjm-icon-button[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
+/* IconButton `elevation` (iconButtonRecipe.elevation, 2026-10-23): a floating control's lift from the shadow tokens. */
+.hjm-icon-button[data-elevation="raised"] { box-shadow: var(--hjm-shadow-raised); }
+.hjm-icon-button[data-elevation="floating"] { box-shadow: var(--hjm-shadow-floating); }
+.hjm-icon-button[data-elevation="overlay"] { box-shadow: var(--hjm-shadow-overlay); }
 .hjm-icon-button[data-size="small"] { inline-size: var(--hjm-control-button-small); block-size: var(--hjm-control-button-small); min-inline-size: 0; min-block-size: 0; }
 .hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-button-hit-slop, var(--hjm-space-xxs))); }
 .hjm-icon-button[data-size="large"] { inline-size: var(--hjm-control-button-large); block-size: var(--hjm-control-button-large); }
@@ -334,6 +346,9 @@
    takes the same overhang and the badge keeps the icon's corner (2026-10-17 1.27.2 adoption: Spint's top-bar bell). */
 .hjm-notification-bell:is([data-edge="start"], [data-edge="both"]) { margin-inline-start: calc(-1 * var(--hjm-icon-button-edge-small)); }
 .hjm-notification-bell:is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-small)); }
+/* Count badge (iconButtonRecipe.badge / resolveIconButtonBadgeOffset, 2026-10-23 web check): on the button's end edge,
+   raised above the glyph slot so only the floating ring overlaps the glyph. The bell is always the small IconButton. */
+.hjm-notification-bell__badge { position: absolute; inset-inline-end: var(--hjm-icon-button-badge-inline-end-small); inset-block-start: var(--hjm-icon-button-badge-block-start-small); display: flex; pointer-events: none; }
 .hjm-link { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; min-inline-size: 0; overflow-wrap: anywhere; color: var(--hjm-color-content-brand); text-underline-offset: 0.18em; }
 .hjm-link[data-tone="neutral"] { color: var(--hjm-color-text-body); }
 .hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); justify-content: center; text-decoration: none; }
@@ -389,7 +404,7 @@
    the support text fades, so a custom Field control dims without needing a class. A component
    recipe value (Select, NumberField, OtpField, SearchField, PasswordField) arrives as an
    inline --hjm-field-disabled-opacity on the root. */
-.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
+.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__count):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
 /* The editable minimum excludes both resolved borders, keeping the field footprint stable in invalid state. */
 .hjm-field__input {
   inline-size: 100%;
@@ -422,6 +437,14 @@
 .hjm-field__affix { display: inline-flex; align-items: center; color: var(--hjm-color-text-muted); }
 .hjm-field__description, .hjm-choice__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-field__error { color: var(--hjm-color-danger); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+/* characterCountRecipe (2026-10-23): label type, sentence and counter on one row with spacing.sm between, the counter
+   at the end in tabular numbers. short/over switch the row to danger and the counter to semibold, so the error is
+   not carried by color alone. Support text, so it keeps full contrast in the disabled scope like the description. */
+.hjm-field__count { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+.hjm-field__count-message { flex: 1 1 auto; min-inline-size: 0; }
+.hjm-field__counter { flex: 0 0 auto; margin-inline-start: auto; font-variant-numeric: tabular-nums; font-weight: var(--hjm-font-weight-regular); }
+.hjm-field__count[data-invalid] { color: var(--hjm-color-danger); }
+.hjm-field__count[data-invalid] .hjm-field__counter { font-weight: var(--hjm-font-weight-semibold); }
 /* searchFieldRecipe.sizes.* (emitted by theme.ts): medium padding 12 · gap 8 · clear 36 + slop 4, large 52 high ·
    padding 16 · gap 12 · clear 44. Size is applied to the input by TextField; size the control from that public attribute. */
 .hjm-search-field .hjm-field__control { padding-inline: var(--hjm-search-field-padding-medium, var(--hjm-space-sm)); gap: var(--hjm-search-field-gap-medium, var(--hjm-space-xs)); }
@@ -877,6 +900,14 @@
 .hjm-choice[data-presentation="chips"][data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); }
 .hjm-choice[data-presentation="chips"][data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
 .hjm-choice[data-presentation="chips"].hjm-choice--with-action { padding: 0; }
+/* selectionGroupRecipe.overflow (2026-10-23): CheckboxGroup chips on one scrolling line, the same meaning as
+   SegmentedControl overflow="scroll". The scrollport keeps scrollInset (spacing.xxs 4) on every side so the focus ring
+   (2 + offset 2) and the small chip hit slop are not clipped and the last chip ends like the first starts; the
+   negative margin keeps the chips aligned with the column. The items row sits inside the scroller, so the chip row
+   rule above (a direct-child selector) is restated here. */
+.hjm-checkbox-group__scroller { min-inline-size: 0; overflow-x: auto; padding: var(--hjm-space-xxs); margin: calc(-1 * var(--hjm-space-xxs)); }
+.hjm-checkbox-group[data-presentation="chips"][data-overflow="scroll"] .hjm-checkbox-group__items { flex-direction: row; flex-wrap: nowrap; gap: var(--hjm-space-xs); inline-size: max-content; }
+.hjm-checkbox-group[data-presentation="chips"][data-overflow="scroll"] .hjm-choice { flex-shrink: 0; }
 .hjm-choice[data-presentation="chips"] > .hjm-choice__target { padding-block: 0; }
 .hjm-choice[data-presentation="chips"] .hjm-choice__indicator { display: none; }
 .hjm-choice[data-presentation="chips"] .hjm-choice__leading { color: inherit; }
@@ -980,6 +1011,9 @@
 .hjm-badge[data-variant="outline"][data-tone="warning"] { background: transparent; color: var(--hjm-accent-warning); border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
 .hjm-badge[data-tone="attention"] { background: var(--hjm-accent-fill-attention); }
 .hjm-badge[data-variant="outline"][data-tone="attention"] { background: transparent; color: var(--hjm-accent-attention); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
+/* Product classification color (Badge categoryColor): the renderer resolves fill, ink and stroke per theme and checks AA. */
+.hjm-badge[data-tone="category"] { color: var(--hjm-badge-category-content); background: var(--hjm-badge-category-background); }
+.hjm-badge[data-variant="outline"][data-tone="category"] { background: transparent; border-color: var(--hjm-badge-category-border); }
 .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: color-mix(in srgb, var(--hjm-accent-info) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
 .hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
 .hjm-tag[data-tone="attention"] { color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
@@ -1057,10 +1091,17 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    baseline 2–2.5px above the row center (2026-10-17 measured audit); a flex
    box centers any trailing node like Native's row-centered View. */
 .hjm-list-row__trailing { display: flex; align-items: center; }
+/* Disclosure mark (listRowRecipe.accessories): decorative content.decorative chevron after any trailing value, inside the
+   row command. The row gap applies before it; a preceding trailing value pulls it to the tighter accessory gap. */
+.hjm-list-row__accessory { flex: 0 0 auto; display: flex; align-items: center; color: var(--hjm-color-text-weak); }
+.hjm-list-row__accessory .hjm-icon { color: inherit; }
+.hjm-list-row__trailing + .hjm-list-row__accessory { margin-inline-start: calc(var(--hjm-list-row-accessory-gap) - var(--hjm-list-row-gap)); }
 /* `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
    the avatar box in product styles. */
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
 .hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
+/* ChoiceRow sheet item picture: the row leading box (choiceRowRecipe.itemLeading), empty for items without one. */
+.hjm-choice-row__item-leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-choice-row-item-leading-size); block-size: var(--hjm-choice-row-item-leading-size); overflow: hidden; }
 /* Photo source peers share ListRow geometry; only their decorative brand plate is specialized. */
 .hjm-photo-source__icon { display: grid; place-items: center; inline-size: 100%; block-size: 100%; border-radius: var(--hjm-radius-md); }
 .hjm-photo-source__icon svg { inline-size: 24px; block-size: 24px; }
@@ -1508,7 +1549,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-size: var(--hjm-type-label-size);
   line-height: var(--hjm-type-label-line-height);
 }
-.hjm-chart-legend[data-interactive] { flex-direction: column; flex-wrap: nowrap; }
+/* chartRecipe.legend.layouts: stack = one row per series; inline = entries flow and wrap (base rule above). */
+.hjm-chart-legend[data-layout="stack"] { flex-direction: column; flex-wrap: nowrap; }
 .hjm-chart-legend__item, .hjm-chart-legend__button { display: flex; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-chart-legend__item[data-dimmed] { opacity: 0.5; }
 .hjm-chart-legend__button {
@@ -1527,7 +1569,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chart-legend__button[aria-pressed="true"] { background: var(--hjm-color-surface); }
 .hjm-chart-legend__button:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-chart-legend__swatch { flex: none; inline-size: 10px; block-size: 10px; border-radius: 3px; }
-.hjm-chart-legend[data-interactive] .hjm-chart-legend__label { flex: 1; }
+.hjm-chart-legend[data-layout="stack"] .hjm-chart-legend__label { flex: 1; }
+.hjm-chart-legend[data-layout="inline"] .hjm-chart-legend__button { flex: none; }
 .hjm-chart-legend__value { font-weight: var(--hjm-text-emphasis-medium); font-variant-numeric: tabular-nums; }
 
 /* Mentions ---------------------------------------------------------------- */
@@ -2119,6 +2162,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-weight: var(--hjm-top-title-weight);
   overflow-wrap: anywhere;
 }
+.hjm-top__title[data-line-breaks="preserve"] { white-space: pre-line; }
 .hjm-top__trailing { display: flex; flex: 0 0 auto; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-top__description {
   margin: var(--hjm-space-xs) 0 0;
@@ -2798,6 +2842,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Baseline sharing put the smaller caption 1.5px under the label's center; center it on the label's first line instead. */
 .hjm-timeline__timestamp { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-timeline__description { color: var(--hjm-color-text-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Selectable record (timelineRecipe.item.selected): the neutral persistent-selection surface + ring shared with ListRow.
+   Selection outranks passive emphasis; the focus ring stays the shared focus role. */
+.hjm-timeline[data-selectable] .hjm-timeline__item { cursor: pointer; }
+.hjm-timeline__item[aria-selected="true"] { background: var(--hjm-color-surface-selected); box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
+.hjm-timeline__item[role="option"]:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-accordion { border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-accordion__item { border-block-end: 1px solid var(--hjm-color-border); }
 .hjm-accordion__header { margin: 0; }
@@ -2824,28 +2873,44 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-accordion__indicator { flex: 0 0 auto; color: var(--hjm-color-text-muted); }
 .hjm-accordion__panel { padding: 0 var(--hjm-space-xs) var(--hjm-space-md); color: var(--hjm-color-text-body); overflow-wrap: anywhere; }
 .hjm-avatar {
+  /* Diameter from avatarRecipe.sizes via --hjm-avatar-size (set inline by Avatar). The frame no longer clips
+     the root so a corner accessory can sit on the edge; the image and fallback clip to the shape themselves. */
+  position: relative;
+  box-sizing: border-box;
   display: inline-grid;
+  flex: 0 0 auto;
   place-items: center;
-  inline-size: 2.5rem;
-  block-size: 2.5rem;
-  overflow: hidden;
+  inline-size: var(--hjm-avatar-size, 2.5rem);
+  block-size: var(--hjm-avatar-size, 2.5rem);
   border: 1px solid var(--hjm-color-border);
   border-radius: 50%;
   color: var(--hjm-color-text-muted);
   background: var(--hjm-color-bg);
   font-weight: var(--hjm-text-emphasis-strong);
 }
-.hjm-avatar[data-size="small"] { inline-size: 2rem; block-size: 2rem; font-size: var(--hjm-type-label-size); }
-.hjm-avatar[data-size="large"] { inline-size: 3rem; block-size: 3rem; }
-.hjm-avatar[data-size="xlarge"] { inline-size: 4rem; block-size: 4rem; font-size: var(--hjm-type-title-size); }
+.hjm-avatar[data-size="xxsmall"], .hjm-avatar[data-size="xsmall"], .hjm-avatar[data-size="small"] { font-size: var(--hjm-type-label-size); }
+.hjm-avatar[data-size="xlarge"] { font-size: var(--hjm-type-title-size); }
 .hjm-avatar[data-shape="rounded"] { border-radius: var(--hjm-radius-md); }
-.hjm-avatar__image { inline-size: 100%; block-size: 100%; object-fit: cover; }
-.hjm-avatar__fallback { display: grid; place-items: center; inline-size: 100%; block-size: 100%; }
+/* avatarRecipe.frames: surface drops the border, none drops border and background. */
+.hjm-avatar[data-frame="surface"] { border-width: 0; }
+.hjm-avatar[data-frame="none"] { border-width: 0; background: transparent; }
+.hjm-avatar__image { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; border-radius: inherit; }
+.hjm-avatar__fallback { display: grid; place-items: center; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: inherit; }
+/* avatarRecipe.accessory.offset (outward overhang, 0): the mark sits on the avatar's box corner so the row layout does not move. */
+.hjm-avatar__accessory { position: absolute; inset-inline-end: var(--hjm-avatar-accessory-inset, 0px); display: inline-flex; line-height: 0; }
+.hjm-avatar__accessory[data-placement="bottom-end"] { inset-block-end: var(--hjm-avatar-accessory-inset, 0px); }
+.hjm-avatar__accessory[data-placement="top-end"] { inset-block-start: var(--hjm-avatar-accessory-inset, 0px); }
 .hjm-divider { flex: 0 0 auto; margin: 0; border: 0; background: var(--hjm-color-border); }
 .hjm-divider[data-orientation="horizontal"] { inline-size: 100%; block-size: 1px; }
 .hjm-divider[data-orientation="vertical"] { align-self: stretch; inline-size: 1px; min-block-size: var(--hjm-control-min-touch-target); }
 .hjm-divider[data-orientation="horizontal"][data-inset="start"] { margin-inline-start: var(--hjm-space-md); inline-size: calc(100% - var(--hjm-space-md)); }
 .hjm-divider[data-orientation="horizontal"][data-inset="both"] { margin-inline: var(--hjm-space-md); inline-size: calc(100% - (2 * var(--hjm-space-md))); }
+/* lineStyle="dashed" (dividerRecipe.lineStyles.dashed): exact dash/gap from the recipe instead of the browser's own
+   dashed border, so Web and Native draw the same 4/4 rhythm starting with a dash at the line's start edge. */
+.hjm-divider[data-line-style="dashed"] { --hjm-divider-pattern: var(--hjm-color-border) 0 var(--hjm-divider-dash), transparent var(--hjm-divider-dash) calc(var(--hjm-divider-dash) + var(--hjm-divider-gap)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="horizontal"] { background: repeating-linear-gradient(to right, var(--hjm-divider-pattern)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="horizontal"]:dir(rtl) { background: repeating-linear-gradient(to left, var(--hjm-divider-pattern)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="vertical"] { background: repeating-linear-gradient(to bottom, var(--hjm-divider-pattern)); }
 .hjm-description-list { display: grid; grid-template-columns: repeat(var(--hjm-description-columns), minmax(0, 1fr)); gap: var(--hjm-space-sm); margin: 0; }
 .hjm-description-list__item { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-description-list__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
@@ -2899,28 +2964,48 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-load-more__spinner { inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 
 /* Expansion renderers --------------------------------------------------- */
-.hjm-steps { display: grid; grid-template-columns: repeat(var(--hjm-steps-connector-count), minmax(0, 1fr)) fit-content(calc(100% / var(--hjm-steps-count))); gap: 0; margin: 0; padding: 0 var(--hjm-steps-inset); list-style: none; }
-.hjm-steps__step { min-inline-size: 0; display: grid; align-content: start; gap: var(--hjm-space-xs); }
-.hjm-steps__rail { display: flex; align-items: center; min-inline-size: 0; }
-.hjm-steps__indicator { flex: 0 0 auto; inline-size: var(--hjm-steps-indicator-size); block-size: var(--hjm-steps-indicator-size); display: grid; place-items: center; border: 1px solid var(--hjm-color-border); border-radius: 50%; color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-steps__connector { flex: 1 1 auto; block-size: 1px; background: var(--hjm-color-border); }
-.hjm-steps__step[data-status="current"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-content-brand); color: var(--hjm-color-content-brand); }
-.hjm-steps__step[data-status="complete"] .hjm-steps__indicator { border-color: var(--hjm-accent-success); color: var(--hjm-accent-success); background: var(--hjm-color-bg); }
-.hjm-steps__step[data-status="complete"] .hjm-steps__connector { background: var(--hjm-color-content-brand); }
-/* The terminal incoming segment continues the previous rail across its copy width. */
-.hjm-steps__connector[data-reached="true"] { background: var(--hjm-color-content-brand); }
-.hjm-steps__step[data-status="error"] .hjm-steps__indicator { border: 2px solid var(--hjm-color-danger); color: var(--hjm-color-danger); background: var(--hjm-color-danger-fill); }
-.hjm-steps__copy { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-inline-end: var(--hjm-space-sm); }
-.hjm-steps__label { color: var(--hjm-color-text); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
-.hjm-steps__step[data-status="pending"] .hjm-steps__label { color: var(--hjm-color-text-muted); }
-.hjm-steps__step[data-status="error"] .hjm-steps__label { color: var(--hjm-color-danger); }
-/* Keep the terminal marker at the inline edge instead of an empty trailing step cell. */
-.hjm-steps__step:last-child .hjm-steps__rail { justify-content: flex-end; }
-.hjm-steps__step:last-child .hjm-steps__copy { padding-inline-end: 0; text-align: end; }
-.hjm-steps__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); overflow-wrap: anywhere; }
-/* A step before the cursor is one button over marker and label (Steps onStepPress); the cell keeps its static layout. */
-.hjm-steps__press { display: grid; align-content: start; gap: var(--hjm-space-xs); min-inline-size: 0; min-block-size: var(--hjm-steps-press-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
-.hjm-steps__press:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
+/* Focus rail is shared by ordinary Steps and the expandable presentations (2026-10-23 user proposal). */
+.hjm-steps { display:grid; grid-template-columns:repeat(var(--hjm-steps-connector-count),minmax(0,1fr)) fit-content(calc(100% / var(--hjm-steps-count))); gap:0; margin:0; padding:0 var(--hjm-steps-inset); list-style:none; }
+.hjm-steps__step { min-inline-size:0; position:relative; }
+.hjm-steps__item,.hjm-steps__press { display:grid; align-content:start; gap:var(--hjm-space-xs); min-inline-size:0; min-block-size:var(--hjm-steps-press-target); }
+.hjm-steps__rail { display:flex; align-items:center; min-inline-size:0; }
+.hjm-steps__indicator { flex:0 0 auto; inline-size:var(--hjm-steps-indicator-size); block-size:var(--hjm-steps-indicator-size); display:grid; place-items:center; border:1px solid var(--hjm-color-border); border-radius:50%; color:var(--hjm-color-text-muted); background:var(--hjm-color-bg); font-size:var(--hjm-type-label-size); font-weight:var(--hjm-text-emphasis-medium); transition:background-color var(--hjm-steps-duration),color var(--hjm-steps-duration),border-color var(--hjm-steps-duration),transform var(--hjm-motion-fast); }
+.hjm-steps__connector { flex:1 1 auto; block-size:1px; background:var(--hjm-color-border); transition:background-color var(--hjm-steps-duration); }
+.hjm-steps__step[data-status="current"] .hjm-steps__indicator { border-color:var(--hjm-color-text); background:var(--hjm-color-text); color:var(--hjm-color-bg); box-shadow:0 0 0 3px var(--hjm-color-bg),0 0 0 4px var(--hjm-color-border); }
+.hjm-steps__step[data-status="complete"] .hjm-steps__indicator { border-color:var(--hjm-color-border-control); color:var(--hjm-color-text); }
+.hjm-steps__step[data-status="complete"] .hjm-steps__connector,.hjm-steps__connector[data-reached="true"] { background:var(--hjm-color-text); }
+.hjm-steps__step[data-status="error"] .hjm-steps__indicator { border:2px solid var(--hjm-color-danger); color:var(--hjm-color-danger); background:color-mix(in srgb,var(--hjm-color-danger) 12%,var(--hjm-color-bg)); }
+.hjm-steps__copy { min-inline-size:0; display:grid; gap:var(--hjm-space-xxs); padding-inline-end:var(--hjm-space-sm); }
+.hjm-steps__label { color:var(--hjm-color-text); font-size:var(--hjm-type-label-size); line-height:var(--hjm-type-label-line-height); overflow-wrap:anywhere; }
+.hjm-steps__step[data-status="current"] .hjm-steps__label { font-weight:var(--hjm-text-emphasis-medium); }
+.hjm-steps__step[data-status="pending"] .hjm-steps__label { color:var(--hjm-color-text-muted); }
+.hjm-steps__step[data-status="error"] .hjm-steps__label { color:var(--hjm-color-danger); }
+.hjm-steps__step:last-child .hjm-steps__rail { justify-content:flex-end; }
+.hjm-steps__step:last-child .hjm-steps__copy { padding-inline-end:0; text-align:end; }
+.hjm-steps__description,.hjm-steps__status { color:var(--hjm-color-text-muted); font-size:var(--hjm-type-caption-size); overflow-wrap:anywhere; }
+.hjm-steps__press { width:100%; margin:0; padding:0; border:0; background:none; color:inherit; font:inherit; text-align:start; cursor:pointer; }
+.hjm-steps__press:focus-visible,.hjm-steps-compact__toggle:focus-visible { outline:var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset:var(--hjm-focus-offset); border-radius:var(--hjm-radius-sm); }
+@media(hover:hover) { .hjm-steps__press:hover .hjm-steps__indicator { transform:translateY(-2px); } }
+.hjm-steps__press:active .hjm-steps__indicator { transform:scale(.96); }
+/* A product illustration keeps its own colors and must not disappear into the current fill. */
+.hjm-steps[data-custom-mark] .hjm-steps__indicator { background:var(--hjm-color-bg); color:var(--hjm-color-text); }
+.hjm-steps[data-presentation="vertical"],.hjm-steps[data-presentation="compact"][data-expanded="true"] { display:flex; flex-direction:column; }
+.hjm-steps:is([data-presentation="vertical"],[data-presentation="compact"][data-expanded="true"]) .hjm-steps__step { padding-block-end:var(--hjm-space-md); }
+.hjm-steps:is([data-presentation="vertical"],[data-presentation="compact"][data-expanded="true"]) .hjm-steps__step:not(:last-child)::before { content:""; position:absolute; inset-inline-start:calc(var(--hjm-steps-indicator-size) / 2); inset-block-start:var(--hjm-steps-indicator-size); inset-block-end:0; inline-size:1px; background:var(--hjm-color-border); }
+.hjm-steps:is([data-presentation="vertical"],[data-presentation="compact"][data-expanded="true"]) :is(.hjm-steps__item,.hjm-steps__press) { grid-template-columns:var(--hjm-steps-indicator-size) minmax(0,1fr); align-items:center; column-gap:var(--hjm-space-md); }
+.hjm-steps:is([data-presentation="vertical"],[data-presentation="compact"][data-expanded="true"]) .hjm-steps__copy { text-align:start; }
+.hjm-steps__body { margin-inline-start:calc(var(--hjm-steps-indicator-size) + var(--hjm-space-md)); padding-block:var(--hjm-space-sm); }
+.hjm-steps-compact { min-inline-size:0; }
+.hjm-steps-compact__header { display:flex; align-items:center; justify-content:space-between; gap:var(--hjm-space-sm); margin-block-end:var(--hjm-space-xs); font-size:var(--hjm-type-label-size); }
+.hjm-steps-compact__toggle { display:flex; align-items:center; gap:var(--hjm-space-xs); flex-shrink:0; min-block-size:44px; padding:0; border:0; background:none; font:inherit; color:var(--hjm-color-text-muted); cursor:pointer; }
+.hjm-steps[data-presentation="compact"][data-expanded="false"] { display:flex; gap:var(--hjm-space-xxs); padding:0; }
+.hjm-steps[data-presentation="compact"][data-expanded="false"] .hjm-steps__step { flex:1; height:var(--hjm-steps-segment-height); background:var(--hjm-color-border); border-radius:var(--hjm-radius-full); }
+.hjm-steps[data-presentation="compact"][data-expanded="false"] .hjm-steps__step:is([data-status="complete"],[data-status="current"]) { background:var(--hjm-color-text); }
+.hjm-steps[data-presentation="compact"][data-expanded="false"] .hjm-steps__step[data-status="error"] { background:var(--hjm-color-danger); }
+.hjm-steps[data-presentation="compact"][data-expanded="false"] .hjm-steps__item { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); min-block-size:0; }
+@media(prefers-reduced-motion:reduce) { .hjm-steps * { transition:none!important; transform:none!important; } }
+.hjm-root[data-motion="reduced"] .hjm-steps * { transition:none!important; transform:none!important; }
+
 
 .hjm-file-picker { display: grid; gap: var(--hjm-space-xs); }
 .hjm-file-picker__label { color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-medium); }
@@ -3277,7 +3362,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-watermark { position: relative; isolation: isolate; }
 .hjm-watermark__content { position: relative; z-index: 0; overflow-wrap: anywhere; }
 .hjm-watermark__overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; user-select: none; overflow: hidden; color: var(--hjm-color-text-sub); font: inherit; }
-.hjm-affix { color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
+/* Stacking and fill come from affixRecipe.defaults (layer sticky = --hjm-layer-sticky 100, fill canvas); the box is always
+   positioned (sticky or relative), so z-index applies in both the pinned and the released state. */
+.hjm-affix { z-index: var(--hjm-layer-sticky); color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
+.hjm-affix[data-layer="base"] { z-index: var(--hjm-layer-base); }
+.hjm-affix[data-fill="none"] { background: transparent; }
 .hjm-affix__marker { display: block; block-size: 0; pointer-events: none; }
 
 /* Sidebar presentation decorates fixed link boxes; no pointer/focus target is transformed. */
@@ -3387,6 +3476,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
 .hjm-screen[data-content-inset="none"] > .hjm-screen__footer { border-block-start: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
+/* A screen-scrolled body is a Tab stop for keyboard scrolling, so reaching it by keyboard draws the HJM ring, inset
+   because the body fills the screen and an outer ring would be clipped. Focus that ScreenLayout itself parks on the
+   body after the focused node was removed (data-focus-landing) is a landing, not a control, and draws none, like
+   the search results landing (2026-10-23 web check: the browser default ring outlined the whole body). */
+.hjm-screen__body:focus { outline: none; }
+.hjm-screen__body:focus-visible:not([data-focus-landing]) { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: calc(-1 * var(--hjm-focus-width)); }
 .hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
 .hjm-screen__body[data-content-alignment="center"] { display: flex; flex-direction: column; }
 .hjm-screen__centered-content { margin-block: auto; flex-shrink: 0; inline-size: 100%; }
@@ -3738,6 +3833,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 }
 
 .hjm-statistic__leading { display: inline-flex; align-items: center; color: var(--hjm-statistic-value-color, var(--hjm-color-text)); }
+/* A leading glyph labels its value: keep them on one line and let the value text wrap beside it.
+   Wrapping the row dropped a long value (e.g. "10월 9일 09:40") under a lone icon (2026-10-23). */
+.hjm-statistic__value-row[data-leading] { flex-wrap: nowrap; }
+.hjm-statistic__value-row[data-leading] > .hjm-statistic__leading { flex-shrink: 0; }
 .hjm-statistic-group[data-arrangement="bar"] { grid-template-columns: repeat(var(--hjm-statistic-columns), minmax(0, 1fr)); gap: 0; }
 .hjm-statistic-group[data-arrangement="bar"] > * { min-inline-size: 0; padding-inline: var(--hjm-space-xs); }
 .hjm-statistic-group[data-arrangement="bar"] > * + * { border-inline-start: 1px solid var(--hjm-color-border); }
@@ -3843,6 +3942,12 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-segmented[data-selection-tone="brand"][data-presentation="pills"] .hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"]::before { background: transparent; }
 
 /* Photo chrome is deliberately independent of the product theme: no card frame or crop. */
+/* ImageViewerTrigger: imageViewerTriggerRecipe (radius = imageRecipe.radius md so the ring follows the image frame). */
+.hjm-image-viewer-trigger { display: block; inline-size: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: none; color: inherit; font: inherit; text-align: inherit; cursor: var(--hjm-image-viewer-trigger-cursor, zoom-in); }
+.hjm-image-viewer-trigger > * { display: block; }
+.hjm-image-viewer-trigger:active:not(:disabled) { opacity: var(--hjm-image-viewer-trigger-pressed-opacity); }
+.hjm-image-viewer-trigger:disabled { cursor: default; opacity: var(--hjm-image-viewer-trigger-disabled-opacity); }
+.hjm-image-viewer-trigger:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-image-viewer { position: fixed; inset: 0; display: flex; flex-direction: column; min-inline-size: 0; background: #000; color: #fff; padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom); }
 .hjm-image-viewer__header, .hjm-image-viewer__footer { display: flex; align-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-left)) var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-right)); }
 .hjm-image-viewer__footer > span { flex: 1; text-align: center; }

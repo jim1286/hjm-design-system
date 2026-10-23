@@ -22,7 +22,8 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     const room = listRowScrollRoom(bleed ? bodyInset : 0);
     const outset = room.content.paddingHorizontal;
     const [width, setWidth] = useState(0), [offset, setOffset] = useState(0);
-    const layout = resolveCollectionRailLayout(items.length, width, density, tokens.spacing.md);
+    const gap = tokens.spacing[collectionRailRecipe.gapSteps[density]];
+    const layout = resolveCollectionRailLayout(items.length, width, density, gap);
     const geometry = useRef(layout);
     geometry.current = layout;
     const logicalOffset = useRef(0);
@@ -64,7 +65,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
             target = getCollectionRailRevealOffset(geometry.current, target, focusedIndex);
         scrollToOffset(target, false);
     }
-    useLayoutEffect(alignAnchor, [width, density, tokens.spacing.md, direction, identity]);
+    useLayoutEffect(alignAnchor, [width, density, gap, direction, identity]);
     function navigate(intent) {
         scrollToOffset(getCollectionRailTargetOffset(geometry.current, pendingOffset.current ?? logicalOffset.current, intent), true);
     }
@@ -85,7 +86,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                         pendingOffset.current = null;
                     publish(next);
                 }, scrollEventThrottle: 16, keyboardShouldPersistTaps: "handled", removeClippedSubviews: false, style: { direction: "ltr", ...room.viewport }, contentContainerStyle: { direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
-                    gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }, children: [items.map((item, index) => _jsx(View, { style: { width: layout.itemWidth, direction }, onFocus: () => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }, onBlur: () => { if (focusedKey.current === item.id)
+                    gap, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }, children: [items.map((item, index) => _jsx(View, { style: { width: layout.itemWidth, direction }, onFocus: () => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }, onBlur: () => { if (focusedKey.current === item.id)
                             focusedKey.current = null; }, children: renderItem(item) }, item.id)), items.length === 0 ? emptyContent : null] }), showNavigation && _jsxs(View, { accessibilityLabel: labels.navigation, style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", disabled: state.atStart, onPress: () => navigate("previous"), children: _jsx(DrawnChevron, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", disabled: state.atEnd, onPress: () => navigate("next"), children: _jsx(DrawnChevron, { direction: "end", size: glyph.sm, color: chevronColor }) })] })] });
 }
 //# sourceMappingURL=collection-rail.js.map

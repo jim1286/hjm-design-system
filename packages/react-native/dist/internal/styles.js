@@ -1,4 +1,4 @@
-import { control, fontFamily, spacing } from "@hjmds/design-contracts/foundations";
+import { control, fontFamily, nativeElevationFallback, spacing } from "@hjmds/design-contracts/foundations";
 import { Platform, StyleSheet, } from "react-native";
 /** Native font inheritance stops at Text subtrees (reactnative.dev/docs/text).
  * Resolve the same profile at every editor/raw text host rather than styling a
@@ -75,5 +75,18 @@ export function resolveNativeShadowElevation(token, profiled, fallbackElevation)
     return { elevation: profiled
             ? token.opacity === 0 ? 0 : Math.max(token.radius, Math.abs(token.offsetY))
             : fallbackElevation };
+}
+/** Public `elevation` step → iOS shadow + Android elevation from the (profile-aware) shadow tokens; `none` → no style. */
+export function resolveNativeElevationStyle(step, shadows, profiled) {
+    if (step === "none")
+        return undefined;
+    const token = shadows[step];
+    return {
+        ...resolveNativeShadowElevation(token, profiled, nativeElevationFallback[step]),
+        shadowColor: token.color,
+        shadowOffset: { width: 0, height: token.offsetY },
+        shadowOpacity: token.opacity,
+        shadowRadius: token.radius,
+    };
 }
 //# sourceMappingURL=styles.js.map

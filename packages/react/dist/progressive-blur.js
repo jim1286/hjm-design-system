@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveProgressiveBlur } from '@hjmds/design-contracts/progressive-blur';
 import { useHjmTheme } from './provider.js';

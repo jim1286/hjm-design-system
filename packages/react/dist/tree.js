@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getTreeArrowKeyIntent, getTreeArrowResult, getVisibleTreeNavigationTarget, getVisibleTreeTypeaheadMatch, reconcileTreeExpansion, resolveTreeDescriptor, treeRecipe, } from "@hjmds/design-contracts/components/tree";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";

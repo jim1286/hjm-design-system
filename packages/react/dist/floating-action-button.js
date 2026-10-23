@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { floatingActionButtonRecipe as recipe, resolveFloatingActionButtonDescriptor, resolveFloatingActionButtonLayoutMode, resolveFloatingActionButtonContentClearance, } from "@hjmds/design-contracts/components/floating-action-button";

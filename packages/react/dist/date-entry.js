@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useRef } from "react";
 import { resolveDateEntryControl, updateDateEntryDraft } from "@hjmds/design-contracts/date-entry";

@@ -8,6 +8,7 @@ import { Spinner } from "./internal/spinner.js";
 import { Button, IconButton } from "./actions.js";
 import { SegmentedControl } from "./inputs.js";
 import { ImageInspection } from "./internal/image-inspection.js";
+export { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
 import { Surface, Text } from "./primitives.js";
 import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
 import { glyph } from "@hjmds/design-contracts/foundations";

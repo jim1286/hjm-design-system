@@ -1,9 +1,11 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
-import { affixRecipe, validateAffixOffset } from "@hjmds/design-contracts/components/affix";
+import { affixRecipe, validateAffixOffset, validateAffixPresentation } from "@hjmds/design-contracts/components/affix";
 /** CSS keeps natural flow, parent boundaries and focus intact; JS only observes state and oversize content. */
-export function Affix({ children, offset = affixRecipe.offset, disabled = false, onChange, layoutStyle }) {
+export function Affix({ children, offset = affixRecipe.offset, disabled = false, onChange, layer = affixRecipe.defaults.layer, fill = affixRecipe.defaults.fill, layoutStyle }) {
     validateAffixOffset(offset);
+    validateAffixPresentation(layer, fill);
     const marker = useRef(null);
     const content = useRef(null);
     const callback = useRef(onChange);
@@ -46,6 +48,6 @@ export function Affix({ children, offset = affixRecipe.offset, disabled = false,
         window.addEventListener("resize", schedule);
         return () => { cancelAnimationFrame(frame); resize.disconnect(); document.removeEventListener("scroll", schedule, true); window.removeEventListener("resize", schedule); };
     }, [offset, disabled, oversize]);
-    return _jsxs(_Fragment, { children: [_jsx("span", { ref: marker, className: "hjm-affix__marker", "aria-hidden": "true" }), _jsx("div", { ref: content, "data-hjm-affix": true, "data-affixed": affixed, "data-oversize": oversize, className: "hjm-affix", style: { ...layoutStyle, position: disabled || oversize ? "relative" : affixRecipe.position, top: disabled || oversize ? undefined : offset }, children: children })] });
+    return _jsxs(_Fragment, { children: [_jsx("span", { ref: marker, className: "hjm-affix__marker", "aria-hidden": "true" }), _jsx("div", { ref: content, "data-hjm-affix": true, "data-affixed": affixed, "data-oversize": oversize, "data-layer": layer, "data-fill": fill, className: "hjm-affix", style: { ...layoutStyle, position: disabled || oversize ? "relative" : affixRecipe.position, top: disabled || oversize ? undefined : offset }, children: children })] });
 }
 //# sourceMappingURL=affix.js.map

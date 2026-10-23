@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe } from "@hjmds/design-contracts/recipes";

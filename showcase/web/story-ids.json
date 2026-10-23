@@ -680,10 +680,13 @@
     "components-navigation-sidebar--dark",
     "components-navigation-sidebar--default",
     "components-navigation-sidebar--large-text",
+    "components-navigation-steps--compact",
     "components-navigation-steps--dark",
     "components-navigation-steps--default",
+    "components-navigation-steps--error",
     "components-navigation-steps--large-text",
     "components-navigation-steps--revisit",
+    "components-navigation-steps--vertical",
     "components-navigation-tabs--dark",
     "components-navigation-tabs--default",
     "components-navigation-tabs--filled-indicator",
@@ -2024,6 +2027,31 @@
       "replacement": "compositions-feedback-save-feedback--summary-dark",
       "date": "2026-10-23",
       "reason": "스토리북 배포(실험/구성/피드백과 복구/저장 결과 → 배포/…)와 Web meta id ASCII kebab 규칙 적용"
+    },
+    "components-navigation-steps-presentations--default": {
+      "replacement": "components-navigation-steps--default",
+      "date": "2026-10-23",
+      "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
+    },
+    "components-navigation-steps-presentations--dark": {
+      "replacement": "components-navigation-steps--dark",
+      "date": "2026-10-23",
+      "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
+    },
+    "components-navigation-steps-presentations--error": {
+      "replacement": "components-navigation-steps--error",
+      "date": "2026-10-23",
+      "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
+    },
+    "components-navigation-steps-presentations--compact": {
+      "replacement": "components-navigation-steps--compact",
+      "date": "2026-10-23",
+      "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
+    },
+    "components-navigation-steps-presentations--vertical": {
+      "replacement": "components-navigation-steps--vertical",
+      "date": "2026-10-23",
+      "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
     }
   }
 }

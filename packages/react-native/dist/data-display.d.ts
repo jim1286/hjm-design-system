@@ -5,7 +5,8 @@ import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/compone
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
 import { type ComposeTimelineAccessibleName, type ResolvedTimelineItemDescriptor, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
-import { listRecipe, listRowRecipe, statisticRecipe, type AccordionDensity, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
+import { type AvatarFrame, type AvatarShape, type AvatarSize, type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
+import { listRecipe, listRowRecipe, statisticRecipe, type AccordionDensity, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type DividerLineStyle, type BadgeCategoryColor, type ListRowDensity, type ListRowLeadingShape, type ListRowTrailingAccessory, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type ViewProps } from "react-native";
 import { type SurfacePadding, type SurfaceProps } from "./primitives.js";
@@ -14,6 +15,11 @@ export type BadgeVariant = ContractBadgeVariant;
 export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     label: string | number;
     tone?: StatusTone;
+    /**
+     * Product classification color per theme (series, grade…) in place of `tone`. HJM keeps the frame and picks the
+     * label ink; a color whose label cannot reach AA 4.5 throws instead of rendering unreadable.
+     */
+    categoryColor?: BadgeCategoryColor;
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
@@ -22,7 +28,7 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Badge({ label, tone, size, variant, leading, trailing, accessibilityLabel, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
+export declare function Badge({ label, tone: toneProp, categoryColor, size, variant, leading, trailing, accessibilityLabel, layoutStyle, ...props }: BadgeProps): import("react").JSX.Element;
 export type TagTone = ContractTagTone;
 export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     children: string;
@@ -88,6 +94,12 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     description?: string;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`/`trailingText`,
+     * inside the row command (before any `trailingAction`), mirrored in RTL; size and color come from
+     * `listRowRecipe.accessories`.
+     */
+    trailingAccessory?: ListRowTrailingAccessory;
     /** Visible metadata placed beside the title, such as a Badge. */
     titleMetadata?: ReactNode;
     /** A separate accessible target rendered beside, never inside, the row command. */
@@ -119,14 +131,7 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, tone, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density: suppliedDensity, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
-type AccessibleMedia = Readonly<{
-    decorative: true;
-    accessibilityLabel?: never;
-}> | Readonly<{
-    decorative?: false;
-    accessibilityLabel: string;
-}>;
+export declare function ListRow({ title, tone, description, leading, trailing, trailingAccessory, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density: suppliedDensity, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
 export type AvatarImageRenderProps = Readonly<{
     source: ImageSourcePropType;
     size: number;
@@ -139,22 +144,46 @@ type AvatarBaseProps = Readonly<{
     source?: ImageSourcePropType;
     /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
     renderImage?: (props: AvatarImageRenderProps) => ReactNode;
-    name: string;
     initials?: string;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
-    size?: number;
+    /**
+     * A step from avatarRecipe.sizes (`xxsmall` 22 … `xlarge` 64), or points for existing callers. Numbers below the
+     * smallest step (22) throw. The default stays 44 (`touch`).
+     */
+    size?: AvatarSize | number;
+    shape?: AvatarShape;
+    /** Border/background treatment from avatarRecipe.frames; `none` when product artwork fills the frame. */
+    frame?: AvatarFrame;
+    /** A small mark (team badge, status dot) on a corner of the avatar's box. It is not clipped by the frame. */
+    accessory?: ReactNode;
+    accessoryPlacement?: CornerAccessoryPlacement;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export type AvatarProps = AvatarBaseProps & AccessibleMedia;
-export declare function Avatar({ source, renderImage, name, initials, renderFallback, size, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
+/**
+ * A meaningful avatar needs `name` (initials) and `accessibilityLabel`; a decorative one — next to a visible
+ * author name, or ornament with no person — is hidden and may omit `name` (2026-10-23 Burntok adoption).
+ */
+type AvatarIdentity = Readonly<{
+    decorative: true;
+    accessibilityLabel?: never;
+    name?: string;
+}> | Readonly<{
+    decorative?: false;
+    accessibilityLabel: string;
+    name: string;
+}>;
+export type AvatarProps = AvatarBaseProps & AvatarIdentity;
+export declare function Avatar({ source, renderImage, name, initials, renderFallback, size: sizeProp, shape, frame, accessory, accessoryPlacement, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;
+    /** `dashed`: a break inside one surface rather than a new section; dash/gap from dividerRecipe.lineStyles. */
+    lineStyle?: DividerLineStyle;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Divider({ orientation, inset, layoutStyle }: DividerProps): import("react").JSX.Element;
+export declare function Divider({ orientation, inset, lineStyle, layoutStyle }: DividerProps): import("react").JSX.Element;
 export type AccordionItem<Value extends string = string> = Readonly<{
     value: Value;
     title: string;
@@ -326,7 +355,15 @@ export type TimelineProps<Id extends string = string> = Omit<ViewProps, "childre
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /**
+     * Makes each record a selectable button (controlled, single). `null` = selectable with nothing chosen. Supply
+     * together with `onSelectedIdChange`. The selected record reads as selected to assistive tech and paints the
+     * neutral selection surface (timelineRecipe.item.selected).
+     */
+    selectedId?: Id | null;
+    onSelectedIdChange?: (id: Id) => void;
     /** Virtualization host only; the shared renderer still owns every record, rail, label and command target. */
     renderList?: (context: Readonly<{
         items: readonly ResolvedTimelineItemDescriptor<Id>[];
@@ -337,6 +374,6 @@ export type TimelineProps<Id extends string = string> = Omit<ViewProps, "childre
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, renderMetadata, renderActions, renderList, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
+export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, renderMetadata, renderActions, renderList, selectedId, onSelectedIdChange, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=data-display.d.ts.map

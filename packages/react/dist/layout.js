@@ -9,7 +9,7 @@ import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/
 import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { resolveTextDefaultWeight, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
-import { numeric as numericVariants, resolveTextFontRole, typography } from "@hjmds/design-contracts/foundations";
+import { numeric as numericVariants, resolveTextFontRole, typography, validateElevationStep } from "@hjmds/design-contracts/foundations";
 import { createElement, forwardRef, useId, useRef, } from "react";
 import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
 function hasRegionContent(content) {
@@ -120,8 +120,11 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         },
     });
 });
-export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {
+export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, elevation, className, layoutStyle, style, ...props }, ref) {
     const contract = surfaceRecipe[tone];
+    if (elevation !== undefined)
+        validateElevationStep(elevation, "Surface");
+    const lifted = elevation === undefined ? contract.elevated : elevation !== "none";
     return createElement(as, {
         ...props,
         ref,
@@ -129,8 +132,9 @@ export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceD
         "data-tone": tone,
         // Canvas framing is the default; preserve the caller's explicit border opt-out.
         "data-bordered": bordered ?? (surfaceDefaults.bordered || contract.borderAlways),
-        "data-elevated": contract.elevated,
-        "data-clips": contract.clipsContent,
+        "data-elevated": lifted,
+        "data-elevation": elevation,
+        "data-clips": contract.clipsContent && !lifted,
         "data-padding": padding,
         "data-radius": radius,
         style: {

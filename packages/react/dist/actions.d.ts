@@ -1,5 +1,6 @@
 import { type ButtonAppearance, type ButtonAlign, type ButtonEdge, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
 export type { ButtonAlign, ButtonEdge, ButtonShape, ButtonAppearance };
+import type { ElevationStep } from "@hjmds/design-contracts/foundations";
 import { type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkTone, type LinkVariant } from "@hjmds/design-contracts/recipes";
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ForwardedRef, type ReactElement, type ReactNode } from "react";
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
@@ -96,6 +97,11 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
      * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
      */
     edge?: IconButtonEdge;
+    /**
+     * Shadow token step for a floating control (iconButtonRecipe.elevation, default `none`). Filled tones only;
+     * an elevated ghost button throws.
+     */
+    elevation?: ElevationStep;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -116,10 +122,45 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
      * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
      */
     edge?: IconButtonEdge;
+    /**
+     * Shadow token step for a floating control (iconButtonRecipe.elevation, default `none`). Filled tones only;
+     * an elevated ghost button throws.
+     */
+    elevation?: ElevationStep;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLButtonElement>>;
+/**
+ * Web navigation with IconButton paint, as ButtonLink is to Button. A 44px icon-only destination (shell settings,
+ * profile) needs the IconButton frame, `edge` and a current-page treatment; ButtonLink's padded pill and a product
+ * `<a>` with its own radius/size/selected CSS both drifted from IconButton (2026-10-23 Diairy ShellSettingsLink).
+ * Toggle, loading and mutation semantics stay on IconButton.
+ */
+export type IconButtonLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "aria-label" | "aria-current" | "children"> & Pick<IconButtonProps, "label" | "tone" | "size" | "hitSlop" | "shape" | "edge" | "layoutStyle"> & Readonly<{
+    href: string;
+    /** Icon only; `label` is the accessible name. */
+    children: ReactNode;
+    /** The link points at the current page: `aria-current="page"` with the selected surface (`iconButtonRecipe.states.selected`). */
+    current?: boolean;
+    disabled?: boolean;
+    /** Framework routing adapter; HJM still owns the anchor destination, ref, name, current state and disabled guards. */
+    renderAnchor?: (props: AnchorHTMLAttributes<HTMLAnchorElement> & {
+        ref: ForwardedRef<HTMLAnchorElement>;
+    }) => ReactElement;
+}>;
+export declare const IconButtonLink: import("react").ForwardRefExoticComponent<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "aria-current" | "aria-label"> & Pick<IconButtonProps, "label" | "tone" | "size" | "layoutStyle" | "shape" | "hitSlop" | "edge"> & Readonly<{
+    href: string;
+    /** Icon only; `label` is the accessible name. */
+    children: ReactNode;
+    /** The link points at the current page: `aria-current="page"` with the selected surface (`iconButtonRecipe.states.selected`). */
+    current?: boolean;
+    disabled?: boolean;
+    /** Framework routing adapter; HJM still owns the anchor destination, ref, name, current state and disabled guards. */
+    renderAnchor?: (props: AnchorHTMLAttributes<HTMLAnchorElement> & {
+        ref: ForwardedRef<HTMLAnchorElement>;
+    }) => ReactElement;
+}> & import("react").RefAttributes<HTMLAnchorElement>>;
 export type LinkRenderProps = AnchorHTMLAttributes<HTMLAnchorElement> & Readonly<{
     children: ReactNode;
     ref: ForwardedRef<HTMLAnchorElement>;

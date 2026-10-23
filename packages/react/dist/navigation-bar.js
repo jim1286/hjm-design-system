@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Site navigation composition; Menu/SearchField continue to own their behavior. */

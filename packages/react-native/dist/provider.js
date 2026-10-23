@@ -79,7 +79,7 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, brandPalette: suppliedBrandPalette, brandPaletteMode, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, surfaceEffects: suppliedSurfaceEffects, fonts: suppliedFonts, }) {
     const parent = useContext(HjmNativeThemeContext);
     const fonts = suppliedFonts ?? parent?.fonts ?? "system";
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
@@ -90,7 +90,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
     const inheritedInsets = useContext(HjmNativeSafeAreaContext);
     const safeAreaInsets = suppliedInsets ?? inheritedInsets;
     const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
-    const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue]);
+    const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode]);
     const colorScheme = useColorScheme();
     // Match Expo web's light server snapshot to avoid stale styles after hydration;
     // native stays immediate. See README: static-web theme precedence.

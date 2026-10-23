@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getNextSplitterValue, resolveSplitterBoundaryValue, resolveSplitterDragValue, resolveSplitterSeparatorOrientation, splitterDefaults, splitterRecipe, validateSplitterDescriptor, } from "@hjmds/design-contracts/components/splitter";
 import { forwardRef, useCallback, useEffect, useRef, useState, } from "react";

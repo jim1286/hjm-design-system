@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { anchorRecipe, getAnchorCurrentId, resolveAnchorItems } from "@hjmds/design-contracts/components/anchor";

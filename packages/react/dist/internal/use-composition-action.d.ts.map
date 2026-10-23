@@ -1,1 +1,1 @@
-{"version":3,"file":"use-composition-action.d.ts","sourceRoot":"","sources":["../../src/internal/use-composition-action.ts"],"names":[],"mappings":"AAGA,wBAAgB,oBAAoB,CAAC,CAAC,GAAG,MAAM,EAAE,QAAQ,UAAQ;;;;;;;;;;;;;;eASlD,CAAC,QAAQ,MAAM,IAAI,GAAG,OAAO,CAAC,IAAI,CAAC;EAIjD"}
+{"version":3,"file":"use-composition-action.d.ts","sourceRoot":"","sources":["../../src/internal/use-composition-action.ts"],"names":[],"mappings":"AAKA,wBAAgB,oBAAoB,CAAC,CAAC,GAAG,MAAM,EAAE,QAAQ,UAAQ;;;;;;;;;;;;;;eASlD,CAAC,QAAQ,MAAM,IAAI,GAAG,OAAO,CAAC,IAAI,CAAC;EAIjD"}

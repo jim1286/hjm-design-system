@@ -1,3 +1,4 @@
+"use client";
 import { createContext } from "react";
 /**
  * Set inside a padded ScreenLayout or Sheet footer. The parent owns the bar chrome and safe area, so

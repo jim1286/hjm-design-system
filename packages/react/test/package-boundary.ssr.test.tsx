@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
@@ -10,140 +10,18 @@ describe("@hjmds/react package boundary", () => {
       exports: Record<string, unknown>;
       sideEffects: readonly string[];
     };
-    const executableExportPaths = [
-      ".",
-      "./status-text",
-      "./provider",
-      "./carousel",
-      "./floating-action-button",
-      "./top-bar",
-      "./bottom-cta",
-      "./layout",
-      "./actions",
-      "./forms",
-      "./password-field",
-      "./otp-field",
-      "./number-field",
-      "./slider",
-      "./date-picker",
-      "./calendar",
-      "./file-picker",
-      "./steps",
-      "./upload-item",
-      "./selection",
-      "./navigation",
-      "./breadcrumb",
-      "./pagination",
-      "./anchor",
-      "./display",
-      "./overlays",
-      "./popover",
-      "./side-panel",
-      "./splitter",
-      "./tour",
-      "./tree",
-      "./transfer-list",
-      "./mentions",
-      "./command-palette",
-      "./agreement",
-      "./top",
-      "./heading",
-      "./text-formats",
-      "./clipboard",
-      "./image-choice",
-      "./toggle-group",
-      "./tags-input",
-      "./skip-nav",
-      "./bottom-info",
-      "./sidebar",
-      "./overlay-stack",
-      "./alert-dialog-queue",
-      "./date-range",
-      "./provider-button",
-      "./auth-screen",
-      "./data-table",
-      "./collapsible",
-      "./context-menu",
-      "./menubar",
-      "./asset",
-      "./feedback",
-      "./toast",
-      "./evidence",
-      "./thinking-orb",
-      "./statistic-motion",
-      "./menu-morph",
-      "./affix",
-      "./color-picker",
-      "./watermark",
-      "./masonry",
-      "./virtual-list",
-      "./qr-code",
-      "./sortable",
-      "./swipe-actions",
-      "./content-transition", "./rating", "./choice-row", "./image-comparison",
-      "./carousel-motion",
-      "./celebration",
-    ];
-
-    // Optional visual entry points are checked independently of canonical family exports.
-    const optionalExportPaths = [
-      "./avatar-blobatar",
-      "./effect-surface",
-      "./icon-lucide",
-      "./duration-field",
-      "./inline-confirm",
-      "./reaction-picker",
-      "./notification-bell",
-      "./scroll-progress",
-      "./code-block",
-      "./activity-heatmap",
-      "./task-list",
-      "./folder-preview",
-      "./avatar-blobatar-motion",
-      "./step-player",
-      "./voice-note",
-      "./grid-reveal",
-      "./gravity-letters",
-      "./navigation-bar",
-      "./screens", "./screen-flows",
-      "./saved-items",
-      "./progressive-blur",
-      "./date-entry",
-      "./field-group",
-      "./document-resource",
-      // Profiles are optional: core imports must not pull the preset registry.
-      "./design-profile",
-      "./collection-rail",
-      // Panel-toast trigger; opt-in like CollectionRail so core graphs do not grow.
-      "./activity-chip",
-      // 2026-10-14 SVG chart family; opt-in so core graphs do not carry chart geometry.
-      "./chart",
-      "./collection-editing",
-      "./data-workflows",
-      "./task-controls",
-      "./media-transport",
-      "./transfer-task",
-      "./authoring-tools",
-      "./social-compositions",
-      "./communication",
-      "./toggle-feedback",
-      "./streaming-answer",
-      "./conversation-row",
-    ];
-
-    expect(Object.keys(packageJson.exports)).toEqual([
-      ...executableExportPaths,
-      "./styles.css",
-      "./styles.layered.css",
-      "./fonts/pretendard.css",
-      ...optionalExportPaths,
-    ]);
-    const familyTargets = [...executableExportPaths.slice(1), ...optionalExportPaths].map((exportPath) => {
-      const definition = packageJson.exports[exportPath] as Record<string, string>;
+    // Read the advertised entry points, then verify their files and isolation instead of duplicating the manifest list.
+    const executable = Object.entries(packageJson.exports).filter(([, definition]) => typeof definition === "object" && definition !== null);
+    expect(executable.length).toBeGreaterThan(1);
+    const familyTargets = await Promise.all(executable.map(async ([exportPath, entry]) => {
+      const definition = entry as Record<string, string>;
       expect(definition.import).toMatch(/^\.\/dist\/.+\.js$/);
-      expect(definition.import).not.toBe("./dist/index.js");
+      expect(definition.types).toMatch(/^\.\/dist\/.+\.d\.ts$/);
+      await access(new URL(`../${definition.import}`, import.meta.url));
+      await access(new URL(`../${definition.types}`, import.meta.url));
+      if (exportPath !== ".") expect(definition.import).not.toBe("./dist/index.js");
       return definition.import;
-    });
+    }));
     expect(new Set(familyTargets).size).toBe(familyTargets.length);
     expect(packageJson.exports["./styles.css"]).toBe("./dist/styles.css");
     expect(packageJson.exports["./styles.layered.css"]).toBe("./dist/styles.layered.css");

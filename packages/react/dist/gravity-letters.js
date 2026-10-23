@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useLayoutEffect, useRef } from "react";
 import { gravityLetterMotion, resolveGravityLetters } from "@hjmds/design-contracts/gravity-letters";

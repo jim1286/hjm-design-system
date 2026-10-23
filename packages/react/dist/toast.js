@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { createToastStore, createToastSession, resolveToastDescriptor, } from "@hjmds/design-contracts/components/toast";

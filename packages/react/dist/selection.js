@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Grid } from "./layout.js";
 import { Button } from "./actions.js";
@@ -71,11 +72,26 @@ export const Radio = forwardRef(function Radio({ label, description, checked: ch
                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: label }), description ? _jsx("span", { className: "hjm-choice__description", children: description }) : null] })] }));
 });
+/**
+ * Minimal horizontal scroll that shows `option` inside `viewport` with `inset` room around it. Shared by
+ * SegmentedControl and CheckboxGroup `overflow="scroll"`; rect deltas work in both reading directions.
+ */
+function revealInScroller(viewport, option, inset = 0) {
+    const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
+    const delta = bounds.left - inset < frame.left ? bounds.left - inset - frame.left
+        : bounds.right + inset > frame.right ? bounds.right + inset - frame.right : 0;
+    if (delta)
+        viewport.scrollBy({ left: delta, behavior: "instant" });
+}
 function ChoiceItems({ grid, className, children }) {
     return grid ? _jsx(Grid, { ...grid, children: children }) : _jsx("div", { className: className, children: children });
 }
-function CheckboxGroupInner({ items, label, accessibilityLabel, description, error, orientation = selectionGroupRecipe.defaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, name, required = false, readOnly = false, renderLeading, value: valueProp, defaultValue, onValueChange, disabled, className, layoutStyle, style, ...props }, ref) {
+function CheckboxGroupInner({ items, label, accessibilityLabel, description, error, orientation = selectionGroupRecipe.defaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, overflow = selectionGroupRecipe.overflow.default, size = selectionControlRecipe.defaults.size, name, required = false, readOnly = false, renderLeading, value: valueProp, defaultValue, onValueChange, disabled, className, layoutStyle, style, ...props }, ref) {
     const resolvedLabel = resolveControlAccessibleName(label, accessibilityLabel, "CheckboxGroup");
+    if (overflow === "scroll" && (presentation !== "chips" || grid)) {
+        throw new TypeError('CheckboxGroup overflow="scroll" requires presentation="chips" without grid');
+    }
+    const scrollerRef = useRef(null);
     const [value, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
         defaultValue: defaultValue ?? new Set(),
@@ -94,7 +110,12 @@ function CheckboxGroupInner({ items, label, accessibilityLabel, description, err
     const generatedId = useId().replaceAll(":", "");
     const descriptionId = `${generatedId}-checkbox-group-description`;
     const errorId = `${generatedId}-checkbox-group-error`;
-    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-checkbox-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-required": required || undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label === undefined ? "hjm-visually-hidden" : undefined, children: label ?? resolvedLabel }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, _jsx(ChoiceItems, { grid: grid, className: "hjm-checkbox-group__items", children: items.map((item) => {
+    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-checkbox-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-overflow": presentation === "chips" ? overflow : undefined, onFocusCapture: (event) => {
+            props.onFocusCapture?.(event);
+            const option = event.target.closest(".hjm-choice");
+            if (overflow === "scroll" && scrollerRef.current && option)
+                revealInScroller(scrollerRef.current, option, selectionGroupRecipe.overflow.scrollInset);
+        }, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-required": required || undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label === undefined ? "hjm-visually-hidden" : undefined, children: label ?? resolvedLabel }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, wrapChipScroller(overflow === "scroll", scrollerRef, _jsx(ChoiceItems, { grid: grid, className: "hjm-checkbox-group__items", children: items.map((item) => {
                     const checked = reconciledValue.has(item.id);
                     return (_jsxs("label", { className: "hjm-choice", "data-kind": "checkbox", "data-state": checked ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [_jsx("input", { className: "hjm-choice__input", type: "checkbox", name: name, value: item.id, checked: checked, disabled: item.disabled, "aria-readonly": readOnly || undefined, onChange: () => {
                                     if (!readOnly) {
@@ -105,7 +126,11 @@ function CheckboxGroupInner({ items, label, accessibilityLabel, description, err
                                     color: "currentColor",
                                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],
                                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.id));
-                }) }), _jsx(FieldError, { id: errorId, error: error })] }));
+                }) })), _jsx(FieldError, { id: errorId, error: error })] }));
+}
+/** The scrollport is separate from the items row so its inset keeps focus rings and chip hit slop unclipped. */
+function wrapChipScroller(scroll, ref, items) {
+    return scroll ? _jsx("div", { ref: ref, className: "hjm-checkbox-group__scroller", children: items }) : items;
 }
 export const CheckboxGroup = forwardRef(CheckboxGroupInner);
 function validateItems(component, items) {
@@ -201,7 +226,9 @@ export const Switch = forwardRef(function Switch({ label, labelVisibility = "vis
             onClick?.(event);
         }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsxs("span", { className: classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden"), children: [_jsx("span", { id: labelId, className: classNames("hjm-switch__label", presentation === "row" && "hjm-text"), "data-font-role": presentation === "row" ? "ui" : undefined, "data-variant": presentation === "row" ? switchRecipe.rowLabelTextVariant : undefined, children: label }), hasDescription ? _jsx("span", { id: descriptionId, className: "hjm-switch__description", children: description }) : null] })] }));
 });
-export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionTone = "neutral", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, name, overflow = "wrap", actions, disabled = false, className, layoutStyle, style, ...props }, ref) {
+export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", 
+// 2026-10-23 user review: filled brand selection is the default; neutral remains opt-in.
+selectionTone = "brand", textEmphasis = "strong", selectionMotion: suppliedSelectionMotion, name, overflow = "wrap", actions, disabled = false, className, layoutStyle, style, ...props }, ref) {
     const designProfile = useDesignProfileDefaults();
     const selectionMotion = presentation === "text" ? "none" : suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
     validateItems("SegmentedControl", items);
@@ -283,12 +310,8 @@ export const SegmentedControl = forwardRef(function SegmentedControl({ label, it
         if (overflow !== "scroll" || !option)
             return;
         const viewport = trackRef.current?.parentElement;
-        if (!viewport)
-            return;
-        const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
-        const delta = bounds.left < frame.left ? bounds.left - frame.left : bounds.right > frame.right ? bounds.right - frame.right : 0;
-        if (delta)
-            viewport.scrollBy({ left: delta, behavior: "instant" });
+        if (viewport)
+            revealInScroller(viewport, option);
     };
     useLayoutEffect(() => { revealOption(trackRef.current?.querySelector('[data-state="checked"]') ?? null); }, [value, items, overflow]);
     const group = (_jsxs("fieldset", { ...props, disabled: disabled, ref: ref, style: { ...style, ...(actions == null ? layoutStyle : { flex: 1, minInlineSize: 0 }) }, className: classNames("hjm-segmented", className), "data-overflow": overflow, onFocusCapture: event => { props.onFocusCapture?.(event); revealOption(event.target.closest(".hjm-segmented__item")); }, "data-size": size, "data-presentation": presentation, "data-selection-tone": selectionTone, "data-text-emphasis": presentation === "text" ? textEmphasis : undefined, role: presentation === "text" ? "radiogroup" : undefined, children: [_jsx("legend", { className: "hjm-visually-hidden", children: label }), _jsx("div", { className: "hjm-segmented__scroller", children: _jsxs("div", { className: "hjm-segmented__items", ref: trackRef, children: [selectionMotion === "slide" ? _jsx("span", { ref: highlightRef, className: "hjm-segmented__highlight", "aria-hidden": "true" }) : null, items.map((item) => (_jsxs("label", { className: "hjm-segmented__item", "data-state": item.value === value ? "checked" : "unchecked", "data-disabled": item.disabled || disabled || undefined, children: [_jsx("input", { type: "radio", name: name ?? generatedName, value: item.value, "aria-label": item.accessibilityLabel, checked: item.value === value, disabled: item.disabled || disabled, required: true, onChange: () => setValue(item.value) }), _jsx("span", { children: item.label })] }, item.value)))] }) })] }));

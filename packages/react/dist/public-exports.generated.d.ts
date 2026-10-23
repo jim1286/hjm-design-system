@@ -6,6 +6,7 @@ export declare const publicExportEntries: {
     readonly Affix: readonly ["./affix"];
     readonly Agreement: readonly ["./agreement"];
     readonly AlertDialog: readonly ["./overlays"];
+    readonly AlertDialogQueueProvider: readonly ["./alert-dialog-queue"];
     readonly Anchor: readonly ["./anchor"];
     readonly AnimatedStatistic: readonly ["./statistic-motion"];
     readonly AspectRatio: readonly ["./layout"];
@@ -91,11 +92,13 @@ export declare const publicExportEntries: {
     readonly HjmProvider: readonly ["./provider"];
     readonly Icon: readonly ["./display"];
     readonly IconButton: readonly ["./actions"];
+    readonly IconButtonLink: readonly ["./actions"];
     readonly IconTile: readonly ["./screens"];
     readonly Image: readonly ["./display"];
     readonly ImageChoiceGroup: readonly ["./image-choice"];
     readonly ImageComparison: readonly ["./image-comparison"];
     readonly ImageViewer: readonly ["./image-viewer"];
+    readonly ImageViewerTrigger: readonly ["./image-viewer"];
     readonly ImmersiveOverlay: readonly ["./overlays"];
     readonly ImportFieldMapping: readonly ["./data-workflows"];
     readonly InlineConfirm: readonly ["./inline-confirm"];

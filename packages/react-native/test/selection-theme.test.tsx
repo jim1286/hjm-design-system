@@ -16,7 +16,7 @@ const destinations = { accessibilityLabel: "Capsule", selectedKey: "home", items
 
 it.each(["light", "dark"] as const)("resolves the neutral role in tabs, navigation, reactions and toggles in %s", theme => {
   let tree!: ReactTestRenderer;
-  const render = (surfaceSelected?: string) => <HjmNativeProvider theme={theme} reducedMotion brandPalette={surfaceSelected ? { [theme]: { surfaceSelected } } : undefined}>
+  const render = (surfaceSelected?: string) => <HjmNativeProvider theme={theme} reducedMotion {...(surfaceSelected ? { brandPalette: { [theme]: { surfaceSelected } } } : {})}>
     <Button selected tone="ghost" accessibilityLabel="Toggle">Toggle</Button>
     <Button accessibilityLabel="Save">Save</Button>
     <Card selected title="Card" testID="card" />

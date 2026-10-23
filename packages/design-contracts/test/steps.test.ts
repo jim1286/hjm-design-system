@@ -273,27 +273,17 @@ describe("Steps visual identity", () => {
   });
 
   it("keeps every marker glyph color above the 3:1 non-text boundary", () => {
-    // Only opaque foreground-style references are checked here, matching
-    // Statistic's contrast harness. The alpha-tinted badge-style border and
-    // background tones (like Badge's own border/background) are decorative
-    // tints, not the required signal — the glyph (or digit) color and shape
-    // carry the state, so those are what must clear the boundary.
+    // The current marker is filled: compare each glyph with its actual recipe surface.
     for (const themeName of ["light", "dark"] as const) {
-      const palette = {
-        theme: THEMES[themeName],
-        statusAccents: ACCENTS[themeName],
-        statusAccentFills: accentFill,
-      };
-      const backgrounds = [THEMES[themeName].bg, THEMES[themeName].surface];
-      for (const reference of [
-        ...Object.values(stepsRecipe.indicator.content),
-        stepsRecipe.connector.tone.reached,
-      ]) {
-        const foreground = resolveColorReference(reference, palette);
-        for (const background of backgrounds) {
-          expect(contrast(foreground, background)).toBeGreaterThanOrEqual(3);
-        }
+      const palette = { theme: THEMES[themeName], statusAccents: ACCENTS[themeName], statusAccentFills: accentFill };
+      for (const status of ["pending", "current", "complete", "error"] as const) {
+        const fill = stepsRecipe.indicator.background[status];
+        const tint = fill === null ? THEMES[themeName].bg : resolveColorReference({ ...fill, alpha: 1 }, palette);
+        const alpha = fill && "alpha" in fill ? fill.alpha ?? 1 : 1;
+        const background = "#" + [1, 3, 5].map(offset => Math.round(parseInt(tint.slice(offset, offset + 2), 16) * alpha + parseInt(THEMES[themeName].bg.slice(offset, offset + 2), 16) * (1 - alpha)).toString(16).padStart(2, "0")).join("");
+        expect(contrast(resolveColorReference(stepsRecipe.indicator.content[status], palette), background)).toBeGreaterThanOrEqual(3);
       }
+      expect(contrast(resolveColorReference(stepsRecipe.connector.tone.reached, palette), THEMES[themeName].bg)).toBeGreaterThanOrEqual(3);
     }
   });
 });

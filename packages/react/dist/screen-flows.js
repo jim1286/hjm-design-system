@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createContext, useContext } from "react";
@@ -15,7 +16,7 @@ import { AlertDialog, Menu, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -23,8 +24,9 @@ import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
-function Action({ action, secondary = false, buttonRef, edge }) { if (action.icon)
-    return _jsx(IconButton, { ref: buttonRef, label: action.label, tone: "ghost", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), onClick: action.onAction, children: action.icon }); return _jsx(Button, { ref: buttonRef, tone: secondary ? "ghost" : "primary", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onClick: action.onAction, children: action.label }); }
+// `emphasis` overrides the primary/ghost pair for footers whose hierarchy a contract resolves (PermissionScreen).
+function Action({ action, secondary = false, emphasis, buttonRef, edge }) { if (action.icon)
+    return _jsx(IconButton, { ref: buttonRef, label: action.label, tone: "ghost", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), onClick: action.onAction, children: action.icon }); return _jsx(Button, { ref: buttonRef, tone: emphasis ?? (secondary ? "ghost" : "primary"), ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onClick: action.onAction, children: action.label }); }
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state. */
 export function ListDetailScreen({ list, detail, back, refresh, loadMore, layoutStyle, ...screen }) {
     const open = !!detail;
@@ -384,7 +386,14 @@ export function SearchScreen({ embedded = false, query, queryLabel, queryField, 
                 : _jsx(ScreenLayout, { ...screen, contentAlignment: phase === "results" && cause !== "none" && resultSummary?.empty ? "center" : screen.contentAlignment ?? "start", initialFocus: initialFocus, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), notice: notice, children: results }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 // Permission guidance occupies the current screen body; keep its default centered on both platforms.
-export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, contentAlignment: screen.contentAlignment ?? "center", footer: _jsxs(Stack, { gap: "xs", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
+export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, recheck, alternative, skip, ...screen }) {
+    const kind = resolvePermissionAction(status);
+    const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null;
+    // Order and emphasis come from the contract: primary → recheck (denied) → alternative → skip.
+    const actions = { primary, recheck, alternative, skip };
+    const footer = resolvePermissionFooter(status, { recheck: !!recheck, alternative: !!alternative, skip: !!skip });
+    return _jsx(ScreenLayout, { ...screen, contentAlignment: screen.contentAlignment ?? "center", footer: _jsx(Stack, { gap: "xs", children: footer.map(({ slot, emphasis }) => _jsx(Action, { action: actions[slot], emphasis: emphasis }, slot)) }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) });
+}
 export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, exit, layoutStyle }) {
     const position = resolveOnboardingStep(steps.length, index);
     const step = steps[index];

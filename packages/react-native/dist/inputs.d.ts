@@ -1,8 +1,9 @@
 import type { ComponentRef } from "react";
 import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
-import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
+import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionGroupOverflow, type SelectionControlSize, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
+import { type CharacterCountOptions } from "@hjmds/design-contracts/character-count";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, type ReactNode } from "react";
 import { TextInput, View, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps } from "react-native";
@@ -54,9 +55,17 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
     initialFocusTarget?: boolean;
 }>;
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
-export type TextFieldProps = AccessibleFieldProps;
+/** TextField and TextArea only; SearchField and PasswordField have no free-text limit to count. */
+type CharacterCountProps = Readonly<{
+    /**
+     * Shows `length/max` and the product's sentence for the current status under the control
+     * (`resolveCharacterCount`). `overflow: "block"` (default) also sets `maxLength`; do not pass both.
+     */
+    characterCount?: CharacterCountOptions;
+}>;
+export type TextFieldProps = AccessibleFieldProps & CharacterCountProps;
 export declare const TextField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>>;
-export type TextAreaProps = AccessibleFieldProps & Readonly<{
+export type TextAreaProps = AccessibleFieldProps & CharacterCountProps & Readonly<{
     trailing?: ReactNode;
     leadingAction?: ReactNode;
 }>;
@@ -215,12 +224,18 @@ export declare function RadioGroup<Value extends string = string>(props: RadioGr
 export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisualProps & CheckboxGroupSelection<Value> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
+    /**
+     * Chip line overflow, the same meaning as SegmentedControl `overflow`: `wrap` (default) breaks onto more lines,
+     * `scroll` keeps one horizontal line and scrolls a focused chip into view. Requires `presentation="chips"`
+     * without `grid`.
+     */
+    overflow?: SelectionGroupOverflow;
     items: readonly SelectionItemDescriptor<Value>[];
     renderLeading?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
 }>;
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
-export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, grid, presentation, size, indicator, renderLeading, renderIndicator, layoutStyle, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
+export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, grid, presentation, overflow, size, indicator, renderLeading, renderIndicator, layoutStyle, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
 type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibilityLabel" | "defaultValue" | "onValueChange" | "style" | "value"> & Readonly<{
     label: string;
     /** Use inside a labelled ListRow; the accessible name and hint remain present. */

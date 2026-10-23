@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";

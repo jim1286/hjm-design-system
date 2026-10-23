@@ -1,3 +1,4 @@
+"use client";
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { resolveOriginTransition } from '@hjmds/design-contracts/content-transition';
 import { dialogRecipe } from '@hjmds/design-contracts/recipes';

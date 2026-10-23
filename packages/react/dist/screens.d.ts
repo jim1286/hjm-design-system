@@ -1,3 +1,4 @@
+import { type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import { type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -7,7 +8,7 @@ export type { MediaAlbum, MediaAlbumPageStatusProps } from "./internal/media-alb
 export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
-import { type MessageAttachmentDescriptor, type ChatReactionSummary, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
+import { type MessageAttachmentDescriptor, type CompositionStateHeight, type ChatReactionSummary, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { type ScreenExit } from "./internal/screen-exit.js";
 import { type ListRowProps } from "./display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -102,8 +103,14 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
     statusLabel: string;
     timestamp: string;
     description?: ReactNode;
+    /**
+     * Localized name of the unread dot. When given, an unread item draws the dot after the status·time line
+     * (notificationRowRecipe.unreadSize, content brand — the NotificationRow mark). Spint drew a "•" glyph in
+     * `trailing` because the item only changed weight and meta (2026-10-23).
+     */
+    unreadLabel?: string;
 }>;
-export declare function NotificationItem({ read, statusLabel, timestamp, description, title, className, ...props }: NotificationItemProps): import("react").JSX.Element;
+export declare function NotificationItem({ read, statusLabel, timestamp, description, unreadLabel, title, className, ...props }: NotificationItemProps): import("react").JSX.Element;
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
     composer: ReactNode;
     /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
@@ -244,11 +251,17 @@ export type CompositionLayoutProps = Readonly<{
     footerAside?: ReactNode;
     state?: ScreenContentState;
     stateAction?: ReactNode;
+    /**
+     * Room the loading/empty/error/restricted replacement keeps in place so it centers without a parent height
+     * (`screenPatternRecipe.compositionState`: compact 96 · regular 160 · large 220; `fit` = its own height).
+     * Ready content is not affected.
+     */
+    stateHeight?: CompositionStateHeight;
     /** Brand visual only; the shared state group owns copy, centering and announcement. */
     loadingIndicator?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;
@@ -288,10 +301,17 @@ export type IconTileProps = Readonly<{
     onActivate?: () => void;
     activationLabel?: string;
     disabled?: boolean;
+    /** Pressable but dimmed (iconTileRecipe.locked) so `onActivate` can explain why. Requires `onActivate` and `lockedLabel`. */
+    locked?: boolean;
+    /** Localized lock reason appended to the accessible name ("Weather, sign-in required"). */
+    lockedLabel?: string;
+    /** Corner mark (lock, clock, count) on the icon frame, overhanging by iconTileRecipe.accessory.offset. */
+    accessory?: ReactNode;
+    accessoryPlacement?: CornerAccessoryPlacement;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
-export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, disabled, layoutStyle }: IconTileProps): import("react").JSX.Element;
+export declare function IconTile({ icon, label, overlay, labelLines, ghost, frame, shape, size, onActivate, activationLabel, disabled, locked, lockedLabel, accessory, accessoryPlacement, layoutStyle }: IconTileProps): import("react").JSX.Element;
 export type TypingIndicatorProps = Readonly<{
     /** Localized status read by assistive tech ("Seoyeon is typing"); the visible row shows only the dots. */
     label: string;

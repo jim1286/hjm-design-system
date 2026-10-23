@@ -1,6 +1,6 @@
 import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { page, userEvent } from "vitest/browser";
+import { userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { SegmentedControl } from "../src/selection.js";
 import { HjmProvider } from "../src/provider.js";

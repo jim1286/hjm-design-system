@@ -3,7 +3,8 @@ import { useEffect, useRef } from "react";
 import { Animated, AppState, View } from "react-native";
 import { IconButton } from "./actions.js";
 import { CounterBadge } from "./data-display.js";
-import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
+import { iconButtonRecipe, resolveIconButtonBadgeOffset } from "@hjmds/design-contracts/recipes";
+import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { useHjmNativeTheme } from "./provider.js";
 import { iconButtonEdgeMargins } from "./internal/icon-button-edge.js";
 export function NotificationBell({ label, count, icon, onPress, disabled = false, active = true, edge }) {
@@ -30,6 +31,9 @@ export function NotificationBell({ label, count, icon, onPress, disabled = false
     // The IconButton edge overhang goes on the root, not the button: the badge is anchored to the root's end, and a
     // margin on the inner button would shrink the root and pull the badge in by the overhang (2026-10-17 1.27.2 adoption).
     const edgeMargins = iconButtonEdgeMargins(edge, iconButtonRecipe.defaults.tone, "small", environment.minimumVisualTarget);
-    return _jsxs(View, { style: { position: 'relative', alignSelf: 'flex-start', ...edgeMargins }, children: [_jsx(IconButton, { size: "small", hitSlop: 0, label: label, disabled: disabled, onPress: onPress, children: _jsx(Animated.View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { transform: [{ rotate: angle.interpolate({ inputRange: [-1, 1], outputRange: ['-12deg', '12deg'] }) }] }, children: icon }) }), _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: 'absolute', end: 0, top: 0 }, children: _jsx(CounterBadge, { count: count, variant: "floating" }) })] });
+    // Badge size and offset come from iconButtonRecipe.badge, as on Web: it rides above the glyph so only its floating
+    // ring touches it (2026-10-23 web check: the medium badge at top 0 hid 82% of an 18px glyph).
+    const badgeOffset = resolveIconButtonBadgeOffset("small", visibleControlHeight(iconButtonRecipe.sizes.small.diameter, environment.minimumVisualTarget));
+    return _jsxs(View, { style: { position: 'relative', alignSelf: 'flex-start', ...edgeMargins }, children: [_jsx(IconButton, { size: "small", hitSlop: 0, label: label, disabled: disabled, onPress: onPress, children: _jsx(Animated.View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { transform: [{ rotate: angle.interpolate({ inputRange: [-1, 1], outputRange: ['-12deg', '12deg'] }) }] }, children: icon }) }), _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: 'absolute', end: badgeOffset.inlineEnd, top: badgeOffset.blockStart }, children: _jsx(CounterBadge, { count: count, size: iconButtonRecipe.badge.size, variant: iconButtonRecipe.badge.variant }) })] });
 }
 //# sourceMappingURL=notification-bell.js.map

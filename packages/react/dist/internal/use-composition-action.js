@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createActionSession } from "@hjmds/design-contracts/action-session";
 export function useCompositionAction(disabled = false) {

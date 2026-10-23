@@ -8294,7 +8294,8 @@ export declare const recipeRegistry: {
         readonly gap: 8;
         readonly paddingInline: 16;
         readonly indicator: {
-            readonly size: 44;
+            readonly size: 32;
+            readonly customSize: 44;
             readonly borderWidth: 1;
             readonly activeBorderWidth: 2;
             readonly marks: {
@@ -8311,12 +8312,12 @@ export declare const recipeRegistry: {
                 }>;
                 readonly current: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "text";
                     alpha?: number;
                 }>;
                 readonly complete: Readonly<{
-                    source: "accent";
-                    key: "success";
+                    source: "theme";
+                    key: "borderControl";
                     alpha?: number;
                 }>;
                 readonly error: Readonly<{
@@ -8327,12 +8328,12 @@ export declare const recipeRegistry: {
             };
             readonly background: {
                 readonly pending: null;
-                readonly current: null;
-                readonly complete: Readonly<{
-                    source: "accent";
-                    key: "success";
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "text";
                     alpha?: number;
                 }>;
+                readonly complete: null;
                 readonly error: Readonly<{
                     source: "theme";
                     key: "danger";
@@ -8347,12 +8348,12 @@ export declare const recipeRegistry: {
                 }>;
                 readonly current: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly complete: Readonly<{
-                    source: "accent";
-                    key: "success";
+                    source: "theme";
+                    key: "text";
                     alpha?: number;
                 }>;
                 readonly error: Readonly<{
@@ -8367,7 +8368,7 @@ export declare const recipeRegistry: {
             readonly tone: {
                 readonly reached: Readonly<{
                     source: "theme";
-                    key: "contentBrand";
+                    key: "text";
                     alpha?: number;
                 }>;
                 readonly unreached: Readonly<{
@@ -8414,6 +8415,8 @@ export declare const recipeRegistry: {
         readonly press: {
             readonly minTouchTarget: 44;
         };
+        readonly transitionDuration: 200;
+        readonly segmentHeight: 4;
     };
     readonly surfaceRecipe: {
         readonly default: {

@@ -5,6 +5,7 @@ export declare const publicExportEntries: {
     readonly ActivityHeatmap: readonly ["./activity-heatmap"];
     readonly Agreement: readonly ["./agreement"];
     readonly AlertDialog: readonly ["./overlays"];
+    readonly AlertDialogQueueProvider: readonly ["./alert-dialog-queue"];
     readonly AnimatedStatistic: readonly ["./statistic-motion"];
     readonly AspectRatio: readonly ["./primitives"];
     readonly Asset: readonly ["./asset"];
@@ -85,11 +86,13 @@ export declare const publicExportEntries: {
     readonly HjmNativeProvider: readonly ["./provider"];
     readonly Icon: readonly ["./primitives"];
     readonly IconButton: readonly ["./bottom-cta", "./actions"];
+    readonly IconButtonLink: readonly ["./bottom-cta", "./actions"];
     readonly IconTile: readonly ["./screens"];
     readonly Image: readonly ["./data-display"];
     readonly ImageChoiceGroup: readonly ["./image-choice"];
     readonly ImageComparison: readonly ["./image-comparison"];
     readonly ImageViewer: readonly ["./image-viewer"];
+    readonly ImageViewerTrigger: readonly ["./image-viewer"];
     readonly ImmersiveOverlay: readonly ["./overlays"];
     readonly ImportFieldMapping: readonly ["./data-workflows"];
     readonly InlineConfirm: readonly ["./inline-confirm"];
@@ -156,7 +159,9 @@ export declare const publicExportEntries: {
     readonly Result: readonly ["./feedback"];
     readonly SavedItemsScreen: readonly ["./saved-items"];
     readonly ScatterChart: readonly ["./chart"];
+    readonly ScreenHost: readonly ["./screens"];
     readonly ScreenLayout: readonly ["./screens"];
+    readonly ScreenRefreshControl: readonly ["./screens"];
     readonly ScrollProgress: readonly ["./scroll-progress"];
     readonly SearchField: readonly ["./inputs"];
     readonly SearchScreen: readonly ["./screen-flows"];

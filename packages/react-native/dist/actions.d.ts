@@ -1,9 +1,10 @@
 import type { ComponentRef } from "react";
 import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contracts/components/link";
 import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
+import { type ElevationStep } from "@hjmds/design-contracts/foundations";
 import { type IconButtonEdge, type IconButtonTone as ContractIconButtonTone, type IconButtonShape, type IconButtonSize } from "@hjmds/design-contracts/recipes";
 import { type ButtonAlign as ContractButtonAlign, type ButtonAppearance as ContractButtonAppearance, type ButtonEdge as ContractButtonEdge, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
-import { forwardRef, type ReactNode, type Ref } from "react";
+import { forwardRef, type ReactElement, type ReactNode, type Ref } from "react";
 import { type View as NativeView, type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type NativeIconRenderProps } from "./primitives.js";
@@ -76,6 +77,11 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
      * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
      */
     edge?: IconButtonEdge;
+    /**
+     * Shadow token step for a floating control (iconButtonRecipe.elevation, default `none`). Filled tones only; an
+     * elevated ghost button throws (Android draws no elevation without a fill).
+     */
+    elevation?: ElevationStep;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
@@ -88,6 +94,42 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof NativeView>, IconButtonProps>>;
+type IconButtonLinkHostProps = Omit<PressableProps, "accessible" | "accessibilityLabel" | "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "hitSlop" | "onPress" | "role" | "style">;
+/** Pressable props HJM prepared for a router adapter (for example Expo Router `<Link asChild>`). */
+export type IconButtonLinkRenderProps = IconButtonLinkHostProps & Readonly<{
+    accessible: true;
+    accessibilityLabel: string;
+    accessibilityRole: "link";
+    accessibilityState: NonNullable<PressableProps["accessibilityState"]>;
+    children: ReactNode;
+    disabled: boolean;
+    hitSlop: PressableProps["hitSlop"];
+    onPress: NonNullable<PressableProps["onPress"]>;
+    role: "link";
+    style: NonNullable<PressableProps["style"]>;
+    destination: LinkDestination;
+}>;
+/**
+ * Native navigation with IconButton paint, matching Web IconButtonLink. Routing follows the TopBarAction link
+ * precedent: the product either handles `onNavigate` or composes its router link through `renderLink`.
+ */
+export type IconButtonLinkProps = IconButtonLinkHostProps & IconButtonNameProps & IconButtonContentProps & Readonly<{
+    destination: LinkDestination;
+    /** Optional when `renderLink` lets the router own activation. */
+    onNavigate?: (destination: LinkDestination) => void | Promise<void>;
+    renderLink?: (props: IconButtonLinkRenderProps) => ReactElement;
+    /** The link points at the current screen: selected surface and `accessibilityState.selected`. */
+    current?: boolean;
+    disabled?: boolean;
+    tone?: IconButtonTone;
+    size?: IconButtonSize;
+    shape?: IconButtonShape;
+    edge?: IconButtonEdge;
+    hitSlop?: PressableProps["hitSlop"];
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
+export declare function IconButtonLink({ label, children, destination, onNavigate, renderLink, current, disabled, tone, size, shape, edge, hitSlop, layoutStyle, ...props }: IconButtonLinkProps): import("react").JSX.Element;
 export type LinkProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     descriptor: LinkDescriptor;
     /** Product router boundary for both internal and external destinations. */

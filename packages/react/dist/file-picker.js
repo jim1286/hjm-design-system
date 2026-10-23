@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { filePickerTriggerDefaults, resolveFilePickerDescriptor, resolveFilePickerSelection, validateFilePickerTriggers, } from "@hjmds/design-contracts/components/file-picker";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";

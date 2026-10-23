@@ -1,13 +1,14 @@
+"use client";
 import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
-import { resolveTimelineDescriptor, } from "@hjmds/design-contracts/components/timeline";
+import { getTimelineSelectionTarget, resolveTimelineDescriptor, validateTimelineSelection, } from "@hjmds/design-contracts/components/timeline";
 import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
-import { accordionRecipe, avatarRecipe, dividerRecipe, listRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, createElement, forwardRef, isValidElement, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
+import { accordionRecipe, avatarRecipe, resolveAvatarSize, validateAvatarPresentation, dividerRecipe, listRecipe, validateDividerLineStyle, statisticRecipe, } from "@hjmds/design-contracts/recipes";
+import { Children, createElement, forwardRef, Fragment, isValidElement, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { assignRef, classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 function validateAccordionItems(items) {
@@ -116,21 +117,31 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                     focused.current = { id: item.id, index, node: event.target }; }, className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
 });
-export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, renderFallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, layoutStyle, ...props }, ref) {
-    if (name.trim().length === 0)
+export const Avatar = forwardRef(function Avatar({ name, src, alt: altProp, decorative = false, fallback, renderFallback, renderImage, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, imageProps, className, layoutStyle, ...props }, ref) {
+    if (!decorative && (name === undefined || name.trim().length === 0))
         throw new TypeError("Avatar name must not be empty");
+    if (renderImage && imageProps)
+        throw new TypeError("Avatar renderImage and imageProps are exclusive; pass image attributes to the host");
+    validateAvatarPresentation({ shape, frame, accessoryPlacement });
+    const diameter = resolveAvatarSize(size);
+    const alt = decorative ? "" : altProp ?? name ?? "";
     const generation = useMemo(() => ({}), [src]);
     const active = useRef(generation);
     useLayoutEffect(() => { active.current = generation; return () => { active.current = null; }; }, [generation]);
     const [failed, setFailed] = useState(null);
     const imageAvailable = Boolean(src) && failed !== generation;
     const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
-    return (_jsx("span", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
-                if (active.current !== generation)
-                    return;
-                setFailed(generation);
-                onError?.(event);
-            } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? resolveAvatarInitials(name) })) }));
+    const fail = () => { if (active.current === generation)
+        setFailed(generation); };
+    const initials = name !== undefined && name.trim().length > 0 ? resolveAvatarInitials(name) : null;
+    return (_jsxs("span", { ...props, "aria-hidden": decorative || props["aria-hidden"], style: { ...props.style, ...layoutStyle, "--hjm-avatar-size": `${diameter}px`,
+            // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
+            "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-frame": frame, "data-state": imageAvailable ? "image" : "fallback", children: [src && imageAvailable ? (renderImage ? (_jsx(Fragment, { children: renderImage({ src, alt, size: diameter, className: "hjm-avatar__image", onError: fail }) }, src)) : (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
+                    if (active.current !== generation)
+                        return;
+                    setFailed(generation);
+                    onError?.(event);
+                } }))) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: diameter, decorative: true }) ?? fallback ?? initials })), accessory ? _jsx("span", { className: "hjm-avatar__accessory", "data-placement": accessoryPlacement, children: accessory }) : null] }));
 });
 /**
  * Overlapping avatars. The overlap comes from the recipe ratio rather than a
@@ -146,7 +157,8 @@ export const AvatarGroup = forwardRef(function AvatarGroup({ label, children, si
         // and keep the recipe overlap last so it stays size-derived.
         style: { ...style, ...layoutStyle, "--hjm-avatar-overlap": `${offset}px` }, children: [children, overflow ? _jsx("span", { className: "hjm-avatar-group__overflow", "aria-hidden": "true", children: overflow }) : null] }));
 });
-export const Divider = forwardRef(function Divider({ orientation = dividerRecipe.defaults.orientation, inset = dividerRecipe.defaults.inset, decorative = false, className, layoutStyle, ...props }, ref) {
+export const Divider = forwardRef(function Divider({ orientation = dividerRecipe.defaults.orientation, inset = dividerRecipe.defaults.inset, lineStyle = dividerRecipe.defaults.lineStyle, decorative = false, className, layoutStyle, ...props }, ref) {
+    validateDividerLineStyle(lineStyle);
     return createElement(orientation === "horizontal" ? "hr" : "div", {
         ...props,
         style: { ...props.style, ...layoutStyle },
@@ -154,6 +166,7 @@ export const Divider = forwardRef(function Divider({ orientation = dividerRecipe
         className: classNames("hjm-divider", className),
         "data-orientation": orientation,
         "data-inset": inset,
+        "data-line-style": lineStyle,
         role: decorative ? "presentation" : "separator",
         "aria-hidden": decorative || undefined,
         "aria-orientation": decorative ? undefined : orientation,
@@ -194,7 +207,7 @@ function StatisticView({ descriptor, density = "comfortable", presentation = "pl
     const trendName = resolved.trend
         ? statisticRecipe.trend.marks[resolved.trend.direction]
         : undefined;
-    return (_jsxs("article", { ...props, style: { ...props.style, ...layoutStyle, ...(valueColor ? { "--hjm-statistic-value-color": valueColor } : {}) }, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-arrangement": bar ? "bar" : undefined, "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [leading === undefined ? null : _jsx("span", { className: "hjm-statistic__leading", children: leading }), resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
+    return (_jsxs("article", { ...props, style: { ...props.style, ...layoutStyle, ...(valueColor ? { "--hjm-statistic-value-color": valueColor } : {}) }, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-arrangement": bar ? "bar" : undefined, "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", "data-leading": leading === undefined ? undefined : "", children: [leading === undefined ? null : _jsx("span", { className: "hjm-statistic__leading", children: leading }), resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
 }
 export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, arrangement = "grid", renderLeading, getValueColor, renderTrendMark, className, style, layoutStyle, ...props }) {
     validateStatisticGroup(descriptor);
@@ -255,11 +268,53 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
                                 } })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
-function TimelineInner({ items, composeAccessibleName, renderMetadata, renderActions, className, layoutStyle, ...props }, ref) {
-    const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
-    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => {
+function TimelineInner({ items, composeAccessibleName, renderMetadata, renderActions, selectedId, onSelectedIdChange, className, layoutStyle, onKeyDown, ...props }, ref) {
+    validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+    const selectable = onSelectedIdChange !== undefined;
+    if (selectable && !props["aria-label"] && !props["aria-labelledby"]) {
+        throw new TypeError("A selectable Timeline needs aria-label or aria-labelledby (listbox name)");
+    }
+    const resolved = resolveTimelineDescriptor(selectable ? { items, selectedId: selectedId ?? null } : { items }, { composeAccessibleName });
+    const idPrefix = useId();
+    // Roving tab stop: the selected record, or the first one before anything is chosen.
+    const tabStopId = selectable ? (selectedId ?? resolved[0]?.id) : undefined;
+    const select = (list, id) => {
+        if (id !== selectedId)
+            onSelectedIdChange?.(id);
+        list.querySelector(`[data-timeline-id="${CSS.escape(id)}"]`)?.focus();
+    };
+    const handleKeyDown = (event) => {
+        onKeyDown?.(event);
+        if (!selectable || event.defaultPrevented)
+            return;
+        const focusedId = event.target.closest("[data-timeline-id]")?.dataset.timelineId;
+        if (focusedId === undefined)
+            return;
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            select(event.currentTarget, focusedId);
+            return;
+        }
+        const target = getTimelineSelectionTarget(items, focusedId, event.key);
+        if (target === undefined)
+            return;
+        event.preventDefault();
+        select(event.currentTarget, target);
+    };
+    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), role: selectable ? "listbox" : props.role, "aria-orientation": selectable ? "vertical" : undefined, "data-selectable": selectable || undefined, onKeyDown: handleKeyDown, children: resolved.map((item, index) => {
             const actions = renderActions?.(item);
-            return (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, "data-emphasized": item.emphasized || undefined, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), renderMetadata?.(item)] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null, item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, children: item.timestamp }) : null] }), actions ? _jsx("div", { className: "hjm-timeline__actions", children: actions }) : null] }, item.id));
+            const detailIds = selectable
+                ? [item.description ? `${idPrefix}-${index}-description` : null, item.timestamp ? `${idPrefix}-${index}-timestamp` : null].filter(Boolean).join(" ")
+                : "";
+            return (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, "data-emphasized": item.emphasized || undefined, ...(selectable ? {
+                    role: "option",
+                    "aria-selected": item.selected,
+                    "aria-describedby": detailIds || undefined,
+                    "data-timeline-id": item.id,
+                    "data-state": item.selected ? "selected" : undefined,
+                    tabIndex: item.id === tabStopId ? 0 : -1,
+                    onClick: (event) => select(event.currentTarget.parentElement, item.id),
+                } : {}), children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), renderMetadata?.(item)] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", id: selectable ? `${idPrefix}-${index}-description` : undefined, children: item.description })) : null, item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, id: selectable ? `${idPrefix}-${index}-timestamp` : undefined, children: item.timestamp }) : null] }), actions ? _jsx("div", { className: "hjm-timeline__actions", children: actions }) : null] }, item.id));
         }) }));
 }
 export const Timeline = forwardRef(TimelineInner);

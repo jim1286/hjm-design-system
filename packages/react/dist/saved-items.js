@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { ListDetailScreen } from "./screen-flows.js";
 import { Stack, Text, Grid } from "./layout.js";

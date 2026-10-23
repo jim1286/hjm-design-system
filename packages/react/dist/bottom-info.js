@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { bottomInfoRecipe, validateBottomInfoDescriptor, } from "@hjmds/design-contracts/components/bottom-info";
 import { forwardRef } from "react";

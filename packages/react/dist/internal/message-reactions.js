@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { chatMessageRecipe, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";

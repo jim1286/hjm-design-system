@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import type { IconButtonEdge } from "@hjmds/design-contracts/recipes";
+import { type IconButtonEdge } from "@hjmds/design-contracts/recipes";
 export type NotificationBellProps = Readonly<{
     label: string;
     count: number;

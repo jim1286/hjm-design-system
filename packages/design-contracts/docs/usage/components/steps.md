@@ -3,8 +3,8 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.12.1
-- 검토일: 2026-10-18
+- 적용: 미게시(1.41.2 이후)
+- 검토일: 2026-10-23
 - 근거: [Steps](../../steps.md), [StepPlayer](../../step-player.md), `src/steps.ts`(`stepsRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/단계 탐색`, `배포/컴포넌트/상태와 알림/단계별 진행 표시`
 
@@ -13,6 +13,9 @@
 여러 단계로 된 **선형 흐름에서 지금 어디인지** 보여 줄 때 쓴다. 온보딩(환영 → 구단 → 알림 → 완료),
 가입·주문 처리 단계가 여기에 속한다. 순서가 있는 설계 설명은 `navigationMode: "free"`로 자유롭게 탐색할 수 있다. 기본은 표시 전용이고, `onStepPress`를 주면 **이미 지난 단계만** 눌러 그 단계로
 돌아갈 수 있다(1.31.0, 단계형 작성).
+
+기본 `focus`는 현재 번호만 중립색 원으로 채우고 완료 체크·예정 번호의 무게를 낮춘다.
+본문 공간이 필요하면 `compact`, 현재 단계 본문을 같은 목록 안에서 펼치려면 `vertical`을 선택한다.
 
 ## 쓰지 않을 때
 
@@ -75,7 +78,10 @@ import { Steps } from "@hjmds/react-native/steps";
 | `descriptor.steps[]` | `{ id, label, description? }` | — | — |
 | `statusLabels` | `{ pending, current, complete, error }`(모두 `string`) | — (필수) | 상태를 읽는 문구 |
 | `composeAccessibleName` | `(info: { position: number, total: number, label: string }) => string` | — (필수) | `position`은 1부터 |
-| `renderMark` | `(status: StepStatus, position: number) => ReactNode` | `✓`·`!`·번호 | 원 안 표시를 바꾼다 |
+| `presentation` | `focus` · `compact` · `vertical` | `focus` | 같은 커서와 이동 규칙을 세 표현으로 제공 |
+| `overviewLabel` | `string` | — | compact의 전체 단계 펼침 버튼에 쓰는 제품 번역 문구. compact에서는 필수 |
+| `renderStepContent` | `(id) => ReactNode` | 없음 | vertical 전용 현재 단계 본문 슬롯. 다른 단계는 접힘; 초안은 상위 제품 상태로 보관 |
+| `renderMark` | `(status: StepStatus, position: number) => ReactNode` | `✓`·`!`·번호 | 원 안 표시를 바꾸며 제품 그림 공간 44를 보존한다 |
 | `onStepPress` | `(id) => void` | 없음 | 1.31.0. 기본 linear에서 커서 앞 단계(`revisitable`, 상태는 늘 `complete`)만 원·라벨 전체가 한 버튼이 되고 누르면 그 `id`를 넘긴다. linear의 현재·다음 단계는 표시 전용으로 남는다. free에서는 현재·다음도 버튼이다. 버튼 이름은 `composeAccessibleName` 결과, 상태 문구는 설명(Web `aria-describedby`·Native `accessibilityHint`). 흐름이 잠긴 동안(제출 중)은 prop을 빼면 모두 표시 전용이 된다 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 루트 배치. Web·Native 모두 |
 | `style`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle`. 현재 공개 props에서 제거되었다 |
@@ -83,17 +89,26 @@ import { Steps } from "@hjmds/react-native/steps";
 | `StepPlayer` `onPlayingChange`·`onReplay` | `(playing: boolean) => void`·`() => void` | — (필수) | 재생/일시정지·다시 보기 요청 |
 | `StepPlayer` `labels` | `{ play, pause, replay, progress }` | — (필수) | — |
 
-방향·variant 축은 없다. 항상 가로 한 줄이다. `descriptor.navigationMode`는 기본 `linear`이며 앞 단계만 이동한다. `free`는 검증을 건너뛰어도 되는 읽기 흐름에서 모든 단계 선택을 허용한다. 선택된 단계의 본문은 제품이 controlled state로 연결한다.
+`focus`는 가로 레일, `compact`는 현재 순서·라벨·상태와 4 높이 분할 막대, `vertical`은 세로 레일이다.
+compact는 `overviewLabel` 버튼으로 같은 단계 목록을 펼친 뒤 지난 단계를 누를 수 있다.
+vertical의 `renderStepContent(id)`는 현재 커서에만 표시되며 버튼 내부에 중첩되지 않는다.
+잘못된 presentation, 비어 있는 compact overviewLabel, vertical 외 renderStepContent는 오류다.
+linear는 지난 단계만 돌아가고 free는 설명 읽기에서 모든 단계를 선택한다. handler를 생략하면 표시 전용이다.
+제품은 커서와 초안을 controlled state로 소유한다. 예: `presentation="compact" overviewLabel={t("allSteps")}`,
+`presentation="vertical" renderStepContent={id => renderControlledForm(id)}`.
+실행 예제는 Web·Native의 `showcase/*/src/components/steps-presentation-preview.tsx`에 있다.
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | Web은 연결선이 있는 앞 단계가 남은 폭을 균등하게 나누고 마지막 단계는 내용 폭(전체 폭/단계 수 이내)만 사용한다. 첫·마지막 표지는 양끝에 맞춘다. Native도 마지막 칸은 내용 폭만 사용한다. 원(indicator) 44(`glyph.xxl`), 연결선 1(`stroke.default`), 현재·오류 단계의 원 테두리 2(`stroke.strong`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
-| 간격 | 좌우 안쪽 여백 `spacing.md` 16(`stepsRecipe.paddingInline`), 원과 글자 사이 `spacing.xs` 8(`stepsRecipe.gap`) | `stepsRecipe.gap` |
-| 순서·정렬 | 흐름 화면의 맨 위(머리 아래, 본문 위)에 가로 한 줄. 화면 아래 행동 버튼과 떨어뜨리고, 같은 수준 화면 사이 이동(탭)으로 쓰지 않는다 | — |
+| 크기 | Web은 연결선이 있는 앞 단계가 남은 폭을 균등하게 나누고 마지막 단계는 내용 폭(전체 폭/단계 수 이내)만 사용한다. 첫·마지막 표지는 양끝에 맞춘다. Native도 마지막 칸은 내용 폭만 사용한다. 숫자 원(indicator) 32(`glyph.xl`), 제품 그림은 44(`glyph.xxl`), 연결선 1(`stroke.default`), 오류 원 테두리 2(`stroke.strong`), 현재 원은 중립 채움과 바깥 링. compact 막대 높이 4(`spacing.xxs`). 누를 수 있는 단계는 칸 전체가 버튼이고 최소 높이 44(`stepsRecipe.press.minTouchTarget`) | `stepsRecipe`, `styles.css` `.hjm-steps*`, `react-native/src/steps.tsx` |
+| 간격 | 좌우 안쪽 여백 `spacing.md` 16(`stepsRecipe.paddingInline`), 가로 원과 글자 사이 `spacing.xs` 8(`stepsRecipe.gap`), 세로 표지 옆 본문 간격·단계 간격 `spacing.md` 16 | `stepsRecipe.gap` |
+| 순서·정렬 | 흐름 화면의 맨 위(머리 아래, 본문 위)에 배치. focus는 가로 레일, compact는 요약과 펼침 버튼, vertical은 현재 본문을 표지 아래에 배치한다. 화면 아래 행동 버튼과 떨어뜨리고, 같은 수준 화면 사이 이동(탭)으로 쓰지 않는다 | — |
 | 고정·스크롤 | — | — |
-| 좁은 폭·큰 글자 | 라벨·설명은 줄바꿈된다(`overflow-wrap: anywhere`). 좁은 폭에서 라벨이 세 줄 이상이 되면 라벨을 줄이거나 [Progress](progress.md)로 바꾼다. 세로 배치 축은 없다 | `styles.css` `.hjm-steps__label` |
+| 좁은 폭·큰 글자 | 라벨·설명은 줄바꿈된다(`overflow-wrap: anywhere`). 이름이 길거나 단계가 많으면 compact 또는 vertical을 선택한다 | `styles.css` `.hjm-steps__label` |
+
+상태 전환은 `stepsRecipe.transitionDuration` = `motion.normal` 200ms. Web 표지·연결선 색과 눌림, Native 상태 변경의 짧은 opacity와 눌림으로 표현한다. reduced motion에서는 이동 연출을 생략한다.
 
 ## 꼭 지킬 것
 
@@ -124,3 +139,9 @@ import { Steps } from "@hjmds/react-native/steps";
 2026-10-19 스핀트 실제 화면 피드백: 수평 행 gap으로 끊기던 연결선을 없애고 마지막 표지 앞의 연결 구간을 유지한다. Native도 마지막 열에 균등 여분 폭을 남기지 않아 첫·마지막 표지가 본문 양끝에 맞는다. 내부 문구 간격과 기본 이동 계약은 유지한다.
 
 2026-10-21 스핀트 실제 화면 피드백: 24pt 원에 꽃 표시가 붙어 식별하기 어렵고 양끝이 화면 가장자리에 가까웠다. 공통 recipe의 원을 `glyph.xxl` 44pt로 키우고 좌우 안쪽 여백 `spacing.md` 16pt를 두었다. Web·Native에 동일 적용하며 제품 그림은 테두리 안 여유를 두고 배치한다. 개발 소스 변경이며 미게시다.
+
+
+2026-10-23 사용자 시안 선택: 포커스 레일을 기본으로, 컴팩트 챕터·펼쳐지는 단계를 옵션으로 요청했다.
+원·연결선·완료와 현재의 시각 무게가 비슷하던 문제를 공통 recipe에서 고친다. 현재는 `content.primary` 채움과 `canvas` 글자,
+완료·도달선은 중립색, 오류는 danger다. 숫자만 32로 줄이고 Spint 꽃 그림의 44 공간과 터치 최소값은 보존한다.
+앞선 44 숫자·초록 완료·브랜드 현재 테두리 기본 표현을 대체하는 미게시 개발 변경이다.

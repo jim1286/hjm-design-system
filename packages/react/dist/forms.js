@@ -1,8 +1,10 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+"use client";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { iconRecipe, searchFieldRecipe, } from "@hjmds/design-contracts/recipes";
 import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/design-contracts/components/password-field";
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
+import { resolveCharacterCount, resolveCharacterCountMaxLength, shouldAnnounceCharacterCount, } from "@hjmds/design-contracts/character-count";
 import { createContext, forwardRef, useContext, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { composeRefs, classNames, isAriaInvalid, useControllableState } from "./internal.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
@@ -80,10 +82,43 @@ function requireFieldAccessibleName(label, ariaLabel) {
         throw new TypeError("Field controls require either label or aria-label");
     }
 }
-export const TextField = forwardRef(function TextField({ id, label, description, error, required, disabled, variant, shape, align, leading, trailing, fieldClassName, className, onFocus, onBlur, onChange, onValueChange, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, layoutStyle, initialFocusTarget, ...props }, ref) {
+/*
+  Character count (characterCountRecipe, 2026-10-23 BurnTok ComposerCount/TextLengthHint). The row sits under the
+  control and before the description, and `aria-describedby` references it, so the counter and sentence are read on
+  focus. A separate polite live region announces only on entering near/short/over: announcing each keystroke
+  would talk over the typed text.
+*/
+function useCharacterCount(options, value, ownMaxLength) {
+    if (options && ownMaxLength !== undefined) {
+        throw new TypeError("Pass the limit through characterCount.max instead of maxLength");
+    }
+    const state = options ? resolveCharacterCount(value, options) : undefined;
+    const previous = useRef(undefined);
+    const [announcement, setAnnouncement] = useState("");
+    const status = state?.status;
+    useEffect(() => {
+        if (state && shouldAnnounceCharacterCount(previous.current, state))
+            setAnnouncement(state.message ?? "");
+        previous.current = status;
+        // Only a status change announces; the message inside one status changes with every keystroke.
+    }, [status]);
+    const maxLength = options ? resolveCharacterCountMaxLength(options) : ownMaxLength;
+    return { ...(state ? { state } : {}), announcement, ...(maxLength === undefined ? {} : { maxLength }) };
+}
+function CharacterCountRow({ id, state, announcement }) {
+    return (_jsxs(_Fragment, { children: [_jsxs("div", { id: id, className: "hjm-field__count", "data-status": state.status, "data-invalid": state.invalid || undefined, children: [state.message ? _jsx("span", { className: "hjm-field__count-message", children: state.message }) : null, _jsx("span", { className: "hjm-field__counter", children: state.counter })] }), _jsx("span", { className: "hjm-visually-hidden", "aria-live": "polite", "data-hjm-field-count-announcement": "", children: announcement })] }));
+}
+function useDraftValue(value, defaultValue) {
+    const [draft, setDraft] = useState(() => (defaultValue === undefined || defaultValue === null ? "" : String(defaultValue)));
+    return [value === undefined || value === null ? draft : String(value), setDraft];
+}
+export const TextField = forwardRef(function TextField({ id, label, description, error, required, disabled, variant, shape, align, leading, trailing, fieldClassName, className, onFocus, onBlur, onChange, onValueChange, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, layoutStyle, initialFocusTarget, characterCount, maxLength: ownMaxLength, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const [countedValue, setDraft] = useDraftValue(props.value, props.defaultValue);
+    const count = useCharacterCount(characterCount, countedValue, ownMaxLength);
+    const countId = `${ids.controlId}-count`;
     const control = useRef(null);
     useInitialFocusTarget(control, initialFocusTarget);
     const handleFocus = (event) => {
@@ -94,15 +129,19 @@ export const TextField = forwardRef(function TextField({ id, label, description,
         setFocused(false);
         onBlur?.(event);
     };
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, invalid: isAriaInvalid(ariaInvalid), variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: composeRefs(control, ref), id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur, onChange: (event) => {
-                        onChange?.(event);
-                        onValueChange?.(event.currentTarget.value);
-                    } }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));
+    return (_jsxs(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, invalid: isAriaInvalid(ariaInvalid) || count.state?.status === "over", variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: [_jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: composeRefs(control, ref), id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, ...(count.maxLength === undefined ? {} : { maxLength: count.maxLength }), "aria-invalid": error || count.state?.status === "over" ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy([ariaDescribedBy, count.state ? countId : undefined].filter(Boolean).join(" ") || undefined, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur, onChange: (event) => {
+                            setDraft(event.currentTarget.value);
+                            onChange?.(event);
+                            onValueChange?.(event.currentTarget.value);
+                        } }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }), count.state ? _jsx(CharacterCountRow, { id: countId, state: count.state, announcement: count.announcement }) : null] }));
 });
-export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, trailing, leadingAction, align, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, layoutStyle, initialFocusTarget, ...props }, ref) {
+export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, trailing, leadingAction, align, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, layoutStyle, initialFocusTarget, characterCount, maxLength: ownMaxLength, onChange, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const [countedValue, setDraft] = useDraftValue(props.value, props.defaultValue);
+    const count = useCharacterCount(characterCount, countedValue, ownMaxLength);
+    const countId = `${ids.controlId}-count`;
     const control = useRef(null);
     useInitialFocusTarget(control, initialFocusTarget);
     // Bounds are expressed in lines so the recipe keeps line height and padding.
@@ -114,13 +153,16 @@ export const TextArea = forwardRef(function TextArea({ id, label, description, e
             ? {}
             : { "--hjm-field-max-visible-lines": maxVisibleLines }),
     };
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, invalid: isAriaInvalid(ariaInvalid), variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control hjm-field__control--multiline", children: [leadingAction ? _jsx("span", { className: "hjm-field__leading", children: leadingAction }) : null, _jsx("textarea", { ...props, ref: composeRefs(control, ref), id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
-                        setFocused(true);
-                        onFocus?.(event);
-                    }, onBlur: (event) => {
-                        setFocused(false);
-                        onBlur?.(event);
-                    } }), trailing ? _jsx("span", { className: "hjm-field__trailing", children: trailing }) : null] }) }));
+    return (_jsxs(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, invalid: isAriaInvalid(ariaInvalid) || count.state?.status === "over", variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: [_jsxs("div", { className: "hjm-field__control hjm-field__control--multiline", children: [leadingAction ? _jsx("span", { className: "hjm-field__leading", children: leadingAction }) : null, _jsx("textarea", { ...props, ref: composeRefs(control, ref), id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, ...(count.maxLength === undefined ? {} : { maxLength: count.maxLength }), "aria-invalid": error || count.state?.status === "over" ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy([ariaDescribedBy, count.state ? countId : undefined].filter(Boolean).join(" ") || undefined, description, error, ids.descriptionId, ids.errorId), onChange: (event) => {
+                            setDraft(event.currentTarget.value);
+                            onChange?.(event);
+                        }, onFocus: (event) => {
+                            setFocused(true);
+                            onFocus?.(event);
+                        }, onBlur: (event) => {
+                            setFocused(false);
+                            onBlur?.(event);
+                        } }), trailing ? _jsx("span", { className: "hjm-field__trailing", children: trailing }) : null] }), count.state ? _jsx(CharacterCountRow, { id: countId, state: count.state, announcement: count.announcement }) : null] }));
 });
 export const SearchField = forwardRef(function SearchField({ value: valueProp, defaultValue = "", onValueChange, onChange, size = searchFieldRecipe.defaults.size, clearLabel, onClear, loading = false, renderSearchIcon, renderClearIcon, renderLoadingIndicator, leading, trailing, fieldClassName, disabled, "aria-busy": ariaBusy, ...props }, forwardedRef) {
     const [value, setValue] = useControllableState({

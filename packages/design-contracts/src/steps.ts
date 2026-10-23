@@ -1,16 +1,10 @@
 import type { ColorReference } from "./color-references.js";
 import type { FontWeightValue, TextVariant } from "./foundations.js";
 import type { SemanticIconName } from "./icon.js";
-import { control, fontWeight, glyph, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, motion, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
-/**
- * Ant Design Steps' full surface (navigation jump, dot type, custom per-item
- * icon, vertical orientation) is intentionally not reproduced. Steps stay a
- * single-cursor horizontal flow. Validated forms default to backward-only
- * navigation; reading flows explicitly opt into free navigation (2026-10-19 portfolio).
- * See docs/steps.md for the per-axis rationale.
- */
+/** One cursor and navigation policy shared by every presentation. */
 export type StepStatus = "pending" | "current" | "complete" | "error";
 
 /** Only the cursor step can be "current" or "error"; every other step is derived. */
@@ -37,9 +31,17 @@ export type StepsDescriptor<Id extends string = string> = Readonly<{
   navigationMode?: "linear" | "free";
 }>;
 
+export type StepsPresentation = "focus" | "compact" | "vertical";
+
+export function validateStepsPresentation(presentation: StepsPresentation, overviewLabel?: string): void {
+  if (!["focus", "compact", "vertical"].includes(presentation)) throw new TypeError(`Unsupported Steps presentation: ${presentation}`);
+  if (presentation === "compact" && !overviewLabel?.trim()) throw new TypeError("Compact Steps requires a localized overviewLabel");
+}
+
 export const stepsDefaults = {
+  presentation: "focus",
   currentStepStatus: "current",
-} as const satisfies Readonly<{ currentStepStatus: StepCursorStatus }>;
+} as const satisfies Readonly<{ currentStepStatus: StepCursorStatus; presentation: StepsPresentation }>;
 
 export type StepsStatusLabels = Readonly<{
   pending: string;
@@ -223,7 +225,9 @@ export const stepsRecipe = {
   // Spint review (2026-10-21): keep endpoint marks inset and give illustrated marks breathing room.
   paddingInline: spacing.md,
   indicator: {
-    size: glyph.xxl,
+    size: glyph.xl,
+    // Illustrated product marks retain the space approved in the Spint review.
+    customSize: glyph.xxl,
     borderWidth: stroke.default,
     activeBorderWidth: stroke.strong,
     /** null means the renderer shows the step's own position number instead of a glyph. */
@@ -235,27 +239,27 @@ export const stepsRecipe = {
     },
     border: {
       pending: semanticColors.border.default,
-      current: semanticColors.content.brand,
-      complete: semanticColors.feedback.success.border,
+      current: semanticColors.content.primary,
+      complete: semanticColors.border.control,
       error: semanticColors.feedback.danger.border,
     },
     background: {
       pending: null,
-      current: null,
-      complete: semanticColors.feedback.success.badgeBackground,
+      current: semanticColors.content.primary,
+      complete: null,
       error: semanticColors.feedback.danger.badgeBackground,
     },
     content: {
       pending: semanticColors.content.secondary,
-      current: semanticColors.content.brand,
-      complete: semanticColors.feedback.success.foreground,
+      current: semanticColors.canvas,
+      complete: semanticColors.content.primary,
       error: semanticColors.feedback.danger.foreground,
     },
   },
   connector: {
     height: stroke.default,
     tone: {
-      reached: semanticColors.content.brand,
+      reached: semanticColors.content.primary,
       unreached: semanticColors.border.default,
     },
   },
@@ -277,12 +281,16 @@ export const stepsRecipe = {
   press: {
     minTouchTarget: control.minTouchTarget,
   },
+  // User selected the focus proposal on 2026-10-23: neutral current fill, quieter completed rail.
+  transitionDuration: motion.normal,
+  segmentHeight: spacing.xxs,
 } as const satisfies {
   slots: readonly string[];
   gap: number;
   paddingInline: number;
   indicator: {
     size: number;
+    customSize: number;
     borderWidth: number;
     activeBorderWidth: number;
     marks: Record<StepStatus, SemanticIconName | null>;
@@ -306,4 +314,6 @@ export const stepsRecipe = {
   press: {
     minTouchTarget: number;
   };
+  transitionDuration: number;
+  segmentHeight: number;
 };

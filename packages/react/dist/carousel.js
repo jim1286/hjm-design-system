@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useLayoutEffect, useRef, useState, forwardRef } from "react";
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive, resolvePageIndicator, getPageIndicatorTarget, } from "@hjmds/design-contracts/components/carousel";

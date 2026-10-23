@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { validateTasks } from '@hjmds/design-contracts/task-list';
 import { Checkbox } from './selection.js';

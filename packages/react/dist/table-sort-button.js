@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 // Both public tables need the same native button/hidden glyph semantics. Keep
 // their two-state/three-state policies and CSS separate rather than merging APIs.

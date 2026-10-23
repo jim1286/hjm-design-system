@@ -1,15 +1,37 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { badgeRecipe, listRowRecipe, } from "@hjmds/design-contracts/recipes";
+import { badgeRecipe, listRowRecipe, resolveBadgeCategoryColor, validateListRowTrailingAccessory, } from "@hjmds/design-contracts/recipes";
+import { THEMES } from "@hjmds/design-contracts/colors";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveTagDescriptor, } from "@hjmds/design-contracts/components/tag";
 import { cardRecipe, } from "@hjmds/design-contracts/components/card";
 import { surfaceGeometry, } from "@hjmds/design-contracts/recipes/base";
 import { createElement, forwardRef, } from "react";
 import { classNames } from "./internal.js";
-import { useHjmDensityDefault } from "./provider.js";
+import { useHjmDensityDefault, useOptionalHjmTheme } from "./provider.js";
 import { Surface, Text } from "./layout.js";
-export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, className, children, layoutStyle, style, ...props }, ref) {
-    const iconContext = { color: "currentColor", size: badgeRecipe.sizes[size].iconSize };
-    return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof leading === "function" ? leading(iconContext) : leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof trailing === "function" ? trailing(iconContext) : trailing }))] }));
+import { Icon } from "./supplemental-display.js";
+export const Badge = forwardRef(function Badge({ tone: toneProp, categoryColor, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, className, children, layoutStyle, style, ...props }, ref) {
+    if (categoryColor !== undefined && toneProp !== undefined)
+        throw new TypeError("Badge takes either tone or categoryColor, not both");
+    const tone = toneProp ?? badgeRecipe.defaults.tone;
+    // Outside a provider the stylesheet paints the light palette, so the category resolves against it too.
+    const theme = useOptionalHjmTheme();
+    const category = categoryColor === undefined ? null : resolveBadgeCategoryColor(categoryColor, {
+        theme: theme?.environment.theme ?? "light",
+        variant,
+        palette: theme?.palette.theme ?? THEMES.light,
+    });
+    const iconContext = { color: "currentColor", size: badgeRecipe.sizes[size].iconSize, strokeWidth: badgeRecipe.iconStrokeWidth };
+    return (_jsxs("span", { ...props, style: {
+            ...style,
+            ...(category ? {
+                "--hjm-badge-category-content": category.content,
+                "--hjm-badge-category-background": category.background ?? "transparent",
+                "--hjm-badge-category-border": category.border ?? "transparent",
+            } : {}),
+            ...layoutStyle,
+        }, ref: ref, className: classNames("hjm-badge", className), "data-tone": category ? "category" : tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof leading === "function" ? leading(iconContext) : leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof trailing === "function" ? trailing(iconContext) : trailing }))] }));
 });
 export const Tag = forwardRef(function Tag({ children, tone, className, layoutStyle, style, ...props }, ref) {
     const descriptor = resolveTagDescriptor({
@@ -59,7 +81,7 @@ selected, onActivate, href, renderLink, disabled = false, tone = cardRecipe.defa
 export function QuoteCard({ children, attribution, renderMark, ...props }) {
     return _jsx(Card, { ...props, leading: _jsx("span", { className: "hjm-quote-card__mark", "aria-hidden": "true", children: renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? "“" }), children: _jsxs("blockquote", { className: "hjm-quote-card__body", children: [children, attribution === undefined ? null : _jsx("footer", { children: _jsx(Text, { variant: "caption", tone: "muted", children: attribution }) })] }) });
 }
-export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
+export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, trailingAccessory = listRowRecipe.defaults.trailingAccessory, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the
     // rules of hooks on the very first row that passes `density`.
     const densityDefault = useHjmDensityDefault({
@@ -67,9 +89,11 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
         compact: "compact",
     });
     const density = densityProp ?? densityDefault;
+    validateListRowTrailingAccessory(trailingAccessory);
+    const accessory = trailingAccessory === "none" ? null : listRowRecipe.accessories[trailingAccessory];
     if (loading) {
         // A loading row is never interactive: there is nothing to activate yet.
-        return (_jsxs("div", { ...props, ref: ref, role: loadingLabel ? "status" : undefined, "aria-busy": loadingLabel ? true : undefined, "aria-hidden": loadingLabel ? undefined : true, "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-leading": leading ? "" : undefined, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "", style: { width: `${listRowRecipe.loading.titleWidthPercent}%` } }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "", style: { width: `${listRowRecipe.loading.descriptionWidthPercent}%` } }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "", style: { width: listRowRecipe.loading.trailingWidth } }) : null] }));
+        return (_jsxs("div", { ...props, ref: ref, role: loadingLabel ? "status" : undefined, "aria-busy": loadingLabel ? true : undefined, "aria-hidden": loadingLabel ? undefined : true, "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-leading": leading ? "" : undefined, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "", style: { width: `${listRowRecipe.loading.titleWidthPercent}%` } }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "", style: { width: `${listRowRecipe.loading.descriptionWidthPercent}%` } }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "", style: { width: listRowRecipe.loading.trailingWidth } }) : null, accessory ? _jsx("span", { className: "hjm-list-row__accessory", "data-accessory": trailingAccessory, style: { inlineSize: glyph[accessory.glyph], blockSize: glyph[accessory.glyph] } }) : null] }));
     }
     const element = href ? "a" : onClick ? "button" : "div";
     const interactiveProps = href
@@ -106,7 +130,9 @@ export const ListRow = forwardRef(function ListRow({ title, description, leading
         style: trailingAction ? style : { ...style, ...layoutStyle },
     }, leading
         ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, children: leading })
-        : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", children: title }), description ? (_jsx("span", { className: "hjm-list-row__description", children: description })) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", children: trailing }) : null);
+        : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", children: title }), description ? (_jsx("span", { className: "hjm-list-row__description", children: description })) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", children: trailing }) : null, accessory
+        ? _jsx("span", { className: "hjm-list-row__accessory", "data-accessory": trailingAccessory, "aria-hidden": "true", children: _jsx(Icon, { name: accessory.icon, size: accessory.glyph, weight: accessory.weight }) })
+        : null);
     const linked = href && renderLink ? renderLink(row.props) : row;
     // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
     // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).

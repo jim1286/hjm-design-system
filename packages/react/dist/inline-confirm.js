@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createAlertDialogSession } from "@hjmds/design-contracts/components/alert-dialog";

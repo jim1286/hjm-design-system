@@ -20,7 +20,7 @@ it("insets terminal markers and keeps them readable at narrow and wide widths", 
         const bounds = list.getBoundingClientRect();
         expect(Math.abs(marks[0]!.getBoundingClientRect().left - bounds.left - 16)).toBeLessThan(1);
         expect(Math.abs(marks[count-1]!.getBoundingClientRect().right - bounds.right + 16)).toBeLessThan(1);
-        expect(marks[0]!.getBoundingClientRect().width).toBe(44);
+        expect(marks[0]!.getBoundingClientRect().width).toBe(32);
         expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth);
         expect(host.querySelectorAll('[aria-current="step"]')).toHaveLength(1);
       }
@@ -44,4 +44,28 @@ it("allows forward selection only when free reading navigation is explicit", asy
     await act(async()=>root.render(<HjmProvider><Steps {...common} descriptor={{steps,currentStepId:"second",navigationMode:"free"}} /></HjmProvider>));
     expect(host.querySelectorAll("button")).toHaveLength(0);
   } finally {await act(async()=>root.unmount());host.remove();}
+});
+
+it("keeps compact navigation behind an accessible overview and expands only the vertical cursor body", async () => {
+  const host = document.createElement("div"); document.body.append(host);
+  const root = createRoot(host); const pressed: string[] = [];
+  const common = { descriptor: { steps: [{id:"a",label:"기본"},{id:"b",label:"취향"},{id:"c",label:"확인"}], currentStepId:"b" },
+    statusLabels:{pending:"예정",current:"진행 중",complete:"완료",error:"오류"}, composeAccessibleName:({label}:{label:string})=>label, onStepPress:(id:string)=>pressed.push(id) };
+  try {
+    await act(async()=>root.render(<HjmProvider><Steps {...common} presentation="compact" overviewLabel="전체 단계" /></HjmProvider>));
+    const toggle = host.querySelector<HTMLButtonElement>('[aria-expanded]')!;
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(host.querySelectorAll(".hjm-steps__press")).toHaveLength(0);
+    await act(async()=>toggle.click());
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    const back = host.querySelector<HTMLButtonElement>(".hjm-steps__press")!;
+    await act(async()=>back.click()); expect(pressed).toEqual(["a"]);
+    expect(host.querySelectorAll(".hjm-steps__press")).toHaveLength(1);
+    await act(async()=>root.render(<HjmProvider><Steps {...common} presentation="vertical" renderStepContent={id=><input aria-label="초안" defaultValue={id} />} /></HjmProvider>));
+    expect(host.querySelectorAll("input")).toHaveLength(1);
+    expect(host.querySelector<HTMLInputElement>("input")!.value).toBe("b");
+    expect(host.querySelectorAll('[aria-current="step"]')).toHaveLength(1);
+    await act(async()=>root.render(<HjmProvider><Steps {...common} renderMark={()=>"🌼"} /></HjmProvider>));
+    expect(host.querySelector(".hjm-steps__indicator")!.getBoundingClientRect().width).toBe(44);
+  } finally { await act(async()=>root.unmount()); host.remove(); }
 });

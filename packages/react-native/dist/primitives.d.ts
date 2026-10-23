@@ -4,7 +4,7 @@ import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect
 import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
 import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
-import { type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type ElevationStep, type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjmds/design-contracts/recipes";
 import { forwardRef, type Ref, type ReactNode } from "react";
@@ -78,10 +78,15 @@ export type SurfaceProps = Omit<ViewProps, "style"> & Readonly<{
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
     bordered?: boolean;
+    /**
+     * Shadow token step. Omitted, the tone decides (raised → raised, others none); `none` removes the raised shadow.
+     * An elevated surface does not clip its content, since clipping cuts off its own shadow.
+     */
+    elevation?: ElevationStep;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Surface({ tone, padding, radius: radiusValue, bordered, layoutStyle, children, ...props }: SurfaceProps): import("react").JSX.Element;
+export declare function Surface({ tone, padding, radius: radiusValue, bordered, elevation, layoutStyle, children, ...props }: SurfaceProps): import("react").JSX.Element;
 export type StackProps = ViewProps & Readonly<{
     axis?: StackAxis;
     gap?: StackGap | number;

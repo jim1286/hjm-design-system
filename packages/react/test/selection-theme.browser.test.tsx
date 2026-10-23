@@ -18,7 +18,7 @@ const destinations = { accessibilityLabel: "Capsule", selectedKey: "home", items
 
 it.each(["light", "dark"] as const)("shares selected surfaces across components while preserving explicit brand emphasis in %s", async theme => {
   const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
-  const render = (surfaceSelected?: string) => <HjmProvider theme={theme} reducedMotion brandPalette={surfaceSelected ? { [theme]: { surfaceSelected } } : undefined}>
+  const render = (surfaceSelected?: string) => <HjmProvider theme={theme} reducedMotion {...(surfaceSelected ? { brandPalette: { [theme]: { surfaceSelected } } } : {})}>
     <Button selected tone="ghost">Toggle</Button>
     <Button>Save</Button>
     <Card selected title="Card" />

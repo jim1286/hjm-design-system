@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveTourAdvance, resolveTourDescriptor, tourRecipe, validateTourOpenState, } from "@hjmds/design-contracts/components/tour";
 import { forwardRef, useCallback, useEffect, useId, useRef, useState, } from "react";

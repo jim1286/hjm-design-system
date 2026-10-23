@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { changeDurationUnit, resolveDuration } from "@hjmds/design-contracts/duration-field";
 import { NumberField } from "./number-field.js";

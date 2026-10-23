@@ -1,6 +1,13 @@
-import { control, fontWeight, glyph, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, motion, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
+export function validateStepsPresentation(presentation, overviewLabel) {
+    if (!["focus", "compact", "vertical"].includes(presentation))
+        throw new TypeError(`Unsupported Steps presentation: ${presentation}`);
+    if (presentation === "compact" && !overviewLabel?.trim())
+        throw new TypeError("Compact Steps requires a localized overviewLabel");
+}
 export const stepsDefaults = {
+    presentation: "focus",
     currentStepStatus: "current",
 };
 function assertNonEmpty(value, field) {
@@ -113,7 +120,9 @@ export const stepsRecipe = {
     // Spint review (2026-10-21): keep endpoint marks inset and give illustrated marks breathing room.
     paddingInline: spacing.md,
     indicator: {
-        size: glyph.xxl,
+        size: glyph.xl,
+        // Illustrated product marks retain the space approved in the Spint review.
+        customSize: glyph.xxl,
         borderWidth: stroke.default,
         activeBorderWidth: stroke.strong,
         /** null means the renderer shows the step's own position number instead of a glyph. */
@@ -125,27 +134,27 @@ export const stepsRecipe = {
         },
         border: {
             pending: semanticColors.border.default,
-            current: semanticColors.content.brand,
-            complete: semanticColors.feedback.success.border,
+            current: semanticColors.content.primary,
+            complete: semanticColors.border.control,
             error: semanticColors.feedback.danger.border,
         },
         background: {
             pending: null,
-            current: null,
-            complete: semanticColors.feedback.success.badgeBackground,
+            current: semanticColors.content.primary,
+            complete: null,
             error: semanticColors.feedback.danger.badgeBackground,
         },
         content: {
             pending: semanticColors.content.secondary,
-            current: semanticColors.content.brand,
-            complete: semanticColors.feedback.success.foreground,
+            current: semanticColors.canvas,
+            complete: semanticColors.content.primary,
             error: semanticColors.feedback.danger.foreground,
         },
     },
     connector: {
         height: stroke.default,
         tone: {
-            reached: semanticColors.content.brand,
+            reached: semanticColors.content.primary,
             unreached: semanticColors.border.default,
         },
     },
@@ -167,5 +176,8 @@ export const stepsRecipe = {
     press: {
         minTouchTarget: control.minTouchTarget,
     },
+    // User selected the focus proposal on 2026-10-23: neutral current fill, quieter completed rail.
+    transitionDuration: motion.normal,
+    segmentHeight: spacing.xxs,
 };
 //# sourceMappingURL=steps.js.map

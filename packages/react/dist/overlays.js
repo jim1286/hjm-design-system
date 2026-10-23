@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
@@ -175,8 +176,16 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, c
             session.interrupt();
         sessionRef.current = null;
     }, [open, sessionGeneration]);
-    useEffect(() => () => {
-        sessionRef.current?.interrupt();
+    useEffect(() => {
+        // StrictMode replays mount effects after a simulated unmount whose cleanup interrupted the session created in
+        // render, so an AlertDialog mounted open could never confirm or cancel (BurnTok delayed its open by one task to
+        // avoid it, 2026-10-23). Only that replay finds an interrupted session while still open; replace it.
+        if (open && sessionRef.current?.getSnapshot().status === "closed")
+            startSession();
+        return () => {
+            sessionRef.current?.interrupt();
+        };
+        // Mount/unmount only: later opens create their session in render or through the trigger.
     }, []);
     const tone = request.tone ?? "attention";
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {

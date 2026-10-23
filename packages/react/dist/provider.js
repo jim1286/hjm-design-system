@@ -25,11 +25,11 @@ function subscribeMedia(query, callback) {
 function useMediaQuery(query, observe = true) {
     return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, systemTheme, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, systemTheme, brandPalette: suppliedBrandPalette, brandPaletteMode, designProfile: suppliedDesignProfile, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
-    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue);
+    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", observesSystem);

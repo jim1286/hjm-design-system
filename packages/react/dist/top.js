@@ -1,9 +1,10 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { topDefaults, topRecipe, validateTopDescriptor, } from "@hjmds/design-contracts/components/top";
+import { resolveTopTitle, topDefaults, topRecipe, } from "@hjmds/design-contracts/components/top";
 import { forwardRef, createElement } from "react";
 import { classNames, useDesignProfileDefaults } from "./internal.js";
 export const Top = forwardRef(function Top({ descriptor, trailing, className, layoutStyle }, forwardedRef) {
-    validateTopDescriptor(descriptor);
+    const resolvedTitle = resolveTopTitle(descriptor);
     const size = descriptor.size ?? topDefaults.size;
     const level = descriptor.headingLevel ?? topDefaults.headingLevel;
     const metrics = topRecipe.sizes[size];
@@ -18,6 +19,6 @@ export const Top = forwardRef(function Top({ descriptor, trailing, className, la
             "--hjm-top-title-weight": title.fontWeight,
             "--hjm-top-padding-top": `${metrics.paddingTop}px`,
             "--hjm-top-padding-bottom": `${metrics.paddingBottom}px`,
-        }, children: [descriptor.eyebrow ? _jsx("p", { className: "hjm-top__eyebrow", children: descriptor.eyebrow }) : null, _jsxs("div", { className: "hjm-top__row", children: [createElement(`h${level}`, { className: "hjm-top__title" }, descriptor.title), trailing ? _jsx("div", { className: "hjm-top__trailing", children: trailing }) : null] }), descriptor.description ? _jsx("p", { className: "hjm-top__description", children: descriptor.description }) : null] }));
+        }, children: [descriptor.eyebrow ? _jsx("p", { className: "hjm-top__eyebrow", children: descriptor.eyebrow }) : null, _jsxs("div", { className: "hjm-top__row", children: [createElement(`h${level}`, { className: "hjm-top__title", "data-line-breaks": resolvedTitle.lines.length > 1 ? "preserve" : undefined }, resolvedTitle.text), trailing ? _jsx("div", { className: "hjm-top__trailing", children: trailing }) : null] }), descriptor.description ? _jsx("p", { className: "hjm-top__description", children: descriptor.description }) : null] }));
 });
 //# sourceMappingURL=top.js.map

@@ -4,7 +4,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
 import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/design-contracts/recipes/base";
-import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRecipe, listRowRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
+import { bottomNavigationRecipe, iconButtonRecipe, resolveIconButtonBadgeOffset, resolveIconButtonEdgeOverhang, comboboxRecipe, dialogRecipe, listRecipe, listRowRecipe, choiceRowRecipe, dividerRecipe, menuRecipe, searchFieldRecipe, selectRecipe, sheetRecipe, skeletonRecipe, tooltipRecipe, switchRecipe, toastRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
@@ -76,6 +76,13 @@ export function createHjmThemeStyle(value) {
     // does not carry a second copy of the same numbers.
     style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
     style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+    // Trailing value → disclosure chevron spacing (listRowRecipe.accessories), tighter than the row gap as on iOS.
+    style["--hjm-list-row-accessory-gap"] = rem(listRowRecipe.accessories.disclosure.gap);
+    // ChoiceRow sheet item pictures share the row leading box (choiceRowRecipe.itemLeading).
+    style["--hjm-choice-row-item-leading-size"] = rem(choiceRowRecipe.itemLeading.size);
+    // Dashed Divider rhythm (dividerRecipe.lineStyles.dashed) so the stylesheet keeps no copy of the numbers.
+    style["--hjm-divider-dash"] = rem(dividerRecipe.lineStyles.dashed.dash);
+    style["--hjm-divider-gap"] = rem(dividerRecipe.lineStyles.dashed.gap);
     // Row text sits on the container content edge; the surface bleeds by this much (2026-10-17 user decision).
     style["--hjm-list-row-surface-bleed"] = rem(listRowRecipe.surfaceBleed);
     style["--hjm-list-grouped-padding-inline"] = rem(listRecipe.grouped.paddingInline);
@@ -247,6 +254,10 @@ export function createHjmThemeStyle(value) {
     for (const size of Object.keys(iconButtonRecipe.sizes)) {
         const visible = visibleControlHeight(iconButtonRecipe.sizes[size].diameter, environment.minimumVisualTarget);
         style[`--hjm-icon-button-edge-${size}`] = `${resolveIconButtonEdgeOverhang("ghost", size, visible)}px`;
+        // Count badge (NotificationBell): offset from the button's top-end corner, tracking the same visible diameter.
+        const badge = resolveIconButtonBadgeOffset(size, visible);
+        style[`--hjm-icon-button-badge-block-start-${size}`] = `${badge.blockStart}px`;
+        style[`--hjm-icon-button-badge-inline-end-${size}`] = `${badge.inlineEnd}px`;
     }
     for (const size of Object.keys(buttonRecipe.sizes)) {
         style[`--hjm-button-edge-${size}`] = `${resolveButtonEdgeOverhang("ghost", size)}px`;

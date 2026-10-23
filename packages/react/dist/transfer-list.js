@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { moveTransferListSelection, reconcileTransferListSelection, resolveTransferListFocusAfterMove, resolveTransferListPanels, resolveTransferListSelectAllState, toggleTransferListSelectAll, toggleTransferListSelection, validateTransferListDescriptor, } from "@hjmds/design-contracts/components/transfer-list";
 import { reconcileCheckboxSelection } from "@hjmds/design-contracts/behaviors";

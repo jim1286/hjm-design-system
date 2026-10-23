@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isPaginationOpenEndedDescriptor, resolvePaginationDescriptor, resolvePaginationOpenEndedDescriptor, } from "@hjmds/design-contracts/components/pagination";
 import { forwardRef, useLayoutEffect, useRef } from "react";

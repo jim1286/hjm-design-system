@@ -181,7 +181,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Splitter](components/splitter.md) | 레이아웃 | 넓은 Web 화면에서 두 영역의 경계를 사용자가 드래그나 키보드로 옮겨 크기를 정할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Stack](components/stack.md) | 레이아웃 | 자식들을 한 방향으로 늘어놓고 사이 간격을 토큰으로 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Statistic](components/statistic.md) | 데이터 표시 | 라벨이 붙은 **숫자 지표 하나**(또는 여러 개)를 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Steps](components/steps.md) | 탐색 | 여러 단계로 된 **선형 흐름에서 지금 어디인지** 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Steps](components/steps.md) | 탐색 | 여러 단계로 된 **선형 흐름에서 지금 어디인지** 보여 줄 때 쓴다. | 미게시(1.41.2 이후) | Web · Native | Web stable / Native stable | 배포 |
 | [StreamingAnswer](components/streaming-answer.md) | 구성/피드백과 복구 | AI 응답처럼 제공자가 조각(`delta`)으로 보내는 답을 받는 대로 표시하고, 생성·다시 생성·중지를 한 묶음으로 제공한다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Surface](components/surface.md) | 레이아웃 | 배경·테두리·radius를 가진 **의미 없는 상자**가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SwipeActions](components/swipe-actions.md) | 구성/직접 조작과 모션 | 목록 행 하나에 붙은 **삭제·보관 같은 행 단위 행동**을, Native에서는 행을 밀어 드러내고 Web에서는 행 아래 버튼으로 바로 보여 줄 때 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |

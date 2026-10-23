@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Collapsible, CollapsibleMarker } from './collapsible.js';
 import { useHjmTheme } from './provider.js';

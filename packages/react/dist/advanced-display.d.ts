@@ -2,7 +2,7 @@ import { type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallb
 import { type DescriptionItemDescriptor, type DescriptionListColumns } from "@hjmds/design-contracts/components/description-list";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
-import { dividerRecipe, listRecipe, type AccordionDensity, type AvatarShape, type AvatarSize, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
+import { dividerRecipe, listRecipe, type DividerLineStyle, type AccordionDensity, type AvatarFrame, type AvatarShape, type AvatarSize, type CornerAccessoryPlacement, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes, type TableHTMLAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AccordionItem = Readonly<{
@@ -47,30 +47,50 @@ export declare const Accordion: import("react").ForwardRefExoticComponent<Omit<H
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLDivElement>>;
-export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
+/** Props handed to a product image host (`next/image`, a cache-aware loader) that replaces Avatar's `<img>`. */
+export type AvatarImageRenderProps = Readonly<{
+    src: string;
+    /** `""` for a decorative avatar or `alt=""`; otherwise the avatar's accessible name. */
+    alt: string;
+    /** Diameter in px from the size step. */
+    size: number;
+    /** Avatar's image class (fill + cover); keep it so the frame's clipping and fit still apply. */
+    className: string;
+    /** Report a failure for this `src` generation; callbacks from a replaced `src` are ignored. */
+    onError: () => void;
+}>;
+/**
+ * Accessibility identity. A meaningful avatar is named by `name` (or `alt`); a decorative one — next to a visible
+ * author name, or ornament without a person — is hidden from assistive tech and may omit `name` (2026-10-23:
+ * Burntok's decorative avatars had no name to pass).
+ */
+type AvatarIdentity = Readonly<{
+    decorative?: false;
     name: string;
-    src?: string;
     alt?: string;
+}> | Readonly<{
+    decorative: true;
+    name?: string;
+    alt?: never;
+}>;
+export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & AvatarIdentity & Readonly<{
+    src?: string;
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
+    /** Product image host in place of the built-in `<img>`. Exclusive with `imageProps`. */
+    renderImage?: (props: AvatarImageRenderProps) => ReactNode;
     size?: AvatarSize;
     shape?: AvatarShape;
+    /** Border/background treatment from avatarRecipe.frames; `none` when product artwork fills the frame. */
+    frame?: AvatarFrame;
+    /** A small mark (team badge, status dot) on a corner of the avatar's box. It is not clipped by the frame. */
+    accessory?: ReactNode;
+    accessoryPlacement?: CornerAccessoryPlacement;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Avatar: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
-    name: string;
-    src?: string;
-    alt?: string;
-    fallback?: ReactNode;
-    renderFallback?: (context: AvatarFallbackContext) => ReactNode;
-    size?: AvatarSize;
-    shape?: AvatarShape;
-    imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
-    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
-    layoutStyle?: HjmCompositionStyleProp;
-}> & RefAttributes<HTMLSpanElement>>;
+export declare const Avatar: import("react").ForwardRefExoticComponent<AvatarProps & RefAttributes<HTMLSpanElement>>;
 export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     /** Required: a pile of faces is meaningless to a screen reader otherwise. */
     label: string;
@@ -101,6 +121,8 @@ export type DividerInset = keyof typeof dividerRecipe.insets;
 export type DividerProps = HTMLAttributes<HTMLElement> & Readonly<{
     orientation?: DividerOrientation;
     inset?: DividerInset;
+    /** `dashed`: a break inside one surface rather than a new section; dash/gap from dividerRecipe.lineStyles. */
+    lineStyle?: DividerLineStyle;
     decorative?: boolean;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -108,6 +130,8 @@ export type DividerProps = HTMLAttributes<HTMLElement> & Readonly<{
 export declare const Divider: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & Readonly<{
     orientation?: DividerOrientation;
     inset?: DividerInset;
+    /** `dashed`: a break inside one surface rather than a new section; dash/gap from dividerRecipe.lineStyles. */
+    lineStyle?: DividerLineStyle;
     decorative?: boolean;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -216,9 +240,18 @@ export type TimelineProps<Id extends string = string> = Omit<HTMLAttributes<HTML
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /**
+     * Makes the record list a single-select listbox (controlled). `null` = selectable with nothing chosen. Supply
+     * together with `onSelectedIdChange`; the list then needs `aria-label` or `aria-labelledby`.
+     */
+    selectedId?: Id | null;
+    /** Called with the record chosen by click, Enter/Space or ArrowUp/ArrowDown/Home/End (selection follows focus). */
+    onSelectedIdChange?: (id: Id) => void;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Timeline: <Id extends string = string>(props: TimelineProps<Id> & RefAttributes<HTMLOListElement>) => ReactElement;
+export {};
 //# sourceMappingURL=advanced-display.d.ts.map

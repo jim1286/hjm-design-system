@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { canDismissCommandPalette, commandPaletteBehaviorDefaults, commandPaletteRecipe, validateCommandPaletteDescriptor, } from "@hjmds/design-contracts/components/command-palette";
 import { getCollectionNavigationIntent, getCollectionNavigationTarget, isComboboxResultCurrent, } from "@hjmds/design-contracts/components/collection";

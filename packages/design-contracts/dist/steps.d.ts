@@ -1,10 +1,4 @@
-/**
- * Ant Design Steps' full surface (navigation jump, dot type, custom per-item
- * icon, vertical orientation) is intentionally not reproduced. Steps stay a
- * single-cursor horizontal flow. Validated forms default to backward-only
- * navigation; reading flows explicitly opt into free navigation (2026-10-19 portfolio).
- * See docs/steps.md for the per-axis rationale.
- */
+/** One cursor and navigation policy shared by every presentation. */
 export type StepStatus = "pending" | "current" | "complete" | "error";
 /** Only the cursor step can be "current" or "error"; every other step is derived. */
 export type StepCursorStatus = Extract<StepStatus, "current" | "error" | "complete">;
@@ -26,7 +20,10 @@ export type StepsDescriptor<Id extends string = string> = Readonly<{
     /** Free navigation is for reading flows; linear remains the default for validated forms. */
     navigationMode?: "linear" | "free";
 }>;
+export type StepsPresentation = "focus" | "compact" | "vertical";
+export declare function validateStepsPresentation(presentation: StepsPresentation, overviewLabel?: string): void;
 export declare const stepsDefaults: {
+    readonly presentation: "focus";
     readonly currentStepStatus: "current";
 };
 export type StepsStatusLabels = Readonly<{
@@ -82,7 +79,8 @@ export declare const stepsRecipe: {
     readonly gap: 8;
     readonly paddingInline: 16;
     readonly indicator: {
-        readonly size: 44;
+        readonly size: 32;
+        readonly customSize: 44;
         readonly borderWidth: 1;
         readonly activeBorderWidth: 2;
         /** null means the renderer shows the step's own position number instead of a glyph. */
@@ -100,12 +98,12 @@ export declare const stepsRecipe: {
             }>;
             readonly current: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly complete: Readonly<{
-                source: "accent";
-                key: "success";
+                source: "theme";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly error: Readonly<{
@@ -116,12 +114,12 @@ export declare const stepsRecipe: {
         };
         readonly background: {
             readonly pending: null;
-            readonly current: null;
-            readonly complete: Readonly<{
-                source: "accent";
-                key: "success";
+            readonly current: Readonly<{
+                source: "theme";
+                key: "text";
                 alpha?: number;
             }>;
+            readonly complete: null;
             readonly error: Readonly<{
                 source: "theme";
                 key: "danger";
@@ -136,12 +134,12 @@ export declare const stepsRecipe: {
             }>;
             readonly current: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly complete: Readonly<{
-                source: "accent";
-                key: "success";
+                source: "theme";
+                key: "text";
                 alpha?: number;
             }>;
             readonly error: Readonly<{
@@ -156,7 +154,7 @@ export declare const stepsRecipe: {
         readonly tone: {
             readonly reached: Readonly<{
                 source: "theme";
-                key: "contentBrand";
+                key: "text";
                 alpha?: number;
             }>;
             readonly unreached: Readonly<{
@@ -204,5 +202,7 @@ export declare const stepsRecipe: {
     readonly press: {
         readonly minTouchTarget: 44;
     };
+    readonly transitionDuration: 200;
+    readonly segmentHeight: 4;
 };
 //# sourceMappingURL=steps.d.ts.map

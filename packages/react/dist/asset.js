@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { assetRecipe, shouldAnimateAsset, validateAssetDescriptor, } from "@hjmds/design-contracts/components/asset";
 import { forwardRef } from "react";

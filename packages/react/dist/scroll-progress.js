@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useEffect, useState } from 'react';
 import { resolveScrollProgress } from '@hjmds/design-contracts/scroll-progress';

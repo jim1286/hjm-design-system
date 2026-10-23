@@ -3,7 +3,7 @@ export { TopBar } from "./top-bar.js";
 export { BottomCTA } from "./bottom-cta.js";
 export { hjmCompositionStyleKeys, } from "./composition-style.js";
 export { AspectRatio, Container, Grid, Layout, Section, Stack, Surface, Text, VisuallyHidden, } from "./layout.js";
-export { Button, ButtonLink, IconButton, Link, } from "./actions.js";
+export { Button, ButtonLink, IconButton, IconButtonLink, Link, } from "./actions.js";
 export { Field, OtpField, PasswordField, SearchField, TextArea, TextField, } from "./forms.js";
 export { Combobox, Form, NativeSelect, } from "./advanced-forms.js";
 export { Select, } from "./select.js";

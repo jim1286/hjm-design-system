@@ -251,6 +251,15 @@ stories 파일 안 구현(§1.7 목표), 상태 arg 이름. 빌드 index 기준 
 
 ## 2. 승인 기록
 
+### 2026-10-23 포커스 레일과 잔여 실험 전체 승급
+
+사용자 요청: “실험에 있는거 다 승급하고 릴리즈해”. 현재 남은 실험은 Web·Native의 단계 탐색 표현 한 항목이다.
+focus·compact·vertical과 오류 예제를 기존 `배포/컴포넌트/탐색/단계 탐색`으로 합친다.
+공개 Web id `components-navigation-steps`와 기존 Default·Revisit·Dark·LargeText URL을 유지한다.
+미게시 로컬 비교용 `components-navigation-steps-presentations` id는 같은 스토리의 대체 id를 기록한다.
+API 성숙도는 기존 catalog 상태를 따르며, npm 게시와 소비 앱 반영은 이번 릴리즈에서 별도로 확인한다.
+
+
 ### 2026-10-23 설정 값 선택 승격과 1.41.0 릴리스
 
 사용자 요청: “승격하고 릴리즈 후 전수 업데이트 후 적용해줘”. 같은 날 실험으로 추가한 `ChoiceRow`를 Web·Native 함께 `배포/컴포넌트/입력/설정 값 선택`으로 옮기고 1.41.0으로 게시한다. Web ID `components-input-choice-row`는 유지한다.

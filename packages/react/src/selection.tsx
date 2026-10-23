@@ -905,7 +905,8 @@ export const SegmentedControl = forwardRef<
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
     presentation = "connected",
-    selectionTone = "neutral",
+    // 2026-10-23 user review: filled brand selection is the default; neutral remains opt-in.
+    selectionTone = "brand",
     textEmphasis = "strong",
     selectionMotion: suppliedSelectionMotion,
     name,

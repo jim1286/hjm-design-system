@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveImageComparison } from "@hjmds/design-contracts/reference-controls";
 import { imageRecipe } from "@hjmds/design-contracts/components/image";

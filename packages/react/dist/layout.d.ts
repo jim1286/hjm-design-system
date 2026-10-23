@@ -4,7 +4,7 @@ import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contract
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
-import { type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type ElevationStep, type FontRole, type NumericVariant, type TextVariant } from "@hjmds/design-contracts/foundations";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjmds/design-contracts/recipes/base";
@@ -109,6 +109,11 @@ export type SurfaceProps = HTMLAttributes<HTMLElement> & Readonly<{
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /**
+     * Shadow token step (`--hjm-shadow-*`). Omitted, the tone decides (raised → raised, others none); `none` removes
+     * the raised shadow. An elevated surface does not clip its content, as the raised tone.
+     */
+    elevation?: ElevationStep;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -121,6 +126,11 @@ export declare const Surface: import("react").ForwardRefExoticComponent<HTMLAttr
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /**
+     * Shadow token step (`--hjm-shadow-*`). Omitted, the tone decides (raised → raised, others none); `none` removes
+     * the raised shadow. An elevated surface does not clip its content, as the raised tone.
+     */
+    elevation?: ElevationStep;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;

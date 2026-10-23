@@ -65,20 +65,14 @@ index > cursor  → pending
 
 - `currentStepStatus` 기본값은 `"current"`(`stepsDefaults.currentStepStatus`). 실패를
   표현하려는 제품만 명시적으로 `"error"`를 넘긴다.
-- `complete` = success 톤(`semanticColors.feedback.success`), `error` = danger 톤
-  (`semanticColors.feedback.danger`) — badge/notice가 이미 쓰는 soft background + border +
-  foreground 3단 조합을 재사용한다.
-- `current`는 배경을 채우지 않고 `semanticColors.content.brand` 테두리·글자만 쓴다.
-  identity.md가 명시한 대로 `primary` fill(버튼 등 주요 행동)과 `contentBrand`(포커스·선택·
-  현재 위치)를 분리하기 위해서다 — Steps 마커는 행동이 아니라 위치 표시이므로 contentBrand만
-  쓴다.
-- `connector.tone`은 `reached`(brand) / `unreached`(border.default) 두 값뿐이다.
-  `isStepReached(status)`(`pending`만 false)로 renderer가 인접 segment 색을 고른다.
-- 텍스트(라벨·description)와 마커 글자·아이콘(`indicator.content`), 도달한 connector 색은
-  각각 4.5:1 / 3:1을 만족하도록 recipe 색을 선택했다(test로 두 기준을 분리해 검증). `pending`
-  마커 테두리와 `connector.unreached`는 Divider·Badge가 이미 쓰는 공용 저대비 `border.default`/
-  alpha 톤을 그대로 재사용하는 장식적 tint라 대비 기준 대상이 아니다 — 상태 구분은 마커
-  글자·모양(숫자 vs check vs error)과 `statusLabel`이 이미 이중으로 전달한다.
+- `presentation` 기본값은 `"focus"`다. 현재 표지는 `content.primary` 채움 + `canvas` 글자,
+  완료는 중립 체크, 예정은 옅은 번호, 오류는 danger 표지를 사용한다. 도달한 연결선도 중립색이다.
+  2026-10-23 사용자가 선택한 시안에 따라 이전 success 완료·brand 현재 테두리를 대체한다.
+- 숫자 표지 32, `renderMark` 제품 그림 44, 버튼 최소 높이 44를 분리한다. 그림 표지는 canvas를 유지한다.
+- `compact`는 현재 순서·제목·상태와 분할 막대, 번역된 `overviewLabel` 버튼을 제공한다.
+  펼쳐야 지난 단계가 버튼이 된다. `vertical`은 현재 단계의 `renderStepContent(id)`만 펼친다.
+- 콘텐츠·초안·입력 검증·서버 확정은 제품이 소유한다. 표현 변경은 navigationMode의 권한을 바꾸지 않는다.
+- 정확한 props와 배치는 [사용 지침](usage/components/steps.md), 수치는 `stepsRecipe`가 소유한다.
 
 ## 플랫폼 번역
 
@@ -102,15 +96,15 @@ index > cursor  → pending
 | 순서(`position`/`total`) | 공개 |
 | 지난 단계 누르기(`revisitable` + renderer `onStepPress`) | **공개(1.31.0)** — 2026-10-18 spint 작성 화면이 지난 단계를 눌러 돌아가려고 단계 레일을 직접 그렸다. resolver가 커서보다 앞선 단계에 `revisitable: true`를 붙이고, renderer는 제품이 `onStepPress`를 줄 때 그 단계만 버튼으로 만든다(칸 전체, 최소 44 `stepsRecipe.press.minTouchTarget`). 이전 판단("뒤로 가기는 별도 버튼")은 바로 앞 단계 행동에는 그대로 유효하다. |
 | 앞으로 건너뛰기(현재·다음 단계 누르기) | **배제** — 검증 전 단계를 지나치고 단일 커서 유도를 흐린다. 커서 단계는 이미 있는 자리라 누를 이유가 없다. |
-| vertical 방향 | **배제** — 두 사용처 모두 가로 진행바 하나만 필요해 antd 표면을 미리 복제하지 않는다. |
+| 세로·축약 표현 | **공개(개발)** — 2026-10-23 사용자 선택. `presentation: focus / compact / vertical`, 새 상태 엔진 없이 동일 커서를 표현한다. |
 | dot type(압축 점 표현) | **배제** — 측정된 요구가 없다. numbered + check/error 마크 하나만 공개한다. |
-| custom icon(스텝별 임의 아이콘 교체) | **배제** — 4개 상태 마크로 충분하고, 임의 아이콘 허용은 브랜드 표현의 일관성을 깨뜨린다. |
-| navigation type(`navigation`/`inline` 등 antd variant) | **배제** — 위 앞으로 건너뛰기·vertical 배제와 같은 이유로 단일 표현만 남긴다. |
+| 제품 그림 표지 | **공개** — `renderMark(status, position)` 슬롯. 그림·의미는 제품, 공간·접근성·누름은 HJM 소유다. |
+| 임의 navigation type | 별도 antd 표현을 복제하지 않음. 현재 요구는 공개 presentation 세 가지로 충족한다. |
 
 ## 검증 화면
 
-first-party Web·Native renderer와 상태 파생·환경 matrix 증거는 연결되어 surface는 `beta`다.
-실제 제품 vertical slice는 아직 없으므로 `stable` 승격 gate는 닫혀 있다.
+기존 Steps의 등록 상태는 catalog를 따른다. 2026-10-23 추가한 표현은 미게시 개발 소스이며,
+새 표현의 Storybook 화면 확인을 소비 앱 적용·npm 게시로 해석하지 않는다.
 
 유력 후보였던 "Yajalal 온보딩(`OnboardingScreen`의 `AppProgress` 대체)"은 검증 결과
 부정확했다 — `OnboardingScreen.tsx`는 지금도 그대로 `AppProgress`(연속 진행바,
@@ -124,3 +118,13 @@ first-party Web·Native renderer와 상태 파생·환경 matrix 증거는 연�
 ## 읽기 흐름의 자유 이동 — 2026-10-19
 
 포트폴리오 설계·운영 설명은 단계 선택으로 해당 본문을 읽는 흐름이므로 `StepsDescriptor.navigationMode: "free"`에서 `onStepPress`가 모든 단계에 동작한다. 기본 `linear`는 기존 검증형 작성 흐름처럼 이전 단계만 허용한다. 이 절이 기존 앞으로 이동 배제 설명의 읽기 흐름 예외다. 단일 currentStepId와 앞/뒤 상태 도출은 유지하며 제품은 상태 문구를 읽기 맥락에 맞춘다.
+
+
+### 2026-10-23 개발 확인
+
+- Steps 계약 20개, Web Steps·StepPlayer 4개, Native Steps·StepPlayer 3개 테스트 통과. 세 패키지 빌드와 두 Showcase 타입 검사 통과.
+- Web Storybook: focus·compact·vertical, 오류→수정→완료, 이전 단계와 초안 보존, 390/1000 폭, light/dark, reduced motion과 compact 키보드 펼침을 확인했다.
+- iPhone 17 Pro · iOS 26.5 (`AC433031-1746-46C6-86A9-143A1FC839F8`): 기존 개발 클라이언트에서 세 표현을 표시하고 focus 이동·복귀, compact 펼침, vertical 본문 전환을 확인했다. dark focus도 표시했다. Android 기기와 VoiceOver는 미실행.
+- Native Storybook 탐색 패널의 항목이 Device Hub 접근성 트리에 노출되지 않고 좌표 입력이 반응하지 않아 목록 선택·스크롤은 idb로 수행했다. 실제 결과 화면과 이후 버튼 동작은 Device Hub로 확인했다. 임시 키보드 캡처는 off로 원복했다.
+- 패키지 전체 타입 검사는 기존 선택 UI 테스트의 optional brandPalette/unused import 오류로 실패했다. 변경한 Steps 소스·Showcase 타입 검사는 통과했으며 무관한 테스트 파일은 보존했다.
+- 검증 중 생성된 무관한 컴파일 산출물 변경은 제거했다. 요청한 미리보기를 위해 Web 6006·Native 8084 개발 서버는 유지하며, 미리보기 종료 시 해당 프로세스를 종료하면 된다. 버전 상승·게시·운영 배포는 하지 않았다.

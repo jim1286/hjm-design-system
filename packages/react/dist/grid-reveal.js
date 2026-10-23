@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useLayoutEffect, useRef } from "react";
 import { gridRevealTiles, gridRevealDuration } from "@hjmds/design-contracts/grid-reveal";

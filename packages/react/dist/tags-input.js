@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { removeTagAt, resolveTagsInputActiveSuggestion, resolveTagsInputCommit, tagsInputBehaviorDefaults, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
 import { forwardRef, useId, useRef, useState, } from "react";

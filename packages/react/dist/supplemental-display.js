@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { getIconTransform, resolveIconDescriptor, semanticIconPaths, } from "@hjmds/design-contracts/components/icon";
 import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";

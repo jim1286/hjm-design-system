@@ -1,7 +1,7 @@
 export { HjmNativeProvider, useHjmNativeSafeAreaInsets, useHjmNativeTheme, } from "./provider.js";
 export { hjmCompositionStyleKeys, } from "./composition-style.js";
 export { AspectRatio, Container, Grid, Icon, Layout, Section, Stack, Surface, Text, useHjmTextFace, } from "./primitives.js";
-export { BottomCTA, Button, IconButton, Link, } from "./actions.js";
+export { BottomCTA, Button, IconButton, IconButtonLink, Link, } from "./actions.js";
 export { Checkbox, CheckboxGroup, Chip, OtpField, PasswordField, Radio, RadioGroup, SearchField, SegmentedControl, Switch, TextArea, TextField, } from "./inputs.js";
 export { NumberField, } from "./number-field.js";
 export { Slider, } from "./slider.js";

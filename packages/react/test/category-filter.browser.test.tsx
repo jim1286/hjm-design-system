@@ -19,10 +19,10 @@ it.skip("keeps large labels and hit targets within a 320px viewport",async()=>{
 it("disables the whole category group without removing the selected value",async()=>{await act(async()=>root.render(<Fixture disabled/>));expect(host.querySelector('fieldset')!.disabled).toBe(true);expect(host.querySelector<HTMLInputElement>('input[value="all"]')!.checked).toBe(true);});
 
 it.each(["light", "dark"] as const)("shares the neutral selection role and respects product overrides in %s", async theme => {
- const render = (surfaceSelected?: string) => <HjmProvider theme={theme} brandPalette={surfaceSelected ? { [theme]: { surfaceSelected } } : undefined}>
+ const render = (surfaceSelected?: string) => <HjmProvider theme={theme} {...(surfaceSelected ? { brandPalette: { [theme]: { surfaceSelected } } } : {})}>
    <Chip label="업무" selectionMode="single" selected onSelectedChange={()=>{}} />
-   <SegmentedControl label="카테고리" presentation="pills" value="all" onValueChange={()=>{}} items={[{value:"all",label:"전체"},{value:"daily",label:"일상"}]} />
-   <SegmentedControl label="구간" value="all" onValueChange={()=>{}} items={[{value:"all",label:"전체"},{value:"daily",label:"일상"}]} />
+   <SegmentedControl label="카테고리" selectionTone="neutral" presentation="pills" value="all" onValueChange={()=>{}} items={[{value:"all",label:"전체"},{value:"daily",label:"일상"}]} />
+   <SegmentedControl label="구간" selectionTone="neutral" value="all" onValueChange={()=>{}} items={[{value:"all",label:"전체"},{value:"daily",label:"일상"}]} />
  </HjmProvider>;
  for (const override of [undefined, theme === "light" ? "#e8e9ed" : "#42464e"]) {
    await act(async()=>root.render(render(override)));
@@ -35,5 +35,26 @@ it.each(["light", "dark"] as const)("shares the neutral selection role and respe
    expect(getComputedStyle(connected).backgroundColor).toBe(expected);
    expect(chip.querySelector(".hjm-chip__indicator")?.textContent).toBe("✓");
    expect(getComputedStyle(chip).color).toBe(getComputedStyle(pill).color);
+ }
+});
+
+it.each(["light", "dark"] as const)("defaults to the product brand pair for static and moving selections in %s", async theme => {
+ for (const presentation of ["connected", "pills"] as const) {
+  for (const selectionMotion of ["none", "slide"] as const) {
+   await act(async()=>root.render(<HjmProvider theme={theme} reducedMotion brandPalette={{[theme]:{primary:"#0B8045",onPrimary:"#FFFFFF"}}}>
+    <SegmentedControl label="보기" presentation={presentation} selectionMotion={selectionMotion} defaultValue="all"
+      items={[{value:"all",label:"전체"},{value:"daily",label:"일상"}]} />
+   </HjmProvider>));
+   if(selectionMotion==="slide") await expect.poll(()=>host.querySelector('.hjm-segmented__highlight')).not.toBeNull();
+   const selected=host.querySelector<HTMLElement>('.hjm-segmented__item[data-state="checked"]')!;
+   const fill=selectionMotion==="slide" ? getComputedStyle(host.querySelector('.hjm-segmented__highlight')!)
+     : getComputedStyle(selected,presentation==="pills" ? "::before" : undefined);
+   expect(fill.backgroundColor).toBe("rgb(11, 128, 69)");
+   expect(getComputedStyle(selected).color).toBe("rgb(255, 255, 255)");
+   const next=host.querySelector<HTMLInputElement>('input[value="daily"]')!;
+   await act(async()=>next.click());
+   expect(next.checked).toBe(true);
+   expect(host.querySelectorAll('input:checked')).toHaveLength(1);
+  }
  }
 });

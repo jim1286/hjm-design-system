@@ -1,8 +1,10 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef } from "react";
 import { IconButton } from "./actions.js";
 import { CounterBadge } from "./supplemental-display.js";
 import { useHjmTheme } from "./provider.js";
+import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 export function NotificationBell({ label, count, icon, onPress, disabled = false, active = true, edge, layoutStyle }) {
     if (!Number.isSafeInteger(count) || count < 0)
         throw new RangeError("Unread count must be a nonnegative integer");
@@ -27,6 +29,8 @@ export function NotificationBell({ label, count, icon, onPress, disabled = false
     // `edge` puts the IconButton edge overhang on this root (.hjm-notification-bell[data-edge]), not on the button: the
     // badge is anchored to the root's end, and a margin on the inner button would shrink the root and pull the badge in
     // by the overhang (2026-10-17 1.27.2 adoption, as Native).
-    return _jsxs("span", { className: "hjm-notification-bell", "data-edge": edge, style: { alignSelf: 'flex-start', position: 'relative', display: 'inline-flex', ...layoutStyle, width: 'max-content' }, children: [_jsx(IconButton, { size: "small", hitSlop: 0, label: label, disabled: disabled, onClick: onPress, children: _jsx("span", { ref: art, "aria-hidden": "true", style: { display: 'inline-flex', transformOrigin: 'top center' }, children: icon }) }), _jsx("span", { "aria-hidden": "true", style: { position: 'absolute', insetInlineEnd: 0, top: 0, pointerEvents: 'none' }, children: _jsx(CounterBadge, { count: count, variant: "floating" }) })] });
+    // The badge's size and offset come from iconButtonRecipe.badge (.hjm-notification-bell__badge): it rides above the
+    // glyph so only its floating ring touches it (2026-10-23: the medium badge at top 0 hid 82% of an 18px glyph).
+    return _jsxs("span", { className: "hjm-notification-bell", "data-edge": edge, style: { alignSelf: 'flex-start', position: 'relative', display: 'inline-flex', ...layoutStyle, width: 'max-content' }, children: [_jsx(IconButton, { size: "small", hitSlop: 0, label: label, disabled: disabled, onClick: onPress, children: _jsx("span", { ref: art, "aria-hidden": "true", style: { display: 'inline-flex', transformOrigin: 'top center' }, children: icon }) }), _jsx("span", { className: "hjm-notification-bell__badge", "aria-hidden": "true", children: _jsx(CounterBadge, { count: count, size: iconButtonRecipe.badge.size, variant: iconButtonRecipe.badge.variant }) })] });
 }
 //# sourceMappingURL=notification-bell.js.map

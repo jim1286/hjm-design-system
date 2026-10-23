@@ -1,3 +1,4 @@
+"use client";
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { useLayoutEffect, useRef, useState } from "react";
 import { nextReaction, validateReactions, resolveReactionOptions } from "@hjmds/design-contracts/reactions";

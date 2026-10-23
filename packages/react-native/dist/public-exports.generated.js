@@ -20,6 +20,9 @@ export const publicExportEntries = {
     AlertDialog: [
         "./overlays"
     ],
+    AlertDialogQueueProvider: [
+        "./alert-dialog-queue"
+    ],
     AnimatedStatistic: [
         "./statistic-motion"
     ],
@@ -267,6 +270,10 @@ export const publicExportEntries = {
         "./bottom-cta",
         "./actions"
     ],
+    IconButtonLink: [
+        "./bottom-cta",
+        "./actions"
+    ],
     IconTile: [
         "./screens"
     ],
@@ -280,6 +287,9 @@ export const publicExportEntries = {
         "./image-comparison"
     ],
     ImageViewer: [
+        "./image-viewer"
+    ],
+    ImageViewerTrigger: [
         "./image-viewer"
     ],
     ImmersiveOverlay: [
@@ -486,7 +496,13 @@ export const publicExportEntries = {
     ScatterChart: [
         "./chart"
     ],
+    ScreenHost: [
+        "./screens"
+    ],
     ScreenLayout: [
+        "./screens"
+    ],
+    ScreenRefreshControl: [
         "./screens"
     ],
     ScrollProgress: [

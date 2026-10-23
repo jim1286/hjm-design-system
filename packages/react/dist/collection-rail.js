@@ -1,6 +1,8 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useLayoutEffect, useRef, useState } from "react";
 import { collectionRailRecipe, validateCollectionRail, resolveCollectionRailLayout, resolveCollectionRailViewport, getCollectionRailTargetOffset, getCollectionRailItemOffset, getCollectionRailRevealOffset, getCollectionRailKeyboardIntent, } from "@hjmds/design-contracts/collection-rail";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -10,7 +12,7 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
     if (!label.trim() || Object.values(labels).some(value => !value.trim()))
         throw new TypeError("CollectionRail labels must not be empty");
     const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
-    const gap = collectionRailRecipe.gap;
+    const gap = spacing[collectionRailRecipe.gapSteps[density]];
     const viewportRef = useRef(null);
     const detachedFocus = useRef(null);
     useLayoutEffect(() => {

@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { type ModalProps } from "react-native";
 import { type ImageViewerInspection } from "./internal/image-inspection.js";
 export type { ImageViewerInspection } from "./internal/image-inspection.js";
+export { ImageViewerTrigger, type ImageViewerTriggerProps } from "./internal/image-viewer-trigger.js";
 export type ImageViewerItem = {
     id: string;
     uri: string;

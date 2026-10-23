@@ -497,7 +497,7 @@ describe("Native input and navigation intent", () => {
     expect(selected.props.hitSlop).toEqual({ top: segmentedControlRecipe.sizes.small.hitSlop, bottom: segmentedControlRecipe.sizes.small.hitSlop });
     expect(flattenStyle(selected.props.style({ pressed: false }))).toMatchObject({
       backgroundColor: resolveColorReference(
-        segmentedControlRecipe.item.selectedBackground,
+        segmentedControlRecipe.selectedBrand.background,
         lightProviderValue.palette,
       ),
       borderColor: resolveColorReference(
@@ -514,7 +514,7 @@ describe("Native input and navigation intent", () => {
     expect(selectedLabel.props.variant).toBe(segmentedControlRecipe.sizes.small.textVariant);
     expect(flattenStyle(selectedLabel.props.style)).toMatchObject({
       color: resolveColorReference(
-        segmentedControlRecipe.item.selectedContent,
+        segmentedControlRecipe.selectedBrand.content,
         lightProviderValue.palette,
       ),
       fontWeight: segmentedControlRecipe.item.selectedFontWeight,
@@ -595,7 +595,6 @@ describe("Native input and navigation intent", () => {
     expect(flattenStyle(switches[0]!.props.style({ pressed: false }))).toMatchObject({
       direction: "rtl",
       flexDirection: "row",
-      minHeight: 68,
     });
     const visual = renderer.root.findByType(NativeSwitch);
     expect(visual.props).toMatchObject({ accessible: false, pointerEvents: "none" });

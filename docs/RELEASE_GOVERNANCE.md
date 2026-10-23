@@ -174,3 +174,12 @@ contracts-peer-train.mjs의 기존 계약을 따른다. 소비 제품은 같은 
 Native 실제 Metro fixture의 남은 1,660,000/410,000 byte 상한도 제거했다. 모든 공개 경로에 수동 budget/면제 사유를 등록하던 의무도 폐지하고 manifest의 실제 export를 자동으로 순회한다. 새 경로도 파일 존재·금지 의존성 검사를 받는다.
 
 `test:release`는 package 동작 검사를 실행하되 `workflows.test.ts`(Actions pin·peer train의 선택적 진단), `consumer-policy.test.ts`(규약 문구), `doc-links.test.ts`(문서 검사기)는 제외한다. 이 세 검사는 명시적인 `test`/`ci:check` 감사에 남긴다. 문서·workflow 형식 검사가 package 테스트 안에서 다시 릴리스를 막는 중복 경로를 없애기 위함이다.
+
+
+### 2026-10-23 1.42.0 train 준비
+
+사용자가 HJM의 모든 미커밋·미푸시 변경과 잔여 실험 전체를 릴리즈하고 소비 앱에 전수 적용하도록 요청했다.
+Steps 세 표현·SegmentedControl 브랜드 선택 기본값과 1.41.2 이후 대기 API·Native 배치 수정을 fixed minor에 포함한다.
+Changesets가 peer 범위 이탈을 major로 올리지 않도록 버전 생성 전에 두 renderer의 peer를 `>=1.42.0 <1.43.0`으로 옮긴다.
+과거 export/peer 목록을 복제하던 boundary 테스트는 manifest가 실제로 광고하는 산출물의 존재·분리·선택 peer 경계를 확인하도록 바꾼다.
+optional palette 테스트는 값이 없는 prop을 생략해 exactOptionalPropertyTypes 계약을 지키고, 동작 검증은 유지한다.

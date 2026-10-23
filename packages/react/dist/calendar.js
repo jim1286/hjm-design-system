@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor, getCalendarNavigationIntent, getCalendarNavigationTarget, } from "@hjmds/design-contracts/components/calendar";

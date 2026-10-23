@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, validateBottomNavigationProminence, } from "@hjmds/design-contracts/components/bottom-navigation";
 import { bottomNavigationRecipe, iconRecipe, } from "@hjmds/design-contracts/recipes";

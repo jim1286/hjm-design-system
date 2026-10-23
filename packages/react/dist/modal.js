@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";

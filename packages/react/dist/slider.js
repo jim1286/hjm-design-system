@@ -1,3 +1,4 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValue, } from "@hjmds/design-contracts/components/slider";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";

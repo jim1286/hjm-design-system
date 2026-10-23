@@ -12,7 +12,7 @@ import { AlertDialog, Sheet } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
@@ -30,8 +30,9 @@ import { Menu } from "./navigation.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 function Pane({ hidden = false, children }) { return _jsx(View, { style: { flex: 1, display: hidden ? "none" : "flex" }, children: children }); }
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
-function Action({ action, secondary = false, edge }) { if (action.icon)
-    return _jsx(IconButton, { label: action.label, tone: "ghost", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), onPress: action.onAction, children: action.icon }); return _jsx(Button, { tone: secondary ? "ghost" : "primary", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onPress: action.onAction, children: action.label }); }
+// `emphasis` overrides the primary/ghost pair for footers whose hierarchy a contract resolves (PermissionScreen).
+function Action({ action, secondary = false, emphasis, edge }) { if (action.icon)
+    return _jsx(IconButton, { label: action.label, tone: "ghost", ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), onPress: action.onAction, children: action.icon }); return _jsx(Button, { tone: emphasis ?? (secondary ? "ghost" : "primary"), ...(edge ? { edge } : {}), disabled: !!(action.disabled || action.pending), loading: action.pending ?? false, onPress: action.onAction, children: action.label }); }
 /** Keep the list mounted so input and scroll survive a detail visit. Routers may instead restore host scroll state.
  * Both panes reach the same window bottom, so `safeAreaBottom` goes to each (yajalal detail content sat under the home indicator, 2026-10-17). */
 // layoutStyle places the outer host that owns both panes, as on Web, so the screen keeps the same
@@ -277,7 +278,14 @@ export function SearchScreen({ embedded = false, query, queryLabel, queryField, 
                 : _jsx(ScreenLayout, { ...screen, contentAlignment: phase === "results" && cause !== "none" && resultSummary?.empty ? "center" : screen.contentAlignment ?? "start", initialFocus: initialFocus, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), scrollRef: scrollRef, notice: notice, children: results }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 // Permission guidance occupies the current screen body; keep its default centered on both platforms.
-export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, contentAlignment: screen.contentAlignment ?? "center", footer: _jsxs(Stack, { gap: "xs", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
+export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, recheck, alternative, skip, ...screen }) {
+    const kind = resolvePermissionAction(status);
+    const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null;
+    // Order and emphasis come from the contract: primary → recheck (denied) → alternative → skip.
+    const actions = { primary, recheck, alternative, skip };
+    const footer = resolvePermissionFooter(status, { recheck: !!recheck, alternative: !!alternative, skip: !!skip });
+    return _jsx(ScreenLayout, { ...screen, contentAlignment: screen.contentAlignment ?? "center", footer: _jsx(Stack, { gap: "xs", children: footer.map(({ slot, emphasis }) => _jsx(Action, { action: actions[slot], emphasis: emphasis }, slot)) }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) });
+}
 // Large headings and a software keyboard can consume the entire fixed header
 // area. Keep step guidance in the existing scroll body, with completion actions fixed.
 export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, exit, layoutStyle, safeAreaBottom }) {

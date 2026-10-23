@@ -1,4 +1,4 @@
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, type ElevationStep } from "@hjmds/design-contracts/foundations";
 import { type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type SpacingToken = keyof typeof spacing;
 /** Native font inheritance stops at Text subtrees (reactnative.dev/docs/text).
@@ -39,4 +39,13 @@ export declare function resolveNativeShadowElevation(token: Readonly<{
     radius: number;
     offsetY: number;
 }>, profiled: boolean, fallbackElevation: number): Pick<ViewStyle, "elevation">;
+type ShadowToken = Readonly<{
+    color: string;
+    opacity: number;
+    radius: number;
+    offsetY: number;
+}>;
+/** Public `elevation` step → iOS shadow + Android elevation from the (profile-aware) shadow tokens; `none` → no style. */
+export declare function resolveNativeElevationStyle(step: ElevationStep, shadows: Readonly<Record<Exclude<ElevationStep, "none">, ShadowToken>>, profiled: boolean): ViewStyle | undefined;
+export {};
 //# sourceMappingURL=styles.d.ts.map
