@@ -54,9 +54,11 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 | --- | --- | --- | --- |
 | `value` | 선택지 값 또는 null | 필수 | 제품이 확인한 값. null이면 `placeholder`가 필요하다 |
 | `items` | `ChoiceRowItem[]` | 필수 | 2개 이상, 값 중복 금지. `description`·`disabled` 지원 |
-| `onValueChange` | `(value) => void \| Promise<void>` | 필수 | Promise를 돌려주면 끝날 때까지 시트가 잠긴다. 거부되면 시트를 연 채 `errorLabel`을 보인다 |
+| `onValueChange` | `(value) => void` 또는 `(value) => Promise<void>` | 필수 | 동기 저장은 시트를 바로 닫는다. Promise를 돌려주면 끝날 때까지 시트가 잠기고, 거부되면 시트를 연 채 `errorLabel`을 보인다 |
+| `errorLabel` | string | 비동기 저장일 때 필수 | 동기 저장에는 줄 수 없다. 시트 안 실패가 없기 때문이다(1.41.2) |
 | `sheetTitle`·`sheetDescription` | string | `title`·없음 | 시트 머리 |
 | `leading`·`trailing` | ReactNode | 없음 | 제품 아이콘·꼬리 표시. ListRow 슬롯 그대로 |
+| `density` | ListRow density | ListRow 기본값 | 주변 설정 행과 같은 밀도(예: `compact`)를 맞춘다 |
 | Native `accessibilityHint` | string | 없음 | 행을 눌렀을 때 일어날 일(예: 언어 목록 열기)을 제품 언어로 |
 | `disabled`·`loading` | boolean | false | ListRow의 비활성·자리 유지 로딩 |
 

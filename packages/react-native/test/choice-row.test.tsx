@@ -35,3 +35,15 @@ it("keeps the sheet open with the error and the confirmed value when the save fa
   expect(tree.root.findByType(Sheet).props.open).toBe(false);
   act(() => tree.unmount());
 });
+
+it("closes at once for a synchronous save and passes the row density through", () => {
+  const change = vi.fn();
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><ChoiceRow title="언어" items={items} value="ko" onValueChange={change} closeLabel="닫기" density="compact" /></HjmNativeProvider>); });
+  expect(tree.root.findByType(ListRow).props.density).toBe("compact");
+  act(() => tree.root.findByType(ListRow).props.onPress());
+  act(() => tree.root.findByType(RadioGroup).props.onValueChange("en"));
+  expect(change).toHaveBeenCalledWith("en");
+  expect(tree.root.findByType(Sheet).props.open).toBe(false);
+  act(() => tree.unmount());
+});
