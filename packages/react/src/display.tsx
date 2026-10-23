@@ -5,11 +5,14 @@ import {
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant as ContractBadgeVariant,
+  resolveBadgeCategoryColor,
   validateListRowTrailingAccessory,
+  type BadgeCategoryColor,
   type ListRowDensity,
   type ListRowLeadingShape,
   type ListRowTrailingAccessory,
 } from "@hjmds/design-contracts/recipes";
+import { THEMES } from "@hjmds/design-contracts/colors";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import {
   resolveTagDescriptor,
@@ -34,7 +37,7 @@ import {
   type ReactNode,
 } from "react";
 import { classNames } from "./internal.js";
-import { useHjmDensityDefault } from "./provider.js";
+import { useHjmDensityDefault, useOptionalHjmTheme } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -46,6 +49,11 @@ export type BadgeVariant = ContractBadgeVariant;
 export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
   Readonly<{
     tone?: BadgeTone;
+    /**
+     * Product classification color per theme (series, grade…) in place of `tone`. HJM keeps the frame and picks the
+     * label ink; a color whose label cannot reach AA 4.5 throws instead of rendering unreadable.
+     */
+    categoryColor?: BadgeCategoryColor;
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
@@ -56,7 +64,8 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   {
-    tone = badgeRecipe.defaults.tone,
+    tone: toneProp,
+    categoryColor,
     size = badgeRecipe.defaults.size,
     variant = badgeRecipe.defaults.variant,
     leading,
@@ -69,14 +78,31 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   },
   ref,
 ) {
-  const iconContext = { color: "currentColor", size: badgeRecipe.sizes[size].iconSize };
+  if (categoryColor !== undefined && toneProp !== undefined) throw new TypeError("Badge takes either tone or categoryColor, not both");
+  const tone = toneProp ?? badgeRecipe.defaults.tone;
+  // Outside a provider the stylesheet paints the light palette, so the category resolves against it too.
+  const theme = useOptionalHjmTheme();
+  const category = categoryColor === undefined ? null : resolveBadgeCategoryColor(categoryColor, {
+    theme: theme?.environment.theme ?? "light",
+    variant,
+    palette: theme?.palette.theme ?? THEMES.light,
+  });
+  const iconContext = { color: "currentColor", size: badgeRecipe.sizes[size].iconSize, strokeWidth: badgeRecipe.iconStrokeWidth };
   return (
     <span
       {...props}
-      style={{ ...style, ...layoutStyle }}
+      style={{
+        ...style,
+        ...(category ? {
+          "--hjm-badge-category-content": category.content,
+          "--hjm-badge-category-background": category.background ?? "transparent",
+          "--hjm-badge-category-border": category.border ?? "transparent",
+        } as CSSProperties : {}),
+        ...layoutStyle,
+      }}
       ref={ref}
       className={classNames("hjm-badge", className)}
-      data-tone={tone}
+      data-tone={category ? "category" : tone}
       data-size={size}
       data-variant={variant}
     >

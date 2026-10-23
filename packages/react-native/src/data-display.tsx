@@ -61,7 +61,9 @@ import {
   type CounterBadgeSize,
   type CounterBadgeTone,
   type CounterBadgeVariant,
+  resolveBadgeCategoryColor,
   validateListRowTrailingAccessory,
+  type BadgeCategoryColor,
   type ListRowDensity,
   type ListRowLeadingShape,
   type ListRowTrailingAccessory,
@@ -118,6 +120,11 @@ export type BadgeProps = Omit<
 > & Readonly<{
   label: string | number;
   tone?: StatusTone;
+  /**
+   * Product classification color per theme (series, grade…) in place of `tone`. HJM keeps the frame and picks the
+   * label ink; a color whose label cannot reach AA 4.5 throws instead of rendering unreadable.
+   */
+  categoryColor?: BadgeCategoryColor;
   size?: BadgeSize;
   variant?: BadgeVariant;
   leading?: ReactNode | ((context: BadgeAdornmentContext) => ReactNode);
@@ -129,7 +136,8 @@ export type BadgeProps = Omit<
 
 export function Badge({
   label,
-  tone = badgeRecipe.defaults.tone,
+  tone: toneProp,
+  categoryColor,
   size = badgeRecipe.defaults.size,
   variant = badgeRecipe.defaults.variant,
   leading,
@@ -139,14 +147,25 @@ export function Badge({
   ...props
 }: BadgeProps) {
   assertNoRemovedStyleProps("Badge", props, ["style","labelStyle"]);
+  if (categoryColor !== undefined && toneProp !== undefined) throw new TypeError("Badge takes either tone or categoryColor, not both");
+  const tone = toneProp ?? badgeRecipe.defaults.tone;
   const theme = useHjmNativeTheme();
   const presentation = badgeRecipe.tones[tone];
   const metrics = badgeRecipe.sizes[size];
   const variantPresentation = badgeRecipe.variants[variant];
   const outlined = !variantPresentation.usesToneBackground;
-  const iconContext = { color: resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette), size: metrics.iconSize };
+  const category = categoryColor === undefined ? null : resolveBadgeCategoryColor(categoryColor, {
+    theme: theme.environment.theme,
+    variant,
+    palette: theme.palette.theme,
+  });
+  const contentColor = category?.content ?? resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette);
+  const iconContext = { color: contentColor, size: metrics.iconSize, strokeWidth: badgeRecipe.iconStrokeWidth };
   const borderReference = outlined ? presentation.border ?? variantPresentation.borderFallback : null;
-  const borderColor = borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);
+  const borderColor = category
+    ? category.border ?? "transparent"
+    : borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);
+  const hasBorder = category ? category.border !== null : borderReference !== null;
   return (
     <View
       {...props}
@@ -158,10 +177,10 @@ export function Badge({
           alignItems: "center",
           backgroundColor: outlined
             ? "transparent"
-            : resolveColorReference(presentation.background, theme.palette),
+            : category?.background ?? resolveColorReference(presentation.background, theme.palette),
           borderColor,
           borderRadius: theme.tokens.radius[badgeRecipe.radius],
-          borderWidth: borderReference === null ? 0 : badgeRecipe.borderWidth,
+          borderWidth: hasBorder ? badgeRecipe.borderWidth : 0,
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: metrics.gap,
@@ -188,10 +207,7 @@ export function Badge({
         style={[
           {
             fontWeight: badgeRecipe.fontWeight,
-            color: resolveColorReference(
-              outlined ? presentation.outlineContent : presentation.content,
-              theme.palette,
-            ),
+            color: contentColor,
           },
         ]}
         variant={metrics.textVariant}

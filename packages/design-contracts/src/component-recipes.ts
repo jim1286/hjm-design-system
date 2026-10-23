@@ -1,4 +1,6 @@
 import { solidAccentColor, type ColorReference } from "./color-references.js";
+import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
+import { contrastRatio } from "./palette-contrast.js";
 import {
   collectionItemContract,
   fieldFrameContract,
@@ -316,7 +318,27 @@ export type BadgeTone =
 export type BadgeSize = "small" | "medium";
 export type BadgeVariant = "filled" | "outline";
 
-export type BadgeAdornmentContext = Readonly<{ color: string; size: number }>;
+/**
+ * Values a `leading`/`trailing` render callback receives. `strokeWidth` follows the Icon weight scale like
+ * BottomNavigation's icon context, so a product glyph renderer (Lucide etc.) draws the same line weight as HJM Icon.
+ * Before 2026-10-23 the context had no stroke, so Diairy passed a whole Icon node instead of the callback.
+ */
+export type BadgeAdornmentContext = Readonly<{ color: string; size: number; strokeWidth: number }>;
+
+/**
+ * Product-defined classification color for one Badge (game series, contract grade…), one value per theme.
+ * Classification is not a status or the brand: before 2026-10-23 Yajalal nested an HjmNativeProvider with a
+ * brandPalette around a single Badge to paint it, which also re-scoped every token under it (brand-boundary §1).
+ * The product owns the hue; HJM owns the frame and picks/validates the label ink (WCAG AA 4.5).
+ */
+export type BadgeCategoryColor = Readonly<Record<ResolvedTheme, string>>;
+export type ResolvedBadgeCategoryColor = Readonly<{
+  /** Plate fill; null for the outline variant. */
+  background: string | null;
+  content: string;
+  /** Outline stroke; null for the filled variant. */
+  border: string | null;
+}>;
 
 export const badgeRecipe = {
   slots: ["root", "icon", "label", "trailing"] as const,
@@ -362,7 +384,43 @@ export const badgeRecipe = {
   radius: "sm",
   borderWidth: stroke.default,
   fontWeight: fontWeight.bold,
+  /** Adornment line weight handed to `leading`/`trailing` callbacks (Icon `regular`). */
+  iconStrokeWidth: iconRecipe.weights.regular,
+  /**
+   * `categoryColor` ink. Filled plates take whichever of the light ink (`onStatusFill`, as the status plates) or the
+   * dark ink (light theme `text`) reads better on the product fill; outline badges use the color itself as label and
+   * stroke. Either way the label must reach `minimumContrast` or the badge throws — the product must pick another
+   * shade per theme instead of shipping an unreadable classification.
+   */
+  category: { darkInk: THEMES.light.text, minimumContrast: 4.5 },
 } as const;
+
+/** Resolves a product classification color for the active theme and verifies label contrast (AA 4.5). */
+export function resolveBadgeCategoryColor(
+  color: BadgeCategoryColor,
+  options: Readonly<{ theme: ResolvedTheme; variant: BadgeVariant; palette: Readonly<ThemeColors> }>,
+): ResolvedBadgeCategoryColor {
+  const { theme, variant, palette } = options;
+  const value = color?.[theme];
+  if (typeof value !== "string") throw new TypeError(`Badge categoryColor needs a ${theme} color`);
+  const minimum = badgeRecipe.category.minimumContrast;
+  if (variant === "outline") {
+    for (const background of [palette.bg, palette.surface]) {
+      const ratio = contrastRatio(value, background);
+      if (ratio < minimum) {
+        throw new RangeError(`Badge categoryColor ${value} reads ${ratio.toFixed(2)}:1 on the ${theme} background ${background}; outline labels need ${minimum}:1`);
+      }
+    }
+    return { background: null, content: value, border: value };
+  }
+  const [content, ratio] = [palette.onStatusFill, badgeRecipe.category.darkInk]
+    .map(ink => [ink, contrastRatio(ink, value)] as const)
+    .reduce((best, next) => (next[1] > best[1] ? next : best));
+  if (ratio < minimum) {
+    throw new RangeError(`Badge categoryColor ${value} (${theme}) reaches only ${ratio.toFixed(2)}:1 with either label ink; filled badges need ${minimum}:1`);
+  }
+  return { background: value, content, border: null };
+}
 
 export type SearchFieldSize = "medium" | "large";
 

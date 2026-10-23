@@ -1,4 +1,6 @@
 import { solidAccentColor } from "./color-references.js";
+import { THEMES } from "./colors.js";
+import { contrastRatio } from "./palette-contrast.js";
 import { collectionItemContract, fieldFrameContract, floatingSurfaceContract, focusIndicatorContract, formSupportContract, } from "./component-contracts.js";
 import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, typography, } from "./foundations.js";
 import { buttonRecipe } from "./base-recipes.js";
@@ -181,7 +183,40 @@ export const badgeRecipe = {
     radius: "sm",
     borderWidth: stroke.default,
     fontWeight: fontWeight.bold,
+    /** Adornment line weight handed to `leading`/`trailing` callbacks (Icon `regular`). */
+    iconStrokeWidth: iconRecipe.weights.regular,
+    /**
+     * `categoryColor` ink. Filled plates take whichever of the light ink (`onStatusFill`, as the status plates) or the
+     * dark ink (light theme `text`) reads better on the product fill; outline badges use the color itself as label and
+     * stroke. Either way the label must reach `minimumContrast` or the badge throws — the product must pick another
+     * shade per theme instead of shipping an unreadable classification.
+     */
+    category: { darkInk: THEMES.light.text, minimumContrast: 4.5 },
 };
+/** Resolves a product classification color for the active theme and verifies label contrast (AA 4.5). */
+export function resolveBadgeCategoryColor(color, options) {
+    const { theme, variant, palette } = options;
+    const value = color?.[theme];
+    if (typeof value !== "string")
+        throw new TypeError(`Badge categoryColor needs a ${theme} color`);
+    const minimum = badgeRecipe.category.minimumContrast;
+    if (variant === "outline") {
+        for (const background of [palette.bg, palette.surface]) {
+            const ratio = contrastRatio(value, background);
+            if (ratio < minimum) {
+                throw new RangeError(`Badge categoryColor ${value} reads ${ratio.toFixed(2)}:1 on the ${theme} background ${background}; outline labels need ${minimum}:1`);
+            }
+        }
+        return { background: null, content: value, border: value };
+    }
+    const [content, ratio] = [palette.onStatusFill, badgeRecipe.category.darkInk]
+        .map(ink => [ink, contrastRatio(ink, value)])
+        .reduce((best, next) => (next[1] > best[1] ? next : best));
+    if (ratio < minimum) {
+        throw new RangeError(`Badge categoryColor ${value} (${theme}) reaches only ${ratio.toFixed(2)}:1 with either label ink; filled badges need ${minimum}:1`);
+    }
+    return { background: value, content, border: null };
+}
 /** Search is a field specialization with stable affordance and clear targets. */
 export const searchFieldRecipe = {
     slots: ["root", "leading", "input", "trailing", "clear", "spinner"],

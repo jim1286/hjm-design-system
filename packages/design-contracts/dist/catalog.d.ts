@@ -2332,6 +2332,11 @@ export declare const recipeRegistry: {
         readonly radius: "sm";
         readonly borderWidth: 1;
         readonly fontWeight: "700";
+        readonly iconStrokeWidth: 2;
+        readonly category: {
+            readonly darkInk: string;
+            readonly minimumContrast: 4.5;
+        };
     };
     readonly bottomNavigationRecipe: {
         readonly slots: readonly ["root", "surface", "list", "item", "indicator", "icon", "label", "badge"];

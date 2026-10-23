@@ -1,3 +1,4 @@
+import { type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { control, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
 export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
@@ -313,9 +314,29 @@ export type BadgeTone = "neutral"
  | "strong" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
 export type BadgeSize = "small" | "medium";
 export type BadgeVariant = "filled" | "outline";
+/**
+ * Values a `leading`/`trailing` render callback receives. `strokeWidth` follows the Icon weight scale like
+ * BottomNavigation's icon context, so a product glyph renderer (Lucide etc.) draws the same line weight as HJM Icon.
+ * Before 2026-10-23 the context had no stroke, so Diairy passed a whole Icon node instead of the callback.
+ */
 export type BadgeAdornmentContext = Readonly<{
     color: string;
     size: number;
+    strokeWidth: number;
+}>;
+/**
+ * Product-defined classification color for one Badge (game series, contract grade…), one value per theme.
+ * Classification is not a status or the brand: before 2026-10-23 Yajalal nested an HjmNativeProvider with a
+ * brandPalette around a single Badge to paint it, which also re-scoped every token under it (brand-boundary §1).
+ * The product owns the hue; HJM owns the frame and picks/validates the label ink (WCAG AA 4.5).
+ */
+export type BadgeCategoryColor = Readonly<Record<ResolvedTheme, string>>;
+export type ResolvedBadgeCategoryColor = Readonly<{
+    /** Plate fill; null for the outline variant. */
+    background: string | null;
+    content: string;
+    /** Outline stroke; null for the filled variant. */
+    border: string | null;
 }>;
 export declare const badgeRecipe: {
     readonly slots: readonly ["root", "icon", "label", "trailing"];
@@ -523,7 +544,25 @@ export declare const badgeRecipe: {
     readonly radius: "sm";
     readonly borderWidth: 1;
     readonly fontWeight: "700";
+    /** Adornment line weight handed to `leading`/`trailing` callbacks (Icon `regular`). */
+    readonly iconStrokeWidth: 2;
+    /**
+     * `categoryColor` ink. Filled plates take whichever of the light ink (`onStatusFill`, as the status plates) or the
+     * dark ink (light theme `text`) reads better on the product fill; outline badges use the color itself as label and
+     * stroke. Either way the label must reach `minimumContrast` or the badge throws — the product must pick another
+     * shade per theme instead of shipping an unreadable classification.
+     */
+    readonly category: {
+        readonly darkInk: string;
+        readonly minimumContrast: 4.5;
+    };
 };
+/** Resolves a product classification color for the active theme and verifies label contrast (AA 4.5). */
+export declare function resolveBadgeCategoryColor(color: BadgeCategoryColor, options: Readonly<{
+    theme: ResolvedTheme;
+    variant: BadgeVariant;
+    palette: Readonly<ThemeColors>;
+}>): ResolvedBadgeCategoryColor;
 export type SearchFieldSize = "medium" | "large";
 /** Search is a field specialization with stable affordance and clear targets. */
 export declare const searchFieldRecipe: {

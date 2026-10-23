@@ -1,6 +1,6 @@
 # 브랜드 경계 — 제품이 바꿀 수 있는 것과 그 경로
 
-상태: 규범 · 검토일: 2026-10-20 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
+상태: 규범 · 검토일: 2026-10-23 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
 [theming.md](./theming.md)는 사용법 예시, [consumer-policy.md](./consumer-policy.md)는 채택 정책,
 [design-system-provider.md](./design-system-provider.md)는 환경 축 설계를 다루며 브랜드 규칙은 여기로 링크한다.
 
@@ -98,5 +98,12 @@ HJM: semantic color role과 light/dark 대비, spacing·type scale·radius·moti
 키보드·screen-reader 행동, loading·empty·error·disabled·focus 문법.
 
 제품: 이름·로고·대표 이미지, 검증한 `designProfile` 데이터와 `brandPalette`로 표현한 브랜드 색, 도메인 상태 → `AccentTone` 매핑, 콘텐츠 밀도와
-정보 우선순위, copy·i18n·내비게이션 구조. 제품 고유 gradient는 light/dark·on-color 대비와 reduce-motion을 제품 테스트로
+정보 우선순위, copy·i18n·내비게이션 구조.
+
+### 제품 분류 색(Badge `categoryColor`) — 개발 소스, 미게시
+
+경기 시리즈·계약 등급처럼 상태(`AccentTone`)도 브랜드도 아닌 **제품 분류**는 Badge의 `categoryColor`(테마별 6자리 hex)로 넣는다.
+분류의 색 정의는 제품이, 틀·글자·간격과 글자색 선택은 HJM이 소유한다. HJM은 `resolveBadgeCategoryColor`(`@hjmds/design-contracts/recipes`)로
+테마마다 채움 위 글자 또는 outline 글자의 대비를 계산하고 4.5:1 미만이면 렌더 전에 던진다. 배지 하나를 `brandPalette` Provider로
+감싸 분류색을 칠하지 않는다 — 그 범위의 primary·contentBrand 등이 함께 바뀌는 브랜드 경로의 오용이다(2026-10-23 야잘알 GameSeriesBadge·FaCards 감사). 제품 고유 gradient는 light/dark·on-color 대비와 reduce-motion을 제품 테스트로
 검증한다([consumer-policy.md §4](./consumer-policy.md#4-제품-정체성-경계)).

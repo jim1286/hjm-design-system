@@ -980,6 +980,9 @@
 .hjm-badge[data-variant="outline"][data-tone="warning"] { background: transparent; color: var(--hjm-accent-warning); border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
 .hjm-badge[data-tone="attention"] { background: var(--hjm-accent-fill-attention); }
 .hjm-badge[data-variant="outline"][data-tone="attention"] { background: transparent; color: var(--hjm-accent-attention); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
+/* Product classification color (Badge categoryColor): the renderer resolves fill, ink and stroke per theme and checks AA. */
+.hjm-badge[data-tone="category"] { color: var(--hjm-badge-category-content); background: var(--hjm-badge-category-background); }
+.hjm-badge[data-variant="outline"][data-tone="category"] { background: transparent; border-color: var(--hjm-badge-category-border); }
 .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: color-mix(in srgb, var(--hjm-accent-info) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
 .hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
 .hjm-tag[data-tone="attention"] { color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
