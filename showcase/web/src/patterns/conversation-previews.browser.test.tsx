@@ -53,7 +53,7 @@ it('preserves the new-message draft through edit cancellation, failure, save and
 
 it('hides group unread metadata after the last participant reads', async () => {
  await render(<ChatMessagePreview/>);
- expect(host.textContent).toContain('안 읽음 2명');
- await click('참여자 한 명 읽음');expect(host.textContent).toContain('안 읽음 1명');
- await click('참여자 한 명 읽음');expect(host.textContent).not.toContain('안 읽음');
+ expect(host.textContent).toContain('오후 3:15 · 2');
+ await click('참여자 한 명 읽음');expect(host.textContent).toContain('오후 3:15 · 1');
+ await click('참여자 한 명 읽음');expect(host.textContent).not.toContain('오후 3:15 ·');
 });

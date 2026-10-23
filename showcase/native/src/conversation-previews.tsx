@@ -218,7 +218,7 @@ function GroupReadPreview() {
   const [unread, setUnread] = useState(2);
   return <Stack gap="md">
     <Heading level="level3">단체 대화 읽음</Heading>
-    <ChatMessage direction="outgoing" author="나" timestamp="오후 3:15" {...(unread > 0 ? { deliveryLabel: `안 읽음 ${unread}명` } : {})}>
+    <ChatMessage direction="outgoing" author="나" timestamp="오후 3:15" {...(unread > 0 ? { deliveryLabel: String(unread) } : {})}>
       <Text>모두 토요일 오후에 만나요!</Text>
     </ChatMessage>
     <PreviewTools>
