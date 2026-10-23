@@ -45,7 +45,8 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
   const room = listRowScrollRoom(bleed ? bodyInset : 0);
   const outset = room.content.paddingHorizontal;
   const [width, setWidth] = useState(0), [offset, setOffset] = useState(0);
-  const layout = resolveCollectionRailLayout(items.length, width, density, tokens.spacing.md);
+  const gap = tokens.spacing[collectionRailRecipe.gapSteps[density]];
+  const layout = resolveCollectionRailLayout(items.length, width, density, gap);
   const geometry = useRef(layout); geometry.current = layout;
   const logicalOffset = useRef(0);
   const pendingOffset = useRef<number | null>(null);
@@ -77,7 +78,7 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
     if (focusedIndex >= 0) target = getCollectionRailRevealOffset(geometry.current, target, focusedIndex);
     scrollToOffset(target, false);
   }
-  useLayoutEffect(alignAnchor, [width, density, tokens.spacing.md, direction, identity]);
+  useLayoutEffect(alignAnchor, [width, density, gap, direction, identity]);
   function navigate(intent: "previous" | "next") {
     scrollToOffset(getCollectionRailTargetOffset(geometry.current, pendingOffset.current ?? logicalOffset.current, intent), true);
   }
@@ -102,7 +103,7 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
       scrollEventThrottle={16} keyboardShouldPersistTaps="handled" removeClippedSubviews={false}
       style={{ direction: "ltr", ...room.viewport }}
       contentContainerStyle={{ direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
-        gap: tokens.spacing.md, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }}>
+        gap, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }}>
       {items.map((item, index) => <View key={item.id} style={{ width: layout.itemWidth, direction }}
         onFocus={() => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }}
         onBlur={() => { if (focusedKey.current === item.id) focusedKey.current = null; }}>

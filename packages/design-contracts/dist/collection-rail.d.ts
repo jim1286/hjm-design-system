@@ -2,14 +2,26 @@ export type CollectionRailItem<Id extends string = string> = Readonly<{
     id: Id;
     label: string;
 }>;
-export type CollectionRailDensity = "compact" | "comfortable";
+export type CollectionRailDensity = "compact" | "comfortable" | "chip";
 export type CollectionRailIntent = "previous" | "next" | "first" | "last";
 export declare const collectionRailRecipe: {
+    /**
+     * `chip` (2026-10-23): Yajalal's home strip of 145pt mini scoreboards used a raw ScrollView because every rail item
+     * took card width (240+). Chips are uniform, so a narrow step keeps the shared one-stride geometry; content-sized
+     * items were not added because previous/next, the start anchor and focus reveal step by a single item width.
+     */
     readonly itemMaxWidth: {
         readonly compact: number;
         readonly comfortable: number;
+        readonly chip: number;
     };
     readonly gap: 16;
+    /** Gap per density as a spacing step (profile-aware on Native); chips sit closer than cards. */
+    readonly gapSteps: {
+        readonly compact: "md";
+        readonly comfortable: "md";
+        readonly chip: "xs";
+    };
     readonly edgeHint: 24;
     readonly defaults: {
         readonly density: "comfortable";

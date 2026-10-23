@@ -162,7 +162,7 @@ import { CollectionRail } from "@hjmds/react/collection-rail";
 | `renderItem` | `(item) => ReactNode` | 필수 | 버튼·입력·카드는 기존 공개 API 사용 |
 | `labels` | previous/next/navigation string | 필수 | 스크롤 행동 이름, empty 금지 |
 | `showNavigation` | boolean | `true` | `false`면 이동 버튼 행과 그 여백을 제거하고 스와이프·스크롤·초점 노출을 유지한다. 2026-10-20 스핀트 요청: 터치 탐색과 중복되는 버튼 제거 |
-| `density` | compact/comfortable | comfortable | 최대 폭240/360, 실제 폭에서 clamp |
+| `density` | compact/comfortable/chip | comfortable | 최대 폭240/360/144(`layout.readingMaxWidth`의 1/3·1/2·1/5), 실제 폭에서 clamp. 간격은 `collectionRailRecipe.gapSteps`(카드 md 16, chip xs 8). `chip`은 미니 스코어보드 같은 같은 폭의 작은 칩 줄이다(미게시, 2026-10-23). 항목마다 다른 내용 폭은 지원하지 않는다 — 이전/다음·앞쪽 anchor·초점 노출이 한 항목 폭 단위로 움직이기 때문이다 |
 | `defaultStartKey` | item ID | 첫 항목 | 초기 위치만. 선택/상세 값 아님 |
 | `onStartKeyChange` | `(key: string|null) => void` | 생략 | 앞쪽 항목 변화 관찰; 선택 확정 callback 아님 |
 | `emptyContent` | ReactNode | 생략 | 제품의 빈 목록 내용 |

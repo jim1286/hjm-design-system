@@ -33,7 +33,10 @@ Native row만 RTL에서 역방향으로 배치하며 데이터/React key/읽기 
 
 ## 배치와 플랫폼 경계
 
-comfortable 최대 폭360은 `layout.readingMaxWidth / 2`, compact240은 `/3`이다. 실제 폭은 viewport와
+comfortable 최대 폭360은 `layout.readingMaxWidth / 2`, compact240은 `/3`, chip144는 `/5`다(2026-10-23 추가).
+간격은 `gapSteps`의 spacing 단계로 카드 밀도는 `md`16, chip은 `xs`8이다. 야잘알 홈의 145pt 미니 스코어보드 줄이
+카드 폭(240+)을 강제받아 원시 ScrollView를 쓰던 문제다. 내용 폭 항목(`itemWidth="content"`)은 넣지 않았다 —
+이전/다음·앞쪽 anchor·초점 노출이 모두 한 항목 폭(stride) 단위의 geometry이고, 실제 소비처의 칩도 같은 폭이다. 실제 폭은 viewport와
 `spacing.xl`24 hint를 함께 고려한다. 간격 `spacing.md`16을 유지하므로 viewport358에서 카드334와 다음 카드8이 노출된다.
 뷰포트24 이하에서는 peek보다 내용 폭을 우선한다. 길고 많은 데이터는 VirtualList/제품별 가상화 계약을 사용한다.
 브랜드 색·표면·폰트·카드 경계는 Provider와 Card가 소유한다. 가로 탐색을 테마의 미지원 screen/composition 축에 자동 연결하지 않는다.

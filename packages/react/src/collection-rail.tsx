@@ -6,6 +6,7 @@ import {
   getCollectionRailTargetOffset, getCollectionRailItemOffset, getCollectionRailRevealOffset,
   getCollectionRailKeyboardIntent, type CollectionRailItem, type CollectionRailDensity, type CollectionRailLayout,
 } from "@hjmds/design-contracts/collection-rail";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -36,7 +37,7 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
   validateCollectionRail(items);
   if (!label.trim() || Object.values(labels).some(value => !value.trim())) throw new TypeError("CollectionRail labels must not be empty");
   const theme = useOptionalHjmTheme(), direction = theme?.environment.direction ?? "ltr";
-  const gap = collectionRailRecipe.gap;
+  const gap = spacing[collectionRailRecipe.gapSteps[density]];
   const viewportRef = useRef<HTMLDivElement>(null);
   const detachedFocus = useRef<HTMLElement | null>(null);
   useLayoutEffect(() => {

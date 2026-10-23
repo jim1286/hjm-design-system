@@ -2,14 +2,21 @@ import { validateItems } from "./interaction-adapters.js";
 import { layout, spacing } from "./foundations.js";
 
 export type CollectionRailItem<Id extends string = string> = Readonly<{ id: Id; label: string }>;
-export type CollectionRailDensity = "compact" | "comfortable";
+export type CollectionRailDensity = "compact" | "comfortable" | "chip";
 export type CollectionRailIntent = "previous" | "next" | "first" | "last";
 
 // A finite rail exposes every item's independent actions. Carousel's single
 // selected/inert panel is therefore not its state engine (docs/collection-rail.md).
 export const collectionRailRecipe = {
-  itemMaxWidth: { compact: layout.readingMaxWidth / 3, comfortable: layout.readingMaxWidth / 2 },
+  /**
+   * `chip` (2026-10-23): Yajalal's home strip of 145pt mini scoreboards used a raw ScrollView because every rail item
+   * took card width (240+). Chips are uniform, so a narrow step keeps the shared one-stride geometry; content-sized
+   * items were not added because previous/next, the start anchor and focus reveal step by a single item width.
+   */
+  itemMaxWidth: { compact: layout.readingMaxWidth / 3, comfortable: layout.readingMaxWidth / 2, chip: layout.readingMaxWidth / 5 },
   gap: spacing.md,
+  /** Gap per density as a spacing step (profile-aware on Native); chips sit closer than cards. */
+  gapSteps: { compact: "md", comfortable: "md", chip: "xs" },
   edgeHint: spacing.xl,
   defaults: { density: "comfortable" },
 } as const;
@@ -27,7 +34,7 @@ export function validateCollectionRail(items: readonly CollectionRailItem[], ini
 
 export function resolveCollectionRailLayout(
   count: number, viewport: number, density: CollectionRailDensity = collectionRailRecipe.defaults.density,
-  gap: number = collectionRailRecipe.gap,
+  gap: number = spacing[collectionRailRecipe.gapSteps[density] ?? "md"],
 ): CollectionRailLayout {
   if (!Number.isSafeInteger(count) || count < 0) throw new RangeError("CollectionRail count must be a nonnegative integer");
   if (!Number.isFinite(viewport) || viewport < 0 || !Number.isFinite(gap) || gap < 0) {
