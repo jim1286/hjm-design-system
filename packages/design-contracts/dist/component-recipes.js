@@ -7,7 +7,7 @@ import { buttonRecipe } from "./base-recipes.js";
 import { semanticColors } from "./semantic-colors.js";
 import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
-export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, } from "./icon-button-recipe.js";
+export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, validateIconButtonElevation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, } from "./counter-badge-recipe.js";
 export { progressRecipe, resolveProgressSegments, } from "./progress-recipe.js";
 export const textRecipe = {

@@ -101,6 +101,14 @@ export declare const iconButtonRecipe: {
     readonly edge: {
         readonly tones: readonly ["ghost"];
     };
+    /**
+     * `elevation` (2026-10-23) lifts a floating control (Burntok Dock's center action) with a shadow token. Only filled
+     * tones can carry it: a ghost button has no frame for the shadow to belong to (Android draws none without a fill).
+     */
+    readonly elevation: {
+        readonly default: "none";
+        readonly tones: readonly ["primary", "secondary", "danger"];
+    };
     readonly states: {
         readonly selected: {
             readonly background: Readonly<{
@@ -132,4 +140,6 @@ export declare function resolveIconButtonPresentation(tone: IconButtonTone, pale
  * minimumVisualTarget axis (`visibleControlHeight`), so the overhang tracks what is actually drawn.
  */
 export declare function resolveIconButtonEdgeOverhang(tone: IconButtonTone, size: IconButtonSize, visibleDiameter?: number): number;
+/** Throws for an unknown step or an elevated ghost IconButton (iconButtonRecipe.elevation). */
+export declare function validateIconButtonElevation(elevation: string, tone: IconButtonTone): void;
 //# sourceMappingURL=icon-button-recipe.d.ts.map

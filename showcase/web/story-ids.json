@@ -618,6 +618,7 @@
     "components-layout-stack--large-text",
     "components-layout-surface--dark",
     "components-layout-surface--default",
+    "components-layout-surface--elevation",
     "components-layout-surface--large-text",
     "components-layout-top--dark",
     "components-layout-top--default",

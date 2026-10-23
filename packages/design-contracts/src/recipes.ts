@@ -37,6 +37,7 @@ export {
   emptyStateRecipe,
   formatCounterBadgeCount,
   iconButtonRecipe,
+  validateIconButtonElevation,
   iconRecipe,
   linkRecipe,
   listRecipe,

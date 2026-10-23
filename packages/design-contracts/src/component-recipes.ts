@@ -38,6 +38,7 @@ export {
   iconButtonRecipe,
   resolveIconButtonEdgeOverhang,
   resolveIconButtonPresentation,
+  validateIconButtonElevation,
   type IconButtonEdge,
   type IconButtonShape,
   type IconButtonSize,

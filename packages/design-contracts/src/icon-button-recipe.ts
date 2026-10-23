@@ -7,6 +7,7 @@ import {
   glyph,
   opacity,
   radius,
+  validateElevationStep,
   type GlyphSize,
 } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
@@ -61,6 +62,11 @@ export const iconButtonRecipe = {
    * moves the glyph slot by the same amount on Web and Native.
    */
   edge: { tones: ["ghost"] as const },
+  /**
+   * `elevation` (2026-10-23) lifts a floating control (Burntok Dock's center action) with a shadow token. Only filled
+   * tones can carry it: a ghost button has no frame for the shadow to belong to (Android draws none without a fill).
+   */
+  elevation: { default: "none", tones: ["primary", "secondary", "danger"] as const },
   states: {
     // `aria-pressed` / `accessibilityState.selected` already carried the toggle
     // state; without a paired visual every consumer painted the pressed icon
@@ -88,6 +94,7 @@ export const iconButtonRecipe = {
   sizes: Record<IconButtonSize, { diameter: number; hitSlop: number; glyph: GlyphSize }>;
   shapes: Record<IconButtonShape, keyof typeof radius>;
   edge: { tones: readonly IconButtonTone[] };
+  elevation: { default: "none"; tones: readonly IconButtonTone[] };
   states: {
     selected: { background: ColorReference; content: ColorReference; border: ColorReference | null };
     pressedOpacity: number;
@@ -137,4 +144,12 @@ export function resolveIconButtonEdgeOverhang(
 ): number {
   if (!(iconButtonRecipe.edge.tones as readonly IconButtonTone[]).includes(tone)) return 0;
   return Math.max(0, (visibleDiameter - glyph[iconButtonRecipe.sizes[size].glyph]) / 2);
+}
+
+/** Throws for an unknown step or an elevated ghost IconButton (iconButtonRecipe.elevation). */
+export function validateIconButtonElevation(elevation: string, tone: IconButtonTone): void {
+  validateElevationStep(elevation, "IconButton");
+  if (elevation !== "none" && !(iconButtonRecipe.elevation.tones as readonly string[]).includes(tone)) {
+    throw new TypeError(`IconButton elevation needs a filled tone, not ${tone}`);
+  }
 }

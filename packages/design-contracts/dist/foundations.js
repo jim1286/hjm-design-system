@@ -299,4 +299,11 @@ export const shadow = {
         offsetY: 8,
     },
 };
+export const elevationSteps = ["none", "raised", "floating", "overlay"];
+/** Android `elevation` when no design profile supplies shadow tokens (the existing raised 4 / floating 8 fallbacks). */
+export const nativeElevationFallback = { none: 0, raised: 4, floating: 8, overlay: 16 };
+export function validateElevationStep(step, owner) {
+    if (!elevationSteps.includes(step))
+        throw new TypeError(`Unsupported ${owner} elevation: ${step}`);
+}
 //# sourceMappingURL=foundations.js.map

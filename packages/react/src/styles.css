@@ -88,6 +88,11 @@
    opts out because clipping cuts off its own shadow. */
 .hjm-surface[data-clips="true"] { overflow: hidden; }
 .hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-raised)); }
+/* Surface `elevation` (shadow token steps, 2026-10-23) overrides the tone's shadow; declared after the tone rule. */
+.hjm-surface[data-elevation="none"] { box-shadow: var(--hjm-surface-inset-shadow, none); }
+.hjm-surface[data-elevation="raised"] { box-shadow: var(--hjm-surface-raised-shadow, var(--hjm-shadow-raised)); }
+.hjm-surface[data-elevation="floating"] { box-shadow: var(--hjm-shadow-floating); }
+.hjm-surface[data-elevation="overlay"] { box-shadow: var(--hjm-shadow-overlay); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="sunken"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
@@ -317,6 +322,10 @@
   border-radius: var(--hjm-radius-md);
 }
 .hjm-icon-button[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
+/* IconButton `elevation` (iconButtonRecipe.elevation, 2026-10-23): a floating control's lift from the shadow tokens. */
+.hjm-icon-button[data-elevation="raised"] { box-shadow: var(--hjm-shadow-raised); }
+.hjm-icon-button[data-elevation="floating"] { box-shadow: var(--hjm-shadow-floating); }
+.hjm-icon-button[data-elevation="overlay"] { box-shadow: var(--hjm-shadow-overlay); }
 .hjm-icon-button[data-size="small"] { inline-size: var(--hjm-control-button-small); block-size: var(--hjm-control-button-small); min-inline-size: 0; min-block-size: 0; }
 .hjm-icon-button[data-size="small"]::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-button-hit-slop, var(--hjm-space-xxs))); }
 .hjm-icon-button[data-size="large"] { inline-size: var(--hjm-control-button-large); block-size: var(--hjm-control-button-large); }

@@ -30,6 +30,8 @@ import {
   numeric as numericVariants,
   resolveTextFontRole,
   resolveFontFamilyStack,
+  validateElevationStep,
+  type ElevationStep,
   type FontFamilyRoles,
   type FontRole,
   type NumericVariant,
@@ -87,7 +89,7 @@ import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/desig
 import {
   logicalTextAlign,
   resolveNativeFontStyle,
-  resolveNativeShadowElevation,
+  resolveNativeElevationStyle,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -304,6 +306,11 @@ export type SurfaceProps = Omit<ViewProps, "style"> &
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
     bordered?: boolean;
+    /**
+     * Shadow token step. Omitted, the tone decides (raised → raised, others none); `none` removes the raised shadow.
+     * An elevated surface does not clip its content, since clipping cuts off its own shadow.
+     */
+    elevation?: ElevationStep;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -317,11 +324,13 @@ export function Surface({
   padding = surfaceDefaults.padding,
   radius: radiusValue = surfaceDefaults.radius,
   bordered,
+  elevation,
   layoutStyle,
   children,
 
   ...props
 }: SurfaceProps) {
+  if (elevation !== undefined) validateElevationStep(elevation, "Surface");
   const { colors, tokens, designProfile, environment, surfaceEffects, reducedTransparency, surfaceMaterial: material } = useHjmNativeTheme();
   const renderBackdrop = !reducedTransparency && material?.blurStrength ? surfaceEffects?.renderBackdrop : undefined;
   // The core supports RN 0.81's old architecture too: inset boxShadow must be
@@ -333,16 +342,9 @@ export function Surface({
   const contract = surfaceRecipe[normalizedTone];
   const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
   const borderColor = resolveThemeColor(colors, contract.border);
-  const elevatedStyle: ViewStyle | undefined = contract.elevated
-    ? {
-        ...resolveNativeShadowElevation(tokens.shadow.raised, designProfile !== undefined, 4),
-        // Raised cards use the low elevation token; floating is reserved for floating controls and overlays.
-        shadowColor: tokens.shadow.raised.color,
-        shadowOffset: { width: 0, height: tokens.shadow.raised.offsetY },
-        shadowOpacity: tokens.shadow.raised.opacity,
-        shadowRadius: tokens.shadow.raised.radius,
-      }
-    : undefined;
+  // Raised cards use the low elevation token; floating is reserved for floating controls and overlays.
+  const step = elevation ?? (contract.elevated ? "raised" : "none");
+  const elevatedStyle = resolveNativeElevationStyle(step, tokens.shadow, designProfile !== undefined);
   return (
     <View
       {...props}
@@ -358,7 +360,7 @@ export function Surface({
           borderWidth: 1,
           // A child image would otherwise spill past the rounded corner. An
           // elevated tone opts out because clipping cuts off its own shadow.
-          overflow: contract.clipsContent ? "hidden" : "visible",
+          overflow: contract.clipsContent && step === "none" ? "hidden" : "visible",
           padding: surfaceGeometry.paddings[padding],
         },
         elevatedStyle,

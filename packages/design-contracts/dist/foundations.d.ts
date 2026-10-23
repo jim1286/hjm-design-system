@@ -331,4 +331,19 @@ export declare const shadow: {
         readonly offsetY: 8;
     };
 };
+/**
+ * Public elevation steps: `none` or a `shadow` token. 2026-10-23: Burntok kept a RaisedControl View under HJM controls
+ * and passed `shadow-lg ring-2` classes to IconButton/Surface because their layoutStyle cannot carry a shadow. Steps
+ * name the existing tokens (design profiles override them) instead of opening a free shadow style.
+ */
+export type ElevationStep = "none" | keyof typeof shadow;
+export declare const elevationSteps: readonly ["none", "raised", "floating", "overlay"];
+/** Android `elevation` when no design profile supplies shadow tokens (the existing raised 4 / floating 8 fallbacks). */
+export declare const nativeElevationFallback: {
+    readonly none: 0;
+    readonly raised: 4;
+    readonly floating: 8;
+    readonly overlay: 16;
+};
+export declare function validateElevationStep(step: string, owner: string): asserts step is ElevationStep;
 //# sourceMappingURL=foundations.d.ts.map

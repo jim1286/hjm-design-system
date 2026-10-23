@@ -12,9 +12,11 @@ import {
 } from "@hjmds/design-contracts/recipes/base";
 
 export type { ButtonAlign, ButtonEdge, ButtonShape, ButtonAppearance };
+import type { ElevationStep } from "@hjmds/design-contracts/foundations";
 import {
   iconButtonRecipe,
   linkRecipe,
+  validateIconButtonElevation,
   type IconButtonEdge,
   type IconButtonShape,
   type IconButtonSize,
@@ -242,6 +244,11 @@ export type IconButtonProps = Omit<
      * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
      */
     edge?: IconButtonEdge;
+    /**
+     * Shadow token step for a floating control (iconButtonRecipe.elevation, default `none`). Filled tones only;
+     * an elevated ghost button throws.
+     */
+    elevation?: ElevationStep;
     children: ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -258,6 +265,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       selected,
       loading = false,
       edge,
+      elevation = iconButtonRecipe.elevation.default,
       disabled,
       onClick,
       type = "button",
@@ -269,6 +277,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     },
     ref,
   ) {
+    validateIconButtonElevation(elevation, tone);
     // Preserve a focusable disabled action (e.g. a Carousel boundary).
     const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
     const unavailable = disabled === true || loading || ariaDisabled;
@@ -291,6 +300,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         data-size={size}
         data-shape={shape}
         data-edge={edge}
+        data-elevation={elevation === "none" ? undefined : elevation}
         {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
         data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
         aria-label={label}

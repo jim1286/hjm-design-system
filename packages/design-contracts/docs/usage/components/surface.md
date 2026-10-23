@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-07
+- 검토일: 2026-10-23
 - 근거: `src/base-recipes.ts`(`surfaceRecipe`·`surfaceDefaults`·`surfaceGeometry`)
 - 스토리북: `배포/컴포넌트/레이아웃/배경 영역`
 
@@ -65,6 +65,7 @@ import { Surface } from "@hjmds/react-native/primitives";
 | `tone` | `default` · `raised` · `sunken` · `accent` · `subtle` · `selected` | `default` | `raised`는 그림자, `accent`는 primary 색 테두리. `selected`는 `surfaceSelected` 배경, 나머지는 테마 `bg` 바탕에 테두리·그림자로 위계를 나타낸다 |
 | `padding` | `none` 또는 spacing 토큰(`xxs`~`xxxl`) | `none` | — |
 | `radius` | `sm` · `md` · `lg` · `xl` · `full` | `lg`(16) | — |
+| `elevation` | `none` · `raised` · `floating` · `overlay` | tone이 정함(`raised` tone → `raised`, 나머지 `none`) | 그림자 토큰 단계([그림자와 투명도](../tokens/elevation-opacity.md)). `none`은 raised tone의 그림자도 뺀다. 그림자가 있는 면은 내용을 자르지 않는다(Native `overflow: visible`). 떠 있는 안내·받침에 쓰고 className `shadow-*`나 감싸는 View로 그림자를 주지 않는다(미게시, 2026-10-23) |
 | `bordered` | `boolean` | 생략 시 테두리 그림 | 모든 tone이 `borderAlways`. `bordered={false}`로만 끈다 |
 | 자식 자르기 | — | `raised` 외 자름 | `raised`를 뺀 tone은 둥근 모서리 밖으로 넘친 자식을 자른다. `raised`는 그림자가 잘리지 않게 자르지 않는다 |
 | `as`(Web) | `div` · `section` · `article` | `div` | — |

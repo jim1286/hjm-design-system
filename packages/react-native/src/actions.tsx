@@ -6,13 +6,14 @@ import {
   type LinkDestination,
 } from "@hjmds/design-contracts/components/link";
 import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
-import { glyph, spacing } from "@hjmds/design-contracts/foundations";
+import { glyph, spacing, type ElevationStep } from "@hjmds/design-contracts/foundations";
 import {
   bottomCtaRecipe,
   actionGroupRecipe,
   linkRecipe,
   iconButtonRecipe,
   resolveIconButtonPresentation,
+  validateIconButtonElevation,
   type IconButtonEdge,
   type IconButtonTone as ContractIconButtonTone,
   type IconButtonShape,
@@ -40,7 +41,7 @@ import { ScreenFooterContext } from "./internal/screen-footer.js";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { assertNoRemovedStyleProps, warnOnce } from "./internal/diagnostics.js";
-import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/styles.js";
+import { minimumTargetStyle, resolveNativeElevationStyle, resolveNativeShadowElevation } from "./internal/styles.js";
 import { Icon, Text, type NativeIconRenderProps } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -134,6 +135,11 @@ export type IconButtonProps = Omit<
      * (`resolveIconButtonEdgeOverhang`, 2026-10-17 measured audit). Framed tones align their frame and do not move.
      */
     edge?: IconButtonEdge;
+    /**
+     * Shadow token step for a floating control (iconButtonRecipe.elevation, default `none`). Filled tones only; an
+     * elevated ghost button throws (Android draws no elevation without a fill).
+     */
+    elevation?: ElevationStep;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
@@ -153,6 +159,7 @@ export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof Native
   disabled = false,
   loading = false,
   edge,
+  elevation = iconButtonRecipe.elevation.default,
   disableWhileLoading = false,
   hitSlop,
   layoutStyle,
@@ -172,7 +179,9 @@ export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof Native
   if (resolvedIcon === undefined || resolvedIcon === null || resolvedIcon === false) {
     throw new TypeError("IconButton requires children");
   }
+  validateIconButtonElevation(elevation, tone);
   const frame = iconButtonFrame(theme, { tone, size, shape, edge, selected: selected === true });
+  const lift = resolveNativeElevationStyle(elevation, theme.tokens.shadow, theme.designProfile !== undefined);
   const unavailable = disabled || (loading && disableWhileLoading);
   return (
     <Pressable
@@ -190,7 +199,7 @@ export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof Native
       hitSlop={hitSlop ?? frame.hitSlop}
       onPress={loading ? () => undefined : onPress}
       onLongPress={loading ? () => undefined : onLongPress}
-      style={({ pressed }) => [frame.style(disabled ? "disabled" : loading ? "idle" : pressed ? "pressed" : "idle"), layoutStyle]}
+      style={({ pressed }) => [frame.style(disabled ? "disabled" : loading ? "idle" : pressed ? "pressed" : "idle"), lift, layoutStyle]}
     >
       {loading ? (
         renderLoadingIndicator?.({ color: frame.content, size: "small" }) ?? (

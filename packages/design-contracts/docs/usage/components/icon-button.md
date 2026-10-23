@@ -123,6 +123,7 @@ Client Component에서 연결한다.
 | `tone` | `ghost` · `primary` · `secondary` · `danger` | `ghost` | — |
 | `size` | `small` 36 · `medium` 44 · `large` 52 | `medium` | `small`은 터치 여백 4 추가. 아이콘 크기는 각각 `sm`·`md`·`lg` |
 | `shape` | `rounded` · `circle` | `rounded` | — |
+| `elevation` | `none` · `raised` · `floating` · `overlay` | `none` | 떠 있는 컨트롤(번뚝 Dock 가운데 버튼)의 그림자 토큰 단계(`iconButtonRecipe.elevation`). `primary`·`secondary`·`danger`만 받고 `ghost`에 주면 `TypeError`. Web은 `--hjm-shadow-<단계>`, Native는 iOS 그림자 + Android elevation. `IconButtonLink`에는 없다(미게시, 2026-10-23) |
 | `selected` | `true` · `false` | — | 주면 토글이 된다(Web `aria-pressed`, Native 접근성 state) |
 | `edge` | `start` · `end` · `both` | — | 버튼이 놓인 컨테이너 가장자리(논리 방향, RTL에서 뒤집힘). `ghost`면 터치 영역은 그대로 두고 그 쪽으로 (보이는 지름 − 아이콘 칸) / 2만큼 내민다(`medium` 10, `small` 8, `large` 12, `resolveIconButtonEdgeOverhang`). 테두리·배경이 있는 tone은 틀이 정렬 기준이라 움직이지 않는다 |
 | `loading` | `true` · `false` | — | 누름을 막고 스피너로 바꾼다. Native는 기본으로 포커스를 유지한다(`disableWhileLoading`으로만 옛 동작) |

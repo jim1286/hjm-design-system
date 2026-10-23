@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-13
+- 검토일: 2026-10-23
 - 근거: `src/foundations.ts`(`shadow`·`opacity`·`stateLayer`·`overlay`·`backdrop`·`scrim`), `src/component-contracts.ts`(`floatingSurfaceContract`), `src/component-recipes.ts`(`dialogRecipe`·`sheetRecipe`·`toastRecipe`·`bottomCtaRecipe`), `packages/react/src/theme.ts`, `packages/react/src/styles.css`, `packages/react-native/src/primitives.tsx`
 - 스토리북: `배포/토큰/표면과 움직임/그림자와 투명도`
 
@@ -50,6 +50,17 @@ Native 경로의 이름은 `@hjmds/design-contracts/foundations` import다.
 
 ## 쓰는 법
 
+HJM 컴포넌트에는 그림자를 감싸는 View·className으로 주지 않고 `elevation` prop(`"none"` · `"raised"` · `"floating"` · `"overlay"`,
+`ElevationStep`)을 쓴다(2026-10-23). `Surface`는 생략하면 tone이 정하고(`raised` tone → raised), `IconButton`은 기본 `none`이며
+채운 tone(`primary`·`secondary`·`danger`)만 받는다. Native는 같은 단계를 iOS `shadow*`와 Android `elevation`
+(프로필이 없으면 `nativeElevationFallback` 4·8·16)으로 번역한다. 번뚝 `RaisedControl` 받침과 웹 `shadow-lg` className이 이 자리를 대신하던 우회다.
+
+```tsx
+// Web — Native도 같은 prop
+<IconButton label={t("burn")} tone="primary" size="large" shape="circle" elevation="floating" onClick={burn}>{icon}</IconButton>
+<Surface tone="default" elevation="floating" padding="sm">{notice}</Surface>
+```
+
 ```tsx
 // Web
 // 제품 고유 떠 있는 카드: .product-floating { box-shadow: var(--hjm-shadow-floating); }
@@ -80,7 +91,8 @@ const s = shadow.floating;
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 그림자 표현 | box-shadow 문자열(`--hjm-shadow-*`) | iOS `shadow*` 속성 + Android `elevation` |
-| Surface `tone="raised"` | `--hjm-shadow-floating` | `shadow.floating` + `elevation` 4 |
+| Surface `tone="raised"` | `--hjm-surface-raised-shadow`(프로필) 또는 `--hjm-shadow-raised` | `shadow.raised` + `elevation` 4 |
+| `elevation` prop(Surface·IconButton) | `--hjm-shadow-<단계>`(Surface raised는 프로필 변수 우선) | 해당 `shadow.<단계>` + `elevation`(프로필 없으면 4·8·16) |
 | HJM 목록 팝업 그림자 | `--hjm-shadow-floating`(Select·Menubar·DatePicker·Menu·Popover) | Modal 기반 메뉴는 해당 플랫폼 표면 계약 |
 
 2026-10-06 후속 검수에서 정의만 있던 Web 그림자 변수를 실제 떠 있는 표면에 연결했다. CommandPalette·Tour 같은 큰 강조 표면은 `shadow.overlay`, 일반 popup·Surface는 `shadow.floating`을 쓴다. Native Surface의 별도 blur 6도 floating token으로 맞췄다. 포커스 링·선택 테두리·스위치 손잡이의 inset 표현은 높이 그림자가 아니므로 각 컴포넌트 상태 계약을 유지한다.

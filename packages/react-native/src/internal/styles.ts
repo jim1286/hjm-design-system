@@ -1,4 +1,4 @@
-import { control, fontFamily, spacing } from "@hjmds/design-contracts/foundations";
+import { control, fontFamily, nativeElevationFallback, spacing, type ElevationStep } from "@hjmds/design-contracts/foundations";
 import {
   Platform,
   StyleSheet,
@@ -117,4 +117,23 @@ export function resolveNativeShadowElevation(
   return { elevation: profiled
     ? token.opacity === 0 ? 0 : Math.max(token.radius, Math.abs(token.offsetY))
     : fallbackElevation };
+}
+
+type ShadowToken = Readonly<{ color: string; opacity: number; radius: number; offsetY: number }>;
+
+/** Public `elevation` step → iOS shadow + Android elevation from the (profile-aware) shadow tokens; `none` → no style. */
+export function resolveNativeElevationStyle(
+  step: ElevationStep,
+  shadows: Readonly<Record<Exclude<ElevationStep, "none">, ShadowToken>>,
+  profiled: boolean,
+): ViewStyle | undefined {
+  if (step === "none") return undefined;
+  const token = shadows[step];
+  return {
+    ...resolveNativeShadowElevation(token, profiled, nativeElevationFallback[step]),
+    shadowColor: token.color,
+    shadowOffset: { width: 0, height: token.offsetY },
+    shadowOpacity: token.opacity,
+    shadowRadius: token.radius,
+  };
 }

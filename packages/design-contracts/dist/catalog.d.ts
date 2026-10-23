@@ -5231,6 +5231,10 @@ export declare const recipeRegistry: {
         readonly edge: {
             readonly tones: readonly ["ghost"];
         };
+        readonly elevation: {
+            readonly default: "none";
+            readonly tones: readonly ["primary", "secondary", "danger"];
+        };
         readonly states: {
             readonly selected: {
                 readonly background: Readonly<{
