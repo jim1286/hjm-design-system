@@ -1,5 +1,11 @@
 # @hjmds/react
 
+## 1.46.0
+
+### Minor Changes
+
+- 208157e: Add persistent message editing context to MessageComposer on web and native. Demonstrate sent-message edit/delete recovery and group unread counts in Storybook. Use named icon controls for recognizable retry, replay and playback actions while preserving confirmation labels and keyboard focus.
+
 ## 1.45.0
 
 ### Minor Changes
