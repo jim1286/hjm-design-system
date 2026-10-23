@@ -338,7 +338,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       aria-hidden={decorative || props["aria-hidden"]}
       style={{ ...props.style, ...layoutStyle, "--hjm-avatar-size": `${diameter}px`,
         // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
-        "--hjm-avatar-accessory-inset": `${avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` } as CSSProperties}
+        "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` } as CSSProperties}
       ref={ref}
       className={classNames("hjm-avatar", className)}
       data-size={size}

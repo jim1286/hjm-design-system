@@ -73,7 +73,7 @@ import { Avatar } from "@hjmds/react-native/data-display";
 | `size` | `xxsmall`(22) · `xsmall`(28) · `small`(32) · `medium`(40) · `touch`(44) · `large`(48) · `xlarge`(64). Native는 기존 숫자(pt)도 받는다 | Web `medium` · Native 44(`touch`) | `avatarRecipe.sizes`. Native 숫자가 22 미만이면 `RangeError`(2026-10-23 전에는 24). 새 코드는 단계 이름을 쓴다 |
 | `shape` | `circle` · `rounded` | `circle` | `rounded`는 `radius.md`(가장 가까운 디자인 프로필) |
 | `frame` | `outlined` · `surface` · `none` | `outlined` | `avatarRecipe.frames`. `outlined`=canvas 바탕+1px 테두리(기존), `surface`=바탕만, `none`=바탕·테두리 없음(제품 그림이 액자를 채울 때) |
-| `accessory` · `accessoryPlacement` | `ReactNode` · `bottom-end` · `top-end` | — · `bottom-end` | 팀 배지·상태 점 같은 모서리 표식. 아바타 상자 안쪽 모서리(`avatarRecipe.accessory.offset` 0)에 붙고 액자에 잘리지 않는다. 누르는 요소를 넣지 않는다 |
+| `accessory` · `accessoryPlacement` | `ReactNode` · `bottom-end` · `top-end` | — · `bottom-end` | 팀 배지·상태 점 같은 모서리 표식. 아바타 상자 모서리(`avatarRecipe.accessory.offset` 0, Asset·IconTile처럼 바깥으로 나가는 거리)에 붙고 액자에 잘리지 않는다. 누르는 요소를 넣지 않는다 |
 | `renderFallback` | `(context: { size: number; decorative: true }) => ReactNode` | — | 사진이 없거나 실패했을 때만 불린다. `size`는 px/pt 값. null·undefined를 돌려주면 기본 대체 표시(Web `fallback`→이니셜, Native 이니셜)를 쓴다 |
 | Web `alt` | `string` | `name` | `""`이면 보조기기에서 숨긴다 |
 | Web `imageProps` | `img` 속성(`alt`·`src` 제외) | — | `onError`는 `(event: SyntheticEvent<HTMLImageElement>) => void`이며 대체 표시로 바꾼 뒤 불린다. `renderImage`와 함께 주면 `TypeError` |

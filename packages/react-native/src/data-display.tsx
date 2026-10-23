@@ -963,7 +963,8 @@ export function Avatar({
   const cornerRadius = shape === "rounded" ? tokens.radius.md : radius.full;
   const fallbackNode = renderFallback?.({ size, decorative: true }) ?? (fallback === null ? null
     : <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text>);
-  const offset = avatarRecipe.accessory.offset;
+  // Outward overhang, as Asset/IconTile; `0 -` keeps a zero offset positive.
+  const offset = 0 - avatarRecipe.accessory.offset;
   return (
     <View
       {...mediaAccessibility}

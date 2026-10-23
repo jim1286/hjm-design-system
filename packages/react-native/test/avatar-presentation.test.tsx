@@ -41,8 +41,8 @@ it("places the accessory on the requested corner outside the clipping frame", ()
   const t = mount(<Avatar accessibilityLabel="Kim" name="Kim" accessory={<View testID="team" />} accessoryPlacement="top-end" />);
   const mark = t.root.findByProps({ testID: "team" });
   const holder = StyleSheet.flatten(mark.parent!.props.style);
-  expect(holder).toMatchObject({ position: "absolute", top: avatarRecipe.accessory.offset, end: avatarRecipe.accessory.offset });
+  expect(holder).toMatchObject({ position: "absolute", top: 0 - avatarRecipe.accessory.offset, end: 0 - avatarRecipe.accessory.offset });
   expect(frameOf(t).findAllByProps({ testID: "team" })).toHaveLength(0);
   const bottom = mount(<Avatar decorative name="Kim" accessory={<View testID="team" />} />);
-  expect(StyleSheet.flatten(bottom.root.findByProps({ testID: "team" }).parent!.props.style).bottom).toBe(avatarRecipe.accessory.offset);
+  expect(StyleSheet.flatten(bottom.root.findByProps({ testID: "team" }).parent!.props.style).bottom).toBe(0 - avatarRecipe.accessory.offset);
 });

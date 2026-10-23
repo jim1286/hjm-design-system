@@ -53,8 +53,8 @@ it("draws the rounded shape, the recipe frames and an unclipped corner accessory
   expect(Number.parseFloat(style.borderTopLeftRadius)).toBeLessThan(20);
   const box = avatar().getBoundingClientRect();
   const mark = host.querySelector("[data-mark]")!.getBoundingClientRect();
-  expect(mark.right).toBe(box.right - avatarRecipe.accessory.offset);
-  expect(mark.bottom).toBe(box.bottom - avatarRecipe.accessory.offset);
+  expect(mark.right).toBe(box.right + avatarRecipe.accessory.offset);
+  expect(mark.bottom).toBe(box.bottom + avatarRecipe.accessory.offset);
   await render(<Avatar name="Kim" accessory={<span data-mark="" style={{ display: "block", width: 12, height: 12 }} />} accessoryPlacement="top-end" />);
   expect(host.querySelector("[data-mark]")!.getBoundingClientRect().top).toBe(avatar().getBoundingClientRect().top);
   expect(getComputedStyle(avatar()).borderTopWidth).toBe("1px");

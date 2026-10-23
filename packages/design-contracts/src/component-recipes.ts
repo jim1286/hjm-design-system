@@ -1836,8 +1836,9 @@ export const avatarRecipe = {
     none: { background: null, border: null, borderWidth: 0 },
   },
   /**
-   * 모서리 표식(팀 배지·상태 점·편집 표시). 아바타 **경계 상자 안쪽** 모서리에 붙여 행 배치가 바뀌지 않는다.
-   * 야잘알 PlayerAvatar가 `right: 0, bottom: 0`으로 팀 배지를 얹던 자리다(2026-10-23).
+   * 모서리 표식(팀 배지·상태 점·편집 표시). `offset`은 Asset·IconTile과 같이 상자 모서리 **바깥으로** 나가는 거리다.
+   * Avatar는 0이라 경계 상자 모서리에 붙어 행 배치가 바뀌지 않는다. 야잘알 PlayerAvatar가 `right: 0, bottom: 0`으로
+   * 팀 배지를 얹던 자리다(2026-10-23).
    */
   accessory: { offset: 0 },
   background: semanticColors.canvas,

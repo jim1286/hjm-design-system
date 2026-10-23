@@ -95,5 +95,6 @@ and a 1px border. The axes now live in `avatarRecipe`:
 - `frame`: `outlined` (default, unchanged) · `surface` · `none`.
 - `shape`: `circle` · `rounded` on both renderers (Native was circle only).
 - `accessory` + `accessoryPlacement` (`bottom-end` default · `top-end`): a non-interactive corner mark outside the
-  clipping frame, inside the avatar's box (`avatarRecipe.accessory.offset` 0). IconTile uses the same placement names.
+  clipping frame, on the avatar's box corner (`avatarRecipe.accessory.offset` 0; offsets are outward overhangs as in
+  Asset and IconTile). IconTile uses the same placement names.
 - Web `renderImage`: product image host with a generation-guarded `onError`, exclusive with `imageProps`.
