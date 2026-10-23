@@ -183,7 +183,9 @@ export function Notice({
             {resolvedIcon}
           </View>
         )}
-        <View style={{ flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }}>
+        {/* Grow into a stretched row, but keep the content's own width as the basis: `flex: 1` (basis 0) collapsed
+            a centered, content-width status Notice to an empty pill (2026-10-23 BurnTok welcome). */}
+        <View style={{ flexGrow: 1, flexShrink: 1, gap: noticeRecipe.contentGap, minWidth: 0 }}>
           {appearance === "status" ? <Badge label={title} tone={tone} size="small" /> : <Text
             style={{ color: foreground, fontWeight: noticeRecipe.title.fontWeight }}
             variant={noticeRecipe.title.textVariant}

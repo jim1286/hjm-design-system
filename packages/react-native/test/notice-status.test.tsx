@@ -37,3 +37,15 @@ it.each(["info", "success", "warning", "attention", "danger"] as const)("keeps %
   expect(StyleSheet.flatten(tint.props.style)).toMatchObject({ position: "absolute", top: 0, bottom: 0 });
   expect(JSON.stringify(tree!.toJSON())).toContain("현재 위치를 확인하지 못했어요.");
 });
+
+it("keeps the content's own width as its basis so a centered status Notice does not collapse", () => {
+  // 2026-10-23 BurnTok welcome: `flex: 1` (basis 0) shrank a centered, content-width status Notice to an empty pill.
+  act(() => { tree = create(<HjmNativeProvider><Notice appearance="status" tone="success" title="프로필 사진을 변경했어요" /></HjmNativeProvider>); });
+  const badge = tree!.root.findByType(Badge);
+  let column = badge.parent;
+  while (column && StyleSheet.flatten(column.props.style)?.minWidth !== 0) column = column.parent;
+  const style = StyleSheet.flatten(column!.props.style);
+  expect(style).toMatchObject({ flexGrow: 1, flexShrink: 1 });
+  expect(style.flex).toBeUndefined();
+  expect(style.flexBasis === undefined || style.flexBasis === "auto").toBe(true);
+});
