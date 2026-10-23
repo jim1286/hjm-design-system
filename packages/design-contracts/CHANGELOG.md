@@ -1,5 +1,11 @@
 # @hjmds/design-contracts
 
+## 1.41.1
+
+### Patch Changes
+
+- 2f95346: ChoiceRow announces whether its sheet is open (Web `aria-expanded`/`aria-haspopup`, Native `expanded`), accepts a Native `accessibilityHint`, and keeps the sheet header fixed while long choice lists scroll.
+
 ## 1.41.0
 
 ### Minor Changes

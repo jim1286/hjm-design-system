@@ -15,8 +15,10 @@ export type ChoiceRowProps<Value extends string = string> = Readonly<{
     placeholder?: string;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Spoken result of activating the row, e.g. "Opens the language list". */
+    accessibilityHint?: string;
     disabled?: boolean;
     loading?: boolean;
 }>;
-export declare function ChoiceRow<Value extends string = string>({ title, items, value, onValueChange, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, disabled, loading }: ChoiceRowProps<Value>): import("react").JSX.Element;
+export declare function ChoiceRow<Value extends string = string>({ title, items, value, onValueChange, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, accessibilityHint, disabled, loading }: ChoiceRowProps<Value>): import("react").JSX.Element;
 //# sourceMappingURL=choice-row.d.ts.map
