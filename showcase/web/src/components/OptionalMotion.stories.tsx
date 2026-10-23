@@ -1,8 +1,9 @@
+import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AnimatedStatistic } from "@hjmds/react/statistic-motion";
 import { MorphingMenu } from "@hjmds/react/menu-morph";
-import { Button } from "@hjmds/react/actions";
+import { IconButton } from "@hjmds/react/actions";
 import { Container, Stack, Text } from "@hjmds/react/layout";
 
 // Result copy is chosen from a constant table, as the guide's `resultKey` (template keys escape extraction).
@@ -12,7 +13,7 @@ function Demo() {
   const [result, setResult] = useState<keyof typeof resultCopy>("idle");
   return <Stack gap="md">
     <AnimatedStatistic descriptor={{ id: "views", label: "조회 수" }} value={value} locale="ko-KR" />
-    <Button tone="secondary" onClick={() => setValue(current => current + 127)}>조회 수 새로고침</Button>
+    <IconButton label="조회 수 새로고침" title="조회 수 새로고침" tone="secondary" onClick={() => setValue(current => current + 127)}><RefreshCw size={20} aria-hidden="true" /></IconButton>
     <MorphingMenu label="작업 선택" items={[{ id: "save", label: "저장" }, { id: "share", label: "공유" }, { id: "delete", label: "삭제", disabled: true }]} onAction={id => setResult(id === "share" ? "shared" : "saved")} />
     <Text as="p" role="status">{resultCopy[result]}</Text>
   </Stack>;

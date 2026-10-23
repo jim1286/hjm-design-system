@@ -2,9 +2,10 @@
 // The full chat/inbox screens (common-screen-previews) own screen states; these previews
 // show the item interactions those screens repeat, so the two stories no longer duplicate.
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, Plus } from "lucide-react";
+import { ArrowUp, Plus, RefreshCw, Check, Pencil, Trash2 } from "lucide-react";
 import { HjmProvider } from "@hjmds/react/provider";
-import { Button } from "@hjmds/react/actions";
+import { AlertDialog } from "@hjmds/react/overlays";
+import { IconButton } from "@hjmds/react/actions";
 import { Heading } from "@hjmds/react/heading";
 import { Container, Stack, Surface, Text } from "@hjmds/react/layout";
 import { Avatar } from "@hjmds/react/display";
@@ -129,10 +130,12 @@ export function ChatMessagePreview() {
         <Text>네! 생각보다 조용해서 좋았어요.</Text>
       </ChatMessage>
       <ChatMessage direction="outgoing" author="" timestamp="오후 2:33" deliveryLabel={deliveryCopy[delivered ? "sent" : busy ? "pending" : "failed"]}
-        actions={delivered ? null : <Button ref={resendButton} size="small" tone="secondary" loading={busy} onClick={resend}>다시 보내기</Button>}>
+        actions={delivered ? null : <IconButton ref={resendButton} label="다시 보내기" title="다시 보내기" size="small" tone="secondary" loading={busy} onClick={resend}><RefreshCw size={18} aria-hidden="true" /></IconButton>}>
         <Text>주말 오후는 어때요?</Text>
       </ChatMessage>
     </Stack>
+    <SentMessageManagementPreview />
+    <GroupReadPreview />
     <Heading level="level3">묶음 표시</Heading>
     {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
     <div>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size="small" src={SEOYEON_PHOTO} alt="" /> })}><Text>{message.text}</Text></ChatMessage>)}</div>
@@ -171,4 +174,56 @@ export function NotificationItemPreview() {
     <Text role="status">{readStatusCopy[state.status]}</Text>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>다음 읽음 처리 실패시키기</PreviewToolButton></PreviewTools>
   </Stack></Container>;
+}
+
+/** The draft and saved message are distinct: failed saves or cancelling never consume a new-message draft. */
+function SentMessageManagementPreview() {
+  const [draft, setDraft] = useState("작성하던 새 메시지");
+  const [editValue, setEditValue] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction({ text: "토요일 오후에 만나요!", edited: false, deleted: false });
+  useEffect(() => () => session.reset({ text: "토요일 오후에 만나요!", edited: false, deleted: false }), [session]);
+  const cancel = () => { setEditing(false); setEditValue(""); };
+  const save = async () => {
+    const outcome = await session.run(() => request({ text: editValue, edited: true, deleted: false }), { retryable: true });
+    if (outcome.status === "success") cancel();
+  };
+  return <Stack gap="md">
+    <Heading level="level3">보낸 메시지 관리</Heading>
+    <ChatMessage direction="outgoing" author="나" timestamp="오후 3:10" {...(state.value.edited && !state.value.deleted ? { deliveryLabel: "수정됨" } : {})}
+      {...(state.value.deleted ? {} : { reactions: { label: "보낸 메시지 메뉴", closeLabel: "메시지 메뉴 닫기", options: [], value: null, onValueChange: () => {}, disabled: busy,
+        menuActions: [
+          { id: "edit", label: "메시지 수정", icon: <Pencil size={20} aria-hidden="true" />, onPress: () => { setEditValue(state.value.text); setEditing(true); } },
+          { id: "delete", label: "메시지 삭제", tone: "danger", icon: <Trash2 size={20} aria-hidden="true" />, onPress: () => setConfirmDelete(true) },
+        ],
+      } })}><Text>{state.value.deleted ? "삭제된 메시지입니다" : state.value.text}</Text></ChatMessage>
+    <MessageComposer value={editing ? editValue : draft} label={editing ? "메시지 수정 내용" : "새 메시지"}
+      onValueChange={editing ? setEditValue : setDraft} sendLabel={editing ? "수정 저장" : "전송"}
+      sendIcon={editing ? <Check size={20} aria-hidden="true" /> : <ArrowUp size={20} aria-hidden="true" />} sendPresentation="circle" pending={busy}
+      onSend={() => { if (editing) void save(); else setDraft(""); }}
+      {...(editing ? { editTarget: { label: "메시지 수정", excerpt: state.value.text, cancelLabel: "수정 취소", onCancel: cancel } } : {})}
+      {...(editing && state.status === "error" ? { error: "수정하지 못했어요. 작성한 내용은 그대로예요." } : {})} />
+    <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete} request={{ mode: "confirm", title: "메시지를 삭제할까요?", description: "모든 대화 상대에게서 메시지가 삭제됩니다.", confirmLabel: "삭제", cancelLabel: "취소", tone: "danger",
+      fallbackErrorMessage: "삭제하지 못했어요. 다시 시도해 주세요.", onConfirm: async () => {
+        const outcome = await session.run(() => request({ text: "", edited: false, deleted: true }), { retryable: true });
+        if (outcome.status !== "success") throw new Error("Delete failed");
+        cancel(); setConfirmDelete(false);
+      } }} />
+    <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy} onClick={toggleFailure}>다음 메시지 변경 실패시키기</PreviewToolButton></PreviewTools>
+  </Stack>;
+}
+
+function GroupReadPreview() {
+  const [unread, setUnread] = useState(2);
+  return <Stack gap="md">
+    <Heading level="level3">단체 대화 읽음</Heading>
+    <ChatMessage direction="outgoing" author="나" timestamp="오후 3:15" {...(unread > 0 ? { deliveryLabel: `안 읽음 ${unread}명` } : {})}>
+      <Text>모두 토요일 오후에 만나요!</Text>
+    </ChatMessage>
+    <PreviewTools>
+      <PreviewToolButton onClick={() => setUnread(value => Math.max(0, value - 1))} disabled={unread === 0}>참여자 한 명 읽음</PreviewToolButton>
+      <PreviewToolButton onClick={() => setUnread(2)}>읽음 상태 초기화</PreviewToolButton>
+    </PreviewTools>
+  </Stack>;
 }

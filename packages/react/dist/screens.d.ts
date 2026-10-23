@@ -154,6 +154,13 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
         cancelLabel: string;
         onCancel(): void;
     }>;
+    /** Editing keeps the same input mounted. The host owns the saved draft and server confirmation. */
+    editTarget?: Readonly<{
+        label: string;
+        excerpt: string;
+        cancelLabel: string;
+        onCancel(): void;
+    }>;
     /** Icon mode puts the send/attachment action inside the growing field. */
     sendIcon?: ReactNode;
     /** Reference comment layout: a filled circular send action inside the field. */
@@ -171,7 +178,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, descriptionAlign, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ leading, quickInserts, value, label, sendLabel, placeholder, description, descriptionAlign, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, lengthFeedback, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, editTarget, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;

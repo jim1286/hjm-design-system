@@ -1,5 +1,6 @@
+import { RefreshCw, Play, Pause } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
 import { PreviewTools, PreviewToolButton } from "./preview-tools.js";
 import { Dialog } from "@hjmds/react/overlays";
 import { Stack, Text } from "@hjmds/react/layout";
@@ -58,8 +59,8 @@ function Player({ broken, retry, restoreFocus }: { broken: boolean; retry: () =>
         playRequest.current = null; setStarting(false); setFailed(true); setPlaying(false);
       }} />
     <Text variant="caption">영상 설명: 여러 색의 패턴이 6초 동안 움직입니다. 소리는 없습니다.</Text>
-    {failed ? <><Text role="alert">영상을 불러오지 못했어요. 다시 시도해 주세요.</Text><Button ref={retryButton} onClick={retry}>다시 시도</Button></> :
-      <><Button ref={playButton} loading={starting} onClick={() => void toggle()}>{starting ? "재생 준비 중" : playing ? "일시 정지" : "재생"}</Button>
+    {failed ? <><Text role="alert">영상을 불러오지 못했어요. 다시 시도해 주세요.</Text><IconButton ref={retryButton} label="다시 시도" tone="secondary" onClick={retry}><RefreshCw size={20} aria-hidden="true" /></IconButton></> :
+      <><IconButton ref={playButton} label={starting ? "재생 준비 중" : playing ? "일시 정지" : "재생"} tone="secondary" loading={starting} onClick={() => void toggle()}>{playing ? <Pause size={20} aria-hidden="true" /> : <Play size={20} aria-hidden="true" />}</IconButton>
       <Text role="status">{playing ? "재생 중" : "재생 대기"}</Text>
       {playRejected ? <Text role="alert">재생을 시작하지 못했어요. 재생 버튼을 다시 눌러 주세요.</Text> : null}</>}
   </Stack>;

@@ -226,3 +226,16 @@ for (const theme of ["light", "dark"] as const) {
     expect(rail.parent!.props.style.borderStartWidth).toBeUndefined();
   });
 }
+
+it("shows the editing target and prevents cancellation while saving", () => {
+  const cancel = vi.fn();
+  const child = (pending: boolean) => <MessageComposer value="고친 메시지" label="메시지" sendLabel="수정 저장"
+    onValueChange={() => {}} onSend={() => {}} pending={pending}
+    editTarget={{ label: "메시지 수정", excerpt: "원래 메시지", cancelLabel: "수정 취소", onCancel: cancel }} />;
+  const view = render(child(true));
+  const button = () => view.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === '수정 취소')!;
+  expect(button().props.accessibilityState.disabled).toBe(true);
+  act(() => view.update(<HjmNativeProvider>{child(false)}</HjmNativeProvider>));
+  expect(button().props.accessibilityState.disabled).toBe(false);
+  act(() => button().props.onPress({})); expect(cancel).toHaveBeenCalledOnce();
+});

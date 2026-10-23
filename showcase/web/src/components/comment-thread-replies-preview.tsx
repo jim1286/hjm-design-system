@@ -1,6 +1,7 @@
+import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { CommentThreadScreen, type CommentThreadItem } from "@hjmds/react/screen-flows";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
 import { Notice } from "@hjmds/react/feedback";
 import { Text } from "@hjmds/react/layout";
 
@@ -14,7 +15,7 @@ export function CommentRepliesPreview() {
   });
   const root: CommentThreadItem = { ...item('root', null, '댓글과 답글은 같은 공통 구조를 사용해요.'), repliesCount: 3,
     repliesNotice: status === 'failed' ? <Notice tone="danger" title="답글을 불러오지 못했어요"
-      action={<Button tone="secondary" onClick={() => setStatus('ready')}>다시 시도</Button>} /> : undefined,
+      action={<IconButton label="다시 시도" tone="secondary" onClick={() => setStatus('ready')}><RefreshCw size={20} aria-hidden="true" /></IconButton>} /> : undefined,
     repliesFooter: status === 'ready' ? <Button tone="link" onClick={() => setStatus('complete')}>답글 더 불러오기</Button> : undefined,
   };
   return <CommentThreadScreen title="답글 실패와 복구" threadHeader={<Text>오류가 나도 받은 미리보기는 유지해요. 접기와 다시 시도를 눌러 보세요.</Text>}

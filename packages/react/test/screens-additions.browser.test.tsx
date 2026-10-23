@@ -225,3 +225,18 @@ for (const theme of ["light", "dark"] as const) {
     expect(getComputedStyle(quote, "::before").backgroundColor).toBe(resolveColor("--hjm-color-on-primary"));
   });
 }
+
+it("keeps the editing input mounted and locks cancellation until save settles", async () => {
+  const cancel = vi.fn(), save = vi.fn();
+  const draw = (editing: boolean, pending = false) => act(async () => root.render(<HjmProvider><MessageComposer
+    value="고친 메시지" label="메시지" sendLabel="수정 저장" onValueChange={() => {}} onSend={save} pending={pending}
+    {...(editing ? { editTarget: { label: "메시지 수정", excerpt: "원래 메시지", cancelLabel: "수정 취소", onCancel: cancel } } : {})}
+  /></HjmProvider>));
+  await draw(false); const input = host.querySelector('textarea')!; input.focus();
+  await draw(true); expect(host.querySelector('textarea')).toBe(input); expect(document.activeElement).toBe(input);
+  expect(host.textContent).toContain('원래 메시지');
+  await draw(true, true); const close = host.querySelector<HTMLButtonElement>('[aria-label="수정 취소"]')!;
+  expect(close.disabled).toBe(true); close.click(); expect(cancel).not.toHaveBeenCalled();
+  await draw(true); await act(async () => host.querySelector<HTMLButtonElement>('[aria-label="수정 취소"]')!.click());
+  expect(cancel).toHaveBeenCalledOnce(); await draw(false); expect(host.querySelector('textarea')).toBe(input);
+});

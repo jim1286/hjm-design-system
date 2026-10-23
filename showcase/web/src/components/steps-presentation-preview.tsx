@@ -1,7 +1,8 @@
+import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 import type { StepsPresentation } from "@hjmds/design-contracts/components/steps";
 import { Steps } from "@hjmds/react/steps";
-import { Button } from "@hjmds/react/actions";
+import { Button, IconButton } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { Stack, Text } from "@hjmds/react/layout";
 
@@ -26,7 +27,7 @@ export function StepsPresentationPreview({ presentation = "focus", initialError 
       onValueChange={value => setValues(previous => previous.map((item, position) => position === index ? value : item))} /> : <Text>{values.join(" · ")}</Text>}
     {error ? <Text tone="danger">빈칸을 입력해 주세요. 입력한 다른 내용은 유지돼요.</Text> : null}
     <Stack axis="inline" gap="sm">
-      {finished ? <Button tone="secondary" onClick={() => go(0)}>다시 살펴보기</Button> : <>
+      {finished ? <IconButton label="다시 살펴보기" title="다시 살펴보기" tone="secondary" onClick={() => go(0)}><RotateCcw size={20} aria-hidden="true" /></IconButton> : <>
         <Button tone="secondary" disabled={index === 0} onClick={() => go(index - 1)}>이전</Button>
         <Button onClick={next}>{index === 2 ? "완료하기" : "다음으로"}</Button>
       </>}

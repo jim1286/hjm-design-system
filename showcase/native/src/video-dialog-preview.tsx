@@ -1,8 +1,10 @@
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { RefreshCw, Play, Pause } from "lucide-react-native";
 import type { ComponentRef } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AppState, type View } from "react-native";
 import { videoDialogHost } from "./video-dialog-host";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { PreviewTools, PreviewToolButton } from "./preview-tools";
 import { Dialog } from "@hjmds/react-native/overlays";
 import { Stack, Text } from "@hjmds/react-native/primitives";
@@ -11,6 +13,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 const brokenClip = { uri: "data:video/mp4;base64,bm90LWEtbXA0" };
 
 function Player({ host, broken, retry }: { host: typeof import("expo-video"); broken: boolean; retry: () => void }) {
+  const { colors } = useHjmNativeTheme();
   const { VideoView, useVideoPlayer } = host;
   // Hook ownership releases the player on unmount. Do not prebuffer a second
   // player outside the modal or enable background playback for this preview.
@@ -29,8 +32,8 @@ function Player({ host, broken, retry }: { host: typeof import("expo-video"); br
   return <Stack gap="md">
     <VideoView player={player} style={{ width: "100%", aspectRatio: 16 / 9 }} contentFit="contain" nativeControls fullscreenOptions={{ enable: false }} allowsPictureInPicture={false} />
     <Text variant="caption">영상 설명: 여러 색의 패턴이 6초 동안 움직입니다. 소리는 없습니다.</Text>
-    {status === "error" ? <><Text accessibilityRole="alert">영상을 불러오지 못했어요. 다시 시도해 주세요.</Text><Button onPress={retry}>다시 시도</Button></> :
-      <><Button onPress={toggle}>{isPlaying ? "일시 정지" : "재생"}</Button><Text accessibilityLiveRegion="polite">{isPlaying ? "재생 중" : "재생 대기"}</Text>
+    {status === "error" ? <><Text accessibilityRole="alert">영상을 불러오지 못했어요. 다시 시도해 주세요.</Text><IconButton label="다시 시도" tone="secondary" onPress={retry}><RefreshCw size={20} color={colors.text} accessible={false} /></IconButton></> :
+      <><IconButton label={isPlaying ? "일시 정지" : "재생"} tone="secondary" onPress={toggle}>{isPlaying ? <Pause size={20} color={colors.text} accessible={false} /> : <Play size={20} color={colors.text} accessible={false} />}</IconButton><Text accessibilityLiveRegion="polite">{isPlaying ? "재생 중" : "재생 대기"}</Text>
       {playRejected ? <Text accessibilityRole="alert">재생을 시작하지 못했어요. 재생 버튼을 다시 눌러 주세요.</Text> : null}</>}
   </Stack>;
 }

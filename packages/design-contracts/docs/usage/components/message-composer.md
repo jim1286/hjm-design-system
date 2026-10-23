@@ -90,6 +90,7 @@ import { Image } from "react-native";
 | `inputRef` | Web `Ref<HTMLTextAreaElement>` · Native `Ref<TextInput>` | 없음 | 답글 선택 뒤 포커스 유지 |
 | `context` | `ReactNode` | 없음 | 답장 대상 위 임의 슬롯 |
 | `replyTo` | `{ author, excerpt, cancelLabel, onCancel() }` | 없음 | 입력창 위 답장 대상과 취소 버튼 |
+| `editTarget` | `{ label, excerpt, cancelLabel, onCancel }` | 없음 | 보낸 메시지 편집 대상. `replyTo`와 동시에 제공하지 않는다. 같은 입력을 유지하며 pending 동안 취소를 잠근다. 제품이 편집 전 초안 보관·취소 복원·서버 성공 후 종료를 소유한다. 저장은 `sendLabel`과 체크 모양 `sendIcon`으로 연결 |
 | `sendIcon` | `ReactNode` | 없음 | 주면 아이콘 모드: 빈 입력에서는 입력창 안에 `attachmentAction`, 내용이 있거나 `pending`이면 전송 아이콘. 없으면 입력창 옆 텍스트 `Button` |
 | `sendPresentation` | `"inline"` · `"circle"` | `"inline"` | `circle`은 primary 원형 `IconButton size="small"`(댓글·DM 레퍼런스). `sendIcon`이 있을 때만 의미가 있다 |
 | `attachmentAction` | `{ label, icon, onPress(), disabled? }` | 없음 | 첨부 버튼(ghost `IconButton`) |

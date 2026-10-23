@@ -1,7 +1,9 @@
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { RotateCcw } from "lucide-react-native";
 import { useState } from "react";
 import type { StepsPresentation } from "@hjmds/design-contracts/components/steps";
 import { Steps } from "@hjmds/react-native/steps";
-import { Button } from "@hjmds/react-native/actions";
+import { Button, IconButton } from "@hjmds/react-native/actions";
 import { TextField } from "@hjmds/react-native/inputs";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 
@@ -11,6 +13,7 @@ const name = ({ position, total, label }: { position: number; total: number; lab
 
 /** A real controlled draft demonstrates revisit/preservation; vertical supplies only its active content slot. */
 export function StepsPresentationPreview({ presentation = "focus", initialError = false }: { presentation?: StepsPresentation; initialError?: boolean }) {
+  const { colors } = useHjmNativeTheme();
   const [index, setIndex] = useState(1);
   const [values, setValues] = useState(["지민", initialError ? "" : "디자인과 일상"]);
   const [error, setError] = useState(initialError);
@@ -26,7 +29,7 @@ export function StepsPresentationPreview({ presentation = "focus", initialError 
       onValueChange={value => setValues(previous => previous.map((item, position) => position === index ? value : item))} /> : <Text>{values.join(" · ")}</Text>}
     {error ? <Text tone="danger">빈칸을 입력해 주세요. 입력한 다른 내용은 유지돼요.</Text> : null}
     <Stack axis="inline" gap="sm">
-      {finished ? <Button tone="secondary" onPress={() => go(0)}>다시 살펴보기</Button> : <>
+      {finished ? <IconButton label="다시 살펴보기" tone="secondary" onPress={() => go(0)}><RotateCcw size={20} color={colors.text} accessible={false} /></IconButton> : <>
         <Button tone="secondary" disabled={index === 0} onPress={() => go(index - 1)}>이전</Button>
         <Button onPress={next}>{index === 2 ? "완료하기" : "다음으로"}</Button>
       </>}

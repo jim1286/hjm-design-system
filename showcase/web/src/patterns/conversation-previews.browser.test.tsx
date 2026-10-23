@@ -38,3 +38,22 @@ it('connects reaction selection, clearing and reply navigation to the example st
 it('preserves an explicit resend blur when confirmation removes the action',async()=>{
  await render(<ChatMessagePreview/>);await click('다시 보내기');button('다시 보내기').blur();await settle();expect(document.activeElement).toBe(document.body);
 });
+
+it('preserves the new-message draft through edit cancellation, failure, save and confirmed deletion', async () => {
+ await render(<ChatMessagePreview/>);
+ const menu = async () => { const trigger=host.querySelector<HTMLElement>('[aria-label="보낸 메시지 메뉴"]')!;trigger.focus();await act(async()=>userEvent.keyboard('{Enter}')); };
+ await menu();await click('메시지 수정');await click('수정 취소');
+ expect(host.querySelector('textarea')!.value).toBe('작성하던 새 메시지');
+ await menu();await click('메시지 수정');await fill('수정한 약속');await click('다음 메시지 변경 실패시키기');await click('수정 저장');await settle();
+ expect(host.querySelector('textarea')!.value).toBe('수정한 약속');expect(host.textContent).toContain('작성한 내용은 그대로예요.');
+ await click('수정 저장');await settle();expect(host.textContent).toContain('수정한 약속');expect(host.textContent).toContain('수정됨');expect(host.querySelector('textarea')!.value).toBe('작성하던 새 메시지');
+ await menu();await click('메시지 삭제');await click('취소');expect(host.textContent).toContain('수정한 약속');
+ await menu();await click('메시지 삭제');await click('삭제');await settle();expect(host.textContent).toContain('삭제된 메시지입니다');expect(host.querySelector('[aria-label="보낸 메시지 메뉴"]')).toBeNull();expect(host.querySelector('textarea')!.value).toBe('작성하던 새 메시지');
+});
+
+it('hides group unread metadata after the last participant reads', async () => {
+ await render(<ChatMessagePreview/>);
+ expect(host.textContent).toContain('안 읽음 2명');
+ await click('참여자 한 명 읽음');expect(host.textContent).toContain('안 읽음 1명');
+ await click('참여자 한 명 읽음');expect(host.textContent).not.toContain('안 읽음');
+});
