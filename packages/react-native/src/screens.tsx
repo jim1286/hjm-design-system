@@ -25,7 +25,7 @@ import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset
 import { BottomEntryFocusBoundary, InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { useScreenPullDismiss } from "./internal/screen-dismiss.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, resolveCompositionStateMinHeight, type CompositionStateHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
@@ -489,12 +489,24 @@ export type CompositionLayoutProps = Readonly<{
   footerAside?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /**
+   * Room the loading/empty/error/restricted replacement keeps in place so it centers without a parent height
+   * (`screenPatternRecipe.compositionState`: compact 96 · regular 160 · large 220; `fit` = its own height).
+   * Ready content is not affected.
+   */
+  stateHeight?: CompositionStateHeight;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
+  const stateMinHeight = resolveCompositionStateMinHeight(stateHeight);
+  // The floor sits on a host around the state group: layoutStyle is placement-only and excludes sizes.
+  const stateGroup = state.kind === "ready" ? null : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
+      {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center", gap: screenPatternRecipe.itemGap }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant={resolved.titleVariant} align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
+      {stateAction}
+    </Stack>;
   // Compact section titles follow the 2026-10-19 mobile typography direction; headingLevel still owns document semantics.
   const content = <>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
@@ -505,10 +517,7 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       </Stack>{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center", gap: screenPatternRecipe.itemGap }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion="polite"><Text variant={resolved.titleVariant} align="center">{state.title}</Text>{state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}</View>}
-      {stateAction}
-    </Stack>}
+    {state.kind === "ready" ? children : stateMinHeight === null ? stateGroup : <View testID="hjm-composition-state-region" style={{flex: 1, minHeight: stateMinHeight}}>{stateGroup}</View>}
   </>;
   // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
   // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.

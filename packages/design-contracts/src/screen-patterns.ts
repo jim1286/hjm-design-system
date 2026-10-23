@@ -206,7 +206,24 @@ export const screenPatternRecipe = {
   replySwipeDistance: 60,
   composerMinLines: 1,
   composerMaxLines: 5,
+  /**
+   * In-place room CompositionLayout's loading/empty/error/restricted replacement keeps (`stateHeight`), so the state
+   * centers inside a section that has no parent height. 2026-10-23 audit: Yajalal wrapped 13+ layouts in
+   * `<View style={{ minHeight: N }}>` + `layoutStyle={{ flex: 1 }}` with 36–220. The steps follow those values:
+   * `compact` 96 (rails, inline save errors, share-card rows: 68–96), `regular` 160 (a list/table section's body:
+   * 120–180), `large` 220 (a field or chart panel). `fit` keeps the state's own height (an inline loading line).
+   * Ready content is never stretched by this floor.
+   */
+  compositionState: { minHeight: { fit: null, compact: 96, regular: 160, large: 220 } },
 } as const;
+
+export type CompositionStateHeight = keyof typeof screenPatternRecipe.compositionState.minHeight;
+export function resolveCompositionStateMinHeight(height: CompositionStateHeight = "fit"): number | null {
+  if (!Object.hasOwn(screenPatternRecipe.compositionState.minHeight, height)) {
+    throw new TypeError(`Unsupported CompositionLayout stateHeight: ${String(height)}`);
+  }
+  return screenPatternRecipe.compositionState.minHeight[height];
+}
 
 /** Controlled composer: HJM never clears drafts or interprets a fulfilled callback as server delivery. */
 export type MessageComposerDescriptor = Readonly<{

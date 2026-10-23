@@ -540,6 +540,8 @@
     "components-layout-composition-layout--dark",
     "components-layout-composition-layout--default",
     "components-layout-composition-layout--large-text",
+    "components-layout-composition-layout--state-height",
+    "components-layout-composition-layout--supporting-artwork",
     "components-layout-container--dark",
     "components-layout-container--default",
     "components-layout-container--large-text",

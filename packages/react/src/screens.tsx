@@ -15,7 +15,7 @@ import { Button, IconButton } from "./actions.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { TextArea } from "./forms.js";
 import { useId, useLayoutEffect, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, resolveCompositionStateMinHeight, type CompositionStateHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { topBarRecipe } from "@hjmds/design-contracts/recipes";
@@ -358,12 +358,24 @@ export type CompositionLayoutProps = Readonly<{
   footerAside?: ReactNode;
   state?: ScreenContentState;
   stateAction?: ReactNode;
+  /**
+   * Room the loading/empty/error/restricted replacement keeps in place so it centers without a parent height
+   * (`screenPatternRecipe.compositionState`: compact 96 · regular 160 · large 220; `fit` = its own height).
+   * Ready content is not affected.
+   */
+  stateHeight?: CompositionStateHeight;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
+  const stateMinHeight = resolveCompositionStateMinHeight(stateHeight);
+  // The floor sits on a host around the state group: layoutStyle is placement-only and excludes sizes.
+  const stateGroup = state.kind === "ready" ? null : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
+      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant={resolved.titleVariant}>{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
+      {stateAction}
+    </Stack>;
   const content = <>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
@@ -373,10 +385,7 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       </Stack>{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : <Stack gap="sm" align="center" justify="center" layoutStyle={{flex: 1}}>
-      {resolved.busy ? (loadingIndicator ? <div role="status" aria-busy="true" aria-label={[state.title, state.description].filter(Boolean).join(". ")}><div aria-hidden="true">{loadingIndicator}</div></div> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <div role={state.kind === "error" ? "alert" : "status"} style={{ textAlign: "center" }}>{/* Block, centered lines as Native; the live role covers the copy only, not stateAction. */}<Text as="p" variant={resolved.titleVariant}>{state.title}</Text>{state.description ? <Text as="p" tone="muted">{state.description}</Text> : null}</div>}
-      {stateAction}
-    </Stack>}
+    {state.kind === "ready" ? children : stateMinHeight === null ? stateGroup : <div data-hjm-state-height={stateHeight} style={{display: "flex", flexDirection: "column", flex: 1, minHeight: stateMinHeight}}>{stateGroup}</div>}
   </>;
   // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
   // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.

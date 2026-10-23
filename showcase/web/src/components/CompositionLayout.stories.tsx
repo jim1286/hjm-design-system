@@ -18,3 +18,6 @@ export const SupportingArtwork: Story = { name: '본문 옆 보조 그림', rend
   footer={<Text variant="caption">배달 친구 · 어제</Text>} footerAside={<Badge size="small" variant="outline">전달 완료</Badge>}>
   <Text>제목과 본문은 그림 옆의 남은 폭에서 자연스럽게 줄바꿈합니다.</Text>
 </CompositionLayout> };
+// stateHeight (2026-10-23): the empty/loading/error replacement keeps its own room and centers without a parent height.
+export const StateHeight: Story = { name: '상태 영역 높이', render: () => <CompositionLayout title="박스스코어" stateHeight="regular"
+  state={{ kind: 'empty', title: '아직 기록이 없어요' }}><Text>표</Text></CompositionLayout> };

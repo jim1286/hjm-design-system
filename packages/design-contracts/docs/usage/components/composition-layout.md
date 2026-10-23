@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.23.0
-- 검토일: 2026-10-20
+- 검토일: 2026-10-23
 - 근거: 양 renderer `src/screens.tsx`, [소유권](../SELECTION.md#소유권). 제품별 제목·배지·상태·하단 영역 재조립을 줄이기 위해 기존 Stack·상태 계약을 합성한다.
 - 스토리북: `배포/컴포넌트/레이아웃/구성 골격`, `배포/화면/설정/알림 설정`
 
@@ -62,6 +62,7 @@ import { CompositionLayout } from "@hjmds/react-native/screens";
 | footer | ReactNode | 없음 | 본문 다음 보조/주 행동; 고정은 바깥 ScreenLayout 소유 |
 | state | ScreenContentState | ready | 본문 교체; loading은 Spinner만 표시. empty 제목은 body(14), 오류·접근 제한 제목은 title |
 | stateAction | ReactNode | 없음 | 본문 상태와 중앙 정렬되는 복구 행동 |
+| stateHeight | fit · compact · regular · large | fit | loading·empty·error·restricted가 본문을 대신할 때 그 자리에서 확보하는 최소 높이(`screenPatternRecipe.compositionState.minHeight`: compact 96 · regular 160 · large 220, fit은 상태 자체 높이). 부모가 높이를 주지 않아도 상태가 그 영역 가운데에 온다. ready 본문에는 적용하지 않는다. 개발 소스, 미게시 |
 | layoutStyle | HjmCompositionStyleProp | 없음 | 부모가 제공하는 영역 크기·배치 |
 
 ## 배치
@@ -75,7 +76,7 @@ footer
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 부모의 가용 폭·높이 | 별도 고정 높이나 스크롤 없음 |
+| 크기 | 부모의 가용 폭·높이. 상태 교체 영역만 `stateHeight` 단계의 최소 높이를 가진다 | 별도 고정 높이나 스크롤 없음 |
 | 제목·상태 문구 | 제목은 두 플랫폼 모두 `Heading level5`(문서 단계는 `headingLevel`). 상태 블록은 제목(`Text title`)·설명이 블록 줄로 가운데 정렬된다 | renderer. 2026-10-17 화면 검토: Native 제목이 작은 `Text title`이었고 Web 상태 문구가 한 줄로 이어져 왼쪽 정렬됐다 |
 | 간격 | 영역 spacing.md 16, 제목 행 spacing.sm 12, 배지 spacing.xs 8, 제목/설명 spacing.xxs 4 | Stack props |
 | 순서·정렬 | 머리글 → notice → 본문 → footer | renderer |
@@ -87,6 +88,7 @@ footer
 - 데이터·권한·초안·저장·배지 의미는 제품에서 연결한다. 전송 성공을 추정하거나 초안을 자동으로 지우지 않는다.
 - 본문 교체는 초기 조회에, 기존 입력을 유지하는 실패는 notice에 연결한다.
 - 중앙 상태는 이 구성에 주어진 영역을 기준으로 한다. 화면 높이를 임의 여백으로 흉내 내지 않는다.
+- 부모 높이가 없는 구획(카드·패널·탭 본문)에서 상태 자리를 확보할 때는 `stateHeight`를 쓴다. `<View style={{ minHeight: N }}>`로 감싸고 `layoutStyle={{ flex: 1 }}`을 주는 조립을 하지 않는다. 단계 선택: 레일·인라인 저장 오류·공유 카드 행은 `compact`, 목록·표 구획 본문은 `regular`, 필드·차트 패널은 `large`, 한 줄 인라인 로딩은 `fit`.
 - 별도 스크롤을 중첩하지 않는다. 기본 구조를 children 안에서 다시 만들지 않는다.
 
 ## 플랫폼 차이
@@ -100,5 +102,7 @@ footer
 
 2026-10-19 사용자 지시: 앱·모바일 웹뷰의 큰 글씨를 지양하므로 구획 제목은 두 renderer 모두 18(level5)을 기본으로 쓴다.
 headingLevel은 문서 구조만 결정한다. 기존 24는 상한이며 일반 카드·선택 영역 제목의 기본값이 아니다.
+
+`stateHeight` 근거: 2026-10-23 소비 감사. 야잘알이 QueryRegion·LeadersRail·MatchFieldPanel 등 13곳 이상에서 상태 영역을 `minHeight` 36·68·88·96·120·160·180·220 View로 감쌌다. 이 값들을 세 단계(68–96 → 96, 120–180 → 160, 220)로 묶어 recipe가 소유한다.
 
 `aside`는 제목·본문 묶음의 끝 쪽에 놓이고 footer는 카드 전체 폭을 사용한다. 지원 그림 자체의 크기·브랜드는 제품이 결정하며, 위치·본문의 가변 폭·footer 줄바꿈은 이 구성이 소유한다.
