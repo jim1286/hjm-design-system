@@ -739,6 +739,12 @@
       "import": "./dist/collection-rail.js",
       "default": "./dist/collection-rail.js"
     },
+    "./character-count": {
+      "types": "./dist/character-count.d.ts",
+      "react-native": "./dist/character-count.js",
+      "import": "./dist/character-count.js",
+      "default": "./dist/character-count.js"
+    },
     "./activity-chip": {
       "types": "./dist/activity-chip.d.ts",
       "react-native": "./dist/activity-chip.js",

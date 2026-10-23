@@ -25,6 +25,14 @@ import {
   type OtpFieldPresentation,
 } from "@hjmds/design-contracts/components/otp-field";
 import {
+  resolveCharacterCount,
+  resolveCharacterCountMaxLength,
+  shouldAnnounceCharacterCount,
+  type CharacterCountOptions,
+  type CharacterCountState,
+  type CharacterCountStatus,
+} from "@hjmds/design-contracts/character-count";
+import {
   createContext,
   forwardRef,
   useContext,
@@ -244,6 +252,50 @@ function requireFieldAccessibleName(label: ReactNode | undefined, ariaLabel: str
   }
 }
 
+/*
+  Character count (characterCountRecipe, 2026-10-23 BurnTok ComposerCount/TextLengthHint). The row sits under the
+  control and before the description, and `aria-describedby` references it, so the counter and sentence are read on
+  focus. A separate polite live region announces only on entering near/short/over: announcing each keystroke
+  would talk over the typed text.
+*/
+function useCharacterCount(
+  options: CharacterCountOptions | undefined,
+  value: string,
+  ownMaxLength: number | undefined,
+): Readonly<{ state?: CharacterCountState; announcement: string; maxLength?: number }> {
+  if (options && ownMaxLength !== undefined) {
+    throw new TypeError("Pass the limit through characterCount.max instead of maxLength");
+  }
+  const state = options ? resolveCharacterCount(value, options) : undefined;
+  const previous = useRef<CharacterCountStatus | undefined>(undefined);
+  const [announcement, setAnnouncement] = useState("");
+  const status = state?.status;
+  useEffect(() => {
+    if (state && shouldAnnounceCharacterCount(previous.current, state)) setAnnouncement(state.message ?? "");
+    previous.current = status;
+    // Only a status change announces; the message inside one status changes with every keystroke.
+  }, [status]);
+  const maxLength = options ? resolveCharacterCountMaxLength(options) : ownMaxLength;
+  return { ...(state ? { state } : {}), announcement, ...(maxLength === undefined ? {} : { maxLength }) };
+}
+
+function CharacterCountRow({ id, state, announcement }: Readonly<{ id: string; state: CharacterCountState; announcement: string }>) {
+  return (
+    <>
+      <div id={id} className="hjm-field__count" data-status={state.status} data-invalid={state.invalid || undefined}>
+        {state.message ? <span className="hjm-field__count-message">{state.message}</span> : null}
+        <span className="hjm-field__counter">{state.counter}</span>
+      </div>
+      <span className="hjm-visually-hidden" aria-live="polite" data-hjm-field-count-announcement="">{announcement}</span>
+    </>
+  );
+}
+
+function useDraftValue(value: unknown, defaultValue: unknown): readonly [string, (next: string) => void] {
+  const [draft, setDraft] = useState(() => (defaultValue === undefined || defaultValue === null ? "" : String(defaultValue)));
+  return [value === undefined || value === null ? draft : String(value), setDraft] as const;
+}
+
 type SharedInputProps = FieldCopyProps &
   Readonly<{
     variant?: FieldVariant;
@@ -269,8 +321,19 @@ type SharedInputProps = FieldCopyProps &
     initialFocusTarget?: boolean;
   }>;
 
+/** TextField and TextArea only; SearchField, PasswordField and OtpField have no free-text limit to count. */
+type CharacterCountProps = Readonly<{
+  /**
+   * Shows `length/max` and the product's sentence for the current status under the control
+   * (`resolveCharacterCount`). `overflow: "block"` (default) also sets the platform `maxLength`; do not pass
+   * `maxLength` together with it.
+   */
+  characterCount?: CharacterCountOptions;
+}>;
+
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
   SharedInputProps &
+  CharacterCountProps &
   Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
@@ -306,6 +369,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       "aria-label": ariaLabel,
       layoutStyle,
       initialFocusTarget,
+      characterCount,
+      maxLength: ownMaxLength,
       ...props
     },
     ref,
@@ -313,6 +378,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const [countedValue, setDraft] = useDraftValue(props.value, props.defaultValue);
+    const count = useCharacterCount(characterCount, countedValue, ownMaxLength);
+    const countId = `${ids.controlId}-count`;
     const control = useRef<HTMLInputElement>(null);
     useInitialFocusTarget(control, initialFocusTarget);
     const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
@@ -332,7 +400,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         required={required ?? false}
         disabled={disabled ?? false}
         focused={focused}
-        invalid={isAriaInvalid(ariaInvalid)}
+        invalid={isAriaInvalid(ariaInvalid) || count.state?.status === "over"}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}
@@ -350,10 +418,11 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             className={classNames("hjm-field__input", className)}
             required={required}
             disabled={disabled}
-            aria-invalid={error ? true : ariaInvalid}
+            {...(count.maxLength === undefined ? {} : { maxLength: count.maxLength })}
+            aria-invalid={error || count.state?.status === "over" ? true : ariaInvalid}
             aria-label={ariaLabel}
             aria-describedby={describedBy(
-              ariaDescribedBy,
+              [ariaDescribedBy, count.state ? countId : undefined].filter(Boolean).join(" ") || undefined,
               description,
               error,
               ids.descriptionId,
@@ -362,12 +431,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChange={(event) => {
+              setDraft(event.currentTarget.value);
               onChange?.(event);
               onValueChange?.(event.currentTarget.value);
             }}
           />
           {trailing ? <span className="hjm-field__affix">{trailing}</span> : null}
         </div>
+        {count.state ? <CharacterCountRow id={countId} state={count.state} announcement={count.announcement} /> : null}
       </FieldFrame>
     );
   },
@@ -375,6 +446,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
 export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
   Omit<SharedInputProps, "leading"> &
+  CharacterCountProps &
   Readonly<{
     /**
      * Action before the text inside the field frame (for example a composer's camera button),
@@ -417,6 +489,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       style,
       layoutStyle,
       initialFocusTarget,
+      characterCount,
+      maxLength: ownMaxLength,
+      onChange,
       ...props
     },
     ref,
@@ -424,6 +499,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    const [countedValue, setDraft] = useDraftValue(props.value, props.defaultValue);
+    const count = useCharacterCount(characterCount, countedValue, ownMaxLength);
+    const countId = `${ids.controlId}-count`;
     const control = useRef<HTMLTextAreaElement>(null);
     useInitialFocusTarget(control, initialFocusTarget);
     // Bounds are expressed in lines so the recipe keeps line height and padding.
@@ -444,7 +522,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         required={required ?? false}
         disabled={disabled ?? false}
         focused={focused}
-        invalid={isAriaInvalid(ariaInvalid)}
+        invalid={isAriaInvalid(ariaInvalid) || count.state?.status === "over"}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}
@@ -463,15 +541,20 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             style={{ ...style, ...lineBounds }}
             required={required}
             disabled={disabled}
-            aria-invalid={error ? true : ariaInvalid}
+            {...(count.maxLength === undefined ? {} : { maxLength: count.maxLength })}
+            aria-invalid={error || count.state?.status === "over" ? true : ariaInvalid}
             aria-label={ariaLabel}
             aria-describedby={describedBy(
-              ariaDescribedBy,
+              [ariaDescribedBy, count.state ? countId : undefined].filter(Boolean).join(" ") || undefined,
               description,
               error,
               ids.descriptionId,
               ids.errorId,
             )}
+            onChange={(event) => {
+              setDraft(event.currentTarget.value);
+              onChange?.(event);
+            }}
             onFocus={(event) => {
               setFocused(true);
               onFocus?.(event);
@@ -483,6 +566,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           />
           {trailing ? <span className="hjm-field__trailing">{trailing}</span> : null}
         </div>
+        {count.state ? <CharacterCountRow id={countId} state={count.state} announcement={count.announcement} /> : null}
       </FieldFrame>
     );
   },
@@ -606,7 +690,7 @@ export type PasswordFieldToggleRenderProps = Readonly<{
 
 export type PasswordFieldProps = Omit<
   TextFieldProps,
-  "autoComplete" | "defaultValue" | "size" | "trailing" | "type" | "value"
+  "autoComplete" | "characterCount" | "defaultValue" | "size" | "trailing" | "type" | "value"
 > &
   Readonly<{
     value?: string;
@@ -736,6 +820,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
 export type OtpFieldProps = Omit<
   TextFieldProps,
   | "autoComplete"
+  | "characterCount"
   | "defaultValue"
   | "leading"
   | "maxLength"

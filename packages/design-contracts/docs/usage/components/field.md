@@ -77,6 +77,7 @@ import { Field } from "@hjmds/react-native/forms";
 | `onValueChange`(`TextField`) | `(value: string) => void` | — | Web·Native 같은 이름·모양. Web은 DOM `onChange`(이벤트)도 함께 불린다. 공용 폼 코드는 `onValueChange`를 쓴다 |
 | `children`(`Field` render-prop) | `(control: FieldControlProps) => ReactNode` 또는 `ReactNode` | — | Web `FieldControlProps`는 `{ id, required, disabled, "aria-invalid"?: true, "aria-describedby"? }`, Native는 `{ accessibilityLabel, accessibilityHint?, accessibilityState: { disabled } }`(hint는 오류 우선) |
 | `busy`(Native `TextField`) | `boolean` | `false` | 편집을 막고 접근성 busy를 싣는다 |
+| `characterCount`(`TextField`·`TextArea`) | `CharacterCountOptions` | — | 미게시. 틀 아래 `n/max`와 상태 문장. [글자 수 표시](#글자-수-표시-미게시) |
 
 - 상태 테두리는 recipe가 정한다: 기본 `borderControl`, 포커스 `contentBrand`, 오류 `danger`.
 - 도움말은 오류가 생겨도 사라지지 않고 둘 다 보인다(Web은 `aria-describedby`로 둘 다 연결).
@@ -118,6 +119,56 @@ Native는 제품 프로필의 `tokens.fontFamily.ui`를 실제 텍스트/입력 
 - 정렬·높이는 `align`·`variant`·`shape` 축으로 바꾼다. Native `TextField`는 `style`을 받지 않고 배치는 `layoutStyle`로만 한다.
 - 커스텀 컨트롤에는 render-prop 값을 그대로 펼쳐 라벨 연결을 끊지 않는다. Web `Field`는 `controlId`가 필수다.
 - 비활성인 이유는 도움말(`description`)에 적는다. 도움말·오류는 흐려지지 않으므로 제품에서 따로 흐리게 하거나 색을 바꾸지 않는다.
+
+### 글자 수 표시 (미게시)
+
+`TextField`·`TextArea`의 `characterCount`는 틀 바로 아래, 설명(`description`) 위에 한 줄을 그린다. 앞에는 제품 문장,
+끝에는 `n/max` 숫자가 온다. 계산과 상태 판정은 `@hjmds/design-contracts/character-count`의 `resolveCharacterCount`가 맡는다.
+숫자는 `locale`로 HJM이 형식화하고(`1,024/1,000`), 문장은 제품이 `messages`로 준다.
+
+```tsx
+// Web (Native는 onValueChange={setPrompt})
+<TextArea label={t("create.prompt")} description={t("create.countHint")} value={prompt}
+  onChange={(event) => setPrompt(event.currentTarget.value)}
+  characterCount={{
+    min: 5, max: 500, nearLimit: 40, measure: "trimmed", overflow: "allow", locale,
+    messages: {
+      range: ({ min, max }) => t("create.range", { min, max }),
+      remaining: ({ count }) => t("create.remaining", { count }),
+      needed: ({ count }) => t("create.needed", { count }),
+      over: ({ count }) => t("create.over", { count }),
+    },
+  }} />
+```
+
+| 옵션 | 값 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `max` | 양의 정수 | 필수 | 상한 |
+| `min` | 0 이상 정수 | `0` | 하한. 빈 값은 `short`가 아니다(손대지 않은 칸은 오류가 아니다) |
+| `overflow` | `block` · `allow` | `block` | `block`은 플랫폼 `maxLength`를 걸어 상한에서 입력이 멈춘다. `allow`는 붙여 넣은 긴 초안을 지우지 않고 계속 받으며 초과를 표시한다. 이때 제출은 제품이 `status !== "over"`로 막는다 |
+| `measure` | `length` · `trimmed` | `length` | `length`는 UTF-16 길이(플랫폼 `maxLength`와 같은 단위), `trimmed`는 앞뒤 공백을 뺀 길이 |
+| `nearLimit` | 0 이상 정수 | `ceil(max × 0.1)` | 남은 수가 이 값 이하면 `near`(`characterCountRecipe.nearLimitRatio`) |
+| `locale` | BCP 47 | 필수 | 숫자 형식. 환경 기본값으로 새지 않도록 필수다 |
+| `messages` | `range` · `remaining` · `needed` · `over` 함수 | — | 상태별 문장. 없으면 숫자만 보인다 |
+
+| 상태(`status`) | 조건(우선순위 순) | 문장 | 모양 |
+| --- | --- | --- | --- |
+| `over` | 길이 > `max` | `over({ count: 초과 수 })` | 행 `danger`, 숫자 semibold, 칸 오류 테두리 2·`aria-invalid` |
+| `short` | 0 < 길이 < `min` | `needed({ count: 부족 수 })` | 행 `danger`, 숫자 semibold. 칸 테두리는 그대로 |
+| `near` | 남은 수 ≤ `nearLimit` | `remaining({ count: 남은 수 })` | `textMuted` |
+| `within` | 그 밖 | `range({ min, max })` | `textMuted` |
+
+- 배치: `characterCountRecipe` — `label` 글자(12/18), 문장과 숫자 사이 `spacing.sm` 8, 숫자는 끝 정렬·고정폭 숫자(`tabular-nums`).
+  비활성일 때도 설명처럼 흐리지 않는다.
+- 접근성: Web은 행에 id를 주고 컨트롤의 `aria-describedby`(자체 → 글자 수 → 설명 → 오류 순)에 넣어 포커스할 때 읽는다.
+  Native는 행을 접근성 트리에서 숨기고 문장·숫자를 입력의 `accessibilityHint` 뒤에 붙인다.
+  알림은 `near`·`short`·`over`로 **들어갈 때 한 번**만 정중하게(Web `aria-live="polite"` 영역, Native `announceForAccessibility`) 한다.
+  같은 상태 안에서 글자마다 알리지 않는다. 입력한 글자 낭독을 덮기 때문이다.
+- `maxLength`를 함께 넘기면 `TypeError`다. 상한은 `characterCount.max` 하나로 둔다.
+- `SearchField`·`PasswordField`·`OtpField`에는 없다. 자유 글 상한이 아니기 때문이다.
+
+근거: 2026-10-23 번뚝 웹 `components/ComposerCount.tsx`와 앱 `components/TextLengthHint.tsx`가 같은 규칙(부족·초과·남은 수, `n/max`,
+초과 시 오류 색)을 따로 그렸고, 웹만 남은 50자에서 숫자를 브랜드색으로 강조해 기준이 어긋나 있었다. 브랜드 강조는 옮기지 않았다.
 
 ### GestureSheetInput (Native optional-extension)
 

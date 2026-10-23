@@ -401,7 +401,7 @@
    the support text fades, so a custom Field control dims without needing a class. A component
    recipe value (Select, NumberField, OtpField, SearchField, PasswordField) arrives as an
    inline --hjm-field-disabled-opacity on the root. */
-.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
+.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__count):not(.hjm-field__error):not([data-hjm-field-error]) { opacity: var(--hjm-field-disabled-opacity); }
 /* The editable minimum excludes both resolved borders, keeping the field footprint stable in invalid state. */
 .hjm-field__input {
   inline-size: 100%;
@@ -434,6 +434,14 @@
 .hjm-field__affix { display: inline-flex; align-items: center; color: var(--hjm-color-text-muted); }
 .hjm-field__description, .hjm-choice__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-field__error { color: var(--hjm-color-danger); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+/* characterCountRecipe (2026-10-23): label type, sentence and counter on one row with spacing.sm between, the counter
+   at the end in tabular numbers. short/over switch the row to danger and the counter to semibold, so the error is
+   not carried by color alone. Support text, so it keeps full contrast in the disabled scope like the description. */
+.hjm-field__count { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+.hjm-field__count-message { flex: 1 1 auto; min-inline-size: 0; }
+.hjm-field__counter { flex: 0 0 auto; margin-inline-start: auto; font-variant-numeric: tabular-nums; font-weight: var(--hjm-font-weight-regular); }
+.hjm-field__count[data-invalid] { color: var(--hjm-color-danger); }
+.hjm-field__count[data-invalid] .hjm-field__counter { font-weight: var(--hjm-font-weight-semibold); }
 /* searchFieldRecipe.sizes.* (emitted by theme.ts): medium padding 12 · gap 8 · clear 36 + slop 4, large 52 high ·
    padding 16 · gap 12 · clear 44. Size is applied to the input by TextField; size the control from that public attribute. */
 .hjm-search-field .hjm-field__control { padding-inline: var(--hjm-search-field-padding-medium, var(--hjm-space-sm)); gap: var(--hjm-search-field-gap-medium, var(--hjm-space-xs)); }

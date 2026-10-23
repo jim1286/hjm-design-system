@@ -51,6 +51,15 @@ import {
   type OtpFieldPresentation,
 } from "@hjmds/design-contracts/components/otp-field";
 import {
+  characterCountRecipe,
+  resolveCharacterCount,
+  resolveCharacterCountMaxLength,
+  shouldAnnounceCharacterCount,
+  type CharacterCountOptions,
+  type CharacterCountState,
+  type CharacterCountStatus,
+} from "@hjmds/design-contracts/character-count";
+import {
   getCheckboxNextState,
   reconcileCheckboxSelection,
   resolveControlAccessibleName,
@@ -80,6 +89,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  AccessibilityInfo,
   ActivityIndicator,
   Animated,
   AppState,
@@ -187,7 +197,60 @@ function resolveFieldAccessibleName(
   };
 }
 
-type FieldRendererProps = AccessibleFieldProps & FieldPrivateProps &
+/** TextField and TextArea only; SearchField and PasswordField have no free-text limit to count. */
+type CharacterCountProps = Readonly<{
+  /**
+   * Shows `length/max` and the product's sentence for the current status under the control
+   * (`resolveCharacterCount`). `overflow: "block"` (default) also sets `maxLength`; do not pass both.
+   */
+  characterCount?: CharacterCountOptions;
+}>;
+
+/*
+  Character count (characterCountRecipe, 2026-10-23 BurnTok TextLengthHint). The row is hidden from the
+  accessibility tree and its sentence and counter are appended to the input hint, so they are read on focus without
+  a second swipe stop. Entering near/short/over is announced once; announcing each keystroke would talk over the
+  typed text. Both platforms use announceForAccessibility because an Android live region on the row would speak on
+  every counter change.
+*/
+function useCharacterCount(
+  options: CharacterCountOptions | undefined,
+  value: string,
+  ownMaxLength: number | undefined,
+): Readonly<{ state?: CharacterCountState; maxLength?: number }> {
+  if (options && ownMaxLength !== undefined) {
+    throw new TypeError("Pass the limit through characterCount.max instead of maxLength");
+  }
+  const state = options ? resolveCharacterCount(value, options) : undefined;
+  const previous = useRef<CharacterCountStatus | undefined>(undefined);
+  const status = state?.status;
+  useEffect(() => {
+    if (state && shouldAnnounceCharacterCount(previous.current, state)) AccessibilityInfo.announceForAccessibility(state.message ?? "");
+    previous.current = status;
+    // Only a status change announces; the message inside one status changes with every keystroke.
+  }, [status]);
+  const maxLength = options ? resolveCharacterCountMaxLength(options) : ownMaxLength;
+  return { ...(state ? { state } : {}), ...(maxLength === undefined ? {} : { maxLength }) };
+}
+
+function CharacterCountRow({ state }: Readonly<{ state: CharacterCountState }>) {
+  const { colors, environment } = useHjmNativeTheme();
+  const tone = state.invalid ? "invalid" : "idle";
+  const color = colors[characterCountRecipe.colors[tone]];
+  return (
+    <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+      testID="hjm-field-character-count"
+      style={{ flexDirection: "row", alignItems: "flex-start", gap: characterCountRecipe.gap, direction: environment.direction }}>
+      {state.message ? <Text variant={characterCountRecipe.textVariant} style={{ color, flex: 1 }}>{state.message}</Text> : null}
+      <Text variant={characterCountRecipe.textVariant}
+        style={{ color, flexShrink: 0, marginStart: "auto", fontVariant: [characterCountRecipe.numeric], fontWeight: characterCountRecipe.counterFontWeight[tone] }}>
+        {state.counter}
+      </Text>
+    </View>
+  );
+}
+
+type FieldRendererProps = AccessibleFieldProps & FieldPrivateProps & CharacterCountProps &
   Readonly<{
     multiline: boolean;
     search: boolean;
@@ -241,6 +304,8 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
       onFocus,
       onContentSizeChange,
       onSelectionChange,
+      characterCount,
+      maxLength: ownMaxLength,
       ...props
     },
     ref,
@@ -270,7 +335,11 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
     useInitialFocusTarget(inputRef, initialFocusTarget,
       () => !disabled && !props.readOnly && props.editable !== false && (search || !busy));
     const supportText = description;
-    const hint = error ?? accessibilityHint ?? supportText;
+    const count = useCharacterCount(characterCount, currentValue, ownMaxLength);
+    const countHint = count.state ? [count.state.message, count.state.counter].filter(Boolean).join(", ") : undefined;
+    const hint = [error ?? accessibilityHint ?? supportText, countHint].filter(Boolean).join(", ") || undefined;
+    // Over the limit (overflow "allow") draws the invalid border like an external group error.
+    const invalidState = invalid || count.state?.status === "over";
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
       label,
       accessibilityLabel,
@@ -281,11 +350,11 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
     const searchSizing = searchFieldRecipe.sizes[searchSize];
     const resolvedMaxVisibleLines =
       maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-    const borderWidth = error || invalid ? fieldRecipe.states.invalid.borderWidth
+    const borderWidth = error || invalidState ? fieldRecipe.states.invalid.borderWidth
       : search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
     const borderColor = search
       ? resolveColorReference(
-          error || invalid
+          error || invalidState
             ? searchFieldRecipe.colors.invalid
             : focused
             ? searchFieldRecipe.colors.focus
@@ -293,7 +362,7 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
           theme.palette,
         )
       : colors[
-          error || invalid
+          error || invalidState
             ? fieldRecipe.states.invalid.border
             : focused
             ? fieldRecipe.states.focused.border
@@ -403,6 +472,7 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
     const editor = (<TextInput
             key={editorKey}
             {...props}
+            {...(count.maxLength === undefined ? {} : { maxLength: count.maxLength })}
             {...inputTextScaleProps}
             ref={attachInput}
             accessibilityHint={hint}
@@ -495,18 +565,19 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
           </View> : editor}
           {trailing}
         </View>
+        {count.state ? <CharacterCountRow state={count.state} /> : null}
       </NativeFieldFrame>
     );
   },
 );
 
-export type TextFieldProps = AccessibleFieldProps;
+export type TextFieldProps = AccessibleFieldProps & CharacterCountProps;
 
 export const TextField: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>> = forwardRef<ComponentRef<typeof TextInput>, TextFieldProps>(function TextField(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline={false} search={false} />;
 });
 
-export type TextAreaProps = AccessibleFieldProps & Readonly<{ trailing?: ReactNode; leadingAction?: ReactNode }>;
+export type TextAreaProps = AccessibleFieldProps & CharacterCountProps & Readonly<{ trailing?: ReactNode; leadingAction?: ReactNode }>;
 
 export const TextArea: ReturnType<typeof forwardRef<ComponentRef<typeof TextInput>, TextAreaProps>> = forwardRef<ComponentRef<typeof TextInput>, TextAreaProps>(function TextArea(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline search={false} />;

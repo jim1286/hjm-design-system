@@ -75,8 +75,9 @@ import { TextArea } from "@hjmds/react-native/inputs";
 | `description` · `error` · `required` · `disabled` | Web `ReactNode`, Native `string` · `boolean` | — | Field와 같은 틀로 그려지고 보조기기 설명에 연결된다 |
 | `busy`(Native) | `boolean` | `false` | — |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 필드 전체(라벨·틀·설명) 배치. Web·Native 모두 |
+| `characterCount` | `CharacterCountOptions` | — | 미게시. 틀 아래 글자 수 행(`n/max`와 상태 문장)을 그린다. [글자 수 표시](field.md#글자-수-표시-미게시) 참조. TextField와 같다 |
 
-`leading`(흐린 장식 affix)은 TextArea에 없다(TextField 전용). 행동은 `leadingAction`·`trailing`에 두고, 글자 수 같은 보조 표시는 `description`으로 둔다.
+`leading`(흐린 장식 affix)은 TextArea에 없다(TextField 전용). 행동은 `leadingAction`·`trailing`에 둔다. 글자 수는 `characterCount`로 그리고 제품이 `n/max` 행을 따로 만들지 않는다.
 
 ## 배치
 
