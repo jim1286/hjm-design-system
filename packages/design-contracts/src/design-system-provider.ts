@@ -150,15 +150,37 @@ export type DesignSystemProviderValue = Readonly<{
   designProfile?: HjmDesignProfile;
 }>;
 
+/**
+ * How a nested provider's `brandPalette` meets the inherited one. `replace` (default, the scope reset contract)
+ * starts the subtree from the HJM defaults plus only the supplied roles. `extend` merges the supplied roles over the
+ * inherited palette per theme, so a sub-scope names only the roles it changes. 2026-10-23: BurnTok web/app
+ * ThemeProviders accumulated outer overrides by hand and Diairy built `shoreBrandPaletteWith()` to get this.
+ */
+export type ProviderBrandPaletteMode = "replace" | "extend";
+export const providerBrandPaletteDefaults = { mode: "replace" } as const satisfies { mode: ProviderBrandPaletteMode };
+
+export function validateProviderBrandPaletteMode(mode: unknown): asserts mode is ProviderBrandPaletteMode {
+  if (mode !== "replace" && mode !== "extend") throw new TypeError(`Unsupported brandPaletteMode: ${String(mode)}`);
+}
+
 /** A resolved-value bridge still owns its current color scope. Preserve it for nested
- * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
+ * providers. An explicit brandPalette replaces the inherited overrides unless `mode` is `extend`. */
 export function resolveProviderBrandPalette(
   inherited: ResolveDesignSystemEnvironmentOptions["brandPalette"],
   supplied: ResolveDesignSystemEnvironmentOptions["brandPalette"],
   value?: DesignSystemProviderValue,
+  mode: ProviderBrandPaletteMode = providerBrandPaletteDefaults.mode,
 ): ResolveDesignSystemEnvironmentOptions["brandPalette"] {
+  validateProviderBrandPaletteMode(mode);
   if (value !== undefined) return { ...inherited, [value.environment.theme]: value.palette.theme };
-  return supplied ?? inherited;
+  if (supplied === undefined || inherited === undefined) return supplied ?? inherited;
+  if (mode === "replace") return supplied;
+  const merged: Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>> = {};
+  for (const theme of ["light", "dark"] as const) {
+    if (inherited[theme] === undefined && supplied[theme] === undefined) continue;
+    merged[theme] = { ...inherited[theme], ...supplied[theme] };
+  }
+  return merged;
 }
 
 const themeColorKeys = Object.keys(THEMES.light) as readonly (keyof typeof THEMES.light)[];

@@ -32,6 +32,21 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
 
 안전 영역 등 환경을 연결하는 `value={resolvedValue}` 중첩 Provider도 현재 모드의 해석된 브랜드 팔레트를 하위 Provider에 전달한다. 명시적으로 새 `brandPalette`를 지정하면 기존처럼 그 범위를 대체한다. 이 구분은 환경 bridge 뒤의 일반 Provider가 브랜드색을 기본값으로 되돌리던 문제를 막는다.
 
+### 1.1 하위 범위의 일부 역할만 바꾸기 — `brandPaletteMode` (개발 소스·미게시)
+
+중첩 Provider의 `brandPaletteMode`는 하위 `brandPalette`와 상위 팔레트의 관계를 정한다.
+
+| 값 | 결과 | 쓰는 곳 |
+| --- | --- | --- |
+| `replace`(기본) | HJM 기본값(또는 프로필) 위에 하위가 넘긴 역할만 놓는다. 상위 브랜드는 이 범위에서 끊긴다 | 다른 브랜드의 임베드처럼 상위 색을 물려받지 않아야 하는 범위 |
+| `extend` | theme별로 상위 팔레트 위에 하위가 넘긴 역할만 덮는다. 더 깊은 `extend`도 차례로 쌓인다 | 종이·바다처럼 바탕·표면 몇 역할만 바꾸고 제품 브랜드는 유지하는 범위 |
+
+`brandPalette` 없이 준 모드는 효과가 없다. `value` 중첩 Provider와는 함께 쓸 수 없다(타입이 막는다).
+기존 `replace` 기본값은 바꾸지 않는다. 기본을 `extend`로 바꾸면 지금 상위 색을 끊으려고 `brandPalette`를 다시 준
+범위가 조용히 상위 색을 물려받게 되기 때문이다. 결정 근거: 2026-10-23 번뚝 웹·앱 ThemeProvider는 상위 덮어쓰기를
+직접 누적했고(`apps/web/src/components/ThemeProvider.tsx` `BrandPaletteScope`), 다에리 앱은 `shoreBrandPaletteWith()`로
+기본 팔레트를 매번 다시 합쳤다. 병합 규칙은 contracts `resolveProviderBrandPalette(inherited, supplied, value, mode)`가 소유한다.
+
 ## 2. 모든 브랜드 팔레트는 대비 검사를 통과해야 한다
 
 `@hjmds/design-contracts/palette-contrast`의 `checkBrandPaletteContrast(brandPalette)`가 Provider와 같은 방식으로

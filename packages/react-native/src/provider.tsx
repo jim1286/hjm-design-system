@@ -3,6 +3,7 @@ import { resolveSurfaceFillOpacity } from "@hjmds/design-contracts/palette-contr
 import {
   resolveDesignSystemProviderValue,
   resolveProviderBrandPalette,
+  type ProviderBrandPaletteMode,
   validateDesignSystemProviderValue,
   type DesignSystemDirection,
   type DesignSystemDensity,
@@ -64,6 +65,7 @@ export type HjmNativeTheme = DesignSystemProviderValue &
 
 /** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
 export type HjmNativeBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
+export type HjmNativeBrandPaletteMode = ProviderBrandPaletteMode;
 
 type HjmNativeProviderEnvironmentProps = Readonly<{
   value?: never;
@@ -79,6 +81,12 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
    * reduced-motion settings.
    */
   brandPalette?: HjmNativeBrandPalette;
+  /**
+   * How `brandPalette` meets the nearest ancestor's (default `replace`: only the supplied roles over the HJM
+   * defaults). `extend` merges the supplied roles over the inherited palette per theme, so a nested scope passes
+   * only the roles it changes. No effect without `brandPalette`.
+   */
+  brandPaletteMode?: HjmNativeBrandPaletteMode;
   /** Appearance and interaction defaults defined once by the product. Explicit props win. */
   designProfile?: HjmDesignProfile;
 }>;
@@ -93,6 +101,7 @@ type HjmNativeProviderValueProps = Readonly<{
   minimumVisualTarget?: never;
   density?: never;
   brandPalette?: never;
+  brandPaletteMode?: never;
   designProfile?: never;
 }>;
 
@@ -217,6 +226,7 @@ export function HjmNativeProvider({
   minimumVisualTarget,
   density,
   brandPalette: suppliedBrandPalette,
+  brandPaletteMode,
   designProfile: suppliedDesignProfile,
   value: suppliedValue,
   safeAreaInsets: suppliedInsets,
@@ -233,7 +243,7 @@ export function HjmNativeProvider({
   const inheritedInsets = useContext(HjmNativeSafeAreaContext);
   const safeAreaInsets = suppliedInsets ?? inheritedInsets;
   const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
-  const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue]);
+  const brandPalette = useMemo(() => resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode), [inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode]);
   const colorScheme = useColorScheme();
   // Match Expo web's light server snapshot to avoid stale styles after hydration;
   // native stays immediate. See README: static-web theme precedence.

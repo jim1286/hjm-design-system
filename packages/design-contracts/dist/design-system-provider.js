@@ -37,12 +37,28 @@ export const designSystemEnvironmentDefaults = {
     minimumVisualTarget: false,
     density: "comfortable",
 };
+export const providerBrandPaletteDefaults = { mode: "replace" };
+export function validateProviderBrandPaletteMode(mode) {
+    if (mode !== "replace" && mode !== "extend")
+        throw new TypeError(`Unsupported brandPaletteMode: ${String(mode)}`);
+}
 /** A resolved-value bridge still owns its current color scope. Preserve it for nested
- * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
-export function resolveProviderBrandPalette(inherited, supplied, value) {
+ * providers. An explicit brandPalette replaces the inherited overrides unless `mode` is `extend`. */
+export function resolveProviderBrandPalette(inherited, supplied, value, mode = providerBrandPaletteDefaults.mode) {
+    validateProviderBrandPaletteMode(mode);
     if (value !== undefined)
         return { ...inherited, [value.environment.theme]: value.palette.theme };
-    return supplied ?? inherited;
+    if (supplied === undefined || inherited === undefined)
+        return supplied ?? inherited;
+    if (mode === "replace")
+        return supplied;
+    const merged = {};
+    for (const theme of ["light", "dark"]) {
+        if (inherited[theme] === undefined && supplied[theme] === undefined)
+            continue;
+        merged[theme] = { ...inherited[theme], ...supplied[theme] };
+    }
+    return merged;
 }
 const themeColorKeys = Object.keys(THEMES.light);
 const accentColorKeys = Object.keys(ACCENTS.light);

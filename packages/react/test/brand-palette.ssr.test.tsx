@@ -30,4 +30,24 @@ describe("HjmProvider brandPalette", () => {
     const dark = renderToStaticMarkup(<HjmProvider systemTheme="dark" brandPalette={brand}>x</HjmProvider>);
     expect(dark).toContain("--hjm-color-primary:#abcdef");
   });
+  it("replaces the inherited brand by default and merges only the supplied roles with brandPaletteMode=\"extend\"", () => {
+    const outer = { light: { primary: "#123456", bg: "#fafafa" } } as const;
+    const html = renderToStaticMarkup(
+      <HjmProvider systemTheme="light" brandPalette={outer}>
+        <HjmProvider brandPalette={{ light: { bg: "#000000" } }}><span data-scope="replace" /></HjmProvider>
+        <HjmProvider brandPalette={{ light: { bg: "#0b0b0b" } }} brandPaletteMode="extend">
+          <HjmProvider brandPalette={{ light: { surface: "#0c0c0c" } }} brandPaletteMode="extend">x</HjmProvider>
+        </HjmProvider>
+      </HjmProvider>,
+    );
+    const scopes = html.split('data-hjm-provider=""').slice(1);
+    // [outer, replace, extend, nested extend]
+    expect(scopes[1]).toContain("--hjm-color-bg:#000000");
+    expect(scopes[1]).not.toContain("--hjm-color-primary:#123456");
+    expect(scopes[2]).toContain("--hjm-color-primary:#123456");
+    expect(scopes[2]).toContain("--hjm-color-bg:#0b0b0b");
+    expect(scopes[3]).toContain("--hjm-color-primary:#123456");
+    expect(scopes[3]).toContain("--hjm-color-bg:#0b0b0b");
+    expect(scopes[3]).toContain("--hjm-color-surface:#0c0c0c");
+  });
 });

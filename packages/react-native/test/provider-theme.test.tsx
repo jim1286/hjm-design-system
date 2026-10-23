@@ -123,6 +123,27 @@ describe("brandPalette prop", () => {
   });
 });
 
+describe("nested brandPalette scopes", () => {
+  it("replaces the inherited brand by default and merges only the supplied roles with brandPaletteMode=\"extend\"", () => {
+    const seen: Record<string, { primary: string; bg: string }> = {};
+    function Record_({ name }: { name: string }) {
+      const { palette } = useHjmNativeTheme();
+      seen[name] = { primary: palette.theme.primary, bg: palette.theme.bg };
+      return null;
+    }
+    act(() => {
+      renderer = create(
+        <HjmNativeProvider theme="dark" brandPalette={{ dark: { primary: "#123456" } }}>
+          <HjmNativeProvider brandPalette={{ dark: { bg: "#010101" } }}><Record_ name="replace" /></HjmNativeProvider>
+          <HjmNativeProvider brandPalette={{ dark: { bg: "#020202" } }} brandPaletteMode="extend"><Record_ name="extend" /></HjmNativeProvider>
+        </HjmNativeProvider>,
+      );
+    });
+    expect(seen.replace).toEqual({ primary: resolveDesignSystemProviderValue({ theme: "dark" }, { systemTheme: "dark" }).palette.theme.primary, bg: "#010101" });
+    expect(seen.extend).toEqual({ primary: "#123456", bg: "#020202" });
+  });
+});
+
 describe("designProfile inheritance", () => {
   it("inherits a reference pack through nested providers and keeps brand overrides above it", async () => {
     const { hjmDesignPresets } = await import("@hjmds/design-contracts/design-profile");

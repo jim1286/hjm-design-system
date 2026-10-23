@@ -29,6 +29,7 @@ import { HjmProvider } from "@hjmds/react/provider";
 교체되고 나머지는 기본값을 유지하므로 recipe와 대비 규칙이 그대로 적용된다.
 1.5.0부터 Provider가 `brandPalette`를 prop으로 직접 받는다. 이 경로에서 Provider는 계속
 OS theme·글자 크기·reduced motion을 관찰하고, 중첩 Provider는 가장 가까운 상위 `brandPalette`를 물려받는다.
+중첩 Provider가 일부 역할만 바꾸려면 `brandPaletteMode="extend"`를 함께 준다(기본 `replace`는 상위 브랜드를 끊는다, [브랜드 경계 §1.1](./brand-boundary.md#11-하위-범위의-일부-역할만-바꾸기--brandpalettemode-개발-소스미게시)).
 
 ```tsx
 import { HjmProvider, type HjmBrandPalette } from "@hjmds/react/provider";

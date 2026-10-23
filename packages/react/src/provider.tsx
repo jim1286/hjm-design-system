@@ -11,6 +11,7 @@ import {
   resolveDesignSystemProviderValue,
   resolveProviderBrandPalette,
   validateDesignSystemProviderValue,
+  type ProviderBrandPaletteMode,
   type DesignSystemDensity,
   type DesignSystemDirection,
   type DesignSystemProviderValue,
@@ -37,6 +38,7 @@ const HjmThemeContext = createContext<DesignSystemProviderValue | null>(null);
 
 /** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
 export type HjmBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
+export type HjmBrandPaletteMode = ProviderBrandPaletteMode;
 
 /**
  * The nearest ancestor's brand palette. A nested provider (for example one that
@@ -86,6 +88,12 @@ type HjmProviderEnvironmentProps = Readonly<{
    * following the OS theme and reduced-motion settings.
    */
   brandPalette?: HjmBrandPalette;
+  /**
+   * How `brandPalette` meets the nearest ancestor's (default `replace`: only the supplied roles over the HJM
+   * defaults). `extend` merges the supplied roles over the inherited palette per theme, so a nested scope passes
+   * only the roles it changes. No effect without `brandPalette`.
+   */
+  brandPaletteMode?: HjmBrandPaletteMode;
   /** Appearance and interaction defaults defined once by the product. Explicit props win. */
   designProfile?: HjmDesignProfile;
 }>;
@@ -101,6 +109,7 @@ type HjmProviderValueProps = Readonly<{
   density?: never;
   systemTheme?: never;
   brandPalette?: never;
+  brandPaletteMode?: never;
   designProfile?: never;
 }>;
 
@@ -138,6 +147,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       density,
       systemTheme,
       brandPalette: suppliedBrandPalette,
+      brandPaletteMode,
       designProfile: suppliedDesignProfile,
       host = "surface",
       value: suppliedValue,
@@ -150,7 +160,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     const parent = useContext(HjmThemeContext);
     const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
-    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue);
+    const brandPalette = resolveProviderBrandPalette(inheritedBrandPalette, suppliedBrandPalette, suppliedValue, brandPaletteMode);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery(

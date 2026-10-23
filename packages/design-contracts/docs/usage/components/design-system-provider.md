@@ -12,7 +12,7 @@
 
 앱 루트에 한 번 둔다. theme(light/dark/system)·방향·글자 배율·reduced motion을 해석하고, 제품 브랜드색을
 HJM semantic token 위에 얹는 **유일한 진입점**이다. Native HJM 컴포넌트는 테마를 이 Provider에서 읽으므로
-Provider 없이 렌더하면 예외가 난다. 화면 일부의 밀도·테마만 바꿀 때는 중첩 Provider를 둔다.
+Provider 없이 렌더하면 예외가 난다. 화면 일부의 밀도·테마만 바꿀 때는 중첩 Provider를 둔다. 화면 일부의 바탕·표면 같은 몇 색 역할만 바꿀 때는 중첩 Provider에 그 역할만 `brandPalette`로 넘기고 `brandPaletteMode="extend"`를 준다. 제품에서 상위 덮어쓰기를 누적하는 scope 컴포넌트를 만들지 않는다.
 
 ## 쓰지 않을 때
 
@@ -86,6 +86,7 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `reducedMotion` | `true` · `false` | `false` | — |
 | `minimumVisualTarget` | `true` · `false` | `false` | 작은 컨트롤의 표시 높이를 최소 44로 올리는 선택 기능. 2026-10-21 사용자 지시로 포트폴리오 앱·웹은 `false`를 사용한다. 터치 확장 `hitSlop`과 별개다 |
 | `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 20개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
+| `brandPaletteMode` | `"replace"` · `"extend"` | `"replace"` | 중첩 Provider에서 `brandPalette`가 상위 팔레트를 대체할지(`replace`), theme별로 상위 위에 넘긴 역할만 덮을지(`extend`) 정한다. `brandPalette` 없이는 효과 없음(개발 소스·미게시, [브랜드 경계 §1.1](../../brand-boundary.md#11-하위-범위의-일부-역할만-바꾸기--brandpalettemode-개발-소스미게시)) |
 | `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 기본 프로필·표면 질감은 1.15.0 추가. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. 글자 역할·관련 구성 개선은 1.16.0 변경. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
 | `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
 | `surfaceEffects`(Native) | `{ renderBackdrop?, insetShadows? }` | 상위 host 또는 없음 | 1.15.0 실험 API. 실제 blur host·inset capability를 한 번 등록하며 `{}`로 하위 영역을 해제. [Surface 질감 계약](../../design-profile.md#surfacecard의-유리클레이-질감) |

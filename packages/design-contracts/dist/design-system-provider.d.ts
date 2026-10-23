@@ -113,9 +113,20 @@ export type DesignSystemProviderValue = Readonly<{
     /** Optional to preserve existing pre-resolved provider values. */
     designProfile?: HjmDesignProfile;
 }>;
+/**
+ * How a nested provider's `brandPalette` meets the inherited one. `replace` (default, the scope reset contract)
+ * starts the subtree from the HJM defaults plus only the supplied roles. `extend` merges the supplied roles over the
+ * inherited palette per theme, so a sub-scope names only the roles it changes. 2026-10-23: BurnTok web/app
+ * ThemeProviders accumulated outer overrides by hand and Diairy built `shoreBrandPaletteWith()` to get this.
+ */
+export type ProviderBrandPaletteMode = "replace" | "extend";
+export declare const providerBrandPaletteDefaults: {
+    readonly mode: "replace";
+};
+export declare function validateProviderBrandPaletteMode(mode: unknown): asserts mode is ProviderBrandPaletteMode;
 /** A resolved-value bridge still owns its current color scope. Preserve it for nested
- * providers. An explicit brandPalette still replaces the inherited overrides (scope reset contract). */
-export declare function resolveProviderBrandPalette(inherited: ResolveDesignSystemEnvironmentOptions["brandPalette"], supplied: ResolveDesignSystemEnvironmentOptions["brandPalette"], value?: DesignSystemProviderValue): ResolveDesignSystemEnvironmentOptions["brandPalette"];
+ * providers. An explicit brandPalette replaces the inherited overrides unless `mode` is `extend`. */
+export declare function resolveProviderBrandPalette(inherited: ResolveDesignSystemEnvironmentOptions["brandPalette"], supplied: ResolveDesignSystemEnvironmentOptions["brandPalette"], value?: DesignSystemProviderValue, mode?: ProviderBrandPaletteMode): ResolveDesignSystemEnvironmentOptions["brandPalette"];
 /**
  * Runtime boundary for the resolved palette a renderer receives, including one
  * merged from a partial `brandPalette`: after merging, every semantic role a
