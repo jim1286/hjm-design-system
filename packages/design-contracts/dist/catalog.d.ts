@@ -9665,10 +9665,17 @@ export declare const recipeRegistry: {
         }>;
         fillMinSize: 48;
         fillMaxSize: 68;
+        locked: Readonly<{
+            opacity: 0.5;
+        }>;
+        accessory: Readonly<{
+            offset: 4;
+        }>;
         defaults: Readonly<{
             frame: import("./screen-patterns.js").IconTileFrame;
             shape: import("./screen-patterns.js").IconTileShape;
             size: import("./screen-patterns.js").IconTileSize;
+            accessoryPlacement: import("./component-recipes.js").CornerAccessoryPlacement;
         }>;
     }>;
     readonly composerQuickInsertRecipe: {

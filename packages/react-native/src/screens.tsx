@@ -1,6 +1,6 @@
 import type { ComponentRef } from "react";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe, topBarRecipe } from "@hjmds/design-contracts/recipes";
+import { cornerAccessoryPlacements, iconButtonRecipe, topBarRecipe, type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit, type ComposerLengthFeedback } from "@hjmds/design-contracts/communication";
 import { Progress } from "./feedback.js";
 import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
@@ -595,12 +595,22 @@ export type IconTileProps = Readonly<{
   /** Native secondary gesture; the product supplies its preview/menu without recreating the press host. */
   onLongPress?: () => void;
   disabled?: boolean;
+  /** Pressable but dimmed (iconTileRecipe.locked) so `onActivate` can explain why. Requires `onActivate` and `lockedLabel`. */
+  locked?: boolean;
+  /** Localized lock reason appended to the accessible name ("Weather, sign-in required"). */
+  lockedLabel?: string;
+  /** Corner mark (lock, clock, count) on the icon frame, overhanging by iconTileRecipe.accessory.offset. */
+  accessory?: ReactNode;
+  accessoryPlacement?: CornerAccessoryPlacement;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, activationHint, onLongPress, disabled = false, layoutStyle}: IconTileProps) {
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, activationHint, onLongPress, disabled = false, locked = false, lockedLabel, accessory, accessoryPlacement = iconTileRecipe.defaults.accessoryPlacement, layoutStyle}: IconTileProps) {
   const r = iconTileRecipe;
   if (onActivate && !(activationLabel ?? label).trim()) throw new TypeError("Interactive IconTile requires a label");
+  if (locked && (!onActivate || !lockedLabel?.trim())) throw new TypeError("A locked IconTile needs onActivate and a lockedLabel");
+  if (!(cornerAccessoryPlacements as readonly string[]).includes(accessoryPlacement)) throw new TypeError(`Unsupported IconTile accessoryPlacement: ${accessoryPlacement}`);
+  const dim = ghost ? r.ghostOpacity : locked ? r.locked.opacity : 1;
   if (onLongPress && !onActivate) throw new TypeError("IconTile onLongPress requires onActivate");
   const {colors} = useHjmNativeTheme();
   // A filling icon's edge is known only after layout; the radius follows the measured edge so the shape holds at every
@@ -609,12 +619,17 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
   const edge = size === "fill" ? fillEdge : r.iconSize;
   const framed = frame === "surface";
   const dimensions = size === "fill" ? {width: "100%" as const, minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: 1} : {width: r.iconSize, height: r.iconSize};
-  const content = <View style={[{alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}, onActivate ? undefined : layoutStyle]}>
-    <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: ghost ? r.ghostOpacity : 1, borderColor: colors.border}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</View>
-    <Text variant="caption" numberOfLines={labelLines} style={{width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
+  const content = <View style={[{position: "relative", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible"}, onActivate ? undefined : layoutStyle]}>
+    <View onLayout={size === "fill" ? event => setFillEdge(event.nativeEvent.layout.width) : undefined} style={{position: "relative", alignItems: "center", justifyContent: "center", ...dimensions, borderRadius: edge * r.shapes[shape], backgroundColor: framed ? colors.surfaceAlt : "transparent", borderWidth: framed || ghost ? 1 : 0, borderStyle: ghost ? "dashed" : "solid", opacity: dim, borderColor: colors.border}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</View>
+    {/* A box laid over the frame (centered, measured edge) holds the accessory so dimming the frame never dims it. */}
+    {accessory ? <View pointerEvents="none" accessibilityElementsHidden={onActivate ? true : undefined} importantForAccessibility={onActivate ? "no-hide-descendants" : undefined}
+      style={{position: "absolute", top: 0, left: "50%", marginLeft: -edge / 2, width: edge, height: edge}}>
+      <View testID="hjm-icon-tile-accessory" style={[{position: "absolute", end: -r.accessory.offset}, accessoryPlacement === "top-end" ? {top: -r.accessory.offset} : {bottom: -r.accessory.offset}]}>{accessory}</View>
+    </View> : null}
+    <Text variant="caption" numberOfLines={labelLines} style={{opacity: locked ? r.locked.opacity : undefined, width: "100%", minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, textAlign: "center", fontWeight: "500"}}>{label}</Text>
   </View>;
   if (!onActivate) return content;
-  return <Pressable accessibilityRole="button" accessibilityLabel={activationLabel ?? label} accessibilityHint={activationHint} accessibilityState={{ disabled }} disabled={disabled}
+  return <Pressable accessibilityRole="button" accessibilityLabel={locked ? `${activationLabel ?? label}, ${lockedLabel}` : activationLabel ?? label} accessibilityHint={activationHint} accessibilityState={{ disabled }} disabled={disabled}
     onPress={() => { if (!disabled) onActivate(); }}
     onLongPress={onLongPress ? () => { if (!disabled) onLongPress(); } : undefined}
     style={({ pressed }) => [{ minWidth: r.activation.minimumTarget, minHeight: r.activation.minimumTarget, width: "100%", opacity: disabled ? r.activation.disabledOpacity : pressed ? r.activation.pressedOpacity : 1 }, layoutStyle]}>{content}</Pressable>;

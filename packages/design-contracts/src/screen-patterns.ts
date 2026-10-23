@@ -1,5 +1,5 @@
 import { control, glyph, layout, opacity, radius, spacing } from "./foundations.js";
-import { avatarRecipe, emptyStateRecipe } from "./component-recipes.js";
+import { avatarRecipe, emptyStateRecipe, type CornerAccessoryPlacement } from "./component-recipes.js";
 import type { MenuItemDescriptor } from "./behaviors.js";
 
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
@@ -727,7 +727,16 @@ export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, m
   // Standalone tile activation must not add Button face padding around a narrow launcher cell.
   activation: Object.freeze({ minimumTarget: control.minTouchTarget, pressedOpacity: opacity.pressed, disabledOpacity: opacity.disabled }),
   fillMinSize: 48, fillMaxSize: 68,
-  defaults: Object.freeze({ frame: "surface" as IconTileFrame, shape: "squircle" as IconTileShape, size: "fixed" as IconTileSize }) });
+  /**
+   * `locked`: the tile stays pressable so the product can explain why (sign-in required), drawn at the disabled
+   * opacity, and its name gains the product's `lockedLabel`. Utilverse ToolboxScreen dimmed an outer View with
+   * activation.disabledOpacity and put the lock badge at `right: -4, top: -4` (2026-10-23); the corner accessory keeps
+   * full opacity so the reason mark stays legible.
+   */
+  locked: Object.freeze({ opacity: opacity.disabled }),
+  /** Corner mark on the icon frame; `offset` is the outward overhang (Asset/Avatar meaning), spacing.xxs 4. */
+  accessory: Object.freeze({ offset: spacing.xxs }),
+  defaults: Object.freeze({ frame: "surface" as IconTileFrame, shape: "squircle" as IconTileShape, size: "fixed" as IconTileSize, accessoryPlacement: "top-end" as CornerAccessoryPlacement }) });
 
 /**
  * What an IconTile passes to an `icon` render function: the rendered icon edge (`iconSize` for `fixed`, the measured

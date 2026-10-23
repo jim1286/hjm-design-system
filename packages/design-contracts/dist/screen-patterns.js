@@ -560,7 +560,16 @@ export const iconTileRecipe = Object.freeze({ iconSize: 64, labelMaxWidth: 72, m
     // Standalone tile activation must not add Button face padding around a narrow launcher cell.
     activation: Object.freeze({ minimumTarget: control.minTouchTarget, pressedOpacity: opacity.pressed, disabledOpacity: opacity.disabled }),
     fillMinSize: 48, fillMaxSize: 68,
-    defaults: Object.freeze({ frame: "surface", shape: "squircle", size: "fixed" }) });
+    /**
+     * `locked`: the tile stays pressable so the product can explain why (sign-in required), drawn at the disabled
+     * opacity, and its name gains the product's `lockedLabel`. Utilverse ToolboxScreen dimmed an outer View with
+     * activation.disabledOpacity and put the lock badge at `right: -4, top: -4` (2026-10-23); the corner accessory keeps
+     * full opacity so the reason mark stays legible.
+     */
+    locked: Object.freeze({ opacity: opacity.disabled }),
+    /** Corner mark on the icon frame; `offset` is the outward overhang (Asset/Avatar meaning), spacing.xxs 4. */
+    accessory: Object.freeze({ offset: spacing.xxs }),
+    defaults: Object.freeze({ frame: "surface", shape: "squircle", size: "fixed", accessoryPlacement: "top-end" }) });
 /** The edge a `size="fill"` icon takes in a cell of `cellWidth`, for layout estimates made before the tile measures. */
 export function resolveIconTileFillEdge(cellWidth) {
     if (!Number.isFinite(cellWidth) || cellWidth < 0)

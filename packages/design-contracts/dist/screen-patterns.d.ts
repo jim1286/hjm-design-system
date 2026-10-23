@@ -1,3 +1,4 @@
+import { type CornerAccessoryPlacement } from "./component-recipes.js";
 import type { MenuItemDescriptor } from "./behaviors.js";
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
 export type ScreenContentState = Readonly<{
@@ -634,10 +635,24 @@ export declare const iconTileRecipe: Readonly<{
     }>;
     fillMinSize: 48;
     fillMaxSize: 68;
+    /**
+     * `locked`: the tile stays pressable so the product can explain why (sign-in required), drawn at the disabled
+     * opacity, and its name gains the product's `lockedLabel`. Utilverse ToolboxScreen dimmed an outer View with
+     * activation.disabledOpacity and put the lock badge at `right: -4, top: -4` (2026-10-23); the corner accessory keeps
+     * full opacity so the reason mark stays legible.
+     */
+    locked: Readonly<{
+        opacity: 0.5;
+    }>;
+    /** Corner mark on the icon frame; `offset` is the outward overhang (Asset/Avatar meaning), spacing.xxs 4. */
+    accessory: Readonly<{
+        offset: 4;
+    }>;
     defaults: Readonly<{
         frame: IconTileFrame;
         shape: IconTileShape;
         size: IconTileSize;
+        accessoryPlacement: CornerAccessoryPlacement;
     }>;
 }>;
 /**

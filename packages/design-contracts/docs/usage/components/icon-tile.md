@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.26.0
-- 검토일: 2026-10-20
+- 검토일: 2026-10-23
 - 근거: `src/screen-patterns.ts`의 `iconTileRecipe`
 - 스토리북: `배포/컴포넌트/데이터 표시/아이콘 타일`
 
@@ -58,7 +58,9 @@ import { IconTile } from "@hjmds/react-native/screens";
 | onActivate · activationLabel · disabled | callback · string · boolean | 없음 · label · false | 미게시. 단순 항목 열기는 IconTile 자체의 버튼을 사용한다. 44 최소 대상/키보드/초점/비활성/누름 피드백을 HJM이 제공한다 |
 | Native `onLongPress` · `activationHint` | callback · string | 없음 | 미게시. `onActivate`와 함께 길게 누르기 미리보기·메뉴를 연결한다. 비활성일 때 두 행동을 모두 막고 설명은 버튼의 접근성 hint로 전달한다. Web prop으로 제공하지 않는다 |
 | layoutStyle | 배치 전용 style | 없음 | 정적 타일 또는 interactive 루트의 폭·외부 배치 |
-| overlay | ReactNode | 없음 | 제품 배지 |
+| overlay | ReactNode | 없음 | 틀 안 자유 배치 슬롯(기존). 모서리 표식은 `accessory`를 쓴다 |
+| `accessory` · `accessoryPlacement` | `ReactNode` · `"top-end"` · `"bottom-end"` | 없음 · `"top-end"` | 아이콘 틀 모서리 표식(잠금·대기·개수). `iconTileRecipe.accessory.offset` 4만큼 바깥으로 나가고 `locked`에도 흐려지지 않는다. 누르는 타일 안에서는 보조기기에서 숨기므로 뜻은 `lockedLabel`·`activationLabel`에 담는다(미게시, 2026-10-23) |
+| `locked` · `lockedLabel` | boolean · string | false · 없음 | 눌리지만 흐린 잠금 상태(`iconTileRecipe.locked.opacity` = 비활성 투명도). `onActivate`가 그대로 불려 제품이 이유를 보여 준다. 접근성 이름은 `"<이름>, <lockedLabel>"`. `onActivate`·`lockedLabel` 없이 쓰면 `TypeError`(미게시, 2026-10-23) |
 | labelLines | 1 또는 2 | 1 | 제목 줄 수 |
 | ghost | boolean | false | 이동 대상 표시 |
 | frame | `"surface"` · `"none"` | `"surface"` | 미게시(1.30.0 이후). `surface`는 공통 틀(`surfaceAlt` 채움 + 테두리 1), `none`은 틀을 그리지 않는다. 아이콘 원본이 이미 완성된 런처 아이콘(모양·배경 포함)일 때 `none` |
@@ -89,6 +91,15 @@ import { IconTile } from "@hjmds/react-native/screens";
 ## 상태와 상호작용
 
 `onActivate`가 없으면 표시 전용이며, 있으면 HJM이 버튼·누름 피드백·비활성을 소유한다.
+`disabled`는 누를 수 없는 상태, `locked`는 누르면 이유를 보여 주는 상태다. 잠금 타일을 바깥 View의
+`opacity`로 흐리게 하거나 잠금 배지를 `right: -4, top: -4` 같은 절대 좌표로 놓지 않는다(2026-10-23 유틸버스 우회).
+
+```tsx
+// Native — Web도 같은 prop(onActivate 대신 클릭)
+<IconTile label={name} icon={({ edge }) => <ToolArtwork size={edge} />} size="fill" frame="none"
+  onActivate={() => open(tool)} locked={!signedIn} lockedLabel={t("loginRequiredBadge")}
+  accessory={!signedIn ? <LockBadge /> : undefined} />
+```
 Native의 길게 누르기 미리보기는 `onLongPress`에 제품 콜백을 연결한다. 별도 Pressable로 감싸지 않는다.
 실제 끌기·재배열 같은 제품 제스처는 정적 타일을 기존 gesture host에 넣어 유지한다.
 

@@ -201,6 +201,7 @@
     "components-data-display-icon-tile--dark",
     "components-data-display-icon-tile--default",
     "components-data-display-icon-tile--large-text",
+    "components-data-display-icon-tile--locked",
     "components-data-display-image--dark",
     "components-data-display-image--default",
     "components-data-display-image--full-screen-photo",

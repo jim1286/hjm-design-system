@@ -476,6 +476,10 @@ HJM 1.31.0 채택 뒤에도 제품이 공통 계산을 다시 하던 세 지점�
 - `IconTile.icon`은 함수도 받는다. 함수는 `IconTileArtwork`(`{ edge }`: `fixed`는 64, `fill`은 측정한 칸 크기)를 받아
   고정 크기 이미지가 스스로 크기를 맞춘다. 측정 전 추정이 필요한 host는 `resolveIconTileFillEdge(cellWidth)`로
   같은 48~68 제한을 쓴다. 유틸버스 런처가 이 제한을 격자 폭에서 다시 계산해 아트워크 크기로 넘겼다.
+- `IconTile` `locked`·`lockedLabel`·`accessory`·`accessoryPlacement`(2026-10-23): 눌러서 이유를 보는 잠금 상태와 틀 모서리
+  표식을 HJM이 소유한다. 잠금은 틀·제목만 `iconTileRecipe.locked.opacity`로 흐리고 표식은 그대로 두며, 표식은
+  `iconTileRecipe.accessory.offset` 4만큼 바깥으로 나간다(Asset·Avatar와 같은 뜻의 offset, 모서리 이름 `CornerAccessoryPlacement`).
+  유틸버스 ToolboxScreen이 바깥 View에 `activation.disabledOpacity`를 주고 배지를 `right: -4, top: -4`에 놓던 우회를 대신한다.
 - `BottomNavigationInsetProvider`의 덮인 높이는 ScreenLayout만 적용한다(patch). 사용 지침이 `scroll="content"` 화면에
   `useBottomNavigationInset()`을 다시 더하라고 안내해, 따르면 마지막 영역 여백과 목록 여백이 두 번 쌓였다. 코드는
   이미 한 곳(마지막 영역)만 적용했으므로 지침을 고치고 두 renderer에 한 번만 적용되는지 검사를 더했다.

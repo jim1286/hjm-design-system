@@ -1,5 +1,6 @@
 "use client";
 
+import { cornerAccessoryPlacements, type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { BottomEntryFocusBoundary, InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";
@@ -468,12 +469,22 @@ export type IconTileProps = Readonly<{
   onActivate?: () => void;
   activationLabel?: string;
   disabled?: boolean;
+  /** Pressable but dimmed (iconTileRecipe.locked) so `onActivate` can explain why. Requires `onActivate` and `lockedLabel`. */
+  locked?: boolean;
+  /** Localized lock reason appended to the accessible name ("Weather, sign-in required"). */
+  lockedLabel?: string;
+  /** Corner mark (lock, clock, count) on the icon frame, overhanging by iconTileRecipe.accessory.offset. */
+  accessory?: ReactNode;
+  accessoryPlacement?: CornerAccessoryPlacement;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
-export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, disabled = false, layoutStyle}: IconTileProps) {
+export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, disabled = false, locked = false, lockedLabel, accessory, accessoryPlacement = iconTileRecipe.defaults.accessoryPlacement, layoutStyle}: IconTileProps) {
   const r = iconTileRecipe;
   if (onActivate && !(activationLabel ?? label).trim()) throw new TypeError("Interactive IconTile requires a label");
+  if (locked && (!onActivate || !lockedLabel?.trim())) throw new TypeError("A locked IconTile needs onActivate and a lockedLabel");
+  if (!(cornerAccessoryPlacements as readonly string[]).includes(accessoryPlacement)) throw new TypeError(`Unsupported IconTile accessoryPlacement: ${accessoryPlacement}`);
+  const dim = ghost ? r.ghostOpacity : locked ? r.locked.opacity : 1;
   const framed = frame === "surface";
   // Percent radius follows the rendered size, so a filling icon keeps its shape at every cell width.
   const dimensions = size === "fill" ? {width: "100%", minWidth: r.fillMinSize, maxWidth: r.fillMaxSize, aspectRatio: "1"} : {width: r.iconSize, height: r.iconSize};
@@ -492,12 +503,16 @@ export function IconTile({icon, label, overlay, labelLines = 1, ghost = false, f
     return () => observer.disconnect();
   }, [measureEdge, r.fillMinSize]);
   const edge = size === "fill" ? fillEdge : r.iconSize;
-  const content = <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} style={{display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible", ...(onActivate ? {} : layoutStyle)}}>
-    <span ref={frameRef} style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: ghost ? r.ghostOpacity : 1, fontSize: 32}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</span>
-    <Text variant="caption" style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
+  const content = <span data-hjm-icon-tile="true" data-frame={frame} data-shape={shape} data-size={size} data-locked={locked || undefined} style={{position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: r.gap, minWidth: 0, width: "100%", overflow: "visible", ...(onActivate ? {} : layoutStyle)}}>
+    <span ref={frameRef} style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center", ...dimensions, boxSizing: "border-box", flexShrink: 0, borderRadius: `${Math.round(r.shapes[shape] * 100)}%`, background: framed ? "var(--hjm-color-surface-alt)" : undefined, color: "var(--hjm-color-text)", boxShadow: ghost || !framed ? undefined : "0 0 0 1px var(--hjm-color-border)", outline: ghost ? "1px dashed var(--hjm-color-text-muted)" : undefined, opacity: dim, fontSize: 32}}>{typeof icon === "function" ? icon({edge}) : icon}{overlay}</span>
+    {/* The accessory sits in a box laid over the frame (same size rules, centered) so dimming the frame never dims it. */}
+    {accessory ? <span aria-hidden={onActivate ? true : undefined} style={{position: "absolute", insetBlockStart: 0, left: "50%", transform: "translateX(-50%)", ...dimensions, boxSizing: "border-box", pointerEvents: "none"}}>
+      <span data-hjm-icon-tile-accessory={accessoryPlacement} style={{position: "absolute", display: "inline-flex", insetInlineEnd: -r.accessory.offset, ...(accessoryPlacement === "top-end" ? {insetBlockStart: -r.accessory.offset} : {insetBlockEnd: -r.accessory.offset})}}>{accessory}</span>
+    </span> : null}
+    <Text variant="caption" style={{opacity: locked ? r.locked.opacity : undefined, display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: labelLines, width: "100%", maxWidth: labelLines === 2 ? r.multilineLabelMaxWidth : r.labelMaxWidth, minHeight: labelLines === 2 ? r.multilineLabelMinHeight : undefined, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "normal", overflowWrap: "anywhere", textAlign: "center", fontWeight: 500}}>{label}</Text>
   </span>;
   if (!onActivate) return content;
-  return <button type="button" className="hjm-icon-tile-action" aria-label={activationLabel ?? label} disabled={disabled}
+  return <button type="button" className="hjm-icon-tile-action" aria-label={locked ? `${activationLabel ?? label}, ${lockedLabel}` : activationLabel ?? label} disabled={disabled}
     style={{ "--hjm-icon-tile-pressed-opacity": r.activation.pressedOpacity, "--hjm-icon-tile-disabled-opacity": r.activation.disabledOpacity,
       minWidth: r.activation.minimumTarget, minHeight: r.activation.minimumTarget, ...layoutStyle } as React.CSSProperties}
     onClick={() => { if (!disabled) onActivate(); }}>{content}</button>;
