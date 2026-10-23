@@ -22,7 +22,7 @@
 
 | 설정 | 쓸 것 |
 | --- | --- |
-| 설정 화면의 즉시 저장 한 값 선택(언어·화면 테마·기본 정렬·셸 테마) | ChoiceRow |
+| 설정 화면의 즉시 저장 한 값 선택(언어·화면 테마·기본 정렬·셸 테마) | ChoiceRow. 항목마다 그림이 필요하면 `ChoiceRowItem.leading` |
 | 폼 안에서 다른 필드와 함께 제출하는 한 값 | [Select](select.md) 또는 [RadioGroup](radio-group.md) |
 | 선택 외 입력·설명이 많은 편집 패널 | [Sheet](sheet.md)를 직접 구성 |
 
@@ -67,11 +67,11 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `value` | 선택지 값 또는 null | 필수 | 제품이 확인한 값. null이면 `placeholder`가 필요하다 |
-| `items` | `ChoiceRowItem[]` | 필수 | 2개 이상, 값 중복 금지. `description`·`disabled` 지원 |
+| `items` | `ChoiceRowItem[]` | 필수 | 2개 이상, 값 중복 금지. `description`·`disabled`·`leading`(항목 그림, 개발 소스·미게시) 지원 |
 | `onValueChange` | `(value) => void` 또는 `(value) => Promise<void>` | 필수 | 동기 저장은 시트를 바로 닫는다. Promise를 돌려주면 끝날 때까지 시트가 잠기고, 거부되면 시트를 연 채 `errorLabel`을 보인다 |
 | `errorLabel` | string | 비동기 저장일 때 필수 | 동기 저장에는 줄 수 없다. 시트 안 실패가 없기 때문이다(1.41.2) |
 | `sheetTitle`·`sheetDescription` | string | `title`·없음 | 시트 머리 |
-| `leading`·`trailing` | ReactNode | 없음 | 제품 아이콘·꼬리 표시. ListRow 슬롯 그대로 |
+| `leading`·`trailing` | ReactNode | `leading`은 확인된 항목의 `leading`, `trailing`은 없음 | 제품 아이콘·꼬리 표시. ListRow 슬롯 그대로. 행 `leading`을 주면 항목 그림보다 우선한다 |
 | `density` | ListRow density | ListRow 기본값 | 주변 설정 행과 같은 밀도(예: `compact`)를 맞춘다 |
 | Native `accessibilityHint` | string | 없음 | 행을 눌렀을 때 일어날 일(예: 언어 목록 열기)을 제품 언어로 |
 | `disabled`·`loading` | boolean | false | ListRow의 비활성·자리 유지 로딩 |
@@ -80,9 +80,9 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | ListRow 기본 높이와 터치 영역. 시트는 내용 높이(`size="auto"`) | [ListRow](list-row.md#배치), [Sheet](sheet.md#배치) |
+| 크기 | ListRow 기본 높이와 터치 영역. 시트는 내용 높이(`size="auto"`). 항목 그림은 `choiceRowRecipe.itemLeading` 40×40 상자 가운데에 놓이고 넘치면 잘린다(ListRow leading과 같은 크기) | [ListRow](list-row.md#배치), [Sheet](sheet.md#배치), `choiceRowRecipe` |
 | 간격 | ListRow·RadioGroup recipe 간격을 그대로 쓴다 | 같은 recipe |
-| 순서·정렬 | 행: leading → 제목·현재 값(description) → trailing. 시트: 제목 → 설명 → 세로 선택지 → 오류 | [설정 화면](../screens/common-settings.md#버튼과-행동-위치) |
+| 순서·정렬 | 행: leading → 제목·현재 값(description) → trailing. 시트: 제목 → 설명 → 세로 선택지(선택 표시 → 그림 → 이름·설명) → 오류. 그림이 있는 항목이 하나라도 있으면 그림 없는 항목도 빈 상자를 둬 이름 시작선을 맞춘다 | [설정 화면](../screens/common-settings.md#버튼과-행동-위치) |
 | 고정·스크롤 | 행은 바깥 화면 스크롤을 따른다. 선택지가 길면 시트 본문이 스크롤된다 | Sheet |
 | 좁은 폭·큰 글자 | 제목과 현재 값이 줄바꿈되며 행 높이가 늘어난다 | ListRow |
 
@@ -93,3 +93,4 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 - 저장 중에는 시트를 닫거나 다른 값을 고를 수 없다. 다시 고르면 이전 오류는 지워진다.
 - 행은 시트가 열렸는지를 낭독한다(Web `aria-expanded`·`aria-haspopup="dialog"`, Native `expanded`). 시트는 머리를 고정하고 선택지만 스크롤한다(1.41.1, utilverse 언어 행 이관에서 확인).
 - 문구·선택지·저장은 제품이 공급한다. 언어 목록이나 테마 적용 로직은 이 컴포넌트에 없다.
+- 항목 그림(`leading`)은 장식이다. 보조기술은 항목 이름(`label`)만 읽으므로 그림에만 있는 정보를 두지 않는다. 크기·정렬을 제품 style로 다시 맞추지 않는다(2026-10-23 유틸버스 셸 테마 그림 때문에 ChoiceRow 대신 `ListRow`+`Sheet`+`RadioGroup`을 조립했던 사례).

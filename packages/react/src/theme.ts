@@ -29,6 +29,7 @@ import {
   dialogRecipe,
   listRecipe,
   listRowRecipe,
+  choiceRowRecipe,
   dividerRecipe,
   menuRecipe,
   searchFieldRecipe,
@@ -130,6 +131,8 @@ export function createHjmThemeStyle(
   style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
   // Trailing value → disclosure chevron spacing (listRowRecipe.accessories), tighter than the row gap as on iOS.
   style["--hjm-list-row-accessory-gap"] = rem(listRowRecipe.accessories.disclosure.gap);
+  // ChoiceRow sheet item pictures share the row leading box (choiceRowRecipe.itemLeading).
+  style["--hjm-choice-row-item-leading-size"] = rem(choiceRowRecipe.itemLeading.size);
   // Dashed Divider rhythm (dividerRecipe.lineStyles.dashed) so the stylesheet keeps no copy of the numbers.
   style["--hjm-divider-dash"] = rem(dividerRecipe.lineStyles.dashed.dash);
   style["--hjm-divider-gap"] = rem(dividerRecipe.lineStyles.dashed.gap);

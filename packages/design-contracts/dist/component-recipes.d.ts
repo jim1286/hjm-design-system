@@ -963,6 +963,18 @@ export declare const listRowRecipe: {
         readonly disabledOpacity: 0.5;
     };
 };
+/**
+ * ChoiceRow per-item picture (2026-10-23: utilverse's shell theme row showed ThemeArtwork per choice and so rebuilt
+ * ListRow + Sheet + RadioGroup instead of ChoiceRow). The sheet draws each item's `leading` in the same box as the
+ * row's ListRow leading (40, centered, clipped), so the selected art reads the same in the row and in the sheet.
+ * When any item has a picture, items without one keep the empty box so every label starts on one line.
+ */
+export declare const choiceRowRecipe: {
+    readonly itemLeading: {
+        readonly size: 40;
+        readonly align: "center";
+    };
+};
 export declare function validateListRowTrailingAccessory(value: unknown): asserts value is ListRowTrailingAccessory;
 export type AccordionDensity = "compact" | "comfortable";
 export declare const accordionRecipe: {

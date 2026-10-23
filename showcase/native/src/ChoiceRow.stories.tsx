@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ChoiceRow } from "@hjmds/react-native/choice-row";
-import { choiceRowExample as copy, type ChoiceRowExampleValue } from "../../shared/choice-row";
+import { View } from "react-native";
+import { choiceRowExample as copy, choiceRowPictureExample as pictures, type ChoiceRowExampleValue, type ChoiceRowPictureValue } from "../../shared/choice-row";
 
 // The row shows only the confirmed value; the in-memory save stands in for the product's server write.
 function ChoiceRowPreview({ failFirst = false }: { failFirst?: boolean }) {
@@ -13,10 +14,17 @@ function ChoiceRowPreview({ failFirst = false }: { failFirst?: boolean }) {
   });
   return <ChoiceRow title={copy.title} sheetDescription={copy.sheetDescription} items={copy.items} value={value} onValueChange={save} closeLabel={copy.closeLabel} errorLabel={copy.errorLabel} />;
 }
+// Each choice carries its own picture; the row shows the confirmed one and the sheet boxes them all.
+function PicturedPreview() {
+  const [value, setValue] = useState<ChoiceRowPictureValue>(pictures.initial);
+  return <ChoiceRow title={pictures.title} value={value} onValueChange={setValue} closeLabel={pictures.closeLabel}
+    items={pictures.items.map(({ swatch, ...item }) => ({ ...item, leading: <View style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: swatch }} /> }))} />;
+}
 const meta = { title: "배포/컴포넌트/입력/설정 값 선택", component: ChoiceRowPreview } satisfies Meta<typeof ChoiceRowPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const SaveFailure: Story = { name: "저장 실패와 다시 선택", args: { failFirst: true } };
+export const Pictured: Story = { name: "그림이 있는 선택지", render: () => <PicturedPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

@@ -47,3 +47,26 @@ it("closes at once for a synchronous save and passes the row density through", (
   expect(tree.root.findByType(Sheet).props.open).toBe(false);
   act(() => tree.unmount());
 });
+
+it("shows the confirmed item's picture on the row and boxes every item's picture in the sheet", () => {
+  const art = (name: string) => <ListRow title={name} />;
+  const pictured = [{ value: "meadow", label: "들판", leading: art("meadow") }, { value: "night", label: "밤하늘", leading: art("night") }, { value: "plain", label: "기본" }];
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><ChoiceRow title="셸 테마" items={pictured} value="night" onValueChange={() => {}} closeLabel="닫기" /></HjmNativeProvider>); });
+  const row = tree.root.findAllByType(ListRow)[0]!;
+  expect(row.props.leading.props.title).toBe("night");
+  act(() => row.props.onPress());
+  const sheetItems = tree.root.findByType(RadioGroup).props.items as readonly { leading: { props: { style: { width: number; height: number }; children: unknown } } }[];
+  expect(sheetItems.map((item) => [item.leading.props.style.width, item.leading.props.style.height])).toEqual([[40, 40], [40, 40], [40, 40]]);
+  expect(sheetItems.map((item) => (item.leading.props.children as { props?: { title: string } } | undefined)?.props?.title ?? null)).toEqual(["meadow", "night", null]);
+  act(() => tree.unmount());
+});
+
+it("keeps the product row leading and leaves items unboxed without pictures", () => {
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><ChoiceRow title="언어" leading="icon" items={items} value="ko" onValueChange={() => {}} closeLabel="닫기" /></HjmNativeProvider>); });
+  expect(tree.root.findByType(ListRow).props.leading).toBe("icon");
+  act(() => tree.root.findByType(ListRow).props.onPress());
+  expect((tree.root.findByType(RadioGroup).props.items as readonly { leading?: unknown }[]).every((item) => item.leading === undefined)).toBe(true);
+  act(() => tree.unmount());
+});

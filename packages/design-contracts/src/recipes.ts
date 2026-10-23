@@ -26,6 +26,7 @@ export {
   badgeRecipe,
   resolveBadgeCategoryColor,
   validateListRowTrailingAccessory,
+  choiceRowRecipe,
   validateDividerLineStyle,
   bottomNavigationRecipe,
   bottomCtaRecipe,

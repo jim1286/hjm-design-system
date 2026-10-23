@@ -453,6 +453,15 @@ export const listRowRecipe = {
         disabledOpacity: opacity.disabled,
     },
 };
+/**
+ * ChoiceRow per-item picture (2026-10-23: utilverse's shell theme row showed ThemeArtwork per choice and so rebuilt
+ * ListRow + Sheet + RadioGroup instead of ChoiceRow). The sheet draws each item's `leading` in the same box as the
+ * row's ListRow leading (40, centered, clipped), so the selected art reads the same in the row and in the sheet.
+ * When any item has a picture, items without one keep the empty box so every label starts on one line.
+ */
+export const choiceRowRecipe = {
+    itemLeading: { size: listRowLeadingSize, align: "center" },
+};
 export function validateListRowTrailingAccessory(value) {
     if (value !== "none" && value !== "disclosure")
         throw new TypeError(`Unsupported ListRow trailingAccessory: ${String(value)}`);

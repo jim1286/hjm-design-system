@@ -1081,6 +1081,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    the avatar box in product styles. */
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
 .hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
+/* ChoiceRow sheet item picture: the row leading box (choiceRowRecipe.itemLeading), empty for items without one. */
+.hjm-choice-row__item-leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-choice-row-item-leading-size); block-size: var(--hjm-choice-row-item-leading-size); overflow: hidden; }
 /* Photo source peers share ListRow geometry; only their decorative brand plate is specialized. */
 .hjm-photo-source__icon { display: grid; place-items: center; inline-size: 100%; block-size: 100%; border-radius: var(--hjm-radius-md); }
 .hjm-photo-source__icon svg { inline-size: 24px; block-size: 24px; }

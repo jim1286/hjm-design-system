@@ -383,6 +383,7 @@
     "components-input-choice-row--dark",
     "components-input-choice-row--default",
     "components-input-choice-row--large-text",
+    "components-input-choice-row--pictured",
     "components-input-choice-row--save-failure",
     "components-inputs--agreement",
     "components-inputs--checkbox",
