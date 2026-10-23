@@ -59,7 +59,8 @@ function EventAttendanceBody(props: EventAttendanceCardProps) {
   return <Card title={props.title} description={props.description}><Stack gap="md">
     <Text>{props.dateLabel}</Text>
     <AnimatedStatistic descriptor={{ id: "social-count", label: props.labels.count }} value={displayed.count} locale={props.locale} />
-    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs" align="center">{person.avatar ?? <Avatar name={person.name} decorative />}<Text>{person.name}</Text></Stack>)}</Stack>
+    {/* A long name wraps beside its avatar inside the card instead of overflowing it (2026-10-23 layout audit). */}
+    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs" align="center" layoutStyle={{maxWidth: "100%"}}>{person.avatar ?? <Avatar name={person.name} decorative />}<Text style={{flexShrink: 1}}>{person.name}</Text></Stack>)}</Stack>
     {/* One answer out of several is a radio choice; selected primary Buttons gave the card three primaries.
         RadioGroup (not SegmentedControl) keeps the "no answer yet" state that responseId=null needs; plain keeps
         three short answers on one line inside the card. */}

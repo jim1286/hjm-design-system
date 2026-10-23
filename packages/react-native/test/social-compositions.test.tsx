@@ -34,3 +34,15 @@ it("rolls back attendee proposals and allows retry after calendar permission rej
  await act(async () => tree!.root.findByType(Button).props.onPress()); expect(tree!.root.findByType(Button).props.children).toBe("캘린더에 추가");
  await act(async () => tree!.root.findByType(Button).props.onPress()); expect(calendar).toHaveBeenCalledTimes(2); expect(tree!.root.findByType(Button).props.children).toBe("캘린더 추가 완료");
 });
+
+// 2026-10-23 layout audit: a long participant name overflowed the card next to its avatar.
+it("lets a long participant name wrap beside its avatar inside the card", async () => {
+ const { Text, StyleSheet } = await import("react-native");
+ const name = "아주 긴 참여자 이름 ".repeat(6);
+ act(() => { tree = create(<HjmNativeProvider reducedMotion><EventAttendanceCard eventId="event" title="산책" dateLabel="10월 20일" state={{ responseId: null, count: 1 }} choices={choices} participants={[{ id: "a", name }]} locale="ko-KR" labels={eventLabels} onResponseChange={() => undefined} onAddToCalendar={() => undefined} /></HjmNativeProvider>); });
+ const label = tree!.root.findAll(node => node.type === Text && node.props.children === name)[0]!;
+ expect(StyleSheet.flatten(label.props.style)?.flexShrink).toBe(1);
+ let group = label.parent;
+ while (group && StyleSheet.flatten(group.props.style)?.flexDirection !== "row") group = group.parent;
+ expect(StyleSheet.flatten(group!.props.style)?.maxWidth).toBe("100%");
+});
