@@ -24,7 +24,7 @@ it("draws a decorative title mark beside the heading, or as the heading when the
   expect(heading.textContent).toBe("LG 트윈스");
   const mark = host.querySelector(".hjm-screen__title-leading")!;
   expect(mark.getAttribute("aria-hidden")).toBe("true");
-  // Mark, heading and badge share one centered row.
+  // Mark and heading share one group (the badge wraps after it).
   expect(mark.parentElement).toBe(heading.parentElement);
 
   await act(async () => root.render(<HjmProvider><div style={{ height: 400 }}><ScreenLayout title="LG 트윈스" titleVisibility="hidden" titleLeading={<span>LG</span>}><p>본문</p></ScreenLayout></div></HjmProvider>));

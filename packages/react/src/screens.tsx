@@ -127,7 +127,11 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   // The mark is decorative beside a visible title; standing alone it becomes the heading, named by `title`.
   const mark = hasMark ? <span className="hjm-screen__title-leading" aria-hidden="true">{titleLeading}</span> : null;
   const titleRow = (level: typeof screenHeaderRecipe.titleLevel | typeof screenHeaderRecipe.centeredTitleLevel, justify: "center" | "start") => titleVisibility === "visible"
-    ? <Stack axis="inline" gap="xs" align="center" justify={justify} wrap>{mark}<Heading level={level} semanticLevel={1} id={id}>{title}</Heading>{titleBadge}</Stack>
+    ? <Stack axis="inline" gap="xs" align="center" justify={justify} wrap>{mark
+      // A mark labels its title: one non-wrapping group whose heading shrinks and wraps beside the mark. In the wrapping
+      // row the heading's max-content basis dropped a long title under a lone mark (2026-10-23, as CompositionLayout).
+      ? <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexShrink: 1, minWidth: 0, maxWidth: "100%"}}>{mark}<Heading level={level} semanticLevel={1} id={id} layoutStyle={{minWidth: 0}}>{title}</Heading></Stack>
+      : <Heading level={level} semanticLevel={1} id={id}>{title}</Heading>}{titleBadge}</Stack>
     : mark ? <div role="heading" aria-level={1} aria-label={title} style={{ display: "flex", justifyContent: justify === "center" ? "center" : "flex-start" }}>{mark}</div> : null;
   return <Element aria-labelledby={header || titleVisibility === "hidden" ? undefined : id} aria-label={header || titleVisibility === "hidden" ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
     style={{ backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}><InitialFocusScope mode={initialFocus}>
