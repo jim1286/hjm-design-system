@@ -59,6 +59,7 @@ export {
   checkboxBehaviorDefaults,
   getCheckboxNextState,
   reconcileCheckboxSelection,
+  resolveScrollRevealOffset,
   toggleCheckboxSelection,
   type CheckboxState,
   type MixedCheckboxActivation,

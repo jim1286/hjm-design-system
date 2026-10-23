@@ -6832,6 +6832,10 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly disabledOpacity: 0.5;
         };
+        readonly overflow: {
+            readonly default: "wrap";
+            readonly scrollInset: 4;
+        };
     };
     readonly sectionRecipe: {
         readonly slots: readonly ["root", "header", "copy", "title", "description", "action", "content"];

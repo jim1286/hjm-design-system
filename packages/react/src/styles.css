@@ -897,6 +897,14 @@
 .hjm-choice[data-presentation="chips"][data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); }
 .hjm-choice[data-presentation="chips"][data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
 .hjm-choice[data-presentation="chips"].hjm-choice--with-action { padding: 0; }
+/* selectionGroupRecipe.overflow (2026-10-23): CheckboxGroup chips on one scrolling line, the same meaning as
+   SegmentedControl overflow="scroll". The scrollport keeps scrollInset (spacing.xxs 4) on every side so the focus ring
+   (2 + offset 2) and the small chip hit slop are not clipped and the last chip ends like the first starts; the
+   negative margin keeps the chips aligned with the column. The items row sits inside the scroller, so the chip row
+   rule above (a direct-child selector) is restated here. */
+.hjm-checkbox-group__scroller { min-inline-size: 0; overflow-x: auto; padding: var(--hjm-space-xxs); margin: calc(-1 * var(--hjm-space-xxs)); }
+.hjm-checkbox-group[data-presentation="chips"][data-overflow="scroll"] .hjm-checkbox-group__items { flex-direction: row; flex-wrap: nowrap; gap: var(--hjm-space-xs); inline-size: max-content; }
+.hjm-checkbox-group[data-presentation="chips"][data-overflow="scroll"] .hjm-choice { flex-shrink: 0; }
 .hjm-choice[data-presentation="chips"] > .hjm-choice__target { padding-block: 0; }
 .hjm-choice[data-presentation="chips"] .hjm-choice__indicator { display: none; }
 .hjm-choice[data-presentation="chips"] .hjm-choice__leading { color: inherit; }

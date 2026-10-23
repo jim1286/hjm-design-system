@@ -110,6 +110,7 @@ export {
   type SelectionControlPresentation,
   type SelectionControlSize,
   type SelectionGroupOrientation,
+  type SelectionGroupOverflow,
   type SelectionGroupPresentation,
   type SpinnerSize,
   type SpinnerTone,

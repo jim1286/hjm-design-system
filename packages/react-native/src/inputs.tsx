@@ -32,6 +32,7 @@ import {
   type SearchFieldSize,
   type SegmentedControlSize,
   type SelectionControlPresentation,
+  type SelectionGroupOverflow,
   type SelectionControlSize,
   type SwitchSize,
   type SwitchPresentation,
@@ -67,6 +68,7 @@ import {
   resolveRadioTabStop,
   resolveInitialTabValue,
   reconcileRadioSelection,
+  resolveScrollRevealOffset,
   selectionGroupBehaviorDefaults,
   toggleCheckboxSelection,
   validateCheckboxSelection,
@@ -102,6 +104,7 @@ import {
   TextInput,
   View,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
   type SwitchProps as NativeSwitchProps,
   type TextInputProps,
 } from "react-native";
@@ -1127,6 +1130,9 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   onActivate: () => void;
   /** Roving tabindex position inside a radio group. Web renderer only. */
   webTabIndex?: number | undefined;
+  /** Chip rail (CheckboxGroup overflow="scroll") measures each chip and reveals the focused one. */
+  onRailLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  onRailFocus?: (() => void) | undefined;
 }>;
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
@@ -1154,6 +1160,8 @@ function ChoiceRow({
   onActivate,
   webTabIndex,
   layoutStyle,
+  onRailLayout,
+  onRailFocus,
 }: ChoiceRowProps) {
   const theme = useHjmNativeTheme();
   const metrics = selectionControlRecipe.sizes[size];
@@ -1213,6 +1221,8 @@ function ChoiceRow({
       }))}
       disabled={disabled || readOnly}
       hitSlop={chips ? chipMetrics.hitSlop : plate.useSizePadding ? 0 : metrics.hitSlop}
+      {...(onRailFocus ? { onFocus: onRailFocus } : {})}
+      {...(onRailLayout && !action ? { onLayout: onRailLayout } : {})}
       onPress={() => {
         if (!readOnly) onActivate();
       }}
@@ -1292,7 +1302,7 @@ function ChoiceRow({
   if (!action) return target;
   // The selection target owns its accessible label; the action is a separate sibling
   // so rename/manage never changes the selected option or nests a button in a radio.
-  return <View style={[{
+  return <View {...(onRailLayout ? { onLayout: onRailLayout } : {})} style={[{
     alignItems: "center", alignSelf: chips ? "flex-start" : "stretch", flexDirection: "row", direction: theme.environment.direction,
     minHeight: rowMinHeight,
     flexGrow: presentation === "card" ? 1 : undefined,
@@ -1484,6 +1494,37 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
   }>;
 
+type ChipRail = Readonly<{
+  ref: React.RefObject<ComponentRef<typeof ScrollView> | null>;
+  onScroll: (event: { nativeEvent: { contentOffset: { x: number } } }) => void;
+  onViewportLayout: (event: LayoutChangeEvent) => void;
+  itemLayout: (id: string) => (event: LayoutChangeEvent) => void;
+  reveal: (id: string) => void;
+}>;
+
+/** Measures chips in the rail and scrolls the least distance that shows a focused chip (resolveScrollRevealOffset). */
+function useChipRail(enabled: boolean): ChipRail | undefined {
+  const ref = useRef<ComponentRef<typeof ScrollView>>(null);
+  const offset = useRef(0);
+  const viewport = useRef(0);
+  const rects = useRef<Record<string, Readonly<{ x: number; width: number }>>>({});
+  if (!enabled) return undefined;
+  return {
+    ref,
+    onScroll: event => { offset.current = event.nativeEvent.contentOffset.x; },
+    onViewportLayout: event => { viewport.current = event.nativeEvent.layout.width; },
+    itemLayout: id => event => { const { x, width } = event.nativeEvent.layout; rects.current[id] = { x, width }; },
+    reveal: id => {
+      const rect = rects.current[id];
+      if (!rect || viewport.current <= 0) return;
+      // Layout x is inside the padded content row; the scroll offset counts the content padding too.
+      const inset = selectionGroupRecipe.overflow.scrollInset;
+      const next = resolveScrollRevealOffset(offset.current, viewport.current, rect.x + inset, rect.width, inset);
+      if (next !== offset.current) { offset.current = next; ref.current?.scrollTo({ x: next, animated: false }); }
+    },
+  };
+}
+
 function ChoiceGroupFrame({
   label,
   accessibilityLabel,
@@ -1499,6 +1540,7 @@ function ChoiceGroupFrame({
   presentation,
   grid,
   layoutStyle,
+  rail,
   children,
 }: Readonly<{
   label?: string | undefined;
@@ -1515,6 +1557,8 @@ function ChoiceGroupFrame({
   grid?: GridDescriptor | undefined;
   presentation: SelectionControlPresentation;
   layoutStyle?: HjmCompositionStyleProp | undefined;
+  /** Chip rail for overflow="scroll"; the frame owns the scroll view and its inset. */
+  rail?: ChipRail | undefined;
   children: ReactNode;
 }>) {
   const theme = useHjmNativeTheme();
@@ -1549,7 +1593,24 @@ function ChoiceGroupFrame({
       {description && !error ? (
         <Text tone="muted" variant={selectionGroupRecipe.description.textVariant}>{description}</Text>
       ) : null}
-      {grid ? <Grid {...grid}>{children}</Grid> : (
+      {rail ? (
+        // Same scroller as SegmentedControl overflow="scroll": an LTR scroll view with the reading direction on
+        // its row. selectionGroupRecipe.overflow.scrollInset pads every side (focus ring, chip hit slop, equal end
+        // gap) and the negative margin keeps the chips aligned with the column.
+        <ScrollView
+          ref={rail.ref}
+          horizontal
+          keyboardShouldPersistTaps="handled"
+          onScroll={rail.onScroll}
+          scrollEventThrottle={16}
+          showsHorizontalScrollIndicator={false}
+          onLayout={rail.onViewportLayout}
+          style={{ direction: "ltr", flexGrow: 0, margin: -selectionGroupRecipe.overflow.scrollInset }}
+          contentContainerStyle={{ padding: selectionGroupRecipe.overflow.scrollInset }}
+        >
+          <View style={{ direction: theme.environment.direction, flexDirection: "row", flexWrap: "nowrap", gap }}>{children}</View>
+        </ScrollView>
+      ) : grid ? <Grid {...grid}>{children}</Grid> : (
         <View style={{
           direction: theme.environment.direction,
           flexDirection: presentation === "chips" || (orientation === "horizontal" && theme.environment.textScale < 1.6) ? "row" : "column",
@@ -1681,6 +1742,12 @@ export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisua
   CheckboxGroupSelection<Value> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
+    /**
+     * Chip line overflow, the same meaning as SegmentedControl `overflow`: `wrap` (default) breaks onto more lines,
+     * `scroll` keeps one horizontal line and scrolls a focused chip into view. Requires `presentation="chips"`
+     * without `grid`.
+     */
+    overflow?: SelectionGroupOverflow;
     items: readonly SelectionItemDescriptor<Value>[];
     renderLeading?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
@@ -1706,6 +1773,7 @@ export function CheckboxGroup<Value extends string = string>({
   orientation = selectionGroupBehaviorDefaults.orientation,
   grid,
   presentation = selectionGroupRecipe.defaults.presentation,
+  overflow = selectionGroupRecipe.overflow.default,
   size = selectionControlRecipe.defaults.size,
   indicator = "default",
   renderLeading,
@@ -1714,6 +1782,10 @@ export function CheckboxGroup<Value extends string = string>({
   ...slotStyles
 }: CheckboxGroupProps<Value>) {
   validateSelectionItems(items);
+  if (overflow === "scroll" && (presentation !== "chips" || grid)) {
+    throw new TypeError('CheckboxGroup overflow="scroll" requires presentation="chips" without grid');
+  }
+  const rail = useChipRail(overflow === "scroll");
   if (value !== undefined) validateCheckboxSelection(items, value);
   const [storedValue, setSelected] = useControllableState<ReadonlySet<Value>>({
     ...(value === undefined ? {} : { value }),
@@ -1740,6 +1812,7 @@ export function CheckboxGroup<Value extends string = string>({
       required={required}
       requiredLabel={requiredLabel}
       layoutStyle={layoutStyle}
+      rail={rail}
     >
       {items.map((item) => {
         const optionDisabled = disabled || item.disabled === true;
@@ -1765,6 +1838,8 @@ export function CheckboxGroup<Value extends string = string>({
             required={required}
             requiredLabel={requiredLabel}
             size={size}
+            onRailLayout={rail?.itemLayout(item.id)}
+            onRailFocus={rail ? () => rail.reveal(item.id) : undefined}
           />
         );
       })}
@@ -2083,8 +2158,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   const reveal = (rect: SelectionHighlightRect | undefined) => {
     if (!scrollRow || !rect || trackWidth <= 0) return;
     const offset = railOffset.current;
-    const next = rect.x < offset ? Math.max(0, rect.x) : rect.x + rect.width > offset + trackWidth
-      ? Math.max(0, rect.x + rect.width - trackWidth) : offset;
+    const next = resolveScrollRevealOffset(offset, trackWidth, rect.x, rect.width);
     if (next !== offset) { railOffset.current = next; railRef.current?.scrollTo({ x: next, animated: false }); }
   };
   useEffect(() => { reveal(selectedRect); }, [selectedRect, trackWidth, scrollRow]);

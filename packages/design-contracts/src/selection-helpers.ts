@@ -77,3 +77,14 @@ export function reconcileCheckboxSelection<Key extends string>(
   const reconciled = [...current].filter((id) => knownIds.has(id));
   return reconciled.length === current.size ? current : new Set(reconciled);
 }
+
+/**
+ * Smallest scroll offset that shows an item inside a horizontal rail (SegmentedControl / CheckboxGroup
+ * `overflow="scroll"`). `start`/`size` are the item's position and width in content coordinates; `inset` keeps
+ * that much room around the item (focus ring, hit slop). Returns the current offset when the item is already shown.
+ */
+export function resolveScrollRevealOffset(offset: number, viewport: number, start: number, size: number, inset = 0): number {
+  if (start - inset < offset) return Math.max(0, start - inset);
+  if (start + size + inset > offset + viewport) return Math.max(0, start + size + inset - viewport);
+  return offset;
+}

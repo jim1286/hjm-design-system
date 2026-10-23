@@ -15,6 +15,7 @@ import {
   type SelectionControlPresentation,
   type SelectionControlSize,
   type SelectionGroupOrientation,
+  type SelectionGroupOverflow,
   type SelectionGroupPresentation,
   type SwitchSize,
   type SwitchPresentation,
@@ -355,6 +356,17 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   );
 });
 
+/**
+ * Minimal horizontal scroll that shows `option` inside `viewport` with `inset` room around it. Shared by
+ * SegmentedControl and CheckboxGroup `overflow="scroll"`; rect deltas work in both reading directions.
+ */
+function revealInScroller(viewport: HTMLElement, option: Element, inset = 0): void {
+  const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
+  const delta = bounds.left - inset < frame.left ? bounds.left - inset - frame.left
+    : bounds.right + inset > frame.right ? bounds.right + inset - frame.right : 0;
+  if (delta) viewport.scrollBy({ left: delta, behavior: "instant" });
+}
+
 function ChoiceItems({ grid, className, children }: Readonly<{ grid: GridDescriptor | undefined; className: string; children: ReactNode }>) {
   return grid ? <Grid {...grid}>{children}</Grid> : <div className={className}>{children}</div>;
 }
@@ -376,6 +388,12 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<
     /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
     grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
+    /**
+     * Chip line overflow, the same meaning as SegmentedControl `overflow`: `wrap` (default) breaks onto more lines,
+     * `scroll` keeps one horizontal line and scrolls a focused chip into view. Requires `presentation="chips"`
+     * without `grid`.
+     */
+    overflow?: SelectionGroupOverflow;
     size?: SelectionControlSize;
     name?: string;
     required?: boolean;
@@ -401,6 +419,7 @@ function CheckboxGroupInner<Key extends string>(
     orientation = selectionGroupRecipe.defaults.orientation,
     grid,
     presentation = selectionGroupRecipe.defaults.presentation,
+    overflow = selectionGroupRecipe.overflow.default,
     size = selectionControlRecipe.defaults.size,
     name,
     required = false,
@@ -422,6 +441,10 @@ function CheckboxGroupInner<Key extends string>(
     accessibilityLabel,
     "CheckboxGroup",
   );
+  if (overflow === "scroll" && (presentation !== "chips" || grid)) {
+    throw new TypeError('CheckboxGroup overflow="scroll" requires presentation="chips" without grid');
+  }
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [value, setValue] = useControllableState<ReadonlySet<Key>>({
     ...(valueProp === undefined ? {} : { value: valueProp }),
     defaultValue: defaultValue ?? new Set<Key>(),
@@ -446,6 +469,12 @@ function CheckboxGroupInner<Key extends string>(
       className={classNames("hjm-checkbox-group", className)}
       data-orientation={orientation}
       data-presentation={presentation}
+      data-overflow={presentation === "chips" ? overflow : undefined}
+      onFocusCapture={(event) => {
+        props.onFocusCapture?.(event);
+        const option = (event.target as HTMLElement).closest(".hjm-choice");
+        if (overflow === "scroll" && scrollerRef.current && option) revealInScroller(scrollerRef.current, option, selectionGroupRecipe.overflow.scrollInset);
+      }}
       data-size={size}
       data-state={error ? "invalid" : disabled ? "disabled" : "idle"}
       disabled={disabled}
@@ -460,7 +489,7 @@ function CheckboxGroupInner<Key extends string>(
       {description && !error ? (
         <div id={descriptionId} className="hjm-field__description">{description}</div>
       ) : null}
-      <ChoiceItems grid={grid} className="hjm-checkbox-group__items">
+      {wrapChipScroller(overflow === "scroll", scrollerRef, <ChoiceItems grid={grid} className="hjm-checkbox-group__items">
         {items.map((item) => {
           const checked = reconciledValue.has(item.id);
           return (
@@ -508,10 +537,15 @@ function CheckboxGroupInner<Key extends string>(
             </label>
           );
         })}
-      </ChoiceItems>
+      </ChoiceItems>)}
       <FieldError id={errorId} error={error} />
     </fieldset>
   );
+}
+
+/** The scrollport is separate from the items row so its inset keeps focus rings and chip hit slop unclipped. */
+function wrapChipScroller(scroll: boolean, ref: React.RefObject<HTMLDivElement | null>, items: ReactNode): ReactNode {
+  return scroll ? <div ref={ref} className="hjm-checkbox-group__scroller">{items}</div> : items;
 }
 
 export const CheckboxGroup = forwardRef(CheckboxGroupInner) as <Key extends string = string>(
@@ -951,10 +985,7 @@ export const SegmentedControl = forwardRef<
   const revealOption = (option: Element | null) => {
     if (overflow !== "scroll" || !option) return;
     const viewport = trackRef.current?.parentElement;
-    if (!viewport) return;
-    const frame = viewport.getBoundingClientRect(), bounds = option.getBoundingClientRect();
-    const delta = bounds.left < frame.left ? bounds.left - frame.left : bounds.right > frame.right ? bounds.right - frame.right : 0;
-    if (delta) viewport.scrollBy({ left: delta, behavior: "instant" });
+    if (viewport) revealInScroller(viewport, option);
   };
   useLayoutEffect(() => { revealOption(trackRef.current?.querySelector('[data-state="checked"]') ?? null); }, [value, items, overflow]);
   const group = (

@@ -50,7 +50,7 @@ import { formBehaviorSpec } from "./form.js";
 import { numberFieldBehavior } from "./number-field.js";
 import { sliderBehavior } from "./slider.js";
 import { checkboxBehaviorDefaults, } from "./selection-helpers.js";
-export { checkboxBehaviorDefaults, getCheckboxNextState, reconcileCheckboxSelection, toggleCheckboxSelection, } from "./selection-helpers.js";
+export { checkboxBehaviorDefaults, getCheckboxNextState, reconcileCheckboxSelection, resolveScrollRevealOffset, toggleCheckboxSelection, } from "./selection-helpers.js";
 /** Resolves a renderer's required name while rejecting type-valid blank copy. */
 export function resolveControlAccessibleName(label, accessibilityLabel, controlName = "Control") {
     if (label !== undefined && (typeof label !== "string" || !label.trim())) {

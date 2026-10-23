@@ -69,6 +69,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 | `label` · `accessibilityLabel` | `string` | — | 둘 중 하나는 필수 |
 | `orientation` | `vertical` · `horizontal` | `vertical` | — |
 | `presentation` | `card` · `plain` · `grouped` · `chips` | `card` | — |
+| `overflow` | `wrap` · `scroll` | `wrap` | 미게시. `chips`의 줄 넘침. `scroll`은 한 줄 가로 스크롤([칩 한 줄 스크롤](#칩-한-줄-스크롤-미게시)). `chips`가 아니거나 `grid`와 함께 쓰면 `TypeError` |
 | `size` | `medium` · `small` | `medium` | — |
 | `renderLeading` | Web `(item, appearance: { selected, color: "currentColor", size }) => ReactNode` · Native `(item, props: { checked, selected, disabled, readOnly, color, size }) => ReactNode` | — | 항목 아이콘 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 그룹 외곽(Web `fieldset`) 배치 |
@@ -80,7 +81,7 @@ import { CheckboxGroup } from "@hjmds/react-native/inputs";
 | 크기 | 폭을 채우는 묶음. 각 행은 [Checkbox](checkbox.md) 규격(최소 높이 `medium` 56 · `small` 44, 표시 24 · 20) | `selectionControlRecipe.sizes`, `.hjm-choice` |
 | 간격 | 그룹 이름(legend)↔항목 `spacing.xs` 8. 항목 사이 세로 `card` `spacing.xs` 8 · `plain` `spacing.xxs` 4 · `grouped` 0, 가로 `card` `spacing.md` 16 · `plain` `spacing.sm` 12 · `grouped` 0. 설명·오류는 `formSupportContract.gap` `spacing.xs` 8 | `selectionGroupRecipe.orientations`, `.hjm-checkbox-group*` |
 | 순서·정렬 | 위→아래 [그룹 이름(medium 500)] → [설명] → [항목들] → [오류]. 항목은 시작 쪽 정렬. `grouped`는 항목들을 테두리 1px·`radius.lg` 16 카드 하나에 붙여 담는다 | `selectionGroupRecipe.slots`, `.hjm-checkbox-group[data-presentation="grouped"]` |
-| 고정·스크롤 | 고정 영역이 없다. 목록이 길어도 그룹 안에서 스크롤 영역을 만들지 않는다 | `.hjm-checkbox-group__items` |
+| 고정·스크롤 | 고정 영역이 없다. 세로 목록은 그룹 안에서 스크롤 영역을 만들지 않는다. `chips` + `overflow="scroll"`만 가로 한 줄 스크롤이다 | `.hjm-checkbox-group__items`, `.hjm-checkbox-group__scroller` |
 | 좁은 폭·큰 글자 | `horizontal`은 줄바꿈된다(`flex-wrap: wrap`). 좁은 폭·큰 글자에서는 `vertical`을 쓴다 | `.hjm-checkbox-group[data-orientation="horizontal"]` |
 
 ## 꼭 지킬 것
@@ -136,3 +137,25 @@ Chip/직접 wrap으로 조립하고 있었다. `presentation="chips"`는 기존 
 ### 같은 행의 카드 높이 (checkout 수정·미게시)
 
 `presentation="card"` 항목은 같은 Grid 행에서 가장 높은 콘텐츠에 맞춰 칸을 채운다. Native의 Grid 칸 안에서 카드가 내용 높이만 사용하던 문제를 공통 ChoiceRow에서 수정했다(2026-10-20 다에리 공개 범위 선택 카드 지적). 제품에서 높이를 고정하거나 설명을 줄여 맞추지 않는다. 행별 높이는 해당 행의 콘텐츠로 결정한다.
+
+### 칩 한 줄 스크롤 (미게시)
+
+`presentation="chips" overflow="scroll"`은 여러 개를 고르는 칩을 한 줄에 두고 가로로 스크롤한다.
+단일 선택 [SegmentedControl](segmented-control.md)의 `overflow="scroll"`과 같은 뜻이며, 다중 선택 의미(체크박스·`Set` 값)는 그대로다.
+
+```tsx
+<CheckboxGroup accessibilityLabel={t("filter.teams")} presentation="chips" size="small" overflow="scroll"
+  items={teams.map((team) => ({ id: team, label: team }))} value={selected} onValueChange={setSelected}
+  renderLeading={(item) => <TeamBadge team={item.id} size="small" />} />
+```
+
+| 항목 | 값 | 근거 |
+| --- | --- | --- |
+| 줄 | 줄바꿈 없이 한 줄, 칩 사이 `spacing.xs` 8. 칩은 줄어들지 않는다 | `selectionGroupRecipe.orientations.*.gap.chips` |
+| 끝 여백 | 스크롤 영역 안쪽 사방 `selectionGroupRecipe.overflow.scrollInset` `spacing.xxs` 4, 바깥은 같은 값만큼 당겨 첫 칩이 열 가장자리에 맞는다. 마지막 칩 뒤에도 같은 4가 남는다 | `.hjm-checkbox-group__scroller`, Native `ScrollView` padding/margin |
+| 키보드·포커스 | Web은 Tab으로 칩마다 이동하고 Space로 켜고 끈다. 포커스한 칩이 가려져 있으면 최소 거리만 스크롤해 inset까지 보인다. 4는 포커스 테두리(2 + 간격 2)와 작은 칩의 터치 여유(4)가 잘리지 않는 값이다 | `resolveScrollRevealOffset`(behaviors) |
+| 처음 위치 | 시작 쪽에서 시작한다. 선택을 바꿔도 스크롤하지 않는다(여러 개를 켜는 동안 줄이 튀지 않게) | — |
+
+SegmentedControl의 스크롤 노출 계산도 같은 `resolveScrollRevealOffset`(inset 0)을 쓴다.
+근거: 2026-10-23 야잘알 `TeamGameFilter.tsx`가 SegmentedControl(단일 선택)에만 있는 가로 스크롤을 쓰지 못해
+다중 선택 칩을 제품 `ScrollView`로 직접 감쌌다(`gap: 6`, `paddingRight: spacing.xs`).

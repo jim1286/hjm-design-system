@@ -1,6 +1,6 @@
 import type { DesignSystemDirection } from "./design-system-provider.js";
 import { type CheckboxState } from "./selection-helpers.js";
-export { checkboxBehaviorDefaults, getCheckboxNextState, reconcileCheckboxSelection, toggleCheckboxSelection, type CheckboxState, type MixedCheckboxActivation, } from "./selection-helpers.js";
+export { checkboxBehaviorDefaults, getCheckboxNextState, reconcileCheckboxSelection, resolveScrollRevealOffset, toggleCheckboxSelection, type CheckboxState, type MixedCheckboxActivation, } from "./selection-helpers.js";
 /** Platform-neutral behavior vocabulary shared by renderer acceptance tests. */
 export type InteractionState = "idle" | "hover" | "focusVisible" | "pressed" | "dragged";
 export type AvailabilityState = "enabled" | "disabled" | "readOnly" | "busy";

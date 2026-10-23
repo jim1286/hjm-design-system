@@ -293,8 +293,18 @@ export const selectionGroupRecipe = {
   error: formSupportContract.error,
   supportGap: formSupportContract.gap,
   states: { disabledOpacity: opacity.disabled },
+  /**
+   * CheckboxGroup `presentation="chips"` overflow (2026-10-23), the same meaning as SegmentedControl `overflow`:
+   * `wrap` breaks chips onto more lines, `scroll` keeps one horizontal line. Yajalal TeamGameFilter.tsx built a
+   * multi-select chip rail from a raw ScrollView because only single-select SegmentedControl could scroll.
+   * The scroll content keeps `scrollInset` on every side (and the scroller pulls back by the same amount, so the
+   * chips stay aligned with the column): the focus ring (2 + offset 2) and the small chip hit slop (4) would
+   * otherwise be clipped by the scrollport, and the last chip ends with the same gap as the first starts.
+   */
+  overflow: { default: "wrap", scrollInset: spacing.xxs },
 } as const;
 
+export type SelectionGroupOverflow = "wrap" | "scroll";
 export type SelectionGroupOrientation = keyof typeof selectionGroupRecipe.orientations;
 export type SelectionGroupPresentation = keyof typeof selectionGroupRecipe.orientations.vertical.gap;
 
