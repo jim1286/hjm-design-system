@@ -8,4 +8,7 @@ export function validateReplyTarget(target) {
     if (target !== null && !target.id.trim())
         throw new TypeError("Reply target requires the actual message ID");
 }
+export function canSubmitChatRoom(profile, memberIds) {
+    return profile.name.trim().length > 0 && (memberIds === undefined || (memberIds.length > 0 && memberIds.every(id => id.trim().length > 0) && new Set(memberIds).size === memberIds.length));
+}
 //# sourceMappingURL=communication.js.map

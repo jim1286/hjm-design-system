@@ -3967,3 +3967,18 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-surface[data-tone="selected"] { background: var(--hjm-color-surface-selected); }
 .hjm-surface[data-tone="selected"][data-bordered="true"] { border-color: var(--hjm-color-border-control); }
 .hjm-data-table__table tr[aria-selected="true"] > :is(td, th) { background-color: var(--hjm-color-surface-selected); }
+
+/* Borrow room-info hierarchy only; canvas and surfaces follow the HJM/product theme. */
+.hjm-chat-room { background:var(--hjm-color-bg); padding:var(--hjm-space-md); }
+.hjm-chat-room__group { background:var(--hjm-color-surface); padding:var(--hjm-space-md); border-radius:var(--hjm-radius-lg); }
+.hjm-chat-room__tools { display:flex; gap:var(--hjm-space-xs); }
+.hjm-chat-room__tool { flex:1; min-width:0; min-height:64px; border:0; border-radius:var(--hjm-radius-md); padding:var(--hjm-space-xs); background:var(--hjm-color-surface); color:var(--hjm-color-content-brand); cursor:pointer; }
+.hjm-chat-room__tool:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }
+.hjm-chat-room__tool:disabled { cursor:default; opacity:.6; }
+
+/* Telegram quoted replies carry an inset tint as well as the leading rail. */
+.hjm-chat-message__reply { padding:var(--hjm-space-xs); border-radius:var(--hjm-radius-sm); background:color-mix(in srgb,var(--hjm-color-content-brand) 12%,transparent); }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__reply { background:color-mix(in srgb,var(--hjm-color-on-primary) 12%,transparent); }
+
+.hjm-chat-room__photo { display:block; padding:0; border:0; background:transparent; border-radius:50%; cursor:pointer; color:inherit; }
+.hjm-chat-room__photo:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }

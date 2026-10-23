@@ -26,6 +26,7 @@ const supplemental = new Set([
   // 2026-10-23: a settings choice row composed from ListRow, Sheet and RadioGroup; it owns its own story and guide.
   "ChoiceRow",
   // Controlled collection compositions reuse FieldGroup, ActionSession and DataTable; no new canonical rows.
+  "ChatRoomInvite", "ChatRoomDetails", "ChatRoomProfile", "ChatRoomMembers", "ChatRoomCreate", "ChatRoomActions",
   "StreamingAnswer", "ExpandableSearch", "ReplyMessage", "ReplyComposer", "ToggleFeedbackButton",
   "TransferTask", "BezierEditor", "ShortcutRecorder", "FollowProfileCard", "EventAttendanceCard",
   "MediaTransport",

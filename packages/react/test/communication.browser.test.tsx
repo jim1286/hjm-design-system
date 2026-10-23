@@ -2,7 +2,7 @@ import { act,useState } from "react";
 import { createRoot,type Root } from "react-dom/client";
 import { page } from "vitest/browser";
 import { afterEach,beforeEach,expect,it,vi } from "vitest";
-import { ExpandableSearch,ReplyComposer,ReplyMessage } from "../src/communication.js";
+import { ChatRoomProfile,ChatRoomCreate,ChatRoomActions,ExpandableSearch,ReplyComposer,ReplyMessage } from "../src/communication.js";
 import { MessageComposer } from "../src/screens.js";
 import { HjmProvider } from "../src/provider.js";
 import type { SearchResponse } from "@hjmds/design-contracts/communication";
@@ -29,4 +29,22 @@ it("replies to actual IDs, preserves failed drafts and serializes sends",async()
 it("opts into near-limit circular feedback while retaining the existing composer and controlled draft",async()=>{
  const render=(value:string)=><HjmProvider><MessageComposer value={value} label="메시지" sendLabel="전송" maxLength={10} lengthFeedback={{label:"입력 길이",formatCount:(n,max)=>`${n}/${max}`}} onValueChange={()=>undefined} onSend={()=>undefined}/></HjmProvider>;
  await act(async()=>root.render(render("abc")));expect(host.querySelector('[data-shape="circular"]')).toBeNull();await act(async()=>root.render(render("abcdefgh")));expect(host.querySelector('[data-shape="circular"]')).not.toBeNull();expect(host.textContent).toContain("8/10");await act(async()=>root.render(render("abcdefghijk")));expect(host.querySelector("textarea")!.value).toBe("abcdefghijk");expect(button("전송").disabled).toBe(true);
+});
+
+const roomLabels={name:"Room name",description:"Description",photo:"Room photo",changePhoto:"Change photo",removePhoto:"Remove photo",save:"Save room",error:"Save failed"};
+it("retains a room draft after failure and serializes duplicate saves",async()=>{
+ let reject!:(error:Error)=>void;const save=vi.fn(()=>new Promise<void>((_,fail)=>{reject=fail;}));
+ await act(async()=>root.render(<HjmProvider><ChatRoomProfile value={{name:"Draft room",description:"Draft description",photoUrl:null}} onValueChange={()=>undefined} onSave={save} labels={roomLabels}/></HjmProvider>));
+ await act(async()=>{button("Save room").click();button("Save room").click();});expect(save).toHaveBeenCalledOnce();
+ await act(async()=>reject(new Error("offline")));expect((host.querySelector("input") as HTMLInputElement).value).toBe("Draft room");expect(host.textContent).toContain("Save failed");expect(button("Save room").disabled).toBe(false);
+});
+it("requires a selected member before creating a group and sends real IDs",async()=>{
+ const create=vi.fn();function Demo(){const [selected,setSelected]=useState(false);return <ChatRoomCreate title="새 채팅방" nextLabel="다음" backLabel="뒤로" searchLabel="참여자 검색" clearSearchLabel="검색 지우기" searchBusyLabel="검색 중" value={{name:"Group",description:"",photoUrl:null}} onValueChange={()=>undefined} labels={roomLabels} members={[{id:"real-user-2",name:"Friend",selected}]} onSelectionChange={(_,value)=>setSelected(value)} membersLabel="Members" emptyMembersLabel="Empty" onCreate={create}/>;}
+ await act(async()=>root.render(<HjmProvider><Demo/></HjmProvider>));expect(button("다음").disabled).toBe(true);
+ await act(async()=>page.getByRole("checkbox",{name:"Friend"}).click());expect(button("다음").disabled).toBe(false);await act(async()=>button("다음").click());await act(async()=>button("Save room").click());expect(create).toHaveBeenCalledWith({name:"Group",description:"",photoUrl:null},["real-user-2"]);
+});
+it("requires confirmation for history deletion and does not call leave",async()=>{
+ const remove=vi.fn(),leave=vi.fn();const action={label:"Delete history",title:"Delete my history?",description:"Other members keep their messages.",confirmLabel:"Delete now",cancelLabel:"Cancel",errorLabel:"Failed",onConfirm:remove};
+ await act(async()=>root.render(<HjmProvider><ChatRoomActions deleteHistory={action} leave={{...action,label:"Leave room",onConfirm:leave}}/></HjmProvider>));
+ await act(async()=>button("Delete history").click());expect(remove).not.toHaveBeenCalled();await act(async()=>page.getByRole("button",{name:"Delete now",exact:true}).click());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
 });

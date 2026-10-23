@@ -315,6 +315,7 @@ export const chatMessageRecipe = {
   // 2026-10-23: Telegram-style quote rail remains visible inside both neutral and filled brand bubbles.
   quoteRailWidth: 3,
   quoteInset: spacing.xs,
+  quoteSurfaceOpacity: 0.12,
   // Bubbles of one run read as a stack; a new author or minute starts a visibly separate group.
   runGap: 6,
   groupGap: spacing.sm,

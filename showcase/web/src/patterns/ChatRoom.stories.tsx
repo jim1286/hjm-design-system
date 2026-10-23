@@ -1,0 +1,11 @@
+import type { Meta,StoryObj } from "@storybook/react-vite";
+import { ChatRoomPreview } from "./ChatRoom.preview";
+const meta={id:"compositions-chat-room", title:"배포/구성/입력과 작성/채팅방 관리",component:ChatRoomPreview,parameters:{layout:"fullscreen",hjm:{edgeToEdge:true}},decorators:[(Story)=><Story/>]} satisfies Meta<typeof ChatRoomPreview>;
+export default meta;
+type Story=StoryObj<typeof meta>;
+export const Default:Story={name:"기본"};
+export const Edit:Story={name:"정보 편집",args:{initialMode:"edit"}};
+export const Create:Story={name:"단톡방 개설",args:{initialMode:"create"}};
+export const Failed:Story={name:"실패 후 입력 유지",args:{initialMode:"edit",failSave:true}};
+export const ReadOnly:Story={name:"멤버 권한",args:{readOnly:true}};
+export const Dark:Story={name:"어두운 테마",globals:{theme:"dark"}};

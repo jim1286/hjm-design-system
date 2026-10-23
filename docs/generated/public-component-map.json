@@ -362,6 +362,60 @@
         "role": "canonical"
       },
       {
+        "name": "ChatRoomActions",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomCreate",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomDetails",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomInvite",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomMembers",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomProfile",
+        "source": "packages/react/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ChatScreen",
         "source": "packages/react/src/screens.tsx",
         "entries": [
@@ -2517,6 +2571,60 @@
         ],
         "canonicalComponent": "ChatMessage",
         "role": "canonical"
+      },
+      {
+        "name": "ChatRoomActions",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomCreate",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomDetails",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomInvite",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomMembers",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ChatRoomProfile",
+        "source": "packages/react-native/src/communication.tsx",
+        "entries": [
+          "./communication"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ChatScreen",

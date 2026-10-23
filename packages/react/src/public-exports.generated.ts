@@ -114,6 +114,24 @@ export const publicExportEntries = {
   ChatMessage: [
     "./screens"
   ],
+  ChatRoomActions: [
+    "./communication"
+  ],
+  ChatRoomCreate: [
+    "./communication"
+  ],
+  ChatRoomDetails: [
+    "./communication"
+  ],
+  ChatRoomInvite: [
+    "./communication"
+  ],
+  ChatRoomMembers: [
+    "./communication"
+  ],
+  ChatRoomProfile: [
+    "./communication"
+  ],
   ChatScreen: [
     "./screens"
   ],

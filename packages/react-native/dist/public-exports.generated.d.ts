@@ -31,6 +31,12 @@ export declare const publicExportEntries: {
     readonly ChartLegend: readonly ["./chart"];
     readonly ChatDateSeparator: readonly ["./screens"];
     readonly ChatMessage: readonly ["./screens"];
+    readonly ChatRoomActions: readonly ["./communication"];
+    readonly ChatRoomCreate: readonly ["./communication"];
+    readonly ChatRoomDetails: readonly ["./communication"];
+    readonly ChatRoomInvite: readonly ["./communication"];
+    readonly ChatRoomMembers: readonly ["./communication"];
+    readonly ChatRoomProfile: readonly ["./communication"];
     readonly ChatScreen: readonly ["./screens"];
     readonly Checkbox: readonly ["./inputs"];
     readonly CheckboxGroup: readonly ["./inputs"];

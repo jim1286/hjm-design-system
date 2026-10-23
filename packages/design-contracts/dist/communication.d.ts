@@ -26,4 +26,29 @@ export type SearchResponse<T> = Readonly<{
         }>;
     }>[];
 }>;
+/** Room data stays controlled: only the product can acknowledge persistence or grant permissions. */
+export type ChatRoomProfileValue = Readonly<{
+    name: string;
+    description: string;
+    photoUrl: string | null;
+}>;
+export type ChatRoomMember = Readonly<{
+    id: string;
+    name: string;
+    detail?: string;
+    photoUrl?: string;
+    selected?: boolean;
+    disabled?: boolean;
+}>;
+export type ChatRoomConfirmation = Readonly<{
+    destructive?: boolean;
+    label: string;
+    title: string;
+    description: string;
+    confirmLabel: string;
+    cancelLabel: string;
+    errorLabel: string;
+    onConfirm: () => void | Promise<void>;
+}>;
+export declare function canSubmitChatRoom(profile: ChatRoomProfileValue, memberIds?: readonly string[]): boolean;
 //# sourceMappingURL=communication.d.ts.map

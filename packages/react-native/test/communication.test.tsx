@@ -1,6 +1,6 @@
 import { act,create,type ReactTestRenderer } from "react-test-renderer";
 import { afterEach,expect,it,vi } from "vitest";
-import { ExpandableSearch,ReplyMessage,ReplyComposer } from "../src/communication.js";
+import { ChatRoomProfile,ChatRoomCreate,ChatRoomActions,ExpandableSearch,ReplyMessage,ReplyComposer } from "../src/communication.js";
 import { ChatMessage,MessageComposer } from "../src/screens.js";
 import { SearchScreen } from "../src/screen-flows.js";
 import { Progress } from "../src/feedback.js";
@@ -19,4 +19,21 @@ it("uses the existing SearchScreen debounce and aborts actual requests on collap
  let resolve!:(response:{result:string;suggestions:[]})=>void;let signal!:AbortSignal;const search=vi.fn((_q:string,context:{signal:AbortSignal})=>{signal=context.signal;return new Promise<{result:string;suggestions:[]}>(done=>{resolve=done;});});
  const render=(expanded:boolean)=><HjmNativeProvider reducedMotion><ExpandableSearch expanded={expanded} onExpandedChange={()=>undefined} query="real" onQueryChange={()=>undefined} onSearch={search} renderResult={value=>value} labels={{title:"Search",open:"Open",cancel:"Cancel",query:"Query",clear:"Clear",searching:"Searching",error:"Error",commit:q=>q,suggestionCount:String}}/></HjmNativeProvider>;
  act(()=>{tree=create(render(true));});await act(async()=>tree!.root.findByType(SearchScreen).props.onSearch("real",{signal:new AbortController().signal}));expect(search).toHaveBeenCalledOnce();act(()=>tree!.update(render(false)));expect(signal.aborted).toBe(true);await act(async()=>resolve({result:"late",suggestions:[]}));expect(tree!.root.findAllByType(SearchScreen)).toHaveLength(0);
+});
+
+import { Button } from "../src/actions.js";
+import { ListRow } from "../src/data-display.js";
+import { AlertDialog } from "../src/overlays.js";
+const roomLabels={name:"Name",description:"Description",photo:"Photo",changePhoto:"Change",removePhoto:"Remove",save:"Save",error:"Failed"};
+it("gates native group creation and preserves failed profile drafts",async()=>{
+ const value={name:"Draft",description:"About",photoUrl:null},createRoom=vi.fn(),save=vi.fn().mockRejectedValue(new Error("offline"));
+ act(()=>{tree=create(<HjmNativeProvider><ChatRoomCreate title="새 채팅방" nextLabel="다음" backLabel="뒤로" searchLabel="참여자 검색" clearSearchLabel="검색 지우기" searchBusyLabel="검색 중" value={{...value,name:""}} onValueChange={()=>undefined} labels={roomLabels} members={[]} onSelectionChange={()=>undefined} membersLabel="Members" emptyMembersLabel="Empty" onCreate={createRoom}/></HjmNativeProvider>);});
+ expect(tree!.root.findAllByType(Button).find(node=>node.props.children==="다음")!.props.disabled).toBe(true);
+ act(()=>tree!.update(<HjmNativeProvider><ChatRoomProfile value={value} onValueChange={()=>undefined} labels={roomLabels} onSave={save}/></HjmNativeProvider>));
+ await act(async()=>tree!.root.findAllByType(Button).find(node=>node.props.children==="Save")!.props.onPress());expect(save).toHaveBeenCalledOnce();expect(tree!.root.findByType(ChatRoomProfile).props.value).toEqual(value);expect(tree!.root.findAll(node=>node.props.accessibilityRole==="alert").length).toBeGreaterThan(0);
+});
+it("native leave and history deletion stay separate behind confirmation",async()=>{
+ const remove=vi.fn(),leave=vi.fn();const action={label:"Delete",title:"Delete history?",description:"Only my history",confirmLabel:"Confirm",cancelLabel:"Cancel",errorLabel:"Failed",onConfirm:remove};
+ act(()=>{tree=create(<HjmNativeProvider><ChatRoomActions deleteHistory={action} leave={{...action,label:"Leave",onConfirm:leave}}/></HjmNativeProvider>);});
+ act(()=>tree!.root.findAllByType(ListRow).find(node=>node.props.title==="Delete")!.props.onPress());expect(remove).not.toHaveBeenCalled();await act(async()=>tree!.root.findByType(AlertDialog).props.request.onConfirm());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
 });

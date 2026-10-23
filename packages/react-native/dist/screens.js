@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { withAlpha } from "@hjmds/design-contracts/colors";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { cornerAccessoryPlacements, iconButtonRecipe, topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveComposerLimit } from "@hjmds/design-contracts/communication";
@@ -286,7 +287,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
     // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
     const body = typeof children === "string" || typeof children === "number" ? _jsx(Text, { children: children }) : children;
-    const bubbleContent = _jsxs(InheritedTextColorContext.Provider, { value: outgoing ? colors.onPrimary : undefined, children: [tail, quote ? _jsx(View, { style: { borderStartWidth: chatMessageRecipe.quoteRailWidth, borderColor: outgoing ? colors.onPrimary : colors.contentBrand, paddingStart: chatMessageRecipe.quoteInset }, children: replyLink ? _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: quote }) : quote }) : null, mediaBlock, photoOnly ? null : body] });
+    const bubbleContent = _jsxs(InheritedTextColorContext.Provider, { value: outgoing ? colors.onPrimary : undefined, children: [tail, quote ? _jsx(View, { style: { borderStartWidth: chatMessageRecipe.quoteRailWidth, borderColor: outgoing ? colors.onPrimary : colors.contentBrand, padding: chatMessageRecipe.quoteInset, borderRadius: tokens.radius.sm, backgroundColor: withAlpha(outgoing ? colors.onPrimary : colors.contentBrand, chatMessageRecipe.quoteSurfaceOpacity) }, children: replyLink ? _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: quote }) : quote }) : null, mediaBlock, photoOnly ? null : body] });
     // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
     const avatarSlot = !avatar ? null : display.showAvatar ? _jsx(View, { style: { width: chatMessageRecipe.avatarSize, alignItems: "center" }, children: avatar }) : _jsx(View, { accessible: false, style: { width: chatMessageRecipe.avatarSize } });
     return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden", marginTop: display.spacingBefore,

@@ -267,6 +267,7 @@ export declare const chatMessageRecipe: {
     readonly bubblePaddingBlock: 6;
     readonly quoteRailWidth: 3;
     readonly quoteInset: 8;
+    readonly quoteSurfaceOpacity: 0.12;
     readonly runGap: 6;
     readonly groupGap: 12;
     readonly tailWidth: 7;

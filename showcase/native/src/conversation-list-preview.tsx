@@ -1,3 +1,4 @@
+import { ChatRoomPreview } from "./ChatRoom.preview";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Ban, BellOff, MailOpen, Search, SquarePen, Trash2 } from "lucide-react-native";
@@ -19,6 +20,7 @@ const icons: Record<ConversationListAction, typeof MailOpen> = { unread: MailOpe
 
 export function ConversationListPreview({ tools = false }: { tools?: boolean }) {
   const { colors } = useHjmNativeTheme();
+  const [creating,setCreating]=useState(false);
   const [status, setStatus] = useState<string>(copy.hint);
   const [query, setQuery] = useState("");
   const rows = filterConversations(query);
@@ -27,11 +29,12 @@ export function ConversationListPreview({ tools = false }: { tools?: boolean }) 
   // Host height stands in for the product route.
   // ConversationRow owns its 16pt inline inset, so the body uses contentInset="body-edge" while header and search keep
   // the screen gutter: rows start 16 from the edge like Instagram DM instead of 32 (review S5#9).
+  if(creating)return <ChatRoomPreview initialMode="create" onClose={()=>setCreating(false)}/>;
   return <Stack gap="sm" layoutStyle={{ flex: 1 }}>
     {tools ? <PreviewTools><PatternStatus tone="muted">{status}</PatternStatus></PreviewTools> : null}
     <View style={{ flex: 1, width: "100%" }}>
       <ScreenLayout title={copy.title} scroll="content" contentInset="body-edge"
-        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onPress={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} color={colors.text} /></IconButton>}
+        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onPress={() => setCreating(true)}><SquarePen size={20} color={colors.text} /></IconButton>}
         notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} busyLabel={copy.searching} placeholder={copy.searchPlaceholder} renderLeading={({ color, size }) => <Search color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
         <View>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}

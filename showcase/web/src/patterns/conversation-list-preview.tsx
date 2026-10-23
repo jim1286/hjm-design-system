@@ -1,3 +1,4 @@
+import { ChatRoomPreview } from "./ChatRoom.preview";
 import { useState } from "react";
 import { Ban, BellOff, MailOpen, Search, SquarePen, Trash2 } from "lucide-react";
 import { Text } from "@hjmds/react/layout";
@@ -15,6 +16,7 @@ import { conversationActionResult, conversationListActions, conversationListCopy
 const icons: Record<ConversationListAction, typeof MailOpen> = { unread: MailOpen, mute: BellOff, block: Ban, delete: Trash2 };
 
 export function ConversationListPreview({ tools = false }: { tools?: boolean }) {
+  const [creating,setCreating]=useState(false);
   const [status, setStatus] = useState<string>(copy.hint);
   const [query, setQuery] = useState("");
   const rows = filterConversations(query);
@@ -22,9 +24,10 @@ export function ConversationListPreview({ tools = false }: { tools?: boolean }) 
   // keep demo controls out of the default canvas (2026-10-17 review). The product's notice slot holds search.
   // ConversationRow owns its 16pt inline inset, so the body uses contentInset="body-edge" while header and search keep
   // the screen gutter: rows start 16 from the edge like Instagram DM instead of 32 (review S5#9).
+  if(creating)return <ChatRoomPreview initialMode="create" onClose={()=>setCreating(false)}/>;
   return <PreviewRoute before={tools ? <PreviewTools><Text tone="muted" role="status">{status}</Text></PreviewTools> : null}>
       <ScreenLayout title={copy.title} as="section" scroll="content" contentInset="body-edge"
-        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onClick={() => setStatus(`${copy.compose}를 시작해요.`)}><SquarePen size={20} /></IconButton>}
+        actions={<IconButton edge="end" label={copy.compose} tone="ghost" onClick={() => setCreating(true)}><SquarePen size={20} /></IconButton>}
         notice={<SearchField label={copy.search} clearLabel={copy.clearSearch} placeholder={copy.searchPlaceholder} renderSearchIcon={({ color, size }) => <Search aria-hidden color={color} size={size} />} value={query} onValueChange={setQuery} />}
         state={rows.length ? { kind: "ready" } : { kind: "empty", title: copy.noMatch }}>
         <div>{rows.map(row => <ContextMenu key={row.id} accessibilityLabel={conversationRowMenuLabel(row)}

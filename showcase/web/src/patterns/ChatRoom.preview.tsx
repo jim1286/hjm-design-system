@@ -1,0 +1,27 @@
+import roomPhoto from "../../../shared/photos/mountain.jpg";
+import { useState } from "react";
+import { ChatRoomInvite,ChatRoomDetails,ChatRoomProfile,ChatRoomCreate } from "@hjmds/react/communication";
+import { Stack,Text } from "@hjmds/react/layout";
+import { Button } from "@hjmds/react/actions";
+import type { ChatRoomProfileValue,ChatRoomMember,ChatRoomConfirmation } from "@hjmds/design-contracts/communication";
+import { Search,Image,UserPlus,Bell } from "lucide-react";
+export function ChatRoomPreview({initialMode="details",failSave=false,readOnly=false,onClose}:{initialMode?:"details"|"edit"|"create"|"invite";failSave?:boolean;readOnly?:boolean;onClose?:()=>void}){
+ const [mode,setMode]=useState(initialMode),[profile,setProfile]=useState<ChatRoomProfileValue>({name:"주말 산책 모임",description:"토요일 오후, 함께 걷고 이야기해요.",photoUrl:roomPhoto}),[draft,setDraft]=useState<ChatRoomProfileValue>(initialMode==="create"?{name:"",description:"",photoUrl:null}:profile),[notice,setNotice]=useState("");
+ const [members,setMembers]=useState<ChatRoomMember[]>([{id:"me",name:"나",detail:"관리자",disabled:true},{id:"seoyeon",name:"서연",detail:"멤버"},{id:"minsu",name:"민수",detail:"멤버"}]);
+ const [candidates,setCandidates]=useState<ChatRoomMember[]>([{id:"seoyeon",name:"서연"},{id:"minsu",name:"민수"},{id:"jisu",name:"지수"}]);
+ const [muted,setMuted]=useState(false);
+ const save=async(value:ChatRoomProfileValue)=>{if(failSave)throw new Error("Example failure");setProfile(value);setNotice("채팅방 정보를 저장했어요.");setMode("details");};
+ const confirmation=(label:string,description:string,onConfirm:()=>void):ChatRoomConfirmation=>({destructive:label!=="관리자로 지정",label,title:label,description,confirmLabel:label,cancelLabel:"취소",errorLabel:"처리하지 못했어요. 다시 시도해 주세요.",onConfirm});
+ const labels={name:"채팅방 이름",description:"소개",photo:"채팅방 사진",changePhoto:"사진 변경",removePhoto:"사진 삭제",save:mode==="create"?"개설":"저장",error:"저장하지 못했어요. 입력은 유지했어요. 다시 시도해 주세요."};
+ const editor={value:draft,onValueChange:setDraft,labels,onPickPhoto:async()=>roomPhoto};
+ return <Stack gap="lg" style={{padding:mode==="details"?0:"var(--hjm-space-md)"}}>
+ {notice?<Text>{notice}</Text>:null}
+ {mode==="details"?<><ChatRoomDetails {...(onClose?{back:{label:"대화 목록",onPress:onClose}}:{})} profile={profile} photoLabel="채팅방 사진" memberCountLabel={`${members.length}명 참여 중`} errorLabel="작업을 완료하지 못했어요."
+ {...(!readOnly?{edit:{label:"정보 편집",onPress:()=>{setDraft(profile);setMode("edit");}}}:{})}
+ tools={[{id:"search",label:"검색",icon:<Search size={20}/>,onPress:()=>setNotice("제품에서는 이 방의 메시지 검색으로 연결됩니다.")},{id:"media",label:"미디어",icon:<Image size={20}/>,onPress:()=>setNotice("제품에서는 공유한 사진과 파일 목록으로 연결됩니다.")},{id:"mute",label:muted?"알림 켜기":"알림 끄기",icon:<Bell size={20}/>,onPress:()=>setMuted(!muted)},...(!readOnly?[{id:"invite",label:"초대",icon:<UserPlus size={20}/>,onPress:()=>setMode("invite")}]:[])]}
+ members={{members,title:"참여자",emptyLabel:"참여자가 없습니다.",...(!readOnly?{actions:member=>member.id==="me"?[]:[confirmation("관리자로 지정",`${member.name}님에게 관리 권한을 부여할까요?`,()=>setMembers(items=>items.map(item=>item.id===member.id?{...item,detail:"관리자"}:item))),confirmation("멤버 내보내기",`${member.name}님을 이 채팅방에서 내보낼까요?`,()=>setMembers(items=>items.filter(item=>item.id!==member.id)))]}:{})}}
+ actions={{leave:confirmation("채팅방 나가기","나가면 새로운 메시지를 받지 않아요. 다시 참여하려면 초대가 필요해요.",()=>setNotice("예제: 채팅방에서 나갔어요.")),deleteHistory:confirmation("내 대화 기록 삭제","내 기록만 삭제해요. 방 참여와 다른 멤버의 기록은 유지돼요.",()=>setNotice("예제: 내 대화 기록을 삭제했어요."))}}/>
+ {!readOnly?<Button tone="secondary" onClick={()=>{setDraft({name:"",description:"",photoUrl:null});setMode("create");}}>새 단톡방</Button>:null}</>:mode==="invite"?<ChatRoomInvite title="멤버 초대" emptyLabel="초대할 사람이 없습니다." members={candidates.map(item=>({...item,disabled:members.some(member=>member.id===item.id)}))} onSelectionChange={(id,selected)=>setCandidates(items=>items.map(item=>item.id===id?{...item,selected}:item))} confirmLabel="초대하기" errorLabel="초대하지 못했어요." onInvite={ids=>{setMembers(items=>[...items,...candidates.filter(item=>ids.includes(item.id))]);setMode("details");}}/>:mode==="edit"?<ChatRoomProfile {...editor} title="방 정보 편집" back={{label:"뒤로",onPress:()=>setMode("details")}} onSave={save}/>:<ChatRoomCreate onCancel={()=>onClose?onClose():setMode("details")} title="새 채팅방" nextLabel="다음" backLabel="뒤로" searchLabel="참여자 검색" clearSearchLabel="검색 지우기" searchBusyLabel="검색 중" {...editor} members={candidates} membersLabel="함께할 사람" emptyMembersLabel="초대할 사람이 없습니다." onSelectionChange={(id,selected)=>setCandidates(items=>items.map(item=>item.id===id?{...item,selected}:item))} onCreate={async(value,ids)=>{await save(value);setMembers([{id:"me",name:"나",detail:"관리자"},...candidates.filter(item=>ids.includes(item.id))]);}}/>}
+ {mode==="invite"?<Button tone="ghost" onClick={()=>setMode("details")}>취소</Button>:null}
+ </Stack>;
+}
