@@ -281,6 +281,9 @@ export const publicExportEntries = {
   IconButton: [
     "./actions"
   ],
+  IconButtonLink: [
+    "./actions"
+  ],
   IconTile: [
     "./screens"
   ],

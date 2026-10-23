@@ -830,7 +830,8 @@
           "claimed": true,
           "subpath": "./actions",
           "exportNames": [
-            "IconButton"
+            "IconButton",
+            "IconButtonLink"
           ],
           "proofs": [
             {
@@ -7768,7 +7769,8 @@
           "claimed": true,
           "subpath": "./bottom-cta",
           "exportNames": [
-            "IconButton"
+            "IconButton",
+            "IconButtonLink"
           ],
           "proofs": [
             {

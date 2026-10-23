@@ -56,6 +56,8 @@ export {
   ButtonLink,
   type ButtonLinkProps,
   IconButton,
+  IconButtonLink,
+  type IconButtonLinkProps,
   Link,
   type ButtonAlign,
   type ButtonProps,

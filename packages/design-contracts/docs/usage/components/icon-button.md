@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-23
 - 근거: recipe `iconButtonRecipe`(`src/icon-button-recipe.ts`), NotificationBell 계약: [Compound controls](../../compound-controls.md#notificationbell)
 - 스토리북: `배포/컴포넌트/동작/아이콘 버튼` · `배포/컴포넌트/상태와 알림/알림 벨`
 
@@ -28,7 +28,8 @@ Dialog·Sheet footer 행동, 목록 끝 "더 보기", 온보딩 다음·이전, 
 | 상황 | 대신 쓸 것 |
 | --- | --- |
 | 글자로 결과를 확인해야 하는 주 행동·확인 행동(저장·완료·보내기) | [Button](button.md) |
-| 다른 페이지·URL로 이동 | [Link](link.md) |
+| 글자로 다른 페이지·URL로 이동 | [Link](link.md) |
+| 아이콘만으로 다른 페이지로 이동(셸의 설정·프로필 진입점) | `IconButtonLink`(아래). `<button>`에 router push를 달거나 `<a>`에 제품 CSS로 원형·현재 표시를 그리지 않는다 |
 | 화면 위에 떠 있는 주 행동 | [FloatingActionButton](floating-action-button.md) |
 | 여러 아이콘 중 하나를 고름 | [ToggleGroup](toggle-group.md), [SegmentedControl](segmented-control.md) |
 | 누를 수 없는 그림 | [Icon](icon.md) |
@@ -38,6 +39,7 @@ Dialog·Sheet footer 행동, 목록 끝 "더 보기", 온보딩 다음·이전, 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `IconButton` | 기본 | `@hjmds/react`, `/actions` | `@hjmds/react-native`, `/actions`, `/bottom-cta` |
+| `IconButtonLink` | 동반(이동) — IconButton 모양의 링크. 현재 페이지 표시 `current`. 개발 소스·미게시 | `@hjmds/react`, `/actions` | `@hjmds/react-native`, `/actions`, `/bottom-cta` |
 | `NotificationBell` | 확장 — 미확인 수 배지 + 증가 시 한 번 흔들림 | `/notification-bell` | `/notification-bell` |
 | `ClipboardIconButton` | 동반(복사) — 아이콘만 있는 복사 도구 행동. `value`, `labels: { idle; copied }`(두 상태의 접근성 이름), `onCopy?`, `onCopyError?`, `feedbackDuration?`(ms), `tone` 기본 `ghost` | `@hjmds/react`, `/clipboard` | — |
 
@@ -74,6 +76,45 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
   active={isFocused}
 />
 ```
+
+### 아이콘 링크 — `IconButtonLink` (2026-10-23, 개발 소스·미게시)
+
+Button에 대한 ButtonLink처럼 IconButton 틀(`tone`·`size`·`shape`·`edge`·`hitSlop`·`layoutStyle`)을 이동 링크에 쓴다.
+토글·로딩·변경 행동은 IconButton에 남는다. `current`는 지금 보고 있는 화면의 진입점이며 선택된 IconButton과 같은 면
+(`iconButtonRecipe.states.selected`)으로 칠하고 Web `aria-current="page"`, Native `accessibilityState.selected`로 알린다.
+
+| prop | Web | Native | 기본값 |
+| --- | --- | --- | --- |
+| 목적지 | `href: string` | `destination: LinkDestination` | 필수 |
+| 이름 | `label: string`(접근성 이름, 빈 값이면 `TypeError`) | 같음 | 필수 |
+| `current` | `boolean` → `aria-current="page"` + 선택 면 | `boolean` → `selected` + 선택 면 | `false` |
+| `disabled` | `href`를 지우고 클릭·가운데 클릭을 막는다(ButtonLink와 같다) | 누름을 막는다 | `false` |
+| router 연결 | `renderAnchor(props)` — `ref`·`href`·이름·`aria-current`·차단 핸들러가 담긴 props를 자기 링크에 펼친다 | `onNavigate(destination)` 또는 `renderLink(props)`(TopBarAction `intent="link"`와 같다). 둘 다 없으면 `TypeError` | — |
+
+```tsx
+// Web (Next.js)
+import NextLink from "next/link";
+import { IconButtonLink } from "@hjmds/react/actions";
+
+<IconButtonLink href={`/${locale}/settings`} label={t("action.settings")} shape="circle"
+  current={pathname.endsWith("/settings")} renderAnchor={(props) => <NextLink {...props} />}>
+  <Icon name="settings" decorative />
+</IconButtonLink>
+```
+
+```tsx
+// Native (Expo Router)
+import { Link } from "expo-router";
+import { IconButtonLink } from "@hjmds/react-native/actions";
+
+<IconButtonLink label={t("action.settings")} destination={{ kind: "internal", href: "/settings" }} current={focused}
+  renderLink={({ destination, ...props }) => <Link href={destination.href} asChild><Pressable {...props} /></Link>}>
+  <Icon descriptor={{ name: "settings", decorative: true }} renderGlyph={renderGlyph} />
+</IconButtonLink>
+```
+
+`renderAnchor`·`renderLink`는 함수 prop이라 Next 서버 컴포넌트에서 넘길 수 없다. 현재 경로로 `current`를 정하는 셸
+Client Component에서 연결한다.
 
 ## 축과 기본값
 
@@ -150,6 +191,8 @@ TopBar
 
 ## 근거
 
+- `IconButtonLink`: 2026-10-23 다에리 웹 소비 감사 — 셸 설정 진입점(`ShellSettingsLink`)이 IconButton은 `<button>`만, ButtonLink는
+  가로 padding이 있는 pill이라 둘 다 쓸 수 없어 `Link` + 제품 `.settings-link` CSS(44 원형, `aria-current` 배경)로 다시 그렸다.
 - 가장자리 정렬(`edge`): 2026-10-17 화면 정렬 실측 감사(Web Storybook 402·1280, Native iPhone 17 Pro 3x 캡처). 행·헤더 끝의 44 버튼이
   아이콘을 여백 선보다 10~15 안쪽에 두었다(댓글 더보기 28 vs 아바타 16, 화면 머리 뒤로 31 vs 16, 업로드 취소 26 vs 16, 정렬 화살표 29 vs 16).
   컴포넌트마다 오프셋을 따로 두지 않고 이 한 규칙과 계약 값으로 맞췄다. Toast 닫기(같은 날 `toastRecipe.close.inlineOverhang`)와 같은 식이다.

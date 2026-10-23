@@ -292,7 +292,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "IconButton";
     readonly label: "아이콘 버튼";
-    readonly companions: readonly ["ClipboardIconButton"];
+    readonly companions: readonly ["ClipboardIconButton", "IconButtonLink"];
     readonly extensions: readonly ["NotificationBell"];
     readonly category: "action";
     readonly platform: "shared";
@@ -3201,6 +3201,11 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "group", "groupLabel", "item", "label", "badge", "toggle"];
         readonly defaults: {
             readonly collapsed: false;
+            readonly size: "regular";
+        };
+        readonly sizes: {
+            readonly compact: 220;
+            readonly regular: 260;
         };
         readonly widths: {
             readonly expanded: 260;

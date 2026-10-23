@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 227개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 228개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -100,6 +100,7 @@
 | HjmProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./display |
 | IconButton | IconButton | canonical | root, ./actions |
+| IconButtonLink | IconButton | companion-or-alternative | root, ./actions |
 | IconTile | IconTile | canonical | ./screens |
 | Image | Image | canonical | root, ./display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |
@@ -238,7 +239,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 214개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 215개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -328,6 +329,7 @@
 | HjmNativeProvider | DesignSystemProvider | canonical | root, ./provider |
 | Icon | Icon | canonical | root, ./primitives |
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
+| IconButtonLink | IconButton | companion-or-alternative | root, ./actions, ./bottom-cta |
 | IconTile | IconTile | canonical | ./screens |
 | Image | Image | canonical | root, ./data-display |
 | ImageChoiceGroup | ImageChoiceGroup | canonical | ./image-choice |

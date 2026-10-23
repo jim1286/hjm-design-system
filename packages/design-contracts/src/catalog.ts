@@ -164,7 +164,7 @@ export const componentCatalog = [
   // Stable after the real Web matrix and focused separator keyboard proof pass; collapse and N-pane stay out of the contract.
   { name: "Splitter", label: "분할 영역 조절", category: "layout", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), aliases: ["SplitPane"], recipe: "splitterRecipe", behavior: "splitter", ...evidenceNeeded("Web long-copy, environment, accessibility, drag and focused keyboard proofs pass.") },
   { name: "Button", label: "버튼", companions: ["ClipboardButton", "ButtonLink"], extensions: ["ReactionPicker", "InlineConfirm"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "buttonRecipe" },
-  { name: "IconButton", label: "아이콘 버튼", companions: ["ClipboardIconButton"], extensions: ["NotificationBell"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "iconButtonRecipe" },
+  { name: "IconButton", label: "아이콘 버튼", companions: ["ClipboardIconButton", "IconButtonLink"], extensions: ["NotificationBell"], category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "iconButtonRecipe" },
   // Web anchor Enter activation and Native router activation are now asserted at the renderer boundary.
   { name: "Link", label: "링크", category: "action", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "linkRecipe", behavior: "link" },
   { name: "BottomCTA", label: "하단 실행 버튼", category: "action", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "bottomCtaRecipe" },

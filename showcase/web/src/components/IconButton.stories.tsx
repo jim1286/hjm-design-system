@@ -1,3 +1,6 @@
+import { IconButtonLink } from "@hjmds/react/actions";
+import { Icon } from "@hjmds/react/display";
+import { Stack } from "@hjmds/react/layout";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "./preview-registry";
 import { IconButtonStatePreview } from "./component-state-previews";
@@ -10,5 +13,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Pending: Story = { name: "처리 중", render: () => <IconButtonStatePreview state="pending" /> };
 export const Disabled: Story = { name: "비활성", render: () => <IconButtonStatePreview state="disabled" /> };
+// IconButtonLink (2026-10-23): a 44 icon-only destination with the IconButton frame; `current` paints the page you are on.
+export const Navigation: Story = { name: "이동 링크 · 미게시", render: () => <Stack axis="inline" gap="xs">
+  <IconButtonLink href="#icon-link-settings" label="설정" shape="circle" current><Icon name="settings" decorative /></IconButtonLink>
+  <IconButtonLink href="#icon-link-profile" label="프로필" shape="circle"><Icon name="user" decorative /></IconButtonLink>
+  <IconButtonLink href="#icon-link-billing" label="결제" shape="circle" disabled><Icon name="settings" decorative /></IconButtonLink>
+</Stack> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

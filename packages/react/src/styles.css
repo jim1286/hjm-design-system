@@ -268,7 +268,8 @@
 /* Toggle treatment: aria-pressed already carried the state, so without a paired
    visual every consumer painted the selected background in product styles.
    Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
-.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
+/* IconButtonLink `current` (aria-current="page") reuses the selected surface: iconButtonRecipe.states.selected. */
+.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"], .hjm-icon-button[aria-current="page"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
 /* data-state="disabled" also covers focusable boundaries (aria-disabled, e.g. Carousel previous on the first slide),
    which looked enabled while Native dimmed them (2026-10-17 review E9). */
@@ -306,6 +307,8 @@
 }
 .hjm-icon-button {
   position: relative;
+  /* IconButtonLink draws the same frame on an anchor. */
+  text-decoration: none;
   inline-size: var(--hjm-control-button-medium);
   block-size: var(--hjm-control-button-medium);
   min-inline-size: var(--hjm-control-min-touch-target);

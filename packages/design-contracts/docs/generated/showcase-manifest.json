@@ -809,7 +809,8 @@
       "name": "IconButton",
       "label": "아이콘 버튼",
       "companions": [
-        "ClipboardIconButton"
+        "ClipboardIconButton",
+        "IconButtonLink"
       ],
       "extensions": [
         "NotificationBell"

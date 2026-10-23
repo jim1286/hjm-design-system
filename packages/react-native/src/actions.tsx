@@ -26,7 +26,7 @@ import {
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
-import { forwardRef, useContext, type ReactNode, type Ref } from "react";
+import { forwardRef, useContext, type ReactElement, type ReactNode, type Ref } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -172,20 +172,7 @@ export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof Native
   if (resolvedIcon === undefined || resolvedIcon === null || resolvedIcon === false) {
     throw new TypeError("IconButton requires children");
   }
-  const resolvedTone: IconButtonTone = tone;
-  const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette, selected === true);
-  const sizeContract = iconButtonRecipe.sizes[size];
-  // Web reads the same size through `--hjm-control-button-*`, which the axis
-  // already raises. Native read `diameter` straight from the recipe, so a
-  // product that turned `minimumVisualTarget` on got 44pt buttons but 36pt
-  // icon buttons — the two renderers disagreed.
-  const visibleDiameter = visibleControlHeight(
-    sizeContract.diameter,
-    theme.environment.minimumVisualTarget,
-  );
-  const glyphSize = glyph[sizeContract.glyph];
-  // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
-  const edgeMargins = iconButtonEdgeMargins(edge, resolvedTone, size, theme.environment.minimumVisualTarget);
+  const frame = iconButtonFrame(theme, { tone, size, shape, edge, selected: selected === true });
   const unavailable = disabled || (loading && disableWhileLoading);
   return (
     <Pressable
@@ -200,53 +187,182 @@ export const IconButton: ReturnType<typeof forwardRef<ComponentRef<typeof Native
         busy: loading,
       }}
       disabled={unavailable}
-      hitSlop={hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)}
+      hitSlop={hitSlop ?? frame.hitSlop}
       onPress={loading ? () => undefined : onPress}
       onLongPress={loading ? () => undefined : onLongPress}
-      style={({ pressed }) => [
-        {
-          alignItems: "center",
-          backgroundColor: presentation.background ?? "transparent",
-          borderColor: presentation.border ?? "transparent",
-          borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
-          borderWidth: selected === true ? 0 : 1,
-          height: visibleDiameter,
-          justifyContent: "center",
-          minHeight: visibleDiameter,
-          minWidth: visibleDiameter,
-          opacity: disabled
-            ? iconButtonRecipe.states.disabledOpacity
-            : loading
-              ? 1
-            : pressed
-              ? iconButtonRecipe.states.pressedOpacity
-              : 1,
-          width: visibleDiameter,
-          ...edgeMargins,
-        },
-        layoutStyle,
-      ]}
+      style={({ pressed }) => [frame.style(disabled ? "disabled" : loading ? "idle" : pressed ? "pressed" : "idle"), layoutStyle]}
     >
       {loading ? (
-        renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (
-          <ActivityIndicator color={presentation.content} size="small" />
+        renderLoadingIndicator?.({ color: frame.content, size: "small" }) ?? (
+          <ActivityIndicator color={frame.content} size="small" />
         )
       ) : (
-        <View
-          accessible={false}
-          style={{
-            alignItems: "center",
-            height: glyphSize,
-            justifyContent: "center",
-            width: glyphSize,
-          }}
-        >
-          {resolvedIcon}
-        </View>
+        <IconButtonGlyph size={frame.glyphSize}>{resolvedIcon}</IconButtonGlyph>
       )}
     </Pressable>
   );
 });
+
+type IconButtonFrameInput = Readonly<{
+  tone: IconButtonTone;
+  size: IconButtonSize;
+  shape: IconButtonShape;
+  edge: IconButtonEdge | undefined;
+  selected: boolean;
+}>;
+
+/** One frame for IconButton and IconButtonLink: size, tone/selected paint, radius, edge overhang and press opacity. */
+function iconButtonFrame(theme: ReturnType<typeof useHjmNativeTheme>, { tone, size, shape, edge, selected }: IconButtonFrameInput) {
+  const presentation = resolveIconButtonPresentation(tone, theme.palette, selected);
+  const sizeContract = iconButtonRecipe.sizes[size];
+  // Web reads the same size through `--hjm-control-button-*`, which the axis
+  // already raises. Native read `diameter` straight from the recipe, so a
+  // product that turned `minimumVisualTarget` on got 44pt buttons but 36pt
+  // icon buttons — the two renderers disagreed.
+  const visibleDiameter = visibleControlHeight(
+    sizeContract.diameter,
+    theme.environment.minimumVisualTarget,
+  );
+  // Edge alignment from the same contract helper Web reads, on the visible diameter actually drawn.
+  const edgeMargins = iconButtonEdgeMargins(edge, tone, size, theme.environment.minimumVisualTarget);
+  return {
+    content: presentation.content,
+    glyphSize: glyph[sizeContract.glyph],
+    hitSlop: sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined,
+    style: (state: "idle" | "pressed" | "disabled") => ({
+      alignItems: "center" as const,
+      backgroundColor: presentation.background ?? "transparent",
+      borderColor: presentation.border ?? "transparent",
+      borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
+      borderWidth: selected ? 0 : 1,
+      height: visibleDiameter,
+      justifyContent: "center" as const,
+      minHeight: visibleDiameter,
+      minWidth: visibleDiameter,
+      opacity: state === "disabled"
+        ? iconButtonRecipe.states.disabledOpacity
+        : state === "pressed"
+          ? iconButtonRecipe.states.pressedOpacity
+          : 1,
+      width: visibleDiameter,
+      ...edgeMargins,
+    }),
+  };
+}
+
+function IconButtonGlyph({ size, children }: Readonly<{ size: number; children: ReactNode }>) {
+  return (
+    <View
+      accessible={false}
+      style={{
+        alignItems: "center",
+        height: size,
+        justifyContent: "center",
+        width: size,
+      }}
+    >
+      {children}
+    </View>
+  );
+}
+
+type IconButtonLinkHostProps = Omit<
+  PressableProps,
+  | "accessible"
+  | "accessibilityLabel"
+  | "accessibilityRole"
+  | "accessibilityState"
+  | "children"
+  | "disabled"
+  | "hitSlop"
+  | "onPress"
+  | "role"
+  | "style"
+>;
+
+/** Pressable props HJM prepared for a router adapter (for example Expo Router `<Link asChild>`). */
+export type IconButtonLinkRenderProps = IconButtonLinkHostProps & Readonly<{
+  accessible: true;
+  accessibilityLabel: string;
+  accessibilityRole: "link";
+  accessibilityState: NonNullable<PressableProps["accessibilityState"]>;
+  children: ReactNode;
+  disabled: boolean;
+  hitSlop: PressableProps["hitSlop"];
+  onPress: NonNullable<PressableProps["onPress"]>;
+  role: "link";
+  style: NonNullable<PressableProps["style"]>;
+  destination: LinkDestination;
+}>;
+
+/**
+ * Native navigation with IconButton paint, matching Web IconButtonLink. Routing follows the TopBarAction link
+ * precedent: the product either handles `onNavigate` or composes its router link through `renderLink`.
+ */
+export type IconButtonLinkProps = IconButtonLinkHostProps &
+  IconButtonNameProps &
+  IconButtonContentProps &
+  Readonly<{
+    destination: LinkDestination;
+    /** Optional when `renderLink` lets the router own activation. */
+    onNavigate?: (destination: LinkDestination) => void | Promise<void>;
+    renderLink?: (props: IconButtonLinkRenderProps) => ReactElement;
+    /** The link points at the current screen: selected surface and `accessibilityState.selected`. */
+    current?: boolean;
+    disabled?: boolean;
+    tone?: IconButtonTone;
+    size?: IconButtonSize;
+    shape?: IconButtonShape;
+    edge?: IconButtonEdge;
+    hitSlop?: PressableProps["hitSlop"];
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+  }>;
+
+export function IconButtonLink({
+  label,
+  children,
+  destination,
+  onNavigate,
+  renderLink,
+  current = false,
+  disabled = false,
+  tone = iconButtonRecipe.defaults.tone,
+  size = iconButtonRecipe.defaults.size,
+  shape = iconButtonRecipe.defaults.shape,
+  edge,
+  hitSlop,
+  layoutStyle,
+  ...props
+}: IconButtonLinkProps) {
+  const theme = useHjmNativeTheme();
+  assertNoRemovedStyleProps("IconButtonLink", props, ["style"]);
+  if (!label.trim()) throw new TypeError("IconButtonLink label must not be empty");
+  if (children === undefined || children === null || children === false) {
+    throw new TypeError("IconButtonLink requires children");
+  }
+  if (!renderLink && !onNavigate) throw new TypeError("IconButtonLink requires renderLink or onNavigate");
+  const frame = iconButtonFrame(theme, { tone, size, shape, edge, selected: current });
+  const controlProps: IconButtonLinkRenderProps = {
+    ...props,
+    accessible: true,
+    accessibilityLabel: label,
+    accessibilityRole: "link",
+    accessibilityState: { selected: current, disabled },
+    children: <IconButtonGlyph size={frame.glyphSize}>{children}</IconButtonGlyph>,
+    destination,
+    disabled,
+    hitSlop: hitSlop ?? frame.hitSlop,
+    onPress: () => {
+      if (!disabled) void onNavigate?.(destination);
+    },
+    role: "link",
+    style: ({ pressed }) => [frame.style(disabled ? "disabled" : pressed ? "pressed" : "idle"), layoutStyle],
+  };
+  if (renderLink) return renderLink(controlProps);
+  const { destination: _destination, ...pressableProps } = controlProps;
+  return <Pressable {...pressableProps} />;
+}
 
 export type LinkProps = Omit<
   PressableProps,

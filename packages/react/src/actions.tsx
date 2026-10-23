@@ -305,6 +305,60 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   },
 );
 
+/**
+ * Web navigation with IconButton paint, as ButtonLink is to Button. A 44px icon-only destination (shell settings,
+ * profile) needs the IconButton frame, `edge` and a current-page treatment; ButtonLink's padded pill and a product
+ * `<a>` with its own radius/size/selected CSS both drifted from IconButton (2026-10-23 Diairy ShellSettingsLink).
+ * Toggle, loading and mutation semantics stay on IconButton.
+ */
+export type IconButtonLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "aria-label" | "aria-current" | "children"> &
+  Pick<IconButtonProps, "label" | "tone" | "size" | "hitSlop" | "shape" | "edge" | "layoutStyle"> &
+  Readonly<{
+    href: string;
+    /** Icon only; `label` is the accessible name. */
+    children: ReactNode;
+    /** The link points at the current page: `aria-current="page"` with the selected surface (`iconButtonRecipe.states.selected`). */
+    current?: boolean;
+    disabled?: boolean;
+    /** Framework routing adapter; HJM still owns the anchor destination, ref, name, current state and disabled guards. */
+    renderAnchor?: (props: AnchorHTMLAttributes<HTMLAnchorElement> & { ref: ForwardedRef<HTMLAnchorElement> }) => ReactElement;
+  }>;
+
+export const IconButtonLink = forwardRef<HTMLAnchorElement, IconButtonLinkProps>(function IconButtonLink({
+  href, label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, hitSlop,
+  shape = iconButtonRecipe.defaults.shape, edge, current = false, disabled = false, layoutStyle,
+  children, className, style, onClick, onAuxClick, tabIndex, renderAnchor, ...props
+}, ref) {
+  if (!label.trim()) throw new TypeError("IconButtonLink label must not be empty");
+  const unavailable = disabled || props["aria-disabled"] === true || props["aria-disabled"] === "true";
+  const activate = (callback: typeof onClick) => (event: MouseEvent<HTMLAnchorElement>) => {
+    if (unavailable) { event.preventDefault(); event.stopPropagation(); return; }
+    callback?.(event);
+  };
+  const anchorProps = {
+    ...props,
+    ref,
+    // Same guard as ButtonLink: an unavailable link gives adapters no href, so no framework can navigate it.
+    href: unavailable ? undefined : href,
+    role: unavailable ? "link" : props.role,
+    "aria-label": label,
+    "aria-current": current ? "page" as const : undefined,
+    "aria-disabled": unavailable || undefined,
+    tabIndex: unavailable ? -1 : tabIndex,
+    onClick: activate(onClick),
+    onAuxClick: activate(onAuxClick),
+    className: classNames("hjm-icon-button", className),
+    style: { ...(hitSlop === undefined ? {} : { "--hjm-button-hit-slop": `${hitSlop}px` }), ...style, ...layoutStyle } as CSSProperties,
+    "data-tone": tone,
+    "data-size": size,
+    "data-shape": shape,
+    "data-edge": edge,
+    "data-state": unavailable ? "disabled" : "idle",
+    children,
+  };
+  return renderAnchor ? renderAnchor(anchorProps) : <a {...anchorProps} />;
+});
+
 export type LinkRenderProps = AnchorHTMLAttributes<HTMLAnchorElement> &
   Readonly<{
     children: ReactNode;

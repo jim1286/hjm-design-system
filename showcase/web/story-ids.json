@@ -102,6 +102,7 @@
     "components-actions-icon-button--default",
     "components-actions-icon-button--disabled",
     "components-actions-icon-button--large-text",
+    "components-actions-icon-button--navigation",
     "components-actions-icon-button--pending",
     "components-actions-inline-confirm--dark",
     "components-actions-inline-confirm--default",

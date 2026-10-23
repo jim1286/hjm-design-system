@@ -887,6 +887,16 @@
         "role": "canonical"
       },
       {
+        "name": "IconButtonLink",
+        "source": "packages/react/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "IconTile",
         "source": "packages/react/src/screens.tsx",
         "entries": [
@@ -3001,6 +3011,17 @@
         ],
         "canonicalComponent": "IconButton",
         "role": "canonical"
+      },
+      {
+        "name": "IconButtonLink",
+        "source": "packages/react-native/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "companion-or-alternative"
       },
       {
         "name": "IconTile",

@@ -267,6 +267,10 @@ export const publicExportEntries = {
     "./bottom-cta",
     "./actions"
   ],
+  IconButtonLink: [
+    "./bottom-cta",
+    "./actions"
+  ],
   IconTile: [
     "./screens"
   ],
