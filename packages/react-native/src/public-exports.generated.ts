@@ -499,6 +499,9 @@ export const publicExportEntries = {
   ScreenLayout: [
     "./screens"
   ],
+  ScreenRefreshControl: [
+    "./screens"
+  ],
   ScrollProgress: [
     "./scroll-progress"
   ],

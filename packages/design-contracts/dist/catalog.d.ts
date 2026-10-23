@@ -1482,7 +1482,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "ScreenLayout";
     readonly label: "화면 골격";
-    readonly companions: readonly ["ScreenHost"];
+    readonly companions: readonly ["ScreenHost", "ScreenRefreshControl"];
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";
@@ -9567,6 +9567,19 @@ export declare const recipeRegistry: {
                 readonly regular: 160;
                 readonly large: 220;
             };
+        };
+        readonly refresh: {
+            readonly tint: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly indicatorOffset: 16;
         };
     };
     readonly searchScreenRecipe: {

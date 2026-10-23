@@ -502,3 +502,18 @@ contracts `screen-patterns.test.ts`. 실기기·npm 게시·소비 앱 반영을
 - Web은 만들지 않는다. HjmProvider `host="surface"`가 문서 바탕을 칠하고 각 고정 영역이 `env(safe-area-inset-*)`를 직접 쓰므로
   같은 공백(창 배경 노출·좌우 inset 누락)이 없다.
 
+## 2026-10-23 당겨서 새로고침 — Native ScreenLayout `onRefresh` (개발 소스·미게시)
+
+spint 홈·알림·셀 세 화면이 `RefreshControl tintColor="transparent" colors={["transparent"]}`로 시스템 스피너를 숨기고
+목록 머리에 FlowerSpinner를 직접 넣었다. ScreenLayout(Native)은 `scrollProps.refreshControl`을 그대로 넘길 뿐 새로고침 상태와
+제품 표시 자리가 없었기 때문이다.
+
+- ScreenLayout `onRefresh`·`refreshing`(기본 false)·`refreshLabel`: 화면이 당김 동작과 표시를 소유한다. `scroll="screen"`(그리고 상태 교체 중의
+  본문)은 ScreenLayout의 ScrollView에 붙인다. `scroll="content"` 목록은 그 목록 안에서 `ScreenRefreshControl`을 `refreshControl`로 넘기며,
+  상태·색·표시는 감싸는 ScreenLayout context에서 읽는다(밖에서 쓰면 TypeError).
+- 표시: 기존 `loadingIndicator` 슬롯을 그대로 쓴다. 있으면 시스템 컨트롤은 제스처와 iOS 상단 공간을 위해 남기되 투명하게 그리고,
+  제품 표시를 본문 위쪽 `screenPatternRecipe.refresh.indicatorOffset`(16) 아래 가운데에 `refreshing` 동안 띄운다. 입력을 막지 않으며
+  보조기술에는 `refreshLabel` 이름의 busy progressbar로 알린다. 없으면 시스템 스피너가 `refresh.tint`(spinner brand)·`refresh.background`(surface)로 돈다.
+- `pullToDismiss`와 함께 쓰지 않는다(같은 맨 위 아래 당김). `scrollProps.refreshControl`과도 같이 주지 않는다(소유자 하나).
+- Web은 만들지 않는다. 브라우저 기본 당김(overscroll)이 있고 HJM Web에 당김 제스처 계약이 없어 같은 반복이 확인되지 않았다.
+

@@ -28,6 +28,7 @@ export const Pressable = host("Pressable");
 export const Switch = host("Switch");
 export const ActivityIndicator = host("ActivityIndicator");
 export const ScrollView = host("ScrollView");
+export const RefreshControl = host("RefreshControl");
 export function FlatList({ data = [], renderItem, ListEmptyComponent, ...props }: HostProps & { data?: readonly unknown[]; renderItem?: (info: { item: unknown; index: number }) => ReactNode; ListEmptyComponent?: ReactNode }) {
   return createElement("FlatList", props, data.length ? data.map((item, index) => createElement("Cell", { key: index }, renderItem?.({ item, index }))) : ListEmptyComponent);
 }

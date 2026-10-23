@@ -3728,6 +3728,15 @@
         "role": "canonical"
       },
       {
+        "name": "ScreenRefreshControl",
+        "source": "packages/react-native/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": "ScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "ScrollProgress",
         "source": "packages/react-native/src/scroll-progress.tsx",
         "entries": [

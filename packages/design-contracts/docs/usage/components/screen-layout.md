@@ -31,6 +31,7 @@
 | --- | --- | --- | --- |
 | `ScreenLayout` | supplemental. root에서는 내보내지 않는다 | `/screens` | `/screens` |
 | `ScreenHost` | 동반(Native 전용: 화면 바깥의 창 safe area와 바탕, 개발 소스·미게시) | — | `/screens` |
+| `ScreenRefreshControl` | 동반(Native 전용: `scroll="content"` 목록이 감싸는 ScreenLayout의 당겨서 새로고침, 개발 소스·미게시) | — | `/screens` |
 
 ## 최소 사용 예
 
@@ -91,6 +92,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 입력 하나에 한 번 포커스한다. 기본값 변경은 1.33.0부터 제공. 하단 시트 안에서는 자동 포커스하지 않는다. 아래 [진입 포커스](#진입-포커스) |
 | `pullToDismiss` (Native) | `boolean` | `false` | 미게시. 읽기 route 본문의 손잡이·본문 맨 위에서 새로 시작한 아래 당김을 기존 `exit.onPress`로 연결한다. `exit.kind="close"`, 기본 헤더, `scroll="screen"`이 필요하다. 손잡이가 `exit.label`을 가진 접근 가능한 닫기 버튼을 겸하며, 중복 X 헤더를 표시하지 않는다(2026-10-20 편지 시트 상단 정리 요청). `exit.disabled`면 당김/손잡이/접근성 escape도 비활성이다. Web 읽기 패널은 Sheet의 `swipeDirection="down"`을 사용한다 |
+| `onRefresh` · `refreshing` · `refreshLabel` (Native) | `() => void` · `boolean` · `string` | 없음 · `false` · 없음 | 개발 소스·미게시. 당겨서 새로고침을 화면이 소유한다. `scroll="screen"`은 본문에 바로 붙고, `scroll="content"` 목록은 `refreshControl={<ScreenRefreshControl />}`를 넘긴다. `loadingIndicator`가 있으면 시스템 스피너를 투명하게 두고 그 제품 표시를 본문 위에서 `screenPatternRecipe.refresh.indicatorOffset` 16 아래 가운데에 `refreshing` 동안 보인다(이름 `refreshLabel`, busy). 없으면 시스템 스피너가 `spinnerRecipe.tones.brand` 색과 `surface` 판으로 돈다. `onRefresh`에는 `refreshLabel`이 필요하고 `pullToDismiss`·`scrollProps.refreshControl`과 함께 줄 수 없다(`TypeError`). 사용자의 당김만 `refreshing`으로 연결하고 배경 재조회는 연결하지 않는다 |
 | `safeAreaBottom` (Native) | 0 이상의 유한수 | `0`(미게시) | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 탭바 위·이미 아래를 들인 host 안이면 0). 마지막 영역(footer, 없으면 본문)이 아래 여백을 `max(16, inset)`으로 한 번만 준다. 넘길 때는 host의 아래 SafeAreaView edge를 빼고, 둘을 같이 쓰지 않는다. 음수·무한대는 `RangeError` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
@@ -160,6 +162,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 - 배치는 Web·Native 모두 `layoutStyle`로 한다(Web은 `className`도 있다). 색·여백을 덮지 않는다.
 - 제목 옆 로고·아트워크 때문에 `header`에 TopBar나 직접 만든 헤더를 넣지 않는다. `titleLeading`을 쓰면 가운데 제목·양쪽 같은 폭 열·`exit`·`actions` 배치가 그대로 유지된다.
 - 첫 로딩에 브랜드 로더를 보이려고 `ready` 본문 안에 로딩 화면을 직접 두지 않는다. `state={{ kind: "loading", title }}` + `loadingIndicator`로 넘긴다.
+- 당겨서 새로고침의 시스템 스피너를 `tintColor="transparent"`로 숨기고 목록 머리에 제품 로더를 직접 넣지 않는다. Native `onRefresh`·`refreshing`·`refreshLabel`과 `loadingIndicator`로 넘기고, `scroll="content"` 목록은 `<ScreenRefreshControl />`을 쓴다(2026-10-23 spint 홈·알림·셀 세 곳).
 
 ## 플랫폼 차이
 

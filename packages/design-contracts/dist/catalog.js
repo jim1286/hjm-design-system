@@ -218,7 +218,7 @@ export const componentCatalog = [
       proofs and applicable environment matrices passed after repairing the host harness, screen body naming
       and fixtures. Stable promises the public contract, not device QA or consumer adoption (docs/stable-core.md).
     */
-    { name: "ScreenLayout", label: "화면 골격", companions: ["ScreenHost"], category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
+    { name: "ScreenLayout", label: "화면 골격", companions: ["ScreenHost", "ScreenRefreshControl"], category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "CompositionLayout", label: "구성 골격", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "SettingsScreen", label: "설정 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "screenPatternRecipe" },
     { name: "SearchScreen", label: "검색 화면", category: "layout", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "searchScreenRecipe" },

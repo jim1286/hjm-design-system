@@ -187,6 +187,26 @@ export declare const screenPatternRecipe: {
             readonly large: 220;
         };
     };
+    /**
+     * Pull to refresh (Native ScreenLayout `onRefresh`). Without a product `loadingIndicator` the system control spins in
+     * the shared brand spinner tone on the surface plate. With one, the system control stays for the gesture but is
+     * drawn transparent and the product visual sits `indicatorOffset` below the body top, centered, while `refreshing`.
+     * 2026-10-23: spint Home, Notifications and Cell each set `tintColor="transparent"` and put FlowerSpinner in a list
+     * header by hand.
+     */
+    readonly refresh: {
+        readonly tint: Readonly<{
+            source: "theme";
+            key: "contentBrand";
+            alpha?: number;
+        }>;
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surface";
+            alpha?: number;
+        }>;
+        readonly indicatorOffset: 16;
+    };
 };
 export type CompositionStateHeight = keyof typeof screenPatternRecipe.compositionState.minHeight;
 export declare function resolveCompositionStateMinHeight(height?: CompositionStateHeight): number | null;

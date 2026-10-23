@@ -1,5 +1,6 @@
 import { control, glyph, layout, opacity, radius, spacing } from "./foundations.js";
-import { avatarRecipe, emptyStateRecipe, type CornerAccessoryPlacement } from "./component-recipes.js";
+import { avatarRecipe, emptyStateRecipe, spinnerRecipe, type CornerAccessoryPlacement } from "./component-recipes.js";
+import { semanticColors } from "./semantic-colors.js";
 import type { MenuItemDescriptor } from "./behaviors.js";
 
 /** Initial load replaces the body; refresh/save errors belong beside retained content. */
@@ -215,6 +216,14 @@ export const screenPatternRecipe = {
    * Ready content is never stretched by this floor.
    */
   compositionState: { minHeight: { fit: null, compact: 96, regular: 160, large: 220 } },
+  /**
+   * Pull to refresh (Native ScreenLayout `onRefresh`). Without a product `loadingIndicator` the system control spins in
+   * the shared brand spinner tone on the surface plate. With one, the system control stays for the gesture but is
+   * drawn transparent and the product visual sits `indicatorOffset` below the body top, centered, while `refreshing`.
+   * 2026-10-23: spint Home, Notifications and Cell each set `tintColor="transparent"` and put FlowerSpinner in a list
+   * header by hand.
+   */
+  refresh: { tint: spinnerRecipe.tones.brand, background: semanticColors.surface.default, indicatorOffset: spacing.md },
 } as const;
 
 export type CompositionStateHeight = keyof typeof screenPatternRecipe.compositionState.minHeight;

@@ -13,8 +13,9 @@ export { MediaAlbumPageStatus } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./inputs.js";
-import { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
-import { AccessibilityInfo, Animated, PanResponder, Platform, Pressable, ScrollView, View, type AccessibilityActionEvent, type TextInput, type ScrollViewProps } from "react-native";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type Ref, type ReactNode } from "react";
+import { AccessibilityInfo, Animated, PanResponder, Platform, Pressable, RefreshControl, ScrollView, View, type AccessibilityActionEvent, type RefreshControlProps, type TextInput, type ScrollViewProps } from "react-native";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { Spinner } from "./internal/spinner.js";
 import { KeyboardAvoidanceContext, useInsideKeyboardAvoidance, useKeyboardOverlap, useScrollFocusedInputIntoView } from "./keyboard.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
@@ -37,6 +38,29 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
 type ScreenLayoutPrivateProps = Readonly<{ hjmBodyInlinePadding?: number }>;
+type ScreenRefreshState = Readonly<{ refreshing: boolean; onRefresh: () => void; productIndicator: boolean; progressViewOffset: number }>;
+const ScreenRefreshContext = createContext<ScreenRefreshState | null>(null);
+
+// ScrollView/VirtualizedList clone this element with `style` (and the scroll view as `children` on Android); pass them on.
+function HjmRefreshControl({ refresh, ...props }: Omit<RefreshControlProps, "refreshing" | "onRefresh"> & Readonly<{ refresh: ScreenRefreshState }>) {
+  const { palette } = useHjmNativeTheme();
+  // A product visual replaces the system spinner; the control stays for the gesture and the iOS top inset.
+  const tint = refresh.productIndicator ? "transparent" : resolveColorReference(screenPatternRecipe.refresh.tint, palette);
+  const plate = refresh.productIndicator ? "transparent" : resolveColorReference(screenPatternRecipe.refresh.background, palette);
+  return <RefreshControl {...props} refreshing={refresh.refreshing} onRefresh={refresh.onRefresh} tintColor={tint} colors={[tint]} progressBackgroundColor={plate} progressViewOffset={refresh.progressViewOffset} />;
+}
+
+export type ScreenRefreshControlProps = Omit<RefreshControlProps, "refreshing" | "onRefresh" | "tintColor" | "colors" | "progressBackgroundColor" | "progressViewOffset">;
+/**
+ * The enclosing ScreenLayout's pull to refresh for a `scroll="content"` list: `<FlatList refreshControl={<ScreenRefreshControl />} />`.
+ * State, colors and the product indicator come from that ScreenLayout's `onRefresh`/`refreshing`/`loadingIndicator`.
+ */
+export function ScreenRefreshControl(props: ScreenRefreshControlProps) {
+  const refresh = useContext(ScreenRefreshContext);
+  if (refresh === null) throw new TypeError("ScreenRefreshControl must render inside a ScreenLayout with onRefresh");
+  return <HjmRefreshControl {...props} refresh={refresh} />;
+}
+
 export type ScreenLayoutProps = Readonly<{
   title: string;
   /** The shared header owns badge placement; the product supplies its meaning and label. */
@@ -112,14 +136,34 @@ export type ScreenLayoutProps = Readonly<{
    * Bottom sheets disable automatic focus for this screen and all nested inputs, regardless of this prop.
    */
   initialFocus?: ScreenInitialFocus;
+  /**
+   * Pull to refresh, owned by the screen (2026-10-23: spint Home/Notifications/Cell hid the system spinner with
+   * `tintColor="transparent"` and drew FlowerSpinner in a list header by hand). `scroll="screen"` attaches the control
+   * to the body; a `scroll="content"` list passes `<ScreenRefreshControl />` as its `refreshControl`. With
+   * `loadingIndicator` the system spinner is transparent and that product visual shows below the body top while
+   * `refreshing`; without it the system spinner uses `screenPatternRecipe.refresh`. Bind only the user's pull: a
+   * background refetch should not set `refreshing`. Requires `refreshLabel`; not with `pullToDismiss` or
+   * `scrollProps.refreshControl`.
+   */
+  onRefresh?: () => void;
+  /** The product's pull-refresh request is running (default false). */
+  refreshing?: boolean;
+  /** Spoken name of the refresh in progress, in the product language (e.g. "새 글을 불러오는 중"). */
+  refreshLabel?: string;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, headerPosition = "flow", scrollEdgeEffect, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, pullToDismiss = false, keyboardAvoidance = true, safeAreaBottom = 0, safeAreaTop = 0, initialFocus = initialFocusDefaults.screen, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, headerPosition = "flow", scrollEdgeEffect, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, pullToDismiss = false, keyboardAvoidance = true, safeAreaBottom = 0, safeAreaTop = 0, initialFocus = initialFocusDefaults.screen, onRefresh, refreshing = false, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("ScreenLayout safeAreaTop must be non-negative");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
   if (pullToDismiss && (exit?.kind !== "close" || scroll !== "screen" || header != null)) throw new TypeError("ScreenLayout pullToDismiss requires its own close exit and screen scrolling");
+  if (onRefresh !== undefined) {
+    if (!refreshLabel?.trim()) throw new TypeError("ScreenLayout onRefresh requires a localized refreshLabel");
+    // Both read a downward pull at the top of the body; one gesture cannot mean close and reload.
+    if (pullToDismiss) throw new TypeError("ScreenLayout onRefresh cannot be combined with pullToDismiss");
+    if (scrollProps?.refreshControl) throw new TypeError("ScreenLayout owns the refresh control with onRefresh; drop scrollProps.refreshControl");
+  }
   const dismissal = useScreenPullDismiss(pullToDismiss && !exit?.disabled, exit?.onPress, testID, exit?.label);
   // A pull-dismiss sheet exposes its close action on the handle, without a second header row.
   const leading = exit && !pullToDismiss ? <ScreenExitButton {...exit} /> : null;
@@ -138,6 +182,10 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   });
   const [overlayHeaderHeight, setOverlayHeaderHeight] = useState(0);
   const overlayHeader = headerPosition === "overlay" && header != null;
+  const [bodyTop, setBodyTop] = useState(0);
+  const refresh = useMemo<ScreenRefreshState | null>(() => onRefresh === undefined ? null : {
+    refreshing, onRefresh, productIndicator: loadingIndicator != null, progressViewOffset: overlayHeader ? overlayHeaderHeight : 0,
+  }, [loadingIndicator, onRefresh, overlayHeader, overlayHeaderHeight, refreshing]);
   const [leadingWidth, setLeadingWidth] = useState(0), [actionsWidth, setActionsWidth] = useState(0);
   const sideWidth = Math.max(leadingWidth, actionsWidth);
   const hasMark = titleLeading !== undefined && titleLeading !== null && titleLeading !== false;
@@ -189,7 +237,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   const standaloneMark = (centered: boolean) => mark ? <View accessible accessibilityRole="header" accessibilityLabel={title} style={{ alignItems: centered ? "center" : "flex-start" }}>{mark}</View> : null;
   const Root = pullToDismiss ? Animated.View : View;
   return <Root ref={rootRef} onAccessibilityEscape={pullToDismiss ? dismissal.close : undefined} testID={testID} accessibilityLabel={titleVisibility === "hidden" || header ? title : undefined} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle, ...(pullToDismiss ? [{ transform: [{ translateY: dismissal.offset }] }] : [])]}>
-    <KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
+    <ScreenRefreshContext.Provider value={refresh}><KeyboardAvoidanceContext.Provider value={insideAvoidance || avoidKeyboard}><InitialFocusProvider scope={focusScope}>
     {dismissal.handle}
     {scrollEdgeEffect ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", top: 0, start: 0, end: 0, height: (overlayHeader ? overlayHeaderHeight : safeAreaTop) + recipe.padding, zIndex: 1 }}>{scrollEdgeEffect}</View> : null}
     {/* Not TopBar: this is the page heading (titleLarge, actions wrap under the title at
@@ -218,16 +266,17 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
       </View><Stack axis="inline" align="center" gap={topBarRecipe.gap}>{actions}</Stack>
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
-    {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
+    {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} {...(refresh ? { refreshControl: <HjmRefreshControl refresh={refresh} /> } : {})} onLayout={refresh ? event => setBodyTop(event.nativeEvent.layout.y) : undefined} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
       alwaysBounceVertical={pullToDismiss || scrollProps?.alwaysBounceVertical}
       onScrollBeginDrag={event => { dismissal.onScrollBeginDrag(event); scrollProps?.onScrollBeginDrag?.(event); }}
       onScrollEndDrag={event => { dismissal.onScrollEndDrag(event); scrollProps?.onScrollEndDrag?.(event); }}
       contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
-      : <View style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }}>{body}</View>}
+      : <View onLayout={refresh ? event => setBodyTop(event.nativeEvent.layout.y) : undefined} style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }}>{body}</View>}
+    {refresh?.refreshing && refresh.productIndicator && state.kind === "ready" ? <View pointerEvents="none" accessible accessibilityRole="progressbar" accessibilityLabel={refreshLabel} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" testID="hjm-screen-refresh-indicator" style={{ position: "absolute", top: bodyTop + refresh.progressViewOffset + recipe.refresh.indicatorOffset, start: 0, end: 0, alignItems: "center", zIndex: 1 }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : null}
     {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;
         only then may BottomCTA render bare, otherwise it keeps its own bar (utilverse tool footers lost theirs, 2026-10-17). */}
     {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}><BottomEntryFocusBoundary>{footer}</BottomEntryFocusBoundary></ScreenFooterContext.Provider></View> : null}
-    </InitialFocusProvider></KeyboardAvoidanceContext.Provider>
+    </InitialFocusProvider></KeyboardAvoidanceContext.Provider></ScreenRefreshContext.Provider>
   </Root>;
 }
 
