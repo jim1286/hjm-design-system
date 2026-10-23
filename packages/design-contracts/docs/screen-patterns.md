@@ -44,7 +44,9 @@ Flutter 앱에는 React 컴포넌트를 주입할 수 없다. 화면 역할과 �
   저장 방식·낙관적 갱신·실패 복구·탈퇴 확인은 [action-session](action-session.md)과 제품이 소유한다.
 - `NotificationInboxScreen`: 필터는 상태가 바뀌어도 유지하고 본문만 교체한다. `NotificationItem`은
   기존 ListRow에 지역화한 읽음 상태와 시각을 조합한다. href/onClick(Web), onPress(Native)를
-  그대로 사용하며 표시·탭·스크롤 자체가 읽음 처리를 실행하지 않는다.
+  그대로 사용하며 표시·탭·스크롤 자체가 읽음 처리를 실행하지 않는다. `unreadLabel`을 주면 안 읽음 항목에
+  NotificationRow와 같은 점(`notificationRowRecipe.unreadSize`, content brand)을 이름과 함께 그린다(2026-10-23,
+  Spint가 `trailing`에 "•" 글자를 두던 우회). Native 누르는 행의 합성 이름에 상태·시각 줄과 안 읽음 이름을 포함한다.
 - `ChatMessage`: 발신/수신 정렬, 작성자, 아바타, 답장 인용, 전송 상태와 시각을 합성한다.
   기존 Asset/VoiceNote 등은 children에 넣고 영수증·반응·재시도는 제품이 넘긴다. 전체 타임라인을
   live region으로 만들지 않으므로 과거 메시지 로딩 때 읽기 순서를 가로채지 않는다.

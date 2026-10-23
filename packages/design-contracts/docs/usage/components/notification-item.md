@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.17.1
-- 검토일: 2026-10-20
+- 검토일: 2026-10-23
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/컴포넌트/데이터 표시/알림 목록 항목`, `배포/구성/정보 표시/알림 항목`, `배포/화면/소통/알림함`
 
@@ -69,6 +69,7 @@ import { NotificationItem } from "@hjmds/react-native/screens";
 | `statusLabel` | 지역화 읽음 상태 문구(필수). 굵기만으로 상태를 전하지 않도록 글로도 표시한다 |
 | `timestamp` | 제품이 포맷한 상대·절대 시각 문자열(필수) |
 | `title`, `description` | 알림 내용 |
+| `unreadLabel` | 선택. 안 읽음 점의 지역화 접근성 이름(예: "읽지 않음"). 주면 `read={false}`일 때 HJM이 상태·시각 줄 끝에 점(`notificationRowRecipe.unreadSize` 6, content brand — NotificationRow와 같은 표식)을 그린다. 빈 문자열은 `TypeError`. 주지 않으면 기존처럼 굵기와 문구만 바뀐다 |
 | 나머지 ListRow props | `leading`·`trailing`·`density`·`disabled` 등, 이동은 `href`/`onClick`(Web), `onPress`(Native) |
 
 ## 배치
@@ -82,6 +83,9 @@ import { NotificationItem } from "@hjmds/react-native/screens";
 | 좁은 폭·큰 글자 | 제목·설명·상태 줄이 줄바꿈되며 행 높이가 늘어난다; 읽음 여부는 굵기만이 아니라 `statusLabel` 문구로도 전한다 | `NotificationItem` |
 
 ## 꼭 지킬 것
+
+- 안 읽음 점을 `trailing`에 "•" 글자나 제품 View로 그리지 않는다. `unreadLabel`을 준다(2026-10-23 Spint `NotificationsScreen`이 글자로 그리던 자리).
+- Native 누르는 행의 접근성 이름은 제목 → 안 읽음 이름 → 설명 → `statusLabel · timestamp` 순으로 합성된다. 2026-10-23 전에는 상태·시각 줄이 빠져 읽음 상태가 읽히지 않았다.
 
 - 표시·탭·스크롤이 읽음 처리를 하지 않는다. 읽음 mutation은 제품이 `onPress`/`onClick` 또는 화면 정책에서 실행하고 `read`를 갱신한다.
 - `selected`는 받지 않는다(타입에서 제외). 선택 목록이 필요하면 ListRow를 쓴다.

@@ -196,10 +196,21 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
   statusLabel: string;
   timestamp: string;
   description?: ReactNode;
+  /**
+   * Localized name of the unread dot. When given, an unread item draws the dot after the status·time line
+   * (notificationRowRecipe.unreadSize, content brand — the NotificationRow mark). Spint drew a "•" glyph in
+   * `trailing` because the item only changed weight and meta (2026-10-23).
+   */
+  unreadLabel?: string;
 }>;
-export function NotificationItem({ read, statusLabel, timestamp, description, title, className, ...props }: NotificationItemProps) {
+export function NotificationItem({ read, statusLabel, timestamp, description, unreadLabel, title, className, ...props }: NotificationItemProps) {
+  if (unreadLabel !== undefined && unreadLabel.trim().length === 0) throw new TypeError("NotificationItem unreadLabel must not be empty");
+  const meta = <Text variant="caption" tone="muted">{statusLabel} · {timestamp}</Text>;
+  const dot = !read && unreadLabel !== undefined
+    ? <span role="img" aria-label={unreadLabel} data-hjm-unread-dot="true" style={{ inlineSize: notificationRecipe.unreadSize, blockSize: notificationRecipe.unreadSize, borderRadius: "50%", flexShrink: 0, background: "var(--hjm-color-content-brand)" }} />
+    : null;
   return <ListRow {...props} className={classNames("hjm-notification-item", className)} data-unread={!read || undefined} title={<Text variant={listRowRecipe.title.textVariant} emphasis={read ? "regular" : "strong"}>{title}</Text>}
-    description={<Stack gap="xxs">{description}<Text variant="caption" tone="muted">{statusLabel} · {timestamp}</Text></Stack>} />;
+    description={<Stack gap="xxs">{description}{dot ? <span style={{ display: "flex", alignItems: "center", gap: notificationRecipe.contentGap }}>{meta}{dot}</span> : meta}</Stack>} />;
 }
 
 export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{

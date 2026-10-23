@@ -2,6 +2,7 @@ import { resolveDensityDefault } from "@hjmds/design-contracts/components/design
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { notificationRowRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { fontWeight, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveDescriptionListColumnCount,
@@ -603,7 +604,7 @@ export function ListRow({
   ...forwarded
 }: ListRowProps) {
   assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle","descriptionStyle"]);
-  const { hjmTitleEmphasis, hjmMeta, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
+  const { hjmTitleEmphasis, hjmMeta, hjmUnreadLabel, ...props } = forwarded as typeof forwarded & ListRowPrivateProps;
   const theme = useHjmNativeTheme();
   const density = suppliedDensity ?? resolveDensityDefault(theme.environment.density, { comfortable: listRowRecipe.defaults.density, compact: "compact" } as const);
   // Tell the enclosing List item whether this row has a leading frame, so the indented separator after it starts at
@@ -629,10 +630,14 @@ export function ListRow({
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
   const resolvedMetadata = titleMetadata;
   const resolvedTrailingLabel = trailingLabel ?? trailingText;
+  // The NotificationItem status·time caption and unread mark are row content; a pressable row announces only this
+  // composed name, so omitting them hid the read state from screen readers (found 2026-10-23).
   const composedLabel = accessibilityLabel ?? [
     title,
+    hjmUnreadLabel,
     metadataLabel,
     description,
+    hjmMeta,
     resolvedTrailingLabel,
   ].filter(Boolean).join(", ");
   const visualState = {
@@ -740,7 +745,14 @@ export function ListRow({
             {description}
           </Text>
         ) : null}
-        {hjmMeta ? <Text variant="caption" tone="muted">{hjmMeta}</Text> : null}
+        {hjmMeta ? (hjmUnreadLabel ? (
+          <View style={{ alignItems: "center", flexDirection: "row", gap: notificationRowRecipe.contentGap }}>
+            <Text variant="caption" tone="muted">{hjmMeta}</Text>
+            <View accessible accessibilityRole="image" accessibilityLabel={hjmUnreadLabel} testID="hjm-unread-dot"
+              style={{ backgroundColor: theme.colors.contentBrand, borderRadius: notificationRowRecipe.unreadSize / 2, flexShrink: 0,
+                height: notificationRowRecipe.unreadSize, width: notificationRowRecipe.unreadSize }} />
+          </View>
+        ) : <Text variant="caption" tone="muted">{hjmMeta}</Text>) : null}
       </View>
       {trailingText || trailing ? (
         <View

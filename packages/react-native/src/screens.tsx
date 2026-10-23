@@ -266,10 +266,14 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
   statusLabel: string;
   timestamp: string;
   description?: string;
+  /** Localized name of the unread dot. When given, an unread item draws the dot after the status·time line. */
+  unreadLabel?: string;
 }>;
-export function NotificationItem({ read, statusLabel, timestamp, description, ...props }: NotificationItemProps) {
+export function NotificationItem({ read, statusLabel, timestamp, description, unreadLabel, ...props }: NotificationItemProps) {
+  if (unreadLabel !== undefined && unreadLabel.trim().length === 0) throw new TypeError("NotificationItem unreadLabel must not be empty");
   // Status·time is a separate muted caption, as on Web, not a second description line.
-  const privateProps: ListRowPrivateProps = { hjmTitleEmphasis: read ? "regular" : "strong", hjmMeta: `${statusLabel} · ${timestamp}` };
+  const privateProps: ListRowPrivateProps = { hjmTitleEmphasis: read ? "regular" : "strong", hjmMeta: `${statusLabel} · ${timestamp}`,
+    ...(!read && unreadLabel !== undefined ? { hjmUnreadLabel: unreadLabel } : {}) };
   return <ListRow {...props} /* Unread weight and meta: renderer-private inputs, not deprecated titleStyle (list-row-private.ts). */ {...privateProps}
     {...(description === undefined ? {} : { description })} />;
 }
