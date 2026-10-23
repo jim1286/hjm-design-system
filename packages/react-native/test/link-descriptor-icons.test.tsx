@@ -113,3 +113,14 @@ describe("Native Link descriptor icons", () => {
     act(() => renderer.unmount());
   });
 });
+
+it("lets a long label shrink beside a leading glyph so it wraps inside the parent", () => {
+  // 2026-10-23 flex audit: at its natural width the label plus the glyph overran the parent (link.md: long labels wrap).
+  const label = "아주 긴 링크 문구가 좁은 폭에서 줄바꿈되어야 해요";
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><Link descriptor={{ label, destination: { kind: "internal", href: "/a" } }} leading={<View testID="glyph" />} onNavigate={() => {}} /></HjmNativeProvider>); });
+  const text = tree.root.findAllByType(Text).find(node => node.props.children === label)!;
+  const style = [text.props.style].flat(5).reduce<Record<string, unknown>>((all, item) => ({ ...all, ...(item ?? {}) }), {});
+  expect(style.flexShrink).toBe(1);
+  act(() => tree.unmount());
+});

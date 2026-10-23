@@ -463,7 +463,9 @@ export function Link({
       {leadingNode ? <View accessible={false}>{leadingNode}</View> : null}
       <Text
               fontRole="ui"
-        style={{ color: colors.contentBrand, textDecorationLine: "underline" }}
+        // Shrink beside a leading/trailing glyph so a long label wraps inside the parent (link.md: long labels wrap);
+        // at its natural width the label plus the glyph overran it (2026-10-23 flex audit).
+        style={{ color: colors.contentBrand, flexShrink: 1, textDecorationLine: "underline" }}
         variant="bodyLarge"
       >
         {resolved.label}
