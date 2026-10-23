@@ -1,3 +1,5 @@
+"use client";
+
 import { Grid } from "./layout.js";
 import type { GridDescriptor } from "@hjmds/design-contracts/grid";
 import { Button } from "./actions.js";
