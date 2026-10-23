@@ -225,6 +225,42 @@ export function resolveCompositionStateMinHeight(height: CompositionStateHeight 
   return screenPatternRecipe.compositionState.minHeight[height];
 }
 
+/**
+ * Native host outside the screens: window safe-area insets and the canvas behind them. 2026-10-23 audit: choose-window
+ * (`app/_layout.tsx` AppCanvas), Unairplane (`ui/index.tsx` AppScreenHost, FlightLookupScreen, BoardingPassScanner)
+ * each wrapped routes in `SafeAreaView edges={["top","left","right"]}` painted `colors.bg`, because ScreenLayout only
+ * took top/bottom numbers and its root stops at the reading width, so the window background showed in the notch and
+ * beside the column. The bottom stays out of the default: ScreenLayout `safeAreaBottom` pads the last region
+ * max(gutter, inset) once, and a host bottom inset would add the gutter on top of it.
+ */
+export type ScreenHostEdge = "top" | "right" | "bottom" | "left";
+export type ScreenHostSurface = "default" | "transparent";
+export const screenHostDefaults = { edges: ["top", "right", "left"], surface: "default" } as const satisfies {
+  edges: readonly ScreenHostEdge[];
+  surface: ScreenHostSurface;
+};
+const screenHostEdges: readonly ScreenHostEdge[] = ["top", "right", "bottom", "left"];
+
+/** Padding a ScreenHost applies from window insets; edges outside the list stay 0. */
+export function resolveScreenHostInsets(
+  edges: readonly ScreenHostEdge[],
+  insets: Readonly<Partial<Record<ScreenHostEdge, number>>>,
+): Readonly<Record<ScreenHostEdge, number>> {
+  const seen = new Set<ScreenHostEdge>();
+  for (const edge of edges) {
+    if (!screenHostEdges.includes(edge)) throw new TypeError(`Unsupported ScreenHost edge: ${String(edge)}`);
+    if (seen.has(edge)) throw new TypeError(`Duplicate ScreenHost edge: ${edge}`);
+    seen.add(edge);
+  }
+  const padding = { top: 0, right: 0, bottom: 0, left: 0 };
+  for (const edge of seen) {
+    const value = insets[edge] ?? 0;
+    if (!Number.isFinite(value) || value < 0) throw new RangeError(`ScreenHost ${edge} inset must be non-negative`);
+    padding[edge] = value;
+  }
+  return padding;
+}
+
 /** Controlled composer: HJM never clears drafts or interprets a fulfilled callback as server delivery. */
 export type MessageComposerDescriptor = Readonly<{
   value: string;

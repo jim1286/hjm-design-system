@@ -190,6 +190,22 @@ export declare const screenPatternRecipe: {
 };
 export type CompositionStateHeight = keyof typeof screenPatternRecipe.compositionState.minHeight;
 export declare function resolveCompositionStateMinHeight(height?: CompositionStateHeight): number | null;
+/**
+ * Native host outside the screens: window safe-area insets and the canvas behind them. 2026-10-23 audit: choose-window
+ * (`app/_layout.tsx` AppCanvas), Unairplane (`ui/index.tsx` AppScreenHost, FlightLookupScreen, BoardingPassScanner)
+ * each wrapped routes in `SafeAreaView edges={["top","left","right"]}` painted `colors.bg`, because ScreenLayout only
+ * took top/bottom numbers and its root stops at the reading width, so the window background showed in the notch and
+ * beside the column. The bottom stays out of the default: ScreenLayout `safeAreaBottom` pads the last region
+ * max(gutter, inset) once, and a host bottom inset would add the gutter on top of it.
+ */
+export type ScreenHostEdge = "top" | "right" | "bottom" | "left";
+export type ScreenHostSurface = "default" | "transparent";
+export declare const screenHostDefaults: {
+    readonly edges: readonly ["top", "right", "left"];
+    readonly surface: "default";
+};
+/** Padding a ScreenHost applies from window insets; edges outside the list stay 0. */
+export declare function resolveScreenHostInsets(edges: readonly ScreenHostEdge[], insets: Readonly<Partial<Record<ScreenHostEdge, number>>>): Readonly<Record<ScreenHostEdge, number>>;
 /** Controlled composer: HJM never clears drafts or interprets a fulfilled callback as server delivery. */
 export type MessageComposerDescriptor = Readonly<{
     value: string;

@@ -486,3 +486,19 @@ HJM 1.31.0 채택 뒤에도 제품이 공통 계산을 다시 하던 세 지점�
 
 검증: Web `hjm-1320-screen-insets.browser.test.tsx`(Chromium), Native `hjm-1320-screen-insets.test.tsx`(host 렌더),
 contracts `screen-patterns.test.ts`. 실기기·npm 게시·소비 앱 반영을 뜻하지 않는다.
+
+## 2026-10-23 화면 바깥 host — Native `ScreenHost` (개발 소스·미게시)
+
+선택의창 `app/_layout.tsx` AppCanvas, Unairplane `ui/index.tsx` AppScreenHost·`FlightLookupScreen`·`BoardingPassScannerScreen`이
+같은 `SafeAreaView edges={["top","left","right"]}` + `colors.bg` 칠하기를 반복했다. ScreenLayout(Native)은 `safeAreaTop`·`safeAreaBottom`
+숫자만 받고 좌우 inset이 없으며, 루트가 읽기 폭(720)에서 멈춰 그 밖과 노치 아래에 창 배경이 드러났기 때문이다.
+여러 화면·navigator 전체를 감싸는 자리라 ScreenLayout prop이 아니라 바깥 host로 둔다.
+
+- `ScreenHost`(`@hjmds/react-native/screens`, ScreenLayout companion): 창 전체를 차지하고 `surface="default"`이면 theme `bg`를 칠한다.
+  `edges`(기본 `screenHostDefaults.edges` = top·right·left)만큼 HjmNativeProvider `safeAreaInsets`를 padding으로 준다.
+  값과 검증은 contracts `resolveScreenHostInsets`(알 수 없는·중복 edge는 TypeError, 음수 inset은 RangeError)가 소유한다.
+- 아래는 기본에서 뺀다. ScreenLayout `safeAreaBottom`이 마지막 영역에 max(16, inset)을 한 번 주므로 host가 아래를 들이면 16 + inset이 된다.
+  ScreenLayout·footer가 없는 내용을 감쌀 때만 `bottom`을 넣는다.
+- Web은 만들지 않는다. HjmProvider `host="surface"`가 문서 바탕을 칠하고 각 고정 영역이 `env(safe-area-inset-*)`를 직접 쓰므로
+  같은 공백(창 배경 노출·좌우 inset 누락)이 없다.
+

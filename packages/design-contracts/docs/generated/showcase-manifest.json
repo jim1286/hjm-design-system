@@ -5416,7 +5416,9 @@
       "storyId": "layout/screen-layout",
       "name": "ScreenLayout",
       "label": "화면 골격",
-      "companions": [],
+      "companions": [
+        "ScreenHost"
+      ],
       "extensions": [],
       "category": "layout",
       "platform": "adaptive",

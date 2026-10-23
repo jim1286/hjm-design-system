@@ -1482,6 +1482,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "ScreenLayout";
     readonly label: "화면 골격";
+    readonly companions: readonly ["ScreenHost"];
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "stable";

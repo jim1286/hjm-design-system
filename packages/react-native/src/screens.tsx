@@ -25,14 +25,14 @@ import { BottomNavigationInsetContext } from "./internal/bottom-navigation-inset
 import { BottomEntryFocusBoundary, InitialFocusProvider, useInitialFocusScope } from "./internal/initial-focus.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { useScreenPullDismiss } from "./internal/screen-dismiss.js";
-import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, resolveCompositionStateMinHeight, type CompositionStateHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, resolveCompositionStateMinHeight, type CompositionStateHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, resolveScreenHostInsets, screenHostDefaults, type ScreenHostEdge, type ScreenHostSurface, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 /** Internal: lets ChatScreen narrow only the timeline gutter without a public spacing escape hatch. */
@@ -229,6 +229,31 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
     {footer ? <View style={{ padding, paddingBottom: bottomPadding, borderTopWidth: contentInset === "none" ? 0 : 1, borderColor: colors.border }}><ScreenFooterContext.Provider value={contentInset === "none" ? null : { bottomPadding }}><BottomEntryFocusBoundary>{footer}</BottomEntryFocusBoundary></ScreenFooterContext.Provider></View> : null}
     </InitialFocusProvider></KeyboardAvoidanceContext.Provider>
   </Root>;
+}
+
+export type { ScreenHostEdge, ScreenHostSurface } from "@hjmds/design-contracts/screen-patterns";
+export type ScreenHostProps = Readonly<{
+  children?: ReactNode;
+  /**
+   * Window edges padded by HjmNativeProvider `safeAreaInsets` (default top, right, left). Leave `bottom` to the
+   * screen's `safeAreaBottom`, which pads the last region max(gutter, inset) once; add it only around content that
+   * has no ScreenLayout/footer of its own.
+   */
+  edges?: readonly ScreenHostEdge[];
+  /** `default` paints the theme canvas behind the insets and beside the reading column; `transparent` keeps an outer wallpaper. */
+  surface?: ScreenHostSurface;
+  testID?: string;
+}>;
+
+/**
+ * The outer host of routes (around a navigator or one screen): the full window, painted with the canvas, padded by
+ * the provider's window insets for `edges`. Replaces product `SafeAreaView` + `colors.bg` wrappers (2026-10-23).
+ */
+export function ScreenHost({ children, edges = screenHostDefaults.edges, surface = screenHostDefaults.surface, testID }: ScreenHostProps) {
+  const { colors } = useHjmNativeTheme();
+  const padding = resolveScreenHostInsets(edges, useHjmNativeSafeAreaInsets());
+  if (surface !== "default" && surface !== "transparent") throw new TypeError(`Unsupported ScreenHost surface: ${String(surface)}`);
+  return <View testID={testID} style={{ flex: 1, minHeight: 0, width: "100%", backgroundColor: surface === "transparent" ? "transparent" : colors.bg, paddingTop: padding.top, paddingRight: padding.right, paddingBottom: padding.bottom, paddingLeft: padding.left }}>{children}</View>;
 }
 
 /**

@@ -145,6 +145,27 @@ export function resolveCompositionStateMinHeight(height = "fit") {
     }
     return screenPatternRecipe.compositionState.minHeight[height];
 }
+export const screenHostDefaults = { edges: ["top", "right", "left"], surface: "default" };
+const screenHostEdges = ["top", "right", "bottom", "left"];
+/** Padding a ScreenHost applies from window insets; edges outside the list stay 0. */
+export function resolveScreenHostInsets(edges, insets) {
+    const seen = new Set();
+    for (const edge of edges) {
+        if (!screenHostEdges.includes(edge))
+            throw new TypeError(`Unsupported ScreenHost edge: ${String(edge)}`);
+        if (seen.has(edge))
+            throw new TypeError(`Duplicate ScreenHost edge: ${edge}`);
+        seen.add(edge);
+    }
+    const padding = { top: 0, right: 0, bottom: 0, left: 0 };
+    for (const edge of seen) {
+        const value = insets[edge] ?? 0;
+        if (!Number.isFinite(value) || value < 0)
+            throw new RangeError(`ScreenHost ${edge} inset must be non-negative`);
+        padding[edge] = value;
+    }
+    return padding;
+}
 /** Safari may report the final IME Enter as keyCode 229 after isComposing becomes false. */
 export function shouldSubmitMessageKey(event, mode = "newline") {
     return mode === "send" && event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229;

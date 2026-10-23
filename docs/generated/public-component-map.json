@@ -3710,6 +3710,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "ScreenHost",
+        "source": "packages/react-native/src/screens.tsx",
+        "entries": [
+          "./screens"
+        ],
+        "canonicalComponent": "ScreenLayout",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "ScreenLayout",
         "source": "packages/react-native/src/screens.tsx",
         "entries": [

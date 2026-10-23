@@ -30,6 +30,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `ScreenLayout` | supplemental. root에서는 내보내지 않는다 | `/screens` | `/screens` |
+| `ScreenHost` | 동반(Native 전용: 화면 바깥의 창 safe area와 바탕, 개발 소스·미게시) | — | `/screens` |
 
 ## 최소 사용 예
 
@@ -154,7 +155,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
   unmount되어 입력 초안이 사라진다.
 - `state.title`·문구는 i18n 키로 넣는다. ready 외 상태의 빈 `title`은 `TypeError`다.
 - **`safeAreaBottom`을 받는 화면 구성(Native, 1.28.1 감사):** ScreenLayout을 그리는 공개 구성은 모두 같은 prop을 받아 자기 ScreenLayout에 넘긴다 — `SettingsScreen`·`NotificationInboxScreen`·`ChatScreen`·`OverviewScreen`·`EditorScreen`·`ProfileScreen`·`ModerationScreen`·`MediaSelectionScreen`·`PermissionScreen`·`CommentThreadScreen`·`SearchScreen`(+`footer`)·`SavedItemsScreen`(ListDetailScreen 경유)·`ListDetailScreen`(목록·상세 pane 둘 다)·`OnboardingScreen`. 로그인은 `AuthScreenLayout` `safeAreaBottom`(같은 max 규칙, 기준은 paddingBlock). 하단 막대를 직접 그리는 `BottomCTA`·`BottomNavigation`은 각자 `safeAreaBottom`, FAB는 `safeAreaBottomInset`을 받는다. `Layout`(primitives)의 `footer`는 배치 슬롯일 뿐 inset을 정하지 않는다.
-- Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 위·옆 safe area와 탭바 inset을 먼저 처리한다. 아래 홈 인디케이터는 host가 SafeAreaView로 들이지 말고 `safeAreaBottom`으로 넘긴다(들인 뒤 footer 16을 더하면 버튼 아래가 50이 된다).
+- Web host는 실제 남은 높이(`height:100%` 등)를, Native host는 위·옆 safe area와 탭바 inset을 먼저 처리한다. Native의 위·옆 safe area와 그 뒤 바탕은 제품 `SafeAreaView`+`colors.bg` 대신 [ScreenHost](#화면-바깥-host와-안전-영역--native-screenhost-개발-소스미게시)로 둔다. 아래 홈 인디케이터는 host가 SafeAreaView로 들이지 말고 `safeAreaBottom`으로 넘긴다(들인 뒤 footer 16을 더하면 버튼 아래가 50이 된다).
   HJM은 기종별 높이를 추측하지 않는다.
 - 배치는 Web·Native 모두 `layoutStyle`로 한다(Web은 `className`도 있다). 색·여백을 덮지 않는다.
 - 제목 옆 로고·아트워크 때문에 `header`에 TopBar나 직접 만든 헤더를 넣지 않는다. `titleLeading`을 쓰면 가운데 제목·양쪽 같은 폭 열·`exit`·`actions` 배치가 그대로 유지된다.
@@ -196,6 +197,27 @@ dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽�
 - 오버레이 안의 화면 진입 포커스: 2026-10-18 번뚝 검색 오버레이. Web은 화면을 감싼 제품 `aria-modal`을 화면 위의 모달로 보고 진입 포커스를 막았고, HJM Sheet 안에 둔 ScreenLayout은 Sheet의 첫 컨트롤(닫기)에 포커스를 빼앗겼다. Native는 오버레이 표시 전에 칸을 포커스해 무시될 수 있었다. 감싸는 모달은 막지 않고 오버레이 안의 화면은 오버레이와 함께 진입하도록 고쳤다(1.31.0 patch).
 
 2026-10-18 사용자 결정: 빈 상태 문구는 화면·부분 영역 모두 `body`(14)로 표시한다. 오류·접근 제한의 제목은 기존 위계를 유지한다. 상단 보조 문구는 Spint 헤더 교체 중 커지고 강조된 문제를 계기로 표시를 제거했다. `state.description`과 본문의 안내는 유지한다.
+
+### 화면 바깥 host와 안전 영역 — Native `ScreenHost` (개발 소스·미게시)
+
+navigator 전체나 한 화면을 감싸 창의 위·옆 safe area와 그 뒤·읽기 폭 바깥의 바탕을 HJM이 칠한다. inset 값은
+`HjmNativeProvider safeAreaInsets`(보통 `useSafeAreaInsets()`)에서 읽는다. 제품의 `SafeAreaView edges={["top","left","right"]}` +
+`backgroundColor: colors.bg` 감싸기를 이것으로 바꾼다(2026-10-23 선택의창 AppCanvas, Unairplane AppScreenHost).
+
+| prop | 값 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `edges` | `"top"`·`"right"`·`"bottom"`·`"left"` 배열 | `["top","right","left"]`(`screenHostDefaults.edges`) | 들일 창 가장자리. 아래는 화면의 `safeAreaBottom`이 max(16, inset)으로 한 번 소유하므로 기본에서 뺀다. ScreenLayout·footer가 없는 내용만 감쌀 때 `bottom`을 넣는다. 중복·알 수 없는 값은 `TypeError` |
+| `surface` | `"default"`·`"transparent"` | `"default"` | `default`는 theme `bg`를 칠한다. 제품 배경 그림을 바깥에 둘 때 `transparent` |
+| `testID` | string | 없음 | |
+
+```tsx
+// app/_layout.tsx — 지도처럼 상태바 뒤까지 그리는 화면은 그 화면에서 top을 뺀다.
+<HjmNativeProvider safeAreaInsets={useSafeAreaInsets()}>
+  <ScreenHost edges={edgeToEdge ? ["left", "right"] : undefined}><Stack screenOptions={{ headerShown: false }} /></ScreenHost>
+</HjmNativeProvider>
+```
+
+Web에는 없다. HjmProvider `host="surface"`가 바탕을 칠하고 고정 영역이 `env(safe-area-inset-*)`를 직접 쓴다([계약](../../screen-patterns.md#2026-10-23-화면-바깥-host--native-screenhost-개발-소스미게시)).
 
 ### Native 읽기 화면 당겨 닫기 (미게시)
 

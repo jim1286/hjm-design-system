@@ -240,7 +240,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 216개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 217개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -403,6 +403,7 @@
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
 | ScatterChart | Chart | companion-or-alternative | ./chart |
+| ScreenHost | ScreenLayout | companion-or-alternative | ./screens |
 | ScreenLayout | ScreenLayout | canonical | ./screens |
 | ScrollProgress | Progress | optional-extension | ./scroll-progress |
 | SearchField | SearchField | canonical | root, ./inputs |

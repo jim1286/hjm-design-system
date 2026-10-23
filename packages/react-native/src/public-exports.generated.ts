@@ -493,6 +493,9 @@ export const publicExportEntries = {
   ScatterChart: [
     "./chart"
   ],
+  ScreenHost: [
+    "./screens"
+  ],
   ScreenLayout: [
     "./screens"
   ],
