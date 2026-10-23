@@ -19,6 +19,7 @@ it("keeps the sheet open with the error and the confirmed value when the save fa
   expect(tree.root.findByType(ListRow).props.description).toBe("한국어");
   act(() => tree.root.findByType(ListRow).props.onPress());
   expect(tree.root.findByType(Sheet).props.open).toBe(true);
+  expect(tree.root.findByType(ListRow).props.accessibilityState).toEqual({ expanded: true });
 
   act(() => tree.root.findByType(RadioGroup).props.onValueChange("en"));
   expect(change).toHaveBeenCalledWith("en");

@@ -19,11 +19,13 @@ export type ChoiceRowProps<Value extends string = string> = Readonly<{
   placeholder?: string;
   leading?: ReactNode;
   trailing?: ReactNode;
+  /** Spoken result of activating the row, e.g. "Opens the language list". */
+  accessibilityHint?: string;
   disabled?: boolean;
   loading?: boolean;
 }>;
 
-export function ChoiceRow<Value extends string = string>({ title, items, value, onValueChange, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, disabled = false, loading = false }: ChoiceRowProps<Value>) {
+export function ChoiceRow<Value extends string = string>({ title, items, value, onValueChange, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, accessibilityHint, disabled = false, loading = false }: ChoiceRowProps<Value>) {
   const { valueLabel } = resolveChoiceRow({ title, items, value, ...(placeholder === undefined ? {} : { placeholder }) });
   if (!closeLabel.trim() || !errorLabel.trim()) throw new TypeError("ChoiceRow text must not be empty");
   const [open, setOpen] = useState(false);
@@ -39,8 +41,11 @@ export function ChoiceRow<Value extends string = string>({ title, items, value, 
   };
   return <>
     <ListRow title={title} description={valueLabel} {...(leading === undefined ? {} : { leading })} {...(trailing === undefined ? {} : { trailing })} disabled={disabled} loading={loading}
+      accessibilityState={{ expanded: open }} {...(accessibilityHint === undefined ? {} : { accessibilityHint })}
       onPress={() => { setFailed(false); setOpen(true); }} />
     <Sheet open={open} onOpenChange={(next) => { if (!pending) setOpen(next); }} title={sheetTitle ?? title} closeLabel={closeLabel} busy={pending}
+      // Locale and region lists outgrow the screen; the header stays fixed while the choices scroll.
+      scrollable
       {...(sheetDescription === undefined ? {} : { description: sheetDescription })}>
       <RadioGroup accessibilityLabel={sheetTitle ?? title} orientation="vertical" value={value} items={items} disabled={pending}
         {...(failed ? { error: errorLabel } : {})} onValueChange={choose} />

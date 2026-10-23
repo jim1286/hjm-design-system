@@ -57,6 +57,7 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 | `onValueChange` | `(value) => void \| Promise<void>` | 필수 | Promise를 돌려주면 끝날 때까지 시트가 잠긴다. 거부되면 시트를 연 채 `errorLabel`을 보인다 |
 | `sheetTitle`·`sheetDescription` | string | `title`·없음 | 시트 머리 |
 | `leading`·`trailing` | ReactNode | 없음 | 제품 아이콘·꼬리 표시. ListRow 슬롯 그대로 |
+| Native `accessibilityHint` | string | 없음 | 행을 눌렀을 때 일어날 일(예: 언어 목록 열기)을 제품 언어로 |
 | `disabled`·`loading` | boolean | false | ListRow의 비활성·자리 유지 로딩 |
 
 ## 배치
@@ -74,4 +75,5 @@ import { ChoiceRow } from "@hjmds/react-native/choice-row";
 - `value`는 저장이 확인된 값만 넣는다. 선택 직후 낙관적으로 바꾸면 실패해도 행이 바뀐 값으로 남는다.
 - 즉시 저장 설정에 쓴다. 하단 저장 버튼으로 모아 저장하는 설정은 [설정 화면의 일괄 저장](../screens/common-settings.md#즉시-저장과-일괄-저장-선택)대로 초안을 따로 둔다.
 - 저장 중에는 시트를 닫거나 다른 값을 고를 수 없다. 다시 고르면 이전 오류는 지워진다.
+- 행은 시트가 열렸는지를 낭독한다(Web `aria-expanded`·`aria-haspopup="dialog"`, Native `expanded`). 시트는 머리를 고정하고 선택지만 스크롤한다(1.41.1, utilverse 언어 행 이관에서 확인).
 - 문구·선택지·저장은 제품이 공급한다. 언어 목록이나 테마 적용 로직은 이 컴포넌트에 없다.

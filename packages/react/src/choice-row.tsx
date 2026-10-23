@@ -41,6 +41,7 @@ export function ChoiceRow<Value extends string = string>({ title, items, value, 
   };
   return <>
     <ListRow title={title} description={valueLabel} {...(leading === undefined ? {} : { leading })} {...(trailing === undefined ? {} : { trailing })} disabled={disabled} loading={loading}
+      aria-haspopup="dialog" aria-expanded={open}
       onClick={() => { setFailed(false); setOpen(true); }} />
     <Sheet open={open} onOpenChange={(next) => { if (!pending) setOpen(next); }} title={sheetTitle ?? title} closeLabel={closeLabel} busy={pending}
       {...(sheetDescription === undefined ? {} : { description: sheetDescription })}>
