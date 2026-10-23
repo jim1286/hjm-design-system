@@ -84,6 +84,7 @@ import {
 } from "react-native";
 
 import { useHjmNativeTheme, type HjmNativeTheme } from "./provider.js";
+import { useInheritedTextColor } from "./internal/text-colors.js";
 import { useInheritedTextAlign } from "./internal/text-align.js";
 import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/design-contracts/foundations";
 import {
@@ -222,6 +223,7 @@ export const Text: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>,
 ) {
   const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
   const inheritedAlign = useInheritedTextAlign();
+  const inheritedColor = useInheritedTextColor();
   const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
   const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
   const toneColors: Readonly<Record<TextTone, string>> = {
@@ -239,7 +241,7 @@ export const Text: ReturnType<typeof forwardRef<ComponentRef<typeof NativeText>,
     [
       tokens.typography[variant],
       {
-        color: color ?? toneColors[tone],
+        color: color ?? ((["primary", "body", "muted", "subtle", "weak"] as readonly string[]).includes(tone) ? inheritedColor : undefined) ?? toneColors[tone],
         ...(numeric === undefined ? {} : { fontVariant: [numericVariants[numeric]] }),
         fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
         ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),

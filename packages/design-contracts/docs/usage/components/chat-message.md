@@ -70,6 +70,11 @@ import { Text } from "@hjmds/react-native/primitives";
 2026-10-16 사용자 결정으로 대화 타임라인의 공통 기준을 카카오톡 iOS 채팅방 실측(@3x 캡처)으로 바꿨다.
 묶음 단위 표시·촘촘한 말풍선·시각 위치를 흡수했고 노란 말풍선 같은 브랜드 색은 가져오지 않았다(색은 semantic token).
 
+수신 말풍선 본체·꼬리와 입력 중 표시는 `surfaceAlt`, 발신은 `primary`와 `onPrimary`를 사용한다. 발신 내부 HJM Text의 중립 tone은 밝은 글자를 상속하고 명시적 색·브랜드·위험 tone은 보존한다.
+답글 원문은 3px 세로 강조선과 8px 안쪽 간격으로 구분한다(수신 `contentBrand`, 발신 `onPrimary`).
+아이메시지의 수신/발신 표면 대비와 텔레그램의 인용 강조를 참고했다: https://support.apple.com/guide/iphone/about-imessage-iph4e9799206/ios · https://telegram.org/blog/reply-revolution
+2026-10-23 밝은 기본 테마에서 `surface`와 채팅 배경이 모두 흰색이라 수신 말풍선이 사라진 문제를 수정했다.
+
 ## 축과 기본값
 
 | prop | 값 | 기본값 | 설명 |

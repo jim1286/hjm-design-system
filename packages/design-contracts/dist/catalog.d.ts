@@ -9613,6 +9613,8 @@ export declare const recipeRegistry: {
         readonly bubbleRadius: 14;
         readonly bubblePaddingInline: 10;
         readonly bubblePaddingBlock: 6;
+        readonly quoteRailWidth: 3;
+        readonly quoteInset: 8;
         readonly runGap: 6;
         readonly groupGap: 12;
         readonly tailWidth: 7;

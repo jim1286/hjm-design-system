@@ -28,6 +28,7 @@ import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { useScreenPullDismiss } from "./internal/screen-dismiss.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, resolveCompositionStateMinHeight, type CompositionStateHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, type ChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, resolveScreenHostInsets, screenHostDefaults, type ScreenHostEdge, type ScreenHostSurface, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState, type ScreenContentInset, initialFocusDefaults, type ScreenInitialFocus } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
+import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
 import { ListRow, type ListRowProps } from "./data-display.js";
@@ -494,7 +495,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
   const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
   const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
-  const surface = outgoing ? colors.surfaceAccent : colors.surface;
+  // Incoming bubbles need the alternate surface: surface and the light chat canvas are both white.
+  const surface = outgoing ? colors.primary : colors.surfaceAlt;
   // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
   const showTail = bubbleTail && display.showTail && !((media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
   // Tighten the first corner to join the overlapping rounded tip.
@@ -517,7 +519,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
   // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
   const body = typeof children === "string" || typeof children === "number" ? <Text>{children}</Text> : children;
-  const bubbleContent = <>{tail}{quote ? <View style={{ borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</>;
+  const bubbleContent = <InheritedTextColorContext.Provider value={outgoing ? colors.onPrimary : undefined}>{tail}{quote ? <View style={{ borderStartWidth: chatMessageRecipe.quoteRailWidth, borderColor: outgoing ? colors.onPrimary : colors.contentBrand, paddingStart: chatMessageRecipe.quoteInset }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</InheritedTextColorContext.Provider>;
   // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
   const avatarSlot = !avatar ? null : display.showAvatar ? <View style={{ width: chatMessageRecipe.avatarSize, alignItems: "center" }}>{avatar}</View> : <View accessible={false} style={{ width: chatMessageRecipe.avatarSize }} />;
   return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore,
@@ -751,7 +753,7 @@ export function TypingIndicator({ label, avatar, layoutStyle }: TypingIndicatorP
   useEffect(() => { if (Platform.OS === "ios") AccessibilityInfo.announceForAccessibilityWithOptions(label, { queue: true }); }, [label]);
   return <View accessible accessibilityLabel={label} accessibilityLiveRegion="polite" style={[{ flexDirection: "row", alignItems: "flex-start", gap: m.avatarGap, marginTop: m.groupGap, paddingStart: avatar ? 0 : m.tailWidth }, layoutStyle]}>
     {avatar ? <View style={{ width: m.avatarSize, alignItems: "center" }}>{avatar}</View> : null}
-    <View style={{ flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surface }}>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surfaceAlt }}>
       {dots.map((opacity, index) => <Animated.View key={index} style={{ width: r.dotSize, height: r.dotSize, borderRadius: r.dotSize / 2, backgroundColor: colors.textMuted, opacity }} />)}
     </View>
   </View>;

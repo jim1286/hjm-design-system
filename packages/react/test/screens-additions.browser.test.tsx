@@ -4,6 +4,7 @@ import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { page, userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { Text } from "../src/layout.js";
 import { HjmProvider } from "../src/provider.js";
 import { ChatDateSeparator, ChatMessage, ChatScreen, IconTile, MessageComposer, ScreenLayout, TypingIndicator } from "../src/screens.js";
 import "../src/styles.css";
@@ -197,3 +198,29 @@ it("stacks profile summary actions at full width and gives emoji artwork a profi
   await page.getByRole("button", { name: "Message", exact: true }).click();
   expect(message).toHaveBeenCalledOnce(); expect(follow).not.toHaveBeenCalled();
 });
+
+for (const theme of ["light", "dark"] as const) {
+  it(`keeps incoming bubbles and tails visible on the ${theme} chat canvas`, async () => {
+    await act(async () => root.render(<HjmProvider theme={theme}>
+      <ChatMessage direction="incoming" author="서연" timestamp="지금">수신</ChatMessage>
+      <ChatMessage direction="outgoing" author="" timestamp="지금" replyQuote={{title:"서연에게 답장",excerpt:"원문"}} replyLink={{label:"원문으로 이동",onPress:()=>{}}}><Text>발신</Text></ChatMessage>
+    </HjmProvider>));
+    const incoming = host.querySelector<HTMLElement>('[data-direction="incoming"] .hjm-chat-message__bubble')!;
+    const outgoing = host.querySelector<HTMLElement>('[data-direction="outgoing"] .hjm-chat-message__bubble')!;
+    const palette = getComputedStyle(incoming);
+    const resolveColor = (token: string) => {
+      const probe = document.createElement("span"); incoming.append(probe); probe.style.backgroundColor = `var(${token})`;
+      const color = getComputedStyle(probe).backgroundColor; probe.remove(); return color;
+    };
+    expect(palette.backgroundColor).not.toBe(resolveColor("--hjm-color-bg"));
+    expect(palette.backgroundColor).not.toBe(resolveColor("--hjm-color-surface"));
+    expect(getComputedStyle(incoming, "::before").backgroundColor).toBe(palette.backgroundColor);
+    expect(getComputedStyle(outgoing).backgroundColor).toBe(resolveColor("--hjm-color-primary"));
+    expect(getComputedStyle(outgoing.querySelector(".hjm-text")!).color).toBe(resolveColor("--hjm-color-on-primary"));
+    expect(getComputedStyle(outgoing, "::before").backgroundColor).toBe(getComputedStyle(outgoing).backgroundColor);
+    const quote = outgoing.querySelector<HTMLElement>(".hjm-chat-message__reply")!;
+    expect(getComputedStyle(quote).borderInlineStartWidth).toBe("3px");
+    expect(getComputedStyle(quote).borderInlineStartColor).toBe(resolveColor("--hjm-color-on-primary"));
+    expect(getComputedStyle(quote).borderBlockEndWidth).toBe("0px");
+  });
+}

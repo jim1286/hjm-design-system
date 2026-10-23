@@ -12,6 +12,7 @@ import { resolveTextDefaultWeight, sectionRecipe, stackRecipe, textRecipe, } fro
 import { Children, Component, Fragment, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, StyleSheet, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
+import { useInheritedTextColor } from "./internal/text-colors.js";
 import { useInheritedTextAlign } from "./internal/text-align.js";
 import { pretendardNativeFaces, resolvePretendardNativeFace } from "@hjmds/design-contracts/foundations";
 import { logicalTextAlign, resolveNativeFontStyle, resolveNativeElevationStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -41,6 +42,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
 export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, fontRole, tone = textRecipe.defaults.tone, color, numeric, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
     const inheritedAlign = useInheritedTextAlign();
+    const inheritedColor = useInheritedTextColor();
     const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
     const familyRole = resolveTextFontRole(variant, fontRole ?? (props.accessibilityRole === "header" || props.role === "heading" ? "display" : undefined));
     const toneColors = {
@@ -56,7 +58,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
     const resolvedText = resolveNativeTextScaleProps(textScaling, [
         tokens.typography[variant],
         {
-            color: color ?? toneColors[tone],
+            color: color ?? (["primary", "body", "muted", "subtle", "weak"].includes(tone) ? inheritedColor : undefined) ?? toneColors[tone],
             ...(numeric === undefined ? {} : { fontVariant: [numericVariants[numeric]] }),
             fontWeight: (suppliedEmphasis === undefined ? resolveTextDefaultWeight(variant, tokens.typography, Boolean(designProfile)) : undefined) ?? textRecipe.emphasis[emphasis],
             ...resolveNativeFontStyle(resolveFontFamilyStack(tokens.fontFamily, familyRole), familyRole === "code" ? "code" : "ui"),

@@ -555,7 +555,7 @@ export function TypingIndicator({ label, avatar, layoutStyle }: TypingIndicatorP
   return <div role="status" className="hjm-typing-indicator" data-reduced-motion={theme?.environment.reducedMotion || undefined}
     style={{ display: "flex", alignItems: "flex-start", gap: m.avatarGap, marginBlockStart: m.groupGap, paddingInlineStart: avatar ? 0 : m.tailWidth, ...layoutStyle, "--hjm-typing-dot": `${r.dotSize}px`, "--hjm-typing-cycle": `${r.cycleMs}ms`, "--hjm-typing-rest": r.restOpacity } as React.CSSProperties}>
     {avatar ? <span aria-hidden="true" style={{ display: "flex", justifyContent: "center", flex: `0 0 ${m.avatarSize}px`, inlineSize: m.avatarSize }}>{avatar}</span> : null}
-    <span aria-hidden="true" className="hjm-typing-indicator__bubble" style={{ display: "inline-flex", alignItems: "center", gap: r.dotGap, boxSizing: "border-box", minBlockSize: `calc(var(--hjm-type-body-line-height) + ${m.bubblePaddingBlock * 2}px)`, paddingBlock: m.bubblePaddingBlock, paddingInline: m.bubblePaddingInline, borderRadius: m.bubbleRadius, background: "var(--hjm-color-surface)" }}>
+    <span aria-hidden="true" className="hjm-typing-indicator__bubble" style={{ display: "inline-flex", alignItems: "center", gap: r.dotGap, boxSizing: "border-box", minBlockSize: `calc(var(--hjm-type-body-line-height) + ${m.bubblePaddingBlock * 2}px)`, paddingBlock: m.bubblePaddingBlock, paddingInline: m.bubblePaddingInline, borderRadius: m.bubbleRadius, background: "var(--hjm-color-surface-alt)" }}>
       {[0, 1, 2].map(index => <span key={index} className="hjm-typing-indicator__dot" style={{ animationDelay: `${index * r.staggerMs}ms` }} />)}
     </span>
     <VisuallyHidden>{label}</VisuallyHidden>

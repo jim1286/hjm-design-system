@@ -1,12 +1,13 @@
 // HJM 1.31 screen additions on Native: header identity mark, brand loader, IconTile frame options, reaction summary,
 // menu tone, composer error announcement, typing indicator and date separator.
-import { AccessibilityInfo, Animated, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { AccessibilityInfo, Animated, Modal, Platform, Pressable, ScrollView, StyleSheet, View, Text as NativeText } from "react-native";
 import { startedAnimatedTimings } from "./react-native.mock.js";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { HjmNativeProvider } from "../src/provider.js";
 import { ChatDateSeparator, ChatMessage, ChatScreen, IconTile, MessageComposer, ScreenLayout, TypingIndicator } from "../src/screens.js";
+import { THEMES } from "@hjmds/design-contracts/colors";
 import { Spinner } from "../src/feedback.js";
 import { Text } from "../src/primitives.js";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -200,3 +201,27 @@ it("reserves the measured overlay header height while the scroll background rema
   act(() => view.update(<HjmNativeProvider><ScreenLayout title="안내" safeAreaTop={59} header={<Text>호스트가 보호하는 헤더</Text>}><Text>본문</Text></ScreenLayout></HjmNativeProvider>));
   expect(StyleSheet.flatten(scroller().props.contentContainerStyle).paddingTop).toBe(initial);
 });
+
+for (const theme of ["light", "dark"] as const) {
+  it(`keeps incoming bubbles and tails visible on the ${theme} chat canvas`, () => {
+    act(() => { tree = create(<HjmNativeProvider theme={theme}>
+      <ChatMessage direction="incoming" author="서연" timestamp="지금"><Text>수신</Text></ChatMessage>
+      <ChatMessage direction="outgoing" author="" timestamp="지금" replyQuote={{title:"서연에게 답장",excerpt:"원문"}} replyLink={{label:"원문으로 이동",onPress:()=>{}}}><Text>발신</Text></ChatMessage>
+    </HjmNativeProvider>); });
+    const messages = tree!.root.findAllByType(ChatMessage);
+    const fills = (message: ReactTestInstance) => message.findAllByType(View)
+      .map(node => node.props.style?.backgroundColor).filter(Boolean);
+    const incoming = fills(messages[0]!);
+    expect(incoming.length).toBeGreaterThanOrEqual(2);
+    expect(new Set(incoming).size).toBe(1);
+    expect(incoming).not.toContain(THEMES[theme].bg);
+    expect(incoming).not.toContain(THEMES[theme].surface);
+    expect(fills(messages[1]!)).toContain(THEMES[theme].primary);
+    const outgoingText = messages[1]!.findAllByType(NativeText).filter(node => ["발신", "서연에게 답장", "원문"].includes(node.props.children));
+    expect(outgoingText.length).toBeGreaterThanOrEqual(3);
+    for (const text of outgoingText) expect(StyleSheet.flatten(text.props.style).color).toBe(THEMES[theme].onPrimary);
+    const quote = messages[1]!.findAllByType(View).find(node => node.props.style?.borderStartWidth === 3)!;
+    expect(quote.props.style.borderColor).toBe(THEMES[theme].onPrimary);
+    expect(quote.props.style.borderBottomWidth).toBeUndefined();
+  });
+}

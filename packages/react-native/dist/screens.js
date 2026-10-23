@@ -26,6 +26,7 @@ import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { useScreenPullDismiss } from "./internal/screen-dismiss.js";
 import { isReplySwipe, timestampRevealOffset, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveCompositionStateMinHeight, screenPatternRecipe, chatMessageRecipe, composerQuickInsertRecipe, resolveChatMessageGroupDisplay, resolveChatMediaColumns, resolveChatReactionSummary, typingIndicatorRecipe, chatDateSeparatorRecipe, screenHeaderRecipe, validateScreenExit, resolveScreenHostInsets, screenHostDefaults, initialFocusDefaults } from "@hjmds/design-contracts/screen-patterns";
 import { motion } from "@hjmds/design-contracts/foundations";
+import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { Stack, Text } from "./primitives.js";
 import { Heading } from "./heading.js";
 import { ListRow } from "./data-display.js";
@@ -263,7 +264,8 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
     const visibleTime = revealTime || !display.showTimestamp ? "" : timestamp;
     const meta = [visibleTime, deliveryLabel].filter(Boolean).join(" · ");
-    const surface = outgoing ? colors.surfaceAccent : colors.surface;
+    // Incoming bubbles need the alternate surface: surface and the light chat canvas are both white.
+    const surface = outgoing ? colors.primary : colors.surfaceAlt;
     // Filled, borderless bubbles separate authors by surface and side (2026-10-16 timeline standard).
     const showTail = bubbleTail && display.showTail && !((media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === ""));
     // Tighten the first corner to join the overlapping rounded tip.
@@ -284,7 +286,7 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
     // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
     const body = typeof children === "string" || typeof children === "number" ? _jsx(Text, { children: children }) : children;
-    const bubbleContent = _jsxs(_Fragment, { children: [tail, quote ? _jsx(View, { style: { borderBottomWidth: 1, borderColor: colors.border, paddingBottom: tokens.spacing.xs }, children: replyLink ? _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: quote }) : quote }) : null, mediaBlock, photoOnly ? null : body] });
+    const bubbleContent = _jsxs(InheritedTextColorContext.Provider, { value: outgoing ? colors.onPrimary : undefined, children: [tail, quote ? _jsx(View, { style: { borderStartWidth: chatMessageRecipe.quoteRailWidth, borderColor: outgoing ? colors.onPrimary : colors.contentBrand, paddingStart: chatMessageRecipe.quoteInset }, children: replyLink ? _jsx(Pressable, { accessibilityRole: "link", accessibilityLabel: replyLink.label, onPress: replyLink.onPress, children: quote }) : quote }) : null, mediaBlock, photoOnly ? null : body] });
     // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
     const avatarSlot = !avatar ? null : display.showAvatar ? _jsx(View, { style: { width: chatMessageRecipe.avatarSize, alignItems: "center" }, children: avatar }) : _jsx(View, { accessible: false, style: { width: chatMessageRecipe.avatarSize } });
     return _jsxs(View, { ...gesture.panHandlers, style: { position: "relative", overflow: "hidden", marginTop: display.spacingBefore,
@@ -368,7 +370,7 @@ export function TypingIndicator({ label, avatar, layoutStyle }) {
     // queued once behind the current speech when the row appears.
     useEffect(() => { if (Platform.OS === "ios")
         AccessibilityInfo.announceForAccessibilityWithOptions(label, { queue: true }); }, [label]);
-    return _jsxs(View, { accessible: true, accessibilityLabel: label, accessibilityLiveRegion: "polite", style: [{ flexDirection: "row", alignItems: "flex-start", gap: m.avatarGap, marginTop: m.groupGap, paddingStart: avatar ? 0 : m.tailWidth }, layoutStyle], children: [avatar ? _jsx(View, { style: { width: m.avatarSize, alignItems: "center" }, children: avatar }) : null, _jsx(View, { style: { flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surface }, children: dots.map((opacity, index) => _jsx(Animated.View, { style: { width: r.dotSize, height: r.dotSize, borderRadius: r.dotSize / 2, backgroundColor: colors.textMuted, opacity } }, index)) })] });
+    return _jsxs(View, { accessible: true, accessibilityLabel: label, accessibilityLiveRegion: "polite", style: [{ flexDirection: "row", alignItems: "flex-start", gap: m.avatarGap, marginTop: m.groupGap, paddingStart: avatar ? 0 : m.tailWidth }, layoutStyle], children: [avatar ? _jsx(View, { style: { width: m.avatarSize, alignItems: "center" }, children: avatar }) : null, _jsx(View, { style: { flexDirection: "row", alignItems: "center", gap: r.dotGap, minHeight: tokens.typography.body.lineHeight + m.bubblePaddingBlock * 2, paddingVertical: m.bubblePaddingBlock, paddingHorizontal: m.bubblePaddingInline, borderRadius: m.bubbleRadius, backgroundColor: colors.surfaceAlt }, children: dots.map((opacity, index) => _jsx(Animated.View, { style: { width: r.dotSize, height: r.dotSize, borderRadius: r.dotSize / 2, backgroundColor: colors.textMuted, opacity } }, index)) })] });
 }
 /**
  * Centered date (or time) row between ChatScreen timeline groups (2026-10-18 Utilverse chat drew a caption). Grouping
