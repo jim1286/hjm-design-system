@@ -366,6 +366,7 @@
     "components-infrastructure-affix--dark",
     "components-infrastructure-affix--default",
     "components-infrastructure-affix--large-text",
+    "components-infrastructure-affix--pinned-over-positioned-content",
     "components-infrastructure-design-system-provider--dark",
     "components-infrastructure-design-system-provider--default",
     "components-infrastructure-design-system-provider--large-text",

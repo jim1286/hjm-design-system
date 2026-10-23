@@ -3302,7 +3302,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-watermark { position: relative; isolation: isolate; }
 .hjm-watermark__content { position: relative; z-index: 0; overflow-wrap: anywhere; }
 .hjm-watermark__overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; user-select: none; overflow: hidden; color: var(--hjm-color-text-sub); font: inherit; }
-.hjm-affix { color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
+/* Stacking and fill come from affixRecipe.defaults (layer sticky = --hjm-layer-sticky 100, fill canvas); the box is always
+   positioned (sticky or relative), so z-index applies in both the pinned and the released state. */
+.hjm-affix { z-index: var(--hjm-layer-sticky); color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
+.hjm-affix[data-layer="base"] { z-index: var(--hjm-layer-base); }
+.hjm-affix[data-fill="none"] { background: transparent; }
 .hjm-affix__marker { display: block; block-size: 0; pointer-events: none; }
 
 /* Sidebar presentation decorates fixed link boxes; no pointer/focus target is transformed. */

@@ -25,3 +25,10 @@ CSS sticky의 기준을 바꾼다. 부모 자체가 콘텐츠와 같은 높이�
 계약: [affix.ts](../src/affix.ts). UI: [renderer](../../react/src/affix.tsx).
 사용 예제: [Web additions](../../../showcase/web/src/patterns/WebAdditions.stories.tsx).
 검증: [브라우저 스크롤·초점 회귀](../../react/test/web-additions.browser.test.tsx).
+
+## 쌓임과 바탕 (2026-10-23, 개발 소스·미게시)
+
+`layer`(`sticky` 기본 · `base`)는 공통 `layer` 단계에서 고르고, `fill`(`canvas` 기본 · `none`)은 상자 뒤 바탕이다.
+기본값은 `affixRecipe.defaults`가 소유한다. 이전에는 z-index가 없어 뒤에 오는 position 지정 콘텐츠가 고정된 상자 위로 그려졌다.
+상자는 언제나 sticky 또는 relative라 고정·해제 상태 모두 같은 쌓임을 가진다. 숫자 z-index는 받지 않는다 —
+dropdown·modal 단계보다 위로 올라가면 메뉴와 대화상자를 가리기 때문이다. 근거와 사용법은 [사용 지침](usage/components/affix.md).

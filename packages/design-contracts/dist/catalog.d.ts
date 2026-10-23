@@ -1788,6 +1788,10 @@ export declare const recipeRegistry: {
         readonly offset: 0;
         readonly position: "sticky";
         readonly oversize: "flow";
+        readonly defaults: {
+            readonly layer: "sticky";
+            readonly fill: "canvas";
+        };
     };
     readonly watermarkRecipe: {
         readonly tileWidth: 240;
