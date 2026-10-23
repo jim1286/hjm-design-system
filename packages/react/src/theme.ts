@@ -127,6 +127,8 @@ export function createHjmThemeStyle(
   // does not carry a second copy of the same numbers.
   style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
   style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+  // Trailing value → disclosure chevron spacing (listRowRecipe.accessories), tighter than the row gap as on iOS.
+  style["--hjm-list-row-accessory-gap"] = rem(listRowRecipe.accessories.disclosure.gap);
   // Row text sits on the container content edge; the surface bleeds by this much (2026-10-17 user decision).
   style["--hjm-list-row-surface-bleed"] = rem(listRowRecipe.surfaceBleed);
   style["--hjm-list-grouped-padding-inline"] = rem(listRecipe.grouped.paddingInline);

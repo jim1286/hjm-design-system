@@ -336,8 +336,8 @@ export const listRecipe = {
     background: null,
 };
 export const listRowRecipe = {
-    slots: ["root", "leading", "content", "title", "description", "trailing"],
-    defaults: { density: "comfortable", selected: false, tone: "default" },
+    slots: ["root", "leading", "content", "title", "description", "trailing", "accessory"],
+    defaults: { density: "comfortable", selected: false, tone: "default", trailingAccessory: "none" },
     // Destructive destinations keep semantic emphasis without renderer-specific title styles.
     tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger } },
     density: {
@@ -396,12 +396,24 @@ export const listRowRecipe = {
         glyph: "sm",
         textVariant: "caption",
     },
+    /**
+     * Order inside the row command: leading → content → trailing → accessory; a `trailingAction` stays outside, after
+     * it. The mark is decorative (the row's link/button role already says it is activatable), follows the reading
+     * direction (`chevronEnd` mirrors in RTL) and sits `gap` after any trailing value, the iOS detail → chevron pairing.
+     */
+    accessories: {
+        disclosure: { icon: "chevronEnd", glyph: "sm", weight: "regular", color: semanticColors.content.decorative, gap: spacing.xs },
+    },
     states: {
         pressedBackground: semanticColors.canvas,
         selectedBackground: semanticColors.selection.background,
         disabledOpacity: opacity.disabled,
     },
 };
+export function validateListRowTrailingAccessory(value) {
+    if (value !== "none" && value !== "disclosure")
+        throw new TypeError(`Unsupported ListRow trailingAccessory: ${String(value)}`);
+}
 export const accordionRecipe = {
     slots: ["root", "item", "header", "trigger", "title", "indicator", "panel", "divider"],
     defaults: { density: "comfortable", allowsMultipleExpanded: false },

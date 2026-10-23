@@ -5354,11 +5354,12 @@ export declare const recipeRegistry: {
         readonly background: null;
     };
     readonly listRowRecipe: {
-        readonly slots: readonly ["root", "leading", "content", "title", "description", "trailing"];
+        readonly slots: readonly ["root", "leading", "content", "title", "description", "trailing", "accessory"];
         readonly defaults: {
             readonly density: "comfortable";
             readonly selected: false;
             readonly tone: "default";
+            readonly trailingAccessory: "none";
         };
         readonly tones: {
             readonly default: {
@@ -5444,6 +5445,19 @@ export declare const recipeRegistry: {
             }>;
             readonly glyph: "sm";
             readonly textVariant: "caption";
+        };
+        readonly accessories: {
+            readonly disclosure: {
+                readonly icon: "chevronEnd";
+                readonly glyph: "sm";
+                readonly weight: "regular";
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textWeak";
+                    alpha?: number;
+                }>;
+                readonly gap: 8;
+            };
         };
         readonly states: {
             readonly pressedBackground: Readonly<{
@@ -9452,6 +9466,14 @@ export declare const recipeRegistry: {
         readonly replySwipeDistance: 60;
         readonly composerMinLines: 1;
         readonly composerMaxLines: 5;
+        readonly compositionState: {
+            readonly minHeight: {
+                readonly fit: null;
+                readonly compact: 96;
+                readonly regular: 160;
+                readonly large: 220;
+            };
+        };
     };
     readonly searchScreenRecipe: {
         readonly debounceMs: 300;

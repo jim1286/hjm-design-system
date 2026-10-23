@@ -5,9 +5,12 @@ import {
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant as ContractBadgeVariant,
+  validateListRowTrailingAccessory,
   type ListRowDensity,
   type ListRowLeadingShape,
+  type ListRowTrailingAccessory,
 } from "@hjmds/design-contracts/recipes";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import {
   resolveTagDescriptor,
   type TagTone,
@@ -33,6 +36,7 @@ import {
 import { classNames } from "./internal.js";
 import { useHjmDensityDefault } from "./provider.js";
 import { Surface, Text } from "./layout.js";
+import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type { CardHeadingLevel } from "@hjmds/design-contracts/components/card";
@@ -314,6 +318,11 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     description?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
+     * command (before any `trailingAction`), mirrored in RTL; size and color come from `listRowRecipe.accessories`.
+     */
+    trailingAccessory?: ListRowTrailingAccessory;
     /** Independent command outside the row's navigation target. */
     trailingAction?: ReactNode;
     /** Supply a framework Link without replacing the shared row layout. */
@@ -345,6 +354,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     description,
     leading,
     trailing,
+    trailingAccessory = listRowRecipe.defaults.trailingAccessory,
     trailingAction,
     renderLink,
     density: densityProp,
@@ -370,6 +380,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     compact: "compact",
   });
   const density = densityProp ?? densityDefault;
+  validateListRowTrailingAccessory(trailingAccessory);
+  const accessory = trailingAccessory === "none" ? null : listRowRecipe.accessories[trailingAccessory];
   if (loading) {
     // A loading row is never interactive: there is nothing to activate yet.
     return (
@@ -393,6 +405,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
           {description ? <span className="hjm-list-row__description" data-placeholder="" style={{ width: `${listRowRecipe.loading.descriptionWidthPercent}%` }} /> : null}
         </span>
         {trailing ? <span className="hjm-list-row__trailing" data-placeholder="" style={{ width: listRowRecipe.loading.trailingWidth }} /> : null}
+        {/* Keep the accessory's box so the text column does not shift when the real row arrives. */}
+        {accessory ? <span className="hjm-list-row__accessory" data-accessory={trailingAccessory} style={{ inlineSize: glyph[accessory.glyph], blockSize: glyph[accessory.glyph] }} /> : null}
       </div>
     );
   }
@@ -443,6 +457,11 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       ) : null}
     </span>,
     trailing ? <span className="hjm-list-row__trailing">{trailing}</span> : null,
+    accessory
+      ? <span className="hjm-list-row__accessory" data-accessory={trailingAccessory} aria-hidden="true">
+          <Icon name={accessory.icon} size={accessory.glyph} weight={accessory.weight} />
+        </span>
+      : null,
   );
   const linked = href && renderLink ? renderLink(row.props as React.ComponentPropsWithRef<"a">) : row;
   // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;

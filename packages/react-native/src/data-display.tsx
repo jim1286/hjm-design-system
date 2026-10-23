@@ -50,6 +50,7 @@ import {
   badgeRecipe,
   listRecipe,
   formatCounterBadgeCount,
+  iconRecipe,
   listRowRecipe,
   statisticRecipe,
   type AccordionDensity,
@@ -60,8 +61,10 @@ import {
   type CounterBadgeSize,
   type CounterBadgeTone,
   type CounterBadgeVariant,
+  validateListRowTrailingAccessory,
   type ListRowDensity,
   type ListRowLeadingShape,
+  type ListRowTrailingAccessory,
   type StatisticDensity,
   type StatisticPresentation,
 } from "@hjmds/design-contracts/recipes";
@@ -97,6 +100,7 @@ import {
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import {
   Surface,
   Text,
@@ -508,6 +512,12 @@ export type ListRowProps = Omit<
     description?: string;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`/`trailingText`,
+     * inside the row command (before any `trailingAction`), mirrored in RTL; size and color come from
+     * `listRowRecipe.accessories`.
+     */
+    trailingAccessory?: ListRowTrailingAccessory;
     /** Visible metadata placed beside the title, such as a Badge. */
     titleMetadata?: ReactNode;
     /** A separate accessible target rendered beside, never inside, the row command. */
@@ -546,6 +556,7 @@ export function ListRow({
   description,
   leading,
   trailing,
+  trailingAccessory = listRowRecipe.defaults.trailingAccessory,
   titleMetadata,
   trailingAction,
   trailingText,
@@ -592,6 +603,8 @@ export function ListRow({
     return () => reportLeading(0);
   }, [reportLeading, hasLeading, leadingWidth]);
   const metrics = listRowRecipe.density[density];
+  validateListRowTrailingAccessory(trailingAccessory);
+  const accessory = trailingAccessory === "none" ? null : listRowRecipe.accessories[trailingAccessory];
   const interactive = onPress !== undefined;
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
   const resolvedMetadata = titleMetadata;
@@ -646,6 +659,9 @@ export function ListRow({
         {description ? <View style={[placeholder, { width: `${listRowRecipe.loading.descriptionWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.description.textVariant].lineHeight }]} /> : null}
       </View>
       {trailing || trailingText ? <View style={[placeholder, { width: listRowRecipe.loading.trailingWidth, height: theme.tokens.typography[listRowRecipe.trailing.textVariant].lineHeight }]} /> : null}
+      {/* Keep the accessory's box so the text column does not shift when the real row arrives. */}
+      {accessory ? <View testID="hjm-list-row-accessory" style={{ width: glyph[accessory.glyph], height: glyph[accessory.glyph],
+        ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) }} /> : null}
     </View>;
   }
   const rowContent = (
@@ -720,6 +736,23 @@ export function ListRow({
               {trailingText}
             </Text>
           ) : trailing}
+        </View>
+      ) : null}
+      {accessory ? (
+        <View
+          testID="hjm-list-row-accessory"
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          // A preceding trailing value pulls the chevron to the tighter accessory gap (iOS detail → chevron).
+          style={{ flexShrink: 0, ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) }}
+        >
+          <DrawnChevron
+            direction="end"
+            size={glyph[accessory.glyph]}
+            color={resolveColorReference(accessory.color, theme.palette)}
+            strokeWidth={iconRecipe.weights[accessory.weight]}
+          />
         </View>
       ) : null}
     </>

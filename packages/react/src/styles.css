@@ -1057,6 +1057,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    baseline 2–2.5px above the row center (2026-10-17 measured audit); a flex
    box centers any trailing node like Native's row-centered View. */
 .hjm-list-row__trailing { display: flex; align-items: center; }
+/* Disclosure mark (listRowRecipe.accessories): decorative content.decorative chevron after any trailing value, inside the
+   row command. The row gap applies before it; a preceding trailing value pulls it to the tighter accessory gap. */
+.hjm-list-row__accessory { flex: 0 0 auto; display: flex; align-items: center; color: var(--hjm-color-text-weak); }
+.hjm-list-row__accessory .hjm-icon { color: inherit; }
+.hjm-list-row__trailing + .hjm-list-row__accessory { margin-inline-start: calc(var(--hjm-list-row-accessory-gap) - var(--hjm-list-row-gap)); }
 /* `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
    the avatar box in product styles. */
 .hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }

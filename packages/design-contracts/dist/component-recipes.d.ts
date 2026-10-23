@@ -767,12 +767,19 @@ export declare const listRecipe: {
 export type ListRowDensity = "compact" | "comfortable" | "relaxed" | "spacious";
 /** Frame geometry the ListRow paints around its leading slot. */
 export type ListRowLeadingShape = "square" | "circle";
+/**
+ * Fixed mark at the row's trailing end. `disclosure`: activating the row opens another screen (iOS disclosure
+ * indicator). 2026-10-23 audit: products drew the chevron into `trailing` themselves (Yajalal ChevronRight ×10,
+ * Utilverse UiGlyph "next" ×24, Spint ×3), each with its own size, color and RTL handling.
+ */
+export type ListRowTrailingAccessory = "none" | "disclosure";
 export declare const listRowRecipe: {
-    readonly slots: readonly ["root", "leading", "content", "title", "description", "trailing"];
+    readonly slots: readonly ["root", "leading", "content", "title", "description", "trailing", "accessory"];
     readonly defaults: {
         readonly density: "comfortable";
         readonly selected: false;
         readonly tone: "default";
+        readonly trailingAccessory: "none";
     };
     readonly tones: {
         readonly default: {
@@ -869,6 +876,24 @@ export declare const listRowRecipe: {
         readonly glyph: "sm";
         readonly textVariant: "caption";
     };
+    /**
+     * Order inside the row command: leading → content → trailing → accessory; a `trailingAction` stays outside, after
+     * it. The mark is decorative (the row's link/button role already says it is activatable), follows the reading
+     * direction (`chevronEnd` mirrors in RTL) and sits `gap` after any trailing value, the iOS detail → chevron pairing.
+     */
+    readonly accessories: {
+        readonly disclosure: {
+            readonly icon: "chevronEnd";
+            readonly glyph: "sm";
+            readonly weight: "regular";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textWeak";
+                alpha?: number;
+            }>;
+            readonly gap: 8;
+        };
+    };
     readonly states: {
         readonly pressedBackground: Readonly<{
             source: "theme";
@@ -883,6 +908,7 @@ export declare const listRowRecipe: {
         readonly disabledOpacity: 0.5;
     };
 };
+export declare function validateListRowTrailingAccessory(value: unknown): asserts value is ListRowTrailingAccessory;
 export type AccordionDensity = "compact" | "comfortable";
 export declare const accordionRecipe: {
     readonly slots: readonly ["root", "item", "header", "trigger", "title", "indicator", "panel", "divider"];

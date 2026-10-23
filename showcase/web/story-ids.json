@@ -208,6 +208,7 @@
     "components-data-display-list--standalone-separators",
     "components-data-display-list-row--dark",
     "components-data-display-list-row--default",
+    "components-data-display-list-row--disclosure",
     "components-data-display-list-row--large-text",
     "components-data-display-matrix-table--dark",
     "components-data-display-matrix-table--default",

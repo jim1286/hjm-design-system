@@ -553,10 +553,16 @@ export const listRecipe = {
 export type ListRowDensity = "compact" | "comfortable" | "relaxed" | "spacious";
 /** Frame geometry the ListRow paints around its leading slot. */
 export type ListRowLeadingShape = "square" | "circle";
+/**
+ * Fixed mark at the row's trailing end. `disclosure`: activating the row opens another screen (iOS disclosure
+ * indicator). 2026-10-23 audit: products drew the chevron into `trailing` themselves (Yajalal ChevronRight ×10,
+ * Utilverse UiGlyph "next" ×24, Spint ×3), each with its own size, color and RTL handling.
+ */
+export type ListRowTrailingAccessory = "none" | "disclosure";
 
 export const listRowRecipe = {
-  slots: ["root", "leading", "content", "title", "description", "trailing"] as const,
-  defaults: { density: "comfortable", selected: false, tone: "default" },
+  slots: ["root", "leading", "content", "title", "description", "trailing", "accessory"] as const,
+  defaults: { density: "comfortable", selected: false, tone: "default", trailingAccessory: "none" },
   // Destructive destinations keep semantic emphasis without renderer-specific title styles.
   tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger } },
   density: {
@@ -615,6 +621,14 @@ export const listRowRecipe = {
     glyph: "sm",
     textVariant: "caption",
   },
+  /**
+   * Order inside the row command: leading → content → trailing → accessory; a `trailingAction` stays outside, after
+   * it. The mark is decorative (the row's link/button role already says it is activatable), follows the reading
+   * direction (`chevronEnd` mirrors in RTL) and sits `gap` after any trailing value, the iOS detail → chevron pairing.
+   */
+  accessories: {
+    disclosure: { icon: "chevronEnd", glyph: "sm", weight: "regular", color: semanticColors.content.decorative, gap: spacing.xs },
+  },
   states: {
     pressedBackground: semanticColors.canvas,
     selectedBackground: semanticColors.selection.background,
@@ -622,7 +636,7 @@ export const listRowRecipe = {
   },
 } as const satisfies {
   slots: readonly string[];
-  defaults: { density: ListRowDensity; selected: boolean; tone: "default" | "danger" };
+  defaults: { density: ListRowDensity; selected: boolean; tone: "default" | "danger"; trailingAccessory: ListRowTrailingAccessory };
   tones: Record<"default" | "danger", { titleColor: ColorReference }>;
   density: Record<ListRowDensity, {
     oneLineMinHeight: number;
@@ -638,8 +652,19 @@ export const listRowRecipe = {
   title: unknown;
   description: unknown;
   trailing: unknown;
+  accessories: Record<Exclude<ListRowTrailingAccessory, "none">, {
+    icon: "chevronEnd";
+    glyph: GlyphSize;
+    weight: IconWeight;
+    color: ColorReference;
+    gap: number;
+  }>;
   states: unknown;
 };
+
+export function validateListRowTrailingAccessory(value: unknown): asserts value is ListRowTrailingAccessory {
+  if (value !== "none" && value !== "disclosure") throw new TypeError(`Unsupported ListRow trailingAccessory: ${String(value)}`);
+}
 
 export type AccordionDensity = "compact" | "comfortable";
 

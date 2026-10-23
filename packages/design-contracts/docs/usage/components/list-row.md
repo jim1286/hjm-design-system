@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-17
+- 검토일: 2026-10-23
 - 근거: [ListRow](../../list-row.md), recipe `listRowRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/목록 행`
 
@@ -41,10 +41,10 @@
 
 ```tsx
 // Web
-import { Icon, ListRow } from "@hjmds/react/display";
+import { ListRow } from "@hjmds/react/display";
 
 <ListRow title={t("settings.language")} description={languageName} href="/settings/language"
-  trailing={<Icon name="chevronEnd" decorative />} />
+  trailingAccessory="disclosure" />
 ```
 
 ```tsx
@@ -71,6 +71,7 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 | `onClick`(Web) | `(event: MouseEvent<HTMLElement>) => void` | — | 있으면 `<button>` 행 |
 | `onPress`(Native) | `(event: GestureResponderEvent) => void` | — | 있으면 누를 수 있는 행 |
 | `loading`·`loadingLabel` | `boolean` · 현지화 문자열 | `false` · — | 같은 슬롯 모양의 자리표시 행. `loadingLabel`이 상태로 읽힌다 |
+| `trailingAccessory` | `none` · `disclosure` | `none` | `disclosure`: 행을 누르면 다른 화면으로 이동한다는 chevron(`chevronEnd`, `glyph.sm` 20, `content.decorative`, Icon `regular` 굵기)을 HJM이 그린다. 장식이라 보조기기 이름에 더하지 않고 RTL에서 뒤집힌다. 제품은 `trailing`에 chevron을 직접 넣지 않는다(개발 소스, 미게시) |
 | `trailingAction` | ReactNode | — | 행 명령 옆에 따로 그리는 별도 target(IconButton 등, 끝에 둘 때 `edge="end"`). 자기 `onPress`/`onClick`을 가진다 |
 | `layoutStyle` | 배치 key만 | — | 행 루트 배치. Native는 슬롯 배치용 `leadingStyle`·`contentStyle`·`titleRowStyle`·`trailingStyle`·`trailingActionStyle`(모두 배치 key만)도 받는다 |
 | `titleStyle`·`descriptionStyle`(Native) | — | — | 제거된 속성 — 배치는 `layoutStyle`, 제목의 위험색은 `tone="danger"`, 글자는 listRowRecipe가 정한다 |
@@ -89,7 +90,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 | --- | --- | --- |
 | 크기 | 행 표면(누름·hover·선택 배경, 포커스 링, 누를 수 있는 영역)은 부모 콘텐츠 폭보다 양쪽으로 `listRowRecipe.surfaceBleed`(= density `paddingHorizontal`, `spacing.xs` 8)씩 넓다(Web `inline-size: calc(100% + 16)` + `margin-inline: -8`, Native `marginHorizontal: -8`). 글자·leading·trailing은 부모 콘텐츠 가장자리에 놓인다. leading 프레임은 40×40(`leadingSize`), `circle`이면 `radius.full`. trailing 아이콘은 `glyph.sm` 20. 최소 높이는 아래 density 표 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `design-contracts/src/foundations.ts`(`layout.rowHeight`) |
 | 간격 | leading·content·trailing 사이 `spacing.sm` 12(`listRowRecipe.gap`). 행 안 좌우 여백 8은 표면이 바깥으로 넓어진 만큼이라 글자는 부모 콘텐츠 가장자리(기본 화면이면 여백 선 16)에서 시작한다. 위아래 여백은 아래 density 표. Native의 투명 선택 테두리 1은 이 여백 안에 포함된다(테두리 + padding = 8). 제품은 행에 margin을 주지 않는다 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `react/src/styles.css`(`.hjm-list-row`) |
-| 순서·정렬 | leading → content(제목·설명) → trailing. trailing 내용(아이콘·Switch·문구)은 행의 세로 가운데에 둔다(Web `.hjm-list-row__trailing` flex 가운데, Native 행 가운데 정렬 View). `trailingAction`(두 플랫폼)은 행 명령 바깥 끝에 `listRowRecipe.gap` 12 떨어져 놓이고, 명령과 함께 하나의 표면(선택 배경·테두리)을 쓴다. 행동 상자의 끝은 부모 콘텐츠 가장자리에 맞으므로 ghost IconButton에 `edge="end"`를 주면 glyph 칸 끝이 여백 선 16에 온다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다. 행은 leading 여부를 List에 알려(Web 루트 `data-leading`, Native List 항목 context) 자기 아래 `indented` 구분선이 글자 열(leading 있으면 52, 없으면 0)에서 시작하게 한다 | `react-native/src/data-display.tsx`(ListRow), `react/src/styles.css`(`.hjm-list-row__trailing`) |
+| 순서·정렬 | leading → content(제목·설명) → trailing → 이동 표시(`trailingAccessory`) → `trailingAction`. 이동 표시는 행 명령(link/button) 안에 있고, trailing 값이 있으면 그 뒤 `accessories.disclosure.gap` `spacing.xs` 8(행 간격 12보다 좁은 iOS 값·chevron 짝), 없으면 content 뒤 행 간격 12에 놓인다. 로딩 행은 같은 크기의 빈 상자를 둔다. trailing 내용(아이콘·Switch·문구)은 행의 세로 가운데에 둔다(Web `.hjm-list-row__trailing` flex 가운데, Native 행 가운데 정렬 View). `trailingAction`(두 플랫폼)은 행 명령 바깥 끝에 `listRowRecipe.gap` 12 떨어져 놓이고, 명령과 함께 하나의 표면(선택 배경·테두리)을 쓴다. 행동 상자의 끝은 부모 콘텐츠 가장자리에 맞으므로 ghost IconButton에 `edge="end"`를 주면 glyph 칸 끝이 여백 선 16에 온다. 행 사이 구분선·바깥 둥근 배경은 [List](list.md)가 그린다. 행은 leading 여부를 List에 알려(Web 루트 `data-leading`, Native List 항목 context) 자기 아래 `indented` 구분선이 글자 열(leading 있으면 52, 없으면 0)에서 시작하게 한다 | `react-native/src/data-display.tsx`(ListRow), `react/src/styles.css`(`.hjm-list-row__trailing`) |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | 긴 제목·설명은 줄바꿈되고(`overflow-wrap: anywhere`) 행 높이가 늘어난다. 큰 글자에서도 자르지 않는다 | `react/src/styles.css`(`.hjm-list-row`) |
 
@@ -116,6 +117,7 @@ Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 
 
 - 제목·설명은 i18n 키로 넣는다. leading의 사진·아이콘은 장식으로 두고 의미는 제목이 말한다.
 - 행 안에 다른 버튼을 넣지 않는다. 별도 target은 `trailingAction`에 둔다(행 명령 옆에 따로 그린다).
+- 이동하는 행의 chevron은 `trailingAccessory="disclosure"`로 켠다. `trailing`에 `ChevronRight`·`UiGlyph`·`Icon`을 직접 넣으면 크기·색·RTL·값과의 간격이 앱마다 갈라진다. 이동하지 않는 행(Switch 설정·정보 행)에는 쓰지 않는다.
 - 행은 부모가 좌우로 8 이상의 여백을 가진 곳에 둔다(화면 본문 16, Card·Sheet·SidePanel 본문, `grouped` List). 여백이 0인 상자(예: 여백 없는 분할 패널, 제품의 꽉 찬 div)에 바로 두면 표면이 잘리고 Web은 가로 스크롤이 생긴다. 그 상자에 콘텐츠 여백을 준다. HJM의 스크롤 상자는 이 여유를 스스로 만든다: VirtualList는 바깥으로 8 넓히고 안쪽 8을 두며, 스크롤 Sheet 본문은 시트 여백 끝까지 넓고 여백을 안쪽에 둔다(내부 `listRowScrollRoom`). 콘텐츠 위치는 그대로다. 화면을 바깥 Container 여백 + `contentInset="none"`으로 감싸는 구성은 지원하지 않는다([ScreenLayout](screen-layout.md#꼭-지킬-것)). `ScreenLayout contentInset="body-edge"` 본문은 자기 여백 16을 가진 전체 폭 행(ConversationRow·NotificationRow) 전용이다. ListRow·NotificationItem은 `default` 본문에 둔다(그래야 글자가 여백 선 16에 온다).
 - 배치는 `layoutStyle`로 한다. 높이·여백·배경을 덮지 않는다. 밀도는 `density`로 바꾼다.
 - 아바타 프레임을 제품이 다시 그리지 않는다. `leadingShape`를 쓴다.
@@ -150,6 +152,8 @@ Web도 Native와 같이 `trailingAction`을 지원한다. 이 슬롯은 행의 l
 예: `renderLink={props => <Link {...props} href={props.href!} />}`.
 
 ## 근거
+
+- 이동 표시(`trailingAccessory`): 2026-10-23 소비 감사. 야잘알 `ChevronRight` 10곳, 유틸버스 `UiGlyph name="next"` 24곳, spint SettingsRow·PlaceRow·NearbyMapScreen 3곳이 trailing에 chevron을 직접 그렸다. iOS disclosure indicator처럼 행 의미(이동)를 HJM 축으로 두고 모양은 recipe가 소유한다. 이름은 기존 `trailing`·`trailingText`·`trailingAction` 계열을 따랐다.
 
 2026-10-17 사용자 결정("굵기 좀더 줄여"): 모든 글자 굵기를 한 단계 낮췄다. 큰 숫자·선택 상태 600(큰 제목 단계는 같은 날 폐지), 제목·강조 500, label 500, 본문 400이며 정본은 [타이포그래피](../tokens/typography.md)다.
 
