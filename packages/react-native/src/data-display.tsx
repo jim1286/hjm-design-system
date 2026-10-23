@@ -209,10 +209,13 @@ export function Badge({
         accessible={false}
         align="center"
         emphasis="strong"
+        // Shrink beside a leading/trailing glyph so a long label wraps inside the pill (badge.md: labels wrap). At its
+        // natural width the label plus the glyph overran the pill and its parent (2026-10-23 flex audit).
         style={[
           {
             fontWeight: badgeRecipe.fontWeight,
             color: contentColor,
+            flexShrink: 1,
           },
         ]}
         variant={metrics.textVariant}

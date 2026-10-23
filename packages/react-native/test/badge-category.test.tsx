@@ -32,3 +32,11 @@ it("rejects tone together with categoryColor and unreadable category colors", ()
   expect(() => act(() => { tree = create(<HjmNativeProvider theme="dark"><Badge label="x" variant="outline" categoryColor={{ light: "#1762A0", dark: "#1762A0" }} /></HjmNativeProvider>); })).toThrow(RangeError);
   tree = undefined;
 });
+
+it("lets a long label shrink beside a leading glyph so it wraps inside the pill", () => {
+  // 2026-10-23 flex audit: at its natural width the label plus the glyph overran the pill (badge.md: labels wrap).
+  const label = "아주 긴 배지 라벨이 좁은 폭에서 줄바꿈되어야 해요";
+  act(() => { tree = create(<HjmNativeProvider><Badge label={label} leading={<View testID="glyph" />} /></HjmNativeProvider>); });
+  const text = tree!.root.findAllByType(Text).find(node => node.props.children === label)!;
+  expect(flat(text.props.style).flexShrink).toBe(1);
+});
