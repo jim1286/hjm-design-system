@@ -331,7 +331,7 @@ export { ToggleGroup, type ToggleGroupProps } from "./toggle-group.js";
 export { TagsInput, type TagsInputProps } from "./tags-input.js";
 export { SkipNav, type SkipNavProps } from "./skip-nav.js";
 export { BottomInfo, type BottomInfoProps } from "./bottom-info.js";
-export { Sidebar, type SidebarProps } from "./sidebar.js";
+export { Sidebar, type SidebarLinkRenderProps, type SidebarProps, type SidebarSize } from "./sidebar.js";
 export { DateRangePicker, type DateRangePickerProps } from "./date-range.js";
 export {
   OverlayStackProvider,

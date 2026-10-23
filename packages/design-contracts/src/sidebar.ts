@@ -85,18 +85,31 @@ export function validateSidebarDescriptor<Id extends string, GroupId extends str
 }
 
 /**
+ * 펼친 폭 단계. `regular` 260은 그룹 제목과 긴 라벨이 있는 관리·문서 목록, `compact` 220은 그룹 없이
+ * 짧은 라벨 3~5개를 두는 제품 셸 rail이다(2026-10-23 다에리 웹 ProductNav가 220 rail이라 260 고정 Sidebar를
+ * 채택하지 못했다). 임의 px 대신 두 단계만 둔다 — 폭은 라벨·배지 배치를 함께 정하는 recipe 값이다.
+ */
+export type SidebarSize = "compact" | "regular";
+export const sidebarSizes = ["compact", "regular"] as const satisfies readonly SidebarSize[];
+
+/**
  * 접힘은 **표시 밀도**이지 내용이 아니다. 접혀도 항목은 모두 남고 라벨만 숨는다 —
  * 접을 때 항목을 빼면 "접었더니 메뉴가 사라졌다"가 되고, 그건 다른 컴포넌트다.
  * 라벨이 숨으면 아이콘만으로는 이름을 알 수 없으므로 renderer가 접근성 이름을 유지한다.
  */
 export const sidebarDefaults = {
   collapsed: false,
-} as const satisfies Readonly<{ collapsed: boolean }>;
+  size: "regular",
+} as const satisfies Readonly<{ collapsed: boolean; size: SidebarSize }>;
+
+const sidebarSizeWidths = { compact: 220, regular: 260 } as const;
 
 export const sidebarRecipe = {
   slots: ["root", "group", "groupLabel", "item", "label", "badge", "toggle"] as const,
   defaults: sidebarDefaults,
-  widths: { expanded: 260, collapsed: 72 },
+  sizes: sidebarSizeWidths,
+  /** `expanded` is the regular size; kept because 1.12+ recipe readers use it for the default open width. */
+  widths: { expanded: sidebarSizeWidths.regular, collapsed: 72 },
   background: semanticColors.canvas,
   border: semanticColors.border.default,
   borderWidth: stroke.default,
@@ -116,7 +129,8 @@ export const sidebarRecipe = {
   states: { focus: focusIndicatorContract },
 } as const satisfies {
   slots: readonly ["root", "group", "groupLabel", "item", "label", "badge", "toggle"];
-  defaults: { collapsed: boolean };
+  defaults: { collapsed: boolean; size: SidebarSize };
+  sizes: Record<SidebarSize, number>;
   widths: { expanded: number; collapsed: number };
   background: ColorReference;
   border: ColorReference;
@@ -134,7 +148,7 @@ export const sidebarRecipe = {
 
 export const sidebarBehavior = {
   controlled: ["collapsed", "defaultCollapsed", "onCollapsedChange"],
-  inputs: ["groups", "currentId", "accessibilityLabel"],
+  inputs: ["groups", "currentId", "accessibilityLabel", "size"],
   events: ["onNavigate"],
   defaults: sidebarDefaults,
   stateAxes: {
@@ -157,5 +171,6 @@ export const sidebarBehavior = {
     "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look",
     "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it",
     "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it",
+    "a-router-adapter-draws-the-item-anchor-while-hjm-keeps-current-disabled-and-collapsed-names",
   ],
 } as const satisfies BehaviorContract;

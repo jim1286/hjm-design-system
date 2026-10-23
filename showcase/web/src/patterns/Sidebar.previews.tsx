@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sidebar } from "@hjmds/react/sidebar";
+import { Sidebar, type SidebarSize } from "@hjmds/react/sidebar";
 import { SkipNav } from "@hjmds/react/skip-nav";
 import { BottomInfo } from "@hjmds/react/bottom-info";
 import { Top } from "@hjmds/react/top";
@@ -16,13 +16,14 @@ import { bottomInfoExample } from "../../../shared/component-examples.js";
 const icons = { records: "calendar", archive: "download", trash: "delete", profile: "user", billing: "settings" } as const;
 const titles: Record<string, string> = { records: "내 기록", archive: "보관함", trash: "휴지통", profile: "프로필", billing: "결제" };
 
-export function SidebarPreview() {
+export function SidebarPreview({ size }: { size?: SidebarSize } = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [current, setCurrent] = useState("records");
   return (
     <div className="hjm-showcase-shell">
       <SkipNav targetId="showcase-main" label="본문 바로가기" />
       <Sidebar
+        {...(size === undefined ? {} : { size })}
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
         collapseLabels={{ collapse: "메뉴 접기", expand: "메뉴 펼치기" }}

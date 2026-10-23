@@ -43,3 +43,18 @@
 2026-10-07 소비 감사에서 Web 항목의 숫자 recipe 모서리가 프로필을 우회했다. 기존 `radius.md` 역할을 가까운 Provider의 CSS 변수로 읽고 변수 없는 독립 사용은 recipe 12를 유지한다. 레일 폭·링크·현재 위치·접기·초점과 Web 전용 범위는 바꾸지 않는다.
 
 프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+
+## 라우터 링크 어댑터와 폭 단계 (2026-10-23, 개발 소스·미게시)
+
+**`renderLink`.** 항목은 순수 `<a href>`였고 `onNavigate`는 알림이라 기본 이동을 막지 못했다. 그래서 Next 같은
+client router를 쓰는 제품은 항목마다 문서 전체를 다시 불러오게 되어 Sidebar를 채택하지 못하고 자체 nav를 유지했다
+(다에리 웹 `WebShell` ProductNav). `BottomNavigation.renderLink`와 같은 계약으로 제품이 항목 링크를 그린다.
+HJM은 `href`·`className`·`aria-current`·접힘 `aria-label`·`onClick`(비활성 차단·bounce·`onNavigate`)·내용을 준비하고
+어댑터는 그 props를 자기 링크에 그대로 펼친다. 비활성 항목과 `destination` 없는 항목은 어댑터를 거치지 않는다 —
+죽은 링크가 router로 넘어가 이동하는 일을 막는다. 단일 앵커 컴포넌트(`Link`·`ButtonLink`)의 `renderAnchor`가 아니라
+탐색 묶음(BottomNavigation·Card·ListRow)의 `renderLink` 이름을 따른다.
+
+**`size`.** 펼친 폭은 `regular` 260(기본)과 `compact` 220 두 단계다(`sidebarRecipe.sizes`). 그룹 제목과 긴 라벨이 있는
+관리·문서 목록은 regular, 그룹 없이 짧은 라벨 3~5개를 두는 제품 셸 rail은 compact다. 다에리 rail이 220이었다.
+임의 px를 받지 않는 이유는 폭이 라벨 줄바꿈·배지 위치와 함께 정해지는 recipe 값이기 때문이다. 접힌 폭 72는 두 단계 모두 같다.
+`widths.expanded`(260)는 1.12부터 recipe를 읽던 소비자를 위해 regular 값으로 남긴다.

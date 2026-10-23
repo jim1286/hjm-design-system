@@ -33,18 +33,32 @@ export type SidebarDescriptor<Id extends string = string, GroupId extends string
 }>;
 export declare function validateSidebarDescriptor<Id extends string, GroupId extends string>(descriptor: SidebarDescriptor<Id, GroupId>): void;
 /**
+ * 펼친 폭 단계. `regular` 260은 그룹 제목과 긴 라벨이 있는 관리·문서 목록, `compact` 220은 그룹 없이
+ * 짧은 라벨 3~5개를 두는 제품 셸 rail이다(2026-10-23 다에리 웹 ProductNav가 220 rail이라 260 고정 Sidebar를
+ * 채택하지 못했다). 임의 px 대신 두 단계만 둔다 — 폭은 라벨·배지 배치를 함께 정하는 recipe 값이다.
+ */
+export type SidebarSize = "compact" | "regular";
+export declare const sidebarSizes: readonly ["compact", "regular"];
+/**
  * 접힘은 **표시 밀도**이지 내용이 아니다. 접혀도 항목은 모두 남고 라벨만 숨는다 —
  * 접을 때 항목을 빼면 "접었더니 메뉴가 사라졌다"가 되고, 그건 다른 컴포넌트다.
  * 라벨이 숨으면 아이콘만으로는 이름을 알 수 없으므로 renderer가 접근성 이름을 유지한다.
  */
 export declare const sidebarDefaults: {
     readonly collapsed: false;
+    readonly size: "regular";
 };
 export declare const sidebarRecipe: {
     readonly slots: readonly ["root", "group", "groupLabel", "item", "label", "badge", "toggle"];
     readonly defaults: {
         readonly collapsed: false;
+        readonly size: "regular";
     };
+    readonly sizes: {
+        readonly compact: 220;
+        readonly regular: 260;
+    };
+    /** `expanded` is the regular size; kept because 1.12+ recipe readers use it for the default open width. */
     readonly widths: {
         readonly expanded: 260;
         readonly collapsed: 72;
@@ -141,10 +155,11 @@ export declare const sidebarRecipe: {
 };
 export declare const sidebarBehavior: {
     readonly controlled: readonly ["collapsed", "defaultCollapsed", "onCollapsedChange"];
-    readonly inputs: readonly ["groups", "currentId", "accessibilityLabel"];
+    readonly inputs: readonly ["groups", "currentId", "accessibilityLabel", "size"];
     readonly events: readonly ["onNavigate"];
     readonly defaults: {
         readonly collapsed: false;
+        readonly size: "regular";
     };
     readonly stateAxes: {
         readonly availability: readonly ["enabled", "disabled"];
@@ -163,6 +178,6 @@ export declare const sidebarBehavior: {
         readonly states: readonly [];
         readonly actions: readonly [];
     };
-    readonly scenarios: readonly ["the-current-item-is-announced-with-aria-current-not-only-painted", "collapsing-hides-labels-but-keeps-every-item-and-its-accessible-name", "groups-are-real-list-groupings-with-their-own-label-not-visual-dividers-only", "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look", "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it", "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it"];
+    readonly scenarios: readonly ["the-current-item-is-announced-with-aria-current-not-only-painted", "collapsing-hides-labels-but-keeps-every-item-and-its-accessible-name", "groups-are-real-list-groupings-with-their-own-label-not-visual-dividers-only", "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look", "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it", "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it", "a-router-adapter-draws-the-item-anchor-while-hjm-keeps-current-disabled-and-collapsed-names"];
 };
 //# sourceMappingURL=sidebar.d.ts.map

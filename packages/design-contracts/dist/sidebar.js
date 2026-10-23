@@ -38,6 +38,7 @@ export function validateSidebarDescriptor(descriptor) {
         throw new RangeError(`Sidebar currentId does not match any item: ${String(descriptor.currentId)}`);
     }
 }
+export const sidebarSizes = ["compact", "regular"];
 /**
  * 접힘은 **표시 밀도**이지 내용이 아니다. 접혀도 항목은 모두 남고 라벨만 숨는다 —
  * 접을 때 항목을 빼면 "접었더니 메뉴가 사라졌다"가 되고, 그건 다른 컴포넌트다.
@@ -45,11 +46,15 @@ export function validateSidebarDescriptor(descriptor) {
  */
 export const sidebarDefaults = {
     collapsed: false,
+    size: "regular",
 };
+const sidebarSizeWidths = { compact: 220, regular: 260 };
 export const sidebarRecipe = {
     slots: ["root", "group", "groupLabel", "item", "label", "badge", "toggle"],
     defaults: sidebarDefaults,
-    widths: { expanded: 260, collapsed: 72 },
+    sizes: sidebarSizeWidths,
+    /** `expanded` is the regular size; kept because 1.12+ recipe readers use it for the default open width. */
+    widths: { expanded: sidebarSizeWidths.regular, collapsed: 72 },
     background: semanticColors.canvas,
     border: semanticColors.border.default,
     borderWidth: stroke.default,
@@ -70,7 +75,7 @@ export const sidebarRecipe = {
 };
 export const sidebarBehavior = {
     controlled: ["collapsed", "defaultCollapsed", "onCollapsedChange"],
-    inputs: ["groups", "currentId", "accessibilityLabel"],
+    inputs: ["groups", "currentId", "accessibilityLabel", "size"],
     events: ["onNavigate"],
     defaults: sidebarDefaults,
     stateAxes: {
@@ -93,6 +98,7 @@ export const sidebarBehavior = {
         "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look",
         "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it",
         "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it",
+        "a-router-adapter-draws-the-item-anchor-while-hjm-keeps-current-disabled-and-collapsed-names",
     ],
 };
 //# sourceMappingURL=sidebar.js.map

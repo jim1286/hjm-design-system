@@ -1108,6 +1108,7 @@
     "patterns-search--restricted",
     "patterns-search--results",
     "patterns-search--typing",
+    "patterns-sidebar--compact",
     "patterns-sidebar--dark",
     "patterns-sidebar--default",
     "patterns-sidebar--large-text",

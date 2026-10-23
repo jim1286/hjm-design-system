@@ -6,11 +6,16 @@ import {
   validateSidebarDescriptor,
   type SidebarDescriptor,
   type SidebarItemDescriptor,
+  type SidebarSize,
 } from "@hjmds/design-contracts/components/sidebar";
 import {
   forwardRef,
   useState,
+  type AnchorHTMLAttributes,
   type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactElement,
   type ReactNode,
 } from "react";
 import { useOptionalHjmTheme } from "./provider.js";
@@ -18,17 +23,38 @@ import { classNames, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type SidebarAppearance = "standard" | "bounce" | "hook" | "proximity";
+export type { SidebarSize };
+
+/**
+ * Anchor props HJM prepared for one enabled item with a destination. A router adapter spreads all of them onto its
+ * own link (for example Next.js `Link`): `onClick` keeps the disabled guard, bounce and `onNavigate` before the
+ * router navigates, and `aria-current`/collapsed `aria-label` stay HJM-owned.
+ */
+export type SidebarLinkRenderProps = AnchorHTMLAttributes<HTMLAnchorElement> &
+  Readonly<{
+    href: string;
+    className: string;
+    children: ReactNode;
+  }>;
 
 export type SidebarProps<Id extends string = string, GroupId extends string = string> = Readonly<{
   descriptor: SidebarDescriptor<Id, GroupId>;
   /** Decoration only; link hit areas and document-order keyboard navigation stay fixed. */
   appearance?: SidebarAppearance;
+  /** Open width step: `regular` 260 (default) or `compact` 220 (`sidebarRecipe.sizes`). The collapsed rail stays 72. */
+  size?: SidebarSize;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
   /** Localized names for the collapse control in both states. */
   collapseLabels?: Readonly<{ collapse: string; expand: string }>;
+  /** Called on item activation, before a `renderLink` router navigates. A plain `href` still navigates natively. */
   onNavigate?: (id: Id) => void;
+  /**
+   * Framework navigation adapter (same contract as `BottomNavigation.renderLink`) for items with a destination.
+   * Disabled items and items without a destination keep HJM's own anchor so the adapter never receives a dead link.
+   */
+  renderLink?: (props: SidebarLinkRenderProps) => ReactElement;
   /** Product-owned icon per item; required for the collapsed rail to stay usable. */
   renderIcon?: (item: SidebarItemDescriptor<Id>) => ReactNode;
   renderBadge?: (count: number, item: SidebarItemDescriptor<Id>) => ReactNode;
@@ -41,11 +67,13 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
   {
     descriptor,
     appearance = "standard",
+    size = sidebarDefaults.size,
     collapsed: controlledCollapsed,
     defaultCollapsed,
     onCollapsedChange,
     collapseLabels,
     onNavigate,
+    renderLink,
     renderIcon,
     renderBadge,
     className,
@@ -69,6 +97,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
       className={classNames("hjm-sidebar", className)}
       data-collapsed={collapsed || undefined}
       data-appearance={appearance}
+      data-size={size}
       data-animate={animate || undefined}
       onPointerMove={event => {
         if (appearance !== "proximity" || !animate || event.pointerType === "touch") return;
@@ -84,7 +113,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
         for (const item of event.currentTarget.querySelectorAll<HTMLElement>(".hjm-sidebar__item")) item.style.removeProperty("--hjm-sidebar-proximity");
       }}
       style={{ ...layoutStyle,
-        "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
+        "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.sizes[size]}px`,
         "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
         // CSS inheritance preserves nested profiles without adding a Provider dependency.
         "--hjm-sidebar-item-radius": `var(--hjm-radius-md, ${sidebarRecipe.itemRadius}px)`,
@@ -113,38 +142,46 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
           <ul className="hjm-sidebar__list">
             {group.items.map((item) => {
               const current = descriptor.currentId === item.id;
-              // Router-owned destinations may omit href; role/tabIndex/Enter keep
-              // their link keyboard path without inventing a URL.
+              const href = item.destination?.href;
+              const content = (
+                <>
+                  {renderIcon ? <span aria-hidden="true" className="hjm-sidebar__icon">{renderIcon(item)}</span> : null}
+                  <span className="hjm-sidebar__label">{item.label}</span>
+                  {item.badgeCount !== undefined ? (
+                    <span className="hjm-sidebar__badge">{renderBadge?.(item.badgeCount, item) ?? item.badgeCount}</span>
+                  ) : null}
+                </>
+              );
+              const linkProps = {
+                className: "hjm-sidebar__item",
+                href,
+                "aria-current": current ? "page" as const : undefined,
+                "data-bounce": current && activatedId === item.id || undefined,
+                "aria-disabled": item.disabled || undefined,
+                // Collapsed labels are hidden visually, so the name comes
+                // from the attribute instead of disappearing with the text.
+                "aria-label": collapsed ? item.label : undefined,
+                // Router-owned destinations may omit href; role/tabIndex/Enter keep
+                // their link keyboard path without inventing a URL.
+                role: item.destination === undefined ? "link" : undefined,
+                tabIndex: item.disabled ? -1 : item.destination === undefined ? 0 : undefined,
+                onKeyDown: (event: KeyboardEvent<HTMLAnchorElement>) => {
+                  if (item.destination === undefined && !item.disabled && event.key === "Enter") {
+                    event.preventDefault(); event.currentTarget.click();
+                  }
+                },
+                onClick: (event: MouseEvent<HTMLAnchorElement>) => {
+                  if (item.disabled) { event.preventDefault(); return; }
+                  if (appearance === "bounce" && animate) setActivatedId(item.id);
+                  onNavigate?.(item.id);
+                },
+                children: content,
+              };
               return (
                 <li key={item.id}>
-                  <a
-                    className="hjm-sidebar__item"
-                    href={item.destination?.kind === "internal" ? item.destination.href : item.destination?.href}
-                    aria-current={current ? "page" : undefined}
-                    data-bounce={current && activatedId === item.id || undefined}
-                    aria-disabled={item.disabled || undefined}
-                    // Collapsed labels are hidden visually, so the name comes
-                    // from the attribute instead of disappearing with the text.
-                    aria-label={collapsed ? item.label : undefined}
-                    role={item.destination === undefined ? "link" : undefined}
-                    tabIndex={item.disabled ? -1 : item.destination === undefined ? 0 : undefined}
-                    onKeyDown={(event) => {
-                      if (item.destination === undefined && !item.disabled && event.key === "Enter") {
-                        event.preventDefault(); event.currentTarget.click();
-                      }
-                    }}
-                    onClick={(event) => {
-                      if (item.disabled) { event.preventDefault(); return; }
-                      if (appearance === "bounce" && animate) setActivatedId(item.id);
-                      onNavigate?.(item.id);
-                    }}
-                  >
-                    {renderIcon ? <span aria-hidden="true" className="hjm-sidebar__icon">{renderIcon(item)}</span> : null}
-                    <span className="hjm-sidebar__label">{item.label}</span>
-                    {item.badgeCount !== undefined ? (
-                      <span className="hjm-sidebar__badge">{renderBadge?.(item.badgeCount, item) ?? item.badgeCount}</span>
-                    ) : null}
-                  </a>
+                  {renderLink && href !== undefined && !item.disabled
+                    ? renderLink({ ...linkProps, href })
+                    : <a {...linkProps} />}
                 </li>
               );
             })}

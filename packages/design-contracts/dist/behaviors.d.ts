@@ -875,10 +875,11 @@ export declare const behaviorRegistry: {
     };
     readonly sidebar: {
         readonly controlled: readonly ["collapsed", "defaultCollapsed", "onCollapsedChange"];
-        readonly inputs: readonly ["groups", "currentId", "accessibilityLabel"];
+        readonly inputs: readonly ["groups", "currentId", "accessibilityLabel", "size"];
         readonly events: readonly ["onNavigate"];
         readonly defaults: {
             readonly collapsed: false;
+            readonly size: "regular";
         };
         readonly stateAxes: {
             readonly availability: readonly ["enabled", "disabled"];
@@ -895,7 +896,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly [];
             readonly actions: readonly [];
         };
-        readonly scenarios: readonly ["the-current-item-is-announced-with-aria-current-not-only-painted", "collapsing-hides-labels-but-keeps-every-item-and-its-accessible-name", "groups-are-real-list-groupings-with-their-own-label-not-visual-dividers-only", "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look", "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it", "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it"];
+        readonly scenarios: readonly ["the-current-item-is-announced-with-aria-current-not-only-painted", "collapsing-hides-labels-but-keeps-every-item-and-its-accessible-name", "groups-are-real-list-groupings-with-their-own-label-not-visual-dividers-only", "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look", "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it", "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it", "a-router-adapter-draws-the-item-anchor-while-hjm-keeps-current-disabled-and-collapsed-names"];
     };
     readonly nativePlatform: {
         readonly controlled: readonly [];
