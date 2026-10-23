@@ -406,12 +406,16 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
       else if (session.getSnapshot().status !== "closed") session.interrupt();
       sessionRef.current = null;
     }, [open, sessionGeneration]);
-    useEffect(
-      () => () => {
+    useEffect(() => {
+      // StrictMode replays mount effects after a simulated unmount whose cleanup interrupted the session created in
+      // render, so an AlertDialog mounted open could never confirm or cancel (BurnTok delayed its open by one task to
+      // avoid it, 2026-10-23). Only that replay finds an interrupted session while still open; replace it.
+      if (open && sessionRef.current?.getSnapshot().status === "closed") startSession();
+      return () => {
         sessionRef.current?.interrupt();
-      },
-      [],
-    );
+      };
+      // Mount/unmount only: later opens create their session in render or through the trigger.
+    }, []);
     const tone: AlertDialogTone = request.tone ?? "attention";
 
     return (
