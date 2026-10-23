@@ -346,7 +346,9 @@ export function ChartLegend({ items, selectedId, onSelect, exclusion, layout = "
     // Inline entries size to their content and wrap as a whole; stacked rows take the width and end-align the value.
     const content = <View style={{ flexDirection: "row", alignItems: "center", gap: legend.itemGap, ...(inline ? {} : { minHeight: legend.layouts.stack.rowMinHeight }), opacity: selectedId && selectedId !== item.id ? legend.dimmedOpacity : 1 }}>
       <View style={{ width: legend.swatch.size, height: legend.swatch.size, borderRadius: legend.swatch.radius, backgroundColor: item.color }} />
-      <Text variant="body" {...(inline ? {} : { layoutStyle: { flex: 1 }, numberOfLines: 1 })}>{item.label}</Text>
+      {/* Inline: shrink beside the swatch so a long label wraps inside the row; at its natural width the label plus the
+          swatch overran the legend (2026-10-23 flex audit). */}
+      <Text variant="body" {...(inline ? { layoutStyle: { flexShrink: 1 } } : { layoutStyle: { flex: 1 }, numberOfLines: 1 })}>{item.label}</Text>
       {item.value !== undefined && <Text variant="label" fontRole="ui" emphasis="medium" style={{ color: palette.legend, fontVariant: ["tabular-nums"] }}>{item.value}</Text>}
     </View>;
     const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>

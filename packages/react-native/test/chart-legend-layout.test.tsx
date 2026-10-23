@@ -34,3 +34,11 @@ it("stacks by default with the 32 row minimum and rejects unknown layouts", () =
   expect(rows).toHaveLength(2);
   expect(() => act(() => tree!.update(<HjmNativeProvider><ChartLegend layout={"grid" as "inline"} items={items} /></HjmNativeProvider>))).toThrow(/Unsupported ChartLegend layout/);
 });
+
+it("lets an inline label shrink beside its swatch so a long label wraps inside the legend", () => {
+  // 2026-10-23 flex audit: at its natural width the label plus the swatch overran the legend.
+  const label = "아주 긴 계열 이름이 좁은 폭에서 줄바꿈되어야 해요";
+  act(() => { tree = create(<HjmNativeProvider><ChartLegend layout="inline" items={[{ id: "x", label, color: "#f59e0b" }]} /></HjmNativeProvider>); });
+  const text = tree!.root.findAll(node => node.props.children === label && node.props.layoutStyle !== undefined)[0]!;
+  expect(flat(text.props.layoutStyle).flexShrink).toBe(1);
+});
