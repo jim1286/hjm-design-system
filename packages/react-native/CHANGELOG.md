@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.41.2
+
+### Patch Changes
+
+- a54f7b2: ChoiceRow passes ListRow `density` through and requires `errorLabel` only for async saves; a synchronous `onValueChange` closes the sheet without an unused error message.
+
 ## 1.41.1
 
 ### Patch Changes

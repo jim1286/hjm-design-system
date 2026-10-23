@@ -4,9 +4,10 @@ import { resolveChoiceRow } from "@hjmds/design-contracts/choice-row";
 import { ListRow } from "./display.js";
 import { Sheet } from "./overlays.js";
 import { RadioGroup } from "./selection.js";
-export function ChoiceRow({ title, items, value, onValueChange, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, disabled = false, loading = false }) {
+export function ChoiceRow(props) {
+    const { title, items, value, closeLabel, errorLabel, sheetTitle, sheetDescription, placeholder, leading, trailing, density, disabled = false, loading = false } = props;
     const { valueLabel } = resolveChoiceRow({ title, items, value, ...(placeholder === undefined ? {} : { placeholder }) });
-    if (!closeLabel.trim() || !errorLabel.trim())
+    if (!closeLabel.trim() || (errorLabel !== undefined && !errorLabel.trim()))
         throw new TypeError("ChoiceRow text must not be empty");
     const [open, setOpen] = useState(false);
     const [pending, setPending] = useState(false);
@@ -17,7 +18,7 @@ export function ChoiceRow({ title, items, value, onValueChange, closeLabel, erro
         if (next === value || pending)
             return;
         setFailed(false);
-        const result = onValueChange(next);
+        const result = props.onValueChange(next);
         if (!result) {
             setOpen(false);
             return;
@@ -25,7 +26,7 @@ export function ChoiceRow({ title, items, value, onValueChange, closeLabel, erro
         setPending(true);
         result.then(() => { setPending(false); setOpen(false); }, () => { setPending(false); setFailed(true); });
     };
-    return _jsxs(_Fragment, { children: [_jsx(ListRow, { title: title, description: valueLabel, ...(leading === undefined ? {} : { leading }), ...(trailing === undefined ? {} : { trailing }), disabled: disabled, loading: loading, "aria-haspopup": "dialog", "aria-expanded": open, onClick: () => { setFailed(false); setOpen(true); } }), _jsx(Sheet, { open: open, onOpenChange: (next) => { if (!pending)
-                    setOpen(next); }, title: sheetTitle ?? title, closeLabel: closeLabel, busy: pending, ...(sheetDescription === undefined ? {} : { description: sheetDescription }), children: _jsx(RadioGroup, { accessibilityLabel: sheetTitle ?? title, orientation: "vertical", value: value, items: items, disabled: pending, ...(failed ? { error: errorLabel } : {}), onValueChange: choose }) })] });
+    return _jsxs(_Fragment, { children: [_jsx(ListRow, { title: title, description: valueLabel, ...(leading === undefined ? {} : { leading }), ...(trailing === undefined ? {} : { trailing }), ...(density === undefined ? {} : { density }), disabled: disabled, loading: loading, "aria-haspopup": "dialog", "aria-expanded": open, onClick: () => { setFailed(false); setOpen(true); } }), _jsx(Sheet, { open: open, onOpenChange: (next) => { if (!pending)
+                    setOpen(next); }, title: sheetTitle ?? title, closeLabel: closeLabel, busy: pending, ...(sheetDescription === undefined ? {} : { description: sheetDescription }), children: _jsx(RadioGroup, { accessibilityLabel: sheetTitle ?? title, orientation: "vertical", value: value, items: items, disabled: pending, ...(failed && errorLabel !== undefined ? { error: errorLabel } : {}), onValueChange: choose }) })] });
 }
 //# sourceMappingURL=choice-row.js.map
