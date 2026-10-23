@@ -400,10 +400,17 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
   const content = <>
     {title || description || badge || leading || actions ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap: "wrap"}}>
       {/* Keep the copy’s natural width as its flex basis so actions wrap before squeezing a short title (Spint cell header). */}
-      {leading}<Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
+      {/* A leading glyph and its copy are one group: when the title is long the copy wraps beside the glyph
+          instead of the whole copy dropping under a lone glyph (2026-10-23, same fault as StatisticGroup). */}
+      {leading ? <Stack axis="inline" gap="sm" align="center" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
+        {leading}<Stack gap="xxs" layoutStyle={{flexShrink: 1, minWidth: 0}}>
         <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? (titleSize === "compact" ? <Text variant="body" role="heading" aria-level={headingLevel} style={{fontWeight: 500}}>{title}</Text> : <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading>) : null}{badge}</Stack>
         {description ? <Text tone="muted">{description}</Text> : null}
-      </Stack>{actions}
+      </Stack>
+      </Stack> : <Stack gap="xxs" layoutStyle={{flexGrow: 1, flexShrink: 0, flexBasis: "auto", maxWidth: "100%"}}>
+        <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexWrap: "wrap"}}>{title ? (titleSize === "compact" ? <Text variant="body" role="heading" aria-level={headingLevel} style={{fontWeight: 500}}>{title}</Text> : <Heading level="level5" semanticLevel={headingLevel}>{title}</Heading>) : null}{badge}</Stack>
+        {description ? <Text tone="muted">{description}</Text> : null}
+      </Stack>}{actions}
     </Stack> : null}
     {notice}
     {state.kind === "ready" ? children : stateMinHeight === null ? stateGroup : <div data-hjm-state-height={stateHeight} style={{display: "flex", flexDirection: "column", flex: 1, minHeight: stateMinHeight}}>{stateGroup}</div>}
