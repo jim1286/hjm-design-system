@@ -2466,6 +2466,9 @@ export const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipP
         style={[
           {
             color: contentColor,
+            // Shrink beside the leading glyph and selection mark so a long label wraps inside the chip (chip.md: labels
+            // wrap). At its natural width the label plus the glyphs overran the chip (2026-10-23 flex audit).
+            flexShrink: 1,
             fontWeight: active
               ? chipRecipe.label.selectedFontWeight
               : chipRecipe.label.fontWeight,
