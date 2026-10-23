@@ -112,9 +112,14 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   useLayoutEffect(() => {
     // Replacing a focused retry/input removes its DOM node. Keep keyboard users
     // in the same content region without stealing focus moved to another control.
+    // The body is a landing target here, not a control the user moved to, so it is marked to draw no ring while it
+    // holds this recovered focus (as the search results landing). The mark clears on blur: a later Tab to the region
+    // shows the HJM focus ring (2026-10-23 web check: the browser's default ring outlined the whole body).
     const previous = lastBodyFocus.current;
-    if (previous && !previous.isConnected && document.activeElement === document.body) {
-      bodyRef.current?.focus({ preventScroll: true });
+    const body = bodyRef.current;
+    if (body && previous && !previous.isConnected && document.activeElement === document.body) {
+      body.setAttribute("data-focus-landing", "");
+      body.focus({ preventScroll: true });
     }
     if (previous && !previous.isConnected) lastBodyFocus.current = null;
   });
@@ -137,10 +142,12 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
         </div><div style={{ display: "flex", alignItems: "center", gap: topBarRecipe.gap }}>{actions}</div>
     </header> : null)}
     {notice ? <div className="hjm-screen__notice">{notice}</div> : null}
-    {/* Scrollable read-only screens need a named keyboard entry point, including hidden/custom headers. */}
+    {/* Scrollable read-only screens need a named keyboard entry point, including hidden/custom headers: tabIndex 0
+        keeps a screen-scrolled body reachable by Tab (Safari does not make scrollers focusable). */}
     <div ref={bodyRef} role="region" aria-label={title} tabIndex={bodyScroll === "content" ? -1 : 0}
       onFocusCapture={event => { lastBodyFocus.current = event.target as HTMLElement; }}
       onBlurCapture={event => {
+        if (event.target === event.currentTarget) event.currentTarget.removeAttribute("data-focus-landing");
         // A connected input blurred to the document intentionally relinquishes
         // focus too; only removal of the currently focused node needs recovery.
         if (event.relatedTarget ? !event.currentTarget.contains(event.relatedTarget as Node) : (event.target as HTMLElement).isConnected) {

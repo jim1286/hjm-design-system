@@ -3456,6 +3456,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* contentInset="none" hands every inset to the host: no footer rule, as on Native (BottomCTA then draws its own bar). */
 .hjm-screen[data-content-inset="none"] > .hjm-screen__footer { border-block-start: 0; }
 .hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
+/* A screen-scrolled body is a Tab stop for keyboard scrolling, so reaching it by keyboard draws the HJM ring, inset
+   because the body fills the screen and an outer ring would be clipped. Focus that ScreenLayout itself parks on the
+   body after the focused node was removed (data-focus-landing) is a landing, not a control, and draws none, like
+   the search results landing (2026-10-23 web check: the browser default ring outlined the whole body). */
+.hjm-screen__body:focus { outline: none; }
+.hjm-screen__body:focus-visible:not([data-focus-landing]) { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: calc(-1 * var(--hjm-focus-width)); }
 .hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
 .hjm-screen__body[data-content-alignment="center"] { display: flex; flex-direction: column; }
 .hjm-screen__centered-content { margin-block: auto; flex-shrink: 0; inline-size: 100%; }

@@ -61,3 +61,18 @@ it("hides a redundant page title while keeping its screen name and centered date
  expect(Math.abs((header.left+header.right)/2-(context.left+context.right)/2)).toBeLessThan(1);
  expect(host.querySelectorAll('button')).toHaveLength(3);
 });
+// 2026-10-23 web check: replacing a keyboard-focused panel (hash tab change) parked focus on the body and the browser
+// drew its default ring around the whole body. A landing draws no ring; reaching the body by Tab draws the HJM ring.
+it("draws no ring on the recovered body landing and the HJM ring when the body is reached by Tab",async()=>{
+ const panel=(name:string)=><ScreenLayout title="Tabs" titleVisibility="hidden"><Button key={name}>{name}</Button></ScreenLayout>;
+ const ring=()=>getComputedStyle(body());
+ await render(panel('Panel A'));
+ await userEvent.tab();expect(document.activeElement).toBe(body());
+ expect(ring().outlineStyle).toBe('solid');expect(ring().outlineOffset).toBe(`-${ring().outlineWidth}`);
+ await userEvent.tab();expect(document.activeElement).toBe(button('Panel A'));
+ await render(panel('Panel B'));
+ expect(document.activeElement).toBe(body());expect(body().hasAttribute('data-focus-landing')).toBe(true);
+ expect(ring().outlineStyle).toBe('none');
+ await userEvent.tab();expect(document.activeElement).toBe(button('Panel B'));expect(body().hasAttribute('data-focus-landing')).toBe(false);
+ await userEvent.tab({shift:true});expect(document.activeElement).toBe(body());expect(ring().outlineStyle).toBe('solid');
+});

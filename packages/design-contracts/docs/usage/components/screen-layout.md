@@ -151,6 +151,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 
 - Web의 화면 스크롤 본문은 Tab으로 진입할 수 있다. `scroll="content"`의 정상 본문은 자식이 키보드 스크롤을 소유하지만, 오류·빈 상태 등 대체 안내는 화면 스크롤로 바뀌며 Tab 진입도 함께 복원된다.
 - Web에서 본문에 초점을 가진 입력·재시도 버튼이 상태 전환으로 제거되면 같은 본문으로 초점을 복구한다. `scroll="content"`의 본문은 이 복구만을 위한 `tabIndex=-1`을 가지며 일반 Tab 순서에는 추가되지 않는다. 사용자가 다른 컨트롤이나 바깥 영역으로 초점을 옮긴 경우에는 이동시키지 않는다. 2026-10-13 재시도·권한 제한 전환에서 초점이 body로 유실된 경로를 수정했다.
+- Web 본문의 초점 표시: Tab으로 본문에 들어오면 HJM 초점 링(`--hjm-focus-width`·`--hjm-color-focus`)을 본문 안쪽에 그린다. 위 복구로 놓인 초점은 사용자가 고른 컨트롤이 아닌 착지점이라 링을 그리지 않는다(검색 결과 착지와 같은 규칙). 다음 Tab·Shift+Tab부터는 일반 규칙을 따른다. 2026-10-23 웹 확인에서 탭(해시) 전환으로 패널이 바뀔 때 브라우저 기본 링이 본문 전체에 그려진 것을 고쳤다.
 - **화면 여백은 ScreenLayout이 소유한다(기본 `contentInset`).** 화면을 바깥 `Container gutter`로 감싸고 `contentInset="none"`을 주는 구성은 지원하지 않는다. 행의 표면 bleed, footer·BottomCTA 바, 끝 컨트롤의 `edge`는 모두 ScreenLayout이 여백을 가진다는 전제로 맞춰져 있어, 그 구성에서는 행 표면이 본문 끝에서 잘리고 footer가 여백 안에 떠 있는 상자가 된다. `none`은 host가 모든 inset을 소유하는 기존 의미 그대로다(새 동작 없음).
 - 가상화 목록(FlatList, VirtualList)을 넣으면 `scroll="content"`로 둔다. 스크롤을 이중으로 중첩하지 않는다.
 - 새로고침 실패·저장 오류는 `state`를 바꾸지 말고 `ready` + `notice`로 알린다. `loading`으로 바꾸면 본문이
