@@ -109,7 +109,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 1.14.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ImportFieldMapping](components/import-field-mapping.md) | 구성/입력과 작성 | CSV 등 원본 열을 제품의 대상 필드에 연결하고, 검증을 통과한 연결만 가져오기로 넘길 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [InlineEdit](components/inline-edit.md) | 구성/입력과 작성 | 목록·상세의 제목처럼 이미 확정된 짧은 값 하나를 그 자리에서 명시적으로 편집·저장·취소할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [KeyboardAvoidanceContext](components/keyboard-avoidance-context.md) | — | 제품이 직접 만든 키보드 대응 영역 안에서 HJM `ScreenLayout`·`Sheet`가 여백을 두 번 주지 않게 할 때 쓴다. | 미게시(1.26.1 이후) | Native | 개별 API 계약 참조 | 실험 |
+| [KeyboardAvoidanceContext](components/keyboard-avoidance-context.md) | — | 제품이 직접 만든 키보드 대응 영역 안에서 HJM `ScreenLayout`·`Sheet`가 여백을 두 번 주지 않게 할 때 쓴다. | 1.27.0 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
@@ -263,7 +263,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [선택과 오류 복구](compositions/upload-recovery.md) | 피드백과 복구 | 파일 선택과 전송 상태의 취소·재시도를 연결할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [스트림 응답과 중지](compositions/streaming-answer.md) | 피드백과 복구 | 실제 provider가 보내는 응답 delta를 표시하고 중지·재생성·오류를 같은 영역에서 제공할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
-| [저장 결과](compositions/save-feedback.md) | 피드백과 복구 | 실제 영속 저장 성공 뒤 짧게 결과를 알린다. | 1.37.1 | Web · Native | 구성 API별 | 실험 |
+| [저장 결과](compositions/save-feedback.md) | 피드백과 복구 | 실제 영속 저장 성공 뒤 짧게 결과를 알린다. | 1.37.1 | Web · Native | 구성 API별 | 배포 |
 | [저장과 재시도](compositions/action-recovery-save.md) | 피드백과 복구 | 입력한 내용을 서버에 저장하는 폼 한 덩어리에서 저장 중 중복 실행을 막고, 실패하면 입력을 지우지 않은 채 제출했던 값 그대로 다시 보낼 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [전송 진행과 취소](compositions/transfer-task.md) | 피드백과 복구 | 실제 다운로드·업로드·작업의 시작/대기/진행·취소·실패 복구를 한 구성으로 제공할 때 쓴다. | 1.21.0 | Web · Native | 구성 API별 | 배포 |
 | [중단해도 남는 현재 상태](compositions/expo-interactions.md) | 피드백과 복구 | 버튼으로 상태를 빠르게 바꾸거나 전환 도중 내용을 닫아도 현재 상태가 바로 보이고 남아야 하는 영역에 쓴다. | 1.12.1 | Native | 구성 API별 | 배포 |

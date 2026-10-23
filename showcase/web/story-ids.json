@@ -769,6 +769,10 @@
     "compositions-feedback-illustrated-outcome--dark",
     "compositions-feedback-illustrated-outcome--default",
     "compositions-feedback-illustrated-outcome--large-text",
+    "compositions-feedback-save-feedback--dark",
+    "compositions-feedback-save-feedback--default",
+    "compositions-feedback-save-feedback--summary",
+    "compositions-feedback-save-feedback--summary-dark",
     "compositions-information-document-resource--dark",
     "compositions-information-document-resource--default",
     "compositions-information-document-resource--large-text",
@@ -1235,10 +1239,6 @@
     "실험-구성-콘텐츠-바로가기-목록--default",
     "실험-구성-콘텐츠-바로가기-목록--filter-summary",
     "실험-구성-콘텐츠-바로가기-목록--wrapped",
-    "실험-구성-피드백과-복구-저장-결과--dark",
-    "실험-구성-피드백과-복구-저장-결과--default",
-    "실험-구성-피드백과-복구-저장-결과--summary",
-    "실험-구성-피드백과-복구-저장-결과--summary-dark",
     "실험-컴포넌트-데이터-표시-인용-카드--dark",
     "실험-컴포넌트-데이터-표시-인용-카드--default",
     "실험-컴포넌트-데이터-표시-인용-카드--large-text"
@@ -1975,9 +1975,29 @@
       "reason": "제목 이동(실험/구성/사진/촬영과 앨범 선택 → 배포/구성/선택과 필터/사진 촬영과 앨범 선택)과 스토리 어휘 정리"
     },
     "실험-구성-피드백과-복구-저장-결과--inline": {
-      "replacement": "실험-구성-피드백과-복구-저장-결과--default",
+      "replacement": "compositions-feedback-save-feedback--default",
       "date": "2026-10-20",
       "reason": "사용자 요청으로 카드형 저장 피드백 제거, 한 줄·요약 토스트만 유지"
+    },
+    "실험-구성-피드백과-복구-저장-결과--dark": {
+      "replacement": "compositions-feedback-save-feedback--dark",
+      "date": "2026-10-23",
+      "reason": "스토리북 배포(실험/구성/피드백과 복구/저장 결과 → 배포/…)와 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-구성-피드백과-복구-저장-결과--default": {
+      "replacement": "compositions-feedback-save-feedback--default",
+      "date": "2026-10-23",
+      "reason": "스토리북 배포(실험/구성/피드백과 복구/저장 결과 → 배포/…)와 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-구성-피드백과-복구-저장-결과--summary": {
+      "replacement": "compositions-feedback-save-feedback--summary",
+      "date": "2026-10-23",
+      "reason": "스토리북 배포(실험/구성/피드백과 복구/저장 결과 → 배포/…)와 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-구성-피드백과-복구-저장-결과--summary-dark": {
+      "replacement": "compositions-feedback-save-feedback--summary-dark",
+      "date": "2026-10-23",
+      "reason": "스토리북 배포(실험/구성/피드백과 복구/저장 결과 → 배포/…)와 Web meta id ASCII kebab 규칙 적용"
     }
   }
 }

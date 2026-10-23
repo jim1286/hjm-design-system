@@ -1,10 +1,10 @@
 # KeyboardAvoidanceContext
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Native
-- 적용: 미게시(1.26.1 이후)
-- 검토일: 2026-10-16
+- 적용: 1.27.0
+- 검토일: 2026-10-23
 - 근거: Native `src/keyboard.tsx`; 2026-10-16 키보드 전수 조사에서 바깥 KeyboardAvoiding과 안쪽 ScreenLayout이 같은 키보드 이벤트에 동시에 여백을 주지 않게 하려고 추가
 - 스토리북: 없음
 
