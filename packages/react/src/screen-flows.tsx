@@ -18,7 +18,7 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
@@ -33,7 +33,8 @@ export type ScreenFlowAction = Readonly<{label:string; onAction():void; disabled
  * products route exits (a "Cancel" label) through it as a header text button (2026-10-17 screen review); exits use `exit`. */
 export type ScreenFlowIconAction = ScreenFlowAction & Readonly<{icon:ReactNode}>;
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
-function Action({action,secondary=false,buttonRef,edge}:{action:ScreenFlowAction;secondary?:boolean;buttonRef?:Ref<HTMLButtonElement>;edge?:"start"|"end"}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={secondary?"ghost":"primary"} {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
+// `emphasis` overrides the primary/ghost pair for footers whose hierarchy a contract resolves (PermissionScreen).
+function Action({action,secondary=false,emphasis,buttonRef,edge}:{action:ScreenFlowAction;secondary?:boolean;emphasis?:"primary"|"secondary"|"ghost";buttonRef?:Ref<HTMLButtonElement>;edge?:"start"|"end"}){if(action.icon)return <IconButton ref={buttonRef} label={action.label} tone="ghost" {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} onClick={action.onAction}>{action.icon}</IconButton>;return <Button ref={buttonRef} tone={emphasis??(secondary?"ghost":"primary")} {...(edge?{edge}:{})} disabled={!!(action.disabled||action.pending)} loading={action.pending??false} onClick={action.onAction}>{action.label}</Button>;}
 type Base = Omit<ScreenLayoutProps,"children"|"footer">;
 // Stacked footer/sheet buttons use Stack gap "xs" (actionGroupRecipe.stackedGap 8); 12 read as split groups (button.md, 2026-10-17).
 
@@ -627,9 +628,18 @@ export function SearchScreen<F = unknown>({embedded=false,query,queryLabel,query
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 
-export type PermissionScreenProps = Base & {status:PermissionScreenStatus;illustration?:ReactNode;explanation:ReactNode;request:ScreenFlowAction;settings:ScreenFlowAction;continueAction:ScreenFlowAction;skip?:ScreenFlowAction};
+export type PermissionScreenProps = Base & {status:PermissionScreenStatus;illustration?:ReactNode;explanation:ReactNode;request:ScreenFlowAction;settings:ScreenFlowAction;continueAction:ScreenFlowAction;
+  /** Re-read the OS permission after returning from settings. Shown only while `denied`, under the settings action. */
+  recheck?:ScreenFlowAction;
+  /** A path that works without the permission (pick a photo, enter it by hand). Shown until `granted`, above skip. */
+  alternative?:ScreenFlowAction;
+  skip?:ScreenFlowAction};
 // Permission guidance occupies the current screen body; keep its default centered on both platforms.
-export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;return <ScreenLayout {...screen} contentAlignment={screen.contentAlignment ?? "center"} footer={<Stack gap="xs">{primary?<Action action={primary}/>:null}{skip?<Action action={skip} secondary/>:null}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
+export function PermissionScreen({status,illustration,explanation,request,settings,continueAction,recheck,alternative,skip,...screen}:PermissionScreenProps){const kind=resolvePermissionAction(status);const primary=kind==="request"?request:kind==="settings"?settings:kind==="continue"?continueAction:null;
+  // Order and emphasis come from the contract: primary → recheck (denied) → alternative → skip.
+  const actions={primary,recheck,alternative,skip};
+  const footer=resolvePermissionFooter(status,{recheck:!!recheck,alternative:!!alternative,skip:!!skip});
+  return <ScreenLayout {...screen} contentAlignment={screen.contentAlignment ?? "center"} footer={<Stack gap="xs">{footer.map(({slot,emphasis})=><Action key={slot} action={actions[slot]!} emphasis={emphasis}/>)}</Stack>}><Stack gap="xl" align="center">{illustration}{explanation}</Stack></ScreenLayout>;}
 
 export type OnboardingStep = {id:string;title:string;description:string;content:ReactNode};
 export type OnboardingScreenProps = {steps:readonly OnboardingStep[];index:number;onIndexChange(index:number):void;nextLabel:string;backLabel:string;complete:ScreenFlowAction;skip?:ScreenFlowAction;progressLabel(index:number,total:number):string;exit?:ScreenLayoutProps["exit"];layoutStyle?:ScreenLayoutProps["layoutStyle"]};

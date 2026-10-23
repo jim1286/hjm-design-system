@@ -335,6 +335,29 @@ export function resolvePermissionAction(status) {
         default: throw new TypeError("Unknown permission state");
     }
 }
+/**
+ * Footer order and hierarchy (2026-10-23). Unairplane's boarding-pass scanner put "check again" and "choose a photo"
+ * as Buttons inside `explanation` because the footer had only primary + skip, so their order, width and emphasis
+ * differed from the footer. HJM now owns them:
+ * 1. primary — request / settings / continue from `resolvePermissionAction`;
+ * 2. recheck — re-read the OS permission after the user returns from settings; only while `denied`;
+ * 3. alternative — a path that works without the permission (pick a photo, type it in); hidden once `granted`,
+ *    where the screen only continues;
+ * 4. skip — leave the feature (ghost, last), unchanged.
+ * Secondaries are framed and full width like the primary (SELECTION 보조 행동: 주 행동 아래 같은 폭 secondary).
+ */
+export function resolvePermissionFooter(status, supplied) {
+    const footer = [];
+    if (resolvePermissionAction(status) !== null)
+        footer.push({ slot: "primary", emphasis: "primary" });
+    if (supplied.recheck && status === "denied")
+        footer.push({ slot: "recheck", emphasis: "secondary" });
+    if (supplied.alternative && status !== "granted")
+        footer.push({ slot: "alternative", emphasis: "secondary" });
+    if (supplied.skip)
+        footer.push({ slot: "skip", emphasis: "ghost" });
+    return footer;
+}
 export function resolveOnboardingStep(total, index) {
     if (!Number.isInteger(total) || total < 1 || !Number.isInteger(index) || index < 0 || index >= total)
         throw new RangeError("Onboarding requires a valid step index");

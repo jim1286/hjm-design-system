@@ -391,6 +391,29 @@ export type ChatMessageDescriptor = Readonly<{
 /** A denied permission goes to settings; rendering never requests OS access automatically. */
 export type PermissionScreenStatus = "prompt" | "denied" | "granted" | "unavailable";
 export declare function resolvePermissionAction(status: PermissionScreenStatus): "settings" | "request" | "continue" | null;
+/** Footer slot of PermissionScreen in display order. */
+export type PermissionFooterSlot = "primary" | "recheck" | "alternative" | "skip";
+/** Button emphasis per slot: one filled primary, framed same-width secondaries, a quiet skip last. */
+export type PermissionFooterEmphasis = "primary" | "secondary" | "ghost";
+/**
+ * Footer order and hierarchy (2026-10-23). Unairplane's boarding-pass scanner put "check again" and "choose a photo"
+ * as Buttons inside `explanation` because the footer had only primary + skip, so their order, width and emphasis
+ * differed from the footer. HJM now owns them:
+ * 1. primary — request / settings / continue from `resolvePermissionAction`;
+ * 2. recheck — re-read the OS permission after the user returns from settings; only while `denied`;
+ * 3. alternative — a path that works without the permission (pick a photo, type it in); hidden once `granted`,
+ *    where the screen only continues;
+ * 4. skip — leave the feature (ghost, last), unchanged.
+ * Secondaries are framed and full width like the primary (SELECTION 보조 행동: 주 행동 아래 같은 폭 secondary).
+ */
+export declare function resolvePermissionFooter(status: PermissionScreenStatus, supplied: Readonly<{
+    recheck: boolean;
+    alternative: boolean;
+    skip: boolean;
+}>): readonly Readonly<{
+    slot: PermissionFooterSlot;
+    emphasis: PermissionFooterEmphasis;
+}>[];
 export declare function resolveOnboardingStep(total: number, index: number): {
     first: boolean;
     last: boolean;

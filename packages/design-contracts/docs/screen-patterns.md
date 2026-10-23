@@ -158,7 +158,7 @@ UploadItem, RadioGroup, AlertDialog, TextField와 ScreenLayout의 계약을 그�
 | ModerationScreen | 사유 선택, 신고 활성 조건, 차단 확인 | 서버 신고/권한, 차단 mutation |
 | MediaSelectionScreen | 썸네일 격자, 업로드 상태, 순서/삭제/재시도, 제품 작업 중 순서·회전·삭제 잠금(`disabled`, 1.32.0) | 실제 picker, 권한, 이미지 URI 수명, 업로드, 잠글 작업의 시작·끝 |
 | SearchScreen | 300ms debounce, 이전 요청 AbortSignal, 검색/필터 슬롯, 기본 입력의 확정 신호(`onSubmit`)·검색 중 표시(`searching`)·label 숨김, 한 줄 가로 스크롤 필터 줄, 두 단계 검색 단계(검색 전·입력 중·결과)와 확정 경로, 최근·추천 검색어·제안 배치, 결과 개수·정렬, 적용 필터 칩, 초안/적용 필터 시트, 0건 원인별 복구, 개수 낭독 | API, 제안·결과·개수 조회, 오류 문구, 필터 정의와 계산, 정렬 값, 최근 검색 저장소, 늦은 응답 무시 |
-| PermissionScreen | prompt/denied/granted/unavailable에 맞는 action | OS 요청과 설정 이동, 앱 복귀 후 실제 권한 조회 |
+| PermissionScreen | prompt/denied/granted/unavailable에 맞는 action, footer 순서 primary → recheck(denied) → alternative(granted 전) → skip(`resolvePermissionFooter`, 2026-10-23) | OS 요청과 설정 이동, 앱 복귀 후 실제 권한 조회, 대체 경로 실행 |
 | OnboardingScreen | 단계 범위 검증, 이전/다음/건너뛰기 | 선택 데이터와 완료 여부 저장 |
 | CommentThreadScreen | 부모/답글, 펼침, 좋아요/답글, 작성창 | 실제 댓글/권한/전송과 성공 후 초안 정리 |
 

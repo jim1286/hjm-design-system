@@ -588,6 +588,7 @@
     "components-layout-onboarding-screen--large-text",
     "components-layout-permission-screen--dark",
     "components-layout-permission-screen--default",
+    "components-layout-permission-screen--denied-with-alternative",
     "components-layout-permission-screen--large-text",
     "components-layout-profile-screen--dark",
     "components-layout-profile-screen--default",

@@ -41,7 +41,7 @@ host: 남은 높이·safe area·키보드
 | 기본 | 선택적 그림 → 권한 이유 → 상태별 행동 | 각 공개 콜백을 제품 상태에 연결 |
 | 로딩 | 최초 조회는 본문 상태, 저장은 해당 행동 pending | 중복 제출 차단; 성공을 먼저 표시하지 않음 |
 | 빈 | 해당 없음: 권한은 목록 0건이 아니라 OS 상태다 | 상태에 맞는 행동을 제공 |
-| 사용 불가 | status=unavailable, 기능 미지원·대체 경로 안내 | skip 등 제품 대안 |
+| 사용 불가 | status=unavailable, 기능 미지원·대체 경로 안내 | `alternative`·skip |
 | 오류 | 렌더 시 OS 요청 금지; 설정 복귀 시 제품이 상태 재조회 | 실패 원인과 재시도 경로 제공 |
 
 
@@ -50,9 +50,9 @@ host: 남은 높이·safe area·키보드
 | 상황 | 연결 | 유지·복구 |
 | --- | --- | --- |
 | prompt | request | 사용자 행동에서만 OS 권한 요청 |
-| denied | settings | 설정 앱·브라우저 도움으로 이동; 복귀 시 실제 권한 재조회 |
+| denied | settings, 선택 `recheck` | 설정 앱·브라우저 도움으로 이동; 복귀 시 실제 권한 재조회. 사용자가 직접 다시 확인할 길은 `recheck`(footer secondary) |
 | granted | continueAction | 사용할 기능으로 이동 |
-| unavailable | skip 또는 제품 대안 | 권한 재요청을 반복하지 않는다 |
+| unavailable | `alternative`(대체 경로) 또는 skip | 권한 재요청을 반복하지 않는다. 대체 경로는 본문 버튼이 아니라 `alternative` |
 | 조회·요청 실패 | notice + 같은 요청 재시도 | denied와 통신·호스트 오류를 같은 상태로 저장하지 않는다 |
 
 ## 사용하는 지침
