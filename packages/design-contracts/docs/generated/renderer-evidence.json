@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.41.2",
+  "designSystemVersion": "1.42.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.41.2",
+      "packageVersion": "1.42.0",
       "activeComponents": 131,
       "claimedComponents": 131,
       "completeScenarioComponents": 130,
@@ -7063,7 +7063,7 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.41.2",
+      "packageVersion": "1.42.0",
       "activeComponents": 113,
       "claimedComponents": 113,
       "completeScenarioComponents": 110,
@@ -11870,7 +11870,9 @@
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
-            "ScreenLayout"
+            "ScreenLayout",
+            "ScreenHost",
+            "ScreenRefreshControl"
           ],
           "proofs": [
             {
