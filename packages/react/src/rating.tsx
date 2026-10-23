@@ -1,3 +1,5 @@
+"use client";
+
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useId, useRef, type CSSProperties } from "react";
 import { resolveRating, type RatingDescriptor } from "@hjmds/design-contracts/reference-controls";

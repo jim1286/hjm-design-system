@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { ColorReference } from "@hjmds/design-contracts/color-references";
 import {

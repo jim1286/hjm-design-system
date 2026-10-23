@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";

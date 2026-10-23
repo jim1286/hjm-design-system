@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { SortableItem } from "@hjmds/design-contracts/components/interaction-adapters";

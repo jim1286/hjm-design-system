@@ -1,3 +1,5 @@
+"use client";
+
 import { cloneElement, createContext, forwardRef, useCallback, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverRecipe, resolvePopoverDescriptor, validatePopoverOpenState, type PopoverDescriptor, type PopoverDismissPolicy, type PopoverDismissReason, type PopoverOpenChangeDetails, type PopoverOpenOn, type PopoverOpenState } from "@hjmds/design-contracts/components/popover";
 import { easing, layer } from "@hjmds/design-contracts/foundations";

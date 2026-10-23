@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveEntryFocus, type EntryFocusEvent, type EntryFocusPhase, type InitialFocusCandidate, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, type ReactNode, type RefObject } from "react";
 import { getTopModal, subscribeModalClose, type ActiveModal } from "../modal.js";

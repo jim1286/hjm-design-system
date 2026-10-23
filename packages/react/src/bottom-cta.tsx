@@ -1,3 +1,5 @@
+"use client";
+
 import { bottomCtaRecipe, actionGroupRecipe } from "@hjmds/design-contracts/recipes";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { forwardRef, useContext, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode, type Ref } from "react";

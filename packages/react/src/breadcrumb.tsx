@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveBreadcrumbDescriptor, type BreadcrumbItemDescriptor } from "@hjmds/design-contracts/components/breadcrumb";
 import { forwardRef, type ForwardedRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import { classNames } from "./internal.js";

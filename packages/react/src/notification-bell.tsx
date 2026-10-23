@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, type ReactNode } from "react";
 import { IconButton } from "./actions.js";
 import { CounterBadge } from "./supplemental-display.js";

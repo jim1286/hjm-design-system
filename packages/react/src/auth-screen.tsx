@@ -1,3 +1,5 @@
+"use client";
+
 import { PendingContentHost } from "./internal/pending-content.js";
 import {
   authScreenRecipe,

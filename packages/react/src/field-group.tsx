@@ -1,3 +1,5 @@
+"use client";
+
 import { useId, useLayoutEffect, useRef, type ReactNode } from "react";
 import { createFieldGroupEditSession, resolveFieldGroup, fieldGroupRecipe, type FieldGroupLayout, type FieldGroupDescriptor } from "@hjmds/design-contracts/field-group";
 import type { HjmCompositionStyleProp } from "./composition-style.js";

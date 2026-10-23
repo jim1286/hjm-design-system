@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Text } from "./layout.js";
 import { useOptionalHjmTheme } from "./provider.js";

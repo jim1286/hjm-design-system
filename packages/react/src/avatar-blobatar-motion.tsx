@@ -1,3 +1,5 @@
+"use client";
+
 import{useEffect,useRef,useState,type ReactNode}from'react';import{Blobatar}from'@blobatar/react';import{idle,happy,sad,surprised,wink,sleepy,thinking}from'blobatar/expression';import'blobatar/motion.css';
 import{resolveBlobatarMotion,type BlobatarMotionOptions,type AvatarFallbackContext}from'@hjmds/design-contracts/avatar-fallback';import{useHjmTheme}from'./provider.js';
 const expressions={idle,happy,sad,surprised,wink,sleepy,thinking};

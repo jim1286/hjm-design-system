@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { affixRecipe, validateAffixOffset } from "@hjmds/design-contracts/components/affix";
 import type { HjmCompositionStyleProp } from "./composition-style.js";

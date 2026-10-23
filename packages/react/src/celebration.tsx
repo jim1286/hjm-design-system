@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { celebrationColors, celebrationRecipe, validateEventId, type CelebrationPreset } from "@hjmds/design-contracts/components/interaction-adapters";

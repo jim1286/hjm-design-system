@@ -1,3 +1,5 @@
+"use client";
+
 import type { TextFormatKind } from "@hjmds/design-contracts/components/text-formats";
 import { createElement, forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { classNames } from "./internal.js";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";

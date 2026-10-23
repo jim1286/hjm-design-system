@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
 import { resolveChoiceRow, type ChoiceRowItem } from "@hjmds/design-contracts/choice-row";
 import type { ListRowDensity } from "@hjmds/design-contracts/recipes";

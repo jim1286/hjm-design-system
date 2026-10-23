@@ -1,3 +1,5 @@
+"use client";
+
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   createToastStore,

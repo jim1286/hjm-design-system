@@ -1,3 +1,5 @@
+"use client";
+
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { resolveImageComparison, type ImageComparisonDescriptor } from "@hjmds/design-contracts/reference-controls";
 import { imageRecipe } from "@hjmds/design-contracts/components/image";

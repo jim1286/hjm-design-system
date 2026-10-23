@@ -1,3 +1,5 @@
+"use client";
+
 import { useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { resolveVirtualWindow, validateListKeys } from "@hjmds/design-contracts/components/virtual-list";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";

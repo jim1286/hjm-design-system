@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveContentTransition, type ContentTransitionPreset } from "@hjmds/design-contracts/content-transition";
 import { motion } from "framer-motion";
 import { useCallback, useRef, useLayoutEffect, type ReactNode, type RefObject } from "react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveProgressiveBlur, type ProgressiveBlurDescriptor } from '@hjmds/design-contracts/progressive-blur';
 import { useHjmTheme } from './provider.js';
 export type ProgressiveBlurProps = Readonly<{ descriptor: ProgressiveBlurDescriptor }>;

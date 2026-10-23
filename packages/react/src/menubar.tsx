@@ -1,3 +1,5 @@
+"use client";
+
 import { layer } from "@hjmds/design-contracts/foundations";
 import {
   menubarRecipe,

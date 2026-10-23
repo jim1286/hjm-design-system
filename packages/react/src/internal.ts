@@ -1,3 +1,5 @@
+"use client";
+
 import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import {
   createContext,

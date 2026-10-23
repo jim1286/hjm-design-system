@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState, type ReactNode, type PointerEvent } from "react";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { IconButton } from "./actions.js";

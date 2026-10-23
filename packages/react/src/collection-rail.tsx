@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import {
   collectionRailRecipe, validateCollectionRail, resolveCollectionRailLayout, resolveCollectionRailViewport,

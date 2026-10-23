@@ -1,3 +1,5 @@
+"use client";
+
 import { screenExitRecipe, type ScreenExitKind } from "@hjmds/design-contracts/screen-patterns";
 import { IconButton } from "../actions.js";
 

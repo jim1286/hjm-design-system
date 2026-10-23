@@ -1,3 +1,5 @@
+"use client";
+
 // Artwork, label and open mark form one centred column; the label used to sit at the start under centred artwork with
 // the mark floating at the row end (2026-10-17 review E20).
 // Fixed 260×160 artwork is decorative; cap at three previews to keep the motif bounded. The trigger label and expanded content remain fluid.

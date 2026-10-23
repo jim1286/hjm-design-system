@@ -1,3 +1,5 @@
+"use client";
+
 import { TableSortButton } from "./table-sort-button.js";
 import {
   dataTableColumnDefaults,

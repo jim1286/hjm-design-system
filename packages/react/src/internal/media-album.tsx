@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useLayoutEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { mediaAlbumRecipe, resolveMediaAlbumIndex, validateMediaAlbum, validateMediaAlbumPageStatus } from "@hjmds/design-contracts/screen-patterns";
 import { Button, IconButton } from "../actions.js";

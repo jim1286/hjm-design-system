@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveSwipeTabIndicator, type TabSwipePosition, resolveTabIndicator, resolveTabsAppearance, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
 import { easing } from "@hjmds/design-contracts/foundations";
 export type { TabsAppearance };

@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useState } from "react";
 import NumberFlow, { type NumberFlowElement } from "@number-flow/react";
 import { Statistic, type StatisticProps } from "./advanced-display.js";

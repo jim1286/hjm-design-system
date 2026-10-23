@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { chatMessageRecipe, screenPatternRecipe, type ChatReactionSummaryItem } from "@hjmds/design-contracts/screen-patterns";
 import type { MenuItemTone } from "@hjmds/design-contracts/recipes";

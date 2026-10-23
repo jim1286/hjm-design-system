@@ -1,3 +1,5 @@
+"use client";
+
 import type { PhotoSource } from "@hjmds/design-contracts/screen-patterns";
 
 import { useHjmTheme } from "../provider.js";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, type ReactNode } from "react";
 import { validateActions, type RowAction } from "@hjmds/design-contracts/components/interaction-adapters";
 import { Button } from "./actions.js";

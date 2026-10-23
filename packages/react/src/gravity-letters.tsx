@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef } from "react";
 import { gravityLetterMotion, resolveGravityLetters } from "@hjmds/design-contracts/gravity-letters";
 import { useHjmTheme } from "./provider.js";

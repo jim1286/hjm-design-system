@@ -1,3 +1,5 @@
+"use client";
+
 import { topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { forwardRef, type CSSProperties, type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
 import { Button } from "./actions.js";

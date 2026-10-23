@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
 import { ScreenLayout, type ScreenLayoutProps } from "./screens.js";
 import { Collapsible } from "./collapsible.js";

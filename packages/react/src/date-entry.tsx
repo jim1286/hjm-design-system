@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { resolveDateEntryControl, updateDateEntryDraft, type DateEntryControlProps } from "@hjmds/design-contracts/date-entry";
 import { FieldGroup } from "./field-group.js";

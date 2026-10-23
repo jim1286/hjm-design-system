@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createAlertDialogSession, type AlertDialogSession } from "@hjmds/design-contracts/components/alert-dialog";
 import { Button } from "./actions.js";

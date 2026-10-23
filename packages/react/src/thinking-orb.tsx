@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, type CSSProperties } from "react";
 import { buildThinkingOrbFrame, createThinkingOrbClock, thinkingOrbRecipe, validateThinkingOrb, type ThinkingOrbOptions } from "@hjmds/design-contracts/components/thinking-orb";
 import { useHjmTheme } from "./provider.js";

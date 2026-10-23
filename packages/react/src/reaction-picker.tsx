@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef, useState } from "react";
 import { nextReaction, validateReactions, resolveReactionOptions, type ReactionMoreOptions, type ReactionOption } from "@hjmds/design-contracts/reactions";
 import { Button } from "./actions.js";

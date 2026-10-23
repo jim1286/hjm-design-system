@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { gridRevealTiles, gridRevealDuration } from "@hjmds/design-contracts/grid-reveal";
 import { useHjmTheme } from "./provider.js";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { colorPickerRecipe, normalizePickerColor, pickerOpacity, withPickerOpacity } from "@hjmds/design-contracts/components/color-picker";

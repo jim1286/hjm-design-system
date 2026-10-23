@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useLayoutEffect, useRef, type ReactNode } from "react";
 import { resolveDocumentResourceControls, type DocumentResourceControls } from "@hjmds/design-contracts/document-resource";
 import { Button } from "../actions.js";

@@ -1,3 +1,5 @@
+"use client";
+
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
 import { BottomEntryFocusBoundary, InitialFocusScope } from "./internal/initial-focus.js";
 import { iconButtonRecipe, listRowRecipe } from "@hjmds/design-contracts/recipes";

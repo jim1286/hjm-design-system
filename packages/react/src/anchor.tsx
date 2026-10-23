@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useEffect, useRef, useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
 import { anchorRecipe, getAnchorCurrentId, resolveAnchorItems, type AnchorItem } from "@hjmds/design-contracts/components/anchor";
 import { classNames } from "./internal.js";

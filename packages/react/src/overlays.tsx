@@ -1,3 +1,5 @@
+"use client";
+
 import { InitialFocusProvider, useInitialFocusScope, type ModalLayerRef } from "./internal/initial-focus.js";
 import { ScreenFooterContext } from "./internal/screen-footer.js";
 import { initialFocusDefaults, type InitialFocusMode } from "@hjmds/design-contracts/screen-patterns";

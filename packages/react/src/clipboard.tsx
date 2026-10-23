@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button, IconButton, type ButtonProps, type IconButtonProps } from "./actions.js";
 import { Icon } from "./supplemental-display.js";

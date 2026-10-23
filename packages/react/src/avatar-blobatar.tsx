@@ -1,3 +1,5 @@
+"use client";
+
 import { Blobatar } from "@blobatar/react";
 import { happy } from "blobatar/expression";
 import { resolveBlobatarFallback, type AvatarFallbackContext, type BlobatarFallbackOptions } from "@hjmds/design-contracts/avatar-fallback";

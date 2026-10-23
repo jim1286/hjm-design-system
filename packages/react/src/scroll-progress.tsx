@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { resolveScrollProgress, type ScrollMetrics } from '@hjmds/design-contracts/scroll-progress';
 import { Progress, type ProgressProps } from './feedback.js';

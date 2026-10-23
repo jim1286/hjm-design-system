@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import {
   resolveContextMenuAnchor,

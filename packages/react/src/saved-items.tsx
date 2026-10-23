@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { ListDetailScreen, type ListDetailScreenProps } from "./screen-flows.js";
 import { Stack, Text, Grid } from "./layout.js";

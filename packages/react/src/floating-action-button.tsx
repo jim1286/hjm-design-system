@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   floatingActionButtonRecipe as recipe, resolveFloatingActionButtonDescriptor,

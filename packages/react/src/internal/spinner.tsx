@@ -1,3 +1,5 @@
+"use client";
+
 // Shared by feedback and screen shells without pulling unrelated feedback UI
 // into the lightweight screens entry. The public import remains /feedback.
 import { forwardRef, type HTMLAttributes } from "react";

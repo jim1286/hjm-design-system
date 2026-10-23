@@ -1,3 +1,5 @@
+"use client";
+
 import { useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from "react";
 import type { HjmCompositionStyleProp } from "../composition-style.js";
 import { Spinner } from "./spinner.js";

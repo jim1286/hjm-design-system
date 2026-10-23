@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from '@hjmds/design-contracts/foundations';
 import { mergeTextAnnotationFragments, resolveTextAnnotationGeometry, type TextAnnotationAction, type TextAnnotationRect } from '@hjmds/design-contracts/text-annotation';
 import { useLayoutEffect, useRef, useState } from 'react';

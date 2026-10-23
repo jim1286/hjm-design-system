@@ -1,3 +1,5 @@
+"use client";
+
 import { useDesignProfileDefaults } from "./internal.js";
 import {
   headingRecipe,

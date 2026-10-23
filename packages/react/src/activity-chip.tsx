@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import {
   activityChipRecipe,

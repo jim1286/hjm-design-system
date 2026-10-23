@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";

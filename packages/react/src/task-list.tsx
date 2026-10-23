@@ -1,3 +1,5 @@
+"use client";
+
 import type{ReactNode}from'react';
 import{validateTasks,type TaskItem}from'@hjmds/design-contracts/task-list';
 import{Checkbox}from'./selection.js';import{List}from'./advanced-display.js';

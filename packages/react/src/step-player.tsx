@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Steps, type StepsProps } from "./steps.js";
 import { Progress } from "./feedback.js";

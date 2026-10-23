@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useLayoutEffect, useRef, useState, forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import {
   resolveCarouselDescriptor, getCarouselNavigationTarget, isCarouselAutoplayActive,

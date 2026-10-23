@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { resolveVoiceNote, type VoiceNoteDescriptor } from "@hjmds/design-contracts/voice-note";
 import { Asset } from "./asset.js";

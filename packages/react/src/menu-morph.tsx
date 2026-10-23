@@ -1,3 +1,5 @@
+"use client";
+
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { Menu as Bloom } from "bloom-menu";
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";

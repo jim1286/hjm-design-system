@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { conversationRowRecipe as recipe } from "@hjmds/design-contracts/conversation-row";
 import { Text } from "./layout.js";

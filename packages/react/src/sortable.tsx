@@ -1,3 +1,5 @@
+"use client";
+
 import { control } from "@hjmds/design-contracts/foundations";
 import { useCallback, useLayoutEffect, useRef, useState, useMemo, type ReactNode } from "react";
 import { Accessibility, type DragStartEvent, type DragEndEvent } from "@dnd-kit/dom";

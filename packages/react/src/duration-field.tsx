@@ -1,3 +1,5 @@
+"use client";
+
 import { changeDurationUnit, resolveDuration, type DurationFieldLabels, type DurationRange } from "@hjmds/design-contracts/duration-field";
 import { NumberField } from "./number-field.js";
 import { FieldGroup } from "./field-group.js";
