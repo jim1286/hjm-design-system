@@ -204,3 +204,10 @@ reduced motion은 즉시 교체하고, background는 새 표현에 정착하며,
 `LineChart.scrubEmphasis="before" | "after"`는 현재 포커스의 x에서 클립을 나누어 선택한
 쪽을 계열 색으로, 나머지를 축 레이블 색으로 표시한다. 새로운 점·수치·추천을 계산하지
 않으며 기존 드래그·키보드·접근성 포커스와 `holdOnRelease`를 그대로 사용한다.
+
+## 범례 배치 (2026-10-23, 개발 소스·미게시)
+
+`ChartLegend.layout`은 `stack`(계열마다 한 행)과 `inline`(한 줄로 흐르고 감김) 두 값이다. 견본 10·모서리 3, 견본·이름·값 사이
+`spacing.xs`, inline 항목 사이 `spacing.md`·줄 사이 `spacing.xxs`, stack 행 최소 32, 선택 밖 흐림 0.5는 `chartRecipe.legend`가 소유한다.
+선택의창 지도 범례가 Native의 세로 고정 때문에 ChartLegend를 채택하지 못한 것이 계기다(사용 지침 [Chart](usage/components/chart.md)).
+기본값은 기존 동작을 유지한다: Web은 선택 버튼(`onSelect`)이 없으면 `inline`, 있으면 `stack`, Native는 `stack`.

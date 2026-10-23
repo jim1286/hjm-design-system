@@ -14,3 +14,9 @@ export const Radar: Story = { name: "레이더", args: { only: "radar" } };
 export const Scatter: Story = { name: "산점도", args: { only: "scatter" } };
 export const SparklineStory: Story = { name: "스파크라인", args: { only: "sparkline" } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+
+import { ChartLegend } from "@hjmds/react/chart";
+// ChartLegend layout="inline" (2026-10-23): a one-line key that wraps, e.g. under a map (Choose-window).
+export const InlineLegend: Story = { name: "한 줄 범례", render: () => <div style={{ maxWidth: 360 }}>
+  <ChartLegend layout="inline" items={[{ id: "left", label: "왼쪽 햇빛", color: "#f59e0b" }, { id: "right", label: "오른쪽 햇빛", color: "#3b82f6" }, { id: "none", label: "그늘", color: "#94a3b8" }]} />
+</div> };

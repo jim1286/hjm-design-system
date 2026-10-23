@@ -1519,7 +1519,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-size: var(--hjm-type-label-size);
   line-height: var(--hjm-type-label-line-height);
 }
-.hjm-chart-legend[data-interactive] { flex-direction: column; flex-wrap: nowrap; }
+/* chartRecipe.legend.layouts: stack = one row per series; inline = entries flow and wrap (base rule above). */
+.hjm-chart-legend[data-layout="stack"] { flex-direction: column; flex-wrap: nowrap; }
 .hjm-chart-legend__item, .hjm-chart-legend__button { display: flex; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-chart-legend__item[data-dimmed] { opacity: 0.5; }
 .hjm-chart-legend__button {
@@ -1538,7 +1539,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chart-legend__button[aria-pressed="true"] { background: var(--hjm-color-surface); }
 .hjm-chart-legend__button:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-chart-legend__swatch { flex: none; inline-size: 10px; block-size: 10px; border-radius: 3px; }
-.hjm-chart-legend[data-interactive] .hjm-chart-legend__label { flex: 1; }
+.hjm-chart-legend[data-layout="stack"] .hjm-chart-legend__label { flex: 1; }
+.hjm-chart-legend[data-layout="inline"] .hjm-chart-legend__button { flex: none; }
 .hjm-chart-legend__value { font-weight: var(--hjm-text-emphasis-medium); font-variant-numeric: tabular-nums; }
 
 /* Mentions ---------------------------------------------------------------- */

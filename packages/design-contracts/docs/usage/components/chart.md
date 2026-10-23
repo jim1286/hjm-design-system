@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.21.0
-- 검토일: 2026-10-15
+- 검토일: 2026-10-23
 - 근거: [Chart](../../chart.md), `src/chart.ts`(`chartRecipe`, `describeChart`, `resolveLineGeometry`), `src/dataviz.ts`(`resolveDatavizSeriesColor`, `datavizChromeTokens`)
 - 스토리북: `배포/컴포넌트/데이터 표시/차트`
 
@@ -181,6 +181,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `width`·`height`(`Sparkline`) | `number` | 72 · 28 | `chartRecipe.sparkline` |
 | `accessibilityLabel`(`Sparkline`) | `string` | — | 없으면 장식(보조 기술에서 숨김) |
 | `items`(`ChartLegend`) | `{ id, label, color, value?: string }[]` | — (필수) | `value`는 서식이 끝난 문자열 |
+| `layout`(`ChartLegend`) | `stack` · `inline` | Web: `onSelect` 없으면 `inline`, 있으면 `stack` · Native: `stack` | `stack`은 계열마다 한 행(Native 최소 높이 `chartRecipe.legend.layouts.stack.rowMinHeight` 32, 값은 끝 정렬). `inline`은 항목을 한 줄로 흘리고 넘치면 다음 줄로 감는다(항목 사이 `spacing.md` 16, 줄 사이 `spacing.xxs` 4, 견본·이름·값 사이 `spacing.xs` 8). 지도·차트 아래 짧은 범례에 쓴다(개발 소스, 미게시) |
 
 ## 배치
 
@@ -284,3 +285,20 @@ Native centerContent에는 Text 등 Native 노드를 쓴다. 모두 제외하거
 2026-10-21 포트폴리오의 성긴 일별 관측이 끊겨 읽기 어렵다는 사용자 요청으로 `bridge`를 추가했다. 실제 관측선과 결측 연결 안내선을 구분하며 0 채움·수치 보간은 수행하지 않는다.
 
 2026-10-23 오늘야구 선수 최근 7시즌 화면에서 앞쪽 결측의 경계 점선이 빠진 문제를 수정했다(개발 소스, 미게시). 앞·뒤 결측도 실제 관측값 위치에서 하단까지 표시하며, 관측값이 전혀 없으면 점선을 만들지 않는다.
+
+2026-10-23 소비 감사: 선택의창 지도 하단의 한 줄 범례(`RouteMapScreen`의 PlaceDot + caption 묶음)는 Native ChartLegend가
+행을 세로로만 쌓아 채택하지 못했다. `layout="inline"`으로 항목을 가로로 흘려 감고, 견본·간격·흐린 정도는
+`chartRecipe.legend`가 소유한다. 알약 모양 바탕은 범례가 아니라 지도 위에 띄우는 제품 구성이므로 `Surface radius="full"`로
+감싼다. Web의 기본값(선택 버튼이 없으면 가로)은 1.41 동작 그대로이며, Native 기본값은 기존 소비 화면(야잘알 StockChart)을
+바꾸지 않도록 `stack`으로 둔다. 두 플랫폼 기본값의 차이는 기존 동작이며 통일은 별도 결정이다.
+
+```tsx
+// Native: 선택의창 지도 범례
+<Surface tone="raised" radius="full" padding="xs">
+  <ChartLegend layout="inline" items={[
+    { id: "left", label: t("mapLegendLeft"), color: mapColors.leftExposure },
+    { id: "right", label: t("mapLegendRight"), color: mapColors.rightExposure },
+    { id: "neutral", label: t("mapLegendNeutral"), color: mapColors.neutralExposure },
+  ]} />
+</Surface>
+```

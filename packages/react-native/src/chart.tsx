@@ -7,8 +7,8 @@ import {
   prepareChartLineMorph,
   areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices,
   resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
-  splitSegments, stepChartIndex, validateChartSeries,
-  type ChartBar, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
+  splitSegments, stepChartIndex, validateChartLegendLayout, validateChartSeries,
+  type ChartBar, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
 import { spacing } from "@hjmds/design-contracts/foundations";
 // Chart labels and values use the text emphasis scale, the same weight the Web `.hjm-chart__*` rules read.
@@ -326,17 +326,32 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
 // ---------------------------------------------------------------------------------------------
 
 export type ChartLegendItem = Readonly<{ id: string; label: string; color: string; value?: string }>;
-export function ChartLegend({ items, selectedId, onSelect, exclusion }: Readonly<{ items: readonly ChartLegendItem[]; exclusion?: Readonly<{ excludedIds: readonly string[]; onToggle: (id: string) => void; label: (item: ChartLegendItem, included: boolean) => string }>; selectedId?: string | null; onSelect?: (id: string | null) => void }>) {
+export type ChartLegendProps = Readonly<{
+  items: readonly ChartLegendItem[];
+  exclusion?: Readonly<{ excludedIds: readonly string[]; onToggle: (id: string) => void; label: (item: ChartLegendItem, included: boolean) => string }>;
+  selectedId?: string | null;
+  onSelect?: (id: string | null) => void;
+  /** `stack` (default): one row per series. `inline`: entries flow on a line and wrap (chartRecipe.legend.layouts). */
+  layout?: ChartLegendLayout;
+}>;
+export function ChartLegend({ items, selectedId, onSelect, exclusion, layout = "stack" }: ChartLegendProps) {
   const palette = useChartPalette();
-  return <View style={{ gap: spacing.xxs }}>{items.map(item => {
-    const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs, minHeight: 32, opacity: selectedId && selectedId !== item.id ? 0.5 : 1 }}>
-      <View style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: item.color }} />
-      <Text variant="body" layoutStyle={{ flex: 1 }} numberOfLines={1}>{item.label}</Text>
+  validateChartLegendLayout(layout);
+  const legend = chartRecipe.legend;
+  const inline = layout === "inline";
+  const rootStyle = inline
+    ? { flexDirection: "row", flexWrap: "wrap", alignItems: "center", rowGap: legend.layouts.inline.rowGap, columnGap: legend.layouts.inline.columnGap } as const
+    : { gap: legend.layouts.stack.rowGap } as const;
+  return <View style={rootStyle}>{items.map(item => {
+    // Inline entries size to their content and wrap as a whole; stacked rows take the width and end-align the value.
+    const content = <View style={{ flexDirection: "row", alignItems: "center", gap: legend.itemGap, ...(inline ? {} : { minHeight: legend.layouts.stack.rowMinHeight }), opacity: selectedId && selectedId !== item.id ? legend.dimmedOpacity : 1 }}>
+      <View style={{ width: legend.swatch.size, height: legend.swatch.size, borderRadius: legend.swatch.radius, backgroundColor: item.color }} />
+      <Text variant="body" {...(inline ? {} : { layoutStyle: { flex: 1 }, numberOfLines: 1 })}>{item.label}</Text>
       {item.value !== undefined && <Text variant="label" fontRole="ui" emphasis="medium" style={{ color: palette.legend, fontVariant: ["tabular-nums"] }}>{item.value}</Text>}
     </View>;
     const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
       : <View key={item.id} accessible accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`}>{content}</View>;
-    return exclusion ? <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}><Pressable style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }} accessibilityRole="checkbox" accessibilityState={{ checked: !exclusion.excludedIds.includes(item.id) }} accessibilityLabel={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onPress={() => exclusion.onToggle(item.id)}><Text>{exclusion.excludedIds.includes(item.id) ? "□" : "✓"}</Text></Pressable><View style={{ flex: 1 }}>{selection}</View></View> : selection;
+    return exclusion ? <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}><Pressable style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }} accessibilityRole="checkbox" accessibilityState={{ checked: !exclusion.excludedIds.includes(item.id) }} accessibilityLabel={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onPress={() => exclusion.onToggle(item.id)}><Text>{exclusion.excludedIds.includes(item.id) ? "□" : "✓"}</Text></Pressable><View style={inline ? {} : { flex: 1 }}>{selection}</View></View> : selection;
   })}</View>;
 }
 

@@ -35,6 +35,12 @@ export type ChartInsets = Readonly<{ top: number; right: number; bottom: number;
 export type ChartCurve = "linear" | "monotone" | "step";
 export type ChartOrientation = "vertical" | "horizontal";
 export type ChartBarLayout = "grouped" | "stacked";
+/**
+ * ChartLegend arrangement (2026-10-23). `stack`: one row per series (32 minimum row, values aligned at the end).
+ * `inline`: entries flow on one line and wrap — a compact key under a map or chart. Choose-window's map legend could
+ * not adopt ChartLegend because Native only stacked rows.
+ */
+export type ChartLegendLayout = "stack" | "inline";
 
 export type ChartPlot = Readonly<{ index: number; seriesIndex: number; x: number; y: number; value: number }>;
 
@@ -53,8 +59,26 @@ export const chartRecipe = {
   sparkline: { width: 72, height: 28, strokeWidth: 1.8, padding: 2 },
   cursor: { strokeWidth: stroke.subtle, dash: [2, 3] as const },
   reference: { dash: [2, 4] as const },
+  /**
+   * ChartLegend geometry shared by both renderers. `itemGap` separates swatch, label and value inside one entry;
+   * `inline` puts `columnGap` between entries and `rowGap` between wrapped lines. The values are the ones Web already
+   * drew for its passive legend, now also used by Native.
+   */
+  legend: {
+    swatch: { size: 10, radius: 3 },
+    itemGap: spacing.xs,
+    dimmedOpacity: 0.5,
+    layouts: {
+      stack: { rowGap: spacing.xxs, rowMinHeight: 32 },
+      inline: { rowGap: spacing.xxs, columnGap: spacing.md },
+    },
+  },
   chrome: datavizChromeTokens,
 } as const;
+
+export function validateChartLegendLayout(value: unknown): asserts value is ChartLegendLayout {
+  if (value !== "stack" && value !== "inline") throw new TypeError(`Unsupported ChartLegend layout: ${String(value)}`);
+}
 
 // ---------------------------------------------------------------------------------------------
 // Validation

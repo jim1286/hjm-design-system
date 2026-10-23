@@ -18,6 +18,8 @@ import {
   prepareChartLineMorph,
   areaPath,
   chartRecipe,
+  validateChartLegendLayout,
+  type ChartLegendLayout,
   describeChart,
   isChartNumber,
   linePath,
@@ -569,12 +571,19 @@ export type ChartLegendProps = ChartRootProps & Readonly<{
   selectedId?: string | null;
   /** When given, rows are toggle buttons; pressing the selected row clears the selection. */
   onSelect?: (id: string | null) => void;
+  /**
+   * `stack`: one row per series. `inline`: entries flow on a line and wrap (chartRecipe.legend.layouts). Web default:
+   * `inline` without `onSelect`, `stack` once rows are selection buttons — the 1.41 behavior.
+   */
+  layout?: ChartLegendLayout;
 }>;
 
 /** Swatch + label (+ value). Color is never the only encoding: every row carries its label. */
-export function ChartLegend({ items, selectedId, onSelect, exclusion, className, layoutStyle }: ChartLegendProps) {
+export function ChartLegend({ items, selectedId, onSelect, exclusion, layout: layoutProp, className, layoutStyle }: ChartLegendProps) {
+  const layout = layoutProp ?? (onSelect ? "stack" : "inline");
+  validateChartLegendLayout(layout);
   return (
-    <ul className={classNames("hjm-chart-legend", className)} style={{ ...chromeStyle, ...layoutStyle }} data-interactive={onSelect ? "" : undefined}>
+    <ul className={classNames("hjm-chart-legend", className)} style={{ ...chromeStyle, ...layoutStyle }} data-interactive={onSelect ? "" : undefined} data-layout={layout}>
       {items.map((item) => {
         const content = (
           <>

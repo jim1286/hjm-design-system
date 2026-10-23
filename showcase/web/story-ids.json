@@ -163,6 +163,7 @@
     "components-data-display-chart--dark",
     "components-data-display-chart--default",
     "components-data-display-chart--horizontal-bar",
+    "components-data-display-chart--inline-legend",
     "components-data-display-chart--line",
     "components-data-display-chart--pie",
     "components-data-display-chart--radar",

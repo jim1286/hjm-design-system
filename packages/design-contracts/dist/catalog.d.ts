@@ -4648,6 +4648,24 @@ export declare const recipeRegistry: {
         readonly reference: {
             readonly dash: readonly [2, 4];
         };
+        readonly legend: {
+            readonly swatch: {
+                readonly size: 10;
+                readonly radius: 3;
+            };
+            readonly itemGap: 8;
+            readonly dimmedOpacity: 0.5;
+            readonly layouts: {
+                readonly stack: {
+                    readonly rowGap: 4;
+                    readonly rowMinHeight: 32;
+                };
+                readonly inline: {
+                    readonly rowGap: 4;
+                    readonly columnGap: 16;
+                };
+            };
+        };
         readonly chrome: {
             readonly axisLine: Readonly<{
                 source: "theme";
