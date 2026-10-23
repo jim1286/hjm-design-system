@@ -109,6 +109,19 @@ export declare const iconButtonRecipe: {
         readonly default: "none";
         readonly tones: readonly ["primary", "secondary", "danger"];
     };
+    /**
+     * Count badge on an IconButton (NotificationBell). 2026-10-23 web check: a medium badge at the button's top-end
+     * corner (top 0, end 0) covered 82% of BurnTok's 18px heart in a small (36) bell. The badge is now the compact
+     * `small` floating plate, kept on the button's end edge (it never sticks out past an `edge`-aligned inset) and
+     * raised so only its `glyphOverlap` ring (the canvas-colored floating border) reaches into the glyph slot.
+     * Wider counts grow toward the start along the top, not down over the glyph. See `resolveIconButtonBadgeOffset`.
+     */
+    readonly badge: {
+        readonly size: "small";
+        readonly variant: "floating";
+        readonly glyphOverlap: 2;
+        readonly inlineEnd: 0;
+    };
     readonly states: {
         readonly selected: {
             readonly background: Readonly<{
@@ -140,6 +153,16 @@ export declare function resolveIconButtonPresentation(tone: IconButtonTone, pale
  * minimumVisualTarget axis (`visibleControlHeight`), so the overhang tracks what is actually drawn.
  */
 export declare function resolveIconButtonEdgeOverhang(tone: IconButtonTone, size: IconButtonSize, visibleDiameter?: number): number;
+/**
+ * Where an IconButton's count badge sits, measured from the button's top-end corner (logical: `inlineEnd` mirrors in
+ * RTL). The badge's block-end lands `badge.glyphOverlap` inside the glyph slot's top edge: blockStart = slot inset +
+ * overlap − badge height, e.g. −6 for small (36 − 20 slot, 16 badge). `visibleDiameter` is the rendered size after the
+ * Provider's minimumVisualTarget axis, so the badge follows the glyph slot when the button grows (Web and Native).
+ */
+export declare function resolveIconButtonBadgeOffset(size: IconButtonSize, visibleDiameter?: number): Readonly<{
+    blockStart: number;
+    inlineEnd: number;
+}>;
 /** Throws for an unknown step or an elevated ghost IconButton (iconButtonRecipe.elevation). */
 export declare function validateIconButtonElevation(elevation: string, tone: IconButtonTone): void;
 //# sourceMappingURL=icon-button-recipe.d.ts.map

@@ -346,6 +346,9 @@
    takes the same overhang and the badge keeps the icon's corner (2026-10-17 1.27.2 adoption: Spint's top-bar bell). */
 .hjm-notification-bell:is([data-edge="start"], [data-edge="both"]) { margin-inline-start: calc(-1 * var(--hjm-icon-button-edge-small)); }
 .hjm-notification-bell:is([data-edge="end"], [data-edge="both"]) { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-small)); }
+/* Count badge (iconButtonRecipe.badge / resolveIconButtonBadgeOffset, 2026-10-23 web check): on the button's end edge,
+   raised above the glyph slot so only the floating ring overlaps the glyph. The bell is always the small IconButton. */
+.hjm-notification-bell__badge { position: absolute; inset-inline-end: var(--hjm-icon-button-badge-inline-end-small); inset-block-start: var(--hjm-icon-button-badge-block-start-small); display: flex; pointer-events: none; }
 .hjm-link { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; min-inline-size: 0; overflow-wrap: anywhere; color: var(--hjm-color-content-brand); text-underline-offset: 0.18em; }
 .hjm-link[data-tone="neutral"] { color: var(--hjm-color-text-body); }
 .hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); justify-content: center; text-decoration: none; }

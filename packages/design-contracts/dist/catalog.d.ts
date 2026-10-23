@@ -5237,6 +5237,12 @@ export declare const recipeRegistry: {
             readonly default: "none";
             readonly tones: readonly ["primary", "secondary", "danger"];
         };
+        readonly badge: {
+            readonly size: "small";
+            readonly variant: "floating";
+            readonly glyphOverlap: 2;
+            readonly inlineEnd: 0;
+        };
         readonly states: {
             readonly selected: {
                 readonly background: Readonly<{

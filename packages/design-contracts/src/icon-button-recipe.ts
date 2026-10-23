@@ -7,10 +7,12 @@ import {
   glyph,
   opacity,
   radius,
+  stroke,
   validateElevationStep,
   type GlyphSize,
 } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
+import { counterBadgeRecipe, type CounterBadgeSize, type CounterBadgeVariant } from "./counter-badge-recipe.js";
 
 export type IconButtonSize = "small" | "medium" | "large";
 export type IconButtonShape = "rounded" | "circle";
@@ -67,6 +69,14 @@ export const iconButtonRecipe = {
    * tones can carry it: a ghost button has no frame for the shadow to belong to (Android draws none without a fill).
    */
   elevation: { default: "none", tones: ["primary", "secondary", "danger"] as const },
+  /**
+   * Count badge on an IconButton (NotificationBell). 2026-10-23 web check: a medium badge at the button's top-end
+   * corner (top 0, end 0) covered 82% of BurnTok's 18px heart in a small (36) bell. The badge is now the compact
+   * `small` floating plate, kept on the button's end edge (it never sticks out past an `edge`-aligned inset) and
+   * raised so only its `glyphOverlap` ring (the canvas-colored floating border) reaches into the glyph slot.
+   * Wider counts grow toward the start along the top, not down over the glyph. See `resolveIconButtonBadgeOffset`.
+   */
+  badge: { size: "small", variant: "floating", glyphOverlap: stroke.strong, inlineEnd: 0 },
   states: {
     // `aria-pressed` / `accessibilityState.selected` already carried the toggle
     // state; without a paired visual every consumer painted the pressed icon
@@ -95,6 +105,7 @@ export const iconButtonRecipe = {
   shapes: Record<IconButtonShape, keyof typeof radius>;
   edge: { tones: readonly IconButtonTone[] };
   elevation: { default: "none"; tones: readonly IconButtonTone[] };
+  badge: { size: CounterBadgeSize; variant: CounterBadgeVariant; glyphOverlap: number; inlineEnd: number };
   states: {
     selected: { background: ColorReference; content: ColorReference; border: ColorReference | null };
     pressedOpacity: number;
@@ -144,6 +155,24 @@ export function resolveIconButtonEdgeOverhang(
 ): number {
   if (!(iconButtonRecipe.edge.tones as readonly IconButtonTone[]).includes(tone)) return 0;
   return Math.max(0, (visibleDiameter - glyph[iconButtonRecipe.sizes[size].glyph]) / 2);
+}
+
+/**
+ * Where an IconButton's count badge sits, measured from the button's top-end corner (logical: `inlineEnd` mirrors in
+ * RTL). The badge's block-end lands `badge.glyphOverlap` inside the glyph slot's top edge: blockStart = slot inset +
+ * overlap − badge height, e.g. −6 for small (36 − 20 slot, 16 badge). `visibleDiameter` is the rendered size after the
+ * Provider's minimumVisualTarget axis, so the badge follows the glyph slot when the button grows (Web and Native).
+ */
+export function resolveIconButtonBadgeOffset(
+  size: IconButtonSize,
+  visibleDiameter: number = iconButtonRecipe.sizes[size].diameter,
+): Readonly<{ blockStart: number; inlineEnd: number }> {
+  const { badge } = iconButtonRecipe;
+  const slotInset = Math.max(0, (visibleDiameter - glyph[iconButtonRecipe.sizes[size].glyph]) / 2);
+  return {
+    blockStart: slotInset + badge.glyphOverlap - counterBadgeRecipe.sizes[badge.size].height,
+    inlineEnd: badge.inlineEnd,
+  };
 }
 
 /** Throws for an unknown step or an elevated ghost IconButton (iconButtonRecipe.elevation). */

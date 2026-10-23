@@ -146,9 +146,9 @@ Client Component에서 연결한다.
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 지름: `small` 36 · `medium` 44 · `large` 52. `small`은 hitSlop 4를 더해 터치 영역을 44(`control.minTouchTarget`)에 맞춘다. 아이콘 크기는 `glyph.sm` 20 · `glyph.md` 24 · `glyph.lg` 28이다 | `icon-button-recipe.ts` `iconButtonRecipe` |
-| 간격 | [TopBar](top-bar.md)가 슬롯 최소 폭 44, 슬롯 안 간격 `spacing.xs`(8), 좌우 여백 `spacing.md`(16)를 준다. NotificationBell 배지가 버튼 밖으로 넘칠 수 있으니 옆 요소와 간격을 둔다 | `component-recipes.ts` `topBarRecipe`, `styles.css` `.hjm-top-bar` |
+| 간격 | [TopBar](top-bar.md)가 슬롯 최소 폭 44, 슬롯 안 간격 `spacing.xs`(8), 좌우 여백 `spacing.md`(16)를 준다. NotificationBell 배지는 버튼 위로 6만큼 올라오고 끝 쪽으로는 넘치지 않는다 | `component-recipes.ts` `topBarRecipe`, `styles.css` `.hjm-top-bar` |
 | 가장자리 정렬 | 행·헤더·카드의 시작/끝 가장자리에 놓인 ghost IconButton은 `edge`를 준다. 아이콘 칸(`medium` 24)이 컨테이너 안쪽 여백 선(보통 16)에 오고 44 터치 영역은 여백 쪽으로 10 넘어간다. 같은 줄에 여러 버튼이 있으면 가장자리에 닿은 마지막(또는 첫) 버튼에만 준다. HJM이 그리는 화면 나가기(`exit`)와 SavedItemsScreen 새 컬렉션, ListDetailScreen 새로고침, MediaSelectionScreen 추가, UploadItem 취소·다시 시도, InlineEdit·RepeatableFieldGroup·TableColumnSettings 행 끝 도구, SearchScreen 정렬·전체 삭제는 이미 적용돼 있다. 제품이 헤더 `actions`·ListRow `trailing`·Native `trailingAction`에 넣는 끝 버튼은 제품이 `edge="end"`를 준다. Web 포커스 링은 잘리지 않게 버튼 안쪽에 그린다 | `icon-button-recipe.ts` `iconButtonRecipe.edge`·`resolveIconButtonEdgeOverhang`, `react/src/theme.ts`(`--hjm-icon-button-edge-*`), `styles.css` `[data-edge]`, `react-native/src/actions.tsx` |
-| 순서·정렬 | 화면 맨 위에서는 TopBar의 `leading`(뒤로·닫기)과 `actions`/`trailing`(더보기·공유·알림)에 둔다. 행 끝(목록·카드)에는 `size="small"` 또는 `medium`, `tone="ghost"`를 쓴다. NotificationBell은 IconButton 오른쪽 위 모서리(`end: 0`, `top: 0`)에 [CounterBadge](counter-badge.md) `floating`을 겹친다 | `react-native/src/notification-bell.tsx` |
+| 순서·정렬 | 화면 맨 위에서는 TopBar의 `leading`(뒤로·닫기)과 `actions`/`trailing`(더보기·공유·알림)에 둔다. 행 끝(목록·카드)에는 `size="small"` 또는 `medium`, `tone="ghost"`를 쓴다. NotificationBell은 `iconButtonRecipe.badge`대로 [CounterBadge](counter-badge.md) `small`·`floating`을 버튼 끝 모서리(끝 0)에 두고, 배지 아래 테두리 2(`stroke.strong`)만 아이콘 칸 위쪽에 닿도록 올린다(`resolveIconButtonBadgeOffset`, 작은 버튼은 위 −6). 자릿수가 늘면 시작 쪽으로 넓어지고 아이콘을 덮지 않는다. 2026-10-23 웹 확인에서 `medium` 배지를 `top: 0`에 두어 18px 아이콘의 82%를 가린 것을 고쳤다 | `react-native/src/notification-bell.tsx` |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | — | — |
 

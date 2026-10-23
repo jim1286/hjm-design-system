@@ -36,6 +36,7 @@ import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js"
 export {
   iconButtonEdges,
   iconButtonRecipe,
+  resolveIconButtonBadgeOffset,
   resolveIconButtonEdgeOverhang,
   resolveIconButtonPresentation,
   validateIconButtonElevation,

@@ -1,6 +1,6 @@
 import { type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { control, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
-export { iconButtonEdges, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, validateIconButtonElevation, type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
+export { iconButtonEdges, iconButtonRecipe, resolveIconButtonBadgeOffset, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation, validateIconButtonElevation, type IconButtonEdge, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
 export { progressRecipe, resolveProgressSegments, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
 export type { BottomNavigationDensity, BottomNavigationDistribution, BottomNavigationPresentation, } from "./bottom-navigation-defaults.js";

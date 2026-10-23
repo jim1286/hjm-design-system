@@ -96,3 +96,26 @@ it("preserves duration unit names and rejects retained unit edits during lock or
   act(()=>tree.unmount()); act(()=>edit(3)); expect(change).toHaveBeenCalledTimes(1);
  } finally {act(()=>tree.unmount());}
 });
+
+import { CounterBadge } from '../src/data-display.js';
+import { counterBadgeRecipe, iconButtonRecipe } from '@hjmds/design-contracts/recipes';
+import { glyph } from '@hjmds/design-contracts/foundations';
+import { visibleControlHeight } from '@hjmds/design-contracts/components/design-system-provider';
+// 2026-10-23 web check: the medium badge at top 0 covered 82% of an 18px glyph. Native reads the same iconButtonRecipe.badge:
+// small floating plate on the end edge, raised so only its ring reaches the glyph slot (layout is checked in the Web browser test).
+it('keeps the Native bell badge plate above the glyph slot on the end edge',()=>{
+ for(const minimumVisualTarget of [false,true]){
+  let tree!:ReactTestRenderer;
+  try{
+   act(()=>{tree=create(<HjmNativeProvider minimumVisualTarget={minimumVisualTarget}><NotificationBell label="27 unread" count={27} icon={null} onPress={()=>{}}/></HjmNativeProvider>);});
+   const badge=tree.root.findByType(CounterBadge);
+   expect(badge.props).toMatchObject({size:'small',variant:'floating'});
+   const anchor=badge.parent!.props.style as {top:number;end:number};
+   const visible=visibleControlHeight(iconButtonRecipe.sizes.small.diameter,minimumVisualTarget);
+   const slotTop=(visible-glyph[iconButtonRecipe.sizes.small.glyph])/2;
+   const ring=counterBadgeRecipe.variants.floating.borderWidth;
+   expect(anchor.end).toBe(0);
+   expect(anchor.top+counterBadgeRecipe.sizes.small.height-ring).toBe(slotTop);
+  }finally{act(()=>tree.unmount());}
+ }
+});

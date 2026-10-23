@@ -32,7 +32,8 @@ describe("scrollable Sheet keeps the ListRow bleed room", () => {
 });
 
 describe("NotificationBell edge", () => {
-  const overhang = resolveIconButtonEdgeOverhang(iconButtonRecipe.defaults.tone, iconButtonRecipe.defaults.size);
+  // The bell is the small IconButton (035799a5); its root takes the small overhang.
+  const overhang = resolveIconButtonEdgeOverhang(iconButtonRecipe.defaults.tone, "small");
   const bell = (edge?: "start" | "end" | "both") => <NotificationBell label="알림" count={3} icon={<NativeText>B</NativeText>} onPress={() => undefined} {...(edge ? { edge } : {})} />;
   const rootOf = (root: ReactTestRenderer) => root.root.findAllByType(View).find(node => flat(node.props.style).position === "relative")!;
   it("puts the IconButton overhang on the bell root so the badge keeps the icon corner", () => {
@@ -41,7 +42,7 @@ describe("NotificationBell edge", () => {
     expect(flat(rootOf(root).props.style).marginStart).toBeUndefined();
     const button = flat(root.root.findByType(Pressable).props.style);
     expect(button.marginEnd).toBeUndefined();
-    expect(button.width).toBe(iconButtonRecipe.sizes.medium.diameter);
+    expect(button.width).toBe(iconButtonRecipe.sizes.small.diameter);
   });
   it("mirrors start/both and stays put without edge", () => {
     expect(flat(rootOf(render(bell("both"))).props.style)).toMatchObject({ marginStart: -overhang, marginEnd: -overhang });

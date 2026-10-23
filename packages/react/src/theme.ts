@@ -24,6 +24,7 @@ import { buttonRecipe, fieldRecipe, resolveButtonEdgeOverhang } from "@hjmds/des
 import {
   bottomNavigationRecipe,
   iconButtonRecipe,
+  resolveIconButtonBadgeOffset,
   resolveIconButtonEdgeOverhang,
   comboboxRecipe,
   dialogRecipe,
@@ -306,6 +307,10 @@ export function createHjmThemeStyle(
   for (const size of Object.keys(iconButtonRecipe.sizes) as (keyof typeof iconButtonRecipe.sizes)[]) {
     const visible = visibleControlHeight(iconButtonRecipe.sizes[size].diameter, environment.minimumVisualTarget);
     style[`--hjm-icon-button-edge-${size}`] = `${resolveIconButtonEdgeOverhang("ghost", size, visible)}px`;
+    // Count badge (NotificationBell): offset from the button's top-end corner, tracking the same visible diameter.
+    const badge = resolveIconButtonBadgeOffset(size, visible);
+    style[`--hjm-icon-button-badge-block-start-${size}`] = `${badge.blockStart}px`;
+    style[`--hjm-icon-button-badge-inline-end-${size}`] = `${badge.inlineEnd}px`;
   }
   for (const size of Object.keys(buttonRecipe.sizes) as (keyof typeof buttonRecipe.sizes)[]) {
     style[`--hjm-button-edge-${size}`] = `${resolveButtonEdgeOverhang("ghost", size)}px`;

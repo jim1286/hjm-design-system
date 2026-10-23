@@ -72,13 +72,13 @@ import { CounterBadge } from "@hjmds/react-native/data-display";
 | --- | --- | --- |
 | 크기 | `medium` 높이·최소 폭 20, `small` 높이·최소 폭 16, `dot` 8×8, 모두 `radius.full`. 자릿수가 늘면 폭만 늘어난다(`99+`). 터치 대상이 아니므로 누르는 것은 부모다 | `src/counter-badge-recipe.ts`, `packages/react/src/styles.css` `.hjm-counter-badge` |
 | 간격 | 좌우 여백 `medium` `spacing.xs` 8, `small` `spacing.xxs` 4. `floating` 테두리 `stroke.strong` 2가 아이콘과 배지를 떼어 보인다 | `src/counter-badge-recipe.ts` |
-| 순서·정렬 | `inline`: 탭 라벨·목록 행의 끝 쪽에 텍스트와 나란히 둔다. `floating`: 컴포넌트가 스스로 위치를 잡지 않으므로 부모를 relative로 두고 배지를 위·끝 모서리(`top: 0`, 끝 0)에 absolute로 놓는다. 공개된 `NotificationBell`(`/notification-bell`)이 IconButton 위에 이 배치를 그대로 쓴다 | `packages/react/src/notification-bell.tsx`, `packages/react-native/src/notification-bell.tsx` |
+| 순서·정렬 | `inline`: 탭 라벨·목록 행의 끝 쪽에 텍스트와 나란히 둔다. `floating`: 컴포넌트가 스스로 위치를 잡지 않으므로 부모를 relative로 두고 배지를 위·끝 모서리에 absolute로 놓는다. 아이콘 위에 둘 때는 숫자 판이 아이콘을 덮지 않게 올린다. 공개된 `NotificationBell`(`/notification-bell`)은 `iconButtonRecipe.badge`(`small`, 끝 0, 아이콘 칸에 테두리 2만 겹치는 높이)를 쓴다 | `packages/react/src/notification-bell.tsx`, `packages/react-native/src/notification-bell.tsx` |
 | 고정·스크롤 | — | — |
 | 좁은 폭·큰 글자 | Web은 `flex-shrink: 0`이라 좁아져도 줄지 않는다 | `packages/react/src/styles.css` `.hjm-counter-badge` |
 
 ```text
 inline (행 끝)                      floating (아이콘 모서리)
-┌─────────────────────────────┐     ┌──────┐(3)  ← top 0, 끝 0
+┌─────────────────────────────┐     ┌──────┐(3)  ← 끝 0, 테두리만 아이콘에 닿게 위로
 │ 받은 편지함          (12)   │     │  🔔  │
 └─────────────────────────────┘     └──────┘  IconButton 44×44
 ```
