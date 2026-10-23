@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`

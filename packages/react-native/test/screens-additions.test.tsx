@@ -220,8 +220,9 @@ for (const theme of ["light", "dark"] as const) {
     const outgoingText = messages[1]!.findAllByType(NativeText).filter(node => ["발신", "서연에게 답장", "원문"].includes(node.props.children));
     expect(outgoingText.length).toBeGreaterThanOrEqual(3);
     for (const text of outgoingText) expect(StyleSheet.flatten(text.props.style).color).toBe(THEMES[theme].onPrimary);
-    const quote = messages[1]!.findAllByType(View).find(node => node.props.style?.borderStartWidth === 3)!;
-    expect(quote.props.style.borderColor).toBe(THEMES[theme].onPrimary);
-    expect(quote.props.style.borderBottomWidth).toBeUndefined();
+    const rail = messages[1]!.findAllByType(View).find(node => node.props.style?.position === "absolute" && node.props.style?.width === 3)!;
+    expect(rail.props.style.backgroundColor).toBe(THEMES[theme].onPrimary);
+    expect(rail.parent!.props.style.overflow).toBe("hidden");
+    expect(rail.parent!.props.style.borderStartWidth).toBeUndefined();
   });
 }

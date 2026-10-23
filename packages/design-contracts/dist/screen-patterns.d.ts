@@ -289,6 +289,25 @@ export declare const chatMessageRecipe: {
         readonly minCount: 2;
     };
 };
+/**
+ * Room info, group creation and invitation (2026-10-23 redesign). 실제 화면 비교: Telegram 방 정보(구성원 위 "구성원 추가" 행, 역할 표기),
+ * 카카오톡 팀채팅 만들기(사진 모서리 편집 표시·이름 글자 수), WhatsApp/Telegram 참여자 선택(선택한 사람을 검색창 아래 가로 줄에 모아 탭해서 해제).
+ * 기능·배치만 참조하고 색은 HJM 의미 토큰을 쓴다.
+ */
+export declare const chatRoomRecipe: {
+    readonly heroAvatar: "xlarge";
+    readonly memberAvatar: "medium";
+    readonly selectedAvatar: "large";
+    readonly selectedItemWidth: 64;
+    readonly selectedGap: 12;
+    readonly toolMinHeight: 64;
+    readonly toolGap: 8;
+    readonly badgeSize: 24;
+    readonly removeBadgeSize: 20;
+    readonly addLeadingSize: 40;
+    readonly groupPadding: 16;
+    readonly groupGap: 20;
+};
 export type ChatReactionSummaryItem = Readonly<{
     id: string;
     emoji: string;

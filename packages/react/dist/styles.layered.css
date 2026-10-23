@@ -1110,6 +1110,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* listRowRecipe title bodyLarge / description body (2026-10-17: Web inherited 14 for both while Native used the recipe). */
 .hjm-list-row__title { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-type-title-weight); overflow-wrap: anywhere; }
 .hjm-list-row[data-tone="danger"] .hjm-list-row__title { color: var(--hjm-color-danger); }
+.hjm-list-row[data-tone="brand"] .hjm-list-row__title { color: var(--hjm-color-content-brand); }
 .hjm-list-row__description, .hjm-list-row__trailing { color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-list-row__description { font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); }
 
@@ -3559,9 +3560,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .hjm-typing-indicator__dot { animation: none; } }
 @keyframes hjm-typing-pulse { 0%, 100% { opacity: var(--hjm-typing-rest); } 50% { opacity: 1; } }
 /* A quoted reply heads the bubble and is divided from the answer. */
-.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__reply { border-color: var(--hjm-color-on-primary); }
-.hjm-chat-message__reply { border-inline-start: 3px solid var(--hjm-color-content-brand); padding-inline-start: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
-.hjm-chat-message__quote { inline-size: 100%; border-inline-end: 0; border-block: 0; background: none; padding-inline-end: 0; padding-block-start: 0; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+/* Telegram-style quote: a tinted inset whose rounded box clips a straight leading rail. A one-sided border would follow the radius and taper at both ends. */
+.hjm-chat-message__reply { position: relative; overflow: hidden; border-radius: var(--hjm-radius-sm); padding: var(--hjm-space-xs); padding-inline-start: calc(3px + var(--hjm-space-xs)); background: color-mix(in srgb, var(--hjm-color-content-brand) 12%, transparent); margin-block-end: var(--hjm-space-xs); display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
+.hjm-chat-message__reply::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: 3px; background: var(--hjm-color-content-brand); }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__reply { background: color-mix(in srgb, var(--hjm-color-on-primary) 12%, transparent); }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__reply::before { background: var(--hjm-color-on-primary); }
+.hjm-chat-message__quote { inline-size: 100%; border: 0; color: inherit; font: inherit; text-align: start; cursor: pointer; }
 .hjm-chat-message__quote:focus-visible { outline: 2px solid var(--hjm-color-focus, currentColor); outline-offset: 2px; border-radius: var(--hjm-radius-sm); }
 .hjm-chat-message__quote-excerpt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hjm-chat-message__media { display: grid; border-radius: 14px; overflow: hidden; max-inline-size: 100%; }
@@ -3969,19 +3973,22 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-surface[data-tone="selected"][data-bordered="true"] { border-color: var(--hjm-color-border-control); }
 .hjm-data-table__table tr[aria-selected="true"] > :is(td, th) { background-color: var(--hjm-color-surface-selected); }
 
-/* Borrow room-info hierarchy only; canvas and surfaces follow the HJM/product theme. */
+/* Room management (chatRoomRecipe): Telegram/KakaoTalk/WhatsApp hierarchy; canvas and surfaces follow the HJM/product theme. */
 .hjm-chat-room { background:var(--hjm-color-bg); padding:var(--hjm-space-md); }
+.hjm-chat-room__name { text-align:center; overflow-wrap:anywhere; }
 .hjm-chat-room__group { background:var(--hjm-color-surface); padding:var(--hjm-space-md); border-radius:var(--hjm-radius-lg); }
+.hjm-chat-room__group[data-flush="true"] { padding-block:var(--hjm-space-xxs); }
+.hjm-chat-room__heading { display:flex; align-items:baseline; gap:var(--hjm-space-xxs); }
 .hjm-chat-room__tools { display:flex; gap:var(--hjm-space-xs); }
 .hjm-chat-room__tool { flex:1; min-width:0; min-height:64px; border:0; border-radius:var(--hjm-radius-md); padding:var(--hjm-space-xs); background:var(--hjm-color-surface); color:var(--hjm-color-content-brand); cursor:pointer; }
-.hjm-chat-room__tool:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }
 .hjm-chat-room__tool:disabled { cursor:default; opacity:.6; }
-
-/* Telegram quoted replies carry an inset tint as well as the leading rail. */
-.hjm-chat-message__reply { padding:var(--hjm-space-xs); border-radius:var(--hjm-radius-sm); background:color-mix(in srgb,var(--hjm-color-content-brand) 12%,transparent); }
-.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__reply { background:color-mix(in srgb,var(--hjm-color-on-primary) 12%,transparent); }
-
+.hjm-chat-room__add { display:inline-flex; align-items:center; justify-content:center; inline-size:40px; block-size:40px; border-radius:50%; background:color-mix(in srgb,var(--hjm-color-content-brand) 12%,transparent); color:var(--hjm-color-content-brand); }
 .hjm-chat-room__photo { display:block; padding:0; border:0; background:transparent; border-radius:50%; cursor:pointer; color:inherit; }
-.hjm-chat-room__photo:focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }
+.hjm-chat-room__badge { display:inline-flex; align-items:center; justify-content:center; inline-size:24px; block-size:24px; border-radius:50%; background:var(--hjm-color-primary); color:var(--hjm-color-on-primary); box-shadow:0 0 0 2px var(--hjm-color-bg); }
+.hjm-chat-room__badge[data-tone="neutral"] { inline-size:20px; block-size:20px; background:var(--hjm-color-text-muted); }
+.hjm-chat-room__selected { display:flex; gap:var(--hjm-space-sm); margin:0; padding:var(--hjm-space-xxs) 0; list-style:none; overflow-x:auto; scrollbar-width:none; }
+.hjm-chat-room__selected-item { display:flex; flex-direction:column; align-items:center; gap:var(--hjm-space-xxs); inline-size:64px; padding:0; border:0; border-radius:var(--hjm-radius-md); background:transparent; color:inherit; cursor:pointer; }
+.hjm-chat-room__selected-name { max-inline-size:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+:is(.hjm-chat-room__tool,.hjm-chat-room__photo,.hjm-chat-room__selected-item):focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }
 
 }

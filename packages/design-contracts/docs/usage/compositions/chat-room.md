@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: Telegram·Signal 실제 화면 비교와 채팅방 관리 공통화 요청
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -35,19 +35,36 @@
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack | 부모 화면 본문 | gap xl |
 | 방 정보 | Avatar·Text | 상단 중앙 | Avatar xlarge 64, gap sm |
+| 선택한 사람 | Avatar large 48 + 이름 | 검색창 아래 가로 스크롤 | 항목 폭 64, gap sm, 해제 표시 20 |
 | 참여자 | Avatar·Checkbox·Menu | 본문 | gap md |
 | 나가기·삭제 | ListRow·AlertDialog | 최하단 | 기존 row recipe |
 
 ```text
-             [방 사진 xlarge: 64]
-               방 이름 · 인원
+방 정보 (ChatRoomDetails)
         [뒤로]                     [정보 편집]
-                   소개
-       [검색] [사진·파일] [알림] [초대]
-  참여자
-  [사진] 이름 · 역할                     [메뉴]
-  채팅방 나가기
-  내 대화 기록 삭제
+             [방 사진 xlarge: 64]
+                  방 이름
+                 3명 참여 중
+       [검색]   [사진·파일]   [알림]          동폭 타일
+  ┌ 소개 ───────────────────────────┐
+  ┌ 참여자 3 ───────────────────────┐
+  │ (+) 대화상대 초대                │   brand 행, members.invite
+  │ [사진] 나                   관리자 │   role = brand caption
+  │ [사진] 서연 · 오늘 접속        (•••) │   memberActions 메뉴
+  ┌ 내 대화 기록 삭제 / 채팅방 나가기 ─┐   danger 행
+
+참여자 선택 (ChatRoomCreate 1단계 · ChatRoomInvite)
+  [닫기]        새 채팅방          [다음]
+  [ 이름 검색                        ]
+  (서연 ×) (민수 ×)                       선택한 사람 가로 줄, 누르면 해제
+  친구 2
+  [✓] [사진] 서연 · 산책 친구
+
+방 설정 (ChatRoomCreate 2단계)
+  [뒤로]        새 채팅방          [개설]
+  [사진 ✎]  [ 채팅방 이름     0/30 ]
+  [ 소개 ]
+  친구 2 · 선택한 참여자 목록
 ```
 
 Stack gap은 그룹 `xl`, 입력/목록 `md`, 내부 `sm`이다. Avatar·Button·ListRow·Menu·AlertDialog의 기존 recipe를 재사용한다.
@@ -92,6 +109,18 @@ Native 예제: `showcase/native/src/ChatRoom.preview.tsx`.
 ## 참고한 흐름
 
 2026-10-23 사용자 요청에 따라 [Signal 그룹 관리](https://support.signal.org/hc/en-us/articles/360050427692-Manage-a-group)의 사진·이름·소개·관리자 권한과 [Telegram 공유 미디어](https://telegram.org/blog/shared-media-scrolling-calendar-join-requests-and-more)의 방별 미디어 진입을 참고했다. 색·간격·버튼·모달은 HJM과 제품 테마가 소유한다. [Signal 기록 삭제](https://support.signal.org/hc/en-us/articles/360007320491-Delete-messages-alerts-or-chats)를 참고해 기록 삭제와 나가기를 분리했다.
+
+## UI/UX 개편 — 2026-10-23 오후
+
+사용자 요청("다른 앱·웹 모티브를 최대한")으로 아래 실제 화면을 브라우저에서 열어 비교했다. 기능·배치만 가져오고 색은 HJM 토큰을 유지한다.
+
+| 비교 화면 | 흡수한 내용 |
+| --- | --- |
+| [카카오톡 팀채팅 만들기·멤버 초대·채팅방 설정](https://funissu.com/kakaotalk-team-chat-room-create/) | 상단 오른쪽 다음/확인, 이름 검색창, 사진 모서리 편집 표시, 이름 글자 수(0/20), 설정 묶음과 하단 파괴 행동 |
+| [Telegram 방 정보·Add Members·New Group(Android)](https://www.guidingtech.com/how-to-add-someone-to-telegram-group/) | 참여자 위 "Add Members" 브랜드 행, 역할(Owner/Admin) 오른쪽 표기, 선택한 사람을 검색창에 칩으로 모음, 선택 인원 표시, 사진 옆 이름 입력 |
+| WhatsApp 새 그룹(참여자 선택) | 선택한 사람의 가로 아바타 줄과 × 해제 |
+
+반영: `chatRoomRecipe`(screen-patterns), ListRow `tone="brand"`, `ChatRoomMemberActions`·`ChatRoomMemberSearch`·`ChatRoomSelectionLabels` 계약, 사진 실패와 저장 실패 안내 분리, 멤버 메뉴 이름·아이콘 버튼, 서버 검색 연결(`search.onQueryChange`·`searching`). 1.43.0의 `actions`·`searchLabel` 계열 prop은 소비 앱이 없어 이번 minor에서 바로 교체했다.
 
 ## 실제 화면 비교와 반영 — 2026-10-23
 

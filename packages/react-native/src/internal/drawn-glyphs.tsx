@@ -79,6 +79,22 @@ export function DrawnMoreVertical({ size, color }: Readonly<{ size: number; colo
   </View>;
 }
 
+/** Web's built-in `more` mark: three dots across the 24-unit grid (5, 12, 19). Symmetric, so it does not mirror. */
+export function DrawnMoreHorizontal({ size, color }: Readonly<{ size: number; color: string }>) {
+  const dot = size * 0.15;
+  return <View {...hidden} style={{ width: size, height: size, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: size * 0.135 }}>
+    {[0, 1, 2].map(index => <View key={index} style={{ width: dot, height: dot, borderRadius: dot / 2, backgroundColor: color }} />)}
+  </View>;
+}
+
+/** Web's built-in `add` mark: a 14-unit cross centred on the 24-unit grid. Symmetric, no mirroring. */
+export function DrawnPlus({ size, color, strokeWidth = 2 }: Readonly<{ size: number; color: string; strokeWidth?: number }>) {
+  const arm = size * (14 / 24);
+  return <View {...hidden} style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+    {["0deg", "90deg"].map(rotate => <View key={rotate} style={{ position: "absolute", width: arm, height: strokeWidth, borderRadius: strokeWidth / 2, backgroundColor: color, transform: [{ rotate }] }} />)}
+  </View>;
+}
+
 /**
  * Web's built-in `close` mark (two diagonals on the 24-unit grid, 6→18). Row tools drew a font "×" before, whose ink
  * sat ~5pt below the button centre and varied by font (2026-10-17 UploadItem measurement). Symmetric, no mirroring.

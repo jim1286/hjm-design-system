@@ -31,7 +31,7 @@ it("opts into near-limit circular feedback while retaining the existing composer
  await act(async()=>root.render(render("abc")));expect(host.querySelector('[data-shape="circular"]')).toBeNull();await act(async()=>root.render(render("abcdefgh")));expect(host.querySelector('[data-shape="circular"]')).not.toBeNull();expect(host.textContent).toContain("8/10");await act(async()=>root.render(render("abcdefghijk")));expect(host.querySelector("textarea")!.value).toBe("abcdefghijk");expect(button("전송").disabled).toBe(true);
 });
 
-const roomLabels={name:"Room name",description:"Description",photo:"Room photo",changePhoto:"Change photo",removePhoto:"Remove photo",save:"Save room",error:"Save failed"};
+const roomLabels={name:"Room name",description:"Description",photo:"Room photo",changePhoto:"Change photo",removePhoto:"Remove photo",save:"Save room",error:"Save failed",photoError:"Photo failed"};
 it("retains a room draft after failure and serializes duplicate saves",async()=>{
  let reject!:(error:Error)=>void;const save=vi.fn(()=>new Promise<void>((_,fail)=>{reject=fail;}));
  await act(async()=>root.render(<HjmProvider><ChatRoomProfile value={{name:"Draft room",description:"Draft description",photoUrl:null}} onValueChange={()=>undefined} onSave={save} labels={roomLabels}/></HjmProvider>));
@@ -39,12 +39,17 @@ it("retains a room draft after failure and serializes duplicate saves",async()=>
  await act(async()=>reject(new Error("offline")));expect((host.querySelector("input") as HTMLInputElement).value).toBe("Draft room");expect(host.textContent).toContain("Save failed");expect(button("Save room").disabled).toBe(false);
 });
 it("requires a selected member before creating a group and sends real IDs",async()=>{
- const create=vi.fn();function Demo(){const [selected,setSelected]=useState(false);return <ChatRoomCreate title="새 채팅방" nextLabel="다음" backLabel="뒤로" searchLabel="참여자 검색" clearSearchLabel="검색 지우기" searchBusyLabel="검색 중" value={{name:"Group",description:"",photoUrl:null}} onValueChange={()=>undefined} labels={roomLabels} members={[{id:"real-user-2",name:"Friend",selected}]} onSelectionChange={(_,value)=>setSelected(value)} membersLabel="Members" emptyMembersLabel="Empty" onCreate={create}/>;}
+ const create=vi.fn();function Demo(){const [selected,setSelected]=useState(false);return <ChatRoomCreate title="새 채팅방" nextLabel="다음" backLabel="뒤로" search={{label:"참여자 검색",clearLabel:"검색 지우기",busyLabel:"검색 중"}} selection={{count:n=>`${n}명`,remove:member=>`${member.name} 선택 해제`}} value={{name:"Group",description:"",photoUrl:null}} onValueChange={()=>undefined} labels={roomLabels} members={[{id:"real-user-2",name:"Friend",selected}]} onSelectionChange={(_,value)=>setSelected(value)} membersLabel="Members" emptyMembersLabel="Empty" onCreate={create}/>;}
  await act(async()=>root.render(<HjmProvider><Demo/></HjmProvider>));expect(button("다음").disabled).toBe(true);
- await act(async()=>page.getByRole("checkbox",{name:"Friend"}).click());expect(button("다음").disabled).toBe(false);await act(async()=>button("다음").click());await act(async()=>button("Save room").click());expect(create).toHaveBeenCalledWith({name:"Group",description:"",photoUrl:null},["real-user-2"]);
+ await act(async()=>page.getByRole("checkbox",{name:"Friend"}).click());expect(button("다음").disabled).toBe(false);
+ await act(async()=>button("Friend 선택 해제").click());expect(button("다음").disabled).toBe(true);await act(async()=>page.getByRole("checkbox",{name:"Friend"}).click());await act(async()=>button("다음").click());await act(async()=>button("Save room").click());expect(create).toHaveBeenCalledWith({name:"Group",description:"",photoUrl:null},["real-user-2"]);
 });
 it("requires confirmation for history deletion and does not call leave",async()=>{
  const remove=vi.fn(),leave=vi.fn();const action={label:"Delete history",title:"Delete my history?",description:"Other members keep their messages.",confirmLabel:"Delete now",cancelLabel:"Cancel",errorLabel:"Failed",onConfirm:remove};
  await act(async()=>root.render(<HjmProvider><ChatRoomActions deleteHistory={action} leave={{...action,label:"Leave room",onConfirm:leave}}/></HjmProvider>));
  await act(async()=>button("Delete history").click());expect(remove).not.toHaveBeenCalled();await act(async()=>page.getByRole("button",{name:"Delete now",exact:true}).click());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
+});
+it("reports a failed photo upload apart from a failed save",async()=>{
+ await act(async()=>root.render(<HjmProvider><ChatRoomProfile value={{name:"Room",description:"",photoUrl:null}} onValueChange={()=>undefined} onSave={()=>undefined} onPickPhoto={()=>Promise.reject(new Error("upload"))} labels={roomLabels}/></HjmProvider>));
+ await act(async()=>button("Change photo").click());expect(host.textContent).toContain("Photo failed");expect(host.textContent).not.toContain("Save failed");
 });

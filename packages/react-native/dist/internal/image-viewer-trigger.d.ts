@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { type PressableProps } from "react-native";
 import type { HjmCompositionStyleProp } from "../composition-style.js";
 export type ImageViewerTriggerProps = Omit<PressableProps, "children" | "style" | "accessibilityLabel" | "accessibilityRole"> & Readonly<{
-    /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
+    /** Localized accessible name, e.g. "View photo full screen". The media inside is decorative. */
     label: string;
     /** Product media (HJM `Image` with `decorative`). */
     children: ReactNode;

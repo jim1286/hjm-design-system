@@ -150,7 +150,7 @@ export type ScreenLayoutProps = Readonly<{
   onRefresh?: () => void;
   /** The product's pull-refresh request is running (default false). */
   refreshing?: boolean;
-  /** Spoken name of the refresh in progress, in the product language (e.g. "새 글을 불러오는 중"). */
+  /** Spoken name of the refresh in progress, in the product language (e.g. "Loading new posts"). */
   refreshLabel?: string;
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
@@ -520,7 +520,9 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
   const photoOnly = (media.length > 0 || mediaAlbum !== undefined) && !reply && !replyQuote && (children === null || children === undefined || children === false || children === "");
   // Web bubbles accept plain text children; RN needs a Text host, so the public children contract matches.
   const body = typeof children === "string" || typeof children === "number" ? <Text>{children}</Text> : children;
-  const bubbleContent = <InheritedTextColorContext.Provider value={outgoing ? colors.onPrimary : undefined}>{tail}{quote ? <View style={{ borderStartWidth: chatMessageRecipe.quoteRailWidth, borderColor: outgoing ? colors.onPrimary : colors.contentBrand, padding: chatMessageRecipe.quoteInset, borderRadius:tokens.radius.sm, backgroundColor:withAlpha(outgoing?colors.onPrimary:colors.contentBrand,chatMessageRecipe.quoteSurfaceOpacity) }}>{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</InheritedTextColorContext.Provider>;
+  // The rounded quote box clips a straight rail; borderStartWidth with a radius tapers at both ends.
+  const quoteColor = outgoing ? colors.onPrimary : colors.contentBrand;
+  const bubbleContent = <InheritedTextColorContext.Provider value={outgoing ? colors.onPrimary : undefined}>{tail}{quote ? <View style={{ overflow: "hidden", padding: chatMessageRecipe.quoteInset, paddingStart: chatMessageRecipe.quoteRailWidth + chatMessageRecipe.quoteInset, borderRadius: tokens.radius.sm, backgroundColor: withAlpha(quoteColor, chatMessageRecipe.quoteSurfaceOpacity) }}><View style={{ position: "absolute", top: 0, bottom: 0, start: 0, width: chatMessageRecipe.quoteRailWidth, backgroundColor: quoteColor }} />{replyLink ? <Pressable accessibilityRole="link" accessibilityLabel={replyLink.label} onPress={replyLink.onPress}>{quote}</Pressable> : quote}</View> : null}{mediaBlock}{photoOnly ? null : body}</InheritedTextColorContext.Provider>;
   // Later bubbles of a run keep the avatar column so their edges line up under the first bubble.
   const avatarSlot = !avatar ? null : display.showAvatar ? <View style={{ width: chatMessageRecipe.avatarSize, alignItems: "center" }}>{avatar}</View> : <View accessible={false} style={{ width: chatMessageRecipe.avatarSize }} />;
   return <View {...gesture.panHandlers} style={{ position: "relative", overflow: "hidden", marginTop: display.spacingBefore,

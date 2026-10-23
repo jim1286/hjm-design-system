@@ -33,6 +33,17 @@ export declare function DrawnMoreVertical({ size, color }: Readonly<{
     size: number;
     color: string;
 }>): import("react").JSX.Element;
+/** Web's built-in `more` mark: three dots across the 24-unit grid (5, 12, 19). Symmetric, so it does not mirror. */
+export declare function DrawnMoreHorizontal({ size, color }: Readonly<{
+    size: number;
+    color: string;
+}>): import("react").JSX.Element;
+/** Web's built-in `add` mark: a 14-unit cross centred on the 24-unit grid. Symmetric, no mirroring. */
+export declare function DrawnPlus({ size, color, strokeWidth }: Readonly<{
+    size: number;
+    color: string;
+    strokeWidth?: number;
+}>): import("react").JSX.Element;
 /**
  * Web's built-in `close` mark (two diagonals on the 24-unit grid, 6→18). Row tools drew a font "×" before, whose ink
  * sat ~5pt below the button centre and varied by font (2026-10-17 UploadItem measurement). Symmetric, no mirroring.

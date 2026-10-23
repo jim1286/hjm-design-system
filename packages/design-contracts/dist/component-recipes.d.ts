@@ -864,6 +864,13 @@ export declare const listRowRecipe: {
                 alpha?: number;
             }>;
         };
+        readonly brand: {
+            readonly titleColor: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+        };
     };
     readonly density: {
         readonly compact: {

@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -53,6 +53,6 @@ Native는 동일 prop 계약으로 `@hjmds/react-native/communication`에서 가
 
 ## 꼭 지킬 것
 
-members·title·emptyLabel·onSelectionChange·onInvite·confirmLabel·errorLabel이 필수다. disabled 멤버는 요청에서 제외한다.
+members·title·membersLabel·emptyLabel·onSelectionChange·onInvite·search·selection·confirmLabel·errorLabel이 필수다. 확인은 상단 오른쪽에 있다(카카오톡·Telegram). 검색창 아래에 선택한 사람이 가로 줄로 모이고, 누르면 선택이 해제된다. `search.onQueryChange`를 주면 제품이 서버 검색과 결과 목록을 소유하고 `searching`으로 진행 중을 표시한다. 주지 않으면 이름으로 목록을 거른다. disabled 멤버(이미 참여한 사람)는 요청에서 제외한다.
 
 데이터·문구·권한은 제품이 소유한다. 저장·개설·초대·삭제는 실제 성공 뒤 Promise를 resolve하고 실패는 reject한다. 입력과 선택은 실패 시 유지한다. Storybook의 메모리 예제를 운영 저장으로 사용하지 않는다. 방 전환 시 `key={roomId}`로 작업 수명을 구분한다.

@@ -6,6 +6,7 @@ type Story=StoryObj<typeof meta>;
 export const Default:Story={name:"기본"};
 export const Edit:Story={name:"정보 편집",args:{initialMode:"edit"}};
 export const Create:Story={name:"단톡방 개설",args:{initialMode:"create"}};
+export const Invite:Story={name:"대화상대 초대",args:{initialMode:"invite"}};
 export const Failed:Story={name:"실패 후 입력 유지",args:{initialMode:"edit",failSave:true}};
 export const ReadOnly:Story={name:"멤버 권한",args:{readOnly:true}};
 export const Dark:Story={name:"어두운 테마",globals:{theme:"dark"}};

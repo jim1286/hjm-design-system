@@ -219,8 +219,9 @@ for (const theme of ["light", "dark"] as const) {
     expect(getComputedStyle(outgoing.querySelector(".hjm-text")!).color).toBe(resolveColor("--hjm-color-on-primary"));
     expect(getComputedStyle(outgoing, "::before").backgroundColor).toBe(getComputedStyle(outgoing).backgroundColor);
     const quote = outgoing.querySelector<HTMLElement>(".hjm-chat-message__reply")!;
-    expect(getComputedStyle(quote).borderInlineStartWidth).toBe("3px");
-    expect(getComputedStyle(quote).borderInlineStartColor).toBe(resolveColor("--hjm-color-on-primary"));
-    expect(getComputedStyle(quote).borderBlockEndWidth).toBe("0px");
+    expect(getComputedStyle(quote).borderInlineStartWidth).toBe("0px");
+    expect(getComputedStyle(quote).overflow).toBe("hidden");
+    expect(getComputedStyle(quote, "::before").inlineSize).toBe("3px");
+    expect(getComputedStyle(quote, "::before").backgroundColor).toBe(resolveColor("--hjm-color-on-primary"));
   });
 }

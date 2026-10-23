@@ -12,8 +12,22 @@ export type SearchResponse<T> = Readonly<{ result: T; suggestions: readonly Read
 
 /** Room data stays controlled: only the product can acknowledge persistence or grant permissions. */
 export type ChatRoomProfileValue = Readonly<{ name: string; description: string; photoUrl: string | null }>;
-export type ChatRoomMember = Readonly<{ id: string; name: string; detail?: string; photoUrl?: string; selected?: boolean; disabled?: boolean }>;
+/** `role` is the product's localized role mark ("관리자"); `detail` is the secondary line (status, handle). */
+export type ChatRoomMember = Readonly<{ id: string; name: string; detail?: string; role?: string; photoUrl?: string; selected?: boolean; disabled?: boolean }>;
 export type ChatRoomConfirmation = Readonly<{ destructive?: boolean; label: string; title: string; description: string; confirmLabel: string; cancelLabel: string; errorLabel: string; onConfirm: () => void | Promise<void> }>;
+/** Per-member permitted actions behind one anchored menu. `label` names the menu for that member ("서연 관리"). */
+export type ChatRoomMemberActions = Readonly<{ label: (member: ChatRoomMember) => string; dismissLabel: string; items: (member: ChatRoomMember) => readonly ChatRoomConfirmation[] }>;
+/** Member search for create/invite. Without `onQueryChange` the list is filtered locally by name. */
+export type ChatRoomMemberSearch = Readonly<{ label: string; clearLabel: string; busyLabel: string; query?: string; onQueryChange?: (query: string) => void; searching?: boolean }>;
+/** Labels for the selected-people strip and its count. */
+export type ChatRoomSelectionLabels = Readonly<{ count: (count: number) => string; remove: (member: ChatRoomMember) => string }>;
+export function filterChatRoomMembers(members: readonly ChatRoomMember[], query: string): readonly ChatRoomMember[] {
+ const needle = query.trim().toLocaleLowerCase();
+ return needle ? members.filter(member => member.name.toLocaleLowerCase().includes(needle)) : members;
+}
+export function selectedChatRoomMembers(members: readonly ChatRoomMember[]): readonly ChatRoomMember[] {
+ return members.filter(member => member.selected === true && member.disabled !== true);
+}
 export function canSubmitChatRoom(profile: ChatRoomProfileValue, memberIds?: readonly string[]): boolean {
  return profile.name.trim().length > 0 && (memberIds === undefined || (memberIds.length > 0 && memberIds.every(id => id.trim().length > 0) && new Set(memberIds).size === memberIds.length));
 }

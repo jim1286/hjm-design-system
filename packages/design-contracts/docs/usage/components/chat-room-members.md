@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -53,6 +53,6 @@ Native는 동일 prop 계약으로 `@hjmds/react-native/communication`에서 가
 
 ## 꼭 지킬 것
 
-members·title·emptyLabel이 필수다. onSelectionChange가 있으면 선택 목록이다. actions에는 허용된 행동만 전달한다.
+members·title·emptyLabel이 필수다. onSelectionChange가 있으면 선택 목록이다. `memberActions`는 멤버별 메뉴 이름(`label(member)`)·닫기 문구·허용된 행동만 전달하며, 메뉴는 가로 점 세 개 아이콘 버튼으로 열린다. `invite`를 주면 목록 위에 브랜드 색 "초대" 행이 생긴다(Telegram "구성원 추가"). 역할은 `member.role`로 이름 오른쪽에 브랜드 색 caption으로 표시하고, `detail`은 둘째 줄(접속·소개)에 둔다.
 
 데이터·문구·권한은 제품이 소유한다. 저장·개설·초대·삭제는 실제 성공 뒤 Promise를 resolve하고 실패는 reject한다. 입력과 선택은 실패 시 유지한다. Storybook의 메모리 예제를 운영 저장으로 사용하지 않는다. 방 전환 시 `key={roomId}`로 작업 수명을 구분한다.

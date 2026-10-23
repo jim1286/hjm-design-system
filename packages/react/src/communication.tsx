@@ -1,6 +1,5 @@
 "use client";
 import { useEffect,useRef,useState,type ReactNode } from "react";
-import { resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
 import { validateReplyTarget,type ReplyTarget,type SearchResponse } from "@hjmds/design-contracts/communication";
 import { ChatMessage,MessageComposer,type ChatMessageProps,type MessageComposerProps } from "./screens.js";
 import { SearchScreen,type SearchRecentQueries } from "./screen-flows.js";
@@ -8,6 +7,15 @@ import { Button,IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { Stack,Text } from "./layout.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
+import { canSubmitChatRoom,filterChatRoomMembers,selectedChatRoomMembers,type ChatRoomProfileValue,type ChatRoomMember,type ChatRoomConfirmation,type ChatRoomMemberActions,type ChatRoomMemberSearch,type ChatRoomSelectionLabels } from "@hjmds/design-contracts/communication";
+import { chatRoomRecipe,resolveSearchCommit } from "@hjmds/design-contracts/screen-patterns";
+import type { CharacterCountOptions } from "@hjmds/design-contracts/character-count";
+import { Avatar } from "./advanced-display.js";
+import { ListRow } from "./display.js";
+import { AlertDialog,Menu } from "./overlays.js";
+import { TextField,SearchField } from "./forms.js";
+import { TopBar } from "./top-bar.js";
+import { Checkbox } from "./selection.js";
 
 export type ReplyMessageProps = Omit<ChatMessageProps,"replyAction"|"timestampPresentation"> & Readonly<{
  messageId: string; onReply: (messageId:string)=>void; replyLabel: string; replyDisabled?: boolean;
@@ -67,85 +75,125 @@ export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  </SearchScreen>{failed?<Text role="alert" tone="danger" style={{textAlign:"center"}}>{props.labels.error}</Text>:null}</>}</Stack>;
 }
 
-import { canSubmitChatRoom,type ChatRoomProfileValue,type ChatRoomMember,type ChatRoomConfirmation } from "@hjmds/design-contracts/communication";
-import { Avatar } from "./advanced-display.js";
-import { ListRow } from "./display.js";
-import { AlertDialog,Menu } from "./overlays.js";
-import { TextField,SearchField } from "./forms.js";
-import { TopBar } from "./top-bar.js";
-import { Checkbox } from "./selection.js";
+/*
+  Room management (2026-10-23 redesign, chatRoomRecipe). Function and placement follow the compared Telegram, KakaoTalk
+  and WhatsApp screens; color, type and spacing stay HJM tokens and the product theme.
+*/
+type Exit=Readonly<{label:string;onPress:()=>void}>;
+const photoOf=(url?:string|null)=>url?{src:url}:{};
 
 export type ChatRoomProfileProps = Readonly<{
  value: ChatRoomProfileValue; onValueChange: (value: ChatRoomProfileValue) => void;
  onSave: (value: ChatRoomProfileValue) => void | Promise<void>;
  /** The product picks/uploads the image and returns its persistent URL; null means cancellation. */
  onPickPhoto?: () => Promise<string | null>;
- presentation?:"centered"|"inline"; title?:string; back?:Readonly<{label:string;onPress:()=>void}>;
+ presentation?:"centered"|"inline"; title?:string; back?:Exit;
+ /** Live count under the name field (KakaoTalk 0/20); the product owns the limit its server accepts and the locale. */
+ nameCharacterCount?: CharacterCountOptions;
  disabled?: boolean; submitDisabled?: boolean; children?: ReactNode | ((disabled: boolean) => ReactNode);
- labels: Readonly<{ name: string; description: string; photo: string; changePhoto: string; removePhoto: string; save: string; error: string }>;
+ labels: Readonly<{ name: string; description: string; photo: string; changePhoto: string; removePhoto: string; save: string; error: string; photoError: string }>;
 }>;
-export function ChatRoomProfile({value,onValueChange,onSave,onPickPhoto,disabled=false,submitDisabled=false,presentation="centered",title,back,children,labels}:ChatRoomProfileProps){
- const action=useCompositionAction(disabled);const blocked=disabled||action.pending;
+export function ChatRoomProfile({value,onValueChange,onSave,onPickPhoto,disabled=false,submitDisabled=false,presentation="centered",title,back,nameCharacterCount,children,labels}:ChatRoomProfileProps){
+ // Photo upload and save fail for different reasons, so each keeps its own state and message.
+ const save=useCompositionAction(disabled),photo=useCompositionAction(disabled);const blocked=disabled||save.pending||photo.pending;
  const latest=useRef({value,onValueChange});latest.current={value,onValueChange};
  const mounted=useRef(true);useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
  const patch=(change:Partial<ChatRoomProfileValue>)=>onValueChange({...value,...change});
  // A new room has no identity yet; its photo slot is decorative until a name exists.
+ const identity=value.name.trim()?{name:value.name,alt:labels.photo}:{decorative:true as const,renderFallback:()=><Icon name="users" tone="secondary"/>};
+ const avatar=(accessory?:ReactNode)=><Avatar {...photoOf(value.photoUrl)} size={chatRoomRecipe.heroAvatar} {...identity} {...(accessory?{accessory}:{})}/>;
+ const inline=presentation==="inline";
  return <Stack gap="md">
- <TopBar {...(title?{title}:{})} {...(back?{exit:{kind:"back" as const,label:back.label,onClick:back.onPress}}:{})} actions={<Button tone="ghost" disabled={blocked||submitDisabled||!canSubmitChatRoom(value)} loading={action.active==="save"} onClick={()=>void action.run("save",()=>onSave(value))}>{labels.save}</Button>}/>
- <Stack axis={presentation==="inline"?"inline":"block"} align={presentation==="inline"?"center":"stretch"} gap="md"><Stack align="center" gap="xs">{onPickPhoto?<button type="button" className="hjm-chat-room__photo" aria-label={labels.changePhoto} disabled={blocked} onClick={()=>void action.run("photo",async()=>{const url=await onPickPhoto!();if(url!==null&&mounted.current)latest.current.onValueChange({...latest.current.value,photoUrl:url});})}><Avatar {...(value.photoUrl?{src:value.photoUrl}:{})} size="xlarge" {...(value.name.trim()?{name:value.name,alt:labels.photo}:{decorative:true as const,renderFallback:()=> <Text>＋</Text>})}/></button>:<Avatar {...(value.photoUrl?{src:value.photoUrl}:{})} size="xlarge" {...(value.name.trim()?{name:value.name,alt:labels.photo}:{decorative:true as const,renderFallback:()=> <Text>＋</Text>})}/>}
- {onPickPhoto&&value.photoUrl?<Button tone="ghost" size="small" disabled={blocked} onClick={()=>patch({photoUrl:null})}>{labels.removePhoto}</Button>:null}</Stack>
-<Stack gap="xs" layoutStyle={{flex:1}}><TextField label={labels.name} value={value.name} onValueChange={name=>patch({name})} disabled={blocked}/></Stack></Stack>
+ <TopBar {...(title?{title}:{})} {...(back?{exit:{kind:"back" as const,label:back.label,onClick:back.onPress}}:{})} actions={<Button tone="ghost" disabled={blocked||submitDisabled||!canSubmitChatRoom(value)} loading={save.pending} onClick={()=>void save.run("save",()=>onSave(value))}>{labels.save}</Button>}/>
+ <Stack axis={inline?"inline":"block"} align="center" gap="md">
+ <Stack align="center" gap="xs">{onPickPhoto?<button type="button" className="hjm-chat-room__photo" aria-label={labels.changePhoto} aria-busy={photo.pending} disabled={blocked} onClick={()=>void photo.run("photo",async()=>{const url=await onPickPhoto();if(url!==null&&mounted.current)latest.current.onValueChange({...latest.current.value,photoUrl:url});})}>{avatar(<span className="hjm-chat-room__badge"><Icon name="edit" size="xs"/></span>)}</button>:avatar()}
+ {onPickPhoto&&value.photoUrl&&!inline?<Button tone="ghost" size="small" disabled={blocked} onClick={()=>patch({photoUrl:null})}>{labels.removePhoto}</Button>:null}</Stack>
+ <Stack gap="xs" layoutStyle={inline?{flex:1,minWidth:0}:{alignSelf:"stretch"}}><TextField label={labels.name} value={value.name} onValueChange={name=>patch({name})} disabled={blocked} {...(nameCharacterCount?{characterCount:nameCharacterCount}:{})}/></Stack></Stack>
+ {onPickPhoto&&value.photoUrl&&inline?<Button tone="ghost" size="small" disabled={blocked} layoutStyle={{alignSelf:"flex-start"}} onClick={()=>patch({photoUrl:null})}>{labels.removePhoto}</Button>:null}
  <TextField label={labels.description} value={value.description} onValueChange={description=>patch({description})} disabled={blocked}/>
+ {photo.failed?<Text role="alert" tone="danger">{labels.photoError}</Text>:null}
+ {save.failed?<Text role="alert" tone="danger">{labels.error}</Text>:null}
  {typeof children==="function"?children(blocked):children}
- {action.failed?<Text role="alert" tone="danger">{labels.error}</Text>:null}
  </Stack>;
 }
+
 export type ChatRoomMembersProps = Readonly<{
  members: readonly ChatRoomMember[]; title: string; emptyLabel: string;
+ /** Shown beside the title ("3"); the product formats it. */
+ countLabel?: string;
  onSelectionChange?: (id:string,selected:boolean)=>void; disabled?:boolean;
+ /** Row above the list that opens the product's invite route (Telegram "Add Members"). Omit without permission. */
+ invite?: Exit;
  /** Omit actions without permission. The product owns roles and server authorization. */
  renderActions?: (member:ChatRoomMember)=>ReactNode;
- actions?: (member:ChatRoomMember)=>readonly ChatRoomConfirmation[];
+ memberActions?: ChatRoomMemberActions;
 }>;
-export function ChatRoomMembers({members,title,emptyLabel,onSelectionChange,disabled=false,renderActions,actions}:ChatRoomMembersProps){
- return <Stack gap="sm"><Text variant="label">{title}</Text>{members.length===0?<Text tone="muted">{emptyLabel}</Text>:members.map(member=>onSelectionChange?
- <Checkbox key={member.id} presentation="plain" label={member.name} {...(member.detail?{description:member.detail}:{})} renderLeading={()=><Avatar size="medium" {...(member.photoUrl?{src:member.photoUrl}:{})} name={member.name} decorative/>} checked={member.selected===true} disabled={disabled||member.disabled===true} onCheckedChange={selected=>onSelectionChange(member.id,selected)} layoutStyle={{width:"100%"}}/>:
- <ListRow key={member.id} title={member.name} {...(member.detail?{description:member.detail}:{})} leading={<Avatar size="medium" {...(member.photoUrl?{src:member.photoUrl}:{})} name={member.name} decorative/>} trailingAction={<>{actions?<RoomActionList actions={actions(member)} disabled={disabled} menuLabel={member.name}/>:null}{renderActions?.(member)}</>}/> )}</Stack>;
+export function ChatRoomMembers({members,title,emptyLabel,countLabel,onSelectionChange,disabled=false,invite,renderActions,memberActions}:ChatRoomMembersProps){
+ const leading=(member:ChatRoomMember)=><Avatar size={chatRoomRecipe.memberAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative/>;
+ return <Stack gap="xs"><div className="hjm-chat-room__heading"><Text variant="label">{title}</Text>{countLabel?<Text variant="label" tone="muted">{countLabel}</Text>:null}</div>
+ {invite?<ListRow title={invite.label} tone="brand" leading={<span className="hjm-chat-room__add"><Icon name="add" size="sm"/></span>} disabled={disabled} onClick={invite.onPress}/>:null}
+ {members.length===0?<Text tone="muted">{emptyLabel}</Text>:members.map(member=>onSelectionChange?
+ <Checkbox key={member.id} presentation="plain" label={member.name} {...(member.detail?{description:member.detail}:{})} renderLeading={()=>leading(member)} checked={member.selected===true} disabled={disabled||member.disabled===true} onCheckedChange={selected=>onSelectionChange(member.id,selected)} layoutStyle={{width:"100%"}}/>:
+ <ListRow key={member.id} title={member.name} {...(member.detail?{description:member.detail}:{})} leading={leading(member)} {...(member.role?{trailing:<Text variant="caption" tone="brand">{member.role}</Text>}:{})}
+ trailingAction={<>{memberActions?<RoomActionList actions={memberActions.items(member)} disabled={disabled} menu={{label:memberActions.label(member),dismissLabel:memberActions.dismissLabel}}/>:null}{renderActions?.(member)}</>}/> )}</Stack>;
 }
-export type ChatRoomCreateProps = Omit<ChatRoomProfileProps,"onSave"|"children"|"title"|"back"> & Readonly<{
+
+/** People picked so far, kept visible above the list while the search narrows it; tapping one deselects it. */
+function SelectedMembers({members,labels,onRemove,disabled}:{members:readonly ChatRoomMember[];labels:ChatRoomSelectionLabels;onRemove:(id:string)=>void;disabled:boolean}){
+ if(members.length===0)return null;
+ return <ul className="hjm-chat-room__selected" aria-label={labels.count(members.length)}>{members.map(member=><li key={member.id}>
+ <button type="button" className="hjm-chat-room__selected-item" aria-label={labels.remove(member)} disabled={disabled} onClick={()=>onRemove(member.id)}>
+ <Avatar size={chatRoomRecipe.selectedAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative accessory={<span className="hjm-chat-room__badge" data-tone="neutral"><Icon name="close" size="xs"/></span>}/>
+ <Text variant="caption" className="hjm-chat-room__selected-name">{member.name}</Text></button></li>)}</ul>;
+}
+type MemberPickerProps=Readonly<{members:readonly ChatRoomMember[];title:string;emptyLabel:string;search:ChatRoomMemberSearch;selection:ChatRoomSelectionLabels;onSelectionChange:(id:string,selected:boolean)=>void;disabled:boolean}>;
+function MemberPicker({members,title,emptyLabel,search,selection,onSelectionChange,disabled}:MemberPickerProps){
+ const [localQuery,setLocalQuery]=useState("");
+ // A product that searches its server owns the query and the result list; otherwise names are filtered here.
+ const remote=search.onQueryChange!==undefined,query=remote?search.query??"":localQuery;
+ const selected=selectedChatRoomMembers(members);
+ return <Stack gap="sm">
+ <SearchField placeholder={search.label} aria-label={search.label} clearLabel={search.clearLabel} loading={search.searching===true} value={query} onValueChange={remote?search.onQueryChange!:setLocalQuery}/>
+ <SelectedMembers members={selected} labels={selection} onRemove={id=>onSelectionChange(id,false)} disabled={disabled}/>
+ <ChatRoomMembers members={remote?members:filterChatRoomMembers(members,query)} title={title} countLabel={selection.count(selected.length)} emptyLabel={emptyLabel} onSelectionChange={onSelectionChange} disabled={disabled}/></Stack>;
+}
+
+export type ChatRoomCreateProps = Omit<ChatRoomProfileProps,"onSave"|"children"|"title"|"back"|"presentation"> & Readonly<{
  members: readonly ChatRoomMember[]; onSelectionChange:(id:string,selected:boolean)=>void;
  membersLabel:string; emptyMembersLabel:string; nextLabel:string; backLabel:string; title:string;
- searchLabel:string; clearSearchLabel:string; searchBusyLabel:string; onCancel?:()=>void;
+ search:ChatRoomMemberSearch; selection:ChatRoomSelectionLabels; onCancel?:()=>void;
  onCreate:(value:ChatRoomProfileValue,memberIds:readonly string[])=>void|Promise<void>;
 }>;
-export function ChatRoomCreate({members,onSelectionChange,membersLabel,emptyMembersLabel,onCreate,disabled=false,nextLabel,backLabel,title,searchLabel,clearSearchLabel,searchBusyLabel,onCancel,...profile}:ChatRoomCreateProps){
- const [stage,setStage]=useState<"members"|"profile">("members"),[query,setQuery]=useState("");
- const ids=members.filter(member=>member.selected&&!member.disabled).map(member=>member.id);
+export function ChatRoomCreate({members,onSelectionChange,membersLabel,emptyMembersLabel,onCreate,disabled=false,nextLabel,backLabel,title,search,selection,onCancel,...profile}:ChatRoomCreateProps){
+ const [stage,setStage]=useState<"members"|"profile">("members");
+ const selected=selectedChatRoomMembers(members),ids=selected.map(member=>member.id);
  if(stage==="members")return <Stack gap="md"><TopBar title={title} {...(onCancel?{exit:{kind:"close" as const,label:backLabel,onClick:onCancel}}:{})}
  actions={<Button tone="ghost" disabled={disabled||ids.length===0} onClick={()=>setStage("profile")}>{nextLabel}</Button>}/>
- <SearchField placeholder={searchLabel} aria-label={searchLabel} clearLabel={clearSearchLabel} value={query} onValueChange={setQuery}/>
- <ChatRoomMembers members={members.filter(member=>member.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))} title={membersLabel} emptyLabel={emptyMembersLabel} onSelectionChange={onSelectionChange} disabled={disabled}/></Stack>;
+ <MemberPicker members={members} title={membersLabel} emptyLabel={emptyMembersLabel} search={search} selection={selection} onSelectionChange={onSelectionChange} disabled={disabled}/></Stack>;
  return <ChatRoomProfile {...profile} presentation="inline" title={title} back={{label:backLabel,onPress:()=>setStage("members")}} disabled={disabled} onSave={value=>{if(!canSubmitChatRoom(value,ids))return;return onCreate(value,ids);}} submitDisabled={!canSubmitChatRoom(profile.value,ids)}>
- {blocked=><ChatRoomMembers members={members.filter(member=>ids.includes(member.id))} title={membersLabel} emptyLabel={emptyMembersLabel} disabled={blocked}/>}
+ {blocked=><ChatRoomMembers members={selected} title={membersLabel} countLabel={selection.count(selected.length)} emptyLabel={emptyMembersLabel} disabled={blocked}/>}
  </ChatRoomProfile>;
 }
+
 export type ChatRoomActionsProps = Readonly<{
  /** Local history deletion and membership exit are deliberately separate actions. */
  leave?:ChatRoomConfirmation; deleteHistory?:ChatRoomConfirmation; deleteRoom?:ChatRoomConfirmation;
  disabled?:boolean;
 }>;
 export function ChatRoomActions({leave,deleteHistory,deleteRoom,disabled=false}:ChatRoomActionsProps){
- return <RoomActionList actions={[leave,deleteHistory,deleteRoom].filter((item):item is ChatRoomConfirmation=>Boolean(item)).map(item=>({...item,destructive:true}))} disabled={disabled}/>;
+ return <RoomActionList actions={[deleteHistory,leave,deleteRoom].filter((item):item is ChatRoomConfirmation=>Boolean(item)).map(item=>({...item,destructive:true}))} disabled={disabled}/>;
 }
-function RoomActionList({actions,disabled=false,menuLabel}:{actions:readonly ChatRoomConfirmation[];disabled?:boolean;menuLabel?:string}){
+function RoomActionList({actions,disabled=false,menu}:{actions:readonly ChatRoomConfirmation[];disabled?:boolean;menu?:Readonly<{label:string;dismissLabel:string}>}){
  const [active,setActive]=useState<ChatRoomConfirmation|null>(null);
- return <Stack gap="sm">{menuLabel&&actions.length>0?<Menu label={menuLabel} trigger={<Button tone="ghost" aria-label={menuLabel}>•••</Button>} presentation="anchored" disabled={disabled||active!==null} dismissLabel={actions[0]!.cancelLabel} items={actions.map((action,index)=>({id:String(index),label:action.label,...(action.destructive?{tone:"danger" as const}:{})}))} onActionAfterDismiss={id=>setActive(actions[Number(id)]??null)}/>:actions.map((action,index)=>action?<ListRow key={index} title={action.label} tone={action.destructive?"danger":"default"} disabled={disabled||active!==null} onClick={()=>setActive(action)}/>:null)}
- {active?<AlertDialog open onOpenChange={open=>{if(!open)setActive(null);}} request={{mode:"confirm",tone:active.destructive?"danger":"attention",title:active.title,description:active.description,confirmLabel:active.confirmLabel,cancelLabel:active.cancelLabel,fallbackErrorMessage:active.errorLabel,onConfirm:active.onConfirm}}/>:null}</Stack>;
+ if(actions.length===0)return null;
+ const dialog=active?<AlertDialog open onOpenChange={open=>{if(!open)setActive(null);}} request={{mode:"confirm",tone:active.destructive?"danger":"attention",title:active.title,description:active.description,confirmLabel:active.confirmLabel,cancelLabel:active.cancelLabel,fallbackErrorMessage:active.errorLabel,onConfirm:active.onConfirm}}/>:null;
+ if(menu)return <><Menu label={menu.label} trigger={<IconButton label={menu.label} tone="ghost"><Icon name="more"/></IconButton>} presentation="anchored" align="end" disabled={disabled||active!==null} dismissLabel={menu.dismissLabel} items={actions.map((action,index)=>({id:String(index),label:action.label,...(action.destructive?{tone:"danger" as const}:{})}))} onActionAfterDismiss={id=>setActive(actions[Number(id)]??null)}/>{dialog}</>;
+ return <Stack gap="xxs">{actions.map((action,index)=><ListRow key={index} title={action.label} tone={action.destructive?"danger":"default"} disabled={disabled||active!==null} onClick={()=>setActive(action)}/>)}{dialog}</Stack>;
 }
 
 export type ChatRoomDetailsProps = Readonly<{
- profile: ChatRoomProfileValue; back?:Readonly<{label:string;onPress:()=>void}>; photoLabel:string; memberCountLabel:string;
- edit?:Readonly<{label:string;onPress:()=>void}>;
+ profile: ChatRoomProfileValue; back?:Exit; photoLabel:string; memberCountLabel:string;
+ edit?:Exit;
  /** Search, shared media, invite and notification settings use product-owned routes. */
  tools?:readonly Readonly<{id:string;label:string;icon?:ReactNode;onPress:()=>void|Promise<void>}>[];
  members:ChatRoomMembersProps; actions?:ChatRoomActionsProps; errorLabel:string;
@@ -153,23 +201,26 @@ export type ChatRoomDetailsProps = Readonly<{
 export function ChatRoomDetails({profile,back,photoLabel,memberCountLabel,edit,tools=[],members,actions,errorLabel}:ChatRoomDetailsProps){
  const action=useCompositionAction();
  return <div className="hjm-chat-room"><TopBar surface="transparent" {...(back?{exit:{kind:"back" as const,label:back.label,onClick:back.onPress}}:{})} actions={edit?<Button tone="ghost" onClick={edit.onPress}>{edit.label}</Button>:null}/>
- <Stack gap="lg"><Stack align="center" gap="xs">
- <Avatar {...(profile.photoUrl?{src:profile.photoUrl}:{})} size="xlarge" alt={photoLabel} name={profile.name}/>
- <Text variant="title">{profile.name}</Text><Text tone="muted">{memberCountLabel}</Text>
- </Stack><div className="hjm-chat-room__tools">{tools.map(tool=><button key={tool.id} type="button" className="hjm-chat-room__tool" disabled={action.pending} aria-busy={action.active===tool.id} onClick={()=>void action.run(tool.id,tool.onPress)}><Stack align="center" gap="xs">{tool.icon}<Text variant="caption" tone="brand">{tool.label}</Text></Stack></button>)}</div>
- {profile.description?<div className="hjm-chat-room__group"><Text>{profile.description}</Text></div>:null}
+ <Stack gap="lg"><Stack align="center" gap="sm">
+ <Avatar {...photoOf(profile.photoUrl)} size={chatRoomRecipe.heroAvatar} alt={photoLabel} name={profile.name}/>
+ <Stack align="center" gap="xxs"><Text variant="title" className="hjm-chat-room__name">{profile.name}</Text><Text tone="muted">{memberCountLabel}</Text></Stack>
+ </Stack>{tools.length>0?<div className="hjm-chat-room__tools">{tools.map(tool=><button key={tool.id} type="button" className="hjm-chat-room__tool" disabled={action.pending} aria-busy={action.active===tool.id} onClick={()=>void action.run(tool.id,tool.onPress)}><Stack align="center" gap="xs">{tool.icon}<Text variant="caption" tone="brand">{tool.label}</Text></Stack></button>)}</div>:null}
  {action.failed?<Text role="alert" tone="danger">{errorLabel}</Text>:null}
- <div className="hjm-chat-room__group"><ChatRoomMembers {...members}/></div>{actions?<div className="hjm-chat-room__group"><ChatRoomActions {...actions}/></div>:null}</Stack></div>;
+ {profile.description?<div className="hjm-chat-room__group"><Text>{profile.description}</Text></div>:null}
+ <div className="hjm-chat-room__group"><ChatRoomMembers {...members}/></div>{actions?<div className="hjm-chat-room__group" data-flush="true"><ChatRoomActions {...actions}/></div>:null}</Stack></div>;
 }
 
-export type ChatRoomInviteProps = Omit<ChatRoomMembersProps,"renderActions"|"actions"|"onSelectionChange"> & Readonly<{
+export type ChatRoomInviteProps = Readonly<{
+ members: readonly ChatRoomMember[]; title: string; membersLabel: string; emptyLabel: string;
  onSelectionChange:(id:string,selected:boolean)=>void;
  onInvite:(memberIds:readonly string[])=>void|Promise<void>;
- confirmLabel:string;errorLabel:string;
+ search:ChatRoomMemberSearch; selection:ChatRoomSelectionLabels;
+ back?:Exit; confirmLabel:string; errorLabel:string; disabled?:boolean;
 }>;
-export function ChatRoomInvite({onInvite,confirmLabel,errorLabel,disabled=false,...members}:ChatRoomInviteProps){
- const action=useCompositionAction(disabled),ids=members.members.filter(member=>member.selected&&!member.disabled).map(member=>member.id);
- return <Stack gap="md"><ChatRoomMembers {...members} disabled={disabled||action.pending}/>
- {action.failed?<Text role="alert" tone="danger">{errorLabel}</Text>:null}
- <Button disabled={disabled||action.pending||ids.length===0} loading={action.pending} onClick={()=>void action.run("invite",()=>onInvite(ids))}>{confirmLabel}</Button></Stack>;
+export function ChatRoomInvite({members,title,membersLabel,emptyLabel,onSelectionChange,onInvite,search,selection,back,confirmLabel,errorLabel,disabled=false}:ChatRoomInviteProps){
+ const action=useCompositionAction(disabled),ids=selectedChatRoomMembers(members).map(member=>member.id),blocked=disabled||action.pending;
+ return <Stack gap="md"><TopBar title={title} {...(back?{exit:{kind:"close" as const,label:back.label,onClick:back.onPress}}:{})}
+ actions={<Button tone="ghost" disabled={blocked||ids.length===0} loading={action.pending} onClick={()=>void action.run("invite",()=>onInvite(ids))}>{confirmLabel}</Button>}/>
+ <MemberPicker members={members} title={membersLabel} emptyLabel={emptyLabel} search={search} selection={selection} onSelectionChange={onSelectionChange} disabled={blocked}/>
+ {action.failed?<Text role="alert" tone="danger">{errorLabel}</Text>:null}</Stack>;
 }

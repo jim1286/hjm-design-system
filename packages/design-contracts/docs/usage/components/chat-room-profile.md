@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -53,6 +53,6 @@ Native는 동일 prop 계약으로 `@hjmds/react-native/communication`에서 가
 
 ## 꼭 지킬 것
 
-value·onValueChange·onSave·labels가 필수다. onPickPhoto는 업로드한 URL을 반환하며 null은 취소다.
+value·onValueChange·onSave·labels가 필수다. onPickPhoto는 업로드한 URL을 반환하며 null은 취소다. 사진에는 편집 표시가 모서리에 붙는다(카카오톡 카메라 표시). 사진 실패는 `labels.photoError`, 저장 실패는 `labels.error`로 따로 안내한다. 이름 제한은 `nameCharacterCount`(TextField characterCount)로 0/30처럼 보여 주며, 한도는 제품 서버가 받는 값이다.
 
 데이터·문구·권한은 제품이 소유한다. 저장·개설·초대·삭제는 실제 성공 뒤 Promise를 resolve하고 실패는 reject한다. 입력과 선택은 실패 시 유지한다. Storybook의 메모리 예제를 운영 저장으로 사용하지 않는다. 방 전환 시 `key={roomId}`로 작업 수명을 구분한다.

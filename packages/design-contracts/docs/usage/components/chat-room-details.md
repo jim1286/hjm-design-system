@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.43.0
+- 적용: 1.44.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -53,6 +53,6 @@ Native는 동일 prop 계약으로 `@hjmds/react-native/communication`에서 가
 
 ## 꼭 지킬 것
 
-profile·photoLabel·memberCountLabel·members·errorLabel이 필수다. edit·tools·actions는 권한과 제품 경로가 있는 경우 전달한다.
+profile·photoLabel·memberCountLabel·members·errorLabel이 필수다. edit·tools·actions는 권한과 제품 경로가 있는 경우 전달한다. 초대는 도구 타일이 아니라 `members.invite` 행으로 참여자 목록 위에 둔다. 나가기·삭제 묶음은 행 높이만큼만 위아래 여백을 둔다.
 
 데이터·문구·권한은 제품이 소유한다. 저장·개설·초대·삭제는 실제 성공 뒤 Promise를 resolve하고 실패는 reject한다. 입력과 선택은 실패 시 유지한다. Storybook의 메모리 예제를 운영 저장으로 사용하지 않는다. 방 전환 시 `key={roomId}`로 작업 수명을 구분한다.

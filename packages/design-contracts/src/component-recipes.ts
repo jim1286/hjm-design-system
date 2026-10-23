@@ -657,7 +657,8 @@ export const listRowRecipe = {
   slots: ["root", "leading", "content", "title", "description", "trailing", "accessory"] as const,
   defaults: { density: "comfortable", selected: false, tone: "default", trailingAccessory: "none" },
   // Destructive destinations keep semantic emphasis without renderer-specific title styles.
-  tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger } },
+  // `brand` marks an in-list command such as Telegram's "Add Members" above a member list (2026-10-23 chat room).
+  tones: { default: { titleColor: semanticColors.content.body }, danger: { titleColor: semanticColors.content.danger }, brand: { titleColor: semanticColors.content.brand } },
   density: {
     compact: {
       oneLineMinHeight: control.minTouchTarget,
@@ -730,7 +731,7 @@ export const listRowRecipe = {
 } as const satisfies {
   slots: readonly string[];
   defaults: { density: ListRowDensity; selected: boolean; tone: "default" | "danger"; trailingAccessory: ListRowTrailingAccessory };
-  tones: Record<"default" | "danger", { titleColor: ColorReference }>;
+  tones: Record<"default" | "danger" | "brand", { titleColor: ColorReference }>;
   density: Record<ListRowDensity, {
     oneLineMinHeight: number;
     twoLineMinHeight: number;

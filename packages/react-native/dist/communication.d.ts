@@ -1,4 +1,6 @@
 import { type ReactNode } from "react";
+import type { CharacterCountOptions } from "@hjmds/design-contracts/character-count";
+import { type ChatRoomProfileValue, type ChatRoomMember, type ChatRoomConfirmation, type ChatRoomMemberActions, type ChatRoomMemberSearch, type ChatRoomSelectionLabels } from "@hjmds/design-contracts/communication";
 import { type ReplyTarget, type SearchResponse } from "@hjmds/design-contracts/communication";
 import { type ChatMessageProps, type MessageComposerProps } from "./screens.js";
 import { type SearchRecentQueries } from "./screen-flows.js";
@@ -48,7 +50,10 @@ export type ExpandableSearchProps<T> = Readonly<{
     }>;
 }>;
 export declare function ExpandableSearch<T>(props: ExpandableSearchProps<T>): import("react").JSX.Element;
-import { type ChatRoomProfileValue, type ChatRoomMember, type ChatRoomConfirmation } from "@hjmds/design-contracts/communication";
+type Exit = Readonly<{
+    label: string;
+    onPress: () => void;
+}>;
 export type ChatRoomProfileProps = Readonly<{
     value: ChatRoomProfileValue;
     onValueChange: (value: ChatRoomProfileValue) => void;
@@ -57,10 +62,9 @@ export type ChatRoomProfileProps = Readonly<{
     onPickPhoto?: () => Promise<string | null>;
     presentation?: "centered" | "inline";
     title?: string;
-    back?: Readonly<{
-        label: string;
-        onPress: () => void;
-    }>;
+    back?: Exit;
+    /** Live count under the name field (KakaoTalk 0/20); the product owns the limit its server accepts and the locale. */
+    nameCharacterCount?: CharacterCountOptions;
     disabled?: boolean;
     submitDisabled?: boolean;
     children?: ReactNode | ((disabled: boolean) => ReactNode);
@@ -72,21 +76,26 @@ export type ChatRoomProfileProps = Readonly<{
         removePhoto: string;
         save: string;
         error: string;
+        photoError: string;
     }>;
 }>;
-export declare function ChatRoomProfile({ value, onValueChange, onSave, onPickPhoto, disabled, submitDisabled, presentation, title, back, children, labels }: ChatRoomProfileProps): import("react").JSX.Element;
+export declare function ChatRoomProfile({ value, onValueChange, onSave, onPickPhoto, disabled, submitDisabled, presentation, title, back, nameCharacterCount, children, labels }: ChatRoomProfileProps): import("react").JSX.Element;
 export type ChatRoomMembersProps = Readonly<{
     members: readonly ChatRoomMember[];
     title: string;
     emptyLabel: string;
+    /** Shown beside the title ("3"); the product formats it. */
+    countLabel?: string;
     onSelectionChange?: (id: string, selected: boolean) => void;
     disabled?: boolean;
+    /** Row above the list that opens the product's invite route (Telegram "Add Members"). Omit without permission. */
+    invite?: Exit;
     /** Omit actions without permission. The product owns roles and server authorization. */
     renderActions?: (member: ChatRoomMember) => ReactNode;
-    actions?: (member: ChatRoomMember) => readonly ChatRoomConfirmation[];
+    memberActions?: ChatRoomMemberActions;
 }>;
-export declare function ChatRoomMembers({ members, title, emptyLabel, onSelectionChange, disabled, renderActions, actions }: ChatRoomMembersProps): import("react").JSX.Element;
-export type ChatRoomCreateProps = Omit<ChatRoomProfileProps, "onSave" | "children" | "title" | "back"> & Readonly<{
+export declare function ChatRoomMembers({ members, title, emptyLabel, countLabel, onSelectionChange, disabled, invite, renderActions, memberActions }: ChatRoomMembersProps): import("react").JSX.Element;
+export type ChatRoomCreateProps = Omit<ChatRoomProfileProps, "onSave" | "children" | "title" | "back" | "presentation"> & Readonly<{
     members: readonly ChatRoomMember[];
     onSelectionChange: (id: string, selected: boolean) => void;
     membersLabel: string;
@@ -94,13 +103,12 @@ export type ChatRoomCreateProps = Omit<ChatRoomProfileProps, "onSave" | "childre
     nextLabel: string;
     backLabel: string;
     title: string;
-    searchLabel: string;
-    clearSearchLabel: string;
-    searchBusyLabel: string;
+    search: ChatRoomMemberSearch;
+    selection: ChatRoomSelectionLabels;
     onCancel?: () => void;
     onCreate: (value: ChatRoomProfileValue, memberIds: readonly string[]) => void | Promise<void>;
 }>;
-export declare function ChatRoomCreate({ members, onSelectionChange, membersLabel, emptyMembersLabel, onCreate, disabled, nextLabel, backLabel, title, searchLabel, clearSearchLabel, searchBusyLabel, onCancel, ...profile }: ChatRoomCreateProps): import("react").JSX.Element;
+export declare function ChatRoomCreate({ members, onSelectionChange, membersLabel, emptyMembersLabel, onCreate, disabled, nextLabel, backLabel, title, search, selection, onCancel, ...profile }: ChatRoomCreateProps): import("react").JSX.Element;
 export type ChatRoomActionsProps = Readonly<{
     /** Local history deletion and membership exit are deliberately separate actions. */
     leave?: ChatRoomConfirmation;
@@ -111,16 +119,10 @@ export type ChatRoomActionsProps = Readonly<{
 export declare function ChatRoomActions({ leave, deleteHistory, deleteRoom, disabled }: ChatRoomActionsProps): import("react").JSX.Element;
 export type ChatRoomDetailsProps = Readonly<{
     profile: ChatRoomProfileValue;
-    back?: Readonly<{
-        label: string;
-        onPress: () => void;
-    }>;
+    back?: Exit;
     photoLabel: string;
     memberCountLabel: string;
-    edit?: Readonly<{
-        label: string;
-        onPress: () => void;
-    }>;
+    edit?: Exit;
     /** Search, shared media, invite and notification settings use product-owned routes. */
     tools?: readonly Readonly<{
         id: string;
@@ -133,11 +135,20 @@ export type ChatRoomDetailsProps = Readonly<{
     errorLabel: string;
 }>;
 export declare function ChatRoomDetails({ profile, back, photoLabel, memberCountLabel, edit, tools, members, actions, errorLabel }: ChatRoomDetailsProps): import("react").JSX.Element;
-export type ChatRoomInviteProps = Omit<ChatRoomMembersProps, "renderActions" | "actions" | "onSelectionChange"> & Readonly<{
+export type ChatRoomInviteProps = Readonly<{
+    members: readonly ChatRoomMember[];
+    title: string;
+    membersLabel: string;
+    emptyLabel: string;
     onSelectionChange: (id: string, selected: boolean) => void;
     onInvite: (memberIds: readonly string[]) => void | Promise<void>;
+    search: ChatRoomMemberSearch;
+    selection: ChatRoomSelectionLabels;
+    back?: Exit;
     confirmLabel: string;
     errorLabel: string;
+    disabled?: boolean;
 }>;
-export declare function ChatRoomInvite({ onInvite, confirmLabel, errorLabel, disabled, ...members }: ChatRoomInviteProps): import("react").JSX.Element;
+export declare function ChatRoomInvite({ members, title, membersLabel, emptyLabel, onSelectionChange, onInvite, search, selection, back, confirmLabel, errorLabel, disabled }: ChatRoomInviteProps): import("react").JSX.Element;
+export {};
 //# sourceMappingURL=communication.d.ts.map

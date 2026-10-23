@@ -111,7 +111,7 @@ export type ScreenLayoutProps = Readonly<{
     onRefresh?: () => void;
     /** The product's pull-refresh request is running (default false). */
     refreshing?: boolean;
-    /** Spoken name of the refresh in progress, in the product language (e.g. "새 글을 불러오는 중"). */
+    /** Spoken name of the refresh in progress, in the product language (e.g. "Loading new posts"). */
     refreshLabel?: string;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;

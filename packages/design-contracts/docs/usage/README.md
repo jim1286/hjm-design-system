@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.42.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.43.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -60,12 +60,12 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web beta / Native beta | 배포 |
 | [ChatDateSeparator](components/chat-date-separator.md) | 데이터 표시 | 대화 타임라인에서 날짜(또는 오래 쉰 뒤의 시각)가 바뀌는 자리에 가운데 정렬 구분 줄을 둘 때 쓴다. | 1.31.0 | Web · Native | Web beta / Native beta | 배포 |
 | [ChatMessage](components/chat-message.md) | 데이터 표시 | DM·대화 타임라인의 메시지 한 개에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
-| [ChatRoomActions](components/chat-room-actions.md) | 구성/입력과 작성 | 나가기·내 기록 삭제·방 삭제를 구분해 확인한다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ChatRoomCreate](components/chat-room-create.md) | 구성/입력과 작성 | 참여자를 검색·선택하고 사진·이름을 정해 방을 개설한다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ChatRoomDetails](components/chat-room-details.md) | 구성/입력과 작성 | 방 프로필·도구·참여자·관리 행동을 묶음형 정보 화면으로 보여 준다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ChatRoomInvite](components/chat-room-invite.md) | 구성/입력과 작성 | 선택한 새 참여자의 실제 초대 결과를 기다린다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ChatRoomMembers](components/chat-room-members.md) | 구성/입력과 작성 | 참여자를 표시하고 선택 또는 권한별 메뉴를 제공한다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [ChatRoomProfile](components/chat-room-profile.md) | 구성/입력과 작성 | 사진·이름·소개를 편집하고 실제 저장 결과를 기다린다. | 1.43.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomActions](components/chat-room-actions.md) | 구성/입력과 작성 | 나가기·내 기록 삭제·방 삭제를 구분해 확인한다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomCreate](components/chat-room-create.md) | 구성/입력과 작성 | 참여자를 검색·선택하고 사진·이름을 정해 방을 개설한다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomDetails](components/chat-room-details.md) | 구성/입력과 작성 | 방 프로필·도구·참여자·관리 행동을 묶음형 정보 화면으로 보여 준다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomInvite](components/chat-room-invite.md) | 구성/입력과 작성 | 선택한 새 참여자의 실제 초대 결과를 기다린다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomMembers](components/chat-room-members.md) | 구성/입력과 작성 | 참여자를 표시하고 선택 또는 권한별 메뉴를 제공한다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
+| [ChatRoomProfile](components/chat-room-profile.md) | 구성/입력과 작성 | 사진·이름·소개를 편집하고 실제 저장 결과를 기다린다. | 1.44.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ChatScreen](components/chat-screen.md) | 레이아웃 | DM·대화방처럼 헤더, 메시지 타임라인, 하단 작성창으로 이루어진 화면 한 장에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Checkbox](components/checkbox.md) | 입력 | 독립된 예/아니오 하나를 고르는 항목에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [CheckboxGroup](components/checkbox-group.md) | 입력 | 한 질문에 대한 여러 선택지 중 0개 이상을 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -240,7 +240,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [인증번호 확인과 다시 입력](compositions/stea-otp-verify.md) | 입력과 작성 | 문자·메일로 받은 숫자 인증번호를 입력하고 서버 확인을 기다린 뒤, 틀리면 남은 횟수를 보여 주고 다시 받게 하는 흐름에 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [입력 시트](compositions/input-sheet.md) | 입력과 작성 | 현재 화면 위에 하단 시트를 띄워 짧은 입력(이름 바꾸기, 메모 한 줄)을 받고, 키보드가 올라와도 본문을 스크롤하며 완료 버튼에 닿게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
-| [채팅방 관리](compositions/chat-room.md) | 입력과 작성 | `@hjmds/react/communication`, `@hjmds/react-native/communication`에서 제공한다. | 1.43.0 | Web · Native | 구성 API별 | 배포 |
+| [채팅방 관리](compositions/chat-room.md) | 입력과 작성 | `@hjmds/react/communication`, `@hjmds/react-native/communication`에서 제공한다. | 1.44.0 | Web · Native | 구성 API별 | 배포 |
 | [첫 작업을 만들고 이어하기](compositions/reference-first.md) | 입력과 작성 | 첫 기록을 단계별 작성하고 중단한 초안 이어가기 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [날짜 선택과 예정 목록](compositions/stea-schedule-card.md) | 선택과 필터 | 한 주처럼 짧은 날짜 범위에서 날짜 하나를 고르면 같은 카드 안의 일정 목록이 그 날짜로 바뀌는 요약 카드에 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [날짜와 시각 선택](compositions/date-time-selection.md) | 선택과 필터 | 기록·알림의 날짜 하나와 하루 안의 시각을 함께 고를 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
