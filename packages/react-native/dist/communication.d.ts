@@ -61,7 +61,7 @@ export type ChatRoomProfileProps = Readonly<{
     /** The product picks/uploads the image and returns its persistent URL; null means cancellation. */
     onPickPhoto?: () => Promise<string | null>;
     presentation?: "centered" | "inline";
-    title?: string;
+    title: string;
     back?: Exit;
     /** Live count under the name field (KakaoTalk 0/20); the product owns the limit its server accepts and the locale. */
     nameCharacterCount?: CharacterCountOptions;
@@ -116,7 +116,15 @@ export type ChatRoomActionsProps = Readonly<{
     deleteRoom?: ChatRoomConfirmation;
     disabled?: boolean;
 }>;
-export declare function ChatRoomActions({ leave, deleteHistory, deleteRoom, disabled }: ChatRoomActionsProps): import("react").JSX.Element;
+export declare function ChatRoomActions({ leave, deleteHistory, deleteRoom, disabled }: ChatRoomActionsProps): import("react").JSX.Element | null;
+/** `pressed` makes the tile a toggle (mute): its surface and the product icon show the current state. */
+export type ChatRoomTool = Readonly<{
+    id: string;
+    label: string;
+    icon?: ReactNode;
+    pressed?: boolean;
+    onPress: () => void | Promise<void>;
+}>;
 export type ChatRoomDetailsProps = Readonly<{
     profile: ChatRoomProfileValue;
     back?: Exit;
@@ -124,12 +132,7 @@ export type ChatRoomDetailsProps = Readonly<{
     memberCountLabel: string;
     edit?: Exit;
     /** Search, shared media, invite and notification settings use product-owned routes. */
-    tools?: readonly Readonly<{
-        id: string;
-        label: string;
-        icon?: ReactNode;
-        onPress: () => void | Promise<void>;
-    }>[];
+    tools?: readonly ChatRoomTool[];
     members: ChatRoomMembersProps;
     actions?: ChatRoomActionsProps;
     errorLabel: string;

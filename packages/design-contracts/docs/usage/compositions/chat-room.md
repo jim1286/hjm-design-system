@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.44.0
+- 적용: 1.45.0
 - 검토일: 2026-10-23
 - 근거: Telegram·Signal 실제 화면 비교와 채팅방 관리 공통화 요청
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -45,13 +45,14 @@
              [방 사진 xlarge: 64]
                   방 이름
                  3명 참여 중
-       [검색]   [사진·파일]   [알림]          동폭 타일
-  ┌ 소개 ───────────────────────────┐
-  ┌ 참여자 3 ───────────────────────┐
-  │ (+) 대화상대 초대                │   brand 행, members.invite
-  │ [사진] 나                   관리자 │   role = brand caption
-  │ [사진] 서연 · 오늘 접속        (•••) │   memberActions 메뉴
-  ┌ 내 대화 기록 삭제 / 채팅방 나가기 ─┐   danger 행
+       [검색]   [사진·파일]   [무음]          동폭 타일, 무음은 pressed 토글
+  소개
+  참여자 3
+  (+) 대화상대 초대                      brand 행, members.invite
+  [사진] 나                       관리자   role = brand caption
+  [사진] 서연 · 오늘 접속           (•••)   memberActions 메뉴
+  [       내 대화 기록 삭제        ]       secondary 전체 폭
+  [         채팅방 나가기          ]       danger 전체 폭
 
 참여자 선택 (ChatRoomCreate 1단계 · ChatRoomInvite)
   [닫기]        새 채팅방          [다음]
@@ -119,6 +120,8 @@ Native 예제: `showcase/native/src/ChatRoom.preview.tsx`.
 | [카카오톡 팀채팅 만들기·멤버 초대·채팅방 설정](https://funissu.com/kakaotalk-team-chat-room-create/) | 상단 오른쪽 다음/확인, 이름 검색창, 사진 모서리 편집 표시, 이름 글자 수(0/20), 설정 묶음과 하단 파괴 행동 |
 | [Telegram 방 정보·Add Members·New Group(Android)](https://www.guidingtech.com/how-to-add-someone-to-telegram-group/) | 참여자 위 "Add Members" 브랜드 행, 역할(Owner/Admin) 오른쪽 표기, 선택한 사람을 검색창에 칩으로 모음, 선택 인원 표시, 사진 옆 이름 입력 |
 | WhatsApp 새 그룹(참여자 선택) | 선택한 사람의 가로 아바타 줄과 × 해제 |
+
+같은 날 시뮬레이터 검토: 상단·좌우 여백이 대화 목록과 다르다는 지적의 원인은 채팅방 구성이 TopBar를 직접 그리고 호스트가 여백을 따로 준 것이었다. 네 화면 모두 ScreenLayout 위에서 헤더·여백(screenPatternRecipe.padding)·스크롤을 공통 틀에 맡긴다. 카드형 묶음은 사용자 지시로 없애고 섹션을 평평하게 두며, 하단 나가기·삭제는 전체 폭 버튼(기록 삭제 secondary, 나가기·방 삭제 danger)으로 바꿨다. 알림 켜기/끄기가 같은 모양이라는 지적으로 도구 `pressed` 토글(선택 표면 + 제품 아이콘 교체)을 추가했다.
 
 반영: `chatRoomRecipe`(screen-patterns), ListRow `tone="brand"`, `ChatRoomMemberActions`·`ChatRoomMemberSearch`·`ChatRoomSelectionLabels` 계약, 사진 실패와 저장 실패 안내 분리, 멤버 메뉴 이름·아이콘 버튼, 서버 검색 연결(`search.onQueryChange`·`searching`). 1.43.0의 `actions`·`searchLabel` 계열 prop은 소비 앱이 없어 이번 minor에서 바로 교체했다.
 

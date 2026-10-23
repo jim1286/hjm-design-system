@@ -305,7 +305,7 @@ export declare const chatRoomRecipe: {
     readonly badgeSize: 24;
     readonly removeBadgeSize: 20;
     readonly addLeadingSize: 40;
-    readonly groupPadding: 16;
+    readonly exitGap: 8;
     readonly groupGap: 20;
 };
 export type ChatReactionSummaryItem = Readonly<{

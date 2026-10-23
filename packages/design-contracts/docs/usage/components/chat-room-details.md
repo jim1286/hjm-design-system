@@ -3,7 +3,7 @@
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 1.44.0
+- 적용: 1.45.0
 - 검토일: 2026-10-23
 - 근거: 양 renderer `src/communication.tsx`와 [채팅방 비교·구성 지침](../compositions/chat-room.md)
 - 스토리북: `배포/구성/입력과 작성/채팅방 관리`
@@ -53,6 +53,6 @@ Native는 동일 prop 계약으로 `@hjmds/react-native/communication`에서 가
 
 ## 꼭 지킬 것
 
-profile·photoLabel·memberCountLabel·members·errorLabel이 필수다. edit·tools·actions는 권한과 제품 경로가 있는 경우 전달한다. 초대는 도구 타일이 아니라 `members.invite` 행으로 참여자 목록 위에 둔다. 나가기·삭제 묶음은 행 높이만큼만 위아래 여백을 둔다.
+profile·photoLabel·memberCountLabel·members·errorLabel이 필수다. edit·tools·actions는 권한과 제품 경로가 있는 경우 전달한다. 초대는 도구 타일이 아니라 `members.invite` 행으로 참여자 목록 위에 둔다. 화면 틀은 ScreenLayout이라 헤더 위치·좌우 여백·스크롤이 다른 HJM 화면과 같다(방 이름은 hero에 있으므로 헤더 제목은 숨김). 섹션은 카드 없이 평평하게 둔다. 맨 아래 나가기·삭제는 전체 폭 버튼이며 `deleteHistory`는 secondary, `leave`·`deleteRoom`은 danger다(카카오톡 "채팅방 삭제 및 나가기"). 무음처럼 켜고 끄는 도구는 `pressed`를 주면 토글(aria-pressed / togglebutton)이 되고 선택 표면으로 상태를 보여 준다. 아이콘도 제품이 상태에 맞게 바꾼다(종 ↔ 종 끔). 상태에 따라 라벨만 바꾸지 않는다.
 
 데이터·문구·권한은 제품이 소유한다. 저장·개설·초대·삭제는 실제 성공 뒤 Promise를 resolve하고 실패는 reject한다. 입력과 선택은 실패 시 유지한다. Storybook의 메모리 예제를 운영 저장으로 사용하지 않는다. 방 전환 시 `key={roomId}`로 작업 수명을 구분한다.

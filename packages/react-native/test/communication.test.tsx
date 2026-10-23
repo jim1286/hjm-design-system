@@ -22,18 +22,17 @@ it("uses the existing SearchScreen debounce and aborts actual requests on collap
 });
 
 import { Button } from "../src/actions.js";
-import { ListRow } from "../src/data-display.js";
 import { AlertDialog } from "../src/overlays.js";
 const roomLabels={name:"Name",description:"Description",photo:"Photo",changePhoto:"Change",removePhoto:"Remove",save:"Save",error:"Failed",photoError:"Photo failed"};
 it("gates native group creation and preserves failed profile drafts",async()=>{
  const value={name:"Draft",description:"About",photoUrl:null},createRoom=vi.fn(),save=vi.fn().mockRejectedValue(new Error("offline"));
  act(()=>{tree=create(<HjmNativeProvider><ChatRoomCreate title="새 채팅방" nextLabel="다음" backLabel="뒤로" search={{label:"참여자 검색",clearLabel:"검색 지우기",busyLabel:"검색 중"}} selection={{count:n=>`${n}`,remove:member=>`${member.name} 해제`}} value={{...value,name:""}} onValueChange={()=>undefined} labels={roomLabels} members={[]} onSelectionChange={()=>undefined} membersLabel="Members" emptyMembersLabel="Empty" onCreate={createRoom}/></HjmNativeProvider>);});
  expect(tree!.root.findAllByType(Button).find(node=>node.props.children==="다음")!.props.disabled).toBe(true);
- act(()=>tree!.update(<HjmNativeProvider><ChatRoomProfile value={value} onValueChange={()=>undefined} labels={roomLabels} onSave={save}/></HjmNativeProvider>));
+ act(()=>tree!.update(<HjmNativeProvider><ChatRoomProfile title="Room" value={value} onValueChange={()=>undefined} labels={roomLabels} onSave={save}/></HjmNativeProvider>));
  await act(async()=>tree!.root.findAllByType(Button).find(node=>node.props.children==="Save")!.props.onPress());expect(save).toHaveBeenCalledOnce();expect(tree!.root.findByType(ChatRoomProfile).props.value).toEqual(value);expect(tree!.root.findAll(node=>node.props.accessibilityRole==="alert").length).toBeGreaterThan(0);
 });
 it("native leave and history deletion stay separate behind confirmation",async()=>{
  const remove=vi.fn(),leave=vi.fn();const action={label:"Delete",title:"Delete history?",description:"Only my history",confirmLabel:"Confirm",cancelLabel:"Cancel",errorLabel:"Failed",onConfirm:remove};
  act(()=>{tree=create(<HjmNativeProvider><ChatRoomActions deleteHistory={action} leave={{...action,label:"Leave",onConfirm:leave}}/></HjmNativeProvider>);});
- act(()=>tree!.root.findAllByType(ListRow).find(node=>node.props.title==="Delete")!.props.onPress());expect(remove).not.toHaveBeenCalled();await act(async()=>tree!.root.findByType(AlertDialog).props.request.onConfirm());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
+ act(()=>tree!.root.findAllByType(Button).find(node=>node.props.children==="Delete")!.props.onPress());expect(remove).not.toHaveBeenCalled();await act(async()=>tree!.root.findByType(AlertDialog).props.request.onConfirm());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
 });

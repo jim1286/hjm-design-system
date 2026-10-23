@@ -3974,13 +3974,11 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-data-table__table tr[aria-selected="true"] > :is(td, th) { background-color: var(--hjm-color-surface-selected); }
 
 /* Room management (chatRoomRecipe): Telegram/KakaoTalk/WhatsApp hierarchy; canvas and surfaces follow the HJM/product theme. */
-.hjm-chat-room { background:var(--hjm-color-bg); padding:var(--hjm-space-md); }
 .hjm-chat-room__name { text-align:center; overflow-wrap:anywhere; }
-.hjm-chat-room__group { background:var(--hjm-color-surface); padding:var(--hjm-space-md); border-radius:var(--hjm-radius-lg); }
-.hjm-chat-room__group[data-flush="true"] { padding-block:var(--hjm-space-xxs); }
 .hjm-chat-room__heading { display:flex; align-items:baseline; gap:var(--hjm-space-xxs); }
 .hjm-chat-room__tools { display:flex; gap:var(--hjm-space-xs); }
-.hjm-chat-room__tool { flex:1; min-width:0; min-height:64px; border:0; border-radius:var(--hjm-radius-md); padding:var(--hjm-space-xs); background:var(--hjm-color-surface); color:var(--hjm-color-content-brand); cursor:pointer; }
+.hjm-chat-room__tool { flex:1; min-width:0; min-height:64px; border-radius:var(--hjm-radius-md); padding:var(--hjm-space-xs); background:var(--hjm-color-surface); border:0; color:var(--hjm-color-content-brand); cursor:pointer; }
+.hjm-chat-room__tool[aria-pressed="true"] { background:var(--hjm-color-surface-selected); border-color:transparent; }
 .hjm-chat-room__tool:disabled { cursor:default; opacity:.6; }
 .hjm-chat-room__add { display:inline-flex; align-items:center; justify-content:center; inline-size:40px; block-size:40px; border-radius:50%; background:color-mix(in srgb,var(--hjm-color-content-brand) 12%,transparent); color:var(--hjm-color-content-brand); }
 .hjm-chat-room__photo { display:block; padding:0; border:0; background:transparent; border-radius:50%; cursor:pointer; color:inherit; }

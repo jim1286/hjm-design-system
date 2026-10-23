@@ -357,7 +357,11 @@ export const chatRoomRecipe = {
   removeBadgeSize: 20,
   // The invite row's leading circle lines up with member avatars.
   addLeadingSize: avatarRecipe.sizes.medium,
-  groupPadding: spacing.md,
+  // Room screens render inside ScreenLayout: header placement and the screen gutter are the shared shell's, like every
+  // other HJM screen (2026-10-23 review: a self-drawn TopBar and its own inset sat lower and wider than the list).
+  // 2026-10-23 user review: sections stay flat (no card surface); room exits are full-width buttons at the bottom
+  // (KakaoTalk "채팅방 삭제 및 나가기"). Membership/room exits are danger, local history deletion is secondary.
+  exitGap: spacing.xs,
   groupGap: spacing.lg,
 } as const;
 

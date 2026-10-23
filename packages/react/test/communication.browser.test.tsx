@@ -34,7 +34,7 @@ it("opts into near-limit circular feedback while retaining the existing composer
 const roomLabels={name:"Room name",description:"Description",photo:"Room photo",changePhoto:"Change photo",removePhoto:"Remove photo",save:"Save room",error:"Save failed",photoError:"Photo failed"};
 it("retains a room draft after failure and serializes duplicate saves",async()=>{
  let reject!:(error:Error)=>void;const save=vi.fn(()=>new Promise<void>((_,fail)=>{reject=fail;}));
- await act(async()=>root.render(<HjmProvider><ChatRoomProfile value={{name:"Draft room",description:"Draft description",photoUrl:null}} onValueChange={()=>undefined} onSave={save} labels={roomLabels}/></HjmProvider>));
+ await act(async()=>root.render(<HjmProvider><ChatRoomProfile title="Room" value={{name:"Draft room",description:"Draft description",photoUrl:null}} onValueChange={()=>undefined} onSave={save} labels={roomLabels}/></HjmProvider>));
  await act(async()=>{button("Save room").click();button("Save room").click();});expect(save).toHaveBeenCalledOnce();
  await act(async()=>reject(new Error("offline")));expect((host.querySelector("input") as HTMLInputElement).value).toBe("Draft room");expect(host.textContent).toContain("Save failed");expect(button("Save room").disabled).toBe(false);
 });
@@ -50,6 +50,6 @@ it("requires confirmation for history deletion and does not call leave",async()=
  await act(async()=>button("Delete history").click());expect(remove).not.toHaveBeenCalled();await act(async()=>page.getByRole("button",{name:"Delete now",exact:true}).click());expect(remove).toHaveBeenCalledOnce();expect(leave).not.toHaveBeenCalled();
 });
 it("reports a failed photo upload apart from a failed save",async()=>{
- await act(async()=>root.render(<HjmProvider><ChatRoomProfile value={{name:"Room",description:"",photoUrl:null}} onValueChange={()=>undefined} onSave={()=>undefined} onPickPhoto={()=>Promise.reject(new Error("upload"))} labels={roomLabels}/></HjmProvider>));
+ await act(async()=>root.render(<HjmProvider><ChatRoomProfile title="Room" value={{name:"Room",description:"",photoUrl:null}} onValueChange={()=>undefined} onSave={()=>undefined} onPickPhoto={()=>Promise.reject(new Error("upload"))} labels={roomLabels}/></HjmProvider>));
  await act(async()=>button("Change photo").click());expect(host.textContent).toContain("Photo failed");expect(host.textContent).not.toContain("Save failed");
 });
