@@ -64,6 +64,9 @@ import {
   type CounterBadgeVariant,
   resolveBadgeCategoryColor,
   validateListRowTrailingAccessory,
+  dividerRecipe,
+  validateDividerLineStyle,
+  type DividerLineStyle,
   type BadgeCategoryColor,
   type ListRowDensity,
   type ListRowLeadingShape,
@@ -964,23 +967,42 @@ export function Avatar({
 export type DividerProps = Readonly<{
   orientation?: "horizontal" | "vertical";
   inset?: number;
+  /** `dashed`: a break inside one surface rather than a new section; dash/gap from dividerRecipe.lineStyles. */
+  lineStyle?: DividerLineStyle;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
-export function Divider({ orientation = "horizontal", inset = 0, layoutStyle }: DividerProps) {
+export function Divider({ orientation = "horizontal", inset = 0, lineStyle = dividerRecipe.defaults.lineStyle, layoutStyle }: DividerProps) {
   if (!Number.isFinite(inset) || inset < 0) throw new RangeError("Divider inset must be non-negative");
+  validateDividerLineStyle(lineStyle);
   const { colors } = useHjmNativeTheme();
+  const horizontal = orientation === "horizontal";
+  const thickness = dividerRecipe.thickness;
+  // RN `borderStyle: "dashed"` on a single side renders solid on iOS (Diairy 2026-09-19 simulator), so the dashed
+  // line is drawn as recipe-sized segments across the measured length — no optional SVG peer in this entry.
+  const [length, setLength] = useState(0);
+  const dashed = lineStyle === "dashed" ? dividerRecipe.lineStyles.dashed : null;
+  const segments = dashed && length > 0 ? Math.ceil(length / (dashed.dash + dashed.gap)) : 0;
   return (
     <View
       accessible={false}
+      {...(dashed ? { onLayout: (event: LayoutChangeEvent) => {
+        const next = horizontal ? event.nativeEvent.layout.width : event.nativeEvent.layout.height;
+        setLength(current => current === next ? current : next);
+      } } : {})}
       style={[
-        orientation === "horizontal"
-          ? { backgroundColor: colors.border, height: 1, marginHorizontal: inset, width: "auto" }
-          : { alignSelf: "stretch", backgroundColor: colors.border, marginVertical: inset, width: 1 },
+        horizontal
+          ? { backgroundColor: dashed ? undefined : colors.border, height: thickness, marginHorizontal: inset, width: "auto" }
+          : { alignSelf: "stretch", backgroundColor: dashed ? undefined : colors.border, marginVertical: inset, width: thickness },
+        dashed ? { flexDirection: horizontal ? "row" : "column", gap: dashed.gap, overflow: "hidden" } : null,
         layoutStyle,
       ]}
-    />
+    >
+      {Array.from({ length: segments }, (_, index) => <View key={index} style={horizontal
+        ? { width: dashed!.dash, height: thickness, backgroundColor: colors.border }
+        : { height: dashed!.dash, width: thickness, backgroundColor: colors.border }} />)}
+    </View>
   );
 }
 

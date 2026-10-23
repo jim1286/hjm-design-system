@@ -4879,6 +4879,7 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly orientation: "horizontal";
             readonly inset: "none";
+            readonly lineStyle: "solid";
         };
         readonly color: Readonly<{
             source: "theme";
@@ -4890,6 +4891,12 @@ export declare const recipeRegistry: {
             readonly none: 0;
             readonly start: 16;
             readonly both: 16;
+        };
+        readonly lineStyles: {
+            readonly dashed: {
+                readonly dash: 4;
+                readonly gap: 4;
+            };
         };
     };
     readonly formRecipe: {

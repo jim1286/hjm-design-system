@@ -28,6 +28,8 @@ import {
   avatarRecipe,
   dividerRecipe,
   listRecipe,
+  validateDividerLineStyle,
+  type DividerLineStyle,
   statisticRecipe,
   type AccordionDensity,
   type AvatarShape,
@@ -371,6 +373,8 @@ export type DividerProps = HTMLAttributes<HTMLElement> &
   Readonly<{
     orientation?: DividerOrientation;
     inset?: DividerInset;
+    /** `dashed`: a break inside one surface rather than a new section; dash/gap from dividerRecipe.lineStyles. */
+    lineStyle?: DividerLineStyle;
     decorative?: boolean;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -380,6 +384,7 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
   {
     orientation = dividerRecipe.defaults.orientation,
     inset = dividerRecipe.defaults.inset,
+    lineStyle = dividerRecipe.defaults.lineStyle,
     decorative = false,
     className,
     layoutStyle,
@@ -387,6 +392,7 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
   },
   ref,
 ) {
+  validateDividerLineStyle(lineStyle);
   return createElement(orientation === "horizontal" ? "hr" : "div", {
     ...props,
     style: { ...props.style, ...layoutStyle },
@@ -394,6 +400,7 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
     className: classNames("hjm-divider", className),
     "data-orientation": orientation,
     "data-inset": inset,
+    "data-line-style": lineStyle,
     role: decorative ? "presentation" : "separator",
     "aria-hidden": decorative || undefined,
     "aria-orientation": decorative ? undefined : orientation,

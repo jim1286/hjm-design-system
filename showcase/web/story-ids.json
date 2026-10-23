@@ -552,6 +552,7 @@
     "components-layout-container--default",
     "components-layout-container--large-text",
     "components-layout-divider--dark",
+    "components-layout-divider--dashed",
     "components-layout-divider--default",
     "components-layout-divider--large-text",
     "components-layout-editor-screen--dark",

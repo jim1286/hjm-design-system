@@ -749,11 +749,19 @@ export declare const chipRecipe: {
         readonly offset: 2;
     };
 };
+/**
+ * Divider line pattern (2026-10-23). `dashed` separates parts of one surface that continue the same story ("the next
+ * story starts here") where a solid rule would split a card into two. Diairy drew it twice — Web `.cozy-nest-next`
+ * `border-block-start: 1px dashed` and an SVG `DashedRule` on Native because RN `borderStyle: "dashed"` on one side
+ * renders solid on iOS (2026-09-19 simulator) — with different dash lengths.
+ */
+export type DividerLineStyle = "solid" | "dashed";
 export declare const dividerRecipe: {
     readonly slots: readonly ["root", "label"];
     readonly defaults: {
         readonly orientation: "horizontal";
         readonly inset: "none";
+        readonly lineStyle: "solid";
     };
     readonly color: Readonly<{
         source: "theme";
@@ -766,7 +774,15 @@ export declare const dividerRecipe: {
         readonly start: 16;
         readonly both: 16;
     };
+    /** Dash and gap along the line, at `thickness`; the pattern starts with a dash at the line's start edge. */
+    readonly lineStyles: {
+        readonly dashed: {
+            readonly dash: 4;
+            readonly gap: 4;
+        };
+    };
 };
+export declare function validateDividerLineStyle(value: unknown): asserts value is DividerLineStyle;
 export declare const listRecipe: {
     readonly slots: readonly ["root", "item", "separator"];
     readonly defaults: {

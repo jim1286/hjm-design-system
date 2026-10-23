@@ -327,7 +327,7 @@ export const chipRecipe = {
 };
 export const dividerRecipe = {
     slots: ["root", "label"],
-    defaults: { orientation: "horizontal", inset: "none" },
+    defaults: { orientation: "horizontal", inset: "none", lineStyle: "solid" },
     color: semanticColors.border.default,
     thickness: stroke.subtle,
     insets: {
@@ -335,7 +335,15 @@ export const dividerRecipe = {
         start: spacing.md,
         both: spacing.md,
     },
+    /** Dash and gap along the line, at `thickness`; the pattern starts with a dash at the line's start edge. */
+    lineStyles: {
+        dashed: { dash: 4, gap: 4 },
+    },
 };
+export function validateDividerLineStyle(value) {
+    if (value !== "solid" && value !== "dashed")
+        throw new TypeError(`Unsupported Divider lineStyle: ${String(value)}`);
+}
 /**
  * How far a ListRow surface (pressed, hover, selected, focus ring) reaches past the row text on each inline side.
  * 2026-10-17 user decision: the row text sits on its container's content edge (the 16 screen gutter on a default

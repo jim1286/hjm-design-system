@@ -560,9 +560,17 @@ export const chipRecipe = {
   focus: focusIndicatorContract,
 } as const;
 
+/**
+ * Divider line pattern (2026-10-23). `dashed` separates parts of one surface that continue the same story ("the next
+ * story starts here") where a solid rule would split a card into two. Diairy drew it twice — Web `.cozy-nest-next`
+ * `border-block-start: 1px dashed` and an SVG `DashedRule` on Native because RN `borderStyle: "dashed"` on one side
+ * renders solid on iOS (2026-09-19 simulator) — with different dash lengths.
+ */
+export type DividerLineStyle = "solid" | "dashed";
+
 export const dividerRecipe = {
   slots: ["root", "label"] as const,
-  defaults: { orientation: "horizontal", inset: "none" },
+  defaults: { orientation: "horizontal", inset: "none", lineStyle: "solid" },
   color: semanticColors.border.default,
   thickness: stroke.subtle,
   insets: {
@@ -570,7 +578,22 @@ export const dividerRecipe = {
     start: spacing.md,
     both: spacing.md,
   },
-} as const;
+  /** Dash and gap along the line, at `thickness`; the pattern starts with a dash at the line's start edge. */
+  lineStyles: {
+    dashed: { dash: 4, gap: 4 },
+  },
+} as const satisfies {
+  slots: readonly string[];
+  defaults: { orientation: "horizontal" | "vertical"; inset: "none" | "start" | "both"; lineStyle: DividerLineStyle };
+  color: ColorReference;
+  thickness: number;
+  insets: Record<"none" | "start" | "both", number>;
+  lineStyles: Record<Exclude<DividerLineStyle, "solid">, { dash: number; gap: number }>;
+};
+
+export function validateDividerLineStyle(value: unknown): asserts value is DividerLineStyle {
+  if (value !== "solid" && value !== "dashed") throw new TypeError(`Unsupported Divider lineStyle: ${String(value)}`);
+}
 
 /**
  * How far a ListRow surface (pressed, hover, selected, focus ring) reaches past the row text on each inline side.

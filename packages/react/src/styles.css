@@ -2864,6 +2864,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-divider[data-orientation="vertical"] { align-self: stretch; inline-size: 1px; min-block-size: var(--hjm-control-min-touch-target); }
 .hjm-divider[data-orientation="horizontal"][data-inset="start"] { margin-inline-start: var(--hjm-space-md); inline-size: calc(100% - var(--hjm-space-md)); }
 .hjm-divider[data-orientation="horizontal"][data-inset="both"] { margin-inline: var(--hjm-space-md); inline-size: calc(100% - (2 * var(--hjm-space-md))); }
+/* lineStyle="dashed" (dividerRecipe.lineStyles.dashed): exact dash/gap from the recipe instead of the browser's own
+   dashed border, so Web and Native draw the same 4/4 rhythm starting with a dash at the line's start edge. */
+.hjm-divider[data-line-style="dashed"] { --hjm-divider-pattern: var(--hjm-color-border) 0 var(--hjm-divider-dash), transparent var(--hjm-divider-dash) calc(var(--hjm-divider-dash) + var(--hjm-divider-gap)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="horizontal"] { background: repeating-linear-gradient(to right, var(--hjm-divider-pattern)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="horizontal"]:dir(rtl) { background: repeating-linear-gradient(to left, var(--hjm-divider-pattern)); }
+.hjm-divider[data-line-style="dashed"][data-orientation="vertical"] { background: repeating-linear-gradient(to bottom, var(--hjm-divider-pattern)); }
 .hjm-description-list { display: grid; grid-template-columns: repeat(var(--hjm-description-columns), minmax(0, 1fr)); gap: var(--hjm-space-sm); margin: 0; }
 .hjm-description-list__item { min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-description-list__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
