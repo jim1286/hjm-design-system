@@ -22,3 +22,18 @@ it("keeps zero counts, equal narrow bar widths and value-first order without exp
   expect(flatten(icon.props.style).backgroundColor).toBe("#ff4458");
   act(() => tree.unmount());
 });
+
+it("keeps a leading glyph on the value line so a long value wraps beside it", () => {
+  // 2026-10-23 Unairplane: a wrapping row dropped "10월 9일 09:40" under a lone clock icon.
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><StatisticGroup label="Flight" arrangement="bar" availableWidth={300}
+    descriptor={{ items: [{ id: "eta", label: "Arrival", value: "10월 9일 09:40" }, { id: "plain", label: "Plain", value: "1" }] }}
+    renderLeading={(item, context) => item.id === "eta" ? <View testID="icon-eta" style={{ width: context.size }} /> : null} /></HjmNativeProvider>); });
+  const icon = tree.root.findByProps({ testID: "icon-eta" });
+  const ancestors: typeof icon[] = [];
+  for (let node = icon.parent; node; node = node.parent) ancestors.push(node);
+  expect(ancestors.some(node => flatten(node.props.style).flexShrink === 0)).toBe(true);
+  const row = ancestors.find(node => flatten(node.props.style).flexDirection === "row")!;
+  expect(flatten(row.props.style).flexWrap).toBe("nowrap");
+  act(() => tree.unmount());
+});

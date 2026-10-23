@@ -605,7 +605,7 @@ function StatisticView<Id extends string = string>({
       data-presentation={presentation}
     >
       <span aria-hidden="true" className="hjm-statistic__label">{resolved.label}</span>
-      <span aria-hidden="true" className="hjm-statistic__value-row">
+      <span aria-hidden="true" className="hjm-statistic__value-row" data-leading={leading === undefined ? undefined : ""}>
         {leading === undefined ? null : <span className="hjm-statistic__leading">{leading}</span>}
         {resolved.prefix ? <span className="hjm-statistic__affix">{resolved.prefix}</span> : null}
         <strong className="hjm-statistic__value">{renderValue?.(resolved.value) ?? resolved.value}</strong>

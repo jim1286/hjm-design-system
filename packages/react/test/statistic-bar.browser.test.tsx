@@ -23,3 +23,22 @@ it("keeps narrow count bars in one equal row with values above labels", async ()
   }
  } finally { await act(async()=>root.unmount()); host.remove(); }
 });
+
+it("keeps a leading glyph on the value line so a long value wraps beside it", async () => {
+ // 2026-10-23 Unairplane: a wrapping row dropped "10월 9일 09:40" under a lone clock icon.
+ (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+ const host = document.createElement("div"); host.style.width = "300px"; document.body.append(host); const root = createRoot(host);
+ const descriptor = { items: [{ id: "a", label: "Left", value: "0분" }, { id: "b", label: "Distance", value: "약 0 km" }, { id: "c", label: "Arrival", value: "10월 9일 09:40" }] };
+ try {
+  await act(async () => root.render(<HjmProvider><StatisticGroup label="Flight" arrangement="bar" descriptor={descriptor}
+   renderLeading={(_item, context) => <svg aria-hidden="true" width={context.size} height={context.size}><path d="M0 0L8 8"/></svg>} /></HjmProvider>));
+  const rows = [...host.querySelectorAll<HTMLElement>(".hjm-statistic__value-row")];
+  for (const row of rows) {
+   const icon = row.querySelector<HTMLElement>(".hjm-statistic__leading")!.getBoundingClientRect();
+   const value = row.querySelector<HTMLElement>(".hjm-statistic__value")!.getBoundingClientRect();
+   // Same line: the value starts after the icon instead of below it.
+   expect(value.left).toBeGreaterThanOrEqual(icon.right - 0.5);
+   expect(value.top).toBeLessThan(icon.bottom);
+  }
+ } finally { await act(async()=>root.unmount()); host.remove(); }
+});

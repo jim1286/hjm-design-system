@@ -1896,12 +1896,14 @@ function renderStatistic<Id extends string = string>({
           ...(bar ? { justifyContent: "center" } as const : {}),
           direction: theme.environment.direction,
           flexDirection: "row",
-          flexWrap: "wrap",
+          // A leading glyph labels its value: keep them on one line so a long value wraps beside the
+          // icon instead of dropping under a lone icon (2026-10-23 Unairplane arrival time).
+          flexWrap: leading === undefined ? "wrap" : "nowrap",
           gap: spacing.xxs,
           minWidth: 0,
         }}
       >
-        {leading === undefined ? null : <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{leading}</View>}
+        {leading === undefined ? null : <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flexShrink: 0 }}>{leading}</View>}
         {resolved.prefix ? (
           <Text
             accessible={false}

@@ -3813,6 +3813,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 }
 
 .hjm-statistic__leading { display: inline-flex; align-items: center; color: var(--hjm-statistic-value-color, var(--hjm-color-text)); }
+/* A leading glyph labels its value: keep them on one line and let the value text wrap beside it.
+   Wrapping the row dropped a long value (e.g. "10월 9일 09:40") under a lone icon (2026-10-23). */
+.hjm-statistic__value-row[data-leading] { flex-wrap: nowrap; }
+.hjm-statistic__value-row[data-leading] > .hjm-statistic__leading { flex-shrink: 0; }
 .hjm-statistic-group[data-arrangement="bar"] { grid-template-columns: repeat(var(--hjm-statistic-columns), minmax(0, 1fr)); gap: 0; }
 .hjm-statistic-group[data-arrangement="bar"] > * { min-inline-size: 0; padding-inline: var(--hjm-space-xs); }
 .hjm-statistic-group[data-arrangement="bar"] > * + * { border-inline-start: 1px solid var(--hjm-color-border); }
