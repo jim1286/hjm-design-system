@@ -133,4 +133,56 @@ export function createAlertDialogSession(request) {
     };
     return session;
 }
+const interruptedResult = { outcome: "cancelled", reason: "interrupted" };
+export function createAlertDialogQueue() {
+    let entries = [];
+    let snapshot = [];
+    let nextId = 1;
+    let active = true;
+    const listeners = new Set();
+    // Resolve before notifying: the caller's `await` continuation is queued ahead of the renderer's re-render, so a
+    // trigger it re-enables is focusable when the closing dialog returns focus.
+    const commit = (next, settled) => {
+        for (const [entry, result] of settled)
+            entry.resolve(result);
+        entries = next;
+        snapshot = next.map(({ id, request, options, scope }) => ({ id, request, options, scope }));
+        for (const listener of listeners)
+            listener();
+    };
+    return {
+        enqueue(request, options, scope) {
+            validateAlertDialogRequest(request);
+            if (!active)
+                return Promise.resolve(interruptedResult);
+            return new Promise((resolve) => {
+                commit([...entries, { id: nextId++, request, options, scope, resolve }], []);
+            });
+        },
+        getSnapshot: () => snapshot,
+        subscribe(listener) {
+            listeners.add(listener);
+            return () => listeners.delete(listener);
+        },
+        settle(id, result) {
+            const head = entries[0];
+            if (head === undefined || head.id !== id)
+                return false;
+            commit(entries.slice(1), [[head, result]]);
+            return true;
+        },
+        retainScope(scope) {
+            const stale = entries.filter((entry) => entry.scope !== scope);
+            if (stale.length === 0)
+                return;
+            commit(entries.filter((entry) => entry.scope === scope), stale.map((entry) => [entry, interruptedResult]));
+        },
+        setActive(next) {
+            active = next;
+            if (next || entries.length === 0)
+                return;
+            commit([], entries.map((entry) => [entry, interruptedResult]));
+        },
+    };
+}
 //# sourceMappingURL=alert-dialog.js.map

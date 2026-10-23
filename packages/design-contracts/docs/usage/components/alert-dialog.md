@@ -29,6 +29,7 @@
 | --- | --- | --- | --- |
 | `AlertDialog` | 기본 | `@hjmds/react`, `/overlays` | `@hjmds/react-native`, `/overlays` |
 | `AlertDialogRequest` 타입 | 보조(문구·행동 descriptor) | `@hjmds/design-contracts/components/alert-dialog` | 같음 |
+| `AlertDialogQueueProvider`·`useAlertDialogQueue` | 동반(명령형 확인과 대기열, 개발 소스·미게시) | `@hjmds/react/alert-dialog-queue` | `@hjmds/react-native/alert-dialog-queue` |
 
 ## 최소 사용 예
 
@@ -150,6 +151,33 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
   삭제·Apple 인증·로컬 정리의 성공을 뜻하지 않는다. 처리 결과는 제품 상태 화면이 계속 보여 준다.
 - Native에서 매우 긴 확인 문구는 본문이 스크롤되도록 바뀌었지만 큰 글자 실기기 검증은 끝나지 않았다([Dialog](../../dialog.md)).
   문구를 자르거나 글자 크기 상한으로 피하지 않는다.
+
+### 명령형 확인과 대기열 — `useAlertDialogQueue` (개발 소스·미게시)
+
+화면 곳곳에서 "지울까요?"를 묻고 결과를 기다려야 하면 대화상자 상태를 화면마다 두지 않고 앱 루트(라우터 안)에 공급자를 한 번 둔다.
+제품의 AppDialog 대기열·결과 Promise·route scope 구현을 이것으로 바꾼다(2026-10-23 번뚝 웹·앱).
+
+```tsx
+// 루트: route가 바뀌면 이전 화면의 질문은 interrupted로 끝난다.
+<AlertDialogQueueProvider scope={pathname}>{children}</AlertDialogQueueProvider>
+
+// 화면
+const { open } = useAlertDialogQueue();
+const result = await open({ mode: "confirm", tone: "danger", title: t("delete.title"), description: t("delete.body"),
+  confirmLabel: t("delete"), cancelLabel: t("cancel"), onConfirm: () => remove(id), fallbackErrorMessage: t("delete.failed") });
+if (result.outcome === "confirmed") showDone();
+```
+
+| 항목 | 값 | 설명 |
+| --- | --- | --- |
+| `open(request, options?)` | `Promise<AlertDialogResult>` | 앞선 질문이 끝난 뒤 순서대로 뜬다. `{ outcome: "confirmed" }` 또는 `{ outcome: "cancelled", reason }`(`cancel-action`·`escape`·`back`·`programmatic`·`interrupted`) |
+| `options` | Web `{ icon?, size? }`, Native `{ size?, returnFocusRef? }` | 요청별 표현. 문구·행동은 `request` |
+| 공급자 `scope` | string | 질문의 주인(보통 route). 바뀌면 다른 scope 질문이 화면에서 내려가고 `interrupted` |
+| 공급자 `modalPriority`·`portalContainer`(Web) | number · HTMLElement | 대기열 대화상자의 층(기본 0)과 portal. 필수 gate는 더 높은 우선순위 모달로 둔다 |
+
+- `request.onConfirm`이 Promise면 처리 중에는 닫히지 않고, 실패하면 열린 채 `fallbackErrorMessage`를 보이며 `open`은 성공하거나 취소될 때까지 기다린다.
+- 대화상자가 떠 있는 동안 trigger를 disabled로 두지 않는다. 배경은 이미 inert이고, disabled trigger로는 닫힌 뒤 초점이 돌아가지 못한다.
+- 공급자 밖의 `useAlertDialogQueue`는 throw한다. 한 번에 하나의 Dialog·Sheet를 여는 `useDialog`/`useSheet`(`/overlay-stack`, Web)와는 별개다([계약](../../overlay-stack.md#결과를-돌려주는-확인-대기열--alertdialogqueueprovider-2026-10-23-개발-소스미게시)).
 
 ### 외부 확인 잠금 (checkout, 미게시)
 

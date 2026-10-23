@@ -246,3 +246,85 @@ export function createAlertDialogSession(
 
   return session;
 }
+
+/**
+ * A FIFO of AlertDialog requests where each `enqueue` returns the dialog's result. 2026-10-23: BurnTok web and app
+ * AppDialog (321 and 293 lines) each rebuilt this around AlertDialog: a result Promise, one dialog at a time in
+ * arrival order, route-scoped cancellation and focus return. The session above still owns confirm/busy/error per
+ * dialog; the queue only orders requests and settles each promise exactly once.
+ *
+ * `scope` is the owner (usually the route) the call was made from. `retainScope(current)` cancels entries from any
+ * other scope with `interrupted`, so a departed screen's question is never answered on the next one, and a stale
+ * callback that enqueues after its screen left is cancelled the same way. Renderers show only the head.
+ */
+export type AlertDialogQueueEntry<Options> = Readonly<{
+  id: number;
+  request: AlertDialogRequest;
+  options: Options;
+  scope: string | undefined;
+}>;
+
+export type AlertDialogQueue<Options> = Readonly<{
+  enqueue(request: AlertDialogRequest, options: Options, scope: string | undefined): Promise<AlertDialogResult>;
+  /** Entries in arrival order; the first is the dialog on screen. */
+  getSnapshot(): readonly AlertDialogQueueEntry<Options>[];
+  subscribe(listener: () => void): () => void;
+  /** Settles the head entry with its dialog's result and shows the next. Returns false for any other id. */
+  settle(id: number, result: AlertDialogResult): boolean;
+  retainScope(scope: string | undefined): void;
+  /**
+   * Whether a renderer is mounted to show the queue (default true). `false` cancels every entry with `interrupted`
+   * and settles later requests `interrupted` at once, so nothing waits on a dialog no one can answer. Reversible
+   * because React StrictMode replays an unmount and mount on the same provider.
+   */
+  setActive(active: boolean): void;
+}>;
+
+const interruptedResult: AlertDialogResult = { outcome: "cancelled", reason: "interrupted" };
+
+export function createAlertDialogQueue<Options>(): AlertDialogQueue<Options> {
+  type Pending = AlertDialogQueueEntry<Options> & Readonly<{ resolve: (result: AlertDialogResult) => void }>;
+  let entries: readonly Pending[] = [];
+  let snapshot: readonly AlertDialogQueueEntry<Options>[] = [];
+  let nextId = 1;
+  let active = true;
+  const listeners = new Set<() => void>();
+  // Resolve before notifying: the caller's `await` continuation is queued ahead of the renderer's re-render, so a
+  // trigger it re-enables is focusable when the closing dialog returns focus.
+  const commit = (next: readonly Pending[], settled: readonly [Pending, AlertDialogResult][]) => {
+    for (const [entry, result] of settled) entry.resolve(result);
+    entries = next;
+    snapshot = next.map(({ id, request, options, scope }) => ({ id, request, options, scope }));
+    for (const listener of listeners) listener();
+  };
+  return {
+    enqueue(request, options, scope) {
+      validateAlertDialogRequest(request);
+      if (!active) return Promise.resolve(interruptedResult);
+      return new Promise<AlertDialogResult>((resolve) => {
+        commit([...entries, { id: nextId++, request, options, scope, resolve }], []);
+      });
+    },
+    getSnapshot: () => snapshot,
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    settle(id, result) {
+      const head = entries[0];
+      if (head === undefined || head.id !== id) return false;
+      commit(entries.slice(1), [[head, result]]);
+      return true;
+    },
+    retainScope(scope) {
+      const stale = entries.filter((entry) => entry.scope !== scope);
+      if (stale.length === 0) return;
+      commit(entries.filter((entry) => entry.scope === scope), stale.map((entry) => [entry, interruptedResult]));
+    },
+    setActive(next) {
+      active = next;
+      if (next || entries.length === 0) return;
+      commit([], entries.map((entry) => [entry, interruptedResult]));
+    },
+  };
+}

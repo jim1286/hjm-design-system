@@ -1358,6 +1358,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "AlertDialog";
     readonly label: "확인 대화상자";
+    readonly companions: readonly ["AlertDialogQueueProvider"];
     readonly category: "overlay";
     readonly platform: "adaptive";
     readonly status: "stable";

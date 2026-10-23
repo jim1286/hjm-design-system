@@ -98,5 +98,37 @@ export type AlertDialogSession = Readonly<{
  * and settling only after the renderer reports that exit motion completed.
  */
 export declare function createAlertDialogSession(request: AlertDialogRequest): AlertDialogSession;
+/**
+ * A FIFO of AlertDialog requests where each `enqueue` returns the dialog's result. 2026-10-23: BurnTok web and app
+ * AppDialog (321 and 293 lines) each rebuilt this around AlertDialog: a result Promise, one dialog at a time in
+ * arrival order, route-scoped cancellation and focus return. The session above still owns confirm/busy/error per
+ * dialog; the queue only orders requests and settles each promise exactly once.
+ *
+ * `scope` is the owner (usually the route) the call was made from. `retainScope(current)` cancels entries from any
+ * other scope with `interrupted`, so a departed screen's question is never answered on the next one, and a stale
+ * callback that enqueues after its screen left is cancelled the same way. Renderers show only the head.
+ */
+export type AlertDialogQueueEntry<Options> = Readonly<{
+    id: number;
+    request: AlertDialogRequest;
+    options: Options;
+    scope: string | undefined;
+}>;
+export type AlertDialogQueue<Options> = Readonly<{
+    enqueue(request: AlertDialogRequest, options: Options, scope: string | undefined): Promise<AlertDialogResult>;
+    /** Entries in arrival order; the first is the dialog on screen. */
+    getSnapshot(): readonly AlertDialogQueueEntry<Options>[];
+    subscribe(listener: () => void): () => void;
+    /** Settles the head entry with its dialog's result and shows the next. Returns false for any other id. */
+    settle(id: number, result: AlertDialogResult): boolean;
+    retainScope(scope: string | undefined): void;
+    /**
+     * Whether a renderer is mounted to show the queue (default true). `false` cancels every entry with `interrupted`
+     * and settles later requests `interrupted` at once, so nothing waits on a dialog no one can answer. Reversible
+     * because React StrictMode replays an unmount and mount on the same provider.
+     */
+    setActive(active: boolean): void;
+}>;
+export declare function createAlertDialogQueue<Options>(): AlertDialogQueue<Options>;
 export {};
 //# sourceMappingURL=alert-dialog.d.ts.map

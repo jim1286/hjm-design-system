@@ -4978,7 +4978,9 @@
       "storyId": "overlay/alert-dialog",
       "name": "AlertDialog",
       "label": "확인 대화상자",
-      "companions": [],
+      "companions": [
+        "AlertDialogQueueProvider"
+      ],
       "extensions": [],
       "category": "overlay",
       "platform": "adaptive",

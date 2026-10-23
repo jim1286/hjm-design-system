@@ -248,6 +248,11 @@
       "import": "./dist/overlay-stack.js",
       "default": "./dist/overlay-stack.js"
     },
+    "./alert-dialog-queue": {
+      "types": "./dist/alert-dialog-queue.d.ts",
+      "import": "./dist/alert-dialog-queue.js",
+      "default": "./dist/alert-dialog-queue.js"
+    },
     "./date-range": {
       "types": "./dist/date-range.d.ts",
       "import": "./dist/date-range.js",

@@ -57,6 +57,7 @@ describe("@hjmds/react package boundary", () => {
       "./bottom-info",
       "./sidebar",
       "./overlay-stack",
+      "./alert-dialog-queue",
       "./date-range",
       "./provider-button",
       "./auth-screen",
@@ -79,7 +80,7 @@ describe("@hjmds/react package boundary", () => {
       "./qr-code",
       "./sortable",
       "./swipe-actions",
-      "./content-transition", "./rating", "./image-comparison",
+      "./content-transition", "./rating", "./choice-row", "./image-comparison",
       "./carousel-motion",
       "./celebration",
     ];

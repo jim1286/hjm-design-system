@@ -23,6 +23,9 @@ export const publicExportEntries = {
   AlertDialog: [
     "./overlays"
   ],
+  AlertDialogQueueProvider: [
+    "./alert-dialog-queue"
+  ],
   Anchor: [
     "./anchor"
   ],

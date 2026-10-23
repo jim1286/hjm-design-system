@@ -289,7 +289,7 @@ export const componentCatalog = [
   { name: "Toast", label: "토스트", companions: ["ToastProvider", "ToastRegion"], category: "feedback", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "toastRecipe", behavior: "toast", aliases: ["Notification"] },
   { name: "Watermark", label: "워터마크", category: "feedback", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "watermarkRecipe" },
   { name: "Dialog", label: "대화상자", companions: ["OverlayStackProvider", "ImmersiveOverlay"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dialogRecipe", behavior: "dialog" },
-  { name: "AlertDialog", label: "확인 대화상자", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "alertDialogRecipe", behavior: "alertDialog" },
+  { name: "AlertDialog", label: "확인 대화상자", companions: ["AlertDialogQueueProvider"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "alertDialogRecipe", behavior: "alertDialog" },
   { name: "Sheet", label: "시트", extensions: ["GestureSheet", "GestureSheetProvider", "SheetPanel"], category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "sheetRecipe", behavior: "sheet" },
   { name: "SidePanel", label: "측면 패널", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "sidePanelRecipe", behavior: "sidePanel" },
   { name: "Popover", label: "팝오버", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "popoverRecipe", behavior: "popover" },

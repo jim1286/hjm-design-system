@@ -702,6 +702,7 @@
     "components-overlays-alert-dialog--dark",
     "components-overlays-alert-dialog--default",
     "components-overlays-alert-dialog--large-text",
+    "components-overlays-alert-dialog--queue",
     "components-overlays-dialog--dark",
     "components-overlays-dialog--default",
     "components-overlays-dialog--immersive",

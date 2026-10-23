@@ -70,6 +70,15 @@
         "role": "canonical"
       },
       {
+        "name": "AlertDialogQueueProvider",
+        "source": "packages/react/src/alert-dialog-queue.tsx",
+        "entries": [
+          "./alert-dialog-queue"
+        ],
+        "canonicalComponent": "AlertDialog",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "Anchor",
         "source": "packages/react/src/anchor.tsx",
         "entries": [
@@ -2253,6 +2262,15 @@
         ],
         "canonicalComponent": "AlertDialog",
         "role": "canonical"
+      },
+      {
+        "name": "AlertDialogQueueProvider",
+        "source": "packages/react-native/src/alert-dialog-queue.tsx",
+        "entries": [
+          "./alert-dialog-queue"
+        ],
+        "canonicalComponent": "AlertDialog",
+        "role": "companion-or-alternative"
       },
       {
         "name": "AnimatedStatistic",

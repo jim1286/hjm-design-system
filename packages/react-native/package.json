@@ -364,6 +364,12 @@
       "import": "./dist/choice-row.js",
       "default": "./dist/choice-row.js"
     },
+    "./alert-dialog-queue": {
+      "types": "./dist/alert-dialog-queue.d.ts",
+      "react-native": "./dist/alert-dialog-queue.js",
+      "import": "./dist/alert-dialog-queue.js",
+      "default": "./dist/alert-dialog-queue.js"
+    },
     "./image-comparison": {
       "types": "./dist/image-comparison.d.ts",
       "react-native": "./dist/image-comparison.js",
