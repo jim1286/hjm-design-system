@@ -12,7 +12,7 @@
 
 앱의 설정 화면 전체에 쓴다. 제목, 선택적 프로필 영역, id가 있는 섹션 목록을 받아
 [ScreenLayout](screen-layout.md) 안에 그룹으로 쌓는다(Web은 의미 있는 Section, Native는 Stack과 header 역할). 섹션 안의 행은
-기존 ListRow·Switch·Select·Field를 그대로 넣는다.
+기존 ListRow·Switch·ChoiceRow·Field를 그대로 넣는다.
 
 제목·섹션 틀·구분선·
 상태 교체를 제품이 다시 만들지 않는다.
@@ -23,7 +23,8 @@
 | --- | --- |
 | 섹션 구조가 아닌 일반 화면 | [ScreenLayout](screen-layout.md) |
 | 프로필 보기·편집 화면 | [ProfileScreen](profile-screen.md) |
-| 설정 한 항목을 편집하는 입력 패널 | [Sheet](sheet.md) |
+| 언어·화면 테마처럼 여러 값 중 하나를 고르는 설정 행 | [ChoiceRow](choice-row.md) |
+| 설정 한 항목을 편집하는 입력 패널(선택 외 입력이 있음) | [Sheet](sheet.md) |
 | 섹션 하나만 필요(다른 화면 안) | [Section](section.md) |
 
 ## 공개 이름과 import
@@ -38,7 +39,7 @@
 아래 preview의 메모리 상태를 서버 저장으로 취급하지 않는다. 예제는 읽기용이며 제품에서 showcase를 import하지 않는다.
 
 <!-- usage-example: Web ../../../../../showcase/web/src/patterns/settings-page-preview.tsx -->
-- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·ChoiceRow·Switch 행·Sheet 조합과 로컬 설정 상태.
 <!-- usage-example: Native ../../../../../showcase/native/src/settings-page-preview.tsx -->
 - [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
 
@@ -70,7 +71,7 @@
   넘기면 행 전체가 switch 하나다. Pressable·button·ListRow `onPress`로 다시 감싸지 않는다.
   Web 기본은 `inline`, Native 기본은 `row`이므로 Web·Native 같은 화면에서는 `presentation`을 명시한다.
 - ListRow의 trailing에 Switch만 둘 때는 `labelVisibility="hidden"`을 쓰고 그 ListRow에는 `onPress`를 두지 않는다.
-- 현재 선택값(언어·테마)은 행 `description`에 두고, 선택은 [Select](select.md) 또는 [Sheet](sheet.md)로 연다.
+- 언어·화면 테마·기본 정렬처럼 한 값을 고르는 설정은 [ChoiceRow](choice-row.md)를 쓴다. 행 `description`에 확인된 값을 보이고 시트의 선택·저장 중·실패를 ChoiceRow가 소유한다. `ListRow`+`Sheet`+`RadioGroup`이나 `Select`로 다시 조립하지 않는다(2026-10-23 [선택 기준](choice-row.md#설정-값-선택의-기준)).
 - 섹션 `id`는 안정적인 키로 둔다(번역 문구를 id로 쓰지 않는다).
 - 저장 방식·낙관적 갱신·실패 복구·탈퇴 확인은 제품과 [action-session](../../action-session.md)이 소유한다.
   저장 실패는 `state`가 아니라 `notice`로 알린다.

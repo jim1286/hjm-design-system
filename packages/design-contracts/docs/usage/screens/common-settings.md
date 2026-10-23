@@ -31,7 +31,7 @@ host: 남은 높이·safe area·키보드
 
 | 행동 | 컴포넌트·tone | 위치 | 개수·순서 |
 | --- | --- | --- | --- |
-| 작업 | SettingsScreen 공개 행동 슬롯 | Switch 행 자체로 토글; 언어 등은 행에서 선택 표면 열기 | 같은 표면에 경쟁하는 primary 하나만 |
+| 작업 | SettingsScreen 공개 행동 슬롯 | Switch 행 자체로 토글; 언어·화면 테마는 ChoiceRow 행이 선택 시트를 연다 | 같은 표면에 경쟁하는 primary 하나만 |
 | 복구 | Button·secondary | 오류 근처 | 재시도할 대상과 범위를 표시 |
 
 ## 상태
@@ -58,6 +58,7 @@ host: 남은 높이·safe area·키보드
 | 지침 | 쓰는 곳 |
 | --- | --- |
 | [SettingsScreen](../components/settings-screen.md) | 필수 props·슬롯·플랫폼 차이 |
+| [ChoiceRow](../components/choice-row.md) | 언어·화면 테마 같은 한 값 선택 설정 |
 | [Button](../components/button.md) | 동작·로딩·보조 행동 |
 | [ScreenLayout](../components/screen-layout.md) | 화면 높이·본문 교체·스크롤 소유 |
 
@@ -67,7 +68,7 @@ host: 남은 높이·safe area·키보드
 아래 preview의 메모리 상태를 서버 저장으로 취급하지 않는다. 예제는 읽기용이며 제품에서 showcase를 import하지 않는다.
 
 <!-- usage-example: Web ../../../../../showcase/web/src/patterns/settings-page-preview.tsx -->
-- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·행·Sheet 조합과 로컬 설정 상태.
+- [Web 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/web/src/patterns/settings-page-preview.tsx): 공개 SettingsScreen·ChoiceRow·Switch 행·Sheet 조합과 로컬 설정 상태.
 <!-- usage-example: Native ../../../../../showcase/native/src/settings-page-preview.tsx -->
 - [Native 실행 예제](https://github.com/jim1286/hjm-design-system/blob/9fccb921216a06bac2568ca8252bd0b4d7c48d95/showcase/native/src/settings-page-preview.tsx): 같은 흐름의 Native 공개 API와 이벤트 연결.
 

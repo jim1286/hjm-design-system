@@ -14,6 +14,20 @@
 누르면 시트에서 고른다. 저장이 비동기면 시트가 저장 중으로 잠기고, 실패하면 시트를 연 채 오류를 보여 준다.
 행에는 제품이 저장을 확인한 값만 보이므로, 실패한 선택이 저장된 것처럼 남지 않는다.
 
+### 설정 값 선택의 기준
+
+2026-10-23 정리: ChoiceRow 지침은 화면 테마를 ChoiceRow 용도로 적었지만 SettingsScreen 지침과 두 플랫폼의 앱 설정 예제는
+테마·언어를 `Select` 또는 `ListRow`+`Sheet`+`RadioGroup`으로 안내했다. 그래서 선택의창은 ChoiceRow, Unairplane은 Sheet+RadioGroup을 써서
+같은 설정이 앱마다 갈렸다. ChoiceRow는 바로 이 반복(언어·테마 행을 제품마다 조립, 1.41.0 도입 근거)을 없애려고 만든 API이므로 기준을 하나로 둔다.
+
+| 설정 | 쓸 것 |
+| --- | --- |
+| 설정 화면의 즉시 저장 한 값 선택(언어·화면 테마·기본 정렬·셸 테마) | ChoiceRow |
+| 폼 안에서 다른 필드와 함께 제출하는 한 값 | [Select](select.md) 또는 [RadioGroup](radio-group.md) |
+| 선택 외 입력·설명이 많은 편집 패널 | [Sheet](sheet.md)를 직접 구성 |
+
+`ListRow`+`Sheet`+`RadioGroup`으로 같은 행과 시트를 다시 조립하지 않는다. 행의 확인된 값, 시트의 선택·저장 중·실패 유지는 ChoiceRow가 소유한다.
+
 ## 쓰지 않을 때
 
 | 상황 | 대신 쓸 것 |

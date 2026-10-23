@@ -21,6 +21,7 @@ Web은 popover listbox, Native는 modal sheet로 목록을 연다.
 | 2~6개 선택지를 펼쳐서 비교, 항목마다 설명 | [RadioGroup](radio-group.md) |
 | 2~4개 짧은 보기 즉시 전환 | [SegmentedControl](segmented-control.md) |
 | 입력하며 후보를 거름 | [Combobox](combobox.md) |
+| 설정 화면의 즉시 저장 한 값 선택(언어·화면 테마) | [ChoiceRow](choice-row.md) |
 | 행동 목록(편집·삭제) | [Menu](menu.md) |
 | 여러 개 선택 | [CheckboxGroup](checkbox-group.md), [TransferList](transfer-list.md) |
 | Web 폼 제출·자동완성·모바일 브라우저 picker가 중요 | `NativeSelect`(아래) |
