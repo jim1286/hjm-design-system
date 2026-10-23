@@ -1954,17 +1954,19 @@ function renderStatistic<Id extends string = string>({
           style={{
             alignItems: "center",
             flexDirection: "row",
-            flexWrap: "wrap",
+            // The mark labels its trend: one line whose label wraps beside the mark. A wrapping row dropped a long
+            // label under a lone arrow in a narrow bar cell (2026-10-23, same fault as the value row; Web is nowrap).
+            flexWrap: "nowrap",
             gap: statisticRecipe.trend.gap,
             minWidth: 0,
           }}
         >
           {renderTrendMark && trendMark && trendColor ? (
-            <View accessible={false}>
+            <View accessible={false} style={{ flexShrink: 0 }}>
               {renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm })}
             </View>
           ) : (
-            <Text accessible={false} style={{ color: trendColor }} variant="caption">
+            <Text accessible={false} style={{ color: trendColor, flexShrink: 0 }} variant="caption">
               {resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—"}
             </Text>
           )}

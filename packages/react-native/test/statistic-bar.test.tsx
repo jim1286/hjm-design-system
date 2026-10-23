@@ -37,3 +37,18 @@ it("keeps a leading glyph on the value line so a long value wraps beside it", ()
   expect(flatten(row.props.style).flexWrap).toBe("nowrap");
   act(() => tree.unmount());
 });
+
+it("keeps the trend mark on the trend label's line so a long label wraps beside it", () => {
+  // 2026-10-23: the trend row wrapped, so a long label in a narrow bar cell dropped under a lone arrow.
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><StatisticGroup label="Weekly" arrangement="bar" availableWidth={300}
+    descriptor={{ items: [{ id: "a", label: "Visits", value: "1,204", trend: { direction: "up", label: "지난주보다 크게 늘었어요 12%", tone: "success" } }, { id: "b", label: "Plain", value: "1" }] }} /></HjmNativeProvider>); });
+  const label = tree.root.findAll(node => node.type === Text && node.props.children === "지난주보다 크게 늘었어요 12%")[0]!;
+  let row = label.parent;
+  while (row && flatten(row.props.style).flexDirection !== "row") row = row.parent;
+  expect(flatten(row!.props.style).flexWrap).toBe("nowrap");
+  const mark = tree.root.findAll(node => node.type === Text && node.props.children === "↑")[0]!;
+  expect(flatten(mark.props.style).flexShrink).toBe(0);
+  expect(flatten(label.props.style).flexShrink).toBe(1);
+  act(() => tree.unmount());
+});
