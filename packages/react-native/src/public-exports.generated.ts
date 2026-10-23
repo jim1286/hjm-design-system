@@ -111,6 +111,9 @@ export const publicExportEntries = {
   Chip: [
     "./inputs"
   ],
+  ChoiceRow: [
+    "./choice-row"
+  ],
   CodeBlock: [
     "./code-block"
   ],

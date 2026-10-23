@@ -68,6 +68,8 @@ const budgets = [
   // Four bounded transform recipes; one pure module and no renderer dependency.
   { exportPath: "./content-transition", maxModules: 1, maxRawBytes: 1200, maxGzipBytes: 600, forbiddenModules: metadataModules },
   { exportPath: "./reference-controls", maxModules: 5, maxRawBytes: 14900, maxGzipBytes: 4600, forbiddenModules: metadataModules },
+  // 2026-10-23: choice validation only; one pure module, no renderer or catalog import.
+  { exportPath: "./choice-row", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 700, forbiddenModules: metadataModules },
   // 2026-10-01 measured 526/317 B and 6136/2254 B: optional avatar validation
   // and deterministic effect geometry, no component catalog or renderer import.
   // Motion-option validation extends the same pure contract to 967 raw / 437 gzip bytes; still one module.

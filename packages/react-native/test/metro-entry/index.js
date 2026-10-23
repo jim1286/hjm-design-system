@@ -68,6 +68,7 @@ import { Carousel } from "@hjmds/react-native/carousel";
 import { CollectionRail } from "@hjmds/react-native/collection-rail";
 import { ActivityChip } from "@hjmds/react-native/activity-chip";
 import { Rating } from "@hjmds/react-native/rating";
+import { ChoiceRow } from "@hjmds/react-native/choice-row";
 import { ImageComparison } from "@hjmds/react-native/image-comparison";
 import { TextTransition } from "@hjmds/react-native/content-transition";
 import { TopBar } from "@hjmds/react-native/top-bar";
@@ -312,6 +313,7 @@ function MetroSmokeApp() {
       React.createElement(ProfileScreen, { title: "Profile", summary: null, edit: {label: "Edit", onAction: noop} }),
       React.createElement(ToastRegion, null),
       React.createElement(Rating, { label: "평균", value: 3.5, readOnly: true, getValueLabel: String }),
+      React.createElement(ChoiceRow, { title: "언어", value: "ko", items: [{value: "ko", label: "한국어"}, {value: "en", label: "English"}], onValueChange: noop, closeLabel: "닫기", errorLabel: "저장하지 못했어요" }),
       React.createElement(ImageComparison, { label: "비교", before: {src: "https://example.com/before.png", width: 10, height: 10, label: "전"}, after: {src: "https://example.com/after.png", width: 10, height: 10, label: "후"}, value: 50, onValueChange: noop, getValueText: String, decrementLabel: "감소", incrementLabel: "증가" }),
       React.createElement(TextTransition, { text: "현재 상태" }),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),

@@ -607,6 +607,12 @@
       "import": "./dist/reference-controls.js",
       "default": "./dist/reference-controls.js"
     },
+    "./choice-row": {
+      "types": "./dist/choice-row.d.ts",
+      "react-native": "./dist/choice-row.js",
+      "import": "./dist/choice-row.js",
+      "default": "./dist/choice-row.js"
+    },
     "./duration-field": {
       "types": "./dist/duration-field.d.ts",
       "react-native": "./dist/duration-field.js",

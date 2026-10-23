@@ -64,6 +64,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Checkbox](components/checkbox.md) | 입력 | 독립된 예/아니오 하나를 고르는 항목에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [CheckboxGroup](components/checkbox-group.md) | 입력 | 한 질문에 대한 여러 선택지 중 0개 이상을 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Chip](components/chip.md) | 입력 | 누를 수 있는 작은 pill이다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [ChoiceRow](components/choice-row.md) | 입력 | 설정 화면에서 언어·화면 테마·기본 정렬처럼 **여러 값 중 하나를 고르는 설정**에 쓴다. | 미게시(1.40.0 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
 | [CodeBlock](components/code-block.md) | 데이터 표시 | 코드·명령·설정 조각을 읽기 전용으로 보여 주고 사용자가 선택·복사하게 할 때 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CohortRetentionTable](components/cohort-retention-table.md) | 구성/정보 표시 | 가입 시점(코호트)별로 기간마다 남은 인원 비율을 직사각형 표와 heat 색으로 비교할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Collapsible](components/collapsible.md) | 데이터 표시 | 이웃 없이 혼자 접었다 펴는 한 덩어리에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

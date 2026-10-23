@@ -392,6 +392,15 @@
         "role": "canonical"
       },
       {
+        "name": "ChoiceRow",
+        "source": "packages/react/src/choice-row.tsx",
+        "entries": [
+          "./choice-row"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ClipboardButton",
         "source": "packages/react/src/clipboard.tsx",
         "entries": [
@@ -2510,6 +2519,15 @@
         ],
         "canonicalComponent": "Chip",
         "role": "canonical"
+      },
+      {
+        "name": "ChoiceRow",
+        "source": "packages/react-native/src/choice-row.tsx",
+        "entries": [
+          "./choice-row"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "CodeBlock",

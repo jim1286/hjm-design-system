@@ -108,6 +108,8 @@ const rendererBudgets = [
       "./swipe-actions": { modules: 3, raw: 9700, gzip: 2700 },
       "./content-transition": { modules: 4, raw: 22500, gzip: 6400 },
       "./rating": { modules: 3, raw: 10900, gzip: 3100 },
+      // 2026-10-23 measured 195.8/43.3 kB: ListRow, Sheet and RadioGroup graphs it composes; ~20% headroom.
+      "./choice-row": { modules: 16, raw: 235000, gzip: 52000 },
       "./image-comparison": { modules: 6, raw: 42200, gzip: 11500 },
       "./carousel-motion": { modules: 5, raw: 28700, gzip: 7600 },
       "./celebration": { modules: 4, raw: 23700, gzip: 6700 },
@@ -455,6 +457,8 @@ const rendererBudgets = [
       "./swipe-actions": { modules: 5, raw: 43300, gzip: 10100 },
       "./content-transition": { modules: 4, raw: 26800, gzip: 7000 },
       "./rating": { modules: 6, raw: 43600, gzip: 10200 },
+      // 2026-10-23 measured 313.8/68.2 kB: ListRow, Sheet and RadioGroup graphs it composes; ~20% headroom.
+      "./choice-row": { modules: 27, raw: 376600, gzip: 81900 },
       "./image-comparison": { modules: 8, raw: 101700, gzip: 21000 },
       "./carousel-motion": { modules: 5, raw: 42500, gzip: 10100 },
       "./celebration": { modules: 2, raw: 9500, gzip: 3000 },

@@ -1,0 +1,22 @@
+import { useRef, useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-native";
+import { ChoiceRow } from "@hjmds/react-native/choice-row";
+import { choiceRowExample as copy, type ChoiceRowExampleValue } from "../../shared/choice-row";
+
+// The row shows only the confirmed value; the in-memory save stands in for the product's server write.
+function ChoiceRowPreview({ failFirst = false }: { failFirst?: boolean }) {
+  const [value, setValue] = useState<ChoiceRowExampleValue>(copy.initial);
+  const attempts = useRef(0);
+  const save = (next: ChoiceRowExampleValue) => new Promise<void>((resolve, reject) => {
+    attempts.current += 1;
+    setTimeout(() => { if (failFirst && attempts.current === 1) reject(new Error("offline")); else { setValue(next); resolve(); } }, 600);
+  });
+  return <ChoiceRow title={copy.title} sheetDescription={copy.sheetDescription} items={copy.items} value={value} onValueChange={save} closeLabel={copy.closeLabel} errorLabel={copy.errorLabel} />;
+}
+const meta = { title: "실험/컴포넌트/입력/설정 값 선택", component: ChoiceRowPreview } satisfies Meta<typeof ChoiceRowPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const SaveFailure: Story = { name: "저장 실패와 다시 선택", args: { failFirst: true } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
