@@ -41,6 +41,9 @@ patchedDependencies:
   # Legacy root view is absent from RN 0.86 Fabric; remove when upstream guards the legacy helper.
   # RN 0.88's Swift umbrella exposes RCTImageLoaderProtocol, not its attribution extension;
   # the deprecated remote loader only uses base loading. Remove that correction after upstream narrows its type.
+  # RN 0.88 removes the Paper bridge adapter. Fabric helpers now use React's per-runtime
+  # setSurfacePresenter injection and installJSIBindingsWithRuntime hook (including its CallInvoker).
+  # Remove when upstream supports RN 0.88 bridgeless scene-based hosts and prebuilt header imports.
   'react-native-ios-utilities@5.2.0': patches/react-native-ios-utilities.patch
   # Types must precede the react-native source condition; otherwise Expo typechecks upstream internals.
   # Guard optional teleport native views too: installed JS alone caused a red native placeholder.

@@ -53,3 +53,300 @@ diff --git a/ios/Sources/Deprecated/RNIImage/RNIImageRemoteURLMaker.swift b/ios/
 +    return imageLoaderModuleRaw as? RCTImageLoaderProtocol;
    }();
    
+diff --git a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
+@@ -15,6 +15,8 @@
+ #import <React/RCTBridge.h>
+ #endif
+ 
++@class RCTSurfacePresenter;
++
+ typedef void (^RNIPromiseResolveBlock)(NSDictionary * _Nonnull);
+ typedef void (^RNIPromiseRejectBlock)(NSString * _Nonnull);
+ 
+@@ -25,6 +27,10 @@
+   <RCTBridgeModule>
+ #endif
+ 
++// RN injects this per-runtime presenter into native modules in bridgeless mode.
++// A weak reference follows React instance teardown/reload instead of retaining a stale host.
++@property (nonatomic, weak, nullable) RCTSurfacePresenter *surfacePresenter;
++
+ + (nonnull instancetype)shared;
+ 
+ - (void)installHostObjectIfNeeded;
+diff --git a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm
+@@ -46,6 +46,7 @@
+ #endif
+ 
+ @synthesize bridge = _bridge;
++@synthesize surfacePresenter = _surfacePresenter;
+ 
+ + (nonnull instancetype)shared
+ {
+diff --git a/ios/Sources/ObjcHelpers/UIView+RNIPaperHelpers.mm b/ios/Sources/ObjcHelpers/UIView+RNIPaperHelpers.mm
+--- a/ios/Sources/ObjcHelpers/UIView+RNIPaperHelpers.mm
++++ b/ios/Sources/ObjcHelpers/UIView+RNIPaperHelpers.mm
+@@ -27,12 +27,16 @@
+ - (RCTBridge *)reactGetPaperBridge
+ {
+   #if RCT_NEW_ARCH_ENABLED
++  // RN 0.88 removes the Paper adapter entirely. Fabric callers use the injected
++  // presenter via RNIFabricHelpers, not this legacy bridge accessor.
++  #ifndef RCT_REMOVE_LEGACY_ARCH
+   RCTSurfacePresenterBridgeAdapter *reactBridgeAdapter =
+     [[UIApplication sharedApplication] reactBridgeAdapter];
+     
+   if(reactBridgeAdapter != nil){
+     return reactBridgeAdapter.bridge;
+   };
++  #endif
+   #else
+   RCTRootView *reactPaperRootView = [self reactGetPaperRootView];
+   if(reactPaperRootView != nil){
+diff --git a/ios/Sources/ObjcHelpers/UIApplication+RNIHelpers.mm b/ios/Sources/ObjcHelpers/UIApplication+RNIHelpers.mm
+--- a/ios/Sources/ObjcHelpers/UIApplication+RNIHelpers.mm
++++ b/ios/Sources/ObjcHelpers/UIApplication+RNIHelpers.mm
+@@ -6,6 +6,7 @@
+ //
+ 
+ #import "UIApplication+RNIHelpers.h"
++#import "RNIUtilitiesModule.h"
+ 
+ // NOTE:
+ // * Build error starting in RN 78 + Paper
+@@ -113,17 +114,15 @@
+ 
+ - (RCTSurfacePresenterBridgeAdapter *)reactBridgeAdapter
+ {
+-  #ifdef USE_RCT_APP_DELEGATE
++  // The Paper adapter no longer exists in RN 0.88. Fabric access is provided
++  // by reactSurfacePresenter through React's native-module injection below.
++  #if defined(RCT_REMOVE_LEGACY_ARCH)
++  return nil;
++  #elif defined(USE_RCT_APP_DELEGATE)
+   RCTAppDelegate *reactAppDelegate = [self reactAppDelegate];
+-  
+-  if(reactAppDelegate == nil){
+-    return [[UIApplication sharedApplication] reactBridgeAdapter];
+-  };
+-  
+-  return [reactAppDelegate bridgeAdapter];
++  return reactAppDelegate == nil ? nil : [reactAppDelegate bridgeAdapter];
+   #else
+-  
+-  return [[UIApplication sharedApplication] reactBridgeAdapter];
++  return nil;
+   #endif
+ }
+ 
+@@ -134,13 +133,13 @@
+ 
+ - (RCTSurfacePresenter *) reactSurfacePresenter
+ {
+-  RCTSurfacePresenterBridgeAdapter *reactBridgeAdapter = [self reactBridgeAdapter];
+-  
+-  if(reactBridgeAdapter == nil){
+-    return nil;
+-  };
+-  
+-  return [reactBridgeAdapter surfacePresenter];
++  #if RCT_NEW_ARCH_ENABLED
++  // RCTInstance calls setSurfacePresenter: on native modules before they are
++  // used. This works for scene-based Expo hosts without assuming RCTAppDelegate.
++  return [RNIUtilitiesModule shared].surfacePresenter;
++  #else
++  return nil;
++  #endif
+ }
+ 
+ - (RCTMountingManager *)reactMountingManager
+diff --git a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesFollyConvert.h b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesFollyConvert.h
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesFollyConvert.h
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesFollyConvert.h
+@@ -7,7 +7,7 @@
+   // `use_frameworks! :linkage => :static` users will need to import FollyConvert this way
+   #import "FollyConvert.h"
+ #elif __has_include("RCTFollyConvert.h")
+-  #import "RCTFollyConvert.h"
++  #import <React/RCTFollyConvert.h>
+ #else
+   #error "FollyConvert.h not found. Ensure React-utils & RCT-Folly pods are installed."
+ #endif
+diff --git a/ios/Sources/RNIDummyTestView/RNIDummyTestViewManager.mm b/ios/Sources/RNIDummyTestView/RNIDummyTestViewManager.mm
+--- a/ios/Sources/RNIDummyTestView/RNIDummyTestViewManager.mm
++++ b/ios/Sources/RNIDummyTestView/RNIDummyTestViewManager.mm
+@@ -13,7 +13,7 @@
+ 
+ #import <React/RCTViewManager.h>
+ #import <React/RCTUIManager.h>
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ 
+ 
+ @interface RNIDummyTestViewManager : RCTViewManager
+diff --git a/ios/Sources/RNIWrapperView/RNIWrapperViewManager.mm b/ios/Sources/RNIWrapperView/RNIWrapperViewManager.mm
+--- a/ios/Sources/RNIWrapperView/RNIWrapperViewManager.mm
++++ b/ios/Sources/RNIWrapperView/RNIWrapperViewManager.mm
+@@ -10,7 +10,7 @@
+ 
+ #import "RNIBaseViewUtils.h"
+ 
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ #import <React/RCTViewManager.h>
+ #import <React/RCTUIManager.h>
+ 
+diff --git a/ios/Sources/RNIDetachedView/RNIDetachedViewManager.mm b/ios/Sources/RNIDetachedView/RNIDetachedViewManager.mm
+--- a/ios/Sources/RNIDetachedView/RNIDetachedViewManager.mm
++++ b/ios/Sources/RNIDetachedView/RNIDetachedViewManager.mm
+@@ -10,7 +10,7 @@
+ 
+ #import "RNIBaseViewUtils.h"
+ 
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ #import <React/RCTViewManager.h>
+ #import <React/RCTUIManager.h>
+ 
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.mm
+@@ -33,10 +33,17 @@
+ using namespace RNIUtilities;
+ #endif
+ 
++#if RCT_NEW_ARCH_ENABLED
++#import <ReactCommon/RCTTurboModuleWithJSIBindings.h>
++@interface RNIUtilitiesModule () <RCTTurboModuleWithJSIBindings>
++@end
++#endif
++
+ static BOOL SHOULD_LOG = NO;
+ 
+ @implementation RNIUtilitiesModule {
+   BOOL _didInstallHostObject;
++  std::shared_ptr<CallInvoker> _jsCallInvoker;
+ }
+ 
+ static RNIUtilitiesModule *RNIUtilitiesModuleShared = nil;
+@@ -70,25 +77,39 @@
+   return self;
+ }
+ 
++- (std::shared_ptr<CallInvoker>)jsCallInvoker
++{
++  return _jsCallInvoker;
++}
++
+ - (void)installHostObjectIfNeeded
+ {
+-  if(self->_didInstallHostObject){
++#if !RCT_NEW_ARCH_ENABLED
++  RCTCxxBridge *bridge = (RCTCxxBridge *)[RCTBridge currentBridge];
++  auto runtime = (jsi::Runtime *)bridge.runtime;
++  if (runtime != nullptr) {
++    [self installHostObjectWithRuntime:*runtime];
++  }
++#endif
++}
++
++#if RCT_NEW_ARCH_ENABLED
++// Fabric supplies the live runtime and scheduler after creating this TurboModule.
++// Bridge-based runtime lookup no longer exists in RN 0.88.
++- (void)installJSIBindingsWithRuntime:(jsi::Runtime &)runtime
++                        callInvoker:(const std::shared_ptr<CallInvoker> &)callInvoker
++{
++  _jsCallInvoker = callInvoker;
++  [self installHostObjectWithRuntime:runtime];
++}
++#endif
++
++- (void)installHostObjectWithRuntime:(jsi::Runtime &)runtime
++{
++  if (self->_didInstallHostObject) {
+     return;
+-  };
+-  
+-  RCTBridge *bridge = [RCTBridge currentBridge];
+-  
+-  RCTCxxBridge *cxxBridge = (RCTCxxBridge *)bridge;
+-  if (cxxBridge == nil) {
+-    return;
+-  };
+-  
+-  auto jsiRuntime = (jsi::Runtime *)cxxBridge.runtime;
+-  if (jsiRuntime == nil) {
+-    return;
+-  };
+-    
+-  auto &runtime = *jsiRuntime;
++  }
++  auto jsiRuntime = &runtime;
+   __weak auto weakSelf = self;
+   
+   auto moduleName = RNIUtilities::RNIUtilitiesTurboModule::MODULE_NAME;
+@@ -382,10 +403,8 @@
+ }
+ 
+ #if RCT_NEW_ARCH_ENABLED
+-/// Doesn't get called...
+ - (std::shared_ptr<TurboModule>)getTurboModule:(const ObjCTurboModule::InitParams &)params
+ {
+- [self installHostObjectIfNeeded];
+  return std::make_shared<react::NativeRNIUtilitiesModuleSpecJSI>(params);
+ }
+ #endif
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
+@@ -34,5 +34,8 @@
+ + (nonnull instancetype)shared;
+ 
+ - (void)installHostObjectIfNeeded;
++#ifdef __cplusplus
++- (std::shared_ptr<facebook::react::CallInvoker>)jsCallInvoker;
++#endif
+ 
+ @end
+--- a/ios/Sources/ObjcHelpers/RNIObjcUtils.mm
++++ b/ios/Sources/ObjcHelpers/RNIObjcUtils.mm
+@@ -8,6 +8,7 @@
+ #import <Foundation/Foundation.h>
+ 
+ #import "RNIObjcUtils.h"
++#import "RNIUtilitiesModule.h"
+ #import "../../Swift.h"
+ 
+ #import <React/RCTBridge.h>
+@@ -266,10 +267,13 @@
+ + (void)dispatchToJSThreadViaCallInvokerForBlock:(void (^)(void))block
+ {
+ #if __cplusplus
+-  RCTBridge *bridge = [RCTBridge currentBridge];
+-  RCTBridgeProxy *bridgeProxy = (RCTBridgeProxy *)bridge;
+-  
+-  std::shared_ptr<facebook::react::CallInvoker> jsCallInvoker = [bridgeProxy jsCallInvoker];
++  // Use the scheduler paired with the runtime that owns the installed host object.
++#if RCT_NEW_ARCH_ENABLED
++  auto jsCallInvoker = [[RNIUtilitiesModule shared] jsCallInvoker];
++#else
++  RCTBridgeProxy *bridgeProxy = (RCTBridgeProxy *)[RCTBridge currentBridge];
++  auto jsCallInvoker = [bridgeProxy jsCallInvoker];
++#endif
+   
+   #if REACT_NATIVE_TARGET_VERSION <= 74
+   facebook::react::CallFunc dispatchBlock = [block]() {
+--- a/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
++++ b/ios/Sources/RNIUtilitiesModule/RNIUtilitiesModule.h
+@@ -6,6 +6,9 @@
+ //
+ 
+ #import <React/RCTBridgeModule.h>
++#ifdef __cplusplus
++#include <ReactCommon/CallInvoker.h>
++#endif
+ 
+ #ifdef RCT_NEW_ARCH_ENABLED
+ #include <RNIUtilitiesSpec/RNIUtilitiesSpec.h>

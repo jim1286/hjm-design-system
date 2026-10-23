@@ -1,6 +1,7 @@
 # Native showcase
 
 Run `pnpm storybook` here to serve the installed development client on port 8084.
+Both this command and `pnpm storybook:ios` explicitly use the `hjm-showcase` development-client scheme; the iOS command does not select Expo Go.
 The optional native adapters require a linked development client; Expo Go does not
 prove their runtime compatibility.
 
@@ -11,8 +12,8 @@ are included. The earlier Orb-only workaround was removed after the full iOS hos
 built and its native menu completed a save action. See the
 [compatibility rationale](../../docs/LIBRARY_POLICY.md) for the pinned host patches.
 
-iOS prebuild applies the checked-in scene-lifecycle plugin; editing generated
-`ios/` files is not a persistent fix.
+SDK 58 prebuild uses Expo's scene lifecycle; the old SDK 57-only scene plugin was removed.
+Editing generated `ios/` files is not a persistent fix.
 
 For the bare iOS Debug showcase, set its React Native bundle location if launch
 reports "No script URL provided": `xcrun simctl spawn <existing-udid> defaults write
@@ -70,3 +71,11 @@ New integration entries are registered while they are implemented, including opt
 The same semantic grouping applies to the Web showcase. Registration and initial device view evidence are separate from publication; see the [implementation ledger](../../docs/plans/visual-integration-progress.md) for remaining verification.
 
 See [Storybook navigation](../../docs/STORYBOOK_NAVIGATION.md) for the shared category definitions and moved entries. Web retains explicit CSF IDs. Native 10.4.4 uses the new title-derived IDs because its runtime index ignores meta.id; select the renamed entry from the menu if an old saved selection is missing.
+
+## SDK 58 host compatibility
+
+A binary built with older Worklets cannot run the current JS dependencies. Rebuild the development host
+when native versions differ; changing Metro's URL only fixes the server connection.
+RN 0.88 removed the legacy surface-presenter bridge adapter. The pinned ios-utilities patch uses
+React's per-runtime `setSurfacePresenter:` module injection for Fabric registry/scheduler access.
+See [the native compatibility rationale](../../docs/LIBRARY_POLICY.md#rn-088-fabric-runtime-access).

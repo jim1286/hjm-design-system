@@ -4,8 +4,8 @@
   "private": true,
   "main": ".rnstorybook/index.tsx",
   "scripts": {
-    "storybook": "expo start --port 8084",
-    "storybook:ios": "expo start --ios --go --port 8084",
+    "storybook": "expo start --dev-client --scheme hjm-showcase --port 8084",
+    "storybook:ios": "expo start --ios --dev-client --scheme hjm-showcase --port 8084",
     "storybook:generate": "sb-rn-get-stories",
     "typecheck": "node ../../scripts/hjm-typecheck.mjs",
     "test": "vitest run",

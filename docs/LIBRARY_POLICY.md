@@ -306,3 +306,29 @@ Vitest 5의 Vite 필수 peer를 실제 검사 소비처에 devDependency로 선�
 검증 결과·설치 가능한 버전 선택 근거·미완료 항목은 [중앙 업데이트 기록](https://github.com/jim1286/app-portfolio/blob/main/docs/design/LIBRARY_UPDATE_2026-10-19.md)에 구분한다. 현재 기록은 로컬 작업이며 해당 중앙 Git URL의 원격 게시를 뜻하지 않는다.
 
 SDK 58의 RN 0.88은 InteractionManager와 NativeMethods를 제거하고 host instance 타입을 바꿨다. renderer는 공개 ComponentRef 기반으로 이관하며 emitted declaration에 RN private 경로를 노출하지 않는다. masked-view 0.3.2의 제거된 타입 참조는 타입 전용 patch로 직접 수정했고 upstream이 해당 선언을 고친 버전을 게시하면 제거한다. 공식 SDK 58 scene template과 겹치는 HJM의 SDK 57 전용 플러그인은 제거했다. 소스·JS 번들 확인과 새 native binary·기기 QA·npm 게시는 별개다.
+
+### RN 0.88 Fabric runtime access
+
+2026-10-23: rebuilding the complete SDK 58 Native Showcase failed because ios-utilities 5.2.0
+read `.bridge` from the removed `RCTSurfacePresenterBridgeAdapter`. Its UIApplication lookup also
+assumed `RCTAppDelegate` and recursively called itself for scene-based Expo delegates.
+The existing pinned patch now gives `RNIUtilitiesModule` a weak `surfacePresenter` property;
+RN's `RCTInstance._attachBridgelessAPIsToModule` injects it through `setSurfacePresenter:`.
+Fabric helpers read that actual per-runtime presenter, so mounting-manager, component registry
+and scheduler access no longer depend on a Paper bridge or an AppDelegate subclass.
+The host object is installed through `RCTTurboModuleWithJSIBindings`, using the runtime and
+CallInvoker provided by React. JS callbacks use that paired invoker rather than a removed
+`RCTCxxBridge.runtime` lookup. Framework-qualified React imports support the prebuilt headers.
+Legacy-only adapter access is guarded by `RCT_REMOVE_LEGACY_ARCH`; it is unavailable in that architecture.
+This does not disable Fabric or remove native adapters from the showcase. Remove the patch additions
+when upstream supports the same per-runtime lifecycle and RN 0.88's removed legacy API.
+
+The installed old showcase also had `RCT_jsLocation=localhost:8187` and Worklets C++ 0.10.1 while
+current JS requires 0.13.0. Local Storybook uses port 8084; setting the correct bundle address
+restores delivery but a matching native rebuild is still required. The launch scripts now explicitly
+select the development client and `hjm-showcase` scheme rather than Expo Go.
+
+Validation: the complete SDK 58 iOS Debug showcase build succeeded on 2026-10-23 with all optional
+native adapters linked. On the existing iPhone 17 Pro / iOS 26.5 in Device Hub, Storybook
+loaded its on-device story list and the category-filter Pills story; selecting Place changed both
+the checked radio and its result text. This launch check does not establish every adapter flow.
