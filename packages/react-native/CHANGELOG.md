@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.46.1
+
+### Patch Changes
+
+- 8575b93: Document and demonstrate compact numeric chat unread receipts on Web and Native using the shared caption size.
+
 ## 1.46.0
 
 ### Minor Changes
