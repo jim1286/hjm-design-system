@@ -1,5 +1,16 @@
 # @hjmds/react-native
 
+## 1.41.0
+
+### Minor Changes
+
+- ced2ef7: Add `ChoiceRow` (`/choice-row`) for settings that pick one value, such as language or theme. The row shows the product-confirmed value and opens a sheet of choices; an async save keeps the sheet busy and a rejected save keeps it open with the error. Promote the remaining Storybook experiments (save feedback composition, KeyboardAvoidanceContext guide).
+- f3c9fe9: Separate the default neutral selection surface from brand accents and primary actions. TimePicker, Chip, chip groups and neutral SegmentedControl share `surfaceSelected` in light and dark themes, with product palette overrides and readable selection text.
+
+  Complete the selection-role criteria across ordinary selected tabs, capsule navigation, reactions, toggles, cards and collection rows. Add the selected Surface tone; keep active-descendant focus, compact value indicators and explicit solid/brand/tile emphasis distinct. Validate all readable foreground roles on the selection surface and adjust light secondary copy for contrast.
+
+- 61a18ee: Add an opt-in TimePicker wheel selection style with centered snapping, unavailable-slot handling, shared draft confirmation, Web keyboard navigation and native adjustable actions. Preserve the existing list default and HH:mm value contract.
+
 ## 1.40.0
 
 ### Minor Changes

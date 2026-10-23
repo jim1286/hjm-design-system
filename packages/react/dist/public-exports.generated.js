@@ -123,6 +123,9 @@ export const publicExportEntries = {
     Chip: [
         "./selection"
     ],
+    ChoiceRow: [
+        "./choice-row"
+    ],
     ClipboardButton: [
         "./clipboard"
     ],
