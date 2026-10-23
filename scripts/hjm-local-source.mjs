@@ -64,6 +64,15 @@ function relativeSource(state, importer, request) {
   return ['.ts', '.tsx'].map(ext => base + ext).find(file => inside(state.root, file) && fs.existsSync(file)) ?? null;
 }
 
+// Long-lived dev servers read the export map once. When the shared checkout gains a
+// subpath while they run (2026-10-23: design-contracts/character-count), the stale map
+// rejected a public export until restart. Re-read the manifests only on a miss, so a
+// genuinely private import still fails and hits stay as cheap as before.
+function refreshedAlias(projectRoot, env, request) {
+  const state = localSource(projectRoot, env);
+  return { state, source: state.aliases[request] ?? null };
+}
+
 function withMetro(config, projectRoot, env = process.env) {
   if (!usesLocalSource(env)) return config;
   projectRoot = fs.realpathSync(projectRoot);
@@ -86,7 +95,8 @@ function withMetro(config, projectRoot, env = process.env) {
       }
       if (!request.startsWith('@hjmds/') && !fromSource) return delegate(context, request, platform);
       state ??= localSource(projectRoot, env);
-      const source = state.aliases[request] ?? relativeSource(state, context.originModulePath, request);
+      let source = state.aliases[request] ?? relativeSource(state, context.originModulePath, request);
+      if (!source && request.startsWith('@hjmds/')) ({ state, source } = refreshedAlias(projectRoot, env, request));
       if (source) return { type: 'sourceFile', filePath: source };
       if (request.startsWith('@hjmds/')) throw new Error(`HJM source export is not public: ${request}`);
       // Context providers/native peers must belong to the host, not the HJM
@@ -121,7 +131,12 @@ function vitePlugin(projectRoot, env = process.env) {
     resolveId(request, importer) {
       if (!state) return null;
       if (state.aliases[request]) return state.aliases[request];
-      if (request.startsWith('@hjmds/')) throw new Error(`HJM source export is not public: ${request}`);
+      if (request.startsWith('@hjmds/')) {
+        let source;
+        ({ state, source } = refreshedAlias(state.projectRoot, env, request));
+        if (source) return source;
+        throw new Error(`HJM source export is not public: ${request}`);
+      }
       return importer ? relativeSource(state, importer.split('?')[0], request) : null;
     },
   };
