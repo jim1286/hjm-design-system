@@ -729,7 +729,7 @@ export declare const behaviorRegistry: {
     };
     readonly top: {
         readonly controlled: readonly [];
-        readonly inputs: readonly ["title", "eyebrow", "description", "size", "headingLevel"];
+        readonly inputs: readonly ["title", "eyebrow", "description", "size", "headingLevel", "titleLineBreaks"];
         readonly stateAxes: {};
         readonly web: {
             readonly roles: readonly ["heading"];
@@ -741,7 +741,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly [];
             readonly actions: readonly [];
         };
-        readonly scenarios: readonly ["the-title-is-a-real-heading-element-at-the-declared-level-not-styled-text", "top-is-body-content-that-scrolls-away-while-topbar-is-fixed-chrome", "description-wraps-instead-of-truncating-so-large-text-never-hides-the-question", "a-trailing-action-shares-the-title-row-and-drops-below-it-when-space-runs-out", "eyebrow-never-carries-information-the-title-does-not-repeat-in-some-form"];
+        readonly scenarios: readonly ["the-title-is-a-real-heading-element-at-the-declared-level-not-styled-text", "top-is-body-content-that-scrolls-away-while-topbar-is-fixed-chrome", "description-wraps-instead-of-truncating-so-large-text-never-hides-the-question", "preserved-title-line-breaks-change-only-the-drawing-and-the-heading-name-stays-one-sentence", "a-trailing-action-shares-the-title-row-and-drops-below-it-when-space-runs-out", "eyebrow-never-carries-information-the-title-does-not-repeat-in-some-form"];
     };
     readonly authProviderButton: {
         readonly controlled: readonly [];

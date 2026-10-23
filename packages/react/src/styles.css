@@ -2132,6 +2132,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-weight: var(--hjm-top-title-weight);
   overflow-wrap: anywhere;
 }
+.hjm-top__title[data-line-breaks="preserve"] { white-space: pre-line; }
 .hjm-top__trailing { display: flex; flex: 0 0 auto; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-top__description {
   margin: var(--hjm-space-xs) 0 0;

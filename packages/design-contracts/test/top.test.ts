@@ -18,7 +18,7 @@ describe("Top descriptor", () => {
   });
 
   it("defaults to the screen's own first heading", () => {
-    expect(topDefaults).toEqual({ size: "large", headingLevel: 1 });
+    expect(topDefaults).toEqual({ size: "large", headingLevel: 1, titleLineBreaks: "collapse" });
   });
 });
 

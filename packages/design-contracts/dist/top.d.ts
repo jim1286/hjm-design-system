@@ -14,6 +14,13 @@
  * 계약을 합치지 않았다 — 합치면 "이 Section이 화면의 h1인가"를 매번 물어야 한다.
  */
 export type TopSize = "medium" | "large";
+/**
+ * `\n` in the title (2026-10-23). `collapse`(기본): 줄바꿈 문자는 공백이 되고 폭에 따라 자연스럽게 감긴다 — Web이 원래
+ * 그렇게 그렸고, Native만 `\n`을 그대로 그려 두 플랫폼이 달랐다. `preserve`: 제품이 의도한 줄바꿈을 지킨다(히어로 문구).
+ * 어느 쪽이든 제목 이름은 한 문장으로 읽힌다 — 줄은 공백 하나로 이어진다. 포트폴리오 사이트 히어로가 `white-space: pre-line`
+ * span을 Heading 안에 넣느라 Top을 채택하지 못했다.
+ */
+export type TopTitleLineBreaks = "collapse" | "preserve";
 export type TopDescriptor = Readonly<{
     title: string;
     /** 제목 위 한 줄. 카테고리·단계처럼 제목을 한정하는 짧은 말. */
@@ -21,6 +28,8 @@ export type TopDescriptor = Readonly<{
     /** 제목 아래 보조 문장. 길면 줄바꿈되며 잘리지 않는다. */
     description?: string;
     size?: TopSize;
+    /** 제목 안 `\n`의 처리. 기본 `collapse`. */
+    titleLineBreaks?: TopTitleLineBreaks;
     /**
      * 문서 구조상의 제목 단계. 화면당 하나인 Top은 `1`이 기본이지만, 한 라우트가
      * 여러 화면을 담는 경우(시트 안의 화면 등) 제품이 낮출 수 있다.
@@ -30,8 +39,18 @@ export type TopDescriptor = Readonly<{
 export declare const topDefaults: {
     readonly size: "large";
     readonly headingLevel: 1;
+    readonly titleLineBreaks: "collapse";
 };
 export declare function validateTopDescriptor(descriptor: TopDescriptor): void;
+export type ResolvedTopTitle = Readonly<{
+    /** Text to draw. `preserve` keeps one `\n` between trimmed, non-empty lines; `collapse` has none. */
+    text: string;
+    /** The heading's spoken name: the same lines joined by one space, so an intended break never cuts the title. */
+    accessibleName: string;
+    /** Lines as drawn (one entry when collapsed). */
+    lines: readonly string[];
+}>;
+export declare function resolveTopTitle(descriptor: TopDescriptor): ResolvedTopTitle;
 /**
  * `large`는 화면의 첫 제목, `medium`은 시트·모달 안의 첫 제목이다. 두 단계뿐인 이유는
  * 세 번째가 필요해지는 자리가 곧 `Section`이기 때문이다 — 크기를 더 늘리는 대신 다른
@@ -96,7 +115,7 @@ export declare const topRecipe: {
 export declare const topBehavior: {
     /** 상태 축이 없다 — 화면이 제목을 바꾸면 그냥 다른 문자열을 넘긴다. */
     readonly controlled: readonly [];
-    readonly inputs: readonly ["title", "eyebrow", "description", "size", "headingLevel"];
+    readonly inputs: readonly ["title", "eyebrow", "description", "size", "headingLevel", "titleLineBreaks"];
     readonly stateAxes: {};
     readonly web: {
         readonly roles: readonly ["heading"];
@@ -108,6 +127,6 @@ export declare const topBehavior: {
         readonly states: readonly [];
         readonly actions: readonly [];
     };
-    readonly scenarios: readonly ["the-title-is-a-real-heading-element-at-the-declared-level-not-styled-text", "top-is-body-content-that-scrolls-away-while-topbar-is-fixed-chrome", "description-wraps-instead-of-truncating-so-large-text-never-hides-the-question", "a-trailing-action-shares-the-title-row-and-drops-below-it-when-space-runs-out", "eyebrow-never-carries-information-the-title-does-not-repeat-in-some-form"];
+    readonly scenarios: readonly ["the-title-is-a-real-heading-element-at-the-declared-level-not-styled-text", "top-is-body-content-that-scrolls-away-while-topbar-is-fixed-chrome", "description-wraps-instead-of-truncating-so-large-text-never-hides-the-question", "preserved-title-line-breaks-change-only-the-drawing-and-the-heading-name-stays-one-sentence", "a-trailing-action-shares-the-title-row-and-drops-below-it-when-space-runs-out", "eyebrow-never-carries-information-the-title-does-not-repeat-in-some-form"];
 };
 //# sourceMappingURL=top.d.ts.map

@@ -617,6 +617,7 @@
     "components-layout-top--dark",
     "components-layout-top--default",
     "components-layout-top--large-text",
+    "components-layout-top--preserved-line-break",
     "components-navigation--anchor",
     "components-navigation--bottom-navigation",
     "components-navigation--breadcrumb",

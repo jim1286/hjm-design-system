@@ -1,9 +1,9 @@
 "use client";
 
 import {
+  resolveTopTitle,
   topDefaults,
   topRecipe,
-  validateTopDescriptor,
   type TopDescriptor,
 } from "@hjmds/design-contracts/components/top";
 import { forwardRef, createElement, type CSSProperties, type ReactNode } from "react";
@@ -23,7 +23,7 @@ export const Top = forwardRef<HTMLElement, TopProps>(function Top(
   { descriptor, trailing, className, layoutStyle },
   forwardedRef,
 ) {
-  validateTopDescriptor(descriptor);
+  const resolvedTitle = resolveTopTitle(descriptor);
   const size = descriptor.size ?? topDefaults.size;
   const level = descriptor.headingLevel ?? topDefaults.headingLevel;
   const metrics = topRecipe.sizes[size];
@@ -51,7 +51,11 @@ export const Top = forwardRef<HTMLElement, TopProps>(function Top(
           A real heading element at the declared level, not styled text: this
           block is what a screen reader lands on when it skips to the content.
         */}
-        {createElement(`h${level}`, { className: "hjm-top__title" }, descriptor.title)}
+        {/*
+          `titleLineBreaks="preserve"` keeps the product's `\n` with pre-line; the heading's name is computed from the
+          same text with whitespace normalized, so it stays one sentence for assistive tech.
+        */}
+        {createElement(`h${level}`, { className: "hjm-top__title", "data-line-breaks": resolvedTitle.lines.length > 1 ? "preserve" : undefined }, resolvedTitle.text)}
         {trailing ? <div className="hjm-top__trailing">{trailing}</div> : null}
       </div>
       {descriptor.description ? <p className="hjm-top__description">{descriptor.description}</p> : null}

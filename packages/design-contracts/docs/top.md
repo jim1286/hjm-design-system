@@ -37,3 +37,10 @@
 2026-10-07 소비 감사에서 두 renderer의 제목 크기·행간·굵기가 foundation으로 확정된 recipe를 직접 읽어 프로필을 우회했다. `large`는 가까운 프로필의 `heading.level3`, `medium`은 `typography.titleLarge`를 읽고 프로필이 없으면 기존 recipe를 유지한다. 시각 역할은 `headingLevel`과 독립이며 display 서체·제목 의미·보조 행동·초점은 바꾸지 않는다.
 
 프로필 연결은 1.15.0 이후 미게시 변경이며, 기본 배포 계약과 실제 Native 기기 검증은 구분한다.
+
+## 제목 줄바꿈 (2026-10-23, 개발 소스·미게시)
+
+`titleLineBreaks`는 제목 안 `\n`의 의미다. 기본 `collapse`는 공백으로 바꾸고, `preserve`는 제품이 의도한 줄바꿈을 그린다.
+`resolveTopTitle`이 두 renderer의 그릴 글자와 제목 이름을 함께 만든다. 이름은 언제나 줄을 공백 하나로 이은 한 문장이라
+줄바꿈이 보조기기의 제목을 끊지 않는다. 이전에는 같은 `\n`을 Web은 공백으로, Native는 줄바꿈으로 그렸다.
+포트폴리오 사이트 히어로가 `pre-line` span을 Heading에 넣어야 해서 Top을 채택하지 못한 것이 계기다([사용 지침](usage/components/top.md)).
