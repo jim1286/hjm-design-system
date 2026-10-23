@@ -13,7 +13,7 @@ function ChoiceRowPreview({ failFirst = false }: { failFirst?: boolean }) {
   });
   return <ChoiceRow title={copy.title} sheetDescription={copy.sheetDescription} items={copy.items} value={value} onValueChange={save} closeLabel={copy.closeLabel} errorLabel={copy.errorLabel} />;
 }
-const meta = { title: "실험/컴포넌트/입력/설정 값 선택", component: ChoiceRowPreview } satisfies Meta<typeof ChoiceRowPreview>;
+const meta = { title: "배포/컴포넌트/입력/설정 값 선택", component: ChoiceRowPreview } satisfies Meta<typeof ChoiceRowPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
