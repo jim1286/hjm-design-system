@@ -1,4 +1,4 @@
-import { act, createRef } from "react";
+import { act, createRef, type ComponentPropsWithRef } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -11,7 +11,8 @@ let root: Root, host: HTMLDivElement;
 beforeEach(() => { host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 
-async function render(props: Partial<IconButtonLinkProps> = {}) {
+// IconButtonLinkProps excludes the forwarded ref; the adapter test passes one, so type the helper from the component.
+async function render(props: Partial<ComponentPropsWithRef<typeof IconButtonLink>> = {}) {
   await act(async () => root.render(<HjmProvider systemTheme="light" reducedMotion>
     <IconButtonLink href="/ko/settings" label="설정" shape="circle" {...props}>⚙</IconButtonLink>
     <IconButton label="설정" shape="circle" selected>⚙</IconButton>
