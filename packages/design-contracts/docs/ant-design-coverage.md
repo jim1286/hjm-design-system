@@ -52,10 +52,15 @@ message와 notification을 가르는 축(정보 층, 지속 시간, 동시 개�
 
 | 종류 | 뜻 | 예 | 재검토 신호 |
 |---|---|---|---|
-| **흡수됨** | 그 문제를 이미 다른 컴포넌트가 완결한다 | `Notification`→Toast, `Dropdown`→Menu, `ContextPanel`→SidePanel/Sheet, `Flex`→Stack, `TimePicker`→Select 조합, `Rating`→Slider/Statistic | 흡수한 쪽이 못 푸는 요구가 나올 때 |
+| **흡수됨** | 그 문제를 이미 다른 컴포넌트가 완결한다 | `Notification`→Toast, `Dropdown`→Menu, `ContextPanel`→SidePanel/Sheet, `Flex`→Stack | 흡수한 쪽이 못 푸는 요구가 나올 때 |
 | **검증할 화면이 없음** | 계약 자체는 유효하나 이를 확인할 제품 화면이 없다 | `Anchor` | 그 화면이 실제로 생길 때 |
 | **거절됨** | 계약도 유효하고 화면이 생겨도 만들지 않는다 | `BorderBeam`(장식), `AppProvider`(런타임뿐), `Utility`(실체 없음) | 정체성이나 아키텍처 경계가 바뀔 때만 |
 | **흡수 대기** | 흡수 판정은 끝났으나 **선결 축이 아직 없다** | `Cascader`(TreeSelect에 `valueMode`/`commitAt`가 추가돼야 성립) | 그 축이 실제로 추가될 때 |
+
+흡수 판정이 실제로 뒤집힌 예도 있습니다. 표에서 빼고 현재 계약을 따릅니다(2026-10-23 문서 대조에서 표가 옛 판정으로 남아 있던 것을 정정).
+
+- `TimePicker`: 2026-10-19 선택의창의 시트 안 시·분 선택 요구로 독립 canonical 컴포넌트가 됐습니다([time-picker.md](time-picker.md)). crosswalk는 `direct`입니다.
+- `Rating`: 2026-10-06 레퍼런스 적용 요청으로 정수 선택·미평가·소수 평균 표시를 구분하는 supplemental `Rating`(`/rating`)이 추가됐습니다([reference-controls.md](reference-controls.md#rating)). supplemental은 catalog `ComponentId`가 아니므로 antd `Rate`의 crosswalk target은 계속 `Slider`/`Statistic`입니다.
 
 둘을 섞으면 안 됩니다. **흡수됨**은 설계 판단이라 제품이 늘어나도 웬만해선 뒤집히지 않지만,
 **검증할 화면이 없음**은 사실 관찰이라 **커밋 하나로 낡습니다**. 실제로 그런 일이 있었습니다

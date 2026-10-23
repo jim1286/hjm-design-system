@@ -77,8 +77,8 @@ HJM의 기존 API를 확장하거나 하위 구성을 공개한다. 도메인 �
 
 | 의도 | 쓸 것 | 쓰지 않을 것 |
 | --- | --- | --- |
-| 하나 고르기(주제·정렬·탭) | `Chip`(`selectionMode="single"`), `SegmentedControl`, `RadioGroup`, `ToggleGroup` | `selected`를 준 `Button` 나열 |
-| 여러 개 고르기 | `Chip`(`selectionMode="multiple"`), `CheckboxGroup` | 버튼 토글 |
+| 하나 고르기(주제·정렬·탭) | `Chip`(`selectionMode="single"`), `SegmentedControl`, `RadioGroup` | `selected`를 준 `Button` 나열, `ToggleGroup`(단일 모드가 없는 다중 토글 계약) |
+| 여러 개 고르기 | `Chip`(`selectionMode="multiple"`), `CheckboxGroup`, 짧은 서식·필터 토글 묶음은 `ToggleGroup` | 버튼 토글 |
 | 켜고 끄기 설정 | `Switch`(제목·설명 포함), 설정 목록은 `ListRow` + `Switch` | "○○ 켜짐/꺼짐" 글자 버튼 |
 | 주 행동 | 화면 지침의 "버튼과 행동 위치"대로 하나의 primary, 하단 고정이면 `BottomCTA`/`footer` | 같은 표면에 경쟁하는 primary 여럿, 폭이 제각각인 버튼 줄 |
 | 보조 행동 | 주 행동 아래 같은 폭 secondary, 또는 헤더 `actions` | 본문 중간에 흩어진 버튼, 나가기를 보조 행동으로 두기 |
