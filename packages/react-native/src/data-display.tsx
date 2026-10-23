@@ -38,6 +38,7 @@ import {
 import {
   resolveTimelineDescriptor,
   timelineRecipe,
+  validateTimelineSelection,
   type ComposeTimelineAccessibleName,
   type ResolvedTimelineItemDescriptor,
   type TimelineItemDescriptor,
@@ -2049,7 +2050,15 @@ export type TimelineProps<Id extends string = string> = Omit<
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /**
+     * Makes each record a selectable button (controlled, single). `null` = selectable with nothing chosen. Supply
+     * together with `onSelectedIdChange`. The selected record reads as selected to assistive tech and paints the
+     * neutral selection surface (timelineRecipe.item.selected).
+     */
+    selectedId?: Id | null;
+    onSelectedIdChange?: (id: Id) => void;
     /** Virtualization host only; the shared renderer still owns every record, rail, label and command target. */
     renderList?: (context: Readonly<{
       items: readonly ResolvedTimelineItemDescriptor<Id>[];
@@ -2067,13 +2076,17 @@ export function Timeline<Id extends string = string>({
   renderMetadata,
   renderActions,
   renderList,
+  selectedId,
+  onSelectedIdChange,
   layoutStyle,
   ...props
 }: TimelineProps<Id>) {
   assertNoRemovedStyleProps("Timeline", props, ["style"]);
   const theme = useHjmNativeTheme();
+  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+  const selectable = onSelectedIdChange !== undefined;
   const resolved = resolveTimelineDescriptor(
-    { items },
+    selectable ? { items, selectedId: selectedId ?? null } : { items },
     { composeAccessibleName },
   );
   // Dot, label first line and timestamp share the label's rendered first line box (token × text scale), matching
@@ -2089,12 +2102,34 @@ export function Timeline<Id extends string = string>({
         ]
           .filter(Boolean)
           .join(", ");
+        const selectedStyle = timelineRecipe.item.selected;
+        // A selectable record always carries its 1pt ring (transparent until selected) inside the recipe padding, so
+        // selecting never shifts the text — the same rule as ListRow's selection border.
+        const recordStyle = {
+          flexDirection: "row",
+          gap: spacing.sm,
+          padding: selectable ? timelineRecipe.item.padding - selectedStyle.borderWidth : timelineRecipe.item.padding,
+          borderRadius: radius.md,
+          backgroundColor: item.selected
+            ? resolveColorReference(selectedStyle.background, theme.palette)
+            : item.emphasized ? resolveColorReference(timelineRecipe.item.emphasisBackground, theme.palette) : undefined,
+          ...(selectable ? {
+            borderWidth: selectedStyle.borderWidth,
+            borderColor: item.selected ? resolveColorReference(selectedStyle.border, theme.palette) : "transparent",
+          } : {}),
+        } as const;
+        const Record = selectable ? Pressable : View;
         return (
-          <View
+          <Record
             accessible={!actions}
             accessibilityLabel={actions ? undefined : accessibilityLabel}
             key={item.id}
-            style={{ flexDirection: "row", gap: spacing.sm, padding: timelineRecipe.item.padding, borderRadius: radius.md, backgroundColor: item.emphasized ? resolveColorReference(timelineRecipe.item.emphasisBackground, theme.palette) : undefined }}
+            {...(selectable ? {
+              accessibilityRole: "button" as const,
+              accessibilityState: { selected: item.selected },
+              onPress: () => { if (item.id !== selectedId) onSelectedIdChange?.(item.id); },
+            } : {})}
+            style={recordStyle}
           >
             <View
               importantForAccessibility="no-hide-descendants"
@@ -2177,7 +2212,7 @@ export function Timeline<Id extends string = string>({
               {item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
             </View>
             {actions ? <View style={{ flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }}>{actions}</View> : null}
-          </View>
+          </Record>
         );
   };
   return <View {...props} style={[renderList ? {} : { gap: timelineRecipe.gap }, layoutStyle]}>

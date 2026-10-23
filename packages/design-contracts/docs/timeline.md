@@ -32,7 +32,7 @@
 각 항목은 stable string `id`와 보이는 `label`을 가진다(Collection 기본 계약의 최소
 부분집합, [[collection]] 참고). `textValue`, `none|single|multiple` selection mode,
 `idle|loading|loadingMore|empty|error` async 상태는 Steps와 같은 이유로 가져오지 않는다 —
-Timeline은 검색/타이핑 탐색 대상이 아니고, 사용자가 고르는 대상도 아니다. 비동기 로딩은
+Timeline은 검색/타이핑 탐색 대상이 아니고, 기본적으로 사용자가 고르는 대상도 아니다(선택형은 아래 「기록 선택」). 비동기 로딩은
 이 계약이 직접 다루지 않는다 — 항목이 뒤로(과거로) 더 늘어나야 하면 기존 항목을 그대로
 둔 채 다음 페이지만 요청하는 문제이므로, List가 그렇듯 `LoadMore`([[load-more]])와
 합성한다. Timeline 자체가 `idle|loading|empty` 축을 새로 만들지 않는다 — 항목이 하나도
@@ -143,3 +143,20 @@ Ant Design Timeline의 `mode="alternate"`(항목이 좌우로 번갈아 배치)�
 connector 시각이 아니라 평평한 `AppListRow` 목록으로 그려져 있어, 시각 recipe 쪽
 vertical slice는 이 조사에서 확인하지 못했다. 구단 상세의 영입·유출 이력도 미확인 후보였다.
 2026-09-29부터 제품 채택은 관측으로 분리하며 [현재 승격 기준](stable-promotion.md)을 따른다.
+
+## 기록 선택 (2026-10-23, 개발 소스·미게시)
+
+`selectedId`/`onSelectedIdChange`는 기록 하나를 골라 제품의 다른 표시(지도·상세)를 바꾸는 제어형 단일 선택이다.
+위의 "사용자가 고르는 대상이 아니다"는 수동 기록(`selectedId` 없음)의 기본값으로 남는다. 선택은 진행 커서가 아니다 —
+`tone`·connector 색·순서는 선택과 무관하고, 선택된 기록 앞뒤를 지난/남은 단계로 나누지 않는다(그건 Steps).
+
+- 계약: `TimelineDescriptor.selectedId`(`Id | null`), 해석 결과의 `selected`, 목록 밖 id는 `RangeError`.
+  `validateTimelineSelection`이 `selectedId`와 콜백의 짝, 선택형에서 `renderActions` 금지를 검사한다.
+  선택형 기록은 하나의 대상(Web option, Native 선택 버튼)이라 안에 별도 명령을 둘 수 없다.
+- 키보드: `getTimelineSelectionTarget`이 공용 collection 이동 계산(`getCollectionNavigationTarget`, 순환 없음)을 재사용한다.
+  기록에는 처음과 끝이 있어 순환하지 않는다. 선택이 포커스를 따르는 이유는 선택이 옆 표시만 바꾸는 가벼운 동작이기 때문이다.
+- 표현: `timelineRecipe.item.selected` — `selection.background` 면 + `selection.border` 1 테두리. ListRow 선택과 같은
+  중립 선택 면이며 브랜드 면이 아니다(theme-palette 선택 상태 기준).
+- 기존 API로 표현할 수 없었던 이유: `renderActions`의 Button은 기록과 별도 대상이라 선택 의미가 기록에 붙지 않고,
+  [선택 지침](usage/SELECTION.md#조립-규칙필수)이 `selected` Button 나열을 금지한다. RadioGroup·ListRow로 바꾸면
+  레일·시각·기록 의미를 제품이 다시 조립해야 한다(다에리 여정 일지 감사).

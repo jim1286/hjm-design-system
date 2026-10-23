@@ -8778,6 +8778,19 @@ export declare const recipeRegistry: {
                 key: "info";
                 alpha?: number;
             }>;
+            readonly selected: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceSelected";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "borderControl";
+                    alpha?: number;
+                }>;
+                readonly borderWidth: 1;
+            };
         };
         readonly dot: {
             readonly diameter: 10;

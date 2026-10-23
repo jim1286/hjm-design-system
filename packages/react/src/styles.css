@@ -2809,6 +2809,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Baseline sharing put the smaller caption 1.5px under the label's center; center it on the label's first line instead. */
 .hjm-timeline__timestamp { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-timeline__description { color: var(--hjm-color-text-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Selectable record (timelineRecipe.item.selected): the neutral persistent-selection surface + ring shared with ListRow.
+   Selection outranks passive emphasis; the focus ring stays the shared focus role. */
+.hjm-timeline[data-selectable] .hjm-timeline__item { cursor: pointer; }
+.hjm-timeline__item[aria-selected="true"] { background: var(--hjm-color-surface-selected); box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
+.hjm-timeline__item[role="option"]:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-accordion { border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-accordion__item { border-block-end: 1px solid var(--hjm-color-border); }
 .hjm-accordion__header { margin: 0; }

@@ -10,7 +10,9 @@ import {
   type DescriptionListColumns,
 } from "@hjmds/design-contracts/components/description-list";
 import {
+  getTimelineSelectionTarget,
   resolveTimelineDescriptor,
+  validateTimelineSelection,
   type ComposeTimelineAccessibleName,
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
@@ -816,7 +818,15 @@ export type TimelineProps<Id extends string = string> = Omit<
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
+    /**
+     * Makes the record list a single-select listbox (controlled). `null` = selectable with nothing chosen. Supply
+     * together with `onSelectedIdChange`; the list then needs `aria-label` or `aria-labelledby`.
+     */
+    selectedId?: Id | null;
+    /** Called with the record chosen by click, Enter/Space or ArrowUp/ArrowDown/Home/End (selection follows focus). */
+    onSelectedIdChange?: (id: Id) => void;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -827,25 +837,62 @@ function TimelineInner<Id extends string = string>(
     composeAccessibleName,
     renderMetadata,
     renderActions,
+    selectedId,
+    onSelectedIdChange,
     className,
     layoutStyle,
+    onKeyDown,
     ...props
   }: TimelineProps<Id>,
   ref: ForwardedRef<HTMLOListElement>,
 ) {
+  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+  const selectable = onSelectedIdChange !== undefined;
+  if (selectable && !props["aria-label"] && !props["aria-labelledby"]) {
+    throw new TypeError("A selectable Timeline needs aria-label or aria-labelledby (listbox name)");
+  }
   const resolved = resolveTimelineDescriptor(
-    { items },
+    selectable ? { items, selectedId: selectedId ?? null } : { items },
     { composeAccessibleName },
   );
+  const idPrefix = useId();
+  // Roving tab stop: the selected record, or the first one before anything is chosen.
+  const tabStopId = selectable ? (selectedId ?? resolved[0]?.id) : undefined;
+  const select = (list: HTMLOListElement, id: Id) => {
+    if (id !== selectedId) onSelectedIdChange?.(id);
+    list.querySelector<HTMLElement>(`[data-timeline-id="${CSS.escape(id)}"]`)?.focus();
+  };
+  const handleKeyDown = (event: KeyboardEvent<HTMLOListElement>) => {
+    onKeyDown?.(event);
+    if (!selectable || event.defaultPrevented) return;
+    const focusedId = (event.target as HTMLElement).closest<HTMLElement>("[data-timeline-id]")?.dataset.timelineId as Id | undefined;
+    if (focusedId === undefined) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      select(event.currentTarget, focusedId);
+      return;
+    }
+    const target = getTimelineSelectionTarget(items, focusedId, event.key);
+    if (target === undefined) return;
+    event.preventDefault();
+    select(event.currentTarget, target);
+  };
   return (
     <ol
       {...props}
       style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-timeline", className)}
+      role={selectable ? "listbox" : props.role}
+      aria-orientation={selectable ? "vertical" : undefined}
+      data-selectable={selectable || undefined}
+      onKeyDown={handleKeyDown}
     >
       {resolved.map((item, index) => {
         const actions = renderActions?.(item);
+        const detailIds = selectable
+          ? [item.description ? `${idPrefix}-${index}-description` : null, item.timestamp ? `${idPrefix}-${index}-timestamp` : null].filter(Boolean).join(" ")
+          : "";
         return (
         <li
           aria-label={item.accessibleName}
@@ -853,6 +900,15 @@ function TimelineInner<Id extends string = string>(
           data-tone={item.tone}
           data-emphasized={item.emphasized || undefined}
           key={item.id}
+          {...(selectable ? {
+            role: "option",
+            "aria-selected": item.selected,
+            "aria-describedby": detailIds || undefined,
+            "data-timeline-id": item.id,
+            "data-state": item.selected ? "selected" : undefined,
+            tabIndex: item.id === tabStopId ? 0 : -1,
+            onClick: (event: { currentTarget: HTMLLIElement }) => select(event.currentTarget.parentElement as HTMLOListElement, item.id),
+          } : {})}
         >
           <span className="hjm-timeline__rail" aria-hidden="true">
             <span className="hjm-timeline__dot" />
@@ -866,9 +922,9 @@ function TimelineInner<Id extends string = string>(
               {renderMetadata?.(item)}
             </span>
             {item.description ? (
-              <span className="hjm-timeline__description">{item.description}</span>
+              <span className="hjm-timeline__description" id={selectable ? `${idPrefix}-${index}-description` : undefined}>{item.description}</span>
             ) : null}
-            {item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime}>{item.timestamp}</time> : null}
+            {item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime} id={selectable ? `${idPrefix}-${index}-timestamp` : undefined}>{item.timestamp}</time> : null}
           </span>
           {actions ? <div className="hjm-timeline__actions">{actions}</div> : null}
         </li>

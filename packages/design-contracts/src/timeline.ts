@@ -2,6 +2,7 @@ import type { ColorReference } from "./color-references.js";
 import type { FontWeightValue, TextVariant } from "./foundations.js";
 import { fontWeight, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
+import { getCollectionNavigationIntent, getCollectionNavigationTarget } from "./collection.js";
 
 /**
  * Timeline is a record of what already happened, not a position in a flow —
@@ -31,6 +32,12 @@ export type TimelineItemDescriptor<Id extends string = string> = Readonly<{
 
 export type TimelineDescriptor<Id extends string = string> = Readonly<{
   items: readonly TimelineItemDescriptor<Id>[];
+  /**
+   * Single selection of one record (2026-10-23): `undefined` keeps the passive record, `null` makes the list selectable
+   * with nothing chosen yet. Selection is not a progress cursor — no status is derived from it. Diairy's journey log
+   * rebuilt this with a `Button` tone toggle + `aria-pressed` per step (SELECTION forbids button-as-selection).
+   */
+  selectedId?: Id | null;
 }>;
 
 export const timelineDefaults = {
@@ -62,6 +69,8 @@ export type ResolvedTimelineItemDescriptor<Id extends string = string> = Omit<
     total: number;
     /** Order + label, for platforms without built-in list-position semantics. */
     accessibleName: string;
+    /** True only for the record matching a selectable Timeline's `selectedId`. */
+    selected: boolean;
   }>;
 
 export type ResolveTimelineOptions = Readonly<{
@@ -120,6 +129,52 @@ export function validateTimelineDescriptor<Id extends string>(
     }
     ids.add(item.id);
   }
+  if (descriptor.selectedId !== undefined && descriptor.selectedId !== null && !ids.has(descriptor.selectedId)) {
+    throw new RangeError(`Timeline selectedId does not match any item id: ${String(descriptor.selectedId)}`);
+  }
+}
+
+/**
+ * Selection is a pair: a controlled `selectedId` (null for none) and the change callback, or neither. A selectable
+ * record is one target (Web option, Native selected button), so it cannot also host `renderActions` commands —
+ * nested controls inside an option are not operable by assistive tech. Products that need a per-record command keep
+ * the passive Timeline.
+ */
+export function validateTimelineSelection(
+  selectedId: unknown,
+  onSelectedIdChange: unknown,
+  options: Readonly<{ hasActions: boolean }> = { hasActions: false },
+): void {
+  if ((selectedId === undefined) !== (onSelectedIdChange === undefined)) {
+    throw new TypeError("Timeline selectedId and onSelectedIdChange must be supplied together");
+  }
+  if (onSelectedIdChange !== undefined && typeof onSelectedIdChange !== "function") {
+    throw new TypeError("Timeline onSelectedIdChange must be a function");
+  }
+  if (onSelectedIdChange !== undefined && options.hasActions) {
+    throw new TypeError("A selectable Timeline cannot render per-record actions; the record itself is the selection target");
+  }
+}
+
+/**
+ * Keyboard target for a selectable Timeline (vertical listbox): ArrowDown/ArrowUp step one record, Home/End jump to
+ * the ends, and the ends do not wrap — a history has a first and a last record. Selection follows focus, as in the
+ * single-select listbox pattern, because choosing a record only changes what the product shows next to it.
+ * Returns undefined for keys Timeline does not own. Reuses the shared collection navigation math.
+ */
+export function getTimelineSelectionTarget<Id extends string>(
+  items: readonly TimelineItemDescriptor<Id>[],
+  currentId: Id | null,
+  key: string,
+): Id | undefined {
+  const intent = getCollectionNavigationIntent(key as Parameters<typeof getCollectionNavigationIntent>[0]);
+  if (!intent) return undefined;
+  return getCollectionNavigationTarget(
+    { items: items.map((item) => ({ id: item.id, label: item.label, textValue: item.label })) },
+    currentId,
+    intent,
+    false,
+  );
 }
 
 /**
@@ -155,6 +210,7 @@ export function resolveTimelineDescriptor<Id extends string>(
       position,
       total,
       accessibleName,
+      selected: descriptor.selectedId !== undefined && descriptor.selectedId === item.id,
     };
   });
 }
@@ -172,7 +228,19 @@ export const timelineRecipe = {
   ] as const,
   gap: spacing.lg,
   // A record remains passive: emphasis highlights its history without implying progress.
-  item: { padding: spacing.sm, emphasisBackground: semanticColors.feedback.info.background },
+  item: {
+    padding: spacing.sm,
+    emphasisBackground: semanticColors.feedback.info.background,
+    /**
+     * Selected record (selectable Timeline): the neutral persistent-selection surface and ring shared with ListRow,
+     * not brand fill (theme-palette.md 선택 상태 색상 기준). Selection outranks passive emphasis on the same record.
+     */
+    selected: {
+      background: semanticColors.selection.background,
+      border: semanticColors.selection.border,
+      borderWidth: stroke.default,
+    },
+  },
   dot: {
     diameter: 10,
     borderWidth: stroke.default,
@@ -216,7 +284,11 @@ export const timelineRecipe = {
 } as const satisfies {
   slots: readonly string[];
   gap: number;
-  item: { padding: number; emphasisBackground: ColorReference };
+  item: {
+    padding: number;
+    emphasisBackground: ColorReference;
+    selected: { background: ColorReference; border: ColorReference; borderWidth: number };
+  };
   dot: {
     diameter: number;
     borderWidth: number;
