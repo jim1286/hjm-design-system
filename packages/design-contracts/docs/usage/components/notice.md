@@ -88,6 +88,10 @@ import { Notice } from "@hjmds/react-native/feedback";
 
 ## 배치
 
+2026-10-25 개편: 다에리 오프라인 오류에서 붉은 면·붉은 테두리·붉은 제목이 겹치고, 재시도 버튼이 문구 아래 따로 놓여
+오류 한 줄이 화면에서 가장 시끄러운 블록이 됐다(사용자 지적). 테두리를 없애고 tone은 면 tint·앞쪽 막대·아이콘에만 둔다.
+제목은 본문색으로 읽히고, 행동은 Native도 Web처럼 같은 줄 끝에 둔다.
+
 2026-10-20 선택의창 지도 위에서 Native 안내 배경의 alpha가 지도 지명·도로를 그대로 비춰 문구와 겹쳤다.
 `panel`은 불투명한 테마 바탕 위에 tone tint를 합성한다(Web의 기존 color-mix와 같은 방식).
 지도·사진 위에서도 아래 콘텐츠가 비치지 않는다. `status`는 기존처럼 배경 없이 유지한다.
@@ -95,11 +99,12 @@ import { Notice } from "@hjmds/react-native/feedback";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 1(`stroke.default`), radius `radius.md` 12 | `noticeRecipe` |
+| 크기 | 본문 폭을 꽉 채운다. 아이콘 20(`glyph.sm`), 테두리 없음, 앞쪽 tone 막대 4(`accentBar`), radius `radius.md` 12 | `noticeRecipe` |
+| 색 | 면은 tone tint(info는 중립 `surface.sunken`), 막대·아이콘은 tone 색, 제목은 `content.primary`, 설명은 `content.body`. 제목을 tone 색으로 칠하지 않는다 | `noticeRecipe.tones`·`title.color` |
 | 간격 | 안쪽 `spacing.md` 16, 아이콘·문구·행동 사이 `spacing.xs` 8, 제목·설명 사이 `spacing.xxs` 4. 이웃 블록과는 `layout.contentGap` 16 | `noticeRecipe`, `.hjm-notice*` |
-| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. Web은 행동이 같은 줄 끝, Native는 행동이 문구 줄 **아래**. Web은 제목·설명 전체 묶음과 행동의 세로 중심을 행 높이의 중앙에 맞춘다. 첫 줄에 버튼 높이 기반 여백을 더하지 않는다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
+| 순서·정렬 | 아이콘 — 제목·설명 — 행동. 행동은 하나, `Button` `size="small"` `tone="secondary"`(또는 `ghost`), `primary` 금지. 두 플랫폼 모두 행동은 문구와 같은 줄 끝이며, 제목·설명 묶음과 행동의 세로 중심을 행 중앙에 맞춘다. 첫 줄에 버튼 높이 기반 여백을 더하지 않는다. Native 아이콘 칸은 제목 첫 줄 높이(토큰×글자 배율) | `.hjm-notice`·`.hjm-notice__icon`·`.hjm-notice__action`, `react-native/src/feedback.tsx` |
 | 고정·스크롤 | 본문 흐름 안. 먼저 읽어야 하는 경고·입력 오류는 영향을 받는 내용 바로 위(화면 상태는 제목 아래, 폼 검증은 제출 버튼 위). 제출 후 성공·실패 결과는 구성 지침이 지정한 행동 인접 위치에 둔다. 떠 있거나 고정되지 않고 함께 스크롤되며 여러 개 쌓지 않는다 | — |
-| 좁은 폭·큰 글자 | Web은 문구 칸이 60% 아래로 줄면 행동이 다음 줄로 감긴다. 제목·설명은 줄바꿈된다 | `.hjm-notice__content`(`flex: 1 1 60%`) |
+| 좁은 폭·큰 글자 | 문구 칸이 60%(`contentMinWidthPercent`) 아래로 줄면 행동이 다음 줄로 감긴다. 제목·설명은 줄바꿈된다 | `.hjm-notice__content`(`flex: 1 1 60%`), Native `flexBasis` |
 
 ## 꼭 지킬 것
 

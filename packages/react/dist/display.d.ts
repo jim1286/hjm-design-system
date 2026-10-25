@@ -51,6 +51,12 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent identity destination, outside the card activation host. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     media?: ReactNode;
     /** Decorative artwork behind the shared body/actions; its host determines the available height. */
     backgroundMedia?: ReactNode;
@@ -96,6 +102,12 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     title?: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent identity destination, outside the card activation host. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     media?: ReactNode;
     /** Decorative artwork behind the shared body/actions; its host determines the available height. */
     backgroundMedia?: ReactNode;
@@ -152,6 +164,12 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     title: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent member destination; rendered beside, never inside, the row command. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     trailing?: ReactNode;
     /**
      * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
@@ -167,6 +185,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
+    /** Large member portraits use the shared 48px frame; icons retain the default frame. */
+    leadingSize?: "default" | "large";
     selected?: boolean;
     disabled?: boolean;
     /**
@@ -186,6 +206,12 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     title: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent member destination; rendered beside, never inside, the row command. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     trailing?: ReactNode;
     /**
      * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
@@ -201,6 +227,8 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
+    /** Large member portraits use the shared 48px frame; icons retain the default frame. */
+    leadingSize?: "default" | "large";
     selected?: boolean;
     disabled?: boolean;
     /**

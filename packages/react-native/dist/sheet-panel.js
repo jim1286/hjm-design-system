@@ -11,7 +11,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeShadowElevation } from "./internal/styles.js";
 /** A nonmodal, bottom-anchored sheet. The map behind it keeps pointer and accessibility access. */
-export function SheetPanel({ children, handleLabel, maximumHeight, height, onHeightChange, layoutStyle, overlay, contentGesture, handleActions, onHandleAction, testID }) {
+export function SheetPanel({ children, handleLabel, maximumHeight, height, onHeightChange, layoutStyle, safeAreaBottom = 0, overlay, contentGesture, handleActions, onHandleAction, testID }) {
     const theme = useHjmNativeTheme();
     const { tokens, palette, designProfile, environment } = theme;
     const reduced = environment.reducedMotion;
@@ -26,6 +26,8 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
     if (!handleLabel.trim() || [maximumHeight, height].some(value => value !== undefined && (!Number.isFinite(value) || value <= 0))) {
         throw new TypeError("SheetPanel requires a handle label and positive finite heights");
     }
+    if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0)
+        throw new RangeError("SheetPanel safeAreaBottom must be non-negative");
     const settle = (velocityY, success) => {
         "worklet";
         const collapse = velocityY > sheetPanelBehavior.collapseVelocity ||
@@ -96,7 +98,7 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
             const measuredHeight = event.nativeEvent.layout.height;
             const previous = collapsedBy.get();
             const wasCollapsed = previous > 0 && translateY.get() > previous / 2;
-            const next = Math.max(0, measuredHeight - control.minTouchTarget);
+            const next = Math.max(0, measuredHeight - control.minTouchTarget - safeAreaBottom);
             cancelAnimation(translateY);
             collapsedBy.set(next);
             translateY.set(wasCollapsed ? next : 0);
@@ -106,6 +108,6 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
                         toggle();
                     else
                         onHandleAction?.(event); }, onPress: toggle, style: { height: control.minTouchTarget, alignSelf: "stretch", alignItems: "center", justifyContent: "center" }, children: _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no", style: { width: sheetRecipe.handle.width, height: sheetRecipe.handle.height,
-                            borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) }) }), overlay ? _jsx(View, { pointerEvents: expanded ? "box-none" : "none", style: [StyleSheet.absoluteFill, { opacity: expanded ? 1 : 0 }], accessibilityElementsHidden: !expanded, importantForAccessibility: expanded ? "auto" : "no-hide-descendants", children: overlay }) : null, _jsx(GestureDetector, { gesture: bodyGesture, children: _jsx(Animated.ScrollView, { testID: testID ? `${testID}-scroll` : undefined, accessibilityElementsHidden: !expanded, importantForAccessibility: expanded ? "auto" : "no-hide-descendants", style: { flexGrow: height === undefined ? 0 : 1, flexShrink: 1, overflow: "hidden" }, contentContainerStyle: { flexGrow: 1, paddingHorizontal: sheetRecipe.content.paddingHorizontal, paddingBottom: sheetRecipe.content.paddingBottom }, onScroll: onScroll, scrollEventThrottle: 16, showsVerticalScrollIndicator: true, bounces: false, overScrollMode: "never", contentInsetAdjustmentBehavior: "never", children: children }) })] });
+                            borderRadius: tokens.radius[sheetRecipe.handle.radius], backgroundColor: resolveColorReference(sheetRecipe.handle.color, palette) } }) }) }), overlay ? _jsx(View, { pointerEvents: expanded ? "box-none" : "none", style: [StyleSheet.absoluteFill, { opacity: expanded ? 1 : 0 }], accessibilityElementsHidden: !expanded, importantForAccessibility: expanded ? "auto" : "no-hide-descendants", children: overlay }) : null, _jsx(GestureDetector, { gesture: bodyGesture, children: _jsx(Animated.ScrollView, { testID: testID ? `${testID}-scroll` : undefined, accessibilityElementsHidden: !expanded, importantForAccessibility: expanded ? "auto" : "no-hide-descendants", style: { flexGrow: height === undefined ? 0 : 1, flexShrink: 1, overflow: "hidden" }, contentContainerStyle: { flexGrow: 1, paddingHorizontal: sheetRecipe.content.paddingHorizontal, paddingBottom: sheetRecipe.content.paddingBottom + safeAreaBottom }, onScroll: onScroll, scrollEventThrottle: 16, showsVerticalScrollIndicator: true, bounces: false, overScrollMode: "never", contentInsetAdjustmentBehavior: "never", children: children }) })] });
 }
 //# sourceMappingURL=sheet-panel.js.map

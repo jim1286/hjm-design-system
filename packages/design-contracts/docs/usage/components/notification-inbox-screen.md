@@ -95,3 +95,13 @@ import { NotificationInboxScreen } from "@hjmds/react-native/screens";
 | --- | --- | --- |
 | 배치·식별 | `layoutStyle`, `className`, `as` | `layoutStyle`, `testID` |
 | 스크롤 | 없음 | `scrollRef`, `scrollProps`(`refreshControl` 등) |
+
+
+## 행 종류와 여백 — 개발 소스, 미게시 (2026-10-25)
+
+`rowPresentation="item"`(기본)은 NotificationItem/ListRow용으로 화면이 여백을 소유한다.
+아바타·썸네일을 가진 NotificationRow에는 `rowPresentation="preview"`를 사용한다.
+이때 공통 화면이 body-edge를 선택하며 제품은 contentInset을 별도로 조정하지 않는다.
+같은 알림함에 서로 다른 행 종류가 있어 기본값을 일괄 변경하지 않는다.
+필터·notice가 모두 없으면 빈 notice 영역을 만들지 않는다.
+번뚝의 화면 여백과 행 여백 중복 및 빈 notice 간격을 공통 합성에서 예방하기 위한 변경이다.

@@ -140,3 +140,17 @@ it("retries controlled dismissal after the owner rejects it and restores focus o
   expect(document.querySelector('[role="menu"]')).toBeNull();
   expect(document.activeElement).toBe(host.querySelector("button"));
 });
+
+it("header close dismisses a bottom menu and returns focus without dispatching an action", async () => {
+  const action = vi.fn();
+  await render(<HjmProvider><Menu defaultOpen presentation="bottom" title="Manage" description="Packing · v2" dismissPlacement="header" dismissLabel="Close menu" label="Manage" trigger={<button>Open</button>} items={[{ id: "edit", label: "Edit" }]} onActionAfterDismiss={action} /></HjmProvider>);
+  await flush();
+  const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+  expect(menu.querySelector(".hjm-menu__subtitle")?.textContent).toBe("Packing · v2");
+  expect(menu.querySelectorAll('[aria-label="Close menu"]')).toHaveLength(1);
+  await act(async () => menu.querySelector<HTMLButtonElement>('[aria-label="Close menu"]')!.click());
+  await flush();
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  expect(document.activeElement).toBe(host.querySelector("button"));
+  expect(action).not.toHaveBeenCalled();
+});

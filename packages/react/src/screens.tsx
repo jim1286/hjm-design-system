@@ -1,4 +1,5 @@
 "use client";
+import { IdentityAction } from "./internal/identity-action.js";
 
 import { cornerAccessoryPlacements, type CornerAccessoryPlacement } from "@hjmds/design-contracts/recipes";
 import { iconTileRecipe, notificationRowRecipe as notificationRecipe, initialFocusDefaults, type ScreenInitialFocus, type IconTileArtwork, type IconTileFrame, type IconTileShape, type IconTileSize } from "@hjmds/design-contracts/screen-patterns";
@@ -39,6 +40,8 @@ export type ScreenLayoutProps = Readonly<{
    * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
    */
   titleLeading?: ReactNode;
+  /** Optional navigation for the identity mark; the product owns the destination and translated label. */
+  titleLeadingAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   /** Hide duplicate route names; retain titles that identify a subject or a task. */
   titleVisibility?: "visible" | "hidden";
   /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
@@ -89,7 +92,7 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -125,7 +128,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility 
   });
   const recipe = screenPatternRecipe;
   // The mark is decorative beside a visible title; standing alone it becomes the heading, named by `title`.
-  const mark = hasMark ? <span className="hjm-screen__title-leading" aria-hidden="true">{titleLeading}</span> : null;
+  const mark = hasMark ? titleLeadingAction ? <IdentityAction action={titleLeadingAction}>{titleLeading}</IdentityAction> : <span className="hjm-screen__title-leading" aria-hidden="true">{titleLeading}</span> : null;
   const titleRow = (level: typeof screenHeaderRecipe.titleLevel | typeof screenHeaderRecipe.centeredTitleLevel, justify: "center" | "start") => titleVisibility === "visible"
     ? <Stack axis="inline" gap="xs" align="center" justify={justify} wrap>{mark
       // A mark labels its title: one non-wrapping group whose heading shrinks and wraps beside the mark. In the wrapping
@@ -194,12 +197,27 @@ export function SettingsScreen({ profile, sections, ...props }: SettingsScreenPr
     <Section className="hjm-settings-section" key={section.id} title={<Text variant="label" emphasis="strong" tone="muted">{section.title}</Text>} description={section.description}>{section.children}</Section>)}</Stack></ScreenLayout>;
 }
 
+/** Conversation rows own their inset; products supply routing/data and the optional virtualized host.
+ * Keep this composition shared with Showcase: rebuilding it in BurnTok doubled gutters (2026-10-25).
+ */
+export type ConversationListScreenProps = Omit<ScreenLayoutProps, "contentInset" | "notice"> & Readonly<{
+  search?: ReactNode;
+  notice?: ReactNode;
+}>;
+export function ConversationListScreen({ search, notice, ...props }: ConversationListScreenProps) {
+  return <ScreenLayout {...props} contentInset="body-edge"
+    notice={search || notice ? <Stack gap="sm">{search}{notice}</Stack> : undefined} />;
+}
+
 export type NotificationInboxScreenProps = Omit<ScreenLayoutProps, "children"> & Readonly<{
   filters?: ReactNode;
+  /** NotificationRow owns its gutter; NotificationItem uses the screen gutter. */
+  rowPresentation?: "item" | "preview";
   children: ReactNode;
 }>;
-export function NotificationInboxScreen({ filters, children, notice, ...props }: NotificationInboxScreenProps) {
-  return <ScreenLayout {...props} notice={<Stack gap="sm">{notice}{filters}</Stack>}>{children}</ScreenLayout>;
+export function NotificationInboxScreen({ filters, children, notice, rowPresentation = "item", ...props }: NotificationInboxScreenProps) {
+  return <ScreenLayout {...props} {...(rowPresentation === "preview" ? { contentInset: "body-edge" as const } : {})}
+    notice={notice || filters ? <Stack gap="sm">{notice}{filters}</Stack> : undefined}>{children}</ScreenLayout>;
 }
 
 /** Read/unread is announced in localized copy as well as emphasis; rendering never marks an item read. */
@@ -225,20 +243,22 @@ export function NotificationItem({ read, statusLabel, timestamp, description, un
     description={<Stack gap="xxs">{description}{dot ? <span style={{ display: "flex", alignItems: "center", gap: notificationRecipe.contentGap }}>{meta}{dot}</span> : meta}</Stack>} />;
 }
 
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading" | "titleLeadingAction"> & Readonly<{
   composer: ReactNode;
   /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
   jumpToLatest?: Readonly<{ label: string; icon: ReactNode; onPress(): void }>;
   /** Peer or room photo beside the centered title; group rooms add the member count through `titleBadge`. */
   avatar?: ReactNode;
+  /** Opens the peer profile (or group details); omit for a decorative avatar. */
+  avatarAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
 }>;
 /** Caller supplies a virtualized timeline and keyboard-aware composer; no implicit auto-scroll or send. */
-export function ChatScreen({ composer, jumpToLatest, avatar, scroll = "content", ...props }: ChatScreenProps) {
+export function ChatScreen({ composer, jumpToLatest, avatar, avatarAction, scroll = "content", ...props }: ChatScreenProps) {
   // An empty conversation must still allow its first message; unavailable states hide input.
   const showComposer = !props.state || props.state.kind === "ready" || props.state.kind === "empty";
   // Anchor the jump control to the composer edge so it floats over the timeline without measuring the footer.
   // Conversations center the peer between back and tools and use the measured 10px timeline gutter (2026-10-16).
-  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} titleLeading={avatar} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
+  return <ScreenLayout {...props} className={classNames("hjm-chat-screen", props.className) ?? "hjm-chat-screen"} titleLeading={avatar} {...(avatarAction ? { titleLeadingAction: avatarAction } : {})} scroll={scroll} footer={showComposer ? <div className="hjm-chat-screen__footer">
     {jumpToLatest ? <div className="hjm-chat-screen__jump"><IconButton label={jumpToLatest.label} size="small" shape="circle" tone="secondary" onClick={jumpToLatest.onPress}>{jumpToLatest.icon}</IconButton></div> : null}
     {composer}</div> : null} />;
 }
@@ -303,7 +323,7 @@ export function MessageComposer({ leading, quickInserts, value, label, sendLabel
   return <div className="hjm-message-composer" data-send-presentation={sendPresentation} data-description-align={descriptionAlign} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{quickRow}{/* Replying wraps target, attachments and input in one card (2026-10-16 reference). */}{/* One stable wrapper whether or not replying, so the textarea is never remounted (focus stays). */}<div className="hjm-message-composer__reply-card" data-replying={target ? true : undefined}>{target ? <div className="hjm-message-composer__reply"><div className="hjm-message-composer__reply-text"><Text emphasis="strong">{target.author}</Text><Text variant="caption" tone="muted" className="hjm-message-composer__reply-excerpt">{target.excerpt}</Text></div><IconButton label={target.cancelLabel} tone="secondary" size="small" shape="circle" disabled={locked} onClick={target.onCancel}><Text>×</Text></IconButton></div> : null}{composerBody}</div>{lengthFeedback && limit?.near ? <Progress shape="circular" label={lengthFeedback.label} value={Math.min(limit.used, limit.max)} max={limit.max} valueText={lengthFeedback.formatCount(limit.used, limit.max)}><Text variant="caption">{lengthFeedback.formatCount(limit.used, limit.max)}</Text></Progress> : null}</div>;
 }
 
-export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }>; summary?: ChatMessageReactionSummary }>;
+export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: ReactNode; interactiveContent?: boolean; avatar?: ReactNode; avatarAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;  reply?: ReactNode; actions?: ReactNode; replyAction?: Readonly<{label:string; onPress():void; disabled?:boolean; icon?:ReactNode}>; replyLink?: Readonly<{label:string; onPress():void}>; /** HJM-drawn quote ("Replying to X" + one-line excerpt) heading the bubble; preferred over a custom `reply` node. */ replyQuote?: Readonly<{ title: string; excerpt: string }>; /** Photos sent in the message. Products own the image source, viewer and upload; HJM owns the layout. */ media?: readonly Readonly<{ id: string; label: string; preview: ReactNode; aspectRatio?: number; onPress?(): void }>[]; reactions?: ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>; menuActions?: readonly MessageMenuAction[]; reportAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean; icon?: ReactNode }>; summary?: ChatMessageReactionSummary }>;
   /** Canonical layout-only placement on the message row. The swipe offset still owns `transform`. */
   layoutStyle?: HjmCompositionStyleProp }> & Readonly<{
   /**
@@ -317,7 +337,7 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{ children: Reac
  * accessible name ("Reactions: heart 2. Open menu") come from the product; `items` in display order.
  */
 export type ChatMessageReactionSummary = ChatReactionSummary;
-export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, reply, replyQuote, media = [], mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
+export function ChatMessage({ direction, author, timestamp, timestampPresentation = "always", bubbleTail = true, groupPosition = "single", deliveryLabel, avatar, avatarAction, reply, replyQuote, media = [], mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent=false, layoutStyle }: ChatMessageProps) {
   const theme = useOptionalHjmTheme();
   const display = resolveChatMessageGroupDisplay(groupPosition);
   // A run shows its time once, beside its last bubble; delivery state stays on every bubble.
@@ -353,9 +373,9 @@ export function ChatMessage({ direction, author, timestamp, timestampPresentatio
     // Reserve tip room only where it protrudes (own trailing edge, or leading edge without an avatar column).
     ...(bubbleTail ? (direction === "outgoing" ? { paddingInlineEnd: chatMessageRecipe.tailWidth } : avatar ? {} : { paddingInlineStart: chatMessageRecipe.tailWidth }) : {}), touchAction: revealTime || replyAction ? "pan-y" : undefined }} aria-label={author}>
     {revealTime ? <time style={{ position: "absolute", ...(direction === "outgoing" ? { right: 0, justifyContent: "flex-end" } : { left: 0 }), top: 0, bottom: 0, width: 80, display: "flex", alignItems: "center", opacity: offset !== 0 ? 1 : 0, pointerEvents: "none" }}><Text variant="caption" tone="muted">{timestamp}</Text></time> : null}
-    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth, "--hjm-chat-avatar-size": `${chatMessageRecipe.avatarSize}px` } as React.CSSProperties} data-direction={direction} data-tail={(bubbleTail && display.showTail) || undefined}>
+    <div className="hjm-chat-message" style={{ transform: `translateX(${offset}px)`, transition: start.current || theme?.environment.reducedMotion ? "none" : "transform var(--hjm-motion-normal, 200ms) ease-out", "--hjm-message-max-width": screenPatternRecipe.messageMaxWidth, "--hjm-chat-avatar-size": `${avatarAction ? iconButtonRecipe.sizes.medium.diameter : chatMessageRecipe.avatarSize}px` } as React.CSSProperties} data-direction={direction} data-tail={(bubbleTail && display.showTail) || undefined}>
     {/* Later bubbles of a run keep the avatar column so their edges line up under the first bubble. */}
-    {avatar ? <div className="hjm-chat-message__avatar" aria-hidden={display.showAvatar ? undefined : true}>{display.showAvatar ? avatar : null}</div> : null}
+    {avatar ? <div className="hjm-chat-message__avatar" aria-hidden={display.showAvatar ? undefined : true}>{display.showAvatar ? avatarAction ? <IdentityAction action={avatarAction}>{avatar}</IdentityAction> : avatar : null}</div> : null}
     <div className="hjm-chat-message__content">{author && display.showAuthor && direction !== "outgoing"?<Text variant="caption" tone="muted">{author}</Text>:null}
       {/* Time and delivery sit beside the bubble's bottom edge, on the side facing the open space. */}
       <div className="hjm-chat-message__body">
@@ -442,6 +462,7 @@ export type NotificationRowProps = Readonly<{
   preview: ReactNode;
   metadata: string;
   avatar: ReactNode;
+  avatarAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   avatarBadge?: ReactNode;
   thumbnail?: ReactNode;
   unread?: boolean;
@@ -453,26 +474,28 @@ export type NotificationRowProps = Readonly<{
 }>;
 
 /** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
-export function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread = false, separator = false, action }: NotificationRowProps) {
+export function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread = false, separator = false, action }: NotificationRowProps) {
   const r = notificationRecipe;
   if (action && !action.label.trim()) throw new TypeError("NotificationRow action requires a localized label");
-  const content = <span aria-hidden="true" data-hjm-notification-row="true" style={{ position: "relative", display: "flex", alignItems: "center", gap: r.gap, padding: `${r.paddingBlock}px ${r.paddingInline}px`, width: "100%", minWidth: 0, boxSizing: "border-box" }}>
-    {separator ? <span data-hjm-notification-separator="true" style={{ position: "absolute", insetBlockStart: 0, insetInlineStart: r.separatorInsetStart, insetInlineEnd: 0, borderBlockStart: "1px solid var(--hjm-color-border)" }} /> : null}
-    <span style={{ position: "relative", width: r.avatarSize, height: r.avatarSize, flexShrink: 0 }}>
-      <span style={{ display: "flex", width: "100%", height: "100%", overflow: "hidden", borderRadius: "50%" }}>{avatar}</span>
-      {avatarBadge ? <span style={{ position: "absolute", bottom: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center", width: r.avatarBadgeSize, height: r.avatarBadgeSize, borderRadius: "50%", background: "var(--hjm-color-surface)", border: "2px solid var(--hjm-color-surface)", boxSizing: "border-box" }}>{avatarBadge}</span> : null}
-    </span>
-    <span data-hjm-notification-copy="true" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: r.contentGap }}>
-      <Text style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: r.previewLines, overflow: "hidden" }}>{preview}</Text>
-      <span style={{ display: "flex", alignItems: "center", gap: r.contentGap }}><Text variant="caption" tone="muted">{metadata}</Text>{unread ? <span data-hjm-unread-dot="true" style={{ width: r.unreadSize, height: r.unreadSize, borderRadius: "50%", flexShrink: 0, background: "var(--hjm-color-content-brand)" }} /> : null}</span>
-    </span>
-    {thumbnail ? <span style={{ width: r.thumbnailSize, height: r.thumbnailSize, flexShrink: 0, overflow: "hidden", borderRadius: "var(--hjm-radius-sm)" }}>{thumbnail}</span> : null}
+  const portrait = <span style={{position:"relative",display:"flex",width:r.avatarSize,height:r.avatarSize,flexShrink:0}}>
+    <span style={{display:"flex",width:"100%",height:"100%",overflow:"hidden",borderRadius:"50%"}}>{avatar}</span>
+    {avatarBadge?<span style={{position:"absolute",bottom:0,right:0,display:"flex",alignItems:"center",justifyContent:"center",width:r.avatarBadgeSize,height:r.avatarBadgeSize,borderRadius:"50%",background:"var(--hjm-color-surface)",border:"2px solid var(--hjm-color-surface)",boxSizing:"border-box"}}>{avatarBadge}</span>:null}
   </span>;
-  return action ? <button type="button" className="hjm-notification-row-action" aria-label={action.label}
-    disabled={action.disabled} onClick={() => { if (!action.disabled) action.onActivate(); }}
-    style={{ "--hjm-notification-disabled-opacity": r.interaction.disabledOpacity, "--hjm-notification-pressed-opacity": r.interaction.pressedOpacity } as React.CSSProperties}>
-    {content}
-  </button> : content;
+  const copy = <span data-hjm-notification-copy="true" style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:r.contentGap}}>
+    <Text style={{display:"-webkit-box",WebkitBoxOrient:"vertical",WebkitLineClamp:r.previewLines,overflow:"hidden"}}>{preview}</Text>
+    <span style={{display:"flex",alignItems:"center",gap:r.contentGap}}><Text variant="caption" tone="muted">{metadata}</Text>{unread?<span data-hjm-unread-dot="true" style={{width:r.unreadSize,height:r.unreadSize,borderRadius:"50%",flexShrink:0,background:"var(--hjm-color-content-brand)"}}/>:null}</span>
+  </span>;
+  const image = thumbnail?<span style={{width:r.thumbnailSize,height:r.thumbnailSize,flexShrink:0,overflow:"hidden",borderRadius:"var(--hjm-radius-sm)"}}>{thumbnail}</span>:null;
+  const divider = separator?<span data-hjm-notification-separator="true" style={{position:"absolute",insetBlockStart:0,insetInlineStart:r.separatorInsetStart,insetInlineEnd:0,borderBlockStart:"1px solid var(--hjm-color-border)"}}/>:null;
+  const rowStyle: React.CSSProperties = {position:"relative",display:"flex",alignItems:"center",gap:r.gap,padding:`${r.paddingBlock}px ${r.paddingInline}px`,width:"100%",minWidth:0,boxSizing:"border-box"};
+  const commandStyle = {"--hjm-notification-disabled-opacity":r.interaction.disabledOpacity,"--hjm-notification-pressed-opacity":r.interaction.pressedOpacity} as React.CSSProperties;
+  const activate = () => {if(action&&!action.disabled)action.onActivate();};
+  // Separate destinations share the same visual parts, with sibling controls rather than nested buttons.
+  if (avatarAction) return <div data-hjm-notification-row="true" style={rowStyle}>{divider}<IdentityAction action={avatarAction}>{portrait}</IdentityAction>
+    {action?<button type="button" className="hjm-notification-row-action" aria-label={action.label} disabled={action.disabled} onClick={activate} style={{...commandStyle,flex:1,minWidth:0,minHeight:r.avatarSize}}><span aria-hidden="true" style={{display:"flex",alignItems:"center",gap:r.gap,width:"100%"}}>{copy}{image}</span></button>:<span style={{display:"flex",alignItems:"center",gap:r.gap,flex:1,minWidth:0}}>{copy}{image}</span>}
+  </div>;
+  const content = <span aria-hidden="true" data-hjm-notification-row="true" style={rowStyle}>{divider}{portrait}{copy}{image}</span>;
+  return action?<button type="button" className="hjm-notification-row-action" aria-label={action.label} disabled={action.disabled} onClick={activate} style={commandStyle}>{content}</button>:content;
 }
 
 export type IconTileProps = Readonly<{

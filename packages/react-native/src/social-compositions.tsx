@@ -1,4 +1,5 @@
 "use client";
+import { IdentityAction } from "./internal/identity-action.js";
 import { useState, type ReactNode } from "react";
 import { resolveFollowProposal, resolveAttendanceProposal, type FollowProfileState, type AttendanceChoice, type EventAttendanceState } from "@hjmds/design-contracts/social-compositions";
 import { Button } from "./actions.js";
@@ -8,13 +9,13 @@ import { Stack, Text } from "./primitives.js";
 import { RadioGroup } from "./inputs.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 
-type Person = Readonly<{ id: string; name: string; avatar?: ReactNode }>;
+type Person = Readonly<{ id: string; name: string; avatar?: ReactNode; avatarAction?: Readonly<{label:string;onPress():void; disabled?: boolean }> }>;
 function Failure({ failed, label }: Readonly<{ failed: boolean; label: string }>) {
   return failed ? <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" align="center" tone="danger">{label}</Text> : null;
 }
 export type FollowProfileCardProps = Readonly<{
   /** Changing entities remounts the action scope and detaches old responses. */
-  profileId: string; name: string; description?: ReactNode; avatar?: ReactNode;
+  profileId: string; name: string; description?: ReactNode; avatar?: ReactNode; avatarAction?: Readonly<{label:string;onPress():void; disabled?: boolean }>;
   state: FollowProfileState; locale: string;
   labels: Readonly<{ follow: string; following: string; pending: string; count: string; error: string }>;
   /** Resolve only after the real mutation; update state with the server's confirmed snapshot. */
@@ -29,7 +30,7 @@ function FollowProfileBody(props: FollowProfileCardProps) {
   const action = useCompositionAction<FollowProfileState>(props.disabled);
   // Capture the proposal once; changing server counts during the request must not add the delta twice.
   const displayed: FollowProfileState = action.active ?? props.state;
-  return <Card title={props.name} description={props.description} leading={props.avatar ?? <Avatar name={props.name} decorative />}>
+  return <Card title={props.name} description={props.description} leading={props.avatarAction?<IdentityAction action={props.avatarAction}>{props.avatar ?? <Avatar name={props.name} decorative />}</IdentityAction>:props.avatar ?? <Avatar name={props.name} decorative />}>
     <Stack gap="md"><AnimatedStatistic descriptor={{ id: "social-count", label: props.labels.count }} value={displayed.count} locale={props.locale} />
       <Button selected={displayed.following} loading={action.pending} loadingLabel={props.labels.pending} disabled={props.disabled === true}
         onPress={() => { const proposal = resolveFollowProposal(props.state, !props.state.following); void action.run(proposal, () => props.onFollowChange(proposal.following)); }}>
@@ -60,7 +61,7 @@ function EventAttendanceBody(props: EventAttendanceCardProps) {
     <Text>{props.dateLabel}</Text>
     <AnimatedStatistic descriptor={{ id: "social-count", label: props.labels.count }} value={displayed.count} locale={props.locale} />
     {/* A long name wraps beside its avatar inside the card instead of overflowing it (2026-10-23 layout audit). */}
-    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs" align="center" layoutStyle={{maxWidth: "100%"}}>{person.avatar ?? <Avatar name={person.name} decorative />}<Text style={{flexShrink: 1}}>{person.name}</Text></Stack>)}</Stack>
+    <Stack axis="inline" gap="xs" wrap>{props.participants.map(person => <Stack key={person.id} axis="inline" gap="xs" align="center" layoutStyle={{maxWidth: "100%"}}>{person.avatarAction?<IdentityAction action={person.avatarAction}>{person.avatar ?? <Avatar name={person.name} decorative />}</IdentityAction>:person.avatar ?? <Avatar name={person.name} decorative />}<Text style={{flexShrink: 1}}>{person.name}</Text></Stack>)}</Stack>
     {/* One answer out of several is a radio choice; selected primary Buttons gave the card three primaries.
         RadioGroup (not SegmentedControl) keeps the "no answer yet" state that responseId=null needs; plain keeps
         three short answers on one line inside the card. */}

@@ -57,6 +57,7 @@ host: 남은 높이·safe area·키보드
 | --- | --- | --- |
 | 답글 접기·펼치기 | expandedIds와 원문 데이터 분리 | 서버 순서를 보존하고 접어도 답글 초안을 지우지 않는다 |
 | 목록 추가 조회 실패 | 기존 items + threadFooter 재시도 | 이미 읽던 댓글과 스크롤을 유지한다 |
+| 답글 더 보기 | `moreRepliesLabel` + (서버 페이지면) `repliesPage` | 답글은 5개씩 열고 받은 답글을 먼저 보인 뒤 다음 페이지를 요청한다([답글 5개씩](../components/comment-thread-screen.md#답글-5개씩-2026-10-25-정책-미게시)) |
 | 첫 댓글 | empty + composer | 최초 로딩 실패와 실제 0건을 구분한다 |
 | 전송 실패 | 기존 ready 또는 empty + notice | 초안·답글 대상을 유지한다. 항목별 좋아요 실패는 해당 항목만 복구한다 |
 

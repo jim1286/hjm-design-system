@@ -202,7 +202,7 @@ describe("web composition style", () => {
         <NativeSelect label="native" options={[{ value: "one", label: "One" }]} layoutStyle={{ marginTop: 29 }} />
         <Select label="select" placeholder="Choose" emptySelectionLabel="None"
           items={[{ id: "one", label: "One", textValue: "One" }]} layoutStyle={{ marginTop: 30 }} />
-        <ColorPicker label="color" labels={{ color: "c", hex: "h", opacity: "o", invalid: "i" }} value="#b94627"
+        <ColorPicker label="color" labels={{ hue: "Hue", saturation: "Saturation", brightness: "Brightness", hex: "h", opacity: "o", invalid: "i" }} value="#b94627"
           onValueChange={() => {}} layoutStyle={{ marginTop: 31 }} />
         <Collapsible trigger="more" layoutStyle={{ marginTop: 32 }}>content</Collapsible>
         <TextField label="text" layoutStyle={{ marginTop: 33 }} style={{ marginBottom: 1 }} />

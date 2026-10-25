@@ -489,7 +489,9 @@ export declare const commentThreadRecipe: {
     readonly lineGap: 4;
     readonly rowGap: 20;
     readonly replyIndent: number;
-    readonly likeColumnWidth: 44;
+    readonly replyPageSize: 5;
+    readonly actionButtonSize: "small";
+    readonly likeColumnWidth: 36;
     readonly mediaMaxWidth: 160;
     readonly mediaRadius: 12;
     readonly panelGap: 8;
@@ -514,6 +516,23 @@ export type CommentMenuItemDescriptor<Key extends string = string> = Pick<MenuIt
 /** Danger actions (delete, block) always sit last so a destructive row is never the first target; order is otherwise kept. */
 export declare function resolveCommentMenuItems<Key extends string>(items: readonly CommentMenuItemDescriptor<Key>[]): readonly CommentMenuItemDescriptor<Key>[];
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
+/**
+ * One reply branch page under the five-at-a-time policy (`commentThreadRecipe.replyPageSize`, 2026-10-25). `loaded` replies
+ * are in the thread items, `total` is the server count, `visible` how far the reader has opened the branch and
+ * `revealIndex` a loaded reply the product must keep shown (just sent, opened from a notification). "reveal" shows more
+ * already loaded replies, "fetch" asks the product for its next server page, null ends the branch's more action.
+ */
+export declare function resolveCommentReplyPage({ loaded, total, visible, revealIndex, canFetch }: Readonly<{
+    loaded: number;
+    total: number;
+    visible: number;
+    revealIndex?: number;
+    canFetch: boolean;
+}>): Readonly<{
+    shown: number;
+    remaining: number;
+    more: "reveal" | "fetch" | null;
+}>;
 export declare function validateCommentThread(items: readonly {
     id: string;
     parentId: string | null;
@@ -644,7 +663,15 @@ export declare const notificationRowRecipe: {
 };
 /** Shared profile identity geometry; product owns the avatar content. */
 export declare const profileSummaryRecipe: Readonly<{
-    avatarSize: 72;
+    avatarSize: 48;
+    /**
+     * 2026-10-25 user rule: on one's own profile the photo changes the photo and a pencil beside the name changes the
+     * nickname, so no separate "edit profile" button repeats either. Small ghost IconButton (36 + hitSlop 4 = 44 target).
+     */
+    nameEdit: Readonly<{
+        readonly icon: "edit";
+        readonly size: "small";
+    }>;
     avatarGlyphSize: 44;
     actionsLayouts: Readonly<{
         inline: Readonly<{
@@ -653,6 +680,10 @@ export declare const profileSummaryRecipe: Readonly<{
         }>;
         stacked: Readonly<{
             readonly axis: "block";
+            readonly gap: "xs";
+        }>;
+        equal: Readonly<{
+            readonly axis: "inline";
             readonly gap: "xs";
         }>;
     }>;

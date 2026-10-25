@@ -55,6 +55,7 @@ export declare const publicExportEntries: {
     readonly CollapsibleMarker: readonly ["./collapsible"];
     readonly CollectionRail: readonly ["./collection-rail"];
     readonly ColorPicker: readonly ["./color-picker"];
+    readonly ColorSwatchPicker: readonly ["./color-picker"];
     readonly Combobox: readonly ["./forms"];
     readonly CommandPalette: readonly ["./command-palette"];
     readonly CommentThreadRow: readonly ["./screen-flows"];
@@ -64,6 +65,7 @@ export declare const publicExportEntries: {
     readonly Container: readonly ["./layout"];
     readonly ContentTransition: readonly ["./content-transition"];
     readonly ContextMenu: readonly ["./context-menu"];
+    readonly ConversationListScreen: readonly ["./screens"];
     readonly ConversationRow: readonly ["./conversation-row"];
     readonly ConversionFunnel: readonly ["./data-workflows"];
     readonly CorrelationMatrix: readonly ["./data-workflows"];
@@ -88,6 +90,7 @@ export declare const publicExportEntries: {
     readonly FilterRecovery: readonly ["./collection-editing"];
     readonly FloatingActionButton: readonly ["./floating-action-button"];
     readonly FolderPreview: readonly ["./folder-preview"];
+    readonly FollowListScreen: readonly ["./follow-list"];
     readonly FollowProfileCard: readonly ["./social-compositions"];
     readonly Form: readonly ["./forms"];
     readonly GravityLetters: readonly ["./gravity-letters"];

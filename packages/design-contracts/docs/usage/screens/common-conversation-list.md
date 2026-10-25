@@ -23,7 +23,7 @@ host: 남은 높이·safe area
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | ScreenLayout(`scroll="content"`, `contentInset="body-edge"`) | route 본문 | 헤더·notice는 화면 recipe padding 16, 본문 좌우는 0(행이 여백 소유) |
+| 바깥 틀 | ConversationListScreen(가상화 host는 `scroll="content"`) | route 본문 | 헤더·notice는 화면 recipe padding 16, 본문 좌우는 0(행이 여백 소유) |
 | 검색 | SearchField(라벨 "대화 검색", 검색 아이콘, placeholder "이름이나 메시지 검색") | `notice` | 화면 recipe itemGap 12. 결과가 없으면 `state.empty` |
 | 행 | 라우팅 host(Pressable·링크) + ConversationRow | 본문 목록 | 아바타 56, 행 padding 가로 16(`conversationRowRecipe.paddingInline`)·세로 10, 화면 끝에서 아바타까지 16 |
 | 행 메뉴 | ContextMenu | 행 host를 감싼다 | Native 카드 폭 최대 280, 행 48, 아이콘 24 |
@@ -107,3 +107,24 @@ import { ContextMenu } from "@hjmds/react/context-menu";
 - 헤더 새 대화 IconButton·`notice` 검색·Web 메뉴 아이콘: 2026-10-17 화면 검토(S5)에서 예제가 새 대화 행동 없이, `notice`에 데모 안내 문구를 두고, Web과 Native 문구·메뉴 모양이 갈라진 것을 확인했다. 예제 데이터·문구는 `showcase/shared/conversation-list.ts` 하나를 두 플랫폼이 읽는다.
 - 검색 아이콘·placeholder, 행동 결과 줄의 위치: 같은 날 재검증에서 notice로 옮긴 SearchField가 아이콘도 placeholder도 없는 빈 상자였고, 데모 행동 결과("미리보기 도구")가 기본 스토리 화면 위에 여백 없이 붙어 있었다. 아이콘은 Web `renderSearchIcon`·Native `renderLeading`(lucide `Search`)이고, 결과 줄은 다른 화면처럼 도구 스토리("행동 결과 확인")에서만 보인다.
 - 본문 `contentInset="body-edge"`: 2026-10-17 사용자 결정. 화면 검토 S5#9에서 본문 padding 16과 행 padding 16이 겹쳐 아바타가 약 32pt 안쪽에서 시작했다(인스타그램 DM 약 16). 기존 `none`은 앱 사용처가 "host가 모든 여백 소유"로 써서 의미를 바꿀 수 없었다.
+
+
+## 공통 화면 API — 개발 소스, 미게시 (2026-10-25)
+
+Web은 `@hjmds/react/screens`, Native는 `@hjmds/react-native/screens`의
+`ConversationListScreen`을 사용한다. 기존 ScreenLayout 상태·헤더·footer·스크롤 계약을
+재사용하며 `contentInset`은 노출하지 않는다. `search`는 검색 입력, `notice`는 조회 안내다.
+두 슬롯은 공통 notice 영역에서 배치되고, 본문 여백은 행이 한 번만 소유한다.
+제품은 ConversationRow에 데이터·라우팅·메뉴를 연결한다. 목록 바깥 Card·추가 좌우 padding·
+List 구분선을 넣지 않는다. Native 가상화 host만 `scroll="content"`, 일반 자식은 기본 스크롤을 쓴다.
+
+번뚝에서 같은 행을 쓰고도 앱 wrapper로 배치가 달라진 것이 도입 이유다.
+이전에는 이 화면 조합이 Showcase에만 있었으므로 별도 공통 화면을 공개했고, 예제와 제품이
+같은 구현을 소비한다. 기존 ScreenLayout·ListDetailScreen은 일반 화면/상세 전환용으로 유지한다.
+
+```tsx
+import { ConversationListScreen } from "@hjmds/react/screens";
+<ConversationListScreen title={title} search={searchField} actions={composeAction} state={state}>
+  {conversationLinks}
+</ConversationListScreen>
+```

@@ -669,6 +669,18 @@
       "react-native": "./dist/time-picker.js",
       "import": "./dist/time-picker.js",
       "default": "./dist/time-picker.js"
+    },
+    "./follow-list": {
+      "types": "./dist/follow-list.d.ts",
+      "react-native": "./dist/follow-list.js",
+      "import": "./dist/follow-list.js",
+      "default": "./dist/follow-list.js"
+    },
+    "./color-picker": {
+      "types": "./dist/color-picker.d.ts",
+      "react-native": "./dist/color-picker.js",
+      "import": "./dist/color-picker.js",
+      "default": "./dist/color-picker.js"
     }
   },
   "files": [

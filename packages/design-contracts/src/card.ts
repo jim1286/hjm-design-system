@@ -57,10 +57,11 @@ export const cardRecipe = {
     // Short copy and independent commands share one vertical center (BurnTok profile, 2026-10-20).
     alignItems: "center",
   },
+  // Card titles stay below page titles in dense content flows (BurnTok review, 2026-10-25).
   title: {
-    variant: "title",
+    variant: "bodyLarge",
     tone: "primary",
-    emphasis: "strong",
+    emphasis: "medium",
   },
   description: {
     variant: "body",
@@ -106,9 +107,9 @@ export const cardRecipe = {
   body: { padding: number; gap: number };
   header: { gap: number; alignItems: "center" };
   title: {
-    variant: "title";
+    variant: "bodyLarge";
     tone: "primary";
-    emphasis: "strong";
+    emphasis: "medium";
   };
   description: {
     variant: "body";

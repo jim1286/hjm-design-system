@@ -27,7 +27,7 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
-| `ColorPicker` | 네이티브 색 입력 + HEX 입력 + 불투명도(`alpha`) + 프리셋 견본. controlled | [ColorPicker](../components/color-picker.md) |
+| `ColorPicker` | 채도·밝기 영역 + 색조 막대 + 불투명도(`alpha`) + HEX 입력 + 프리셋 견본. controlled | [ColorPicker](../components/color-picker.md) |
 | 선택값 문구 `Text` `role="status"` | 바뀐 HEX를 알림. 값은 `<bdi dir="ltr">`로 감싼다 | [Text](../components/text.md) |
 | `Watermark` | 본문 위 장식 SVG 타일. 포인터·선택을 가로채지 않는다 | [Watermark](../components/watermark.md) |
 | `Affix` | 가장 가까운 스크롤 조상 상단에 `position: sticky`로 붙는다 | [Affix](../components/affix.md) |
@@ -60,14 +60,14 @@ Native 화면에서 같은 일이 필요하면 이 구성을 옮기지 않는다
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | HJM ScreenLayout의 본문 | 세 스토리 모두 바깥 폭·여백을 정하지 않는다. 페이지 본문은 [Container](../components/container.md)가 정한다. Affix만 가장 가까운 스크롤 조상(문서 또는 제품의 `overflow: auto` 영역)에 붙는다. Web 전용이라 안전 영역·화면 키보드 처리는 없다 | Container gutter 폭 600 미만 `compact` 16 · 이상 `regular` 20 |
-| 색 입력 줄 | `ColorPicker` 색 견본 + HEX | fieldset 첫 줄, 좁으면 줄바꿈(`flex-wrap`) | 입력 최소 높이 `colorPickerRecipe.minTargetSize` 44, 색 견본 폭 3rem, 줄 간격 0.75rem |
-| 불투명도·미리보기·프리셋 | `ColorPicker` 내부 | 색 입력 아래 순서대로 | 각 위 여백 0.75rem, 프리셋 사이 0.5rem, 프리셋 최소 높이 44 |
+| 색 편집 | `ColorPicker` 영역·막대 | fieldset 첫 부분, 폭을 채운다 | 영역 4:3, 막대 높이 24, 부품 사이 `spacing.md` |
+| 미리보기·HEX·프리셋 | `ColorPicker` 내부 | 막대 아래 순서대로 | 미리보기 원 44, 견본 누름 영역 44(원 32) |
 | 선택값 | live 문구 | ColorPicker 바로 아래, 같은 Stack | `spacing.md` 16. 스토리는 `Container size="reading"`(최대 720) |
 | 워터마크 | `Watermark` | 감싼 본문 전체를 덮는 오버레이(`inset: 0`) | `tileWidth` 240 · `tileHeight` 160 · `rotate` -22 · `opacity` 0.12(기본값), 색 `--hjm-color-text-sub` |
 | 고정 행동 | `Affix` | 스크롤 조상 상단 + `offset` | `offset` 기본 0, 띄울 때는 spacing 토큰 값(스토리 `spacing.xs` 8). 스크롤 조상보다 높으면 고정하지 않고 흐름에 남는다 |
 | 저장 실패 | `Notice` danger | 저장 버튼 위(Watermark 본문 안, Affix 아래 본문 첫머리) | 버튼과 `spacing.md` 16 |
 
-- ColorPicker 내부 간격은 CSS가 rem 값으로 직접 둔다(`padding: 1rem`, `gap: 0.75rem`·`0.5rem`). 제품에서 덮지 않는다.
+- ColorPicker 내부 간격은 HJM이 둔다(`padding: 1rem`, 부품 사이 `spacing.md`). 제품에서 덮지 않는다.
 - Affix는 스크롤 조상 안에서만 붙는다. 그 조상의 높이·overflow는 HJM 화면 골격이 정한다(스토리의 280px 박스는 데모 값).
 
 ## 흐름과 상태
@@ -104,7 +104,7 @@ import { Stack, Text } from "@hjmds/react/layout";
 <Stack gap="md">
   <ColorPicker label={t("theme.accent")} value={color} onValueChange={setColor} alpha
     presets={productPresets}
-    labels={{ color: t("theme.color"), hex: t("theme.hex"), opacity: t("theme.opacity"), invalid: t("theme.invalidHex") }} />
+    labels={{ hex: t("theme.hex"), hue: t("theme.hue"), saturation: t("theme.saturation"), brightness: t("theme.brightness"), opacity: t("theme.opacity"), invalid: t("theme.invalidHex"), presets: t("theme.presets") }} />
   <Text role="status">{t("theme.selected")} <bdi dir="ltr">{color}</bdi></Text>
 </Stack>;
 

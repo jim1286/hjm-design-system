@@ -57,7 +57,9 @@ export type EditorScreenProps = Omit<Base, "leading" | "exit"> & {
 export declare function EditorScreen({ children, dirty, submitPlacement, submit, cancel, discard, draftStatus, stepBack, initialFocus, ...screen }: EditorScreenProps): import("react").JSX.Element;
 export type ProfileScreenProps = Base & {
     summary: ReactNode;
-    edit: ScreenFlowAction;
+    /** Optional since 2026-10-25: when the profile photo itself is the edit (portfolio rule "tap my photo to change it"), a
+     * separate edit button would duplicate it. Products still pass one for other edits or a guest sign-in action. */
+    edit?: ScreenFlowAction;
     children?: ReactNode;
     accountActions?: ReactNode;
     /** `below-summary` (default): ghost button under the summary. `summary`: the edit action goes first in the action row
@@ -385,6 +387,15 @@ export type CommentThreadItem = Readonly<{
     repliesCount?: number;
     repliesNotice?: ReactNode;
     repliesFooter?: ReactNode;
+    /**
+     * Root-only next server page of replies (2026-10-25 five-at-a-time policy). HJM calls `onLoadMore` from the branch's
+     * "more" action once every loaded reply is shown; the product fetches `commentThreadRecipe.replyPageSize` more and
+     * reports `pending` so the action cannot double-request. Omit it when every reply is already in `items`.
+     */
+    repliesPage?: Readonly<{
+        onLoadMore(): void;
+        pending?: boolean;
+    }>;
     id: string;
     parentId: string | null;
     author: string;
@@ -395,6 +406,11 @@ export type CommentThreadItem = Readonly<{
     timeDateTime?: string;
     likeCountLabel: string;
     avatar?: ReactNode;
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     likeIcon: ReactNode;
     likeLabel: string;
     likeAction?: ReactNode;
@@ -470,6 +486,13 @@ export type CommentThreadScreenProps = Base & {
     threadHeader?: ReactNode;
     threadFooter?: ReactNode;
     commentMenu?: CommentMenu;
+    /**
+     * Label of an open branch's "more" action for the replies not shown yet (2026-10-25 policy: branches open and extend
+     * `commentThreadRecipe.replyPageSize` at a time). Without it the branch keeps the earlier show-all behaviour.
+     */
+    moreRepliesLabel?(remaining: number): string;
+    /** A reply that must stay shown even past the opened page (just sent, opened from a notification); expansion stays product-controlled. */
+    revealedReplyId?: string;
 };
 export type CommentThreadRowProps = Readonly<{
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
@@ -482,13 +505,20 @@ export type CommentThreadRowProps = Readonly<{
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps): import("react").JSX.Element;
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, commentMenu, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
+export declare function CommentThreadScreen({ items, expandedIds, onExpandedChange, onLike, onReply, replyLabel, repliesLabel, composer, threadHeader, threadFooter, commentMenu, moreRepliesLabel, revealedReplyId, ...screen }: CommentThreadScreenProps): import("react").JSX.Element;
 export type ProfileSummaryProps = Readonly<{
     name: string;
     headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     avatar: ReactNode;
     badge?: ReactNode;
     nameActions?: ReactNode;
+    /**
+     * Edit beside the name (2026-10-25 user rule): on one's own profile the name carries a pencil IconButton that opens the
+     * nickname change, while tapping the photo (`Avatar.action`) changes the photo. HJM owns the icon, size and placement
+     * (before `nameActions`); the product supplies the label and the route. Pass `icon` with the product's own pencil
+     * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
+     */
+    nameEdit?: ScreenFlowAction;
     stats?: readonly Readonly<{
         id: string;
         value: string;
@@ -500,6 +530,5 @@ export type ProfileSummaryProps = Readonly<{
     actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
     children?: ReactNode;
 }>;
-/** Profile identity and counts are common; routing and mutations stay controlled by the product. */
-export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, stats, actions, actionsLayout, children }: ProfileSummaryProps): import("react").JSX.Element;
+export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, nameEdit, stats, actions, actionsLayout, children }: ProfileSummaryProps): import("react").JSX.Element;
 //# sourceMappingURL=screen-flows.d.ts.map

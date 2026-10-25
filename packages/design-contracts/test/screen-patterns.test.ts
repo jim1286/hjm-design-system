@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
+import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveFocusAfterRemoval, searchScreenRecipe, commentThreadRecipe, resolveCommentReplyPage, type ScreenContentState } from "../src/screen-patterns.js";
 
 describe("screen content and composer ownership", () => {
   it("only replaces content for explicit initial states", () => {
@@ -178,7 +178,7 @@ describe("chat reaction summary and icon tile frame (2026-10-18)", () => {
   });
   it("keeps the original squircle as the default frame and bounds a filling icon", async () => {
     const { iconTileRecipe } = await import("../src/screen-patterns.js");
-    expect(iconTileRecipe.defaults).toEqual({ frame: "surface", shape: "squircle", size: "fixed" });
+    expect(iconTileRecipe.defaults).toEqual({ frame: "surface", shape: "squircle", size: "fixed", accessoryPlacement: "top-end" });
     expect(`${iconTileRecipe.shapes.squircle * 100}`.startsWith("22")).toBe(true);
     expect(iconTileRecipe.fillMinSize).toBeLessThan(iconTileRecipe.iconSize);
     expect(iconTileRecipe.fillMaxSize).toBeGreaterThan(iconTileRecipe.iconSize);
@@ -190,5 +190,16 @@ describe("chat reaction summary and icon tile frame (2026-10-18)", () => {
     expect(resolveIconTileFillEdge(200)).toBe(iconTileRecipe.fillMaxSize);
     expect(() => resolveIconTileFillEdge(Number.NaN)).toThrow(RangeError);
     expect(() => resolveIconTileFillEdge(-1)).toThrow(RangeError);
+  });
+});
+
+describe("comment reply paging", () => {
+  it("opens five at a time, reveals loaded replies before fetching, and keeps a revealed reply shown", () => {
+    expect(commentThreadRecipe.replyPageSize).toBe(5);
+    expect(resolveCommentReplyPage({ loaded: 12, total: 12, visible: 5, canFetch: false })).toEqual({ shown: 5, remaining: 7, more: "reveal" });
+    expect(resolveCommentReplyPage({ loaded: 5, total: 12, visible: 10, canFetch: true })).toEqual({ shown: 5, remaining: 7, more: "fetch" });
+    expect(resolveCommentReplyPage({ loaded: 2, total: 9, visible: 5, canFetch: false })).toEqual({ shown: 2, remaining: 7, more: null });
+    expect(resolveCommentReplyPage({ loaded: 3, total: 3, visible: 5, canFetch: true })).toEqual({ shown: 3, remaining: 0, more: null });
+    expect(resolveCommentReplyPage({ loaded: 9, total: 9, visible: 5, revealIndex: 8, canFetch: false })).toEqual({ shown: 9, remaining: 0, more: null });
   });
 });

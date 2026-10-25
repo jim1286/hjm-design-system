@@ -1,3 +1,4 @@
+import { MemberProfilePreview } from "./member-profile-preview.js";
 import riverPhoto from "../../../shared/photos/river.jpg";
 import { useState } from "react";
 import { ArrowUp } from "lucide-react";
@@ -29,6 +30,7 @@ const initial: GroupMessage[] = [
 const emoji: Record<string, string> = { heart: "❤️", laugh: "😂", wow: "😮", sad: "😢", thumbs: "👍" };
 
 export function GroupChatPreview() {
+  const [memberId, setMemberId] = useState<string | null>(null);
   const [messages, setMessages] = useState(initial);
   const [draft, setDraft] = useState("");
   const [replyTarget, setReplyTarget] = useState<GroupMessage | null>(null);
@@ -42,6 +44,7 @@ export function GroupChatPreview() {
     setDraft(""); setReplyTarget(null); setTyping(false);
   };
   const summaryOf = (id: string) => { const value = reactions[id]; return value ? { summary: { label: `반응 ${emoji[value]} 1개. 반응 메뉴 열기`, items: [{ id: value, emoji: emoji[value]!, count: 1 }] } } : {}; };
+  if (memberId) { const member = members[memberId]!; return <MemberProfilePreview backLabel="대화로 돌아가기" name={member.name} avatar={<Avatar name={member.name} size="xlarge" decorative src={member.photo}/>} onBack={()=>setMemberId(null)}/>; }
   return <div style={{ height: 720 }}>
     <ChatScreen title="산책 모임" as="section" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onClick: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size="small" src={members.seoyeon!.photo} alt="" />}
@@ -51,7 +54,7 @@ export function GroupChatPreview() {
       <div><ChatDateSeparator label="10월 18일 토요일" dateTime="2026-10-18" />{messages.map(message => {
         const member = members[message.authorId];
         return <ChatMessage key={message.id} direction={member ? "incoming" : "outgoing"} author={member?.name ?? "나"} timestamp={message.timestamp} groupPosition={positions.get(message.id) ?? "single"}
-          {...(member ? { avatar: <Avatar name={member.name} size="small" src={member.photo} alt="" /> } : {})}
+          {...(member ? { avatar: <Avatar name={member.name} size="small" src={member.photo} alt="" />, avatarAction: {label: `${member.name} 프로필 보기`, onPress: () => setMemberId(message.authorId)} } : {})}
           replyAction={{ label: "답장", onPress: () => setReplyTarget(message) }}
           {...(message.replyTo ? { replyQuote: { title: `${message.replyTo.author}에게 답장`, excerpt: message.replyTo.text } } : {})}
           {...(message.photos ? { media: Array.from({ length: message.photos }, (_, index) => ({ id: `${message.id}-${index}`, label: "산책길 사진", aspectRatio: 4 / 3, preview: <img src={riverPhoto} alt="" /> })) } : {})}

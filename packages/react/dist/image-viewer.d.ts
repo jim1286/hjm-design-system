@@ -33,7 +33,7 @@ export type ImageViewerTriggerProps = Omit<ButtonHTMLAttributes<HTMLButtonElemen
  * Button around product media that opens ImageViewer. The product keeps the viewer's `open` state and calls it from
  * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
  */
-export declare const ImageViewerTrigger: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "style" | "aria-label" | "type"> & Readonly<{
+export declare const ImageViewerTrigger: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type" | "style" | "aria-label"> & Readonly<{
     /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
     label: string;
     /** Product media (HJM `Image` with `decorative`, `<img alt="">`). */

@@ -219,7 +219,7 @@ export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Large-text-safe semantic content section with an optional header action. */
-export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "children"> & Readonly<{
+export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
     action?: ReactNode;

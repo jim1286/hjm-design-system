@@ -136,8 +136,10 @@ export function Notice({
     size: glyph[noticeRecipe.iconSize],
   });
   // The icon box spans the title's rendered first line (token × text scale) so the glyph centers on it at any text
-  // scale, like Web's 1lh anchor (2026-10-17 measured audit). The action stays under the copy on Native.
+  // scale, like Web's 1lh anchor (2026-10-17 measured audit).
   const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
+  const radius = theme.tokens.radius[noticeRecipe.radius];
+  const panel = appearance === "panel";
   return (
     <View
       {...props}
@@ -147,62 +149,63 @@ export function Notice({
         {
           // Feedback tints carry alpha. Give them an opaque canvas, as Web's
           // color-mix does, so map/photo content cannot show through the message.
-          backgroundColor: appearance === "status" ? "transparent" : theme.palette.theme.bg,
-          borderColor: resolveColorReference(toneContract.border, theme.palette),
-          borderRadius: theme.tokens.radius[noticeRecipe.radius],
+          backgroundColor: panel ? theme.palette.theme.bg : "transparent",
+          borderRadius: radius,
           borderWidth: noticeRecipe.appearances[appearance].borderWidth,
+          direction: theme.environment.direction,
+          flexDirection: "row",
           gap: noticeRecipe.gap,
           padding: noticeRecipe.appearances[appearance].padding,
         },
         layoutStyle,
       ]}
     >
-      {appearance === "panel" ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
-        style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
-          borderRadius: theme.tokens.radius[noticeRecipe.radius],
+      {panel ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+        style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, borderRadius: radius,
           backgroundColor: resolveColorReference(toneContract.background, theme.palette) }} /> : null}
-      <View
-        style={{
-          alignItems: "flex-start",
-          direction: theme.environment.direction,
-          flexDirection: "row",
-          gap: noticeRecipe.gap,
-        }}
-      >
-        {resolvedIcon === undefined ? null : (
-          <View
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={{
-              alignItems: "center",
-              height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
-              justifyContent: "center",
-              width: glyph[noticeRecipe.iconSize],
-            }}
-          >
-            {resolvedIcon}
-          </View>
-        )}
-        {/* Grow into a stretched row, but keep the content's own width as the basis: `flex: 1` (basis 0) collapsed
-            a centered, content-width status Notice to an empty pill (2026-10-23 BurnTok welcome). */}
-        <View style={{ flexGrow: 1, flexShrink: 1, gap: noticeRecipe.contentGap, minWidth: 0 }}>
-          {appearance === "status" ? <Badge label={title} tone={tone} size="small" /> : <Text
-            style={{ color: foreground, fontWeight: noticeRecipe.title.fontWeight }}
-            variant={noticeRecipe.title.textVariant}
-          >
-            {title}
-          </Text>}
-          {description ? (
-            <Text
-              style={{ color: resolveColorReference(noticeRecipe.description.color, theme.palette) }}
-              variant={noticeRecipe.description.textVariant}
+      {panel ? <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+        style={{ alignSelf: "stretch", width: noticeRecipe.accentBar.width, backgroundColor: foreground,
+          borderRadius: theme.tokens.radius[noticeRecipe.accentBar.radius] }} /> : null}
+      {/* The action sits at the end of the copy row, like Web; it wraps under the copy only when the copy column
+          would drop below the recipe share (2026-10-25: a stacked lone retry button read as a second block). */}
+      <View style={{ alignItems: "center", flexDirection: "row", flexGrow: 1, flexShrink: 1, flexWrap: "wrap", gap: noticeRecipe.gap, minWidth: 0 }}>
+        {/* Grow into a stretched row, but keep a real basis: `flex: 1` (basis 0) collapsed a centered,
+            content-width status Notice to an empty pill (2026-10-23 BurnTok welcome). */}
+        <View style={{ alignItems: "flex-start", flexBasis: action ? `${noticeRecipe.contentMinWidthPercent}%` : "auto",
+          flexDirection: "row", flexGrow: 1, flexShrink: 1, gap: noticeRecipe.gap, minWidth: 0 }}>
+          {resolvedIcon === undefined ? null : (
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={{
+                alignItems: "center",
+                height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
+                justifyContent: "center",
+                width: glyph[noticeRecipe.iconSize],
+              }}
             >
-              {description}
-            </Text>
-          ) : null}
+              {resolvedIcon}
+            </View>
+          )}
+          <View style={{ flexGrow: 1, flexShrink: 1, gap: noticeRecipe.contentGap, minWidth: 0 }}>
+            {appearance === "status" ? <Badge label={title} tone={tone} size="small" /> : <Text
+              style={{ color: resolveColorReference(noticeRecipe.title.color, theme.palette), fontWeight: noticeRecipe.title.fontWeight }}
+              variant={noticeRecipe.title.textVariant}
+            >
+              {title}
+            </Text>}
+            {description ? (
+              <Text
+                style={{ color: resolveColorReference(noticeRecipe.description.color, theme.palette) }}
+                variant={noticeRecipe.description.textVariant}
+              >
+                {description}
+              </Text>
+            ) : null}
+          </View>
         </View>
+        {action === undefined || action === null ? null : <View style={{ flexShrink: 0, maxWidth: "100%" }}>{action}</View>}
       </View>
-      {action}
     </View>
   );
 }

@@ -32,6 +32,103 @@ export type DateRangeCellState = "start" | "end" | "between" | "none";
  * 가리키므로 같은 함수가 처리한다 — renderer가 두 벌의 칠하기 규칙을 만들지 않게 한다.
  */
 export declare function resolveDateRangeCellState(value: DateRangeValue, date: string, hoveredDate?: string | null): DateRangeCellState;
+/**
+ * 칸 하나를 어떻게 칠하는지. `edge`는 채운 원(시작·끝), `band`는 시작과 끝을 잇는 띠의 모양이다.
+ * 띠는 시작 칸에서 끝 쪽 절반(`toEnd`), 끝 칸에서 시작 쪽 절반(`toStart`), 사이 칸 전체(`full`)를 덮는다.
+ * 시작과 끝이 같은 날(하루 구간)이거나 끝이 아직 없으면 띠가 없다.
+ *
+ * 2026-10-25 개편(Spint 기간 시트 사용자 지적): 점 표시는 구간이 이어져 보이지 않았고, 점 줄 때문에 행이
+ * 라벨 한 줄만큼 높아졌다. Material 3·Airbnb처럼 띠로 잇고 두 끝을 같은 채운 원으로 그린다.
+ */
+export type DateRangeCellPaint = Readonly<{
+    edge: boolean;
+    band: "none" | "full" | "toEnd" | "toStart";
+}>;
+export declare function resolveDateRangeCellPaint(value: DateRangeValue, date: string, hoveredDate?: string | null): DateRangeCellPaint;
+/**
+ * 요약 칸에서 강조할 끝. 비었으면 시작, 고르는 중이면 끝을 강조한다. 완성된 구간은 아무것도 강조하지 않는다 —
+ * 다음 탭이 새 시작이 되긴 하지만, 완성 직후 시작 칸이 강조되면 시작일을 고치는 중으로 읽혔다(2026-10-25 실화면).
+ */
+export declare function resolveDateRangeActiveEdge(value: DateRangeValue): "start" | "end" | null;
+/** 프리셋 길이. `days`는 오늘 포함 n일, `months`는 n개월 전 다음 날부터 오늘까지다. */
+export type DateRangePresetLength = Readonly<{
+    days: number;
+} | {
+    months: number;
+}>;
+/**
+ * 오늘로 끝나는 프리셋 구간(최근 7일·1개월 등). 날짜 계산은 UTC 달력 날짜로만 해 서머타임·시간대에 흔들리지 않는다.
+ * 달 길이가 다르면 그 달의 마지막 날로 맞춘다(3/31의 1개월 전 = 2/28, 구간은 3/1부터).
+ */
+export declare function resolveDateRangePreset(today: string, length: DateRangePresetLength): DateRangeValue;
+export declare const dateRangeRecipe: {
+    readonly slots: readonly ["root", "summary", "summaryField", "summaryLabel", "summaryValue", "presets", "band", "edge"];
+    readonly band: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "primary";
+            alpha?: number;
+        }>;
+    };
+    readonly edge: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "primary";
+            alpha?: number;
+        }>;
+        readonly content: Readonly<{
+            source: "theme";
+            key: "onPrimary";
+            alpha?: number;
+        }>;
+    };
+    readonly summary: {
+        readonly gap: 8;
+        readonly field: {
+            readonly paddingVertical: 8;
+            readonly paddingHorizontal: 12;
+            readonly radius: "md";
+            readonly gap: 4;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+            readonly activeBorder: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly activeBorderWidth: 2;
+        };
+        readonly label: {
+            readonly textVariant: "label";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly value: {
+            readonly textVariant: "body";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly placeholderColor: Readonly<{
+                source: "theme";
+                key: "textSub";
+                alpha?: number;
+            }>;
+        };
+    };
+    readonly presets: {
+        readonly gap: 8;
+        readonly chipSize: "small";
+    };
+    readonly gap: 16;
+};
 /** 구간이 실제로 쓸 수 있는 값인지. 제품의 제출 버튼이 읽는다. */
 export declare function isCompleteDateRange(value: DateRangeValue): boolean;
 export declare const dateRangeBehavior: {
@@ -51,6 +148,6 @@ export declare const dateRangeBehavior: {
         readonly states: readonly ["selected", "disabled"];
         readonly actions: readonly ["select"];
     };
-    readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it"];
+    readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it"];
 };
 //# sourceMappingURL=date-range.d.ts.map

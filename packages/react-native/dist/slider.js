@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValueFromOffset, sliderRecipe, } from "@hjmds/design-contracts/components/slider";
 import { forwardRef, useEffect, useMemo, useRef, useState, } from "react";
@@ -9,7 +9,7 @@ import { useHjmNativeTheme } from "./provider.js";
 /** Points of travel before a drag counts as horizontal or vertical intent. */
 const sliderIntentSlop = 6;
 /** Dependency-free horizontal Slider using the Native responder system. */
-export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, layoutStyle, ...viewProps }, forwardedRef) {
+export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, layoutStyle, hjmColorTrack, ...viewProps }, forwardedRef) {
     assertNoRemovedStyleProps("Slider", viewProps, ["containerStyle", "controlStyle"]);
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
     const [currentValue, setCurrentValue] = useControllableState({
@@ -27,6 +27,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
         ...(valueText === undefined ? {} : { valueText }),
     });
     const recipe = sliderRecipe.sizes.medium;
+    const thumbDiameter = hjmColorTrack?.thumbDiameter ?? recipe.thumbDiameter;
     const [layoutWidth, setLayoutWidth] = useState(0);
     const [dragging, setDragging] = useState(false);
     const [focused, setFocused] = useState(false);
@@ -58,10 +59,10 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
     const updateFromLocation = (locationX) => {
         if (disabled)
             return;
-        const extent = layoutWidth - recipe.thumbDiameter;
+        const extent = layoutWidth - thumbDiameter;
         if (extent <= 0)
             return;
-        const offset = locationX - recipe.thumbDiameter / 2;
+        const offset = locationX - thumbDiameter / 2;
         publish(resolveSliderValueFromOffset(descriptor, offset, extent, environment.direction));
     };
     const performAction = (intent) => {
@@ -144,7 +145,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
             finishRef.current();
     }, [disabled]);
     const fraction = resolveSliderFillFraction(descriptor);
-    const travel = Math.max(0, layoutWidth - recipe.thumbDiameter);
+    const travel = Math.max(0, layoutWidth - thumbDiameter);
     const visualFraction = environment.direction === "rtl" ? 1 - fraction : fraction;
     const thumbLeft = travel * visualFraction;
     const visibleValue = valueText ?? String(currentValue);
@@ -182,13 +183,13 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                 opacity: disabled ? sliderRecipe.states.disabledOpacity : 1,
             },
             layoutStyle,
-        ], children: [_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+        ], children: [hjmColorTrack ? null : (_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     alignItems: "baseline",
                     direction: environment.direction,
                     flexDirection: "row",
                     gap: sliderRecipe.header.gap,
                     justifyContent: "space-between",
-                }, children: [_jsx(NativeText, { ...labelTextScaleProps, children: label }), _jsx(NativeText, { ...valueTextScaleProps, children: visibleValue })] }), _jsxs(View, { ...viewProps, ...panResponder.panHandlers, ...actionProps, ref: forwardedRef, accessible: true, accessibilityLabel: label, accessibilityRole: "adjustable", accessibilityState: { disabled }, accessibilityValue: {
+                }, children: [_jsx(NativeText, { ...labelTextScaleProps, children: label }), _jsx(NativeText, { ...valueTextScaleProps, children: visibleValue })] })), _jsx(View, { ...viewProps, ...panResponder.panHandlers, ...actionProps, ref: forwardedRef, accessible: true, accessibilityLabel: label, accessibilityRole: "adjustable", accessibilityState: { disabled }, accessibilityValue: {
                     min,
                     max,
                     now: currentValue,
@@ -208,44 +209,66 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                         minHeight: recipe.hitTarget,
                         minWidth: recipe.hitTarget,
                     },
-                ], children: [_jsx(View, { pointerEvents: "none", style: {
-                            backgroundColor: colors.surfaceAlt,
-                            borderColor: colors.textMuted,
-                            borderRadius: tokens.radius.full,
-                            borderWidth: 1,
-                            height: recipe.trackHeight,
-                            left: recipe.thumbDiameter / 2,
-                            position: "absolute",
-                            right: recipe.thumbDiameter / 2,
-                        } }), _jsx(View, { pointerEvents: "none", style: {
-                            backgroundColor: colors.contentBrand,
-                            borderRadius: tokens.radius.full,
-                            height: recipe.trackHeight,
-                            ...(environment.direction === "rtl"
-                                ? { right: recipe.thumbDiameter / 2 }
-                                : { left: recipe.thumbDiameter / 2 }),
-                            position: "absolute",
-                            width: travel * fraction,
-                        } }), focused ? (_jsx(View, { pointerEvents: "none", style: {
-                            borderColor: colors.contentBrand,
-                            borderRadius: tokens.radius[sliderRecipe.radius],
-                            borderWidth: sliderRecipe.states.focus.width,
-                            height: recipe.thumbDiameter + sliderRecipe.states.focus.offset * 2,
-                            left: thumbLeft - sliderRecipe.states.focus.offset,
-                            position: "absolute",
-                            width: recipe.thumbDiameter + sliderRecipe.states.focus.offset * 2,
-                            zIndex: 1,
-                        } })) : null, _jsx(View, { pointerEvents: "none", style: {
-                            backgroundColor: colors.bg,
-                            borderColor: colors.contentBrand,
-                            borderRadius: tokens.radius.full,
-                            borderWidth: 2,
-                            height: recipe.thumbDiameter,
-                            left: thumbLeft,
-                            opacity: dragging ? sliderRecipe.states.draggedOpacity : 1,
-                            position: "absolute",
-                            width: recipe.thumbDiameter,
-                            zIndex: 2,
-                        } })] })] }));
+                ], children: hjmColorTrack ? (_jsxs(_Fragment, { children: [_jsx(View, { pointerEvents: "none", style: {
+                                borderRadius: tokens.radius.full,
+                                height: hjmColorTrack.height,
+                                left: 0,
+                                overflow: "hidden",
+                                position: "absolute",
+                                right: 0,
+                            }, children: hjmColorTrack.fill }), _jsx(View, { pointerEvents: "none", style: {
+                                borderColor: focused ? colors.contentBrand : "#ffffff",
+                                borderRadius: tokens.radius.full,
+                                borderWidth: hjmColorTrack.thumbBorder,
+                                elevation: 2,
+                                height: thumbDiameter,
+                                left: thumbLeft,
+                                overflow: "hidden",
+                                position: "absolute",
+                                shadowColor: "#000000",
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.3,
+                                shadowRadius: 2,
+                                width: thumbDiameter,
+                                zIndex: 2,
+                            }, children: hjmColorTrack.thumbFill })] })) : (_jsxs(_Fragment, { children: [_jsx(View, { pointerEvents: "none", style: {
+                                backgroundColor: colors.surfaceAlt,
+                                borderColor: colors.textMuted,
+                                borderRadius: tokens.radius.full,
+                                borderWidth: 1,
+                                height: recipe.trackHeight,
+                                left: thumbDiameter / 2,
+                                position: "absolute",
+                                right: thumbDiameter / 2,
+                            } }), _jsx(View, { pointerEvents: "none", style: {
+                                backgroundColor: colors.contentBrand,
+                                borderRadius: tokens.radius.full,
+                                height: recipe.trackHeight,
+                                ...(environment.direction === "rtl"
+                                    ? { right: thumbDiameter / 2 }
+                                    : { left: thumbDiameter / 2 }),
+                                position: "absolute",
+                                width: travel * fraction,
+                            } }), focused ? (_jsx(View, { pointerEvents: "none", style: {
+                                borderColor: colors.contentBrand,
+                                borderRadius: tokens.radius[sliderRecipe.radius],
+                                borderWidth: sliderRecipe.states.focus.width,
+                                height: thumbDiameter + sliderRecipe.states.focus.offset * 2,
+                                left: thumbLeft - sliderRecipe.states.focus.offset,
+                                position: "absolute",
+                                width: thumbDiameter + sliderRecipe.states.focus.offset * 2,
+                                zIndex: 1,
+                            } })) : null, _jsx(View, { pointerEvents: "none", style: {
+                                backgroundColor: colors.bg,
+                                borderColor: colors.contentBrand,
+                                borderRadius: tokens.radius.full,
+                                borderWidth: 2,
+                                height: thumbDiameter,
+                                left: thumbLeft,
+                                opacity: dragging ? sliderRecipe.states.draggedOpacity : 1,
+                                position: "absolute",
+                                width: thumbDiameter,
+                                zIndex: 2,
+                            } })] })) })] }));
 });
 //# sourceMappingURL=slider.js.map

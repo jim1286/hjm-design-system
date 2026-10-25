@@ -91,3 +91,7 @@ HJM이 44px 아바타·썸네일, 20px 유형 배지, 2줄 미리보기와 간�
 ## 관련 지침
 
 [알림 화면](../screens/common-inbox.md), [ConversationRow](conversation-row.md), [ListRow](list-row.md).
+
+### 회원 프로필 이동 (2026-10-25)
+
+`avatarAction={label,onPress}`는 발신자 프로필, `action`은 알림 목적지다. 두 컨트롤은 형제로 렌더링되며 프로필 누르기로 알림 읽음 처리를 실행하지 않는다.

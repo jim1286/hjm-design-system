@@ -5,7 +5,7 @@ import { userEvent } from "vitest/browser";
 import { ColorPicker } from "../src/color-picker.js";
 import { HjmProvider } from "../src/provider.js";
 let host: HTMLDivElement, root: Root;
-const labels = { color: "Color", hex: "Hex", opacity: "Opacity", invalid: "Invalid" };
+const labels = { hue: "Hue", saturation: "Saturation", brightness: "Brightness", hex: "Hex", opacity: "Opacity", invalid: "Invalid" };
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 const input = () => host.querySelector<HTMLInputElement>('input[type=text]')!;

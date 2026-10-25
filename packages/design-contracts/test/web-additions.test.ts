@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { normalizePickerColor, pickerOpacity, withPickerOpacity } from "../src/color-picker.js";
+import { normalizePickerColor, pickerHexFromHsv, pickerHsv, pickerOpacity, withPickerOpacity } from "../src/color-picker.js";
 import { resolveWatermark } from "../src/watermark.js";
 import { validateAffixOffset } from "../src/affix.js";
 it("normalizes shorthand sRGB without silently dropping transparency", () => {
@@ -16,6 +16,13 @@ it("round-trips integer opacity percentages without changing RGB", () => {
     expect(pickerOpacity(color)).toBe(percent);
   }
   for (const value of [NaN, Infinity, -1, 101]) expect(() => withPickerOpacity("#fff", value)).toThrow();
+});
+it("round-trips every opaque hex through HSV and keeps hue/saturation where black and greys have none", () => {
+  for (let n = 0; n < 0x1000000; n += 0x010307) { const hex = `#${n.toString(16).padStart(6, "0")}`; expect(pickerHexFromHsv(pickerHsv(hex))).toBe(hex); }
+  const pink = pickerHsv("#f783ac");
+  expect(pickerHsv("#000000", pink)).toEqual({ hue: pink.hue, saturation: pink.saturation, brightness: 0 });
+  expect(pickerHsv("#808080", pink).hue).toBe(pink.hue);
+  expect(pickerHexFromHsv({ hue: 720, saturation: 140, brightness: -5 })).toBe("#000000");
 });
 it("bounds decorative geometry and rejects empty or unbounded watermark input", () => {
   expect(resolveWatermark(["DRAFT", "2026"])).toMatchObject({ lines: ["DRAFT", "2026"], width: 240, opacity: 0.12 });

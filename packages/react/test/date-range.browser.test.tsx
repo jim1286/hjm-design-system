@@ -19,7 +19,8 @@ const grid = {
 
 const day = (date: string) => [...document.querySelectorAll<HTMLElement>("[role='gridcell'] button, button[data-date]")]
   .find((node) => node.getAttribute("aria-label")?.startsWith(date) || node.textContent === String(Number(date.slice(-2))))!;
-const cellState = (date: string) => day(date).querySelector<HTMLElement>(".hjm-date-range__cell")?.dataset.range;
+// Two filled edges joined by one band (dateRangeRecipe 2026-10-25).
+const cellPaint = (date: string) => ({ edge: day(date).dataset.selected !== undefined, band: day(date).dataset.rangeBand ?? "none" });
 
 function Fixture() {
   const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
@@ -45,10 +46,10 @@ it("builds a range across two clicks and paints the days between", async () => {
   expect(status()).toBe("2026-09-10 ~ -");
   await act(async () => day("2026-09-14").click());
   expect(status()).toBe("2026-09-10 ~ 2026-09-14");
-  expect(cellState("2026-09-10")).toBe("start");
-  expect(cellState("2026-09-12")).toBe("between");
-  expect(cellState("2026-09-14")).toBe("end");
-  expect(cellState("2026-09-20")).toBe("none");
+  expect(cellPaint("2026-09-10")).toEqual({ edge: true, band: "toEnd" });
+  expect(cellPaint("2026-09-12")).toEqual({ edge: false, band: "full" });
+  expect(cellPaint("2026-09-14")).toEqual({ edge: true, band: "toStart" });
+  expect(cellPaint("2026-09-20")).toEqual({ edge: false, band: "none" });
 });
 
 it("swaps when the second pick is earlier and restarts on a complete range", async () => {

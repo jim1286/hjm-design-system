@@ -43,6 +43,12 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent identity destination, outside the card activation host. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     media?: ReactNode;
     /** Decorative artwork behind the shared body/actions; its host determines the available height. */
     backgroundMedia?: ReactNode;
@@ -77,7 +83,7 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
 export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     children: ReactNode;
     attribution?: string;
@@ -93,6 +99,12 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     title: string;
     description?: string;
     leading?: ReactNode;
+    /** Independent member destination; rendered beside, never inside, the row command. */
+    leadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     trailing?: ReactNode;
     /**
      * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`/`trailingText`,
@@ -122,6 +134,8 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     selected?: boolean;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
+    /** Large member portraits use the shared 48px frame; icons retain the default frame. */
+    leadingSize?: "default" | "large";
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
     leadingStyle?: HjmCompositionStyleProp;
@@ -131,7 +145,7 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, tone, description, leading, trailing, trailingAccessory, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density: suppliedDensity, loading, loadingLabel, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ title, tone, description, leading, leadingAction, trailing, trailingAccessory, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density: suppliedDensity, loading, loadingLabel, selected: selectedProp, leadingShape, leadingSize, layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }: ListRowProps): import("react").JSX.Element;
 export type AvatarImageRenderProps = Readonly<{
     source: ImageSourcePropType;
     size: number;
@@ -141,6 +155,12 @@ export type AvatarImageRenderProps = Readonly<{
     onError: () => void;
 }>;
 type AvatarBaseProps = Readonly<{
+    /** Profile navigation; products provide the member route and localized name. */
+    action?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     source?: ImageSourcePropType;
     /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
     renderImage?: (props: AvatarImageRenderProps) => ReactNode;
@@ -148,7 +168,7 @@ type AvatarBaseProps = Readonly<{
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     /**
      * A step from avatarRecipe.sizes (`xxsmall` 22 … `xlarge` 64), or points for existing callers. Numbers below the
-     * smallest step (22) throw. The default stays 44 (`touch`).
+     * smallest step (22) throw. The default is 48 (`large`); dense lists choose their smaller step explicitly.
      */
     size?: AvatarSize | number;
     shape?: AvatarShape;
@@ -174,7 +194,7 @@ type AvatarIdentity = Readonly<{
     name: string;
 }>;
 export type AvatarProps = AvatarBaseProps & AvatarIdentity;
-export declare function Avatar({ source, renderImage, name, initials, renderFallback, size: sizeProp, shape, frame, accessory, accessoryPlacement, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ action, source, renderImage, name, initials, renderFallback, size: sizeProp, shape, frame, accessory, accessoryPlacement, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;

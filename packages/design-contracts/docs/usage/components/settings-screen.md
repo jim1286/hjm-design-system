@@ -72,7 +72,7 @@
   Web 기본은 `inline`, Native 기본은 `row`이므로 Web·Native 같은 화면에서는 `presentation`을 명시한다.
 - ListRow의 trailing에 Switch만 둘 때는 `labelVisibility="hidden"`을 쓰고 그 ListRow에는 `onPress`를 두지 않는다.
 - 언어·화면 테마·기본 정렬처럼 한 값을 고르는 설정은 [ChoiceRow](choice-row.md)를 쓴다. 행 `description`에 확인된 값을 보이고 시트의 선택·저장 중·실패를 ChoiceRow가 소유한다. `ListRow`+`Sheet`+`RadioGroup`이나 `Select`로 다시 조립하지 않는다(2026-10-23 [선택 기준](choice-row.md#설정-값-선택의-기준)).
-- 섹션 `id`는 안정적인 키로 둔다(번역 문구를 id로 쓰지 않는다).
+- 섹션 `id`는 안정적인 키로 둔다(번역 문구를 id로 쓰지 않는다). 그룹 id·이름·순서는 [설정 그룹 표준](../screens/common-settings.md#설정-그룹-표준-2026-10-25)을 따른다(2026-10-25).
 - 저장 방식·낙관적 갱신·실패 복구·탈퇴 확인은 제품과 [action-session](../../action-session.md)이 소유한다.
   저장 실패는 `state`가 아니라 `notice`로 알린다.
 - 배치: Web·Native 모두 `layoutStyle`(Web은 `className`도 있다). 섹션 색·여백을 덮지 않는다.

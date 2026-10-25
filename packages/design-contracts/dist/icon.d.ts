@@ -6,7 +6,7 @@ import type { DesignSystemDirection } from "./design-system-provider.js";
  * or native glyph component instead of leaking a third-party icon name into a
  * product screen.
  */
-export declare const semanticIconNames: readonly ["add", "ai", "alert", "arrowDown", "arrowUp", "back", "calendar", "check", "chevronDown", "chevronEnd", "chevronStart", "chevronUp", "close", "compare", "copy", "delete", "download", "edit", "error", "favorite", "filter", "forward", "help", "home", "info", "lock", "menu", "more", "notifications", "pause", "play", "refresh", "rotate", "search", "settings", "share", "success", "trendDown", "trendFlat", "trendUp", "unblock", "upload", "user", "users", "visibility", "visibilityOff", "warning"];
+export declare const semanticIconNames: readonly ["add", "ai", "alert", "arrowDown", "arrowUp", "back", "calendar", "check", "chevronDown", "chevronEnd", "chevronStart", "chevronUp", "close", "compare", "copy", "delete", "download", "edit", "error", "favorite", "filter", "forward", "help", "home", "info", "lock", "menu", "more", "moreVertical", "notifications", "pause", "play", "refresh", "rotate", "search", "settings", "share", "success", "trendDown", "trendFlat", "trendUp", "unblock", "upload", "user", "users", "visibility", "visibilityOff", "warning"];
 export type SemanticIconName = (typeof semanticIconNames)[number];
 /**
  * Geometry of every semantic mark on one 24-unit stroke grid (round caps/joins, no fill). It lived privately in the
@@ -43,6 +43,7 @@ export declare const semanticIconPaths: {
     readonly lock: "M6 10h12v11H6V10Zm3 0V7a3 3 0 0 1 6 0v3";
     readonly menu: "M4 6h16M4 12h16M4 18h16";
     readonly more: "M5 12h.01M12 12h.01M19 12h.01";
+    readonly moreVertical: "M12 5h.01M12 12h.01M12 19h.01";
     readonly notifications: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Zm-8 12h4";
     readonly pause: "M8 5v14m8-14v14";
     readonly play: "m8 5 11 7-11 7V5Z";

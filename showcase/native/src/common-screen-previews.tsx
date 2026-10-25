@@ -11,6 +11,7 @@ import { Button, IconButton } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Heading } from "@hjmds/react-native/heading";
 import { Notice } from "@hjmds/react-native/feedback";
+import { MemberProfilePreview } from "./member-profile-preview";
 import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 import { Bell, ChevronLeft, ChevronRight, Globe2, HelpCircle, ShieldCheck, Volume2, Sparkles, MoreHorizontal, CheckCheck, MessageCircle, Heart, Palette, Settings2, Image as ImageIcon, ArrowUp, Reply, MessageSquareWarning, Trash2 } from "lucide-react-native";
 import { resolveChatMessageGroups, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
@@ -31,7 +32,7 @@ const states = {
 export type ScreenPreviewOptions = { stateKind?: keyof typeof states; tools?: boolean };
 const glyphs = { bell: Bell, back: ChevronLeft, next: ChevronRight, language: Globe2, help: HelpCircle, shield: ShieldCheck, sound: Volume2, spark: Sparkles, more: MoreHorizontal, check: CheckCheck, chat: MessageCircle, heart: Heart, palette: Palette, settings: Settings2 };
 function Glyph({ name }: { name: keyof typeof glyphs }) { const GlyphIcon = glyphs[name]; const { colors } = useHjmNativeTheme(); return <GlyphIcon size={20} color={colors.textMuted} strokeWidth={1.8} />; }
-function Person({ name }: { name: string }) { return <Avatar name={name} size={32} decorative />; }
+function Person({ name, size = "small" }: { name: string; size?: "small" | "xlarge" }) { return <Avatar name={name} size={size} decorative />; }
 type ReplyTarget = {id:string; author:string; text:string};
 type DemoMessage = ReplyTarget & {direction:"incoming"|"outgoing"; timestamp:string; replyTo?:ReplyTarget; photos?:number};
 const initialMessages: DemoMessage[] = [
@@ -50,6 +51,7 @@ const loginDelay = 600;
 function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }: ScreenPreviewOptions & { kind: Kind }) {
   const {colors:chatColors} = useHjmNativeTheme();
   const [kind, setKind] = useState<Kind>(initialKind);
+  const [memberProfile, setMemberProfile] = useState<string | null>(null);
   const [atHome, setAtHome] = useState(false);
   const [recovered, setRecovered] = useState(false);
   const state: ScreenContentState = recovered ? states.ready : states[stateKind];
@@ -138,15 +140,16 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
   const notificationState = state.kind === "ready" && visibleEntries.length === 0 ? states.empty : state;
   const groups = [{ title: "오늘", items: visibleEntries.filter(entry => entry.id !== 4) }, { title: "이번 주", items: visibleEntries.filter(entry => entry.id === 4) }].filter(group => group.items.length > 0);
   let screen;
-  if (kind === "settings") screen = <SettingsPagePreview exit={back} state={state} stateAction={retry} />;
+  if (memberProfile) screen = <MemberProfilePreview backLabel={kind==="chat"?"대화로 돌아가기":"알림으로 돌아가기"} name={memberProfile} avatar={<Person name={memberProfile} size="xlarge"/>} onBack={()=>setMemberProfile(null)}/>;
+  else if (kind === "settings") screen = <SettingsPagePreview exit={back} state={state} stateAction={retry} />;
   else if (kind === "notifications") screen = <NotificationInboxScreen title="알림" exit={back} state={notificationState} stateAction={retry} notice={readError ? notice : null}
     filters={<Stack axis="inline" gap="xs" wrap accessibilityRole="radiogroup" accessibilityLabel="알림 필터">{["전체","답글","읽지 않음"].map(value=><Chip key={value} label={value} selectionMode="single" selected={notificationTab===value} onPress={()=>setNotificationTab(value)} />)}</Stack>}
     actions={<Stack axis="inline" gap="xs"><IconButton label="모두 읽음" tone="ghost" loading={markingAll} disabled={!markingAll && unreadIds.length === 0} onPress={markAllRead}><Glyph name="check" /></IconButton><IconButton label="알림 설정" tone="ghost" edge="end" onPress={() => setKind("settings")}><Glyph name="settings" /></IconButton></Stack>}>
     <Stack gap="xl">{groups.map(group => <Stack key={group.title} gap="sm"><Heading level="level5">{group.title}</Heading>{group.items.map(entry => <NotificationItem key={entry.id} title={entry.title} description={entry.description}
-      leading={<Person name={entry.name} />} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
+      leading={<Person name={entry.name} />} {...(entry.id!==4?{leadingAction:{label:`${entry.name} 프로필 보기`,onPress:()=>setMemberProfile(entry.name)}}:{})} trailing={<Glyph name={entry.icon} />} read={readIds.includes(entry.id) || entry.id === 4} statusLabel={readIds.includes(entry.id) || entry.id === 4 ? "확인함" : "새 알림"} timestamp={entry.time}
       onPress={() => { if (failNext === "notifications") { setFailNext(null); setReadError("item"); return; } setReadError(null); setReadIds(ids => ids.includes(entry.id) ? ids : [...ids, entry.id]); setNotificationDetailId(entry.id); setDetail(entry.description); }} />)}</Stack>)}</Stack>
   </NotificationInboxScreen>;
-  else if (kind === "chat") screen = <ChatScreen title="서연" exit={back} avatar={<Person name="서연"/>} state={state} stateAction={retry} composer={composer}
+  else if (kind === "chat") screen = <ChatScreen title="서연" exit={back} avatar={<Person name="서연"/>} avatarAction={{label:"서연 프로필 보기",onPress:()=>setMemberProfile("서연")}} state={state} stateAction={retry} composer={composer}
     actions={<IconButton edge="end" label="대화 정보" tone="ghost" onPress={() => setDetail("서연님과 나누는 대화예요.")}><Glyph name="more" /></IconButton>}>
     <FlatList ref={listRef} data={timeline} keyExtractor={message => message.id} keyboardShouldPersistTaps="handled"
       ListHeaderComponent={<Stack align="center"><Text variant="caption" tone="muted">10월 5일 월요일</Text></Stack>}
@@ -156,7 +159,7 @@ function ScreenPreview({ kind: initialKind, stateKind = "ready", tools = false }
       onScrollToIndexFailed={({ index, averageItemLength }) => listRef.current?.scrollToOffset({ offset: index * averageItemLength, animated: false })}
       renderItem={({ item: message }) => <View style={{borderStartWidth:highlight===message.id ? 2 : 0,borderColor:chatColors.contentBrand}}>
         <ChatMessage direction={message.direction} author={message.author} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"}
-          {...(message.direction === "incoming" ? {avatar:<Person name={message.author}/>} : {})}
+          {...(message.direction === "incoming" ? {avatar:<Person name={message.author}/>,avatarAction:{label:`${message.author} 프로필 보기`,onPress:()=>setMemberProfile(message.author)}} : {})}
           {...(message.photos ? {media:Array.from({length:message.photos},(_,index) => ({id:`${message.id}-${index}`,label:`보낸 사진 ${index + 1}`,preview:<Image source={require("../../shared/photos/river.jpg")} accessibilityLabel="" style={{width:"100%",height:"100%"}} />}))} : {})}
           replyAction={{label:"답장",icon:<Reply size={20} color={chatColors.text}/>,onPress:() => setReplyTarget(message)}}
           {...(message.replyTo ? {replyQuote:{title:`${message.replyTo.author}에게 답장`,excerpt:message.replyTo.text},replyLink:{label:"원문 메시지로 이동",onPress:() => jump(message.replyTo!.id)}} : {})}

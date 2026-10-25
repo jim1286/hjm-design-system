@@ -10,7 +10,7 @@ import "../src/styles.css";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 const keyboardScenarios = executedScenarioRegistry.executions.find(entry => entry.proofFile === "test/web-additions.browser.test.tsx")!.scenarios;
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-const labels = { color: "Choose color", hex: "Hex", opacity: "Opacity", invalid: "Invalid hex" };
+const labels = { hue: "Hue", saturation: "Saturation", brightness: "Brightness", hex: "Hex", opacity: "Opacity", invalid: "Invalid hex", presets: "Presets" };
 let root: Root | undefined; let host: HTMLDivElement;
 afterEach(async () => { if (root) await act(async () => root!.unmount()); host?.remove(); root = undefined; });
 async function mount(node: ReactNode, scenario = keyboardScenarios[0]!) { host = document.createElement("div"); document.body.append(host); root = createRoot(host); await act(async () => root!.render(<HjmProvider theme={scenario.theme === "dark" ? "dark" : "light"} direction={scenario.direction === "rtl" ? "rtl" : "ltr"} textScale={scenario.textScale} reducedMotion={scenario.reducedMotion}>{node}</HjmProvider>)); }
@@ -23,32 +23,49 @@ for (const scenario of keyboardScenarios) {
     function Example() { const [value, setValue] = useState("#112233ff"); return <form onSubmit={event => { event.preventDefault(); submitted(); }}><ColorPicker label="Accent" labels={labels} alpha value={value} onValueChange={next => { changes(next); setValue(next); }} presets={["#445566ff"]} /><output data-value>{value}</output></form>; }
     await mount(<Example />, scenario);
     expect(getComputedStyle(host.querySelector('input[type="text"]')!).direction).toBe("ltr");
-    expect(host.querySelector("button bdi")?.getAttribute("dir")).toBe("ltr");
     await page.getByRole("textbox", { name: "Hex" }).fill("#abcd"); await userEvent.keyboard("{Enter}");
     expect(host.querySelector("[data-value]")?.textContent).toBe("#aabbccdd"); expect(submitted).not.toHaveBeenCalled();
     await page.getByRole("textbox", { name: "Hex" }).fill("invalid"); await userEvent.keyboard("{Enter}");
     expect(host.querySelector('[role="alert"]')?.textContent).toBe("Invalid hex"); expect(changes).toHaveBeenCalledTimes(1);
     await userEvent.keyboard("{Escape}"); expect((host.querySelector('input[type="text"]') as HTMLInputElement).value).toBe("#aabbccdd");
     expect(host.querySelector('[role="alert"]')).toBeNull();
-    const slider = host.querySelector<HTMLInputElement>('input[type="range"]')!; slider.focus(); await userEvent.keyboard("{Home}{ArrowRight}");
+    const slider = page.getByRole("slider", { name: "Opacity" }).element() as HTMLInputElement; slider.focus(); await userEvent.keyboard("{Home}{ArrowRight}");
     expect(host.querySelector("[data-value]")?.textContent).toBe("#aabbcc03");
-    await page.getByRole("button", { name: "#445566ff" }).click();
+    // People press the visible swatch; the radio inside it is visually hidden.
+    await userEvent.click(page.getByRole("radio", { name: "#445566ff" }).element().closest("label")!);
     expect(host.querySelector("[data-value]")?.textContent).toBe("#445566ff");
-    expect(host.querySelector('button[aria-pressed="true"]')?.textContent).toContain("#445566ff");
+    expect((page.getByRole("radio", { name: "#445566ff" }).element() as HTMLInputElement).checked).toBe(true);
+    expect(submitted).not.toHaveBeenCalled();
   });
 }
-it("color-picker: native RGB changes preserve alpha; external updates and disabled controls remain controlled", async () => {
+it("color-picker: area, hue and channel sliders edit HSV, keep alpha and keep hue through black", async () => {
   const change = vi.fn();
-  await mount(<ColorPicker label="Accent" labels={labels} alpha value="#12345680" onValueChange={change} />);
-  const native = host.querySelector<HTMLInputElement>('input[type="color"]')!;
-  await act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(native, "#abcdef"); native.dispatchEvent(new Event("input", { bubbles: true })); native.dispatchEvent(new Event("change", { bubbles: true })); });
-  expect(change).toHaveBeenCalledWith("#abcdef80");
-  // A typed 6-digit HEX keeps the current opacity like the native input (2026-09-30 review: it reset to ff).
+  function Example() { const [value, setValue] = useState("#ff000080"); return <><ColorPicker label="Accent" labels={labels} alpha value={value} onValueChange={next => { change(next); setValue(next); }} /><output data-value>{value}</output></>; }
+  await mount(<Example />);
+  const area = host.querySelector<HTMLElement>(".hjm-color-picker__area")!;
+  expect(getComputedStyle(area).touchAction).toBe("none");
+  const rect = area.getBoundingClientRect();
+  await act(async () => {
+    area.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerId: 1, button: 0, clientX: rect.left, clientY: rect.bottom }));
+    area.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerId: 1, clientX: rect.left, clientY: rect.bottom }));
+  });
+  expect(host.querySelector("[data-value]")?.textContent).toBe("#00000080");
+  // Black has no hue: the hue bar must stay where it was instead of snapping to red's 0 by recomputing from HEX.
+  const hue = page.getByRole("slider", { name: "Hue" }).element() as HTMLInputElement;
+  hue.focus(); await userEvent.keyboard("{End}");
+  expect(hue.value).toBe("360");
+  const brightness = page.getByRole("slider", { name: "Brightness" }).element() as HTMLInputElement;
+  brightness.focus(); await userEvent.keyboard("{End}");
+  expect(host.querySelector("[data-value]")?.textContent).toBe("#ffffff80");
+  const saturation = page.getByRole("slider", { name: "Saturation" }).element() as HTMLInputElement;
+  saturation.focus(); await userEvent.keyboard("{End}");
+  expect(host.querySelector("[data-value]")?.textContent).toBe("#ff000080");
+  // A typed 6-digit HEX keeps the current opacity (2026-09-30 review: it reset to ff).
   await page.getByRole("textbox", { name: "Hex" }).fill("#00ff00"); await userEvent.keyboard("{Enter}");
   expect(change).toHaveBeenLastCalledWith("#00ff0080");
   await act(async () => root!.render(<HjmProvider><ColorPicker label="Accent" labels={labels} value="#fedcba" disabled onValueChange={change} presets={["#112233"]} /></HjmProvider>));
   expect(host.querySelector('input[type="text"]')).toMatchObject({ value: "#fedcba" });
-  for (const node of host.querySelectorAll("input,button")) expect(node.matches(":disabled")).toBe(true);
+  for (const node of host.querySelectorAll("input")) expect(node.matches(":disabled")).toBe(true);
 });
 it("watermark: repeated escaped labels never intercept content or share pattern ids", async () => {
   const save = vi.fn();

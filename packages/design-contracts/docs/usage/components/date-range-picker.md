@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-25
 - 근거: [DateRange](../../date-range.md), 격자는 [Calendar](../../calendar.md), 규칙 함수 `src/date-range.ts`
 - 스토리북: `배포/컴포넌트/입력/기간 선택`
 
@@ -77,16 +77,25 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | `composeAccessibleName` | `(info: { date, isToday, isSelected, disabled, content? }) => string` | — (필수) | 구간 접미사는 컴포넌트가 붙인다 |
 | `rangeLabels` | `{ start: string, end: string, between: string }` | — (필수) | 셀 이름 뒤에 붙는 구간 위치 접미사 |
 | `previousMonth` · `nextMonth` | `{ month: string, label: string }` | — | 없으면 이동 버튼이 없다 |
-| `renderCellContent` | `(date: string) => ReactNode` | — | 날짜 아래 보조 표시 |
+| `renderCellContent` | `(date: string) => ReactNode` | — | 날짜 아래 보조 표시. 넘길 때만 행에 보조 줄이 생긴다 |
+| `summary` | `{ startLabel, endLabel, placeholder, formatDate(date) }` | — | 격자 위 시작일·종료일 칸. 지금 고르는 쪽(`resolveDateRangeActiveEdge`: 비었으면 시작, 고르는 중이면 끝, 완성되면 없음)을 테두리로 표시한다. 문구는 i18n, 날짜 형식은 제품 소유 |
+| `presets` | `{ id, label, length: { days } \| { months } }[]` | — | 요약 아래 단일 선택 Chip 줄(최근 7일·1개월 등). 모두 `grid.todayDate`로 끝나고(`resolveDateRangePreset`), 값이 그 구간과 같을 때만 선택으로 보인다. 누르면 끝 달로 `onFocusedMonthChange(month, "jump")`를 요청한다 |
 | Web `layoutStyle` | 배치 전용 style | — | 루트 배치 |
 
 ## 배치
 
+2026-10-25 개편(Spint 기간 시트 사용자 지적): 구간이 날짜 아래 점으로만 보여 이어져 보이지 않았고, 점 줄 때문에
+모든 행이 라벨 한 줄만큼 높아졌다. 오늘 테두리와 단일 선택 원이 섞여 시작·끝도 구분되지 않았다. Material 3·Airbnb
+기간 선택을 모티브로 두 끝은 같은 채운 원, 사이는 날짜 원 높이의 띠 하나로 잇고, 띠는 주(행)가 시작·끝나는 곳에서
+둥글게 닫는다. 기간 설정 안내 문장과 결과 문장은 `summary`의 시작일·종료일 칸이 대신한다(지금 무엇을 고르는지 강조).
+월 이동은 `calendarRecipe.header.navIcon` 화살표 아이콘이다(이전 텍스트 ‹ ›는 약 8pt로 보였다).
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 날짜 셀은 `medium` `control.minTouchTarget` 44, `large` `glyph.xxl` 44로 같고 7열이다. Web 격자는 최소 폭 7×44 = 308을 잡는다. 월 이동 버튼 44 | `src/calendar.ts`(`calendarRecipe`), `packages/react/src/styles.css` `.hjm-calendar*` |
-| 간격 | 월 머리 안 간격·세로 간격 `spacing.xs` 8. Native 구간 점은 날짜 아래 `spacing.xxs` 4, 점 지름 구간 안 4·시작·끝 6. 스토리는 격자 아래 문구를 `Stack gap="md"`(16)로 띄운다 | `packages/react-native/src/date-range.tsx`, `showcase/web/src/patterns/DateRange.stories.tsx` |
-| 순서·정렬 | 오버레이 없이 본문(폼·필터 영역·[Section](section.md)) 안에 격자를 펼쳐 둔다. 위에서 월 머리(이전 · 월 이름 · 다음) → 요일 → 날짜 격자. 선택 결과 문구와 제출 버튼은 격자 **아래**에 둔다(스토리는 `role="status"` 문구). 제출 버튼은 `isCompleteDateRange(value)`가 참일 때만 활성이다 | 같은 파일 |
+| 간격 | 월 머리 안 간격·세로 간격 `spacing.xs` 8. `summary`·`presets`·격자 사이 `spacing.md` 16, 칩 사이 `spacing.xs` 8, 두 칸 사이 `spacing.xs` 8, 칸 안쪽 8×12, 칸 라벨·값 사이 4 | `dateRangeRecipe` |
+| 색 | 띠 `primary` 15% tint(두 끝과 같은 브랜드색. 처음 쓴 `surfaceSelected`는 기본 팔레트에서 #f0f1f3 회색이라 구간이 거의 보이지 않았다), 두 끝 Calendar 선택 원(`action.brand`). 칸 바탕 `surface.sunken`, 다음에 고를 칸 테두리 2 `action.brand`, 빈 값 `content.tertiary` | `dateRangeRecipe` |
+| 순서·정렬 | 오버레이 없이 본문(폼·필터 영역·[Section](section.md)) 안에 격자를 펼쳐 둔다. 위에서 `summary`(시작일 · 종료일) → `presets` 칩 줄 → 월 머리(이전 · 월 이름 · 다음) → 요일 → 날짜 격자. 제출 행동은 격자 **아래**에 둔다. 시트에서는 `footer`에 `BottomCTA` [보조(전체 날짜 등)][주(적용)] 한 줄로 두고 시트 높이는 `auto`로 맞춘다. `summary`를 쓰면 별도 안내·결과 문장을 두지 않는다. 제출 버튼은 `isCompleteDateRange(value)`가 참일 때만 활성이다 | 같은 파일 |
 | 고정·스크롤 | 본문과 함께 스크롤한다(오버레이 없음) | — |
 | 좁은 폭·큰 글자 | Web 격자 최소 폭 308보다 좁은 컨테이너에 두지 않는다 | `packages/react/src/styles.css` `.hjm-calendar__grid` |
 
@@ -102,7 +111,7 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 구간 표시 | 셀 `data-range` band, 마우스 hover로 끝 미리보기 | 날짜 아래 점(고르는 중에는 반투명)과 셀 이름 |
+| 구간 표시 | 두 끝 채운 원 + 띠(`data-selected`·`data-range-band`), 마우스 hover로 끝 미리보기 | 두 끝 채운 원 + 띠, 셀 이름 |
 | 배치 | `layoutStyle`(그 밖에 `className`) | 없음(감싸는 View로 배치) |
 
 ## 함정

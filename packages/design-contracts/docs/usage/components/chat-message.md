@@ -135,7 +135,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | 반응 메뉴 | Popover(Escape·외부 클릭·포커스 복귀), 우클릭·말풍선 자체의 Enter/Space로도 열림. 시각적으로 숨긴 닫기 버튼은 포커스를 받으면 보인다 | 전체 화면 `Modal`, 접근성 activate로도 열림. 닫기 대상은 표준 `activate` 동작에 답해 VoiceOver·TalkBack 모두 닫을 수 있다 |
 | 낭독 | 메시지 행 `article`의 이름이 `author`, 말풍선 이름이 `picker.label`(반응이 있을 때) | 말풍선은 본문 텍스트로 읽히고 `picker.label`은 힌트. 작성자·시각은 별도 요소 |
 | 키보드·보조기기 답장 | 메시지 포커스 후 Alt+←/→ | 접근성 custom action `reply` |
-| `interactiveContent` | 말풍선을 `group`으로 두고, 안쪽 버튼·링크의 누름·Enter/Space는 반응 메뉴가 아니라 그 컨트롤이 받는다 | 반응이 있으면 별도 `···` IconButton이 메뉴를 열고 `reply` 동작도 가진다. 반응이 없으면 `reply` 동작이 시각 caption(시각이 없으면 작성자 caption)에 붙는다 |
+| `interactiveContent` | 말풍선을 `group`으로 두고, 안쪽 버튼·링크의 누름·Enter/Space는 반응 메뉴가 아니라 그 컨트롤이 받는다 | 반응이 있으면 별도 `⋮` IconButton이 메뉴를 열고 `reply` 동작도 가진다. 댓글과 같은 도형 세로 점(`glyph.sm`)을 쓴다(2026-10-25 사용자 통일 요청, 개발 소스). 반응이 없으면 `reply` 동작이 시각 caption(시각이 없으면 작성자 caption)에 붙는다 |
 | `menuAction` | 즉시 실행 | 모달이 닫힌 뒤 실행(iOS 모달 경합 방지) |
 
 ## 함정
@@ -171,3 +171,11 @@ import { Text } from "@hjmds/react-native/primitives";
 2026-10-23: 말풍선 메뉴의 `reactions.menuActions`에 수정·삭제를 연결한다. 반응 선택 없이 메뉴만 필요하면 `options: []`를 쓴다. 수정은 같은 `MessageComposer`의 `editTarget`으로 전환하고 제품이 기존 새 메시지 초안·첨부를 보존한다. 저장 성공 전 원문을 덮지 않으며 삭제는 확인 대화상자 이후 서버 확인을 기다린다. 삭제 결과는 안내 말풍선으로 남기고 메뉴·첨부·반응을 제거한다.
 
 `deliveryLabel`은 제품 서버가 계산한 수정 상태 또는 단체 대화의 안 읽은 인원 수를 표시한다. 단체 대화의 미확인 수는 `3`처럼 숫자만 전달하며 Web·Native 공통 `caption`(11, 줄 높이 16) 크기로 작게 표시한다. 인원 수가 0이면 읽음 숫자를 전달하지 않는다. 가입·퇴장, 메시지 열람 여부와 기록 저장은 제품 소유다. 조회 성공을 읽음으로 추정하거나 예시의 숫자를 제품에 복사하지 않는다. 웹·네이티브 대화 메시지 스토리에서 수정·삭제의 실패 복구와 단체 읽음 수 감소를 확인할 수 있다.
+
+### 작성자 프로필 이동 (2026-10-25, 개발 소스)
+
+`avatarAction={{ label: t("profile.open"), onPress: () => openMember(message.authorId) }}`로 사진·이니셜을
+해당 회원의 프로필로 연결한다(Web·Native 동일). Avatar는 표시를 담당하고 ChatMessage가 이름 있는 버튼과
+44px/pt 누르기 영역을 소유한다. 사진은 기존 32px/pt를 유지하고 이동 버튼이 있으면 아바타 열에 44px/pt를 확보한다. 묶음 뒤 메시지는 같은 열 폭을 비우고 중복 버튼을 만들지 않는다.
+제품이 작성자 ID와 프로필 경로를 결정한다. 동작을 생략하면 기존 장식 아바타를 유지한다.
+사진 확대·답장·반응과 프로필 이동을 섞지 않으며 프로필 누르기는 말풍선 제스처를 시작하지 않는다.

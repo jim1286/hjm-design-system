@@ -438,8 +438,14 @@ export const commentThreadRecipe = {
     rowGap: spacing.lg,
     // Replies align with the parent's text column instead of an arbitrary section inset.
     replyIndent: 32 + spacing.xs,
+    // 2026-10-25 user policy: every product opens and extends a reply branch five replies at a time (Spint's hand-built
+    // "more" link and Burntok's flat list differed). Server-paged products request this page size.
+    replyPageSize: 5,
     // The heart keeps the 44pt touch target even though the measured reference draws a smaller glyph.
-    likeColumnWidth: 44,
+    // 2026-10-25 Spint review: like and ⋮ read as two far-apart islands. Trailing actions use the `small` IconButton
+    // (36 frame + 4 hitSlop = the same 44 target), so the visible gap shrinks while the touch target does not.
+    actionButtonSize: "small",
+    likeColumnWidth: 36,
     // Optional photo/sticker under the body; the measured reference keeps it thumbnail-sized.
     mediaMaxWidth: 160,
     mediaRadius: radius.md,
@@ -468,6 +474,17 @@ export function resolveCommentMenuItems(items) {
     return [...items.filter(item => item.tone !== "danger"), ...items.filter(item => item.tone === "danger")];
 }
 /** Replies are one level deep; reject orphaned/duplicate records instead of silently losing them. */
+/**
+ * One reply branch page under the five-at-a-time policy (`commentThreadRecipe.replyPageSize`, 2026-10-25). `loaded` replies
+ * are in the thread items, `total` is the server count, `visible` how far the reader has opened the branch and
+ * `revealIndex` a loaded reply the product must keep shown (just sent, opened from a notification). "reveal" shows more
+ * already loaded replies, "fetch" asks the product for its next server page, null ends the branch's more action.
+ */
+export function resolveCommentReplyPage({ loaded, total, visible, revealIndex, canFetch }) {
+    const shown = Math.min(loaded, Math.max(visible, revealIndex === undefined || revealIndex < 0 ? 0 : revealIndex + 1));
+    const remaining = Math.max(0, total - shown);
+    return { shown, remaining, more: remaining === 0 ? null : loaded > shown ? "reveal" : canFetch ? "fetch" : null };
+}
 export function validateCommentThread(items) {
     const roots = new Set(items.filter(item => item.parentId === null).map(item => item.id));
     const ids = new Set();
@@ -602,11 +619,19 @@ export const notificationRowRecipe = {
 };
 /** Shared profile identity geometry; product owns the avatar content. */
 export const profileSummaryRecipe = Object.freeze({
-    avatarSize: 72,
+    // Same standard member portrait as Avatar; comments and chat keep their compact recipes.
+    avatarSize: avatarRecipe.sizes.large,
+    /**
+     * 2026-10-25 user rule: on one's own profile the photo changes the photo and a pencil beside the name changes the
+     * nickname, so no separate "edit profile" button repeats either. Small ghost IconButton (36 + hitSlop 4 = 44 target).
+     */
+    nameEdit: Object.freeze({ icon: "edit", size: "small" }),
     avatarGlyphSize: glyph.xxl,
     actionsLayouts: Object.freeze({
         inline: Object.freeze({ axis: "inline", gap: "xs" }),
         stacked: Object.freeze({ axis: "block", gap: "xs" }),
+        // Peer profile actions share one row and equal cells, including menu triggers.
+        equal: Object.freeze({ axis: "inline", gap: "xs" }),
     }),
     /**
      * ProfileScreen `editPlacement="summary"` draws the edit action first in the summary's action row. A framed small

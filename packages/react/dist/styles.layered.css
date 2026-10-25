@@ -1052,8 +1052,8 @@
 .hjm-card__header-actions { position: relative; z-index: 1; display: flex; flex: 0 0 auto; align-items: center; gap: var(--hjm-space-xs); }
 .hjm-card__leading { flex: 0 0 auto; display: inline-grid; place-items: center; line-height: 1; }
 .hjm-card__copy { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xs); }
-/* cardRecipe.title.emphasis "strong": without a weight the h2–h6 element fell back to the UA bold (700). */
-.hjm-card__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-text-emphasis-strong); overflow-wrap: anywhere; }
+/* Follow cardRecipe.title: native headings must not fall back to the UA bold weight. */
+.hjm-card__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 .hjm-card__description { margin: 0; overflow-wrap: anywhere; }
 .hjm-card__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); padding: 0 var(--hjm-space-md) var(--hjm-space-md); }
 /* Row rhythm reads the recipe density variables so the stylesheet does not
@@ -1119,7 +1119,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-section__copy { display: grid; flex: 1 1 auto; gap: var(--hjm-space-xxs); min-inline-size: 0; }
 /* sectionRecipe.title is the `title` variant (18/26 bold) and description the `caption` variant (11/16), as Native draws them.
    Until 2026-10-06 Web inherited body (14) for both, so the same Section header was smaller on Web. */
-.hjm-section__title { margin: 0; color: var(--hjm-color-text-body); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-type-title-weight); overflow-wrap: anywhere; }
+.hjm-section__title { margin: 0; color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); font-weight: var(--hjm-type-title-weight); overflow-wrap: anywhere; }
 .hjm-section__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); overflow-wrap: anywhere; }
 .hjm-section__action { flex: 0 0 auto; }
 .hjm-section__content { min-inline-size: 0; }
@@ -1184,7 +1184,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-statistic__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-text-emphasis-medium); overflow-wrap: anywhere; }
 .hjm-statistic[data-density="compact"] .hjm-statistic__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-statistic__value-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--hjm-space-xxs); min-inline-size: 0; }
-.hjm-statistic__value { color: var(--hjm-statistic-value-color, var(--hjm-color-text)); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); font-weight: var(--hjm-font-weight-semibold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hjm-statistic__value { color: var(--hjm-statistic-value-color, var(--hjm-color-text)); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-font-weight-semibold); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .hjm-statistic[data-density="compact"] .hjm-statistic__value { font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
 .hjm-statistic__affix { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-statistic__hint { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
@@ -1197,14 +1197,16 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   .hjm-statistic-group { grid-template-columns: minmax(0, 1fr); }
 }
 
-.hjm-notice { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-md); border: 1px solid; border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); border-color: var(--hjm-color-border); }
-.hjm-notice[data-tone="info"] { border-color: var(--hjm-accent-info); }
-.hjm-notice[data-tone="success"] { border-color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 10%, var(--hjm-color-bg)); }
-.hjm-notice[data-tone="warning"] { border-color: var(--hjm-accent-warning); background: color-mix(in srgb, var(--hjm-accent-warning) 10%, var(--hjm-color-bg)); }
-.hjm-notice[data-tone="attention"] { border-color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 10%, var(--hjm-color-bg)); }
-.hjm-notice[data-tone="danger"] { border-color: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg)); }
+/* noticeRecipe 2026-10-25: no outline; tone lives in the tint, the leading accentBar and the icon. The bar is
+   positioned in the padding so it spans the whole notice even when the action wraps to a second line. */
+.hjm-notice { --hjm-notice-accent: var(--hjm-accent-info); position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-md); padding-inline-start: calc(var(--hjm-space-md) + 4px + var(--hjm-space-sm)); border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-surface-alt); }
+.hjm-notice[data-appearance="panel"]::before { content: ""; position: absolute; inset-block: var(--hjm-space-md); inset-inline-start: var(--hjm-space-md); inline-size: 4px; border-radius: var(--hjm-radius-full); background: var(--hjm-notice-accent); }
+.hjm-notice[data-tone="success"] { --hjm-notice-accent: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 10%, var(--hjm-color-bg)); }
+.hjm-notice[data-tone="warning"] { --hjm-notice-accent: var(--hjm-accent-warning); background: color-mix(in srgb, var(--hjm-accent-warning) 10%, var(--hjm-color-bg)); }
+.hjm-notice[data-tone="attention"] { --hjm-notice-accent: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 10%, var(--hjm-color-bg)); }
+.hjm-notice[data-tone="danger"] { --hjm-notice-accent: var(--hjm-color-danger); background: color-mix(in srgb, var(--hjm-color-danger) 10%, var(--hjm-color-bg)); }
 /* Status is placed inside the saved card/form; Badge carries tone without a second surface. */
-.hjm-notice[data-appearance="status"] { padding: 0; border: 0; background: transparent; }
+.hjm-notice[data-appearance="status"] { padding: 0; background: transparent; }
 .hjm-notice[data-appearance="status"] .hjm-notice__content { justify-items: start; }
 /* Reserve readable copy; wrap the action instead of crushing its label. */
 .hjm-notice__content { flex: 1 1 60%; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
@@ -1214,7 +1216,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice__action { flex: 0 0 auto; max-inline-size: 100%; }
 .hjm-notice__title, .hjm-notice__description { overflow-wrap: anywhere; }
 /* noticeRecipe/emptyStateRecipe title weight; the <strong> otherwise draws the UA bold (700). */
-.hjm-notice__title { font-weight: var(--hjm-type-title-weight); }
+.hjm-notice__title { font-weight: var(--hjm-type-title-weight); color: var(--hjm-color-text); }
 
 /* emptyStateRecipe.density.regular paddingVertical xxxl 40 (2026-10-06; Web had xxl 32, Native read the recipe). */
 /* Like Native, a regular empty state fills the rest of a flex host and centers in it; compact (cards, sheets) stays content-high. */
@@ -1732,18 +1734,29 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 */
 /* Each hit/hover layer belongs to its own day. Without this containing block
    the last absolute layer covered the whole preview and stole pointer clicks. */
+/* dateRangeRecipe 2026-10-25: one band between two filled edges (Material 3/Airbnb motif) instead of an underline and
+   outlines; the band is as tall as the date circle and rounds off where a week row starts or ends. */
+.hjm-date-range { display: grid; gap: var(--hjm-space-md); }
 .hjm-date-range .hjm-calendar__day { position: relative; isolation: isolate; }
 .hjm-date-range .hjm-calendar__day-label { position: relative; z-index: 1; pointer-events: none; }
-.hjm-date-range__cell { position: absolute; inset: 0; border-radius: var(--hjm-radius-sm); pointer-events: auto; }
-.hjm-date-range__cell[data-range="between"] { box-shadow: inset 0 -2px var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
-.hjm-date-range__cell[data-range="start"],
-.hjm-date-range__cell[data-range="end"] { background: var(--hjm-color-bg); outline: 2px solid var(--hjm-color-focus); }
-.hjm-date-range__cell[data-range="none"] { background: transparent; }
+.hjm-calendar__band { position: absolute; inset-block-start: 0; inset-inline: 0; block-size: var(--hjm-calendar-indicator-size, var(--hjm-calendar-cell-size)); background: color-mix(in srgb, var(--hjm-color-primary) 15%, transparent); pointer-events: none; }
+.hjm-calendar__day[data-range-band="toEnd"] .hjm-calendar__band { inset-inline-start: 50%; }
+.hjm-calendar__day[data-range-band="toStart"] .hjm-calendar__band { inset-inline-end: 50%; }
+.hjm-calendar__day:first-child:not([data-range-band="toEnd"]) .hjm-calendar__band { border-start-start-radius: var(--hjm-radius-full); border-end-start-radius: var(--hjm-radius-full); }
+.hjm-calendar__day:last-child:not([data-range-band="toStart"]) .hjm-calendar__band { border-start-end-radius: var(--hjm-radius-full); border-end-end-radius: var(--hjm-radius-full); }
+.hjm-calendar__day[data-today][data-selected] .hjm-calendar__day-label { border-color: transparent; }
+.hjm-date-range__presets { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+.hjm-date-range__summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--hjm-space-xs); }
+.hjm-date-range__field { display: grid; gap: var(--hjm-space-xxs); min-inline-size: 0; padding: var(--hjm-space-xs) var(--hjm-space-sm); border: 2px solid transparent; border-radius: var(--hjm-radius-md); background: var(--hjm-color-surface-alt); }
+.hjm-date-range__field[data-active] { border-color: var(--hjm-color-primary); }
+.hjm-date-range__field-label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+.hjm-date-range__field-value { overflow: hidden; color: var(--hjm-color-text); font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
+.hjm-date-range__field[data-empty] .hjm-date-range__field-value { color: var(--hjm-color-text-sub); }
 
 /* AvatarGroup: overlap comes from the recipe ratio, not a per-size pixel value. */
 .hjm-avatar-group { display: inline-flex; align-items: center; }
 .hjm-avatar-group > * + * { margin-inline-start: calc(var(--hjm-avatar-overlap) * -1); }
-.hjm-avatar-group > .hjm-avatar { border: 2px solid var(--hjm-color-bg); border-radius: var(--hjm-radius-full); }
+.hjm-avatar-group > .hjm-avatar, .hjm-avatar-group > .hjm-identity-action .hjm-avatar { border: 2px solid var(--hjm-color-bg); border-radius: var(--hjm-radius-full); }
 .hjm-avatar-group__overflow {
   display: grid;
   place-items: center;
@@ -1776,7 +1789,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-family: var(--hjm-font-family-code, ui-monospace, SFMono-Regular, Consolas, monospace);
 }
 .hjm-text-format[data-kind="kbd"] {
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   color: var(--hjm-color-text-body);
   font-size: var(--hjm-type-label-size);
 }
@@ -2091,7 +2104,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   max-block-size: 12rem;
   margin: var(--hjm-space-xxs) 0 0;
   padding: var(--hjm-space-xxs);
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
   list-style: none;
@@ -2579,7 +2592,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   block-size: 100dvh;
   min-inline-size: 0;
   overflow: hidden;
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: 0;
   color: var(--hjm-color-text);
   background: var(--hjm-color-bg);
@@ -2653,7 +2666,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   overscroll-behavior: contain;
   box-sizing: border-box;
   padding: var(--hjm-space-md);
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: var(--hjm-radius-md);
   color: var(--hjm-color-text);
   background: var(--hjm-color-bg);
@@ -2696,7 +2709,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   /* menuRecipe.surface (floatingSurfaceContract) padding spacing.xs 8. Until 2026-10-06 Web drew 4 here and in the
      Select/Combobox/ContextMenu popups that share the same surface contract. */
   padding: var(--hjm-menu-padding, var(--hjm-space-xs));
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
   box-shadow: var(--hjm-shadow-floating);
@@ -2768,7 +2781,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-select__indicator { flex: 0 0 auto; color: var(--hjm-color-text-muted); pointer-events: none; }
 .hjm-select__busy-indicator { flex: 0 0 auto; inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-select__native + .hjm-select__indicator { margin-inline-start: calc(-1 * var(--hjm-space-lg)); }
-.hjm-select__listbox { position: fixed; z-index: var(--hjm-layer-dropdown); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); max-block-size: 22.5rem; overflow: auto; padding: var(--hjm-select-popover-padding, var(--hjm-space-xs)); /* selectRecipe.popover.padding 8 (was 4 until 2026-10-06) */ border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
+.hjm-select__listbox { position: fixed; z-index: var(--hjm-layer-dropdown); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); max-block-size: 22.5rem; overflow: auto; padding: var(--hjm-select-popover-padding, var(--hjm-space-xs)); /* selectRecipe.popover.padding 8 (was 4 until 2026-10-06) */ border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-select__section-label { padding: var(--hjm-space-xs) var(--hjm-space-sm); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-select__option, .hjm-select__message { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); overflow-wrap: anywhere; }
 .hjm-select[data-density="comfortable"] .hjm-select__option,
@@ -2798,7 +2811,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   max-block-size: 22.5rem;
   overflow: auto;
   padding: var(--hjm-combobox-popover-padding, var(--hjm-space-xs)); /* comboboxRecipe.popover = selectRecipe.popover, 8 (was 4 until 2026-10-06) */
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
   box-shadow: var(--hjm-shadow-floating);
@@ -2884,7 +2897,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   place-items: center;
   inline-size: var(--hjm-avatar-size, 2.5rem);
   block-size: var(--hjm-avatar-size, 2.5rem);
-  border: 1px solid var(--hjm-color-border);
+  border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent);
   border-radius: 50%;
   color: var(--hjm-color-text-muted);
   background: var(--hjm-color-bg);
@@ -3341,25 +3354,40 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menu-morph__item[data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-menu-morph__item:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Selected colors are user data; control surfaces keep the same canvas tokens as other inputs. */
-.hjm-color-picker { border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); padding: 1rem; margin: 0; min-inline-size: 0; overflow-wrap: anywhere; }
-.hjm-color-picker legend { max-inline-size: 100%; overflow-wrap: anywhere; }
-.hjm-color-picker__row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-.hjm-color-picker label { display: flex; flex-direction: column; gap: 0.5rem; min-inline-size: 0; }
-.hjm-color-picker__hex { flex: 1 1 10rem; }
-.hjm-color-picker input { box-sizing: border-box; min-block-size: var(--hjm-color-picker-target); min-inline-size: 0; max-inline-size: 100%; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); font: inherit; }
-.hjm-color-picker input[type="text"] { inline-size: 100%; padding-inline: 0.5rem; }
-.hjm-color-picker input[type="color"] { inline-size: 3rem; padding: 0.25rem; }
-.hjm-color-picker__opacity { margin-block-start: 0.75rem; }
-.hjm-color-picker__opacity input[type="range"] { accent-color: var(--hjm-color-primary); }
-.hjm-color-picker__preview { block-size: 1.5rem; margin-block-start: 0.75rem; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); }
-.hjm-color-picker__presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block-start: 0.75rem; }
-.hjm-color-picker__presets button { display: inline-flex; align-items: center; gap: 0.5rem; min-block-size: var(--hjm-color-picker-target); max-inline-size: 100%; overflow-wrap: anywhere; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); padding: 0.5rem; background: var(--hjm-color-bg); color: var(--hjm-color-text); font: inherit; cursor: pointer; }
-.hjm-color-picker__presets button[aria-pressed="true"] { border-color: var(--hjm-color-primary); }
-.hjm-color-picker__swatch { inline-size: 1rem; block-size: 1rem; flex-shrink: 0; border: 1px solid var(--hjm-color-border); }
-.hjm-color-picker :is(input, button):focus-visible { outline: 2px solid var(--hjm-color-primary); outline-offset: 2px; }
-.hjm-color-picker__error { color: var(--hjm-color-danger); margin-block: 0.5rem; }
+/* Selected colors are user data; control surfaces keep the same canvas tokens as other inputs. The 2026-10-25 redesign
+   edits HSV: a saturation/brightness area over the hue colour, then hue and opacity bars (Figma/Procreate Classic). */
+.hjm-color-picker { --hjm-color-picker-checker: repeating-conic-gradient(#d6d6d6 0% 25%, #ffffff 0% 50%) 0 0 / 12px 12px; display: grid; gap: var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); padding: 1rem; margin: 0; min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-color-picker legend { max-inline-size: 100%; overflow-wrap: anywhere; padding-inline: 0.25rem; }
+.hjm-color-picker__area { position: relative; aspect-ratio: var(--hjm-color-picker-area-ratio); border-radius: var(--hjm-radius-md); background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), var(--hjm-color-picker-hue); touch-action: none; cursor: crosshair; user-select: none; }
+.hjm-color-picker__area[data-disabled] { cursor: not-allowed; }
+.hjm-color-picker__area:focus-within { outline: var(--hjm-focus-width, 2px) solid var(--hjm-color-focus); outline-offset: 2px; }
+.hjm-color-picker__area-thumb { position: absolute; inline-size: var(--hjm-color-picker-area-thumb); block-size: var(--hjm-color-picker-area-thumb); box-sizing: border-box; translate: -50% -50%; border: 3px solid #fff; border-radius: 50%; background: var(--hjm-color-picker-opaque); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3), 0 1px 4px rgb(0 0 0 / 0.35); pointer-events: none; }
+.hjm-color-picker__bar { appearance: none; -webkit-appearance: none; display: block; inline-size: 100%; block-size: var(--hjm-color-picker-target); margin: 0; background: transparent; cursor: pointer; }
+.hjm-color-picker__bar::-webkit-slider-runnable-track { block-size: var(--hjm-color-picker-bar); border-radius: 999px; background: var(--hjm-color-picker-bar-fill); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
+.hjm-color-picker__bar::-moz-range-track { block-size: var(--hjm-color-picker-bar); border-radius: 999px; background: var(--hjm-color-picker-bar-fill); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
+.hjm-color-picker__bar::-webkit-slider-thumb { -webkit-appearance: none; inline-size: var(--hjm-color-picker-bar-thumb); block-size: var(--hjm-color-picker-bar-thumb); margin-block-start: calc((var(--hjm-color-picker-bar) - var(--hjm-color-picker-bar-thumb)) / 2); box-sizing: border-box; border: 3px solid #fff; border-radius: 50%; background: var(--hjm-color-picker-bar-thumb-fill); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3), 0 1px 4px rgb(0 0 0 / 0.35); }
+.hjm-color-picker__bar::-moz-range-thumb { inline-size: var(--hjm-color-picker-bar-thumb); block-size: var(--hjm-color-picker-bar-thumb); box-sizing: border-box; border: 3px solid #fff; border-radius: 50%; background: var(--hjm-color-picker-bar-thumb-fill); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3), 0 1px 4px rgb(0 0 0 / 0.35); }
+.hjm-color-picker__bar--hue { --hjm-color-picker-bar-fill: var(--hjm-color-picker-hue-gradient); --hjm-color-picker-bar-thumb-fill: var(--hjm-color-picker-hue); }
+.hjm-color-picker__bar--alpha { --hjm-color-picker-bar-fill: linear-gradient(to right, transparent, var(--hjm-color-picker-opaque)), var(--hjm-color-picker-checker); --hjm-color-picker-bar-thumb-fill: linear-gradient(var(--hjm-color-picker-current), var(--hjm-color-picker-current)), var(--hjm-color-picker-checker); }
+.hjm-color-picker__bar:focus-visible { outline: var(--hjm-focus-width, 2px) solid var(--hjm-color-focus); outline-offset: 2px; border-radius: 999px; }
+.hjm-color-picker__row { display: flex; align-items: flex-end; gap: 0.75rem; }
+.hjm-color-picker__preview { flex-shrink: 0; inline-size: var(--hjm-color-picker-preview); block-size: var(--hjm-color-picker-preview); border-radius: 50%; background: linear-gradient(var(--hjm-color-picker-current), var(--hjm-color-picker-current)), var(--hjm-color-picker-checker); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); }
+.hjm-color-picker__hex { display: flex; flex: 1 1 8rem; flex-direction: column; gap: 0.25rem; min-inline-size: 0; }
+.hjm-color-picker__hex input { box-sizing: border-box; inline-size: 100%; min-block-size: var(--hjm-color-picker-target); padding-inline: 0.5rem; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); font: inherit; font-variant-numeric: tabular-nums; }
+.hjm-color-picker__hex input:focus-visible { outline: var(--hjm-focus-width, 2px) solid var(--hjm-color-focus); outline-offset: 2px; }
+.hjm-color-picker__opacity { min-block-size: var(--hjm-color-picker-target); display: inline-flex; align-items: center; font-variant-numeric: tabular-nums; color: var(--hjm-color-text-muted, inherit); }
+.hjm-color-picker__error { color: var(--hjm-color-danger); margin: 0; }
 .hjm-color-picker:disabled { opacity: 0.5; }
+.hjm-color-picker:disabled .hjm-color-picker__bar { cursor: not-allowed; }
+.hjm-color-swatches { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+.hjm-color-swatches legend { padding: 0; margin-block-end: 0.5rem; }
+.hjm-color-swatches__list { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.hjm-color-swatches[data-layout="scroll"] .hjm-color-swatches__list { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.hjm-color-swatches__item { position: relative; display: inline-grid; place-items: center; flex-shrink: 0; inline-size: var(--hjm-color-swatch-target); block-size: var(--hjm-color-swatch-target); cursor: pointer; }
+.hjm-color-swatches__swatch { inline-size: var(--hjm-color-swatch-size); block-size: var(--hjm-color-swatch-size); border-radius: 50%; background: linear-gradient(var(--hjm-color-swatch), var(--hjm-color-swatch)), repeating-conic-gradient(#d6d6d6 0% 25%, #ffffff 0% 50%) 0 0 / 10px 10px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); }
+.hjm-color-swatches__item input:checked + .hjm-color-swatches__swatch { box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15), 0 0 0 var(--hjm-color-swatch-gap) var(--hjm-color-bg), 0 0 0 calc(var(--hjm-color-swatch-gap) + var(--hjm-color-swatch-ring)) var(--hjm-color-text); }
+.hjm-color-swatches__item input:focus-visible + .hjm-color-swatches__swatch { outline: var(--hjm-focus-width, 2px) solid var(--hjm-color-focus); outline-offset: calc(var(--hjm-color-swatch-gap) + var(--hjm-color-swatch-ring) + 2px); }
+.hjm-color-swatches:disabled .hjm-color-swatches__item { cursor: not-allowed; opacity: 0.5; }
 /* SVG labels are decorative and print with the content; neither selection nor pointer input is intercepted. */
 .hjm-watermark { position: relative; isolation: isolate; }
 .hjm-watermark__content { position: relative; z-index: 0; overflow-wrap: anywhere; }
@@ -3664,8 +3692,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
    (--hjm-comment-anchor-line, set per row), so like/more glyphs share the author line's centre instead of sitting
    12px below it. When HJM's own like/more is the last control (data-edge), the whole column takes the IconButton edge
    overhang: the 44-wide like count under the heart shares the column, so a margin on the button alone was absorbed. */
-.hjm-comment-row__like { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; margin-block-start: calc((var(--hjm-comment-anchor-line) - var(--hjm-control-button-medium)) / 2); }
-.hjm-comment-row__like[data-edge="end"] { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-medium)); }
+.hjm-comment-row__like { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; margin-block-start: calc((var(--hjm-comment-anchor-line) - var(--hjm-control-button-small)) / 2); }
+.hjm-comment-row__like[data-edge="end"] { margin-inline-end: calc(-1 * var(--hjm-icon-button-edge-small)); }
 .hjm-comment-row__like-count { text-align: center; }
 .hjm-comment-row__action { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hjm-color-text-muted); font: inherit; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-text-emphasis-medium); cursor: pointer; }
 .hjm-comment-row__action:disabled { opacity: 0.5; cursor: default; }
@@ -3790,6 +3818,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 
 /* Full destination cards keep all names and widths stable; colors remain product semantic roles. */
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__surface { background: var(--hjm-color-surface-accent); }
+.hjm-bottom-navigation[data-selection="tile"][data-tone="neutral"] .hjm-bottom-navigation__surface { background: var(--hjm-color-surface); }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__list { padding: var(--hjm-space-xxs); gap: var(--hjm-space-xxs); }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-primary); color: var(--hjm-color-on-primary); }
 .hjm-bottom-navigation[data-selection="tile"] .hjm-bottom-navigation__item:not([data-state="selected"]):active { background: var(--hjm-bottom-navigation-pressed-background); }
@@ -3988,5 +4017,38 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-chat-room__selected-item { display:flex; flex-direction:column; align-items:center; gap:var(--hjm-space-xxs); inline-size:64px; padding:0; border:0; border-radius:var(--hjm-radius-md); background:transparent; color:inherit; cursor:pointer; }
 .hjm-chat-room__selected-name { max-inline-size:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 :is(.hjm-chat-room__tool,.hjm-chat-room__photo,.hjm-chat-room__selected-item):focus-visible { outline:2px solid var(--hjm-color-content-brand); outline-offset:2px; }
+
+/* FollowListScreen already receives the screen body inset; external tab panels add no second gutter. */
+.hjm-follow-list__panel { padding-block: 0; }
+
+/* Narrow pager placement without shrinking the vertical tap target or overlapping adjacent buttons. */
+.hjm-page-indicator[data-density="compact"][data-interactive="true"] { gap: 0; }
+.hjm-page-indicator[data-density="compact"] .hjm-page-indicator__dot { min-inline-size: var(--hjm-space-lg); inline-size: var(--hjm-space-lg); padding-inline: 0; }
+
+/* Identity navigation preserves small avatar geometry while exposing a keyboard/touch target. */
+.hjm-identity-action { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-inline-size: var(--hjm-identity-target); min-block-size: var(--hjm-identity-target); margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-full, 9999px); background: transparent; color: inherit; cursor: pointer; }
+.hjm-identity-action > span { display: inline-flex; }
+.hjm-identity-action:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
+.hjm-identity-action:active { opacity: var(--hjm-identity-pressed-opacity); }
+.hjm-identity-action:disabled { cursor: default; }
+
+/* Independent identity navigation is a sibling of row commands, including links. */
+.hjm-list-row__profile { display: flex; flex: 0 0 auto; padding-inline-start: var(--hjm-list-row-inline); }
+.hjm-list-row-frame[data-leading-action] > .hjm-list-row { padding-inline-start: 0; }
+.hjm-list-row-frame[data-leading-action]:not([data-trailing-action]) > .hjm-list-row { padding-inline-end: var(--hjm-list-row-inline); }
+
+.hjm-card[data-activation="overlay"] .hjm-card__leading[data-interactive] { position: relative; z-index: 1; }
+
+/* Header dismissal keeps a single modal surface and leaves the action viewport scrollable. */
+.hjm-menu__content[data-presentation="bottom"][data-dismiss-placement="header"] { background: var(--hjm-color-bg); padding: var(--hjm-space-sm); }
+.hjm-menu__header { display: flex; align-items: center; gap: var(--hjm-space-sm); flex-shrink: 0; }
+.hjm-menu__heading { flex: 1; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
+.hjm-menu__title { font-weight: var(--hjm-text-emphasis-strong); }
+.hjm-menu__subtitle { font-size: var(--hjm-type-label-size); color: var(--hjm-color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Relationship lists use the large Avatar (48) and 64px rows so identity stays legible beside actions. */
+.hjm-follow-list__person { min-block-size: 64px; }
+.hjm-list-row__leading[data-size="large"] { inline-size: 48px; block-size: 48px; }
+.hjm-follow-list__relationship { min-inline-size: 108px; }
 
 }

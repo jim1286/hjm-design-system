@@ -32,33 +32,32 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
         size: glyph[noticeRecipe.iconSize],
     });
     // The icon box spans the title's rendered first line (token × text scale) so the glyph centers on it at any text
-    // scale, like Web's 1lh anchor (2026-10-17 measured audit). The action stays under the copy on Native.
+    // scale, like Web's 1lh anchor (2026-10-17 measured audit).
     const titleLineHeight = theme.tokens.typography[noticeRecipe.title.textVariant].lineHeight * theme.textScaling.scale;
+    const radius = theme.tokens.radius[noticeRecipe.radius];
+    const panel = appearance === "panel";
     return (_jsxs(View, { ...props, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, style: [
             {
                 // Feedback tints carry alpha. Give them an opaque canvas, as Web's
                 // color-mix does, so map/photo content cannot show through the message.
-                backgroundColor: appearance === "status" ? "transparent" : theme.palette.theme.bg,
-                borderColor: resolveColorReference(toneContract.border, theme.palette),
-                borderRadius: theme.tokens.radius[noticeRecipe.radius],
+                backgroundColor: panel ? theme.palette.theme.bg : "transparent",
+                borderRadius: radius,
                 borderWidth: noticeRecipe.appearances[appearance].borderWidth,
+                direction: theme.environment.direction,
+                flexDirection: "row",
                 gap: noticeRecipe.gap,
                 padding: noticeRecipe.appearances[appearance].padding,
             },
             layoutStyle,
-        ], children: [appearance === "panel" ? _jsx(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
-                    borderRadius: theme.tokens.radius[noticeRecipe.radius],
-                    backgroundColor: resolveColorReference(toneContract.background, theme.palette) } }) : null, _jsxs(View, { style: {
-                    alignItems: "flex-start",
-                    direction: theme.environment.direction,
-                    flexDirection: "row",
-                    gap: noticeRecipe.gap,
-                }, children: [resolvedIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
-                            alignItems: "center",
-                            height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
-                            justifyContent: "center",
-                            width: glyph[noticeRecipe.iconSize],
-                        }, children: resolvedIcon })), _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [appearance === "status" ? _jsx(Badge, { label: title, tone: tone, size: "small" }) : _jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));
+        ], children: [panel ? _jsx(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, borderRadius: radius,
+                    backgroundColor: resolveColorReference(toneContract.background, theme.palette) } }) : null, panel ? _jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { alignSelf: "stretch", width: noticeRecipe.accentBar.width, backgroundColor: foreground,
+                    borderRadius: theme.tokens.radius[noticeRecipe.accentBar.radius] } }) : null, _jsxs(View, { style: { alignItems: "center", flexDirection: "row", flexGrow: 1, flexShrink: 1, flexWrap: "wrap", gap: noticeRecipe.gap, minWidth: 0 }, children: [_jsxs(View, { style: { alignItems: "flex-start", flexBasis: action ? `${noticeRecipe.contentMinWidthPercent}%` : "auto",
+                            flexDirection: "row", flexGrow: 1, flexShrink: 1, gap: noticeRecipe.gap, minWidth: 0 }, children: [resolvedIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                                    alignItems: "center",
+                                    height: Math.max(glyph[noticeRecipe.iconSize], titleLineHeight),
+                                    justifyContent: "center",
+                                    width: glyph[noticeRecipe.iconSize],
+                                }, children: resolvedIcon })), _jsxs(View, { style: { flexGrow: 1, flexShrink: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [appearance === "status" ? _jsx(Badge, { label: title, tone: tone, size: "small" }) : _jsx(Text, { style: { color: resolveColorReference(noticeRecipe.title.color, theme.palette), fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action === undefined || action === null ? null : _jsx(View, { style: { flexShrink: 0, maxWidth: "100%" }, children: action })] })] }));
 }
 export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", layoutStyle, ...props }) {
     assertNoRemovedStyleProps("EmptyState", props, ["style", "illustrationStyle", "titleStyle", "descriptionStyle", "actionStyle"]);

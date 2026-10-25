@@ -11,6 +11,12 @@ export type SheetPanelProps = Readonly<{
     height?: number;
     onHeightChange?: (height: number) => void;
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * Space at the bottom that something else covers, such as a raised bottom-navigation item overlapping the sheet. The
+     * surface still reaches the bottom edge (no map strip under it); the body and the folded handle stay above the
+     * covered space (2026-10-25 Diairy map sheet joined to its tab bar).
+     */
+    safeAreaBottom?: number;
     /** Product artwork above the scrolling body; it must not replace the handle. */
     overlay?: ReactNode;
     /** Domain navigation, such as horizontal letter paging; vertical ownership remains here. */
@@ -20,5 +26,5 @@ export type SheetPanelProps = Readonly<{
     testID?: string;
 }>;
 /** A nonmodal, bottom-anchored sheet. The map behind it keeps pointer and accessibility access. */
-export declare function SheetPanel({ children, handleLabel, maximumHeight, height, onHeightChange, layoutStyle, overlay, contentGesture, handleActions, onHandleAction, testID }: SheetPanelProps): import("react").JSX.Element;
+export declare function SheetPanel({ children, handleLabel, maximumHeight, height, onHeightChange, layoutStyle, safeAreaBottom, overlay, contentGesture, handleActions, onHandleAction, testID }: SheetPanelProps): import("react").JSX.Element;
 //# sourceMappingURL=sheet-panel.d.ts.map

@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { IdentityAction } from "./internal/identity-action.js";
 import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
@@ -102,7 +103,7 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props 
             layoutStyle,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, leading, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, mediaAction, actions, headerActions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
+export function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, mediaAction, actions, headerActions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens, colors } = useHjmNativeTheme();
     if (onActivate && !accessibilityLabel?.trim()) {
         throw new TypeError("Interactive Card requires accessibilityLabel");
@@ -117,9 +118,10 @@ export function Card({ children, title, description, leading, media, backgroundM
     const [headerBodyTop, setHeaderBodyTop] = useState(0);
     const [headerRow, setHeaderRow] = useState(null);
     const bodyPadding = surfaceGeometry.paddings[padding];
+    const [leadingActionSize, setLeadingActionSize] = useState({ width: 0, height: 0 });
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined || headerActions !== undefined;
     // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete); see `onActivate`.
-    const split = onActivate !== undefined && Boolean(actions || headerActions);
+    const split = onActivate !== undefined && Boolean(actions || headerActions || leadingAction);
     const activate = () => { if (!disabled)
         onActivate?.(); };
     const activationA11y = {
@@ -142,7 +144,7 @@ export function Card({ children, title, description, leading, media, backgroundM
                                         flexDirection: "row",
                                         gap: cardRecipe.header.gap,
                                         ...(headerActionSize.width > 0 ? { marginEnd: headerActionSize.width + cardRecipe.header.gap, minHeight: headerActionSize.height } : {}),
-                                    }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", ...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {}), variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", ...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {}), variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { style: { flexGrow: 1 }, children: children })] })] }), headerActions === undefined ? null : _jsx(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderActionSize(current => current.width === layout.width && current.height === layout.height ? current : { width: layout.width, height: layout.height }), 
+                                    }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0, ...(leadingAction ? { width: leadingActionSize.width, height: leadingActionSize.height } : {}) }, children: leadingAction ? null : leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: cardRecipe.title.emphasis, tone: "primary", ...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {}), variant: cardRecipe.title.variant, children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", ...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {}), variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { style: { flexGrow: 1 }, children: children })] })] }), leadingAction && leading !== undefined ? _jsx(View, { onLayout: ({ nativeEvent: { layout } }) => setLeadingActionSize(current => current.width === layout.width && current.height === layout.height ? current : { width: layout.width, height: layout.height }), style: { position: "absolute", top: headerBodyTop + (headerRow?.top ?? bodyPadding) + Math.max(0, ((headerRow?.height ?? leadingActionSize.height) - leadingActionSize.height) / 2), start: bodyPadding, zIndex: 1 }, children: _jsx(IdentityAction, { action: leadingAction, children: leading }) }) : null, headerActions === undefined ? null : _jsx(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderActionSize(current => current.width === layout.width && current.height === layout.height ? current : { width: layout.width, height: layout.height }), 
                     // Commands stay outside the accessible card target; measured row height also centers wrapped copy.
                     style: { position: "absolute", top: headerBodyTop + (headerRow?.top ?? bodyPadding) + Math.max(0, ((headerRow?.height ?? headerActionSize.height) - headerActionSize.height) / 2), end: bodyPadding, flexDirection: "row", alignItems: cardRecipe.header.alignItems, gap: cardRecipe.body.gap, zIndex: 1 }, children: headerActions }), actions === undefined ? null : (_jsx(View, { style: {
                         direction: environment.direction,
@@ -176,7 +178,7 @@ export function QuoteCard({ children, attribution, renderMark, ...props }) {
  * root's `data-leading` attribute in CSS.
  */
 const ListItemLeadingContext = createContext(null);
-export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, trailing, trailingAccessory = listRowRecipe.defaults.trailingAccessory, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density: suppliedDensity, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
+export function ListRow({ title, tone = listRowRecipe.defaults.tone, description, leading, leadingAction, trailing, trailingAccessory = listRowRecipe.defaults.trailingAccessory, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density: suppliedDensity, loading = false, loadingLabel, selected: selectedProp, leadingShape = "square", leadingSize = leadingShape === "circle" ? "large" : "default", layoutStyle, leadingStyle, contentStyle, titleRowStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...forwarded }) {
     assertNoRemovedStyleProps("ListRow", forwarded, ["titleStyle", "descriptionStyle"]);
     const { hjmTitleEmphasis, hjmMeta, hjmUnreadLabel, ...props } = forwarded;
     const theme = useHjmNativeTheme();
@@ -203,6 +205,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
     const metrics = listRowRecipe.density[density];
     validateListRowTrailingAccessory(trailingAccessory);
     const accessory = trailingAccessory === "none" ? null : listRowRecipe.accessories[trailingAccessory];
+    const separateActions = Boolean(trailingAction || leadingAction);
     const interactive = onPress !== undefined;
     const selected = selectedProp ?? listRowRecipe.defaults.selected;
     const resolvedMetadata = titleMetadata;
@@ -236,10 +239,10 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
     const leadingRadius = listRowRecipe.leadingShapes[leadingShape];
     const leadingFrameStyle = {
         alignItems: "center",
-        height: listRowRecipe.leadingSize,
+        height: leadingSize === "large" ? avatarRecipe.sizes.large : listRowRecipe.leadingSize,
         justifyContent: "center",
         overflow: "hidden",
-        width: listRowRecipe.leadingSize,
+        width: leadingSize === "large" ? avatarRecipe.sizes.large : listRowRecipe.leadingSize,
         ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
     };
     if (loading) {
@@ -253,7 +256,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                     borderWidth: rowBorder, borderColor: "transparent" }, layoutStyle], children: [leading ? _jsx(View, { onLayout: measureLeading, style: [placeholder, leadingFrameStyle, leadingStyle] }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0, gap: spacing.xxs }, children: [_jsx(View, { style: [placeholder, { width: `${listRowRecipe.loading.titleWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.title.textVariant].lineHeight }] }), description ? _jsx(View, { style: [placeholder, { width: `${listRowRecipe.loading.descriptionWidthPercent}%`, height: theme.tokens.typography[listRowRecipe.description.textVariant].lineHeight }] }) : null] }), trailing || trailingText ? _jsx(View, { style: [placeholder, { width: listRowRecipe.loading.trailingWidth, height: theme.tokens.typography[listRowRecipe.trailing.textVariant].lineHeight }] }) : null, accessory ? _jsx(View, { testID: "hjm-list-row-accessory", style: { width: glyph[accessory.glyph], height: glyph[accessory.glyph],
                         ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) } }) : null] });
     }
-    const rowContent = (_jsxs(_Fragment, { children: [leading ? (_jsx(View, { onLayout: measureLeading, accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [leadingFrameStyle, leadingStyle], children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
+    const rowContent = (_jsxs(_Fragment, { children: [leading && !leadingAction ? (_jsx(View, { onLayout: measureLeading, accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [leadingFrameStyle, leadingStyle], children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
                             {
                                 alignItems: "center",
                                 direction: theme.environment.direction,
@@ -280,31 +283,31 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
             alignItems: "center",
             backgroundColor: pressed
                 ? resolveColorReference(listRowRecipe.states.pressedBackground, theme.palette)
-                : trailingAction
+                : separateActions
                     ? "transparent"
                     : visualState.backgroundColor,
-            borderColor: selected && !trailingAction ? theme.colors.borderControl : "transparent",
-            borderWidth: trailingAction ? 0 : rowBorder,
+            borderColor: selected && !separateActions ? theme.colors.borderControl : "transparent",
+            borderWidth: separateActions ? 0 : rowBorder,
             direction: visualState.direction,
-            flex: trailingAction ? 1 : undefined,
+            flex: separateActions ? 1 : undefined,
             flexDirection: "row",
             gap: listRowRecipe.gap,
             minHeight: visualState.minHeight,
-            opacity: trailingAction ? 1 : visualState.opacity,
+            opacity: separateActions ? 1 : visualState.opacity,
             // With trailingAction the outer frame owns the bleed and border; the command keeps the start padding.
-            ...(trailingAction
-                ? { paddingStart: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder }
+            ...(separateActions
+                ? { paddingStart: leadingAction ? 0 : metrics.paddingHorizontal - rowBorder, ...(trailingAction ? {} : { paddingEnd: metrics.paddingHorizontal - rowBorder }), paddingVertical: metrics.paddingVertical - rowBorder }
                 : { marginHorizontal: -metrics.paddingHorizontal, paddingHorizontal: metrics.paddingHorizontal - rowBorder,
                     paddingVertical: metrics.paddingVertical - rowBorder }),
         },
-        trailingAction ? undefined : layoutStyle,
+        separateActions ? undefined : layoutStyle,
     ];
     const main = interactive ? (_jsx(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: composedLabel, accessibilityRole: "button", accessibilityState: {
             ...accessibilityState,
             disabled,
             ...(selectedProp === undefined ? {} : { selected: selectedProp }),
         }, disabled: disabled, onPress: onPress, style: ({ pressed }) => contentStyleFor(pressed), children: rowContent })) : (_jsx(View, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: accessibilityLabel, accessible: accessibilityLabel === undefined ? undefined : true, style: contentStyleFor(false), children: rowContent }));
-    if (trailingAction === undefined || trailingAction === null)
+    if (!separateActions)
         return main;
     return (_jsxs(View, { ...containerProps, style: [
             {
@@ -321,13 +324,13 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                 opacity: visualState.opacity,
             },
             layoutStyle,
-        ], children: [main, _jsx(View, { style: [
+        ], children: [leadingAction && leading ? _jsx(View, { style: { paddingStart: metrics.paddingHorizontal - rowBorder, flexShrink: 0 }, children: _jsx(View, { onLayout: measureLeading, children: _jsx(IdentityAction, { action: leadingAction, children: leading }) }) }) : null, main, trailingAction ? _jsx(View, { style: [
                     // The action box ends on the content edge, so an `edge="end"` IconButton puts its glyph on that line.
                     { flexShrink: 0, paddingEnd: metrics.paddingHorizontal - rowBorder },
                     trailingActionStyle,
-                ], children: trailingAction })] }));
+                ], children: trailingAction }) : null] }));
 }
-export function Avatar({ source, renderImage, name, initials, renderFallback, size: sizeProp = avatarRecipe.sizes.touch, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, decorative = false, accessibilityLabel, layoutStyle, }) {
+export function Avatar({ action, source, renderImage, name, initials, renderFallback, size: sizeProp = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, decorative = false, accessibilityLabel, layoutStyle, }) {
     const size = resolveAvatarSize(sizeProp);
     validateAvatarPresentation({ shape, frame, accessoryPlacement });
     const { palette, tokens } = useHjmNativeTheme();
@@ -361,7 +364,7 @@ export function Avatar({ source, renderImage, name, initials, renderFallback, si
         : _jsx(Text, { align: "center", style: { color: initialsColor }, variant: initialsVariant, emphasis: avatarRecipe.initialsWeight, children: fallback }));
     // Outward overhang, as Asset/IconTile; `0 -` keeps a zero offset positive.
     const offset = 0 - avatarRecipe.accessory.offset;
-    return (_jsxs(View, { ...mediaAccessibility, style: [{ height: size, position: "relative", width: size }, layoutStyle], children: [_jsx(View, { style: {
+    const avatarNode = (_jsxs(View, { ...mediaAccessibility, style: [{ height: size, position: "relative", width: size }, action ? undefined : layoutStyle], children: [_jsx(View, { style: {
                     alignItems: "center",
                     backgroundColor: frameRecipe.background ? resolveColorReference(frameRecipe.background, palette) : "transparent",
                     borderColor: frameRecipe.border ? resolveColorReference(frameRecipe.border, palette) : "transparent",
@@ -372,6 +375,7 @@ export function Avatar({ source, renderImage, name, initials, renderFallback, si
                     overflow: "hidden",
                     width: size,
                 }, children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: size, width: size }, children: renderImage({ source, size, onError: failImage, fallback: fallbackNode }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: fallbackNode })) }), accessory ? (_jsx(View, { style: [{ position: "absolute", end: offset }, accessoryPlacement === "top-end" ? { top: offset } : { bottom: offset }], children: accessory })) : null] }));
+    return action ? _jsx(IdentityAction, { action: action, ...(layoutStyle ? { layoutStyle } : {}), children: avatarNode }) : avatarNode;
 }
 export function Divider({ orientation = "horizontal", inset = 0, lineStyle = dividerRecipe.defaults.lineStyle, layoutStyle }) {
     if (!Number.isFinite(inset) || inset < 0)

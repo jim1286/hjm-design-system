@@ -12,7 +12,7 @@ export type AuthProviderButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElemen
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const AuthProviderButton: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "style" | "disabled"> & Readonly<{
+export declare const AuthProviderButton: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "disabled" | "style"> & Readonly<{
     descriptor: AuthProviderButtonDescriptor;
     /**
      * The provider's own mark, supplied by the product: brand assets have

@@ -2473,6 +2473,11 @@ export declare const bottomNavigationRecipe: {
             key: "surfaceAccent";
             alpha?: number;
         }>;
+        readonly neutralBackground: Readonly<{
+            source: "theme";
+            key: "surface";
+            alpha?: number;
+        }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
             key: "primary";
@@ -2949,7 +2954,7 @@ export declare const noticeRecipe: {
     readonly appearances: {
         readonly panel: {
             readonly padding: 16;
-            readonly borderWidth: 1;
+            readonly borderWidth: 0;
         };
         readonly status: {
             readonly padding: 0;
@@ -2960,7 +2965,7 @@ export declare const noticeRecipe: {
         readonly info: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "bg";
+                key: "surfaceAlt";
                 alpha?: number;
             }>;
             readonly foreground: Readonly<{
@@ -3073,9 +3078,18 @@ export declare const noticeRecipe: {
     readonly gap: 12;
     readonly contentGap: 4;
     readonly iconSize: "sm";
-    readonly borderWidth: 1;
+    readonly accentBar: {
+        readonly width: 4;
+        readonly radius: "full";
+    };
+    readonly contentMinWidthPercent: 60;
     readonly title: {
         readonly textVariant: "body";
+        readonly color: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
         readonly fontWeight: "500";
     };
     readonly description: {
@@ -3293,7 +3307,7 @@ export declare const avatarRecipe: {
      */
     readonly overlapRatio: 0.3;
     readonly defaults: {
-        readonly size: "medium";
+        readonly size: "large";
         readonly shape: "circle";
         readonly frame: "outlined";
         readonly accessoryPlacement: "bottom-end";
@@ -3316,8 +3330,8 @@ export declare const avatarRecipe: {
         readonly circle: "full";
     };
     /**
-     * 테두리·배경 표현. `outlined`가 기존 모습이다. `surface`는 테두리 없이 바탕만, `none`은 제품 그림(생성 SVG 등)이
-     * 액자를 채울 때 바탕·테두리를 모두 뺀다 — 번뚝은 투명한 원 안에 SVG를 채운다(2026-10-23).
+     * 2026-10-25 사용자 결정: 번뚝에서 조정한 1px·borderControl 50% 선을 기본 outlined로 통일한다.
+     * surface는 바탕만, none은 바탕·테두리를 모두 뺀다.
      */
     readonly frames: {
         readonly outlined: {
@@ -3328,7 +3342,7 @@ export declare const avatarRecipe: {
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "border";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly borderWidth: 1;
@@ -3413,7 +3427,7 @@ export declare const statisticRecipe: {
             readonly padding: 16;
             readonly gap: 8;
             readonly labelVariant: "label";
-            readonly valueVariant: "heading";
+            readonly valueVariant: "title";
         };
     };
     readonly presentations: {
@@ -4379,7 +4393,7 @@ export declare const sectionRecipe: {
     readonly headerGap: 12;
     readonly copyGap: 4;
     readonly title: {
-        readonly textVariant: "title";
+        readonly textVariant: "bodyLarge";
         readonly color: Readonly<{
             source: "theme";
             key: "textBody";

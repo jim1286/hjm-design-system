@@ -137,8 +137,10 @@ export type ChatRoomMembersProps = Readonly<{
  /** Omit actions without permission. The product owns roles and server authorization. */
  renderActions?: (member:ChatRoomMember)=>ReactNode;
  memberActions?: ChatRoomMemberActions;
+ /** Ordinary member rows open the member profile; selection pickers keep their selection behavior. */
+ memberProfile?: Readonly<{label(member:ChatRoomMember):string;onPress(member:ChatRoomMember):void}>;
 }>;
-export function ChatRoomMembers({members,title,emptyLabel,countLabel,onSelectionChange,disabled=false,invite,renderActions,memberActions}:ChatRoomMembersProps){
+export function ChatRoomMembers({members,title,emptyLabel,countLabel,onSelectionChange,disabled=false,invite,renderActions,memberActions,memberProfile}:ChatRoomMembersProps){
  const {colors}=useHjmNativeTheme();
  const leading=(member:ChatRoomMember)=><Avatar size={chatRoomRecipe.memberAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative/>;
  const add=chatRoomRecipe.addLeadingSize;
@@ -146,7 +148,7 @@ export function ChatRoomMembers({members,title,emptyLabel,countLabel,onSelection
  {invite?<ListRow title={invite.label} tone="brand" leading={<View style={{width:add,height:add,borderRadius:add/2,alignItems:"center",justifyContent:"center",backgroundColor:withAlpha(colors.contentBrand,.12)}}><DrawnPlus size={glyph.sm} color={colors.contentBrand}/></View>} disabled={disabled} onPress={invite.onPress}/>:null}
  {members.length===0?<Text tone="muted">{emptyLabel}</Text>:members.map(member=>onSelectionChange?
  <Checkbox key={member.id} presentation="plain" label={member.name} {...(member.detail?{description:member.detail}:{})} renderLeading={()=>leading(member)} checked={member.selected===true} disabled={disabled||member.disabled===true} onCheckedChange={selected=>onSelectionChange(member.id,selected)} layoutStyle={{width:"100%"}}/>:
- <ListRow key={member.id} title={member.name} {...(member.detail?{description:member.detail}:{})} leading={leading(member)} {...(member.role?{trailing:<Text variant="caption" tone="brand">{member.role}</Text>}:{})}
+ <ListRow key={member.id} title={member.name} {...(member.detail?{description:member.detail}:{})} leading={leading(member)} {...(memberProfile?{leadingAction:{label:memberProfile.label(member),onPress:()=>memberProfile.onPress(member)},onPress:()=>memberProfile.onPress(member)}:{})} {...(member.role?{trailing:<Text variant="caption" tone="brand">{member.role}</Text>}:{})}
  trailingAction={<>{memberActions?<RoomActionList actions={memberActions.items(member)} disabled={disabled} menu={{label:memberActions.label(member),dismissLabel:memberActions.dismissLabel}}/>:null}{renderActions?.(member)}</>}/> )}</Stack>;
 }
 

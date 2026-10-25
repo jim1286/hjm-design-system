@@ -40,9 +40,9 @@ export declare const cardRecipe: {
         readonly alignItems: "center";
     };
     readonly title: {
-        readonly variant: "title";
+        readonly variant: "bodyLarge";
         readonly tone: "primary";
-        readonly emphasis: "strong";
+        readonly emphasis: "medium";
     };
     readonly description: {
         readonly variant: "body";

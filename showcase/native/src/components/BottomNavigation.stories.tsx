@@ -18,6 +18,8 @@ export const DockShapes: Story = { name: "테마별 막대 모양", render: () =
 export const OverlayInset: Story = { name: "떠 있는 막대와 화면 여백", render: () => <OverlayInsetPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const NeutralTiles: Story = { name: "중립 배경 타일", render: () => <NeutralTilesPreview /> };
+export const NeutralTilesDark: Story = { name: "중립 배경 타일 · 어두운 테마", globals: { theme: "dark" }, render: () => <NeutralTilesPreview /> };
 
 function ProminentDestinationPreview() {
   const [selected, setSelected] = useState<string>(prominentDestinationExample.initial);
@@ -75,5 +77,18 @@ function DockShapesPreview() {
           {semanticGlyph({ ...props, color: colors.onPrimary, size: tokens.spacing.xl })}
         </View>} />
     </Stack>)}
+  </View>;
+}
+
+
+function NeutralTilesPreview() {
+  const [selected, setSelected] = useState("home");
+  return <View style={{ height: 200, justifyContent: "flex-end" }}>
+    <BottomNavigation configuration={{ presentation: "floating", selection: "tile", tone: "neutral", density: "compact" }}
+      descriptor={{ accessibilityLabel: "주요 탐색", selectedKey: selected, items: [
+        { id: "home", label: "홈", icon: { name: "home" } },
+        { id: "search", label: "검색", icon: { name: "search" } },
+        { id: "settings", label: "설정", icon: { name: "settings" } },
+      ] }} onActivate={({ key }) => setSelected(key)} renderIcon={semanticGlyph} />
   </View>;
 }

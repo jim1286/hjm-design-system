@@ -134,7 +134,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     return (_jsx("nav", { ...props, ref: (node) => {
             navRef.current = node;
             assignRef(ref, node);
-        }, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-selection": presentation.selection, "data-surface": presentation.surface, "data-presentation": presentation.presentation, "data-shape": presentation.shape, "data-icon-emphasis": presentation.iconEmphasis, dir: presentation.direction, style: {
+        }, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-labels": presentation.labels, "data-selection": presentation.selection, "data-surface": presentation.surface, "data-tone": presentation.tone, "data-presentation": presentation.presentation, "data-shape": presentation.shape, "data-icon-emphasis": presentation.iconEmphasis, dir: presentation.direction, style: {
             "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
             "--hjm-bottom-navigation-columns": resolved.items.length,
             "--hjm-bottom-navigation-half-columns": resolved.items.length / 2,

@@ -38,6 +38,8 @@ export type BottomNavigationConfiguration = Readonly<{
    * product supplies colors through palette roles instead of deprecated styles.
    */
   surface?: BottomNavigationSurface;
+  /** Flat tile background only. Neutral keeps the selected brand tile on a theme surface (2026-10-25 오늘야구). */
+  tone?: "brand" | "neutral";
   /**
    * Icon slot size. `standard` keeps the density glyph; `large`/`xlarge` reserve an app-icon sized slot
    * (`bottomNavigationRecipe.iconSizes`) for artwork rendered through `renderIcon`. Added 2026-10-18 for
@@ -73,6 +75,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
+  tone: "brand" | "neutral";
   iconSize: BottomNavigationIconSize;
   shape: BottomNavigationShape;
   iconEmphasis: BottomNavigationIconEmphasis;
@@ -195,6 +198,7 @@ export const bottomNavigationBehaviorDefaults = {
   labels: "visible",
   selection: "emphasis",
   surface: "flat",
+  tone: "brand",
   iconSize: "standard",
   shape: "standard",
   iconEmphasis: "scale",
@@ -206,6 +210,7 @@ export const bottomNavigationBehaviorDefaults = {
   labels: BottomNavigationLabels;
   selection: "emphasis" | "tile";
   surface: BottomNavigationSurface;
+  tone: "brand" | "neutral";
   iconSize: BottomNavigationIconSize;
   shape: BottomNavigationShape;
   iconEmphasis: BottomNavigationIconEmphasis;
@@ -235,6 +240,7 @@ const configurationKeys = new Set([
   "labels",
   "selection",
   "surface",
+  "tone",
   "iconSize",
   "shape",
   "iconEmphasis",
@@ -416,6 +422,15 @@ export function validateBottomNavigationConfiguration(
   if (configuration.surface === "raised" && configuration.selection !== "tile") {
     throw new TypeError("BottomNavigation raised surface requires tile selection");
   }
+  if (configuration.tone !== undefined) {
+    if (!["brand", "neutral"].includes(configuration.tone)) {
+      throw new TypeError("Unsupported BottomNavigation tone");
+    }
+    // Raised surfaces own their sunken fill; accepting tone there would silently ignore the requested background.
+    if (configuration.selection !== "tile" || configuration.surface === "raised") {
+      throw new TypeError("BottomNavigation tone requires flat tile selection");
+    }
+  }
   // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
   if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
     throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -467,6 +482,7 @@ export function resolveBottomNavigationConfiguration(
     labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
     selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
     surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
+    tone: configuration.tone ?? bottomNavigationBehaviorDefaults.tone,
     iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
     shape: configuration.shape ?? bottomNavigationBehaviorDefaults.shape,
     iconEmphasis: configuration.iconEmphasis ?? bottomNavigationBehaviorDefaults.iconEmphasis,

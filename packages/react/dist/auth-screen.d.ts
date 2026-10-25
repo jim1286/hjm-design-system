@@ -37,7 +37,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "children"> & Readonly<{
+export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
     density?: AuthScreenDensity;
     hasFooter?: boolean;
 }> & Readonly<{

@@ -73,7 +73,7 @@ export type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & Pick<But
         ref: ForwardedRef<HTMLAnchorElement>;
     }) => ReactElement;
 }>;
-export declare const ButtonLink: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "appearance" | "tone" | "size" | "layoutStyle" | "align" | "leading" | "trailing" | "shape" | "fullWidth" | "edge"> & Readonly<{
+export declare const ButtonLink: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "appearance" | "layoutStyle" | "size" | "tone" | "align" | "leading" | "trailing" | "shape" | "fullWidth" | "edge"> & Readonly<{
     href: string;
     disabled?: boolean;
     /** Framework routing adapter; HJM still owns the anchor destination, ref and disabled guards. */
@@ -149,7 +149,7 @@ export type IconButtonLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 
         ref: ForwardedRef<HTMLAnchorElement>;
     }) => ReactElement;
 }>;
-export declare const IconButtonLink: import("react").ForwardRefExoticComponent<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "aria-current" | "aria-label"> & Pick<IconButtonProps, "label" | "tone" | "size" | "layoutStyle" | "shape" | "hitSlop" | "edge"> & Readonly<{
+export declare const IconButtonLink: import("react").ForwardRefExoticComponent<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "aria-current" | "aria-label"> & Pick<IconButtonProps, "layoutStyle" | "label" | "size" | "tone" | "shape" | "hitSlop" | "edge"> & Readonly<{
     href: string;
     /** Icon only; `label` is the accessible name. */
     children: ReactNode;

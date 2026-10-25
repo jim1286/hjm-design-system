@@ -1,9 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { isWebRenderer, webOnly } from "./internal/web-a11y.js";
-import { useImperativeHandle, useRef, useEffect, useState } from "react";
+import { useContext, useImperativeHandle, useRef, useEffect, useState } from "react";
 import { AccessibilityInfo, Pressable, ScrollView, View, findNodeHandle } from "react-native";
 import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor, } from "@hjmds/design-contracts/components/calendar";
+import { dateRangeRecipe } from "@hjmds/design-contracts/components/date-range";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { CalendarPaintContext } from "./internal/calendar-paint.js";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -20,6 +24,7 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
             throw new TypeError("Calendar month action label must not be empty");
     }
     const { colors, environment, palette, tokens } = useHjmNativeTheme();
+    const paint = useContext(CalendarPaintContext);
     const [selected, setSelected] = useControllableState({
         ...(descriptor.selectedDate === undefined ? {} : { value: descriptor.selectedDate }),
         defaultValue: descriptor.defaultSelectedDate ?? null,
@@ -53,15 +58,27 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
     // fillers collapses them and shifts partial weeks away from the weekday columns.
     const columnStyle = { flex: 1, minWidth: diameter };
     const nav = (action, reason) => action
-        ? _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: action.label, disabled: !descriptor.onFocusedMonthChange, accessibilityState: { disabled: !descriptor.onFocusedMonthChange }, onPress: () => descriptor.onFocusedMonthChange?.(action.month, reason), style: [minimumTargetStyle, { alignItems: "center", justifyContent: "center" }], children: _jsx(Text, { accessible: false, children: (reason === "previous") !== (environment.direction === "rtl") ? "‹" : "›" }) }) : _jsx(View, { accessible: false, style: minimumTargetStyle });
+        ? _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: action.label, disabled: !descriptor.onFocusedMonthChange, accessibilityState: { disabled: !descriptor.onFocusedMonthChange }, onPress: () => descriptor.onFocusedMonthChange?.(action.month, reason), style: [minimumTargetStyle, { alignItems: "center", justifyContent: "center" }], children: _jsx(DrawnChevron, { direction: reason === "previous" ? "start" : "end", size: glyph[recipe.sizes[size].glyph], color: resolveColorReference(recipe.header.navButton.color, palette) }) }) : _jsx(View, { accessible: false, style: minimumTargetStyle });
     return _jsxs(View, { style: [{ maxWidth: recipe.maxWidth, width: "100%" }, layoutStyle, { gap: recipe.header.gap, direction: environment.direction }], children: [_jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: recipe.header.gap }, children: [nav(previousMonth, "previous"), _jsx(Text, { accessibilityRole: "header", accessibilityLiveRegion: "polite", variant: recipe.header.monthLabel.textVariant, emphasis: "strong", align: "center", style: { flex: 1 }, children: descriptor.monthLabel }), nav(nextMonth, "next")] }), _jsx(ScrollView, { horizontal: true, contentContainerStyle: { flexGrow: 1 }, children: _jsxs(View, { style: { flex: 1, minWidth: diameter * 7 }, children: [_jsx(View, { accessible: false, style: { flexDirection: "row" }, children: descriptor.grid.weekdayLabels.map((label, index) => _jsx(Text, { accessible: false, align: "center", tone: "muted", variant: recipe.weekdayLabel.textVariant, style: columnStyle, children: label }, index)) }), Array.from({ length: cells.length / 7 }, (_, row) => _jsx(View, { style: { flexDirection: "row" }, children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
                                 ? _jsx(View, { accessible: false, style: { ...columnStyle, minHeight: diameter } }, `filler-${column}`)
-                                : _jsxs(Pressable, { ref: (node) => { if (node)
-                                        targets.current.set(cell.date, node);
-                                    else
-                                        targets.current.delete(cell.date); }, accessibilityRole: "button", accessibilityLabel: cell.accessibleName, ...webOnly({ "aria-pressed": cell.isSelected, "aria-disabled": !cell.selectable }), accessibilityState: { selected: cell.isSelected, disabled: !cell.selectable }, onPress: () => { if (cell.selectable)
-                                        setSelected(cell.date); }, style: { ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
-                                        borderRadius: diameter / 2,
-                                        opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }, children: [_jsx(View, { accessible: false, style: { width: indicatorDiameter, minHeight: indicatorDiameter, alignItems: "center", justifyContent: "center", borderRadius: indicatorDiameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }, children: _jsx(Text, { fontRole: "ui", accessible: false, variant: recipe.sizes[size].textVariant, align: "center", style: { color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }, children: Number(cell.date.slice(-2)) }) }), renderCellContent ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { minHeight: tokens.typography.label.lineHeight * environment.textScale }, children: renderCellContent(cell) }) : null] }, cell.date)) }, row))] }) })] });
+                                : (() => {
+                                    const range = paint?.(cell.date);
+                                    const filled = range ? range.edge : cell.isSelected;
+                                    const cap = indicatorDiameter / 2;
+                                    return _jsxs(Pressable, { ref: (node) => { if (node)
+                                            targets.current.set(cell.date, node);
+                                        else
+                                            targets.current.delete(cell.date); }, accessibilityRole: "button", accessibilityLabel: cell.accessibleName, ...webOnly({ "aria-pressed": filled, "aria-disabled": !cell.selectable }), accessibilityState: { selected: filled, disabled: !cell.selectable }, onPress: () => { if (cell.selectable)
+                                            setSelected(cell.date); }, style: { ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
+                                            borderRadius: diameter / 2,
+                                            opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }, children: [range && range.band !== "none" ? _jsx(View, { accessible: false, pointerEvents: "none", style: {
+                                                    position: "absolute", top: 0, height: indicatorDiameter,
+                                                    start: range.band === "toEnd" ? "50%" : 0, end: range.band === "toStart" ? "50%" : 0,
+                                                    backgroundColor: resolveColorReference(dateRangeRecipe.band.background, palette),
+                                                    // The band rounds off where a week row starts or ends, so a range across weeks reads as one run.
+                                                    ...(column === 0 && range.band !== "toEnd" ? { borderTopStartRadius: cap, borderBottomStartRadius: cap } : {}),
+                                                    ...(column === 6 && range.band !== "toStart" ? { borderTopEndRadius: cap, borderBottomEndRadius: cap } : {}),
+                                                } }) : null, _jsx(View, { accessible: false, style: { width: indicatorDiameter, minHeight: indicatorDiameter, alignItems: "center", justifyContent: "center", borderRadius: indicatorDiameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday && !filled ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: filled ? colors.primary : "transparent" }, children: _jsx(Text, { fontRole: "ui", accessible: false, variant: recipe.sizes[size].textVariant, align: "center", style: { color: filled ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }, children: Number(cell.date.slice(-2)) }) }), renderCellContent ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { minHeight: tokens.typography.label.lineHeight * environment.textScale }, children: renderCellContent(cell) }) : null] }, cell.date);
+                                })()) }, row))] }) })] });
 }
 //# sourceMappingURL=calendar.js.map

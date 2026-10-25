@@ -274,6 +274,7 @@ function BottomNavigationInner<
       data-labels={presentation.labels}
       data-selection={presentation.selection}
       data-surface={presentation.surface}
+      data-tone={presentation.tone}
       data-presentation={presentation.presentation}
       data-shape={presentation.shape}
       data-icon-emphasis={presentation.iconEmphasis}

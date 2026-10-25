@@ -1,4 +1,4 @@
-import { solidAccentColor, type ColorReference } from "./color-references.js";
+import { solidAccentColor, themeColor, type ColorReference } from "./color-references.js";
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { contrastRatio } from "./palette-contrast.js";
 import {
@@ -1413,6 +1413,8 @@ export const bottomNavigationRecipe = {
   selectionCapsule: { background: semanticColors.selection.background, content: semanticColors.selection.content },
   selectionTile: {
     background: semanticColors.surface.brand,
+    // Background tone is independent of selected-tile emphasis; products need no palette override.
+    neutralBackground: semanticColors.surface.default,
     selectedBackground: semanticColors.action.brand.background,
     selectedContent: semanticColors.action.brand.content,
     padding: spacing.xxs,
@@ -1683,19 +1685,16 @@ export const noticeRecipe = {
   defaults: { tone: "info", appearance: "panel" },
   // Saved results belong beside their owner without a second banner-sized surface.
   // Both renderers reuse Badge for the short status; panels remain the default for guidance/errors.
-  appearances: { panel: { padding: spacing.md, borderWidth: stroke.default }, status: { padding: 0, borderWidth: 0 } },
+  // 2026-10-25 개편(다에리 오프라인 오류 화면 사용자 지적): tint 면 + tone 테두리 + tone 색 제목이 겹쳐
+  // 오류 한 줄이 화면에서 가장 시끄러웠다. 테두리를 없애고 tone은 면·앞쪽 막대·아이콘에만 남긴다.
+  appearances: { panel: { padding: spacing.md, borderWidth: 0 }, status: { padding: 0, borderWidth: 0 } },
   tones: {
     ...semanticColors.feedback,
     info: {
       ...semanticColors.feedback.info,
-      // The informational wash landed bluer and darker than the selection
-      // tint itself over canvas, so a banner outranked the control the
-      // reader was supposed to act on. `info` alone goes neutral — its
-      // accent stays in the icon, the title, and the border; `success`/
-      // `warning`/`attention`/`danger` keep the tinted surface because a
-      // product author confirmed those readings didn't have the same
-      // conflict with a selection state.
-      background: semanticColors.canvas,
+      // 파란 wash는 선택 상태 tint보다 진해 안내가 조작 대상을 앞섰다. info만 중립 면을 쓰고
+      // accent는 막대·아이콘에 남긴다. 테두리가 없어져 canvas 면으로는 경계가 사라지므로 sunken을 쓴다.
+      background: semanticColors.surface.sunken,
     },
   },
   radius: "md",
@@ -1703,8 +1702,12 @@ export const noticeRecipe = {
   gap: spacing.sm,
   contentGap: spacing.xxs,
   iconSize: "sm",
-  borderWidth: stroke.default,
-  title: { textVariant: "body", fontWeight: typography.title.fontWeight },
+  // 앞쪽 tone 막대: 아이콘이 없는 안내도 tone을 색 하나로 알린다(Toast toneMark와 같은 역할).
+  accentBar: { width: 4, radius: "full" },
+  // 행동은 문구와 같은 줄 끝(두 플랫폼 공통). 문구 칸이 이 비율보다 좁아지면 다음 줄로 감긴다.
+  contentMinWidthPercent: 60,
+  // 제목은 본문색이다. 붉은 문장은 경고 강도보다 읽기 부담이 컸고, tone은 막대·아이콘이 이미 전한다.
+  title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: typography.title.fontWeight },
   description: { color: semanticColors.content.body, textVariant: "body" },
 } as const;
 
@@ -1842,7 +1845,8 @@ export const avatarRecipe = {
    * 픽셀로 적으면 네 벌이 되기 때문이다. 남은 인원은 제품이 문구로 만든다("+3").
    */
   overlapRatio: 0.3,
-  defaults: { size: "medium", shape: "circle", frame: "outlined", accessoryPlacement: "bottom-end" },
+  // 2026-10-25: standard member portraits are circular 48px; dense lists choose a smaller step explicitly.
+  defaults: { size: "large", shape: "circle", frame: "outlined", accessoryPlacement: "bottom-end" },
   /**
    * 2026-10-23: 번뚝 UserAvatar(22·28·32·44)와 Native의 24 하한 때문에 Avatar를 쓰지 못했다. 임의 px 대신
    * 실사용 지름을 단계로 둔다. `touch` 44는 터치 대상 지름이자 Native의 기존 기본값이다(Avatar 자체는 누르는 대상이 아님).
@@ -1850,11 +1854,11 @@ export const avatarRecipe = {
   sizes: { xxsmall: 22, xsmall: 28, small: 32, medium: 40, touch: 44, large: 48, xlarge: 64 },
   shapes: { rounded: "md", circle: "full" },
   /**
-   * 테두리·배경 표현. `outlined`가 기존 모습이다. `surface`는 테두리 없이 바탕만, `none`은 제품 그림(생성 SVG 등)이
-   * 액자를 채울 때 바탕·테두리를 모두 뺀다 — 번뚝은 투명한 원 안에 SVG를 채운다(2026-10-23).
+   * 2026-10-25 사용자 결정: 번뚝에서 조정한 1px·borderControl 50% 선을 기본 outlined로 통일한다.
+   * surface는 바탕만, none은 바탕·테두리를 모두 뺀다.
    */
   frames: {
-    outlined: { background: semanticColors.canvas, border: semanticColors.border.default, borderWidth: 1 },
+    outlined: { background: semanticColors.canvas, border: themeColor("borderControl", 0.5), borderWidth: 1 },
     surface: { background: semanticColors.canvas, border: null, borderWidth: 0 },
     none: { background: null, border: null, borderWidth: 0 },
   },
@@ -1939,7 +1943,8 @@ export const statisticRecipe = {
       padding: spacing.md,
       gap: spacing.xs,
       labelVariant: "label",
-      valueVariant: "heading",
+      // Repeated summary counts should not outweigh content titles (BurnTok review, 2026-10-25).
+      valueVariant: "title",
     },
   },
   presentations: {
@@ -2632,7 +2637,8 @@ export const sectionRecipe = {
   gap: spacing.xs,
   headerGap: spacing.sm,
   copyGap: spacing.xxs,
-  title: { textVariant: "title", color: semanticColors.content.body, fontWeight: typography.title.fontWeight },
+  // Repeated section headings use body size; weight carries hierarchy (BurnTok review, 2026-10-25).
+  title: { textVariant: "bodyLarge", color: semanticColors.content.body, fontWeight: typography.title.fontWeight },
   description: { textVariant: "caption", color: semanticColors.content.secondary },
 } as const;
 

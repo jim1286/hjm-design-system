@@ -28,6 +28,8 @@ export type BottomNavigationConfiguration = Readonly<{
      * product supplies colors through palette roles instead of deprecated styles.
      */
     surface?: BottomNavigationSurface;
+    /** Flat tile background only. Neutral keeps the selected brand tile on a theme surface (2026-10-25 오늘야구). */
+    tone?: "brand" | "neutral";
     /**
      * Icon slot size. `standard` keeps the density glyph; `large`/`xlarge` reserve an app-icon sized slot
      * (`bottomNavigationRecipe.iconSizes`) for artwork rendered through `renderIcon`. Added 2026-10-18 for
@@ -61,6 +63,7 @@ export type ResolvedBottomNavigationConfiguration = Readonly<{
     labels: BottomNavigationLabels;
     selection: "emphasis" | "tile";
     surface: BottomNavigationSurface;
+    tone: "brand" | "neutral";
     iconSize: BottomNavigationIconSize;
     shape: BottomNavigationShape;
     iconEmphasis: BottomNavigationIconEmphasis;
@@ -157,6 +160,7 @@ export declare const bottomNavigationBehaviorDefaults: {
     readonly labels: "visible";
     readonly selection: "emphasis";
     readonly surface: "flat";
+    readonly tone: "brand";
     readonly iconSize: "standard";
     readonly shape: "standard";
     readonly iconEmphasis: "scale";

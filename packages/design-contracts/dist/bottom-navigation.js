@@ -13,6 +13,7 @@ export const bottomNavigationBehaviorDefaults = {
     labels: "visible",
     selection: "emphasis",
     surface: "flat",
+    tone: "brand",
     iconSize: "standard",
     shape: "standard",
     iconEmphasis: "scale",
@@ -39,6 +40,7 @@ const configurationKeys = new Set([
     "labels",
     "selection",
     "surface",
+    "tone",
     "iconSize",
     "shape",
     "iconEmphasis",
@@ -168,6 +170,15 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
     if (configuration.surface === "raised" && configuration.selection !== "tile") {
         throw new TypeError("BottomNavigation raised surface requires tile selection");
     }
+    if (configuration.tone !== undefined) {
+        if (!["brand", "neutral"].includes(configuration.tone)) {
+            throw new TypeError("Unsupported BottomNavigation tone");
+        }
+        // Raised surfaces own their sunken fill; accepting tone there would silently ignore the requested background.
+        if (configuration.selection !== "tile" || configuration.surface === "raised") {
+            throw new TypeError("BottomNavigation tone requires flat tile selection");
+        }
+    }
     // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
     if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
         throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
@@ -204,6 +215,7 @@ export function resolveBottomNavigationConfiguration(configuration, itemCount) {
         labels: configuration.labels ?? bottomNavigationBehaviorDefaults.labels,
         selection: configuration.selection ?? bottomNavigationBehaviorDefaults.selection,
         surface: configuration.surface ?? bottomNavigationBehaviorDefaults.surface,
+        tone: configuration.tone ?? bottomNavigationBehaviorDefaults.tone,
         iconSize: configuration.iconSize ?? bottomNavigationBehaviorDefaults.iconSize,
         shape: configuration.shape ?? bottomNavigationBehaviorDefaults.shape,
         iconEmphasis: configuration.iconEmphasis ?? bottomNavigationBehaviorDefaults.iconEmphasis,

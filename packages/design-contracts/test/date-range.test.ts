@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   emptyDateRange,
   isCompleteDateRange,
+  resolveDateRangeActiveEdge,
+  resolveDateRangeCellPaint,
+  resolveDateRangePreset,
   resolveDateRangeCellState,
   resolveDateRangeSelection,
   validateDateRange,
@@ -41,5 +44,32 @@ describe("DateRange", () => {
     expect(resolveDateRangeCellState(selecting, "2026-09-14", "2026-09-14")).toBe("end");
     // Hovering before the start previews nothing rather than an inverted range.
     expect(resolveDateRangeCellState(selecting, "2026-09-08", "2026-09-08")).toBe("none");
+  });
+
+  it("joins two filled edges with one band and leaves a one-day range unbanded", () => {
+    const range = { start: "2026-09-10", end: "2026-09-13" };
+    expect(resolveDateRangeCellPaint(range, "2026-09-10")).toEqual({ edge: true, band: "toEnd" });
+    expect(resolveDateRangeCellPaint(range, "2026-09-11")).toEqual({ edge: false, band: "full" });
+    expect(resolveDateRangeCellPaint(range, "2026-09-13")).toEqual({ edge: true, band: "toStart" });
+    expect(resolveDateRangeCellPaint(range, "2026-09-20")).toEqual({ edge: false, band: "none" });
+    const oneDay = { start: "2026-09-10", end: "2026-09-10" };
+    expect(resolveDateRangeCellPaint(oneDay, "2026-09-10")).toEqual({ edge: true, band: "none" });
+    const selecting = { start: "2026-09-10", end: null };
+    expect(resolveDateRangeCellPaint(selecting, "2026-09-10")).toEqual({ edge: true, band: "none" });
+    expect(resolveDateRangeCellPaint(selecting, "2026-09-10", "2026-09-12")).toEqual({ edge: true, band: "toEnd" });
+  });
+
+  it("marks the edge being picked and nothing once the range is complete", () => {
+    expect(resolveDateRangeActiveEdge(emptyDateRange)).toBe("start");
+    expect(resolveDateRangeActiveEdge({ start: "2026-09-10", end: null })).toBe("end");
+    expect(resolveDateRangeActiveEdge({ start: "2026-09-10", end: "2026-09-12" })).toBeNull();
+  });
+
+  it("resolves presets that end today and clamps month lengths", () => {
+    expect(resolveDateRangePreset("2026-10-25", { days: 7 })).toEqual({ start: "2026-10-19", end: "2026-10-25" });
+    expect(resolveDateRangePreset("2026-10-25", { months: 1 })).toEqual({ start: "2026-09-26", end: "2026-10-25" });
+    expect(resolveDateRangePreset("2026-03-31", { months: 1 })).toEqual({ start: "2026-03-01", end: "2026-03-31" });
+    expect(resolveDateRangePreset("2026-01-15", { months: 3 })).toEqual({ start: "2025-10-16", end: "2026-01-15" });
+    expect(() => resolveDateRangePreset("2026-10-25", { days: 0 })).toThrow(RangeError);
   });
 });

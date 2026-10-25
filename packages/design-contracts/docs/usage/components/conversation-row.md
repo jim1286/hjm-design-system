@@ -63,7 +63,7 @@ import { ConversationRow } from "@hjmds/react-native/conversation-row";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 아바타 56, 읽지 않음 점 10 | conversationRowRecipe |
+| 크기 | 아바타 48, 읽지 않음 점 10 | conversationRowRecipe |
 | 간격 | 가로 sm, 세로 10 | 같은 recipe |
 | 순서·정렬 | 아바타 → 제목/미리보기·시각 → 읽지 않음 점 | 양 renderer |
 | 고정·스크롤 | 바깥 목록 host 소유 | 별도 scroller 없음 |
@@ -99,3 +99,7 @@ host는 상대·미리보기·시각·읽지 않은 수가 포함된 현지화 �
 
 - 공개 구성으로 분리: 2026-10-15 전사 적용 중 제품마다 복제한 DM 행의 배치가 달라졌다.
 - 행 메뉴의 위험 항목 위치: 2026-10-16 인스타그램 DM 실측.
+
+### 회원 프로필 이동 (2026-10-25)
+
+`avatarAction={label,onPress}`로 상대 프로필을 열고 `renderBody(body)`에 제품의 실제 Link/Pressable을 연결해 대화로 이동한다. 이 조합의 바깥에 행 전체 Link를 다시 감싸지 않는다.

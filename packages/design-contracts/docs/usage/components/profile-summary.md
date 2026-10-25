@@ -45,12 +45,13 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | name | string | 필수 | 제목(이름) |
-| avatar | ReactNode | 필수 | 원형 72 프레임 안에 넣는 아바타 |
+| avatar | ReactNode | 필수 | 원형 48 프레임 안에 넣는 아바타 |
 | headingLevel | 1~6 | 2 | 이름 제목 수준 |
 | badge | ReactNode | 없음 | 이름 옆 배지 |
 | nameActions | ReactNode | 없음 | 이름 행의 행동 |
+| nameEdit | `{label,onAction,disabled?,pending?}` | 없음 | 이름 옆 편집(연필) 아이콘 버튼. 내 프로필에서 닉네임 바꾸기를 연다(2026-10-25, 아래 절) |
 | stats | `{id,value,label,onPress?,disabled?}[]` | `[]` | 통계 수치. `onPress`가 있으면 버튼 |
-| actionsLayout | `inline` · `stacked` | `inline` | 미게시. 가로 보조 행동은 기존 줄바꿈 행, 팔로우/메시지처럼 같은 폭의 주·보조 행동은 stacked로 세로 배치 |
+| actionsLayout | `inline` · `stacked` · `equal` | `inline` | 가로 보조 행동은 inline 줄바꿈 행, 세로 전체 폭은 stacked, 같은 폭의 가로 행동은 equal(개발 소스) |
 | actions | ReactNode | 없음 | 수치 아래 행동 줄. [ProfileScreen](profile-screen.md) `editPlacement="summary"` 안에서는 그 화면의 `edit`이 이 줄 맨 앞에 `secondary` `small` 버튼(`profileSummaryRecipe.editAction`)으로 먼저 들어간다(1.31.0) |
 | children | ReactNode | 없음 | 하단 footer |
 
@@ -60,7 +61,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 원형 아바타 프레임 72. ProfileScreen 수정 행동은 `Button` `secondary` `small` | `profileSummaryRecipe.avatarSize`·`editAction` |
+| 크기 | 원형 아바타 프레임 48. ProfileScreen 수정 행동은 `Button` `secondary` `small` | `profileSummaryRecipe.avatarSize`·`editAction` |
 | 간격 | 수치 칸 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.xs` 8. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
 | 순서·정렬 | 머리(아바타 → 이름·배지 → nameActions) → 수치 줄 → actions → children, 수치 칸은 균등 폭·가운데 | `CompositionLayout` + `flex: 1` 칸 |
 | 고정·스크롤 | 없음. ProfileScreen 본문 스크롤 안에 놓인다 | — |
@@ -87,3 +88,31 @@ Web의 텍스트/이모지 artwork는 원형72 프레임 안에서 glyph.xxl48 �
   actions={<><Button fullWidth onClick={follow}>{followLabel}</Button><Button fullWidth tone="secondary" onClick={message}>{messageLabel}</Button></>} />
 // Native는 같은 actionsLayout에 Button.onPress를 연결한다.
 ```
+
+### 같은 폭의 가로 행동 (2026-10-25)
+
+번뚝의 Instagram형 프로필 요청에 따라 `actionsLayout="equal"`은 버튼과 메뉴 trigger를 같은 폭의 한 행으로 배치한다. HJM Grid가 열·간격을 소유하며 fragment는 셀로 세지 않는다. 오류 안내는 actions 밖의 children에 공급한다. 팔로우·해제 메뉴·메시지 경로와 문구는 제품이 연결한다. 기존 inline/stacked 동작은 유지한다.
+
+### 내 프로필: 사진은 사진 변경, 이름 옆 연필은 닉네임 변경 (2026-10-25)
+
+사용자 지시로 모든 앱·웹의 내 프로필 카드에 같은 규칙을 쓴다.
+
+- **사진을 누르면 프로필 사진 변경**이 열린다. `avatar`에 `Avatar action={{label: t("photo.change"), onPress}}`를 넣는다(이미지 고르기·자르기·업로드는 제품 소유).
+- **이름 옆에 `nameEdit`(연필 아이콘 버튼)**를 두고 누르면 닉네임 변경이 열린다. 아이콘·크기(`profileSummaryRecipe.nameEdit`, small ghost 36 + hitSlop 4 = 44)·위치(`nameActions` 앞)는 HJM이 소유한다. 연필 그림은 제품 아이콘 세트의 연필을 `nameEdit.icon`으로 넣어 이름 줄의 다른 아이콘(설정 톱니 등)과 같은 선 모양으로 맞춘다. 넣지 않으면 HJM 기본 연필을 그린다.
+- 같은 카드에 "프로필 편집"·"사진 바꾸기"·"닉네임 바꾸기" 같은 별도 버튼을 중복으로 두지 않는다. `ProfileScreen`의 `edit`은 이제 선택이며 손님의 로그인 같은 다른 행동에만 쓴다.
+- 남의 프로필에는 `nameEdit`를 넣지 않고, 사진은 회원 아바타 기준(확대·신고)을 따른다.
+- 제품이 ProfileSummary 대신 고유 머리를 그리는 경우에도 사진 = 사진 변경, 이름 = 닉네임 변경을 지킨다. 이름이 그림(예: Spint 내 정원의 나무 팻말)이면 연필을 따로 두지 않고 그 이름 그림 자체를 닉네임 변경 버튼으로 한다(2026-10-25 사용자 결정).
+
+### 프로필 카드 틀 (2026-10-25)
+
+같은 날 사용자 지적: Utilverse 프로필 카드(평평한 `default`, radius `lg`)가 BurnTok 카드(`raised` 그림자, 테두리, radius `xl`)와
+달라 보였다. ProfileSummary를 카드에 담는 화면은 `Surface tone="raised" bordered radius="xl" padding="md"`로 감싼다(Web·Native 같은 값).
+제품 컨셉 때문에 카드 대신 고유 머리를 그리는 화면(Spint 내 정원)은 예외로 그 사유를 코드 주석에 남긴다.
+
+### 손님 카드의 로그인 (2026-10-25)
+
+로그인하지 않은 사용자의 프로필 카드는 로그인이 카드의 주 행동이다. `actionsLayout="stacked"` + `actions`에 전체 폭 primary
+`Button` 하나를 둔다. 이름 옆 작은 버튼(`nameActions`)이나 ProfileScreen `edit` 자리(작은 secondary)를 빌리지 않는다 —
+Utilverse에서 작은 왼쪽 버튼이 카드 안에서 떠 보였다는 사용자 지적으로 정했다. 손님 카드에는 `nameEdit`와 사진 변경을 두지 않는다.
+
+2026-10-25 사용자 요청으로 회원 아바타 프레임은 `avatarRecipe.sizes.large`(48px 원형)이다. 댓글·채팅처럼 작은 목록의 크기는 바꾸지 않는다.

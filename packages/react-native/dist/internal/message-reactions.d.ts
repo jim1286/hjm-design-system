@@ -1,6 +1,6 @@
 import { type ReactNode, type Ref } from "react";
 import { type ChatReactionSummaryItem } from "@hjmds/design-contracts/screen-patterns";
-import type { MenuItemTone } from "@hjmds/design-contracts/recipes";
+import { type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import { type ReactionPickerProps } from "../reaction-picker.js";
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
 export type MessageMenuAction = Readonly<{

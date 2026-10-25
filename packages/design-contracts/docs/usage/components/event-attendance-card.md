@@ -102,3 +102,7 @@ import { EventAttendanceCard } from "@hjmds/react-native/social-compositions";
 | --- | --- | --- |
 | 진행 중 이름 | `aria-label={labels.pending}` | `loadingLabel={labels.pending}` |
 | 기본 아바타 | `Avatar aria-hidden` | `Avatar decorative` |
+
+### 회원 프로필 이동 (2026-10-25)
+
+`participants[].avatarAction={label,onPress}`로 각 참여자 사진을 해당 회원 프로필에 연결한다. 참석 응답/캘린더 행동과 분리한다.

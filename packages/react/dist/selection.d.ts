@@ -54,7 +54,7 @@ export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" |
      */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "size" | "children" | "defaultChecked" | "type" | "checked"> & Readonly<{
+export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "children" | "type" | "size" | "onChange" | "defaultChecked" | "checked"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     checked?: boolean;

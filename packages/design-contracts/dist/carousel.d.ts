@@ -170,6 +170,7 @@ export declare const carouselRecipe: {
         readonly diameter: 8;
         readonly compactGap: 8;
         readonly hitTarget: 44;
+        readonly compactHitWidth: 20;
         readonly color: {
             readonly inactive: Readonly<{
                 source: "theme";

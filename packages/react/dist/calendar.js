@@ -1,8 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useId, useImperativeHandle, useRef, useState } from "react";
+import { useContext, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor, getCalendarNavigationIntent, getCalendarNavigationTarget, } from "@hjmds/design-contracts/components/calendar";
 import { classNames, useControllableState } from "./internal.js";
+import { CalendarPaintContext } from "./internal/calendar-paint.js";
+import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
 export function Calendar({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, layoutStyle, ref }) {
@@ -15,6 +17,7 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
             throw new TypeError("Calendar month action label must not be empty");
     }
     const theme = useOptionalHjmTheme();
+    const rangePaint = useContext(CalendarPaintContext);
     const [selected, setSelected] = useControllableState({
         ...(descriptor.selectedDate === undefined ? {} : { value: descriptor.selectedDate }),
         defaultValue: descriptor.defaultSelectedDate ?? null,
@@ -51,29 +54,33 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
     return _jsxs("div", { ref: root, className: classNames("hjm-calendar", className), "data-size": size, style: { "--hjm-calendar-max-width": `${recipe.maxWidth}px`, ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
             "--hjm-calendar-indicator-size": `${recipe.sizes[size].indicatorDiameter}px`,
             "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
-            "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity }, children: [_jsxs("div", { className: "hjm-calendar__header", children: [previousMonth ? _jsx("button", { type: "button", "aria-label": previousMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous"), children: _jsx("span", { "aria-hidden": "true", children: theme?.environment.direction === "rtl" ? "›" : "‹" }) }) : _jsx("span", {}), _jsx("strong", { id: titleId, "aria-live": "polite", "aria-atomic": "true", children: descriptor.monthLabel }), nextMonth ? _jsx("button", { type: "button", "aria-label": nextMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(nextMonth.month, "next"), children: _jsx("span", { "aria-hidden": "true", children: theme?.environment.direction === "rtl" ? "‹" : "›" }) }) : _jsx("span", {})] }), _jsx("div", { className: "hjm-calendar__viewport", children: _jsxs("div", { role: "grid", "aria-labelledby": titleId, className: "hjm-calendar__grid", children: [_jsx("div", { role: "row", className: "hjm-calendar__week", children: descriptor.grid.weekdayLabels.map((label, index) => _jsx("span", { role: "columnheader", className: "hjm-calendar__weekday", children: label }, index)) }), Array.from({ length: cells.length / 7 }, (_, row) => _jsx("div", { role: "row", className: "hjm-calendar__week", children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
+            "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity }, children: [_jsxs("div", { className: "hjm-calendar__header", children: [previousMonth ? _jsx("button", { type: "button", "aria-label": previousMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous"), children: _jsx(Icon, { name: recipe.header.navIcon.previous, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {}), _jsx("strong", { id: titleId, "aria-live": "polite", "aria-atomic": "true", children: descriptor.monthLabel }), nextMonth ? _jsx("button", { type: "button", "aria-label": nextMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(nextMonth.month, "next"), children: _jsx(Icon, { name: recipe.header.navIcon.next, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {})] }), _jsx("div", { className: "hjm-calendar__viewport", children: _jsxs("div", { role: "grid", "aria-labelledby": titleId, className: "hjm-calendar__grid", children: [_jsx("div", { role: "row", className: "hjm-calendar__week", children: descriptor.grid.weekdayLabels.map((label, index) => _jsx("span", { role: "columnheader", className: "hjm-calendar__weekday", children: label }, index)) }), Array.from({ length: cells.length / 7 }, (_, row) => _jsx("div", { role: "row", className: "hjm-calendar__week", children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
                                 ? _jsx("span", { role: "gridcell", "aria-hidden": "true" }, `filler-${column}`)
-                                : _jsxs("button", { type: "button", role: "gridcell", className: "hjm-calendar__day", "data-date": cell.date, "data-focus-date": cell.date === active || undefined, "data-today": cell.isToday || undefined, "data-selected": cell.isSelected || undefined, "data-disabled": !cell.selectable || undefined, "data-outside": cell.outsideFocusedMonth || undefined, "aria-label": cell.accessibleName, "aria-selected": cell.isSelected, "aria-disabled": !cell.selectable || undefined, "aria-current": cell.isToday ? "date" : undefined, tabIndex: cell.date === active ? 0 : -1, onFocus: () => setFocused(cell.date), onClick: () => {
-                                        if (!cell.selectable)
-                                            return;
-                                        // Range completion and DatePicker confirmation still need activation
-                                        // when the date already equals Calendar's single selected value.
-                                        if (cell.date === selected)
-                                            descriptor.onSelectionChange?.(cell.date);
-                                        else
-                                            setSelected(cell.date);
-                                    }, onKeyDown: (event) => {
-                                        if (event.altKey || event.ctrlKey || event.metaKey)
-                                            return;
-                                        const intent = getCalendarNavigationIntent(event.key, theme?.environment.direction ?? "ltr");
-                                        if (!intent)
-                                            return;
-                                        event.preventDefault();
-                                        const target = getCalendarNavigationTarget(descriptor.grid, cell.date, intent);
-                                        if (target.date)
-                                            focusDate(target.date);
-                                        else if (target.overflow)
-                                            onNavigateBeyondGrid?.({ date: cell.date, intent, overflow: target.overflow }, focusDate);
-                                    }, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-calendar__day-label", children: Number(cell.date.slice(-2)) }), renderCellContent ? _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__content", children: renderCellContent(cell) }) : null] }, cell.date)) }, row))] }) })] });
+                                : (() => {
+                                    const range = rangePaint?.paint(cell.date);
+                                    const filled = range ? range.edge : cell.isSelected;
+                                    return _jsxs("button", { type: "button", role: "gridcell", className: "hjm-calendar__day", "data-date": cell.date, "data-focus-date": cell.date === active || undefined, "data-today": cell.isToday || undefined, "data-selected": filled || undefined, "data-range-band": range && range.band !== "none" ? range.band : undefined, "data-disabled": !cell.selectable || undefined, "data-outside": cell.outsideFocusedMonth || undefined, "aria-label": cell.accessibleName, "aria-selected": filled, "aria-disabled": !cell.selectable || undefined, "aria-current": cell.isToday ? "date" : undefined, tabIndex: cell.date === active ? 0 : -1, onMouseEnter: rangePaint ? () => rangePaint.onDayHover(cell.date) : undefined, onFocus: () => setFocused(cell.date), onClick: () => {
+                                            if (!cell.selectable)
+                                                return;
+                                            // Range completion and DatePicker confirmation still need activation
+                                            // when the date already equals Calendar's single selected value.
+                                            if (cell.date === selected)
+                                                descriptor.onSelectionChange?.(cell.date);
+                                            else
+                                                setSelected(cell.date);
+                                        }, onKeyDown: (event) => {
+                                            if (event.altKey || event.ctrlKey || event.metaKey)
+                                                return;
+                                            const intent = getCalendarNavigationIntent(event.key, theme?.environment.direction ?? "ltr");
+                                            if (!intent)
+                                                return;
+                                            event.preventDefault();
+                                            const target = getCalendarNavigationTarget(descriptor.grid, cell.date, intent);
+                                            if (target.date)
+                                                focusDate(target.date);
+                                            else if (target.overflow)
+                                                onNavigateBeyondGrid?.({ date: cell.date, intent, overflow: target.overflow }, focusDate);
+                                        }, children: [range && range.band !== "none" ? _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__band" }) : null, _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__day-label", children: Number(cell.date.slice(-2)) }), renderCellContent ? _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__content", children: renderCellContent(cell) }) : null] }, cell.date);
+                                })()) }, row))] }) })] });
 }
 //# sourceMappingURL=calendar.js.map

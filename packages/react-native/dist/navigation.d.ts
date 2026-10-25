@@ -226,6 +226,9 @@ export type MenuTriggerRenderProps = Readonly<{
 export type MenuProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "style" | "transparent" | "visible"> & Readonly<{
     triggerLabel: string;
     title?: string;
+    description?: string;
+    /** Header close keeps long modal action collections compact; footer preserves existing menus. */
+    dismissPlacement?: "header" | "footer" | "none";
     /** Native defaults to grouped; anchored follows the trigger, bottom presents an action list. */
     presentation?: MenuPresentation;
     items?: readonly MenuItem<Value>[];
@@ -257,7 +260,7 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, presentation, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, description, dismissPlacement, presentation, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
 export type LoadMoreProps = Readonly<{
     descriptor: LoadMoreDescriptor;
     /** Temporarily block pagination during a product mutation/refetch without claiming a page is loading. */

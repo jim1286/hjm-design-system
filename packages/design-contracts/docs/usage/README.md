@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.46.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.46.1의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -54,7 +54,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Breadcrumb](components/breadcrumb.md) | 탐색 | Web의 깊은 계층 화면에서 현재 위치까지의 경로를 보여 주고 상위 계층으로 바로 돌아가게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Button](components/button.md) | 동작 | 사용자가 누르면 무언가가 일어나는 텍스트 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Calendar](components/calendar.md) | 데이터 표시 | 화면에 항상 펼쳐진 한 달 격자에서 날짜 하나를 고를 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Card](components/card.md) | 데이터 표시 | 인용문과 출처를 묶으면 미게시 동반 API `QuoteCard`를 사용한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Card](components/card.md) | — | 인용문과 출처를 묶으면 미게시 동반 API `QuoteCard`를 사용한다. |  |  | Web stable / Native stable |  |
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web beta / Native beta | 배포 |
@@ -83,6 +83,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [Container](components/container.md) | 레이아웃 | 화면 본문의 최대 폭과 좌우(논리 방향) 여백을 맞출 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ContentTransition](components/content-transition.md) | 시각 효과 | 같은 자리의 내용이 상태에 따라 바뀔 때(필터 결과 패널, 단계별 본문) 새 내용이 짧게 나타나도록 감싼다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ContextMenu](components/context-menu.md) | 탐색 | Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을 띄울 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native unsupported | 배포 |
+| [ConversationListScreen](components/conversation-list-screen.md) | 화면/소통 | DM·단체방 대화 목록의 공통 화면이다. | 미게시(1.46.1 이후) | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ConversationRow](components/conversation-row.md) | 화면/소통 | 대화 목록에서 상대, 마지막 메시지, 상대 시각, 안 읽음 점을 표시한다. | 1.24.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [ConversionFunnel](components/conversion-funnel.md) | 구성/정보 표시 | 순차 단계(열기 → 작성 → 저장 등)의 인원을 가로 막대로 보여 주고, 단계를 골라 전체 대비·직전 대비 전환율과 이탈 수를 문구로 읽을 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [CorrelationMatrix](components/correlation-matrix.md) | 구성/정보 표시 | 여러 지표 사이의 상관계수(-1~1)를 정사각 대칭 표와 양·음 두 방향 heat 색으로 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
@@ -103,6 +104,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [FilePicker](components/file-picker.md) | 입력 | 사용자가 업로드할 로컬 파일을 고르게 할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [FilterRecovery](components/filter-recovery.md) | 구성/피드백과 복구 | 검색·필터 결과가 비었을 때 실제로 결과가 생기는 필터 완화 제안을 보여 주고, 사용자가 고른 하나를 명시적으로 적용할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [FloatingActionButton](components/floating-action-button.md) | 동작 | 목록·피드처럼 스크롤되는 콘텐츠 위에 떠 있는 **단일 생성 행동**(새 기록 추가, 새 글 작성)에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [FollowListScreen](components/follow-list-screen.md) | 화면/소통 | 팔로워/팔로잉을 전환하고 사람을 검색하며 각 행에서 팔로우할 때 사용한다. | 미게시(1.46.1 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
 | [FollowProfileCard](components/follow-profile-card.md) | 구성/정보 표시 | 프로필 카드에서 팔로우·팔로잉 전환과 팔로워 수를 실제 mutation 결과와 함께 보여 줄 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Form](components/form.md) | 입력 | 여러 Field를 한 화면에 쌓고 한 번에 제출할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Grid](components/grid.md) | 레이아웃 | 카드·타일처럼 같은 모양의 자식을 창 크기에 따라 열 수를 바꿔 배치할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -322,6 +324,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [신고와 차단](screens/flow-moderation.md) | 소통 | ModerationScreen을 사용해 신고와 차단 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [알림함](screens/common-inbox.md) | 소통 | NotificationInboxScreen을 사용해 알림함 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [채팅](screens/common-chat.md) | 소통 | ChatScreen을 사용해 채팅 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
+| [팔로워와 팔로잉](screens/common-follow-list.md) | 소통 | 두 관계 목록을 검색하고 프로필로 이동하며 팔로우한다. | 미게시(1.46.1 이후) | Web · Native | 구성 API별 | 실험 |
 | [기록 표현 비교](screens/reference-comparison.md) | 화면 틀과 도구 | ScreenLayout을 사용해 같은 기록의 세 가지 구성 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
 | [목업 편집](screens/mockup-studio.md) | 화면 틀과 도구 | 제품 화면 캡처를 휴대폰·브라우저 프레임에 넣어 스토어·소개용 이미지(PNG)와 짧은 장면 영상을 만드는 Web 전용 작업 도구 화면이다. | 1.12.1 | Web | 구성 API별 | 배포 |
 | [화면 골격과 상태](screens/common-shell.md) | 화면 틀과 도구 | ScreenLayout을 사용해 화면 골격 흐름을 구성한다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |

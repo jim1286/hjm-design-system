@@ -13,7 +13,7 @@ import { useControllableState } from "./internal/state.js";
  * Carousel's position dots for a product-owned pager. The row is one adjustable element, like a platform page
  * control, so a screen reader hears "label: page name" and swipes up/down to move; each dot is a 44pt target.
  */
-export function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }) {
+export function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, density = "comfortable", onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }) {
     const { palette } = useHjmNativeTheme();
     if (!label.trim() || !labels.previous.trim() || !labels.next.trim())
         throw new TypeError("PageIndicator labels must not be empty");
@@ -27,7 +27,7 @@ export function PageIndicator({ label, count, currentIndex, maxVisibleDots, inte
                     backgroundColor: resolveColorReference(dot.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette) } }, dot.index)) });
     return _jsx(View, { testID: testID, accessible: true, accessibilityRole: "adjustable", accessibilityLabel: `${label}: ${current.accessibleName}`, accessibilityValue: { min: 1, max: count, now: current.position, text: current.accessibleName }, accessibilityActions: [{ name: "increment", label: labels.next }, { name: "decrement", label: labels.previous }], onAccessibilityAction: ({ nativeEvent }) => { if (nativeEvent.actionName === "increment")
             move("next"); if (nativeEvent.actionName === "decrement")
-            move("previous"); }, style: [{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }, layoutStyle], children: dots.map((dot) => _jsx(Pressable, { accessible: false, accessibilityLabel: dot.accessibleName, onPress: () => onCurrentIndexChange(dot.index), style: { alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }, children: _jsx(View, { style: { backgroundColor: resolveColorReference(dot.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter } }) }, dot.index)) });
+            move("previous"); }, style: [{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }, layoutStyle], children: dots.map((dot) => _jsx(Pressable, { accessible: false, accessibilityLabel: dot.accessibleName, onPress: () => onCurrentIndexChange(dot.index), style: { alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: density === "compact" ? carouselRecipe.dot.compactHitWidth : carouselRecipe.dot.hitTarget }, children: _jsx(View, { style: { backgroundColor: resolveColorReference(dot.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter } }) }, dot.index)) });
 }
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, swipeEnabled = true, slideMaxHeight }) {
     const { environment, palette, tokens } = useHjmNativeTheme();

@@ -16,7 +16,7 @@ it("sizes from the named steps, keeps numeric points for existing callers and ac
     expect(StyleSheet.flatten(frameOf(t).props.style)).toMatchObject({ width: points, height: points });
   }
   expect(StyleSheet.flatten(frameOf(mount(<Avatar decorative name="Kim" size={22} />)).props.style).width).toBe(22);
-  expect(StyleSheet.flatten(frameOf(mount(<Avatar decorative name="Kim" />)).props.style).width).toBe(44);
+  expect(StyleSheet.flatten(frameOf(mount(<Avatar decorative name="Kim" />)).props.style).width).toBe(48);
   expect(() => mount(<Avatar decorative name="Kim" size={21} />)).toThrow(RangeError);
 });
 

@@ -20,6 +20,12 @@ export type SheetPanelProps = Readonly<{
   height?: number;
   onHeightChange?: (height: number) => void;
   layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * Space at the bottom that something else covers, such as a raised bottom-navigation item overlapping the sheet. The
+   * surface still reaches the bottom edge (no map strip under it); the body and the folded handle stay above the
+   * covered space (2026-10-25 Diairy map sheet joined to its tab bar).
+   */
+  safeAreaBottom?: number;
   /** Product artwork above the scrolling body; it must not replace the handle. */
   overlay?: ReactNode;
   /** Domain navigation, such as horizontal letter paging; vertical ownership remains here. */
@@ -31,7 +37,7 @@ export type SheetPanelProps = Readonly<{
 
 /** A nonmodal, bottom-anchored sheet. The map behind it keeps pointer and accessibility access. */
 export function SheetPanel({ children, handleLabel, maximumHeight, height, onHeightChange,
-  layoutStyle, overlay, contentGesture, handleActions, onHandleAction, testID }: SheetPanelProps) {
+  layoutStyle, safeAreaBottom = 0, overlay, contentGesture, handleActions, onHandleAction, testID }: SheetPanelProps) {
   const theme = useHjmNativeTheme();
   const { tokens, palette, designProfile, environment } = theme;
   const reduced = environment.reducedMotion;
@@ -46,6 +52,7 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
   if (!handleLabel.trim() || [maximumHeight, height].some(value => value !== undefined && (!Number.isFinite(value) || value <= 0))) {
     throw new TypeError("SheetPanel requires a handle label and positive finite heights");
   }
+  if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("SheetPanel safeAreaBottom must be non-negative");
   const settle = (velocityY: number, success: boolean) => {
     "worklet";
     const collapse = velocityY > sheetPanelBehavior.collapseVelocity ||
@@ -98,7 +105,7 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
     const measuredHeight = event.nativeEvent.layout.height;
     const previous = collapsedBy.get();
     const wasCollapsed = previous > 0 && translateY.get() > previous / 2;
-    const next = Math.max(0, measuredHeight - control.minTouchTarget);
+    const next = Math.max(0, measuredHeight - control.minTouchTarget - safeAreaBottom);
     cancelAnimation(translateY);
     collapsedBy.set(next); translateY.set(wasCollapsed ? next : 0); setExpanded(!wasCollapsed);
     onHeightChange?.(measuredHeight);
@@ -117,7 +124,7 @@ export function SheetPanel({ children, handleLabel, maximumHeight, height, onHei
     <GestureDetector gesture={bodyGesture}><Animated.ScrollView testID={testID ? `${testID}-scroll` : undefined}
       accessibilityElementsHidden={!expanded} importantForAccessibility={expanded ? "auto" : "no-hide-descendants"}
       style={{ flexGrow: height === undefined ? 0 : 1, flexShrink: 1, overflow: "hidden" }}
-      contentContainerStyle={{ flexGrow: 1, paddingHorizontal: sheetRecipe.content.paddingHorizontal, paddingBottom: sheetRecipe.content.paddingBottom }}
+      contentContainerStyle={{ flexGrow: 1, paddingHorizontal: sheetRecipe.content.paddingHorizontal, paddingBottom: sheetRecipe.content.paddingBottom + safeAreaBottom }}
       onScroll={onScroll} scrollEventThrottle={16} showsVerticalScrollIndicator bounces={false} overScrollMode="never" contentInsetAdjustmentBehavior="never">
       {children}
     </Animated.ScrollView></GestureDetector>

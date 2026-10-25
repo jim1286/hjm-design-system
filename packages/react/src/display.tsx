@@ -1,4 +1,5 @@
 "use client";
+import { IdentityAction } from "./internal/identity-action.js";
 
 import {
   badgeRecipe,
@@ -155,6 +156,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     title?: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent identity destination, outside the card activation host. */
+    leadingAction?: Readonly<{label:string;onPress():void; disabled?: boolean }>;
     media?: ReactNode;
     /** Decorative artwork behind the shared body/actions; its host determines the available height. */
     backgroundMedia?: ReactNode;
@@ -195,6 +198,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     title,
     description,
     leading,
+    leadingAction,
     media,
     backgroundMedia,
     backgroundInteraction,
@@ -231,7 +235,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     leading !== undefined || title !== undefined || description !== undefined || headerActions !== undefined;
   // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete). A root button cannot
   // contain the action buttons, so the root stays an article and an overlay button carries the card's name and state.
-  const overlay = href !== undefined || (onActivate !== undefined && Boolean(actions || headerActions));
+  const overlay = href !== undefined || (onActivate !== undefined && Boolean(actions || headerActions || leadingAction));
   const { "aria-label": activationLabel, ...rootProps } = props;
   const activate = () => { if (!disabled) onActivate?.(); };
 
@@ -276,8 +280,8 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
         {hasHeader ? (
           <div className="hjm-card__header" data-slot="header">
             {leading === undefined ? null : (
-              <span className="hjm-card__leading" data-slot="leading">
-                {leading}
+              <span className="hjm-card__leading" data-slot="leading" data-interactive={leadingAction?"":undefined}>
+                {leadingAction?<IdentityAction action={leadingAction}>{leading}</IdentityAction>:leading}
               </span>
             )}
             <div className="hjm-card__copy">
@@ -345,6 +349,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     title: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent member destination; rendered beside, never inside, the row command. */
+    leadingAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
     trailing?: ReactNode;
     /**
      * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`, inside the row
@@ -360,6 +366,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     tone?: keyof typeof listRowRecipe.tones;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
+    /** Large member portraits use the shared 48px frame; icons retain the default frame. */
+    leadingSize?: "default" | "large";
     selected?: boolean;
     disabled?: boolean;
     /**
@@ -381,6 +389,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     title,
     description,
     leading,
+    leadingAction,
     trailing,
     trailingAccessory = listRowRecipe.defaults.trailingAccessory,
     trailingAction,
@@ -388,6 +397,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     density: densityProp,
     tone = listRowRecipe.defaults.tone,
     leadingShape = "square",
+    leadingSize = leadingShape === "circle" ? "large" : "default",
     selected,
     disabled = false,
     loading = false,
@@ -403,6 +413,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
 ) {
   // The hook runs unconditionally — `??` would short-circuit it and break the
   // rules of hooks on the very first row that passes `density`.
+  const separateActions = Boolean(trailingAction || leadingAction);
   const densityDefault = useHjmDensityDefault({
     comfortable: listRowRecipe.defaults.density,
     compact: "compact",
@@ -427,7 +438,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
         data-state="loading"
         style={{ ...style, ...layoutStyle }}
       >
-        {leading ? <span className="hjm-list-row__leading" data-shape={leadingShape} data-placeholder="" /> : null}
+        {leading ? <span className="hjm-list-row__leading" data-shape={leadingShape} data-size={leadingSize} data-placeholder="" /> : null}
         <span className="hjm-list-row__content">
           <span className="hjm-list-row__title" data-placeholder="" style={{ width: `${listRowRecipe.loading.titleWidthPercent}%` }} />
           {description ? <span className="hjm-list-row__description" data-placeholder="" style={{ width: `${listRowRecipe.loading.descriptionWidthPercent}%` }} /> : null}
@@ -473,10 +484,10 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       "data-state": disabled ? "disabled" : selected ? "selected" : "idle",
       // Placement wins over the legacy `style`, matching Surface's ordering.
       // With trailingAction the frame is the placed root, as Native's outer View.
-      style: trailingAction ? style : { ...style, ...layoutStyle },
+      style: separateActions ? style : { ...style, ...layoutStyle },
     },
-    leading
-      ? <span className="hjm-list-row__leading" data-shape={leadingShape}>{leading}</span>
+    leading && !leadingAction
+      ? <span className="hjm-list-row__leading" data-shape={leadingShape} data-size={leadingSize}>{leading}</span>
       : null,
     <span className="hjm-list-row__content">
       <span className="hjm-list-row__title">{title}</span>
@@ -494,11 +505,12 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
   const linked = href && renderLink ? renderLink(row.props as React.ComponentPropsWithRef<"a">) : row;
   // The frame owns the row surface and its bleed so the command and the separate action share one fill, as Native;
   // the action stays outside the link/button (styles.css `.hjm-list-row-frame`).
-  return trailingAction ? (
-    <div className="hjm-list-row-frame" data-density={density} data-leading={leading ? "" : undefined}
+  return separateActions ? (
+    <div className="hjm-list-row-frame" data-leading-action={leadingAction ? "" : undefined} data-trailing-action={trailingAction ? "" : undefined} data-density={density} data-leading={leading ? "" : undefined}
       data-state={disabled ? "disabled" : selected ? "selected" : "idle"} style={layoutStyle}>
+      {leadingAction && leading ? <div className="hjm-list-row__profile"><IdentityAction action={leadingAction}>{leading}</IdentityAction></div> : null}
       {linked}
-      <div className="hjm-list-row__action">{trailingAction}</div>
+      {trailingAction ? <div className="hjm-list-row__action">{trailingAction}</div> : null}
     </div>
   ) : linked;
 });

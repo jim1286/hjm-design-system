@@ -648,7 +648,7 @@ export declare const componentCatalog: readonly [{
     readonly status: "stable";
 }, {
     readonly aliases: readonly ["DateRange"];
-    readonly recipe: "calendarRecipe";
+    readonly recipe: "dateRangeRecipe";
     readonly behavior: "dateRange";
     readonly surfaceStatus: {
         readonly web: "stable";
@@ -663,12 +663,13 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "colorPickerRecipe";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "unsupported";
+        readonly native: "beta";
     };
     readonly name: "ColorPicker";
     readonly label: "색상 선택기";
+    readonly companions: readonly ["ColorSwatchPicker"];
     readonly category: "input";
-    readonly platform: "web";
+    readonly platform: "adaptive";
     readonly status: "stable";
 }, {
     readonly roadmap: {
@@ -1807,6 +1808,28 @@ export declare const recipeRegistry: {
         readonly background: "bg";
         readonly border: "border";
         readonly minTargetSize: 44;
+        readonly area: {
+            readonly aspectRatio: number;
+            readonly thumbDiameter: 24;
+            readonly thumbBorder: 3;
+            readonly radius: "md";
+        };
+        readonly bar: {
+            readonly height: 24;
+            readonly thumbDiameter: 28;
+            readonly thumbBorder: 3;
+        };
+        readonly step: 1;
+        readonly largeStep: 10;
+        readonly swatch: {
+            readonly target: 44;
+            readonly diameter: 32;
+            readonly ringWidth: 2;
+            readonly ringGap: 2;
+        };
+        readonly preview: {
+            readonly size: 44;
+        };
     };
     readonly thinkingOrbRecipe: {
         readonly defaults: {
@@ -2102,7 +2125,7 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "image", "fallback", "badge", "group"];
         readonly overlapRatio: 0.3;
         readonly defaults: {
-            readonly size: "medium";
+            readonly size: "large";
             readonly shape: "circle";
             readonly frame: "outlined";
             readonly accessoryPlacement: "bottom-end";
@@ -2129,7 +2152,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly border: Readonly<{
                     source: "theme";
-                    key: "border";
+                    key: "borderControl";
                     alpha?: number;
                 }>;
                 readonly borderWidth: 1;
@@ -2404,6 +2427,11 @@ export declare const recipeRegistry: {
             readonly background: Readonly<{
                 source: "theme";
                 key: "surfaceAccent";
+                alpha?: number;
+            }>;
+            readonly neutralBackground: Readonly<{
+                source: "theme";
+                key: "surface";
                 alpha?: number;
             }>;
             readonly selectedBackground: Readonly<{
@@ -3744,9 +3772,9 @@ export declare const recipeRegistry: {
             readonly alignItems: "center";
         };
         readonly title: {
-            readonly variant: "title";
+            readonly variant: "bodyLarge";
             readonly tone: "primary";
-            readonly emphasis: "strong";
+            readonly emphasis: "medium";
         };
         readonly description: {
             readonly variant: "body";
@@ -3870,6 +3898,7 @@ export declare const recipeRegistry: {
             readonly diameter: 8;
             readonly compactGap: 8;
             readonly hitTarget: 44;
+            readonly compactHitWidth: 20;
             readonly color: {
                 readonly inactive: Readonly<{
                     source: "theme";
@@ -4917,6 +4946,74 @@ export declare const recipeRegistry: {
             }>;
         };
     };
+    readonly dateRangeRecipe: {
+        readonly slots: readonly ["root", "summary", "summaryField", "summaryLabel", "summaryValue", "presets", "band", "edge"];
+        readonly band: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+        };
+        readonly edge: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+        };
+        readonly summary: {
+            readonly gap: 8;
+            readonly field: {
+                readonly paddingVertical: 8;
+                readonly paddingHorizontal: 12;
+                readonly radius: "md";
+                readonly gap: 4;
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAlt";
+                    alpha?: number;
+                }>;
+                readonly activeBorder: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly activeBorderWidth: 2;
+            };
+            readonly label: {
+                readonly textVariant: "label";
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+            };
+            readonly value: {
+                readonly textVariant: "body";
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly placeholderColor: Readonly<{
+                    source: "theme";
+                    key: "textSub";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly presets: {
+            readonly gap: 8;
+            readonly chipSize: "small";
+        };
+        readonly gap: 16;
+    };
     readonly dividerRecipe: {
         readonly slots: readonly ["root", "label"];
         readonly defaults: {
@@ -5879,7 +5976,7 @@ export declare const recipeRegistry: {
         readonly appearances: {
             readonly panel: {
                 readonly padding: 16;
-                readonly borderWidth: 1;
+                readonly borderWidth: 0;
             };
             readonly status: {
                 readonly padding: 0;
@@ -5890,7 +5987,7 @@ export declare const recipeRegistry: {
             readonly info: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "bg";
+                    key: "surfaceAlt";
                     alpha?: number;
                 }>;
                 readonly foreground: Readonly<{
@@ -6003,9 +6100,18 @@ export declare const recipeRegistry: {
         readonly gap: 12;
         readonly contentGap: 4;
         readonly iconSize: "sm";
-        readonly borderWidth: 1;
+        readonly accentBar: {
+            readonly width: 4;
+            readonly radius: "full";
+        };
+        readonly contentMinWidthPercent: 60;
         readonly title: {
             readonly textVariant: "body";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
             readonly fontWeight: "500";
         };
         readonly description: {
@@ -6856,7 +6962,7 @@ export declare const recipeRegistry: {
         readonly headerGap: 12;
         readonly copyGap: 4;
         readonly title: {
-            readonly textVariant: "title";
+            readonly textVariant: "bodyLarge";
             readonly color: Readonly<{
                 source: "theme";
                 key: "textBody";
@@ -8193,7 +8299,7 @@ export declare const recipeRegistry: {
                 readonly padding: 16;
                 readonly gap: 8;
                 readonly labelVariant: "label";
-                readonly valueVariant: "heading";
+                readonly valueVariant: "title";
             };
         };
         readonly presentations: {
@@ -9647,7 +9753,9 @@ export declare const recipeRegistry: {
         readonly lineGap: 4;
         readonly rowGap: 20;
         readonly replyIndent: number;
-        readonly likeColumnWidth: 44;
+        readonly replyPageSize: 5;
+        readonly actionButtonSize: "small";
+        readonly likeColumnWidth: 36;
         readonly mediaMaxWidth: 160;
         readonly mediaRadius: 12;
         readonly panelGap: 8;
@@ -9674,7 +9782,11 @@ export declare const recipeRegistry: {
         readonly paddingInline: 16;
     };
     readonly profileSummaryRecipe: Readonly<{
-        avatarSize: 72;
+        avatarSize: 48;
+        nameEdit: Readonly<{
+            readonly icon: "edit";
+            readonly size: "small";
+        }>;
         avatarGlyphSize: 44;
         actionsLayouts: Readonly<{
             inline: Readonly<{
@@ -9683,6 +9795,10 @@ export declare const recipeRegistry: {
             }>;
             stacked: Readonly<{
                 readonly axis: "block";
+                readonly gap: "xs";
+            }>;
+            equal: Readonly<{
+                readonly axis: "inline";
                 readonly gap: "xs";
             }>;
         }>;

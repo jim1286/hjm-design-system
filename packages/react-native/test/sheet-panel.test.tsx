@@ -4,6 +4,7 @@ import { expect, it, vi } from "vitest";
 import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { HjmNativeProvider } from "../src/provider.js";
 import { SheetPanel } from "../src/sheet-panel.js";
+import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 
 const state = vi.hoisted(() => ({ values: [] as { value: unknown; get(): unknown; set(next: unknown): void }[] }));
 
@@ -82,4 +83,22 @@ it("folds to its handle, keeps the map nonmodal, and preserves the snap when hei
       act(() => tree.unmount());
     }
   } finally { if (tree) act(() => tree.unmount()); }
+});
+
+it("keeps its body and folded handle above a covered bottom edge while the surface reaches it", () => {
+  let tree!: ReactTestRenderer;
+  state.values = [];
+  act(() => { tree = create(<HjmNativeProvider reducedMotion>
+    <SheetPanel testID="panel" handleLabel="Journey panel" safeAreaBottom={20}><Pressable accessibilityLabel="Open letter" /></SheetPanel>
+  </HjmNativeProvider>); });
+  const shell = tree.root.findAllByType(View).find(node => node.props.testID === "panel")!;
+  const scroll = tree.root.findAll(node => node.props.testID === "panel-scroll" && node.props.onScroll)[0]!;
+  act(() => shell.props.onLayout({ nativeEvent: { layout: { height: 260 } } }));
+  act(() => tree.root.findAllByType(Pressable).find(node => node.props.testID === "panel-handle")!.props.onPress());
+  // Folded, the 44pt handle and the 20pt covered strip stay visible: 260 - 44 - 20.
+  expect(StyleSheet.flatten(shell.props.style).transform).toEqual([{ translateY: 196 }]);
+  expect(StyleSheet.flatten(scroll.props.contentContainerStyle).paddingBottom).toBe(sheetRecipe.content.paddingBottom + 20);
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  expect(() => act(() => { create(<HjmNativeProvider><SheetPanel handleLabel="x" safeAreaBottom={-1}>{null}</SheetPanel></HjmNativeProvider>); })).toThrow(RangeError);
+  act(() => tree.unmount());
 });

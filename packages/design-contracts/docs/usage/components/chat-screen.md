@@ -73,7 +73,7 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | `composer`(필수) | `MessageComposer` 등 작성창 | `ready`와 `empty`에서 보인다(빈 대화의 첫 메시지 입력) |
 | `state` / `stateAction` | `loading`·`empty`·`error`·`restricted` + 지역화 `title` | ready 외에는 본문을 교체한다 |
 | `notice` | 새로고침 실패 같은 비차단 안내 | 초안 유지가 필요하면 `state` 대신 이것 |
-| `avatar` | 상대·방 사진 노드 | 미게시. 가운데 정렬 제목 앞에 놓는다. 단톡방은 인원 수를 `titleBadge`(흐린 글자)로 넘긴다. ScreenLayout `titleLeading`과 같은 자리라 ChatScreen은 `titleLeading`을 따로 받지 않는다. 장식이라 보조기술에서 숨는다(제목이 이름) |
+| `avatar` | 상대·방 사진 노드 | 미게시. 가운데 정렬 제목 앞에 놓는다. 단톡방은 인원 수를 `titleBadge`(흐린 글자)로 넘긴다. ScreenLayout `titleLeading`과 같은 자리라 ChatScreen은 `titleLeading`을 따로 받지 않는다. 기본은 장식이라 보조기술에서 숨는다(제목이 이름). `avatarAction`을 주면 이름 있는 프로필 이동 버튼이 된다 |
 | `jumpToLatest` | `{ label, icon, onPress() }` | 미게시. 독자가 최신 메시지에서 벗어났을 때만 넘긴다. 작성창 위 끝 쪽에 원형 `IconButton size="small"`(secondary)로 떠 있고, 스크롤 위치 판단은 제품이 한다 |
 
 ## 축과 기본값
@@ -115,3 +115,12 @@ import { ChatScreen, MessageComposer } from "@hjmds/react-native/screens";
 | 높이 | host가 남은 높이 제공 | `flex: 1` |
 | 스크롤 연결 | 없음 | `scrollRef`, `scrollProps`(`refreshControl`, `keyboardDismissMode` 등) — `scroll="screen"`이거나 상태 교체 중일 때만 ScrollView가 있다 |
 | 테스트 id | 없음 | `testID` |
+
+### 상대 프로필 이동 (2026-10-25, 개발 소스)
+
+헤더 사진을 회원 프로필로 연결할 때 `avatarAction={{ label: t("profile.open"), onPress: () => openMember(peer.id) }}`를 준다.
+Web·Native 모두 같은 계약이며 제품이 회원 ID·이동 경로·번역 문구를 소유한다. 단체방의 헤더는 방을 나타내므로
+회원 한 명의 프로필로 연결하지 않는다. 메시지 작성자는 `ChatMessage.avatarAction`으로 따로 연결한다.
+동작이 없으면 기존 장식 표시를 유지한다. 동작이 있으면 44px/pt 버튼으로 노출하고 장식 사진만 보조기기에서 숨긴다.
+기존에는 헤더 사진 전체가 숨겨져 프로필 이동 컨트롤을 넣어도 접근할 수 없었다.
+일반 `ScreenLayout`의 같은 자리는 `titleLeadingAction`을 사용한다.

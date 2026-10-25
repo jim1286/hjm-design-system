@@ -150,6 +150,12 @@ export const publicExportEntries = {
     CollectionRail: [
         "./collection-rail"
     ],
+    ColorPicker: [
+        "./color-picker"
+    ],
+    ColorSwatchPicker: [
+        "./color-picker"
+    ],
     Combobox: [
         "./forms"
     ],
@@ -173,6 +179,9 @@ export const publicExportEntries = {
     ],
     ContextMenu: [
         "./context-menu"
+    ],
+    ConversationListScreen: [
+        "./screens"
     ],
     ConversationRow: [
         "./conversation-row"
@@ -247,6 +256,9 @@ export const publicExportEntries = {
     ],
     FolderPreview: [
         "./folder-preview"
+    ],
+    FollowListScreen: [
+        "./follow-list"
     ],
     FollowProfileCard: [
         "./social-compositions"

@@ -26,7 +26,7 @@ export type NativeSelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, "c
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** A native select keeps browser keyboard, form, autofill, and mobile picker behavior. */
-export declare const NativeSelect: import("react").ForwardRefExoticComponent<Omit<SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue" | "onChange" | "size" | "children"> & Readonly<{
+export declare const NativeSelect: import("react").ForwardRefExoticComponent<Omit<SelectHTMLAttributes<HTMLSelectElement>, "children" | "size" | "value" | "defaultValue" | "onChange"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     error?: ReactNode;
@@ -85,7 +85,7 @@ export type ComboboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "childre
      */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Combobox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "defaultValue" | "onChange" | "size" | "children" | "role"> & Readonly<{
+export declare const Combobox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "children" | "size" | "value" | "defaultValue" | "onChange" | "role"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     error?: ReactNode;

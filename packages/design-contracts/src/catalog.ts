@@ -213,8 +213,8 @@ export const componentCatalog = [
   // Product adoption and device QA follow the consumer release; both renderer contracts now have complete required proofs.
   { name: "TimePicker", label: "시각 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timePickerRecipe", behavior: "timePicker" },
   { name: "DatePicker", label: "날짜 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
-  { name: "DateRangePicker", label: "기간 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "calendarRecipe", behavior: "dateRange" },
-  { name: "ColorPicker", label: "색상 선택기", category: "input", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "colorPickerRecipe" },
+  { name: "DateRangePicker", label: "기간 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "dateRangeRecipe", behavior: "dateRange" },
+  { name: "ColorPicker", label: "색상 선택기", companions: ["ColorSwatchPicker"], category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "colorPickerRecipe" },
   { name: "FilePicker", label: "파일 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "filePickerRecipe", behavior: "filePicker", aliases: ["Upload"], ...evidenceNeeded("Web은 native file input과 dropzone 선택을, Native는 제품 소유 picker adapter 연결을 제공하고 양쪽이 같은 accept·size·count resolver를 사용합니다. 실제 OS picker 동작은 소비 앱 QA에서 확인합니다.") },
   // Both renderers now focus the product-selected first invalid field; field ordering and validation stay product-owned (docs/form.md).
   { name: "Form", label: "입력 양식", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "formRecipe", behavior: "form" },
@@ -404,6 +404,7 @@ import {
   dataTableRecipe,
   chartRecipe,
   datePickerRecipe,
+  dateRangeRecipe,
   dividerRecipe,
   formRecipe,
   emptyStateRecipe,
@@ -508,6 +509,7 @@ export const recipeRegistry = {
   dataTableRecipe,
   chartRecipe,
   datePickerRecipe,
+  dateRangeRecipe,
   dividerRecipe,
   formRecipe,
   gridRecipe,

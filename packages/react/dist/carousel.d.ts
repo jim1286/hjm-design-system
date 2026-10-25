@@ -30,6 +30,8 @@ export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"
     maxVisibleDots?: number;
     /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
     interactive?: boolean;
+    /** Compact dots retain full target height with narrower, non-overlapping horizontal targets. */
+    density?: "comfortable" | "compact";
     /** Requested page from a dot or an arrow key. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -40,7 +42,7 @@ export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"
  * Carousel's position dots for a product-owned pager (scroll-snap row, virtualized pager). Arrow keys on a dot move
  * one page in reading direction, as in Carousel's controls.
  */
-export declare const PageIndicator: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "children"> & Readonly<{
+export declare const PageIndicator: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "onChange"> & Readonly<{
     /** Name of the paged region (e.g. "Home pages"); the group's accessible name. */
     label: string;
     count: number;
@@ -50,6 +52,8 @@ export declare const PageIndicator: import("react").ForwardRefExoticComponent<Om
     maxVisibleDots?: number;
     /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
     interactive?: boolean;
+    /** Compact dots retain full target height with narrower, non-overlapping horizontal targets. */
+    density?: "comfortable" | "compact";
     /** Requested page from a dot or an arrow key. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;

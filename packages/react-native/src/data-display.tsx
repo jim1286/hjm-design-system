@@ -1,3 +1,4 @@
+import { IdentityAction } from "./internal/identity-action.js";
 import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
@@ -301,6 +302,8 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     title?: ReactNode;
     description?: ReactNode;
     leading?: ReactNode;
+    /** Independent identity destination, outside the card activation host. */
+    leadingAction?: Readonly<{label:string;onPress():void; disabled?: boolean }>;
     media?: ReactNode;
     /** Decorative artwork behind the shared body/actions; its host determines the available height. */
     backgroundMedia?: ReactNode;
@@ -334,6 +337,7 @@ export function Card({
   title,
   description,
   leading,
+  leadingAction,
   media,
   backgroundMedia,
   backgroundInteraction,
@@ -366,10 +370,11 @@ export function Card({
   const [headerBodyTop, setHeaderBodyTop] = useState(0);
   const [headerRow, setHeaderRow] = useState<{ top: number; height: number } | null>(null);
   const bodyPadding = surfaceGeometry.paddings[padding];
+  const [leadingActionSize,setLeadingActionSize] = useState({width:0,height:0});
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined || headerActions !== undefined;
   // Whole-card open plus separate commands (2026-10-18 unairplane journey card: open + delete); see `onActivate`.
-  const split = onActivate !== undefined && Boolean(actions || headerActions);
+  const split = onActivate !== undefined && Boolean(actions || headerActions || leadingAction);
   const activate = () => { if (!disabled) onActivate?.(); };
   const activationA11y = {
     accessibilityRole: "button" as const,
@@ -428,16 +433,16 @@ export function Card({
               }}
             >
               {leading === undefined ? null : (
-                <View style={{ flexShrink: 0 }}>{leading}</View>
+                <View style={{flexShrink:0,...(leadingAction?{width:leadingActionSize.width,height:leadingActionSize.height}:{})}}>{leadingAction?null:leading}</View>
               )}
               <View style={{ flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }}>
                 {title === undefined ? null : (
                   <Text
                     accessibilityRole="header"
-                    emphasis="strong"
+                    emphasis={cardRecipe.title.emphasis}
                     tone="primary"
                     {...(backgroundMedia ? { color: cardRecipe.backgroundMedia.foreground } : {})}
-                    variant="title"
+                    variant={cardRecipe.title.variant}
                   >
                     {title}
                   </Text>
@@ -453,6 +458,11 @@ export function Card({
           {children === undefined ? null : <View style={{ flexGrow: 1 }}>{children}</View>}
         </View>
         </CardActivationRegion>
+        {leadingAction && leading !== undefined ? <View
+          onLayout={({nativeEvent:{layout}})=>setLeadingActionSize(current=>current.width===layout.width&&current.height===layout.height?current:{width:layout.width,height:layout.height})}
+          style={{position:"absolute",top:headerBodyTop+(headerRow?.top??bodyPadding)+Math.max(0,((headerRow?.height??leadingActionSize.height)-leadingActionSize.height)/2),start:bodyPadding,zIndex:1}}>
+          <IdentityAction action={leadingAction}>{leading}</IdentityAction>
+        </View>:null}
         {/* Keep header commands outside the accessible Pressable. Measure their real width instead of reserving an app-specific icon size. */}
         {headerActions === undefined ? null : <View
           onLayout={({ nativeEvent: { layout } }) => setHeaderActionSize(current => current.width === layout.width && current.height === layout.height ? current : { width: layout.width, height: layout.height })}
@@ -535,6 +545,8 @@ export type ListRowProps = Omit<
     title: string;
     description?: string;
     leading?: ReactNode;
+    /** Independent member destination; rendered beside, never inside, the row command. */
+    leadingAction?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
     trailing?: ReactNode;
     /**
      * `disclosure`: the row opens another screen. HJM draws the decorative chevron after `trailing`/`trailingText`,
@@ -564,6 +576,8 @@ export type ListRowProps = Omit<
     selected?: boolean;
     /** Frame the ListRow paints around `leading`; the recipe owns its size. */
     leadingShape?: ListRowLeadingShape;
+    /** Large member portraits use the shared 48px frame; icons retain the default frame. */
+    leadingSize?: "default" | "large";
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
     leadingStyle?: HjmCompositionStyleProp;
@@ -579,6 +593,7 @@ export function ListRow({
   tone = listRowRecipe.defaults.tone,
   description,
   leading,
+  leadingAction,
   trailing,
   trailingAccessory = listRowRecipe.defaults.trailingAccessory,
   titleMetadata,
@@ -595,6 +610,7 @@ export function ListRow({
   loadingLabel,
   selected: selectedProp,
   leadingShape = "square",
+  leadingSize = leadingShape === "circle" ? "large" : "default",
   layoutStyle,
 
   leadingStyle,
@@ -629,6 +645,7 @@ export function ListRow({
   const metrics = listRowRecipe.density[density];
   validateListRowTrailingAccessory(trailingAccessory);
   const accessory = trailingAccessory === "none" ? null : listRowRecipe.accessories[trailingAccessory];
+  const separateActions = Boolean(trailingAction || leadingAction);
   const interactive = onPress !== undefined;
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
   const resolvedMetadata = titleMetadata;
@@ -662,10 +679,10 @@ export function ListRow({
   const leadingRadius = listRowRecipe.leadingShapes[leadingShape];
   const leadingFrameStyle = {
     alignItems: "center",
-    height: listRowRecipe.leadingSize,
+    height: leadingSize === "large" ? avatarRecipe.sizes.large : listRowRecipe.leadingSize,
     justifyContent: "center",
     overflow: "hidden",
-    width: listRowRecipe.leadingSize,
+    width: leadingSize === "large" ? avatarRecipe.sizes.large : listRowRecipe.leadingSize,
     ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
   } as const satisfies ViewStyle;
   if (loading) {
@@ -694,7 +711,7 @@ export function ListRow({
   }
   const rowContent = (
     <>
-      {leading ? (
+      {leading && !leadingAction ? (
         <View
           onLayout={measureLeading}
           accessible={interactive ? false : undefined}
@@ -798,24 +815,24 @@ export function ListRow({
       alignItems: "center",
       backgroundColor: pressed
         ? resolveColorReference(listRowRecipe.states.pressedBackground, theme.palette)
-        : trailingAction
+        : separateActions
           ? "transparent"
           : visualState.backgroundColor,
-      borderColor: selected && !trailingAction ? theme.colors.borderControl : "transparent",
-      borderWidth: trailingAction ? 0 : rowBorder,
+      borderColor: selected && !separateActions ? theme.colors.borderControl : "transparent",
+      borderWidth: separateActions ? 0 : rowBorder,
       direction: visualState.direction,
-      flex: trailingAction ? 1 : undefined,
+      flex: separateActions ? 1 : undefined,
       flexDirection: "row",
       gap: listRowRecipe.gap,
       minHeight: visualState.minHeight,
-      opacity: trailingAction ? 1 : visualState.opacity,
+      opacity: separateActions ? 1 : visualState.opacity,
       // With trailingAction the outer frame owns the bleed and border; the command keeps the start padding.
-      ...(trailingAction
-        ? { paddingStart: metrics.paddingHorizontal - rowBorder, paddingVertical: metrics.paddingVertical - rowBorder }
+      ...(separateActions
+        ? { paddingStart: leadingAction ? 0 : metrics.paddingHorizontal - rowBorder, ...(trailingAction ? {} : { paddingEnd: metrics.paddingHorizontal - rowBorder }), paddingVertical: metrics.paddingVertical - rowBorder }
         : { marginHorizontal: -metrics.paddingHorizontal, paddingHorizontal: metrics.paddingHorizontal - rowBorder,
             paddingVertical: metrics.paddingVertical - rowBorder }),
     },
-    trailingAction ? undefined : layoutStyle,
+    separateActions ? undefined : layoutStyle,
   ];
   const main = interactive ? (
     <Pressable
@@ -846,7 +863,7 @@ export function ListRow({
     </View>
   );
 
-  if (trailingAction === undefined || trailingAction === null) return main;
+  if (!separateActions) return main;
   return (
     <View
       {...containerProps}
@@ -867,8 +884,9 @@ export function ListRow({
         layoutStyle,
       ]}
     >
+      {leadingAction && leading ? <View style={{ paddingStart: metrics.paddingHorizontal - rowBorder, flexShrink: 0 }}><View onLayout={measureLeading}><IdentityAction action={leadingAction}>{leading}</IdentityAction></View></View> : null}
       {main}
-      <View
+      {trailingAction ? <View
         style={[
           // The action box ends on the content edge, so an `edge="end"` IconButton puts its glyph on that line.
           { flexShrink: 0, paddingEnd: metrics.paddingHorizontal - rowBorder },
@@ -876,7 +894,7 @@ export function ListRow({
         ]}
       >
         {trailingAction}
-      </View>
+      </View> : null}
     </View>
   );
 }
@@ -891,6 +909,8 @@ export type AvatarImageRenderProps = Readonly<{
 }>;
 
 type AvatarBaseProps = Readonly<{
+  /** Profile navigation; products provide the member route and localized name. */
+  action?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   source?: ImageSourcePropType;
   /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
   renderImage?: (props: AvatarImageRenderProps) => ReactNode;
@@ -898,7 +918,7 @@ type AvatarBaseProps = Readonly<{
   renderFallback?: (context: AvatarFallbackContext) => ReactNode;
   /**
    * A step from avatarRecipe.sizes (`xxsmall` 22 … `xlarge` 64), or points for existing callers. Numbers below the
-   * smallest step (22) throw. The default stays 44 (`touch`).
+   * smallest step (22) throw. The default is 48 (`large`); dense lists choose their smaller step explicitly.
    */
   size?: AvatarSize | number;
   shape?: AvatarShape;
@@ -922,12 +942,13 @@ type AvatarIdentity =
 export type AvatarProps = AvatarBaseProps & AvatarIdentity;
 
 export function Avatar({
+  action,
   source,
   renderImage,
   name,
   initials,
   renderFallback,
-  size: sizeProp = avatarRecipe.sizes.touch,
+  size: sizeProp = avatarRecipe.defaults.size,
   shape = avatarRecipe.defaults.shape,
   frame = avatarRecipe.defaults.frame,
   accessory,
@@ -968,10 +989,10 @@ export function Avatar({
     : <Text align="center" style={{ color: initialsColor }} variant={initialsVariant} emphasis={avatarRecipe.initialsWeight}>{fallback}</Text>);
   // Outward overhang, as Asset/IconTile; `0 -` keeps a zero offset positive.
   const offset = 0 - avatarRecipe.accessory.offset;
-  return (
+  const avatarNode = (
     <View
       {...mediaAccessibility}
-      style={[{ height: size, position: "relative", width: size }, layoutStyle]}
+      style={[{ height: size, position: "relative", width: size }, action?undefined:layoutStyle]}
     >
       <View
         style={{
@@ -1008,6 +1029,7 @@ export function Avatar({
       ) : null}
     </View>
   );
+  return action ? <IdentityAction action={action} {...(layoutStyle?{layoutStyle}:{})}>{avatarNode}</IdentityAction> : avatarNode;
 }
 
 export type DividerProps = Readonly<{

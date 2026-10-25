@@ -52,7 +52,7 @@ export type ResultProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "tit
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** A terminal flow outcome. EmptyState remains reserved for fillable content. */
-export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
+export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
     status: import("@hjmds/design-contracts/components/result").ResultStatus;
     title: string;
     description?: string;

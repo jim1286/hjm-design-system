@@ -21,5 +21,5 @@ export function CommentRepliesPreview() {
   return <CommentThreadScreen title="답글 실패와 복구" threadHeader={<Text>오류가 나도 받은 미리보기는 유지해요. 접기와 다시 시도를 눌러 보세요.</Text>}
     items={[root, item('preview', 'root', '먼저 받은 미리보기'), ...(status === 'complete' ? [item('reply2', 'root', '복구한 두 번째 답글'), item('reply3', 'root', '마지막 답글')] : [])]}
     expandedIds={expanded ? ['root'] : []} onExpandedChange={() => setExpanded(value => !value)} onLike={() => {}} onReply={() => {}}
-    replyLabel="답글 달기" repliesLabel={(count, open) => open ? '답글 접기' : `답글 ${count}개 보기`} />;
+    replyLabel="답글 달기" moreRepliesLabel={count=>`답글 ${count}개 더 보기`} repliesLabel={(count, open) => open ? '답글 접기' : `답글 ${count}개 보기`} />;
 }

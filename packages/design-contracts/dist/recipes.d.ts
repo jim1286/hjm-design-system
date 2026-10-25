@@ -5,6 +5,7 @@ export { aspectRatioRecipe } from "./aspect-ratio.js";
 export { containerRecipe } from "./container.js";
 export { cardRecipe, type CardHeadingLevel } from "./card.js";
 export { calendarRecipe } from "./calendar.js";
+export { dateRangeRecipe } from "./date-range.js";
 export { carouselRecipe } from "./carousel.js";
 export { commandPaletteRecipe } from "./command-palette.js";
 export { dataTableRecipe } from "./data-table.js";

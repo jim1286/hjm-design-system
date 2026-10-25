@@ -38,6 +38,8 @@ export type PageIndicatorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"
   maxVisibleDots?: number;
   /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
   interactive?: boolean;
+  /** Compact dots retain full target height with narrower, non-overlapping horizontal targets. */
+  density?: "comfortable" | "compact";
   /** Requested page from a dot or an arrow key. It can repeat the current index. */
   onCurrentIndexChange: (index: number) => void;
   composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -63,7 +65,7 @@ function PageDots({ dots, onSelect, dotClassName, keys }: Readonly<{
  * one page in reading direction, as in Carousel's controls.
  */
 export const PageIndicator = forwardRef<HTMLDivElement, PageIndicatorProps>(function PageIndicator({
-  label, count, currentIndex, maxVisibleDots, interactive = true, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, onFocusCapture, layoutStyle, ...props
+  label, count, currentIndex, maxVisibleDots, interactive = true, density = "comfortable", onCurrentIndexChange, composeAccessibleName, className, onKeyDown, onFocusCapture, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
   const host = useRef<HTMLDivElement | null>(null);
@@ -79,7 +81,7 @@ export const PageIndicator = forwardRef<HTMLDivElement, PageIndicatorProps>(func
   const descriptor = { count, currentIndex, ...(maxVisibleDots === undefined ? {} : { maxVisibleDots }) };
   const dots = resolvePageIndicator(descriptor, composeAccessibleName);
   const current = dots.find(dot => dot.current)!;
-  return <div {...props} ref={node => { host.current = node; assignRef(ref, node); }} style={{ ...props.style, ...layoutStyle }} role={interactive ? "group" : "img"} aria-label={interactive ? label : current.accessibleName} data-interactive={interactive}
+  return <div {...props} ref={node => { host.current = node; assignRef(ref, node); }} style={{ ...props.style, ...layoutStyle }} role={interactive ? "group" : "img"} aria-label={interactive ? label : current.accessibleName} data-interactive={interactive} data-density={density}
     className={classNames("hjm-page-indicator", className)}
     onFocusCapture={event => {
       lastFocused.current = event.target instanceof HTMLElement ? event.target : null;

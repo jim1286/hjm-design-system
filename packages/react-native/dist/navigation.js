@@ -15,7 +15,8 @@ import { RecipeButton } from "./internal/recipe-button.js";
 import { BottomNavigationInsetReporterContext } from "./internal/bottom-navigation-inset.js";
 export { BottomNavigationInsetProvider, useBottomNavigationInset, } from "./internal/bottom-navigation-inset.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton } from "./internal/screen-exit.js";
 import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { Spinner } from "./feedback.js";
@@ -452,7 +453,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     const selectedIconColor = resolveColorReference(tile ? tileRecipe.selectedContent : capsule ? bottomNavigationRecipe.selectionCapsule.content : bottomNavigationRecipe.colors.selectedIcon, theme.palette);
     const selectedLabelColor = resolveColorReference(tile ? tileRecipe.selectedContent : capsule ? bottomNavigationRecipe.selectionCapsule.content : bottomNavigationRecipe.colors.selectedLabel, theme.palette);
     const pressedBackground = resolveColorReference(bottomNavigationRecipe.states.pressedBackground, theme.palette);
-    const surfaceBackground = resolveColorReference(raised ? raisedRecipe.background : tile ? tileRecipe.background : presentationRecipe.background, theme.palette);
+    const surfaceBackground = resolveColorReference(raised ? raisedRecipe.background : tile ? (presentation.tone === "neutral" ? tileRecipe.neutralBackground : tileRecipe.background) : presentationRecipe.background, theme.palette);
     const surfaceBorder = resolveColorReference(raised ? raisedRecipe.border : presentationRecipe.border, theme.palette);
     const selectedDepthColor = raised
         ? resolveColorReference(raisedRecipe.selectedDepthColor, theme.palette)
@@ -1009,7 +1010,7 @@ function useMenuAfterDismiss(visible) {
     };
 }
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export function Menu({ triggerLabel, title = "", presentation = "grouped", items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
+export function Menu({ triggerLabel, title = "", description, dismissPlacement = "footer", presentation = "grouped", items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density: suppliedDensity, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, ...modalProps }) {
     assertNoRemovedStyleProps("Menu", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
@@ -1229,12 +1230,12 @@ export function Menu({ triggerLabel, title = "", presentation = "grouped", items
                                 top: 0,
                             } }), _jsxs(View, { accessibilityLabel: title.trim() || triggerLabel, accessibilityRole: "menu", accessibilityViewIsModal: true, onAccessibilityEscape: () => close("escape"), style: {
                                 alignSelf: "center",
-                                backgroundColor: presentation === "bottom" ? "transparent" : colors.bg,
+                                backgroundColor: presentation === "bottom" && dismissPlacement === "footer" ? "transparent" : colors.bg,
                                 borderRadius: theme.tokens.radius.lg,
                                 gap: presentationRecipe.gap,
                                 maxHeight: "75%",
                                 maxWidth: presentationRecipe.maxWidth,
-                                padding: presentationRecipe.padding,
+                                padding: dismissPlacement === "header" && presentation !== "anchored" ? spacing.sm : presentationRecipe.padding,
                                 width: "100%",
                                 ...(presentation === "bottom" ? {} : resolveNativeShadowElevation(theme.designProfile?.tokens.shadow.floating ?? shadow.floating, theme.designProfile !== undefined, 8)),
                                 ...(presentation === "anchored" ? {
@@ -1242,8 +1243,8 @@ export function Menu({ triggerLabel, title = "", presentation = "grouped", items
                                     ...(anchorPosition ? { left: anchorPosition.left, top: anchorPosition.top, width: anchorPosition.width,
                                         maxHeight: anchorPosition.maxHeight } : {}),
                                 } : {}),
-                            }, children: [title.trim() ? _jsx(View, { onLayout: event => setHeadingHeight(event.nativeEvent.layout.height), children: _jsx(Text, { tone: "muted", variant: "label", align: "center", children: title }) }) : null, _jsxs(ScrollView, { onContentSizeChange: (_width, height) => setMenuHeight(height + presentationRecipe.padding * 2 + (title.trim() ? headingHeight + presentationRecipe.gap : 0)), style: { flexGrow: 0, flexShrink: 1, borderRadius: theme.tokens.radius.md,
-                                        backgroundColor: presentation === "grouped" ? colors.surface : presentation === "bottom" ? colors.bg : "transparent" }, children: [asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: densityContract.minHeight }, children: [asyncState.status === "loading" ? _jsx(Spinner, { label: asyncState.message }) : (_jsx(Text, { accessibilityLiveRegion: asyncState.status === "error" ? "assertive" : "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message })), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? _jsx(Spinner, { label: asyncState.message }) : null] }), presentation !== "anchored" ? _jsx(Button, { onPress: () => close("programmatic"), tone: "secondary", children: dismissLabel }) : null] })] }) })] }));
+                            }, children: [dismissPlacement === "header" && presentation !== "anchored" ? (_jsxs(View, { onLayout: event => setHeadingHeight(event.nativeEvent.layout.height), style: { flexDirection: "row", alignItems: "center", gap: spacing.sm, flexShrink: 0 }, children: [_jsxs(View, { style: { flex: 1, minWidth: 0, gap: spacing.xxs }, children: [title.trim() ? _jsx(Text, { variant: "body", emphasis: "strong", accessibilityRole: "header", children: title }) : null, description ? _jsx(Text, { tone: "muted", variant: "label", numberOfLines: 1, children: description }) : null] }), _jsx(IconButton, { label: dismissLabel, onPress: () => close("programmatic"), children: _jsx(FixedGlyph, { fontSize: glyph.sm, children: "\u00D7" }) })] })) : title.trim() ? _jsxs(View, { onLayout: event => setHeadingHeight(event.nativeEvent.layout.height), children: [_jsx(Text, { tone: "muted", variant: "label", align: "center", children: title }), description ? _jsx(Text, { tone: "muted", variant: "label", children: description }) : null] }) : null, _jsxs(ScrollView, { onContentSizeChange: (_width, height) => setMenuHeight(height + presentationRecipe.padding * 2 + (title.trim() ? headingHeight + presentationRecipe.gap : 0)), style: { flexGrow: 0, flexShrink: 1, borderRadius: theme.tokens.radius.md,
+                                        backgroundColor: presentation === "grouped" ? colors.surface : presentation === "bottom" ? colors.bg : "transparent" }, children: [asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: densityContract.minHeight }, children: [asyncState.status === "loading" ? _jsx(Spinner, { label: asyncState.message }) : (_jsx(Text, { accessibilityLiveRegion: asyncState.status === "error" ? "assertive" : "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message })), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? _jsx(Spinner, { label: asyncState.message }) : null] }), presentation !== "anchored" && dismissPlacement === "footer" ? _jsx(Button, { onPress: () => close("programmatic"), tone: "secondary", children: dismissLabel }) : null] })] }) })] }));
 }
 function createNativeLoadMoreControllerFacade() {
     let active = null;

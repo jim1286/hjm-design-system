@@ -42,6 +42,8 @@ export type PageIndicatorProps = Readonly<{
   maxVisibleDots?: number;
   /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
   interactive?: boolean;
+  /** Compact dots retain full target height with narrower, non-overlapping horizontal targets. */
+  density?: "comfortable" | "compact";
   /** Requested page from a dot press or an adjustable action. It can repeat the current index. */
   onCurrentIndexChange: (index: number) => void;
   composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -56,7 +58,7 @@ export type PageIndicatorProps = Readonly<{
  * Carousel's position dots for a product-owned pager. The row is one adjustable element, like a platform page
  * control, so a screen reader hears "label: page name" and swipes up/down to move; each dot is a 44pt target.
  */
-export function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, onCurrentIndexChange, composeAccessibleName, labels,
+export function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, density = "comfortable", onCurrentIndexChange, composeAccessibleName, labels,
   layoutStyle, testID }: PageIndicatorProps) {
   const { palette } = useHjmNativeTheme();
   if (!label.trim() || !labels.previous.trim() || !labels.next.trim()) throw new TypeError("PageIndicator labels must not be empty");
@@ -76,7 +78,7 @@ export function PageIndicator({ label, count, currentIndex, maxVisibleDots, inte
     onAccessibilityAction={({ nativeEvent }) => { if (nativeEvent.actionName === "increment") move("next"); if (nativeEvent.actionName === "decrement") move("previous"); }}
     style={[{ flexDirection: "row", flexShrink: 1, flexWrap: "wrap", justifyContent: "center" }, layoutStyle]}>
     {dots.map((dot) => <Pressable key={dot.index} accessible={false} accessibilityLabel={dot.accessibleName} onPress={() => onCurrentIndexChange(dot.index)}
-      style={{ alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: carouselRecipe.dot.hitTarget }}>
+      style={{ alignItems: "center", height: carouselRecipe.dot.hitTarget, justifyContent: "center", width: density === "compact" ? carouselRecipe.dot.compactHitWidth : carouselRecipe.dot.hitTarget }}>
       <View style={{ backgroundColor: resolveColorReference(dot.current ? carouselRecipe.dot.color.current : carouselRecipe.dot.color.inactive, palette), borderRadius: carouselRecipe.dot.diameter / 2, height: carouselRecipe.dot.diameter, width: carouselRecipe.dot.diameter }} />
     </Pressable>)}
   </View>;

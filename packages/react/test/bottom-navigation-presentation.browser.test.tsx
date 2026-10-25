@@ -65,3 +65,26 @@ it("lifts the selected icon and dims only idle icons, never the badge", async ()
   expect(Number(getComputedStyle(idle).opacity)).toBeCloseTo(lift.idleOpacity, 2);
   expect(Number(getComputedStyle(badge).opacity)).toBe(1);
 });
+
+
+it("uses theme surfaces for neutral tiles while preserving brand selection", async () => {
+  for (const theme of ["light", "dark"] as const) {
+    for (const tone of ["neutral", "brand"] as const) {
+      await act(async () => root.render(
+        <HjmProvider systemTheme={theme}>
+          <BottomNavigation configuration={{ presentation: "floating", selection: "tile", tone }}
+            descriptor={descriptor} getHref={(item) => `/${item.id}`} renderIcon={() => <svg />} />
+        </HjmProvider>,
+      ));
+      const surface = host.querySelector<HTMLElement>(".hjm-bottom-navigation__surface")!;
+      const selected = host.querySelector<HTMLElement>('[data-state="selected"]')!;
+      const probe = document.createElement("span");
+      surface.append(probe);
+      probe.style.backgroundColor = tone === "neutral" ? "var(--hjm-color-surface)" : "var(--hjm-color-surface-accent)";
+      expect(getComputedStyle(surface).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+      probe.style.backgroundColor = "var(--hjm-color-primary)";
+      expect(getComputedStyle(selected).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+      probe.remove();
+    }
+  }
+});

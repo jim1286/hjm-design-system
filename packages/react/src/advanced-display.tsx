@@ -1,4 +1,5 @@
 "use client";
+import { IdentityAction } from "./internal/identity-action.js";
 
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
@@ -281,6 +282,8 @@ type AvatarIdentity =
 export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
   AvatarIdentity &
   Readonly<{
+    /** Profile navigation; products provide the member route and localized name. */
+    action?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
     src?: string;
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
@@ -301,6 +304,7 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   {
     name,
+    action,
     src,
     alt: altProp,
     decorative = false,
@@ -332,11 +336,11 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
   const fail = () => { if (active.current === generation) setFailed(generation); };
   const initials = name !== undefined && name.trim().length > 0 ? resolveAvatarInitials(name) : null;
-  return (
+  const avatarNode = (
     <span
       {...props}
       aria-hidden={decorative || props["aria-hidden"]}
-      style={{ ...props.style, ...layoutStyle, "--hjm-avatar-size": `${diameter}px`,
+      style={{ ...props.style, ...(action ? {} : layoutStyle), "--hjm-avatar-size": `${diameter}px`,
         // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
         "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` } as CSSProperties}
       ref={ref}
@@ -376,6 +380,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       {accessory ? <span className="hjm-avatar__accessory" data-placement={accessoryPlacement}>{accessory}</span> : null}
     </span>
   );
+  return action ? <IdentityAction action={action} {...(layoutStyle?{layoutStyle}:{})}>{avatarNode}</IdentityAction> : avatarNode;
 });
 
 export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &

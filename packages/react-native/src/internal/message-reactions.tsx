@@ -1,12 +1,13 @@
 import type { ComponentRef } from "react";
 import { useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { AccessibilityInfo, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, useWindowDimensions } from "react-native";
-import { control, scrim } from "@hjmds/design-contracts/foundations";
+import { control, glyph, scrim } from "@hjmds/design-contracts/foundations";
 import { chatMessageRecipe, holdMenuRecipe, screenPatternRecipe, type ChatReactionSummaryItem } from "@hjmds/design-contracts/screen-patterns";
-import type { MenuItemTone } from "@hjmds/design-contracts/recipes";
+import { resolveIconButtonPresentation, type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "../provider.js";
 import { IconButton } from "../actions.js";
 import { FixedGlyph } from "./fixed-glyph.js";
+import { DrawnMoreVertical } from "./drawn-glyphs.js";
 import { Text } from "../primitives.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
@@ -35,7 +36,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
     ...(menuAction ? [{ id: "menu", ...menuAction }] : []),
     ...(reportAction ? [{ id: "report", ...reportAction, tone: "danger" as const }] : []),
   ];
-  const { colors, tokens, environment } = useHjmNativeTheme();
+  const { colors, tokens, environment, palette } = useHjmNativeTheme();
   const insets = useHjmNativeSafeAreaInsets();
   const { height } = useWindowDimensions();
   const [anchor, setAnchor] = useState<number>();
@@ -79,15 +80,20 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
       onAccessibilityAction={event => { if(event.nativeEvent.actionName === "reply") { if(replyAction && !replyAction.disabled) replyAction.onPress(); } else if (!picker.disabled) setAnchor(height / 2); }}>{children}</Pressable>
     {/* An interactive album must keep its own page buttons in the AX tree. A separate menu target
         preserves reaction/reply access instead of merging the whole album into one button. */}
-    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><FixedGlyph>···</FixedGlyph></IconButton>:null}
+    {/* Match the comment menu's drawn vertical dots (2026-10-25 user decision), independent of font metrics. */}
+    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><DrawnMoreVertical size={glyph.sm} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>:null}
     <Modal visible={open} transparent statusBarTranslucent animationType={environment.reducedMotion ? "none" : "fade"}
       onRequestClose={close} onDismiss={() => { restore(); runQueuedAction(); }} onShow={focusPicker}>
       <View style={{ flex: 1 }}>
         <Pressable accessible={false} importantForAccessibility="no-hide-descendants" onPress={close} style={{ position: "absolute", inset: 0, backgroundColor: scrim }} />
-        <View accessibilityViewIsModal onAccessibilityEscape={close} style={{ position: "absolute", top, left: holdMenuRecipe.inset, right: holdMenuRecipe.inset, maxHeight: Math.max(0,height-top-(insets.bottom??0)-tokens.spacing.sm) }}>
+        <View pointerEvents="box-none" accessibilityViewIsModal onAccessibilityEscape={close} style={{ position: "absolute", top, left: holdMenuRecipe.inset, right: holdMenuRecipe.inset, maxHeight: Math.max(0,height-top-(insets.bottom??0)-tokens.spacing.sm) }}>
           {/* A full album can exceed the menu reservation. Scroll its content while keeping Close
               pinned inside the safe area; the device audit found Close clipped below the screen. */}
-          <ScrollView style={{flexShrink:1}} contentContainerStyle={{gap:holdMenuRecipe.gap}} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <ScrollView style={{flexShrink:1}} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {/* The scroll host covers the gaps beside the preview/actions. Its own backdrop must
+              receive those taps; the modal backdrop behind the scroll host cannot receive them. */}
+          <Pressable accessible={false} importantForAccessibility="no-hide-descendants" onPress={close} style={{ position: "absolute", inset: 0 }} />
+          <View pointerEvents="box-none" style={{gap:holdMenuRecipe.gap}}>
           {/* Action-only menus (comments, 2026-10-16 reference) pass no options and show no strip. */}
           {picker.options.length ? <View style={{ backgroundColor: colors.bg, borderRadius: picker.more ? tokens.radius.lg : tokens.radius.full, minHeight: holdMenuRecipe.stripHeight, justifyContent: "center", paddingHorizontal: tokens.spacing.xs }}>
             <ReactionPicker {...picker} layout="strip" onValueChange={value => { picker.onValueChange(value); close(); }} />
@@ -105,6 +111,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
               {row.submenu ? <FixedGlyph>›</FixedGlyph> : null}
             </Pressable>)}
           </View> : null}
+          </View>
           </ScrollView>
           {/* onAccessibilityTap is iOS-only, so TalkBack could not close through this focus target.
               The standard activate action is delivered on both platforms. */}

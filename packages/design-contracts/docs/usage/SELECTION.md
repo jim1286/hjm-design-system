@@ -150,3 +150,112 @@ HJM 공통 구성이 선택을 소유하고 제품 adapter는 `presentation`을 
 [Menu 전사 개발 선택](components/menu.md#전사-개발-적용-선택--2026-10-20)을 따른다.
 
 2026-10-23 사용자 지시: 익숙한 아이콘 하나로 의미를 전달할 수 있는 보조 행동은 본문·오류 안내에서도 `IconButton`을 사용한다. 접근성 `label`과 Web 설명(title/Tooltip), pending·disabled·포커스 복구를 보존한다. 재전송은 refresh, 이전 상태로 돌아가기는 되돌리기 아이콘으로 구분한다. 메뉴 행의 이름과 삭제 확인·결제·동의 같은 최종 의사 확인 문구는 유지한다.
+
+
+### 목록 이관의 확인 단위 (2026-10-25)
+
+번뚝에서 행 컴포넌트만 공통으로 바꾸고 부모의 카드·여백·구분선을 남겨 화면이 달라졌다.
+목록은 실제 route/scroll host → 공통 화면/구성 → 목록 → 행까지 함께 확인한다.
+대화는 ConversationListScreen, 알림은 NotificationInboxScreen의 행 종류 계약,
+검색은 SearchScreen과 List/ListRow를 먼저 선택한다. 일반 목록의 묶음 표면은 List appearance를
+사용하며 단순 행을 Card로 다시 감싸지 않는다. 지도 위 정보판·선택 가능한 복합 카드처럼
+고유 역할이 있는 표면까지 없애는 규칙은 아니다.
+
+변경한 배치 확인에서는 실제 HJM 구현과 데이터가 있는 목록을 사용한다.
+링크로 대체한 mock·빈 상태·타입 검사만으로 목록의 시각 일치를 보고하지 않는다.
+이는 기존 변경 범위 검사의 대상 선택이며 새 CI 게이트나 전수 회귀 의무가 아니다.
+
+### 소비 화면 조합 검사 (2026-10-25)
+
+같은 공통 행을 쓰면서 바깥 카드·여백이 남고, 본문 Stack 간격이 행동 묶음에 적용됐으며,
+제품 팔레트까지 공통 기본값으로 교체된 사고를 보완한다. 공통 레이아웃을 먼저 선택하고
+제품의 데이터·문구·테마는 보존한다. 검사 통과는 실제 화면 일치의 증명이 아니다.
+
+기존 `scripts/audit-consumer-ui.mjs`는 제품의 `app.contract.json`에 등록된 mobile/web 소스를
+검사한다. 포트폴리오 루트를 주면 `portfolio.json`의 모든 제품을 순회한다. 폐기되어
+checkout이 없는 제품은 제외 사유를 표시하고, 그 외 누락·분석 실패는 unavailable로 남긴다.
+
+HJM 저장소에서 실행:
+
+```sh
+node scripts/audit-consumer-ui.mjs ../../apps/diairy /tmp/diairy-ui.json --check
+node scripts/audit-consumer-ui.mjs ../.. /tmp/portfolio-ui.json --check
+node --test scripts/audit-consumer-ui.test.mjs
+```
+
+- 간격 값은 authored `foundations.ts`·`component-recipes.ts`에서 읽는다. 별도 숫자 규격표를 복제하지 않는다.
+- 확정 위반: 직접 HJM Button·standalone Link 행동의 인접 배치를 소유한 Stack의 정적 gap이 actionGroupRecipe와 다름.
+- 검토 후보: 행을 감싼 카드/여백, 반복 행의 Stack 간격, 중첩 스크롤, 제품 탭 역할, 자체 상태 UI,
+  공통 컴포넌트 style 덮어쓰기, HEAD 대비 테마 주입 제거/기본 팔레트 교체. 후보를 자동 수정하거나 예외 목록으로 숨기지 않는다.
+- 별칭·namespace·fragment·조건부 분기를 해석한다. 상호 배타적인 버튼을 동시에 놓인 것으로 세지 않는다.
+  단순 로컬 Button 어댑터는 import 경로로 추적하되 실제 geometry는 확정하지 않는다.
+- CSS, 복잡한 어댑터·동적 스타일·portal·실행 상태·전체 route 도달성은 정적 검사만으로 보장하지 않는다.
+  보고서의 raw control/local component 목록과 화면 실측으로 확인한다. 후보 0개도 준수 완료가 아니다.
+- `--check`는 확정 위반에 1, 범위 누락에 2를 반환한다. 후보는 보고서에서 별도로 검토한다.
+  배포 CI에는 새 게이트를 붙이지 않는다. 작은 수정은 대상 제품과 관련 테스트를 선택하고 전사 순회는 명시 요청 때 실행한다.
+- 공통 화면의 실제 폭·여백·상태·안전 영역·행동 영역은 기존 Web browser/Native screen 테스트가 검사한다.
+  제품 테마는 실제 Provider 입력 팔레트와 제품 팔레트의 연결을 제품 테스트에서 확인한다.
+  다에리 Web/Native와 스핀트 Native는 2026-10-25 테마 소실 회귀를 추가했다.
+
+2026-10-25 후보 후속 검토: 조건부 분기의 전체 조합을 열거하던 64개 한도는 제거했다.
+첫/끝 요소와 가능한 인접 쌍을 합성해 조건부 영역이 많은 화면에서도 행동 간격 검사를 수행한다.
+일반 텍스트 Link를 행동 묶음으로 오인하지 않으며 standalone Link만 버튼과 함께 검사한다.
+검토 기록은 원래 파일 hash와 검토한 현재 hash, 판단 근거를 보존한다.
+제품별 사용자 결정이나 지원되는 style 입력은 검토 사유이지 자동 검사 면제 목록이 아니다.
+
+### Native 헤더와 상단 안전 영역 검사
+
+2026-10-25 번뚝 팔로워 화면은 네이티브 헤더를 숨긴 뒤 FollowListScreen만 연결해 상태 표시줄과
+제목이 겹쳤다. Provider가 inset을 알고 있다는 사실만으로 화면에 여백이 적용되지는 않는다.
+네이티브 헤더가 없는 전체 화면은 `ScreenHost`가 상단·좌우 inset을 맡고 화면은 하단을 맡는다.
+이미 navigator/상위 ScreenHost/SafeAreaView가 상단을 확보하면 다시 더하지 않는다.
+`ScreenLayout.safeAreaTop`은 헤더 없는 본문용이며 표시되는 헤더 위 여백의 대체재가 아니다.
+
+기존 소비 검사기는 Native 화면의 JSX 조상에 상단 ScreenHost 또는 SafeAreaView가 확인되지 않으면
+`safe-area-top-owner` 검토 후보로 남긴다. 다른 파일의 navigator·SafeAreaView·Provider 연결을
+추적해야 하므로 이 후보를 곧바로 위반으로 확정하거나 일괄 wrapper 추가하지 않는다.
+정적으로 확인되는 상단 host 안의 ScreenHost 중첩은 `safe-area-top-duplicate` 위반이다.
+동적 edges/spread는 소유자가 확인된 것으로 처리하지 않는다. 실제 기기에서는 상태 표시줄 아래
+헤더 위치를 별도로 확인한다. Native host 테스트는 기기 좌표 측정의 대체 증거가 아니다.
+
+### 예방 검사 범위와 판정 갱신 (2026-10-25)
+
+목록·간격만 확인하면 행동 역할·상단 도구·입력 포커스가 빠진다는 사용자 지적을 반영했다.
+기존 검사기에 역할/포커스 검토와 판정 근거 갱신을 추가하며 별도 배포 게이트는 만들지 않는다.
+
+| 지침 경계 | 현재 자동 확인 | 반드시 별도로 판단할 범위 |
+| --- | --- | --- |
+| 행동 묶음 간격 | `action-group-gap`, authored recipe 값 | CSS/View/복잡한 wrapper의 최종 간격 |
+| 주·보조 행동/같은 크기 | `competing-primary-actions`, `action-size-mismatch` 후보 | 독립 행동인지, 조건이 동시에 참인지, 실제 폭·높이 |
+| 선택/설정 제어 | `selection-control` 후보 | 실행 결과 상태와 단일/다중 선택·설정의 구분 |
+| 상단 도구 | `header-text-action`, `header-tool-size`, `header-tool-gap` 후보 | 제품 헤더 adapter, 아이콘 의미·개수, 탐색/제목 중복 |
+| 목록·본문 여백 | `row-rhythm`, `list-wrapper`, `screen-gutter` 후보 | 카드의 도메인 의미, 최종 좌우·상하 대칭 |
+| 상단 안전 영역 | `safe-area-top-owner`, `safe-area-top-duplicate` | route/navigator/Sheet의 상단 소유권, 실제 상태 표시줄 좌표 |
+| 스크롤·상태 | `scroll-owner`, `state-owner` 후보, 기존 composition-state-height 테스트 | 가상화·overflow·키보드·footer·정중앙·경계 배경 |
+| 입력 포커스 | `input-focus-owner`, `imperative-focus` 후보, 기존 initial-focus 테스트 | 제출 오류/명시적 편집/복귀와 진입·단계 자동 포커스의 구분 |
+| 테마/표현 | HEAD 대비 팔레트 제거 탐지, 공개 style override 후보 | 제품별 승인·라이트/다크·장면 artwork·색 대비 |
+| 전체 화면 기하 | 기존 screen-chrome/screen-insets browser 테스트 | 소비 앱의 실제 화면·긴 문구·좁은 폭·오버레이/스크롤 상태 |
+| 키보드/접근성 | 기존 keyboard-field-visibility·focus 테스트 | 소비 앱 이름/읽기 순서/동작, 실제 플랫폼 키보드 |
+| 사용 계약/버전 | 소스 inventory와 앱 contract 표면 목록 | 공개 export/설치 버전, 실제 실행 bundle, route 도달성 |
+
+단순 named import와 barrel 재수출, React `forwardRef`/`memo` Button·IconButton 어댑터를 추적한다.
+어댑터의 prop 기본값·동적 값까지 증명하는 것은 아니므로 해당 결과는 검토 후보다.
+조건 요약은 JSX 분기를 보존하지만 서로 다른 boolean 식의 논리적 상호 배타성까지 증명하지 않는다.
+후보가 없어도 위 표의 수동/실측 범위는 통과로 바꾸지 않는다. 최대 글자 설정은 포트폴리오 지침대로 제외한다.
+
+포트폴리오 루트와 기존 판정 보고서를 함께 주면 근거 변경을 확인한다:
+
+```sh
+node scripts/audit-consumer-ui.mjs ../.. /tmp/portfolio-ui.json --reviews ../../docs/design/audits/2026-10-25-ui-composition.json --check
+```
+
+`candidateReview`·`headerSafetyAudit`·`extendedReview`의 현재 소스 해시와 `evidence` 경로/해시를
+대조한다. 바뀌거나 삭제되면 `stale`, 의존 근거가 없으면 `dependencies-unrecorded`, 모두 같으면
+`source-unchanged`다. **마지막 값도 화면 합격을 뜻하지 않는다.** 후보를 숨기지 않고 다시 보여주며,
+변경된 소유 구현/조건을 재검토한 뒤에만 판정·근거를 갱신한다. 파일을 다시 읽지 않고 해시만 덮어쓰지 않는다.
+
+### 회원 사진의 기본 동작 (2026-10-25)
+
+댓글·공용 채팅까지 모든 회원 아바타는 해당 회원 프로필로 연결한다. [Avatar의 회원 프로필 이동](components/avatar.md#회원-프로필-이동-2026-10-25)을 따른다.
+상위 구성의 avatarAction/leadingAction/memberProfile을 우선 연결하고 회원 ID·route는 제품이 소유한다.
+사진 확대만 연결하거나, 본문 링크 안에 프로필 버튼을 중첩하거나, 장식 접근성 wrapper 안에 버튼을 넣지 않는다.

@@ -1,3 +1,4 @@
+import { MemberProfilePreview } from "./member-profile-preview";
 import { useState } from "react";
 import { FlatList, Image, View } from "react-native";
 import { ArrowUp } from "lucide-react-native";
@@ -32,6 +33,7 @@ const initial: GroupMessage[] = [
 
 export function GroupChatPreview() {
   const { colors } = useHjmNativeTheme();
+  const [memberId, setMemberId] = useState<string | null>(null);
   const [messages, setMessages] = useState(initial);
   const [draft, setDraft] = useState("");
   const [replyTarget, setReplyTarget] = useState<GroupMessage | null>(null);
@@ -45,6 +47,7 @@ export function GroupChatPreview() {
     setDraft(""); setReplyTarget(null); setTyping(false);
   };
   const summaryOf = (id: string) => { const value = reactions[id]; return value ? { summary: { label: `반응 ${emoji[value]} 1개. 반응 메뉴 열기`, items: [{ id: value, emoji: emoji[value]!, count: 1 }] } } : {}; };
+  if (memberId) { const member = members[memberId]!; return <MemberProfilePreview backLabel="대화로 돌아가기" name={member.name} avatar={<Avatar name={member.name} size="xlarge" decorative source={member.photo}/>} onBack={()=>setMemberId(null)}/>; }
   return <KeyboardAvoiding style={{ flex: 1 }}>
     <ChatScreen title="산책 모임" titleBadge={<Text tone="muted">4</Text>} exit={{ kind: "back", label: "뒤로", onPress: () => setStatus("목록으로 돌아가요.") }}
       avatar={<Avatar name="산책 모임" size={32} decorative source={members.seoyeon!.photo} />}
@@ -56,7 +59,7 @@ export function GroupChatPreview() {
         renderItem={({ item: message }) => {
           const member = members[message.authorId];
           return <ChatMessage direction={member ? "incoming" : "outgoing"} author={member?.name ?? ""} timestamp={message.timestamp} groupPosition={positions.get(message.id) ?? "single"}
-            {...(member ? { avatar: <Avatar name={member.name} size={chatMessageRecipe.avatarSize} decorative source={member.photo} /> } : {})}
+            {...(member ? { avatar: <Avatar name={member.name} size={chatMessageRecipe.avatarSize} decorative source={member.photo} />, avatarAction: {label: `${member.name} 프로필 보기`, onPress: () => setMemberId(message.authorId)} } : {})}
             replyAction={{ label: "답장", onPress: () => setReplyTarget(message) }}
             {...(message.replyTo ? { replyQuote: { title: `${message.replyTo.author}에게 답장`, excerpt: message.replyTo.text } } : {})}
             {...(message.photos ? { media: Array.from({ length: message.photos }, (_, index) => ({ id: `${message.id}-${index}`, label: "산책길 사진", aspectRatio: 4 / 3, preview: <Image source={require("../../shared/photos/river.jpg")} style={{ width: "100%", height: "100%" }} /> })) } : {})}

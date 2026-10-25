@@ -1163,6 +1163,10 @@ type MenuBaseProps = Readonly<{
   presentation?: MenuPresentation;
   /** Required for grouped/bottom; accessible and visible dismiss label. */
   dismissLabel?: string;
+  title?: string;
+  description?: string;
+  /** Modal menus may put the close command beside a compact heading. */
+  dismissPlacement?: "header" | "footer" | "none";
   /** Logical alignment against the trigger; automatically mirrors in RTL. */
   align?: "start" | "end";
   disabled?: boolean;
@@ -1236,6 +1240,9 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     density: densityProp,
     presentation = "anchored",
     dismissLabel,
+    title,
+    description,
+    dismissPlacement = "footer",
     align = "start",
     disabled = false,
     asyncState = { status: "idle" },
@@ -1487,6 +1494,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
             aria-label={label}
             className={classNames("hjm-menu__content", className)}
             data-presentation={presentation}
+            data-dismiss-placement={dismissPlacement}
             data-density={density}
             data-async-state={asyncState.status}
             data-placement={popupPosition.placement}
@@ -1498,6 +1506,15 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
             tabIndex={-1}
             onKeyDown={handleMenuKeyDown}
           >
+            {presentation !== "anchored" && (title || description || dismissPlacement === "header") ? (
+              <div className="hjm-menu__header">
+                <div className="hjm-menu__heading">
+                  {title ? <div className="hjm-menu__title">{title}</div> : null}
+                  {description ? <div className="hjm-menu__subtitle">{description}</div> : null}
+                </div>
+                {dismissPlacement === "header" ? <button type="button" className="hjm-dialog__close" aria-label={dismissLabel} onClick={() => close("programmatic", true)}>×</button> : null}
+              </div>
+            ) : null}
             {asyncState.status !== "idle" ? (
               <div
                 className="hjm-menu__state-message"
@@ -1551,7 +1568,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
               );
             })) : null}
             </div>
-            {presentation !== "anchored" ? <Button tone="secondary" role="menuitem" onClick={() => close("programmatic", true)}>{dismissLabel}</Button> : null}
+            {presentation !== "anchored" && dismissPlacement === "footer" ? <Button tone="secondary" role="menuitem" onClick={() => close("programmatic", true)}>{dismissLabel}</Button> : null}
           </div>
   );
   return (

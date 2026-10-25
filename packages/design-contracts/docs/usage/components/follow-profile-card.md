@@ -98,3 +98,7 @@ import { FollowProfileCard } from "@hjmds/react-native/social-compositions";
 | 진행 중 이름 | 버튼 `aria-label`=pending | Button `loadingLabel`=pending |
 | 기본 아바타 | `Avatar aria-hidden` | `Avatar decorative` |
 | 수치 전환 의존성 | `statistic-motion`의 `@number-flow/react` peer 필요 | 기존 ContentTransition |
+
+### 회원 프로필 이동 (2026-10-25)
+
+`avatarAction={label,onPress}`로 카드의 회원 사진을 해당 회원 프로필 화면에 연결한다. 팔로우 버튼은 별도 행동이다.

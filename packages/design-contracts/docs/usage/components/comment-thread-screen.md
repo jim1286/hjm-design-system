@@ -86,7 +86,9 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 | `onLike(id)`·`onReply(id)` | 기본 좋아요 버튼·답글 버튼의 콜백 |
 | `replyLabel`·`repliesLabel(count, expanded)` | 지역화 문구. 복수형·펼침 상태는 제품 i18n이 만든다. 펼침 버튼 이름이 이 문구이므로 `expanded`에 따라 "답글 3개 보기"/"답글 숨기기"처럼 상태가 드러나게 만든다 |
 | `composer` | 작성창(보통 `MessageComposer`의 `replyTo`·`sendIcon`). `ready`·`empty`일 때만 보인다 |
-| `threadFooter` | 더 보기·커서 페이지네이션 |
+| `threadFooter` | 최상위 댓글 목록의 더 보기·커서 페이지네이션 |
+| `moreRepliesLabel(remaining)`(미게시) | 펼친 답글 묶음의 "더 보기" 문구(예: "답글 7개 더 보기"). 주면 아래 답글 5개 정책이 켜지고, 생략하면 받은 답글을 모두 보이는 이전 동작이다. 포트폴리오 제품은 모두 준다 |
+| `revealedReplyId`(미게시) | 방금 보낸 답글·알림 대상처럼 열린 페이지 밖이어도 보여야 하는 답글 id. 묶음 펼침은 여전히 `expandedIds`가 정한다 |
 | `commentMenu`(미게시) | 댓글별 더보기 메뉴. `label(item)` 버튼·메뉴의 지역화 접근성 이름(예: "seoyeon 댓글 더 보기"), `items(item)` 그 댓글에 허용된 항목(`{ id, label, tone?: "danger", disabled? }`, Menu·ContextMenu와 같은 항목 어휘), `onAction(item, id)` 메뉴가 닫힌 뒤 호출. Native는 메뉴 시트의 닫기 문구 `dismissLabel`도 받는다. 항목이 비면 그 행에는 버튼을 그리지 않는다. 같은 prop을 `CommentThreadRow`도 받는다 |
 
 `CommentThreadItem`: `id`, `parentId`(`null`이면 최상위), `author`, `body`(노드), `timeLabel`, `likeCountLabel`,
@@ -98,6 +100,15 @@ import { MessageComposer } from "@hjmds/react-native/screens";
 받은 답글이 없어도 전체 개수·복구 안내·더 보기 슬롯으로 답글 영역을 열 수 있다. 접으면 세 영역이 함께 숨는다.
 조회·커서·재시도·문구·데이터 보존은 제품이 맡고 오류/페이지 행동은 HJM Notice·Button/LoadMore로 공급한다.
 Spint에서 페이지 오류와 더 보기가 원글 body에 들어가 답글을 접어도 남던 2026-10-18 이관이 확장 근거다.
+
+### 답글 5개씩 (2026-10-25 정책, 미게시)
+
+펼친 답글 묶음은 `commentThreadRecipe.replyPageSize`(5)개만 먼저 보이고, 묶음 끝의 흐린 글자 버튼
+(`moreRepliesLabel(남은 수)`)이 5개씩 더 연다. 받은 답글이 남아 있으면 HJM이 바로 보이고, 받은 답글을 다 보였는데
+`repliesCount`가 더 크면 최상위 항목의 `repliesPage.onLoadMore()`를 불러 제품이 다음 서버 페이지(5개)를 받게 한다.
+요청 중에는 `repliesPage.pending`으로 버튼을 막는다. 오류는 `repliesNotice`, 그 밖의 묶음 끝 내용은 `repliesFooter`에 둔다.
+열린 개수는 HJM 화면 상태이고, 데이터·커서·정렬·펼침은 제품이 맡는다. 판단 규칙은 `resolveCommentReplyPage`다.
+계기: Spint가 답글 더 보기를 가운데 브랜드색 링크로 직접 만들고 번뚝은 답글을 접지 않아, 같은 기능이 앱마다 달랐다.
 실행 원본: [Web 답글 복구](../../../../../showcase/web/src/components/comment-thread-replies-preview.tsx),
 [Native 답글 복구](../../../../../showcase/native/src/components/comment-thread-replies-preview.tsx).
 
@@ -179,3 +190,7 @@ threadHeader도 댓글과 함께 숨겨지므로 항상 보여야 하는 안내�
 2026-10-20 메뉴의 대상 연결을 분명히 하자는 결정으로 `commentMenu.presentation`은 Web·Native 모두
 `anchored`가 기본이다. `grouped`/`bottom`으로 바꿀 때는 제품 상호작용 이유와 지역화한 `dismissLabel`을 함께 제공한다.
 행마다 제품 Menu를 새로 조립하지 않는다. [Menu의 세 표현](menu.md#세-가지-표시-방식--개발-소스-미게시)을 따른다.
+
+### 회원 프로필 이동 (2026-10-25)
+
+`CommentThreadItem.avatarAction={label,onPress}`로 작성자 사진·이니셜을 회원 프로필에 연결한다. 아바타 버튼은 댓글 hold/답장/좋아요 영역 밖에 위치한다.

@@ -1,6 +1,7 @@
 import { act, create } from "react-test-renderer";
 import { Text as NativeText, View } from "react-native";
 import { __setWindowDimensions } from "./react-native.mock.js";
+import { THEMES } from "@hjmds/design-contracts";
 import { typography } from "@hjmds/design-contracts/foundations";
 import { bottomNavigationRecipe } from "@hjmds/design-contracts/recipes";
 import { expect, it, vi } from "vitest";
@@ -340,4 +341,28 @@ it("keeps the floating recipe frame and scale emphasis by default", () => {
   expect(style.padding).toBe(0);
   expect(renderer.root.findAll((node) => node.props.style?.opacity === bottomNavigationRecipe.icon.liftEmphasis.idleOpacity)).toHaveLength(0);
   act(() => renderer.unmount());
+});
+
+
+it("uses neutral theme surfaces without changing the selected brand tile", () => {
+  for (const theme of ["light", "dark"] as const) {
+    for (const tone of ["neutral", "brand"] as const) {
+      let tree!: ReturnType<typeof create>;
+      act(() => { tree = create(<HjmNativeProvider theme={theme}>
+        <BottomNavigation configuration={{ presentation: "floating", selection: "tile", tone }}
+          descriptor={{ accessibilityLabel: "탐색", selectedKey: "home", items: [
+            { id: "home", label: "홈", icon: { name: "home" } },
+            { id: "search", label: "검색", icon: { name: "search" } },
+          ] }} onActivate={() => {}} renderIcon={() => null} getItemTestID={item => `tone-${item.id}`} />
+      </HjmNativeProvider>); });
+      const surface = tree.root.findByProps({ accessibilityRole: "tablist" }).parent!;
+      const styles = [surface.props.style].flat(Infinity) as { backgroundColor?: string }[];
+      expect(styles.find(style => style?.backgroundColor)?.backgroundColor).toBe(
+        tone === "neutral" ? THEMES[theme].surface : THEMES[theme].surfaceAccent,
+      );
+      const selected = tree.root.findByProps({ testID: "tone-home" });
+      expect(selected.props.style({ pressed: false })[1].backgroundColor).toBe(THEMES[theme].primary);
+      act(() => tree.unmount());
+    }
+  }
 });

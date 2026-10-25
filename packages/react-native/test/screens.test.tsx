@@ -2,8 +2,9 @@ import { Animated, View } from "react-native";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
 import { ScrollView } from "react-native";
+import { ConversationRow } from "../src/conversation-row.js";
 import { HjmNativeProvider } from "../src/provider.js";
-import { CompositionLayout, ChatScreen, MessageComposer, NotificationInboxScreen, NotificationItem, ScreenLayout, SettingsScreen } from "../src/screens.js";
+import { ConversationListScreen, NotificationRow, CompositionLayout, ChatScreen, MessageComposer, NotificationInboxScreen, NotificationItem, ScreenLayout, SettingsScreen } from "../src/screens.js";
 import { TextArea } from "../src/inputs.js";
 import { Button } from "../src/actions.js";
 import { Text } from "../src/primitives.js";
@@ -18,6 +19,17 @@ function render(child: ReactNode) {
   return tree!;
 }
 describe("native screen composition", () => {
+  it("shares the populated conversation gutter and keeps virtualized scrolling with the host", () => {
+    const tree = render(<ConversationListScreen title="Messages" search={<Text>Search</Text>} scroll="content"><View testID="virtual-list"><ConversationRow title="Peer" preview="Hello" metadata="Now" avatar={<Text>A</Text>} /></View></ConversationListScreen>);
+    expect(tree.root.findByType(ScreenLayout).props.contentInset).toBe("body-edge");
+    expect(tree.root.findAllByType(ScrollView)).toHaveLength(0);
+    act(() => tree.update(<HjmNativeProvider><ConversationListScreen title="Messages" search={<Text>Search</Text>} state={{kind: "empty", title: "No conversations"}}><Text>Private row</Text></ConversationListScreen></HjmNativeProvider>));
+    expect(JSON.stringify(tree.toJSON())).toContain("Search");
+    expect(JSON.stringify(tree.toJSON())).not.toContain("Private row");
+    act(() => tree.update(<HjmNativeProvider><NotificationInboxScreen title="Inbox" rowPresentation="preview"><NotificationRow preview="Reply" metadata="Now" avatar={<Text>A</Text>} /></NotificationInboxScreen></HjmNativeProvider>));
+    expect(tree.root.findByType(ScrollView).props.contentContainerStyle.paddingHorizontal).toBe(0);
+    act(() => tree.unmount());
+  });
   it("compacts icon-only headers without collapsing notice tabs into body filters", () => {
     const props = { title: "기록실", titleVisibility: "hidden" as const, exit: { kind: "back" as const, label: "뒤로", onPress: () => {} } };
     const tree = render(<ScreenLayout {...props}><Text>카테고리</Text></ScreenLayout>);

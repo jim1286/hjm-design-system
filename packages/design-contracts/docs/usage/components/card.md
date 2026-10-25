@@ -1,5 +1,7 @@
 # Card
 
+2026-10-25 번뚝 글자 크기 리뷰 반영(개발 소스·미게시): 카드 제목은 `bodyLarge` 16/24, `medium` 굵기를 사용한다. 반복 카드가 페이지 제목과 경쟁하지 않도록 양 renderer에 동일하게 적용한다.
+
 - 단계: 컴포넌트
 - 상태: 배포
 - 지원: Web · Native
@@ -293,3 +295,7 @@ QuoteCard가 자동으로 원문을 자르거나 열지 않는다. 이 API의 �
 다에리 편지·장소 기록은 새 탭·가운데 클릭·링크 미리보기를 보존해야 하므로 버튼 callback으로 바꾸지 않는다. `href`는 공통 카드의 media·본문을 덮는 별도 이름 있는 anchor를 만들고, `actions`는 그 위의 독립 대상으로 남긴다. 본문/그림은 링크 이름에 모두 합치지 않고 `aria-label`에 제품이 고른 짧은 이름을 준다. 프레임워크 링크·소리·초안 정리는 `renderLink`가 받은 href/className/접근성 props를 그대로 전달하면서 연결한다. 카드·배지 위치·표면·누름 피드백을 제품 CSS로 다시 조립하지 않는다. Native 목적지 이동은 기존 `onActivate` 콜백으로 연결한다.
 
 <!-- usage-example: Web ../../../../../showcase/web/src/components/Card.stories.tsx -->
+
+### 회원 프로필 이동 (2026-10-25)
+
+`leadingAction={label,onPress}`로 leading의 작성자 사진을 해당 회원 프로필에 연결한다. 카드 전체 `onActivate`/`href`와 독립된 형제 컨트롤이며 Native의 접근성 카드 안에 프로필 버튼을 중첩하지 않는다. 사진에는 별도 Avatar.action을 함께 넣지 않는다.

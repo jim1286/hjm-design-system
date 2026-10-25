@@ -1,9 +1,14 @@
 "use client";
 
 import {
+  dateRangeRecipe,
   emptyDateRange,
   isCompleteDateRange,
+  resolveDateRangeActiveEdge,
+  resolveDateRangeCellPaint,
   resolveDateRangeCellState,
+  resolveDateRangePreset,
+  type DateRangePresetLength,
   resolveDateRangeSelection,
   validateDateRange,
   type DateRangeValue,
@@ -15,7 +20,20 @@ import type {
 import { useState, type ReactNode } from "react";
 import { Calendar, type CalendarMonthAction } from "./calendar.js";
 import { classNames, useControllableState } from "./internal.js";
+import { CalendarPaintContext } from "./internal/calendar-paint.js";
+import { Chip } from "./selection.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+
+export type DateRangeSummary = Readonly<{
+  startLabel: string;
+  endLabel: string;
+  /** Shown in a field whose date is not chosen yet. */
+  placeholder: string;
+  formatDate: (date: string) => string;
+}>;
+
+/** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
+export type DateRangePresetOption = Readonly<{ id: string; label: string; length: DateRangePresetLength }>;
 
 export type DateRangePickerProps<Content = unknown> = Readonly<{
   /** The same grid Calendar renders; the product still owns month data. */
@@ -29,6 +47,10 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   /** Localized suffixes appended to a day's name when it is a range edge. */
   rangeLabels: Readonly<{ start: string; end: string; between: string }>;
   renderCellContent?: (date: string) => ReactNode;
+  /** Start/end fields above the grid; the edge the next tap sets is marked (replaces a hint sentence). */
+  summary?: DateRangeSummary;
+  /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
+  presets?: readonly DateRangePresetOption[];
   className?: string;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -44,6 +66,8 @@ export function DateRangePicker<Content = unknown>({
   nextMonth,
   rangeLabels,
   renderCellContent,
+  summary,
+  presets,
   className,
   layoutStyle,
 }: DateRangePickerProps<Content>) {
@@ -57,6 +81,17 @@ export function DateRangePicker<Content = unknown>({
   // state function the committed range uses.
   const [hovered, setHovered] = useState<string | null>(null);
 
+  const activeEdge = resolveDateRangeActiveEdge(value);
+  const field = (edge: "start" | "end") => {
+    const date = value[edge];
+    return (
+      <div key={edge} className="hjm-date-range__field" data-active={activeEdge === edge || undefined} data-empty={date === null || undefined}>
+        <span className="hjm-date-range__field-label">{edge === "start" ? summary!.startLabel : summary!.endLabel}</span>
+        <span className="hjm-date-range__field-value">{date === null ? summary!.placeholder : summary!.formatDate(date)}</span>
+      </div>
+    );
+  };
+
   return (
     <div
       style={layoutStyle}
@@ -65,31 +100,43 @@ export function DateRangePicker<Content = unknown>({
       data-complete={isCompleteDateRange(value) || undefined}
       onMouseLeave={() => setHovered(null)}
     >
-      <Calendar<Content>
-        descriptor={{
-          ...descriptor,
-          // Calendar keeps single selection: the range's own edges are painted
-          // through cell content and data attributes, not by lying to it.
-          selectedDate: value.end ?? value.start,
-          onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date)); },
-        } as CalendarDescriptor<Content>}
-        composeAccessibleName={(info) => {
-          const state = resolveDateRangeCellState(value, info.date, hovered);
-          const base = composeAccessibleName(info);
-          return state === "none" ? base : `${base}, ${rangeLabels[state]}`;
-        }}
-        {...(previousMonth === undefined ? {} : { previousMonth })}
-        {...(nextMonth === undefined ? {} : { nextMonth })}
-        renderCellContent={(cell) => (
-          <span
-            className="hjm-date-range__cell"
-            data-range={resolveDateRangeCellState(value, cell.date, hovered)}
-            onMouseEnter={() => setHovered(cell.date)}
-          >
-            {renderCellContent?.(cell.date) ?? null}
-          </span>
-        )}
-      />
+      {summary ? <div className="hjm-date-range__summary">{field("start")}{field("end")}</div> : null}
+      {presets?.length ? (
+        <div className="hjm-date-range__presets">
+          {presets.map((preset) => {
+            const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
+            return (
+              <Chip key={preset.id} label={preset.label} size={dateRangeRecipe.presets.chipSize} selectionMode="single"
+                selected={range.start === value.start && range.end === value.end}
+                onSelectedChange={() => {
+                  setValue(range);
+                  // A preset ends today; bring its end month into view like a jump, so the band is visible.
+                  const month = range.end!.slice(0, 7);
+                  if (descriptor.focusedMonth !== month) descriptor.onFocusedMonthChange?.(month, "jump");
+                }} />
+            );
+          })}
+        </div>
+      ) : null}
+      <CalendarPaintContext.Provider value={{ paint: (date) => resolveDateRangeCellPaint(value, date, hovered), onDayHover: setHovered }}>
+        <Calendar<Content>
+          descriptor={{
+            ...descriptor,
+            // Calendar keeps single selection; the two edges and the band are painted through the internal
+            // paint context, and each day's name carries the range position for assistive tech.
+            selectedDate: value.end ?? value.start,
+            onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date)); },
+          } as CalendarDescriptor<Content>}
+          composeAccessibleName={(info) => {
+            const state = resolveDateRangeCellState(value, info.date, hovered);
+            const base = composeAccessibleName(info);
+            return state === "none" ? base : `${base}, ${rangeLabels[state]}`;
+          }}
+          {...(previousMonth === undefined ? {} : { previousMonth })}
+          {...(nextMonth === undefined ? {} : { nextMonth })}
+          {...(renderCellContent === undefined ? {} : { renderCellContent: (cell: { date: string }) => renderCellContent(cell.date) })}
+        />
+      </CalendarPaintContext.Provider>
     </div>
   );
 }

@@ -52,6 +52,18 @@ commentMenu={{ presentation: "anchored", label: commentMenuLabel,
   dismissLabel: t("common.close"), items: allowedItems, onAction: handleCommentAction }}
 ```
 
+### 관리 메뉴의 짧은 헤더 — 개발 소스, 미게시 (2026-10-25)
+
+번뚝의 긴 분기 이력·반복 설명이 하단 메뉴를 과도하게 키운 사용자 관측에 따라,
+양 renderer에 `title`, `description`, `dismissPlacement="header" | "footer" | "none"`를 제공한다.
+2026-10-25 사용자의 관리 메뉴 상단 제거 요청으로 `none`을 추가했다. 제목·보조 설명을 생략하고 `none`을 지정하면 목록만 표시하며 바깥 누름·Escape/back으로 닫는다. 접근성 이름과 `dismissLabel`은 유지한다.
+기본은 기존 `footer`다. `header`는 grouped/bottom에서 제목 옆에 지역화한
+`dismissLabel`의 ✕를 두고 하단 닫기 버튼을 생략한다. 바깥 누름·Escape/back과
+닫힌 후 실행 계약은 유지한다. `anchored`에는 헤더를 표시하지 않는다.
+보조 설명은 대상 이름·현재 버전 등 짧은 맥락에 쓰며 한 줄 넘침은 말줄임한다.
+분기 이력은 기록 화면, 현재 설정값은 trailing, 실행 결과가 불명확한 행동만 description으로 전달한다.
+행·아이콘·본문·안전 영역과 스크롤은 기존 Menu가 소유한다.
+
 `bottom`도 안정적인 id의 행동/선택 목록이면 Menu다. 입력 본문이 생기면 Dialog·Sheet,
 확인 문구와 버튼만 필요하면 AlertDialog를 사용한다. Menu가 닫힌 후 여는 원칙은 세 표현 모두 동일하다.
 실행 예제는 양 Showcase의 Menu `Grouped`·`Anchored`·`Bottom`이다.

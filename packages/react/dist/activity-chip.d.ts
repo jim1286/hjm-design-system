@@ -16,7 +16,7 @@ export type ActivityChipProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "c
     /** Canonical layout-only placement on the root button. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const ActivityChip: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "style" | "aria-expanded" | "aria-label" | "type"> & Readonly<{
+export declare const ActivityChip: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type" | "style" | "aria-expanded" | "aria-label"> & Readonly<{
     /** Short visible status, for example "Polishing". */
     label: string;
     /** Full spoken status; defaults to `label`. */

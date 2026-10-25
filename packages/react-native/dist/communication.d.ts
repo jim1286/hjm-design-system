@@ -93,8 +93,13 @@ export type ChatRoomMembersProps = Readonly<{
     /** Omit actions without permission. The product owns roles and server authorization. */
     renderActions?: (member: ChatRoomMember) => ReactNode;
     memberActions?: ChatRoomMemberActions;
+    /** Ordinary member rows open the member profile; selection pickers keep their selection behavior. */
+    memberProfile?: Readonly<{
+        label(member: ChatRoomMember): string;
+        onPress(member: ChatRoomMember): void;
+    }>;
 }>;
-export declare function ChatRoomMembers({ members, title, emptyLabel, countLabel, onSelectionChange, disabled, invite, renderActions, memberActions }: ChatRoomMembersProps): import("react").JSX.Element;
+export declare function ChatRoomMembers({ members, title, emptyLabel, countLabel, onSelectionChange, disabled, invite, renderActions, memberActions, memberProfile }: ChatRoomMembersProps): import("react").JSX.Element;
 export type ChatRoomCreateProps = Omit<ChatRoomProfileProps, "onSave" | "children" | "title" | "back" | "presentation"> & Readonly<{
     members: readonly ChatRoomMember[];
     onSelectionChange: (id: string, selected: boolean) => void;

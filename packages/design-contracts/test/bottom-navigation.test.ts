@@ -462,6 +462,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "visible",
       selection: "emphasis",
       surface: "flat",
+      tone: "brand",
       iconSize: "standard",
       shape: "standard",
       iconEmphasis: "scale",
@@ -487,6 +488,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "hidden",
       selection: "emphasis",
       surface: "flat",
+      tone: "brand",
       iconSize: "standard",
       shape: "standard",
       iconEmphasis: "scale",
@@ -554,6 +556,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
       labels: "visible",
       selection: "emphasis",
       surface: "flat",
+      tone: "brand",
       iconSize: "standard",
       shape: "standard",
       iconEmphasis: "scale",
@@ -658,4 +661,14 @@ describe("prominent destination and icon size", () => {
     expect(bottomNavigationRecipe.icon.liftEmphasis.idleOpacity).toBeGreaterThan(0);
     expect(bottomNavigationRecipe.icon.liftEmphasis.idleOpacity).toBeLessThan(1);
   });
+});
+
+
+it("separates flat tile background tone from selected brand emphasis", () => {
+  const configuration = { presentation: "floating", selection: "tile" } as const;
+  expect(resolveBottomNavigationConfiguration(configuration, 3).tone).toBe("brand");
+  expect(resolveBottomNavigationConfiguration({ ...configuration, tone: "neutral" }, 3).tone).toBe("neutral");
+  expect(() => resolveBottomNavigationConfiguration({ ...configuration, tone: "white" as never }, 3)).toThrow("Unsupported BottomNavigation tone");
+  expect(() => resolveBottomNavigationConfiguration({ tone: "neutral" }, 3)).toThrow("flat tile selection");
+  expect(() => resolveBottomNavigationConfiguration({ ...configuration, surface: "raised", tone: "neutral" }, 3)).toThrow("flat tile selection");
 });

@@ -1,4 +1,8 @@
-import { assertIsoCalendarDate } from "./calendar.js";
+import { assertIsoCalendarDate, calendarRecipe } from "./calendar.js";
+import { semanticColors } from "./semantic-colors.js";
+import { accentTint } from "./colors.js";
+import { themeColor } from "./color-references.js";
+import { spacing, stroke } from "./foundations.js";
 export const emptyDateRange = { start: null, end: null };
 export function validateDateRange(value) {
     if (value.start !== null)
@@ -49,6 +53,75 @@ export function resolveDateRangeCellState(value, date, hoveredDate) {
         return "between";
     return "none";
 }
+const unpainted = { edge: false, band: "none" };
+export function resolveDateRangeCellPaint(value, date, hoveredDate) {
+    const state = resolveDateRangeCellState(value, date, hoveredDate);
+    if (state === "none")
+        return unpainted;
+    if (state === "between")
+        return { edge: false, band: "full" };
+    const provisionalEnd = value.end
+        ?? (hoveredDate != null && value.start !== null && hoveredDate >= value.start ? hoveredDate : null);
+    const spans = provisionalEnd !== null && provisionalEnd !== value.start;
+    if (state === "start")
+        return { edge: true, band: spans ? "toEnd" : "none" };
+    return { edge: true, band: spans ? "toStart" : "none" };
+}
+/**
+ * 요약 칸에서 강조할 끝. 비었으면 시작, 고르는 중이면 끝을 강조한다. 완성된 구간은 아무것도 강조하지 않는다 —
+ * 다음 탭이 새 시작이 되긴 하지만, 완성 직후 시작 칸이 강조되면 시작일을 고치는 중으로 읽혔다(2026-10-25 실화면).
+ */
+export function resolveDateRangeActiveEdge(value) {
+    validateDateRange(value);
+    if (value.start === null)
+        return "start";
+    return value.end === null ? "end" : null;
+}
+const isoOf = (date) => date.toISOString().slice(0, 10);
+/**
+ * 오늘로 끝나는 프리셋 구간(최근 7일·1개월 등). 날짜 계산은 UTC 달력 날짜로만 해 서머타임·시간대에 흔들리지 않는다.
+ * 달 길이가 다르면 그 달의 마지막 날로 맞춘다(3/31의 1개월 전 = 2/28, 구간은 3/1부터).
+ */
+export function resolveDateRangePreset(today, length) {
+    assertIsoCalendarDate(today, "preset today");
+    const [year, month, day] = today.split("-").map(Number);
+    const count = "days" in length ? length.days : length.months;
+    if (!Number.isInteger(count) || count < 1)
+        throw new RangeError("Date range preset length must be a positive integer");
+    if ("days" in length)
+        return { start: isoOf(new Date(Date.UTC(year, month - 1, day - (count - 1)))), end: today };
+    const lastDay = new Date(Date.UTC(year, month - 1 - count + 1, 0)).getUTCDate();
+    const anchor = new Date(Date.UTC(year, month - 1 - count, Math.min(day, lastDay)));
+    anchor.setUTCDate(anchor.getUTCDate() + 1);
+    return { start: isoOf(anchor), end: today };
+}
+export const dateRangeRecipe = {
+    slots: ["root", "summary", "summaryField", "summaryLabel", "summaryValue", "presets", "band", "edge"],
+    // 띠는 두 끝 원과 같은 브랜드색의 tint다. 처음 쓴 `interaction.selected`(surfaceSelected)는 기본 팔레트에서
+    // #f0f1f3 회색이라 시트 바탕 위에서 구간이 거의 보이지 않았다(2026-10-25 Spint 실화면). 높이는 날짜 원과 같다.
+    band: { background: themeColor("primary", accentTint.base) },
+    edge: calendarRecipe.day.selected,
+    // 시작일·종료일 요약. 안내 문장 대신 "다음에 고를 쪽"을 강조해 지금 무엇을 누르는지 보여 준다
+    // (Material 3 기간 선택 머리·Airbnb 체크인/체크아웃 칸 모티브). 값이 없으면 제품 placeholder를 쓴다.
+    summary: {
+        gap: spacing.xs,
+        field: {
+            paddingVertical: spacing.xs,
+            paddingHorizontal: spacing.sm,
+            radius: "md",
+            gap: spacing.xxs,
+            background: semanticColors.surface.sunken,
+            activeBorder: semanticColors.action.brand.background,
+            activeBorderWidth: stroke.strong,
+        },
+        label: { textVariant: "label", color: semanticColors.content.secondary },
+        value: { textVariant: "body", color: semanticColors.content.primary, placeholderColor: semanticColors.content.tertiary },
+    },
+    // 프리셋 칩 줄(Chip 단일 선택, 작은 크기). 요약 아래·달력 위에서 줄바꿈한다.
+    presets: { gap: spacing.xs, chipSize: "small" },
+    // 요약·프리셋·달력 사이.
+    gap: spacing.md,
+};
 /** 구간이 실제로 쓸 수 있는 값인지. 제품의 제출 버튼이 읽는다. */
 export function isCompleteDateRange(value) {
     validateDateRange(value);
@@ -74,6 +147,9 @@ export const dateRangeBehavior = {
         "a-hovered-date-previews-the-end-through-the-same-cell-state-function",
         "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something",
         "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it",
+        "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band",
+        "the-summary-marks-the-edge-being-picked-and-nothing-once-complete",
+        "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it",
     ],
 };
 //# sourceMappingURL=date-range.js.map

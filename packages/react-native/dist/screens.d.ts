@@ -34,6 +34,12 @@ export type ScreenLayoutProps = Readonly<{
      * named by `title` (2026-10-18: yajalal team detail and Utilverse tool headers rebuilt the header to get this).
      */
     titleLeading?: ReactNode;
+    /** Optional navigation for the identity mark; the product owns the destination and translated label. */
+    titleLeadingAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     /** Hide duplicate route names; retain titles that identify a subject or a task. */
     titleVisibility?: "visible" | "hidden";
     /** Centered by default (2026-10-17 user rule); `start` remains available. Extra actions sit at the trailing edge. */
@@ -115,7 +121,7 @@ export type ScreenLayoutProps = Readonly<{
     refreshLabel?: string;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, onRefresh, refreshing, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, onRefresh, refreshing, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type { ScreenHostEdge, ScreenHostSurface } from "@hjmds/design-contracts/screen-patterns";
 export type ScreenHostProps = Readonly<{
     children?: ReactNode;
@@ -160,11 +166,20 @@ export type SettingsScreenProps = Omit<ScreenLayoutProps, "children" | "scroll">
     sections: readonly SettingsScreenSection[];
 }>;
 export declare function SettingsScreen({ profile, sections, ...props }: SettingsScreenProps): import("react").JSX.Element;
+/** Conversation rows own their inset; products supply routing/data and the optional virtualized host.
+ * Keep this composition shared with Showcase: rebuilding it in BurnTok doubled gutters (2026-10-25).
+ */
+export type ConversationListScreenProps = Omit<ScreenLayoutProps, "contentInset" | "notice"> & Readonly<{
+    search?: ReactNode;
+    notice?: ReactNode;
+}>;
+export declare function ConversationListScreen({ search, notice, ...props }: ConversationListScreenProps): import("react").JSX.Element;
 export type NotificationInboxScreenProps = Omit<ScreenLayoutProps, "children"> & Readonly<{
     filters?: ReactNode;
+    rowPresentation?: "item" | "preview";
     children: ReactNode;
 }>;
-export declare function NotificationInboxScreen({ filters, children, notice, ...props }: NotificationInboxScreenProps): import("react").JSX.Element;
+export declare function NotificationInboxScreen({ filters, children, notice, rowPresentation, ...props }: NotificationInboxScreenProps): import("react").JSX.Element;
 export type NotificationItemProps = Omit<ListRowProps, "description" | "selected" | "titleStyle"> & Readonly<{
     read: boolean;
     statusLabel: string;
@@ -174,7 +189,7 @@ export type NotificationItemProps = Omit<ListRowProps, "description" | "selected
     unreadLabel?: string;
 }>;
 export declare function NotificationItem({ read, statusLabel, timestamp, description, unreadLabel, ...props }: NotificationItemProps): import("react").JSX.Element;
-export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading"> & Readonly<{
+export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading" | "titleLeadingAction"> & Readonly<{
     composer: ReactNode;
     /** Shown while the reader is away from the latest message; the host owns scroll position and visibility. */
     jumpToLatest?: Readonly<{
@@ -184,9 +199,15 @@ export type ChatScreenProps = Omit<ScreenLayoutProps, "footer" | "titleLeading">
     }>;
     /** Peer or room photo beside the centered title; group rooms add the member count through `titleBadge`. */
     avatar?: ReactNode;
+    /** Opens the peer profile (or group details); omit for a decorative avatar. */
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
 }>;
 /** Wrap with existing KeyboardAvoiding (or the host's keyboard adapter), never both. */
-export declare function ChatScreen({ composer, jumpToLatest, avatar, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
+export declare function ChatScreen({ composer, jumpToLatest, avatar, avatarAction, scroll, ...props }: ChatScreenProps): import("react").JSX.Element;
 export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCount"> & Readonly<{
     maxLength?: number;
     /** Opt-in count/ring appears only near the actual maxLength; never trims drafts. */
@@ -244,6 +265,11 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;
     avatar?: ReactNode;
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     reply?: ReactNode;
     actions?: ReactNode;
     replyAction?: Readonly<{
@@ -296,7 +322,7 @@ export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
  * accessible name ("Reactions: heart 2. Open menu") come from the product; `items` in display order.
  */
 export type ChatMessageReactionSummary = ChatReactionSummary;
-export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, groupPosition, deliveryLabel, avatar, reply, replyQuote, media, mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
+export declare function ChatMessage({ direction, author, timestamp, timestampPresentation, bubbleTail, groupPosition, deliveryLabel, avatar, avatarAction, reply, replyQuote, media, mediaAlbum, actions, replyAction, replyLink, reactions, children, interactiveContent }: ChatMessageProps): import("react").JSX.Element;
 /** Shared structure for embedded compositions. The parent supplies size; this never creates a second scroller. */
 export type CompositionLayoutProps = Readonly<{
     title?: string;
@@ -333,6 +359,11 @@ export type NotificationRowProps = Readonly<{
     preview: ReactNode;
     metadata: string;
     avatar: ReactNode;
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     avatarBadge?: ReactNode;
     thumbnail?: ReactNode;
     unread?: boolean;
@@ -346,7 +377,7 @@ export type NotificationRowProps = Readonly<{
     }>;
 }>;
 /** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
-export declare function NotificationRow({ preview, metadata, avatar, avatarBadge, thumbnail, unread, separator, action }: NotificationRowProps): import("react").JSX.Element;
+export declare function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread, separator, action }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
     /**
      * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image

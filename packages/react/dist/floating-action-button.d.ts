@@ -16,7 +16,7 @@ export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" 
     onContentClearanceChange: (clearance: number) => void;
 }>;
 /** One persistent button preserves focus while its label collapses. */
-export declare const FloatingActionButton: import("react").ForwardRefExoticComponent<Pick<ButtonProps, "id" | "className" | "onFocus" | "onBlur" | "onClick"> & Readonly<{
+export declare const FloatingActionButton: import("react").ForwardRefExoticComponent<Pick<ButtonProps, "className" | "onClick" | "id" | "onFocus" | "onBlur"> & Readonly<{
     descriptor: FloatingActionButtonDescriptor;
     size?: "medium" | "large";
     renderIcon: (icon: Readonly<{

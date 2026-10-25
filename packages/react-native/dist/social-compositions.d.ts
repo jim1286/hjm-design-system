@@ -4,6 +4,11 @@ type Person = Readonly<{
     id: string;
     name: string;
     avatar?: ReactNode;
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
 }>;
 export type FollowProfileCardProps = Readonly<{
     /** Changing entities remounts the action scope and detaches old responses. */
@@ -11,6 +16,11 @@ export type FollowProfileCardProps = Readonly<{
     name: string;
     description?: ReactNode;
     avatar?: ReactNode;
+    avatarAction?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     state: FollowProfileState;
     locale: string;
     labels: Readonly<{

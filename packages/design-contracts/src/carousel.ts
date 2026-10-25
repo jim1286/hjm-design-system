@@ -354,6 +354,7 @@ export const carouselRecipe = {
     diameter: 8,
     compactGap: spacing.xs,
     hitTarget: control.minTouchTarget,
+    compactHitWidth: spacing.lg,
     color: {
       inactive: semanticColors.border.strong,
       current: semanticColors.content.brand,
@@ -387,6 +388,7 @@ export const carouselRecipe = {
     diameter: number;
     compactGap: number;
     hitTarget: number;
+    compactHitWidth: number;
     color: Record<"inactive" | "current", ColorReference>;
   };
   control: {

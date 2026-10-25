@@ -74,6 +74,12 @@ type AvatarIdentity = Readonly<{
     alt?: never;
 }>;
 export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & AvatarIdentity & Readonly<{
+    /** Profile navigation; products provide the member route and localized name. */
+    action?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     src?: string;
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;

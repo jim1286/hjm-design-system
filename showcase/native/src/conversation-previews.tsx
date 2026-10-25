@@ -1,3 +1,4 @@
+import { MemberProfilePreview } from "./member-profile-preview";
 // Item-level conversation compositions: composer, message bubble and notification row.
 // The full chat/inbox screens (common-screen-previews) own screen states; these previews
 // show the item interactions those screens repeat, so the two stories no longer duplicate.
@@ -95,6 +96,7 @@ const groupPositions = resolveChatMessageGroups(groupedMessages);
 const SEOYEON_PHOTO = "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=96&h=96&fit=crop";
 
 export function ChatMessagePreview() {
+  const [profileOpen, setProfileOpen] = useState(false);
   const { colors } = useHjmNativeTheme();
   const [reaction, setReaction] = useState<string | null>(null);
   const [highlight, setHighlight] = useState(false);
@@ -111,11 +113,12 @@ export function ChatMessagePreview() {
   }, { retryable: true }); };
   useEffect(() => { if (!highlight) return; const timer = setTimeout(() => setHighlight(false), 1500); return () => clearTimeout(timer); }, [highlight]);
   const delivered = state.status === "success";
+  if (profileOpen) return <MemberProfilePreview name="서연" avatar={<Avatar name="서연" size="xlarge" decorative source={{uri:SEOYEON_PHOTO}}/>} onBack={()=>setProfileOpen(false)}/>;
   return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">대화 메시지</Heading>
     <Stack gap="lg">
       <View style={{ borderWidth: 2, borderColor: highlight ? colors.primary : "transparent", borderRadius: radius.md }}>
-        <ChatMessage direction="incoming" author="서연" timestamp="오후 2:30" avatar={<Avatar name="서연" size={32} decorative source={{ uri: SEOYEON_PHOTO }} />}
+        <ChatMessage avatarAction={{label:"서연 프로필 보기",onPress:()=>setProfileOpen(true)}} direction="incoming" author="서연" timestamp="오후 2:30" avatar={<Avatar name="서연" size={32} decorative source={{ uri: SEOYEON_PHOTO }} />}
           replyAction={{ label: "답장", onPress: () => setStatus("서연님의 메시지에 답장을 준비했어요.") }}
           reactions={{ label: "메시지에 반응", closeLabel: "반응 닫기", value: reaction, onValueChange: setReaction, options: reactionOptions, reportAction: { label: "신고", onPress: () => setStatus("서연님의 메시지 신고를 접수했어요.") },
             // The summary is HJM's pill beside the time; pressing it opens the same hold menu (2026-10-18).
@@ -137,7 +140,7 @@ export function ChatMessagePreview() {
     <GroupReadPreview />
     <Heading level="level3">묶음 표시</Heading>
     {/* Timeline lists add no gap: each message's group position owns the spacing above it. */}
-    <View>{groupedMessages.map(message => <ChatMessage key={message.id} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={chatMessageRecipe.avatarSize} decorative source={{ uri: SEOYEON_PHOTO }} /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
+    <View>{groupedMessages.map(message => <ChatMessage key={message.id} avatarAction={{label:"서연 프로필 보기",onPress:()=>setProfileOpen(true)}} direction={message.authorId === "me" ? "outgoing" : "incoming"} author={message.authorId === "me" ? "" : "서연"} timestamp={message.timestamp} groupPosition={groupPositions.get(message.id) ?? "single"} {...(message.authorId === "me" ? {} : { avatar: <Avatar name="서연" size={chatMessageRecipe.avatarSize} decorative source={{ uri: SEOYEON_PHOTO }} /> })}><Text>{message.text}</Text></ChatMessage>)}</View>
     <StatusText>{state.status === "error" ? "다시 보내지 못했어요. 메시지는 그대로 남아 있어요." : status}</StatusText>
     <PreviewTools><PreviewToolButton selected={failureArmed} disabled={busy || delivered} onPress={toggleFailure}>다음 전송 실패시키기</PreviewToolButton></PreviewTools>
   </Stack></Container></ScrollView>;
@@ -153,6 +156,7 @@ const readCopy = { read: "확인함", unread: "새 알림" } as const;
 const readStatusCopy = { idle: "알림을 누르면 읽음으로 바뀌어요.", pending: "읽음으로 표시하고 있어요.", success: "읽음으로 표시했어요.", error: "읽음으로 바꾸지 못해 이전 상태로 돌아왔어요." } as const;
 
 export function NotificationItemPreview() {
+ const [member,setMember]=useState<string|null>(null);
   // Marking read is optimistic and rolls back on failure (action-session.md `optimisticValue`).
   const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction<readonly number[]>([]);
   useEffect(() => () => session.reset([]), [session]);
@@ -163,11 +167,12 @@ export function NotificationItemPreview() {
     const next = [...current.value, id];
     void session.run(() => request(next), { optimisticValue: next, retryable: true });
   };
+  if(member)return <MemberProfilePreview name={member} avatar={<Avatar name={member} size="xlarge" decorative/>} onBack={()=>setMember(null)}/>;
   return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.md }}><Container gutter="compact"><Stack gap="lg">
     <Heading level="level3">알림 항목</Heading>
     <Stack gap="sm">{notifications.map(entry => {
       const read = state.value.includes(entry.id);
-      return <NotificationItem key={entry.id} title={entry.title} description={entry.description} leading={<Avatar name={entry.name} size={32} decorative />}
+      return <NotificationItem leadingAction={{label:`${entry.name} 프로필 보기`,onPress:()=>setMember(entry.name)}} key={entry.id} title={entry.title} description={entry.description} leading={<Avatar name={entry.name} size={32} decorative />}
         read={read} statusLabel={read ? readCopy.read : readCopy.unread} timestamp={entry.time} disabled={busy} onPress={() => open(entry.id)} />;
     })}</Stack>
     <StatusText>{readStatusCopy[state.status]}</StatusText>

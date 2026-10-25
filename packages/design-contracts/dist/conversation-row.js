@@ -1,7 +1,8 @@
 import { fontWeight, spacing, typography } from "./foundations.js";
 /** Conversation previews reserve metadata and unread status while truncating the message. */
 export const conversationRowRecipe = {
-    avatarSize: 56,
+    // Standard member portrait (2026-10-25); message bubbles retain their compact avatar recipe.
+    avatarSize: 48,
     unreadSize: 10,
     gap: spacing.sm,
     paddingInline: spacing.md,

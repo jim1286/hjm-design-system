@@ -79,3 +79,5 @@ when native versions differ; changing Metro's URL only fixes the server connecti
 RN 0.88 removed the legacy surface-presenter bridge adapter. The pinned ios-utilities patch uses
 React's per-runtime `setSurfacePresenter:` module injection for Fabric registry/scheduler access.
 See [the native compatibility rationale](../../docs/LIBRARY_POLICY.md#rn-088-fabric-runtime-access).
+
+Native Showcase의 tsconfig는 `expo/tsconfig.base.json`을 파일 확장자까지 명시한다. 확장자 없는 참조는 2026-10-25 Vite/Oxc가 외부 Showcase 파일을 변환하는 Vitest 실행에서 base 파일을 찾지 못했으므로 실제 Expo 설정 파일을 직접 지정했다.

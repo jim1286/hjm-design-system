@@ -613,6 +613,11 @@
       "types": "./dist/image-viewer.d.ts",
       "import": "./dist/image-viewer.js",
       "default": "./dist/image-viewer.js"
+    },
+    "./follow-list": {
+      "types": "./dist/follow-list.d.ts",
+      "import": "./dist/follow-list.js",
+      "default": "./dist/follow-list.js"
     }
   },
   "files": [

@@ -15,7 +15,7 @@ function PageDots({ dots, onSelect, dotClassName, keys }) {
  * Carousel's position dots for a product-owned pager (scroll-snap row, virtualized pager). Arrow keys on a dot move
  * one page in reading direction, as in Carousel's controls.
  */
-export const PageIndicator = forwardRef(function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, onCurrentIndexChange, composeAccessibleName, className, onKeyDown, onFocusCapture, layoutStyle, ...props }, ref) {
+export const PageIndicator = forwardRef(function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive = true, density = "comfortable", onCurrentIndexChange, composeAccessibleName, className, onKeyDown, onFocusCapture, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
     const host = useRef(null);
     const lastFocused = useRef(null);
@@ -31,7 +31,7 @@ export const PageIndicator = forwardRef(function PageIndicator({ label, count, c
     const descriptor = { count, currentIndex, ...(maxVisibleDots === undefined ? {} : { maxVisibleDots }) };
     const dots = resolvePageIndicator(descriptor, composeAccessibleName);
     const current = dots.find(dot => dot.current);
-    return _jsx("div", { ...props, ref: node => { host.current = node; assignRef(ref, node); }, style: { ...props.style, ...layoutStyle }, role: interactive ? "group" : "img", "aria-label": interactive ? label : current.accessibleName, "data-interactive": interactive, className: classNames("hjm-page-indicator", className), onFocusCapture: event => {
+    return _jsx("div", { ...props, ref: node => { host.current = node; assignRef(ref, node); }, style: { ...props.style, ...layoutStyle }, role: interactive ? "group" : "img", "aria-label": interactive ? label : current.accessibleName, "data-interactive": interactive, "data-density": density, className: classNames("hjm-page-indicator", className), onFocusCapture: event => {
             lastFocused.current = event.target instanceof HTMLElement ? event.target : null;
             onFocusCapture?.(event);
         }, onKeyDown: (event) => {

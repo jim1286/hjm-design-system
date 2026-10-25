@@ -67,6 +67,7 @@ import { PageIndicator } from "@hjmds/react-native/carousel";
 | `count` | 1 이상 정수 | 필수 | 페이지 수. 밖이면 `RangeError` |
 | `maxVisibleDots` | 1 이상 정수 | 전체 | 현재 페이지를 포함하는 연속 창만 표시. 이름·이동은 전체 페이지 기준이며 창 크기는 페이지 수를 넘지 않는다(checkout 미게시) |
 | `interactive` | `boolean` | `true` | `false`이면 위치만 표시하며 점은 누름 대상/키보드/조절 행동을 만들지 않는다. 별도 이전·다음 컨트롤이 있는 작은 표시용(checkout 미게시) |
+| `density` | `comfortable / compact` | `comfortable` | compact는 점 중심 간격과 가로 누름 영역을 24로 줄이고 세로 44는 유지한다. 좁은 상단 표시용 개발 API |
 | `currentIndex` | 0부터 `count - 1` | 필수 | 페이저가 확정한 현재 페이지. 컴포넌트는 따로 기억하지 않는다 |
 | `onCurrentIndexChange` | `(index: number) => void` | 필수 | 점 누름·Web 화살표 키·Native 조절 동작이 요청한 페이지. 처음·끝에서는 같은 값이 다시 올 수 있다(넘어가지 않고 멈춘다) |
 | `composeAccessibleName` | `({ position, total }) => string` | 필수 | 점 하나의 이름. 숫자 문법은 제품 문구다. 빈 문자열은 `TypeError` |

@@ -5,8 +5,10 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { iconTileRecipe, screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { BottomNavigation, BottomNavigationInsetProvider, HjmProvider } from "../src/index.js";
-import { IconTile, NotificationInboxScreen, ScreenLayout } from "../src/screens.js";
+import { ConversationListScreen, NotificationRow, IconTile, NotificationInboxScreen, ScreenLayout } from "../src/screens.js";
 import "../src/styles.css";
+
+import { ConversationRow } from "../src/conversation-row.js";
 
 let host: HTMLDivElement;
 let root: Root;
@@ -77,4 +79,23 @@ it("ScreenLayout applies the bar inset once: scroll=\"content\", a composed scre
   await inset();
   expect(paddingsAbove("[data-list]")).toHaveLength(1);
   expect(paddingsAbove("[data-list]")[0]).toBeCloseTo(covered, 0);
+});
+
+
+it("keeps populated conversation and notification previews on one gutter", async () => {
+  const shell = (screen: React.ReactNode) => <HjmProvider><div style={{height: 600}}>{screen}</div></HjmProvider>;
+  await act(async () => root.render(shell(<ConversationListScreen title="Messages" search={<input aria-label="Search" />}>
+    <a href="#peer"><ConversationRow title="Peer" preview="Hello" metadata="Now" avatar={<span>Avatar</span>} /></a>
+  </ConversationListScreen>)));
+  const body = host.querySelector(".hjm-screen__body")!;
+  const row = host.querySelector("[data-hjm-conversation-row]")!;
+  expect(px(body, "padding-left")).toBe(0);
+  expect(row.firstElementChild!.getBoundingClientRect().left - body.getBoundingClientRect().left).toBe(gutter);
+  expect(host.querySelector(".hjm-screen__notice input")!.getBoundingClientRect().left - body.getBoundingClientRect().left).toBe(gutter);
+  expect(row.closest(".hjm-card, .hjm-list")).toBeNull();
+  await act(async () => root.render(shell(<NotificationInboxScreen title="Inbox" rowPresentation="preview">
+    <NotificationRow preview="Reply" metadata="Now" avatar={<span>Avatar</span>} />
+  </NotificationInboxScreen>)));
+  expect(px(host.querySelector(".hjm-screen__body")!, "padding-left")).toBe(0);
+  expect(host.querySelector(".hjm-screen__notice")).toBeNull();
 });

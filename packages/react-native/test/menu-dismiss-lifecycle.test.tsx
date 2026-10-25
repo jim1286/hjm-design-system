@@ -86,3 +86,13 @@ it("waits for shown iOS modal dismissal and ignores duplicate completion", async
   await act(async () => { dismiss(); dismiss(); });
   expect(action).toHaveBeenCalledOnce();
 });
+
+it("header close dismisses a bottom menu without dispatching an item action", () => {
+  const action = vi.fn();
+  act(() => { renderer = create(<HjmNativeProvider><Menu defaultOpen presentation="bottom" title="Manage" description="Packing · v2" dismissPlacement="header" triggerLabel="Menu" dismissLabel="Close menu" items={[{ id: "edit", label: "Edit" }]} onActionAfterDismiss={action} /></HjmNativeProvider>); });
+  const closeButtons = renderer.root.findAllByType(Pressable).filter(node => node.props.accessibilityLabel === "Close menu");
+  expect(closeButtons).toHaveLength(2);
+  act(() => closeButtons.at(-1)!.props.onPress());
+  expect(renderer.root.findByType(Modal).props.visible).toBe(false);
+  expect(action).not.toHaveBeenCalled();
+});

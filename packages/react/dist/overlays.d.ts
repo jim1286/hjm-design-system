@@ -204,6 +204,10 @@ type MenuBaseProps = Readonly<{
     presentation?: MenuPresentation;
     /** Required for grouped/bottom; accessible and visible dismiss label. */
     dismissLabel?: string;
+    title?: string;
+    description?: string;
+    /** Modal menus may put the close command beside a compact heading. */
+    dismissPlacement?: "header" | "footer" | "none";
     /** Logical alignment against the trigger; automatically mirrors in RTL. */
     align?: "start" | "end";
     disabled?: boolean;

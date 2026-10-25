@@ -36,6 +36,8 @@ export type PageIndicatorProps = Readonly<{
     maxVisibleDots?: number;
     /** Position-only dots when separate pager controls own navigation. Default true retains 44pt dot targets. */
     interactive?: boolean;
+    /** Compact dots retain full target height with narrower, non-overlapping horizontal targets. */
+    density?: "comfortable" | "compact";
     /** Requested page from a dot press or an adjustable action. It can repeat the current index. */
     onCurrentIndexChange: (index: number) => void;
     composeAccessibleName: ComposePageIndicatorAccessibleName;
@@ -49,6 +51,6 @@ export type PageIndicatorProps = Readonly<{
  * Carousel's position dots for a product-owned pager. The row is one adjustable element, like a platform page
  * control, so a screen reader hears "label: page name" and swipes up/down to move; each dot is a 44pt target.
  */
-export declare function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive, onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }: PageIndicatorProps): import("react").JSX.Element;
+export declare function PageIndicator({ label, count, currentIndex, maxVisibleDots, interactive, density, onCurrentIndexChange, composeAccessibleName, labels, layoutStyle, testID }: PageIndicatorProps): import("react").JSX.Element;
 export declare function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, swipeEnabled, slideMaxHeight }: CarouselProps): import("react").JSX.Element;
 //# sourceMappingURL=carousel.d.ts.map

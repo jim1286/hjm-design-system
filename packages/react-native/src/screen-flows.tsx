@@ -1,3 +1,5 @@
+import { Children, Fragment, isValidElement } from "react";
+import { IdentityAction } from "./internal/identity-action.js";
 import type { ComponentRef } from "react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createContext, useContext } from "react";
@@ -12,10 +14,11 @@ import { AlertDialog, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
-import { DrawnMoreVertical } from "./internal/drawn-glyphs.js";
+import { DrawnMoreVertical, DrawnPencil } from "./internal/drawn-glyphs.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
 export type { MediaAlbum } from "./internal/media-album.js";
@@ -77,14 +80,17 @@ export function EditorScreen({children,dirty,submitPlacement="footer",submit,can
  >{children}</ScreenLayout><AlertDialog open={confirm&&!cancelLocked&&!stepping} onOpenChange={setConfirm} request={{...discard,mode:"confirm",onConfirm:leave}}/></>;
 }
 
-export type ProfileScreenProps = Base & {summary:ReactNode;edit:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode;
+export type ProfileScreenProps = Base & {summary:ReactNode;
+ /** Optional since 2026-10-25: when the profile photo itself is the edit (portfolio rule "tap my photo to change it"), a
+  * separate edit button would duplicate it. Products still pass one for other edits or a guest sign-in action. */
+ edit?:ScreenFlowAction;children?:ReactNode;accountActions?:ReactNode;
  /** `below-summary` (default): ghost button under the summary. `summary`: the edit action goes first in the action row
   * of the ProfileSummary inside `summary` (2026-10-15 utilverse account decision: the edit action belongs inside the
   * profile card). With `summary`, the slot must contain a ProfileSummary, or the edit action is not drawn. */
  editPlacement?:"below-summary"|"summary"};
 // Hands ProfileScreen's edit action to the ProfileSummary inside its summary slot, wherever the product nests it.
 const ProfileEditContext=createContext<ScreenFlowAction|undefined>(undefined);
-export function ProfileScreen({summary,edit,children,accountActions,editPlacement="below-summary",...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl">{editPlacement==="summary"?<ProfileEditContext.Provider value={edit}>{summary}</ProfileEditContext.Provider>:<CompositionLayout footer={<Action action={edit} secondary/>}>{summary}</CompositionLayout>}{children}{accountActions}</Stack></ScreenLayout>;}
+export function ProfileScreen({summary,edit,children,accountActions,editPlacement="below-summary",...screen}:ProfileScreenProps){return <ScreenLayout {...screen}><Stack gap="xl">{editPlacement==="summary"?<ProfileEditContext.Provider value={edit}>{summary}</ProfileEditContext.Provider>:(edit?<CompositionLayout footer={<Action action={edit} secondary/>}>{summary}</CompositionLayout>:summary)}{children}{accountActions}</Stack></ScreenLayout>;}
 
 /** Operator decision on a report (dismiss, hide, uphold, overturn…). Labels are product copy; ids are product keys.
  * With `confirmation`, pressing opens that AlertDialog and only its `onConfirm` acts (same rule as `block`). */
@@ -514,7 +520,13 @@ export function OnboardingScreen({steps,index,onIndexChange,nextLabel,backLabel,
 export type CommentThreadItem = Readonly<{
  /** Root-only reply branch. Total can exceed the loaded preview; HJM owns its indentation and expansion. */
  repliesCount?:number;repliesNotice?:ReactNode;repliesFooter?:ReactNode;
- id:string;parentId:string|null;author:string;authorBadge?:ReactNode;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
+ /**
+  * Root-only next server page of replies (2026-10-25 five-at-a-time policy). HJM calls `onLoadMore` from the branch's
+  * "more" action once every loaded reply is shown; the product fetches `commentThreadRecipe.replyPageSize` more and
+  * reports `pending` so the action cannot double-request. Omit it when every reply is already in `items`.
+  */
+ repliesPage?:Readonly<{onLoadMore():void;pending?:boolean}>;
+ id:string;parentId:string|null;author:string;authorBadge?:ReactNode;body:ReactNode;bodyText?:string;timeLabel:string;timeDateTime?:string;likeCountLabel:string;avatar?:ReactNode;avatarAction?:Readonly<{label:string;onPress():void; disabled?: boolean }>;likeIcon:ReactNode;likeLabel:string;likeAction?:ReactNode;actions?:ReactNode;canReply?:boolean;replyDisabled?:boolean;
  /** Long-press the comment (author and body) to react; the product owns the stored value and summary. */
  reactions?:CommentReactions;reactionSummary?:ReactNode;
  /** Optional photo or sticker under the body; HJM bounds its width and corners, the product sizes the image. */
@@ -554,7 +566,14 @@ export type CommentMenu = Readonly<{
   /** Runs after the sheet closes, so a confirmation dialog does not stack on the closing modal. */
   onAction(item: CommentThreadItem, id: string): void;
 }>;
-export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode;commentMenu?:CommentMenu};
+export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[];expandedIds:readonly string[];onExpandedChange(id:string):void;onLike(id:string):void;onReply(id:string):void;replyLabel:string;repliesLabel(count:number,expanded:boolean):string;composer?:ReactNode;threadHeader?:ReactNode;threadFooter?:ReactNode;commentMenu?:CommentMenu;
+ /**
+  * Label of an open branch's "more" action for the replies not shown yet (2026-10-25 policy: branches open and extend
+  * `commentThreadRecipe.replyPageSize` at a time). Without it the branch keeps the earlier show-all behaviour.
+  */
+ moreRepliesLabel?(remaining:number):string;
+ /** A reply that must stay shown even past the opened page (just sent, opened from a notification); expansion stays product-controlled. */
+ revealedReplyId?:string};
 export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string; commentMenu?: CommentMenu }>;
 /** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
 function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{label:string;onPress():void;disabled?:boolean;expanded?:boolean}>){
@@ -565,7 +584,7 @@ function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;me
  const {palette}=useHjmNativeTheme();
  const label=menu.label(item);
  return <Menu presentation={menu.presentation ?? "anchored"} triggerLabel={label} dismissLabel={menu.dismissLabel} items={items.map(entry=>({id:entry.id,label:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))}
-  onActionAfterDismiss={id=>menu.onAction(item,id)} renderTrigger={trigger=><IconButton label={label} tone="ghost" onPress={trigger.onPress}><DrawnMoreVertical size={commentThreadRecipe.menuGlyphSize} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>}/>;
+  onActionAfterDismiss={id=>menu.onAction(item,id)} renderTrigger={trigger=><IconButton label={label} tone="ghost" size={commentThreadRecipe.actionButtonSize} onPress={trigger.onPress}><DrawnMoreVertical size={commentThreadRecipe.menuGlyphSize} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>}/>;
 }
 
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
@@ -581,12 +600,12 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  // renders (token × controlled/OS text scale). When HJM's own like/more is last, the whole column takes the IconButton
  // edge overhang so its glyph slot ends on the row inset; the 44-wide like count shares the column and would absorb a
  // margin on the button alone.
- const visibleTarget=visibleControlHeight(iconButtonRecipe.sizes.medium.diameter,theme.environment.minimumVisualTarget);
+ const visibleTarget=visibleControlHeight(iconButtonRecipe.sizes[commentThreadRecipe.actionButtonSize].diameter,theme.environment.minimumVisualTarget);
  const anchorVariant=item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant;
  const anchorOffset=(theme.tokens.typography[anchorVariant].lineHeight*theme.textScaling.scale-visibleTarget)/2;
- const edgeOverhang=menuItems.length||item.actions==null&&item.likeAction===undefined?resolveIconButtonEdgeOverhang("ghost","medium",visibleTarget):0;
+ const edgeOverhang=menuItems.length||item.actions==null&&item.likeAction===undefined?resolveIconButtonEdgeOverhang("ghost",commentThreadRecipe.actionButtonSize,visibleTarget):0;
  // The like count sits under the heart so the text column carries only identity, body and reply.
- return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<View style={{width:avatarSize,alignItems:"center"}}>{item.avatar}</View>:null}<View style={{flex:1,minWidth:0,gap:commentThreadRecipe.lineGap}}>
+ return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<View style={{width:item.avatarAction?iconButtonRecipe.sizes.medium.diameter:avatarSize,alignItems:"center"}}>{item.avatarAction?<IdentityAction action={item.avatarAction}>{item.avatar}</IdentityAction>:item.avatar}</View>:null}<View style={{flex:1,minWidth:0,gap:commentThreadRecipe.lineGap}}>
  {/* A definite media width resolves percentage-sized children; the parent cap preserves narrow comment columns (Spint photo adoption). */}
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
  {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text>{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.authorBadge}{item.timeLabel&&!timeInActions?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
@@ -595,12 +614,14 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  {(timeInActions&&item.timeLabel)||(item.canReply??item.parentId===null)||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.reactionSummary}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
  {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
  {item.panel!=null?<View style={{marginTop:commentThreadRecipe.panelGap-commentThreadRecipe.lineGap}}>{item.panel}</View>:null}</View>
- <View style={{flexShrink:0,marginTop:anchorOffset,...(edgeOverhang?{marginEnd:-edgeOverhang}:{})}}><Stack axis="inline" gap={0} align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<View style={{width:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted" align="center">{item.likeCountLabel}</Text></View>:null}</View></Stack>;
+ <View style={{flexShrink:0,marginTop:anchorOffset,...(edgeOverhang?{marginEnd:-edgeOverhang}:{})}}><Stack axis="inline" gap={0} align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" size={commentThreadRecipe.actionButtonSize} onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<View style={{width:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted" align="center">{item.likeCountLabel}</Text></View>:null}</View></Stack>;
 }
 
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
-export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,commentMenu,...screen}:CommentThreadScreenProps){
+export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,onReply,replyLabel,repliesLabel,composer,threadHeader,threadFooter,commentMenu,moreRepliesLabel,revealedReplyId,...screen}:CommentThreadScreenProps){
  validateCommentThread(items);
+ // How far the reader opened each branch is presentation state; data, ordering and expansion stay with the product.
+ const [openedReplies,setOpenedReplies]=useState<Readonly<Record<string,number>>>({});
  // Index replies once; rescanning every item for each root makes long threads quadratic.
  const roots:CommentThreadItem[]=[], repliesByParent=new Map<string,CommentThreadItem[]>();
  const expanded=new Set(expandedIds);
@@ -611,7 +632,7 @@ export function CommentThreadScreen({items,expandedIds,onExpandedChange,onLike,o
  const row=(item:CommentThreadItem)=><CommentThreadRow key={item.id} item={item} onLike={onLike} onReply={onReply} replyLabel={replyLabel} {...(commentMenu===undefined?{}:{commentMenu})}/>;
  // Product context belongs in the same scroll body as comments. Putting a tall
  // overview in the fixed header forced a second scroll region in Spint (2026-10-08).
- return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<View style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];const total=item.repliesCount;if(total!==undefined&&(!Number.isSafeInteger(total)||total<0))throw new RangeError("CommentThreadItem repliesCount must be nonnegative");const count=Math.max(replies.length,total??0);return <View key={item.id} style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{count||item.repliesNotice||item.repliesFooter?<View style={{gap:commentThreadRecipe.rowGap,marginStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(count,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?<>{item.repliesNotice}{replies.map(row)}{item.repliesFooter}</>:null}</View>:null}</View>;})}</View>{threadFooter}</Stack></ScreenLayout>;
+ return <ScreenLayout {...screen} footer={!screen.state||screen.state.kind==="ready"||screen.state.kind==="empty"?composer:null}><Stack gap="lg">{threadHeader}<View style={{gap:commentThreadRecipe.rowGap}}>{roots.map(item=>{const replies=repliesByParent.get(item.id)??[];const total=item.repliesCount;if(total!==undefined&&(!Number.isSafeInteger(total)||total<0))throw new RangeError("CommentThreadItem repliesCount must be nonnegative");const count=Math.max(replies.length,total??0);return <View key={item.id} style={{gap:commentThreadRecipe.rowGap}}>{row(item)}{count||item.repliesNotice||item.repliesFooter?<View style={{gap:commentThreadRecipe.rowGap,marginStart:commentThreadRecipe.replyIndent}}><CommentTextAction label={repliesLabel(count,expanded.has(item.id))} expanded={expanded.has(item.id)} onPress={()=>onExpandedChange(item.id)}/>{expanded.has(item.id)?<>{item.repliesNotice}{(()=>{if(!moreRepliesLabel)return replies.map(row);const visible=openedReplies[item.id]??commentThreadRecipe.replyPageSize;const page=resolveCommentReplyPage({loaded:replies.length,total:count,visible,revealIndex:replies.findIndex(reply=>reply.id===revealedReplyId),canFetch:item.repliesPage!==undefined});return <>{replies.slice(0,page.shown).map(row)}{page.more?<CommentTextAction label={moreRepliesLabel(page.remaining)} disabled={page.more==="fetch"&&!!item.repliesPage?.pending} onPress={()=>{setOpenedReplies(current=>({...current,[item.id]:page.shown+commentThreadRecipe.replyPageSize}));if(page.more==="fetch")item.repliesPage?.onLoadMore();}}/>:null}</>;})()}{item.repliesFooter}</>:null}</View>:null}</View>;})}</View>{threadFooter}</Stack></ScreenLayout>;
 }
 
 export type ProfileSummaryProps = Readonly<{
@@ -620,6 +641,13 @@ export type ProfileSummaryProps = Readonly<{
   avatar: ReactNode;
   badge?: ReactNode;
   nameActions?: ReactNode;
+  /**
+   * Edit beside the name (2026-10-25 user rule): on one's own profile the name carries a pencil IconButton that opens the
+   * nickname change, while tapping the photo (`Avatar.action`) changes the photo. HJM owns the icon, size and placement
+   * (before `nameActions`); the product supplies the label and the route. Pass `icon` with the product's own pencil
+   * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
+   */
+  nameEdit?: ScreenFlowAction;
   stats?: readonly Readonly<{ id: string; value: string; label: string; onPress?(): void; disabled?: boolean }>[];
   actions?: ReactNode;
   actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
@@ -627,18 +655,38 @@ export type ProfileSummaryProps = Readonly<{
 }>;
 
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
-export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
+// Fragments group JSX without creating an action cell; menus remain one cell.
+function profileActionItems(actions: ReactNode): ReactNode[] {
+  return Children.toArray(actions).flatMap(action =>
+    isValidElement<{ children?: ReactNode }>(action) && action.type === Fragment
+      ? profileActionItems(action.props.children)
+      : [action]);
+}
+
+// react-native-svg is an optional peer: screen-flows must not import icon-svg (2026-10-25 Metro crash in apps without it).
+// The fallback pencil is the View-drawn glyph like the comment ⋮; products normally pass their own glyph via `nameEdit.icon`.
+function NameEditGlyph() {
+  const { palette } = useHjmNativeTheme();
+  return <DrawnPencil size={glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph]} color={resolveIconButtonPresentation("ghost", palette).content} />;
+}
+
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
   const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];
   const edit = useContext(ProfileEditContext);
   const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
   const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onPress={edit.onAction}>{edit.label}</Button> : null;
-  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<View style={{ alignItems: "center", justifyContent: "center", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }}>{avatar}</View>} badge={badge} actions={nameActions} footer={children}>
+  const nameEditButton = nameEdit ? <IconButton label={nameEdit.label} tone="ghost" size={profileSummaryRecipe.nameEdit.size} disabled={!!(nameEdit.disabled || nameEdit.pending)} onPress={nameEdit.onAction}>{nameEdit.icon ?? <NameEditGlyph />}</IconButton> : null;
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<View style={{ alignItems: "center", justifyContent: "center", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }}>{avatar}</View>} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{stats.map(stat =>
       <Stack key={stat.id} gap="xxs" align="center" justify="center" layoutStyle={{ flex: 1, minWidth: 0 }}>
         {stat.onPress ? <Button tone="ghost" accessibilityLabel={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onPress={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
           : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
       </Stack>)}</Stack> : null}
-    {editButton || actions ? <Stack axis={actionLayout.axis} gap={actionLayout.gap} wrap={actionsLayout === "inline"} layoutStyle={{ width: "100%" }}>{editButton}{actions}</Stack> : null}
+    {editButton || actions ? actionsLayout === "equal" ? (
+      <Grid columns={{ compact: Math.max(1, profileActionItems([editButton, actions]).length) }} gap={{ compact: actionLayout.gap }} style={{ width: "100%" }}>
+        {profileActionItems([editButton, actions])}
+      </Grid>
+    ) : <Stack axis={actionLayout.axis} gap={actionLayout.gap} wrap={actionsLayout === "inline"} layoutStyle={{ width: "100%" }}>{editButton}{actions}</Stack> : null}
   </CompositionLayout>;
 }

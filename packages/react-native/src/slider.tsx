@@ -9,6 +9,7 @@ import {
 } from "@hjmds/design-contracts/components/slider";
 import {
   forwardRef,
+  type ReactNode,
   useEffect,
   useMemo,
   useRef,
@@ -66,8 +67,14 @@ export type SliderProps = NativeSliderViewProps &
     layoutStyle?: HjmCompositionStyleProp;
   }>;
 
+/**
+ * HJM-internal: ColorPicker's hue and opacity bars reuse this gesture and accessibility logic with a painted track.
+ * The visible header is dropped (the bar itself shows the value) and the thumb shows the colour under it.
+ */
+export type SliderPrivateProps = Readonly<{ hjmColorTrack?: Readonly<{ fill: ReactNode; thumbFill: ReactNode; height: number; thumbDiameter: number; thumbBorder: number }> }>;
+
 /** Dependency-free horizontal Slider using the Native responder system. */
-export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, SliderProps>> = forwardRef<ComponentRef<typeof View>, SliderProps>(function Slider(
+export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, SliderProps>> = forwardRef<ComponentRef<typeof View>, SliderProps & SliderPrivateProps>(function Slider(
   {
     label,
     min,
@@ -85,6 +92,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
     onBlur,
     onLayout,
     layoutStyle,
+    hjmColorTrack,
     ...viewProps
   },
   forwardedRef,
@@ -107,6 +115,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
     ...(valueText === undefined ? {} : { valueText }),
   });
   const recipe = sliderRecipe.sizes.medium;
+  const thumbDiameter = hjmColorTrack?.thumbDiameter ?? recipe.thumbDiameter;
   const [layoutWidth, setLayoutWidth] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -136,9 +145,9 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
   };
   const updateFromLocation = (locationX: number) => {
     if (disabled) return;
-    const extent = layoutWidth - recipe.thumbDiameter;
+    const extent = layoutWidth - thumbDiameter;
     if (extent <= 0) return;
-    const offset = locationX - recipe.thumbDiameter / 2;
+    const offset = locationX - thumbDiameter / 2;
     publish(resolveSliderValueFromOffset(
       descriptor,
       offset,
@@ -229,7 +238,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
   }, [disabled]);
 
   const fraction = resolveSliderFillFraction(descriptor);
-  const travel = Math.max(0, layoutWidth - recipe.thumbDiameter);
+  const travel = Math.max(0, layoutWidth - thumbDiameter);
   const visualFraction = environment.direction === "rtl" ? 1 - fraction : fraction;
   const thumbLeft = travel * visualFraction;
   const visibleValue = valueText ?? String(currentValue);
@@ -270,25 +279,27 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
         layoutStyle,
       ]}
     >
-      <View
-        accessible={false}
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{
-          alignItems: "baseline",
-          direction: environment.direction,
-          flexDirection: "row",
-          gap: sliderRecipe.header.gap,
-          justifyContent: "space-between",
-        }}
-      >
-        <NativeText {...labelTextScaleProps}>
-          {label}
-        </NativeText>
-        <NativeText {...valueTextScaleProps}>
-          {visibleValue}
-        </NativeText>
-      </View>
+      {hjmColorTrack ? null : (
+        <View
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            alignItems: "baseline",
+            direction: environment.direction,
+            flexDirection: "row",
+            gap: sliderRecipe.header.gap,
+            justifyContent: "space-between",
+          }}
+        >
+          <NativeText {...labelTextScaleProps}>
+            {label}
+          </NativeText>
+          <NativeText {...valueTextScaleProps}>
+            {visibleValue}
+          </NativeText>
+        </View>
+      )}
       <View
         {...viewProps}
         {...panResponder.panHandlers}
@@ -324,62 +335,103 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
           },
         ]}
       >
-        <View
-          pointerEvents="none"
-          style={{
-            backgroundColor: colors.surfaceAlt,
-            borderColor: colors.textMuted,
-            borderRadius: tokens.radius.full,
-            borderWidth: 1,
-            height: recipe.trackHeight,
-            left: recipe.thumbDiameter / 2,
-            position: "absolute",
-            right: recipe.thumbDiameter / 2,
-          }}
-        />
-        <View
-          pointerEvents="none"
-          style={{
-            backgroundColor: colors.contentBrand,
-            borderRadius: tokens.radius.full,
-            height: recipe.trackHeight,
-            ...(environment.direction === "rtl"
-              ? { right: recipe.thumbDiameter / 2 }
-              : { left: recipe.thumbDiameter / 2 }),
-            position: "absolute",
-            width: travel * fraction,
-          }}
-        />
-        {focused ? (
-          <View
-            pointerEvents="none"
-            style={{
-              borderColor: colors.contentBrand,
-              borderRadius: tokens.radius[sliderRecipe.radius],
-              borderWidth: sliderRecipe.states.focus.width,
-              height: recipe.thumbDiameter + sliderRecipe.states.focus.offset * 2,
-              left: thumbLeft - sliderRecipe.states.focus.offset,
-              position: "absolute",
-              width: recipe.thumbDiameter + sliderRecipe.states.focus.offset * 2,
-              zIndex: 1,
-            }}
-          />
-        ) : null}
-        <View
-          pointerEvents="none"
-          style={{
-            backgroundColor: colors.bg,
-            borderColor: colors.contentBrand,
-            borderRadius: tokens.radius.full,
-            borderWidth: 2,
-            height: recipe.thumbDiameter,
-            left: thumbLeft,
-            opacity: dragging ? sliderRecipe.states.draggedOpacity : 1,
-            position: "absolute",
-            width: recipe.thumbDiameter,
-            zIndex: 2,
-          }}
-        />
+        {hjmColorTrack ? (
+          <>
+            <View
+              pointerEvents="none"
+              style={{
+                borderRadius: tokens.radius.full,
+                height: hjmColorTrack.height,
+                left: 0,
+                overflow: "hidden",
+                position: "absolute",
+                right: 0,
+              }}
+            >
+              {hjmColorTrack.fill}
+            </View>
+            <View
+              pointerEvents="none"
+              style={{
+                borderColor: focused ? colors.contentBrand : "#ffffff",
+                borderRadius: tokens.radius.full,
+                borderWidth: hjmColorTrack.thumbBorder,
+                elevation: 2,
+                height: thumbDiameter,
+                left: thumbLeft,
+                overflow: "hidden",
+                position: "absolute",
+                shadowColor: "#000000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.3,
+                shadowRadius: 2,
+                width: thumbDiameter,
+                zIndex: 2,
+              }}
+            >
+              {hjmColorTrack.thumbFill}
+            </View>
+          </>
+        ) : (
+          <>
+            <View
+              pointerEvents="none"
+              style={{
+                backgroundColor: colors.surfaceAlt,
+                borderColor: colors.textMuted,
+                borderRadius: tokens.radius.full,
+                borderWidth: 1,
+                height: recipe.trackHeight,
+                left: thumbDiameter / 2,
+                position: "absolute",
+                right: thumbDiameter / 2,
+              }}
+            />
+            <View
+              pointerEvents="none"
+              style={{
+                backgroundColor: colors.contentBrand,
+                borderRadius: tokens.radius.full,
+                height: recipe.trackHeight,
+                ...(environment.direction === "rtl"
+                  ? { right: thumbDiameter / 2 }
+                  : { left: thumbDiameter / 2 }),
+                position: "absolute",
+                width: travel * fraction,
+              }}
+            />
+            {focused ? (
+              <View
+                pointerEvents="none"
+                style={{
+                  borderColor: colors.contentBrand,
+                  borderRadius: tokens.radius[sliderRecipe.radius],
+                  borderWidth: sliderRecipe.states.focus.width,
+                  height: thumbDiameter + sliderRecipe.states.focus.offset * 2,
+                  left: thumbLeft - sliderRecipe.states.focus.offset,
+                  position: "absolute",
+                  width: thumbDiameter + sliderRecipe.states.focus.offset * 2,
+                  zIndex: 1,
+                }}
+              />
+            ) : null}
+            <View
+              pointerEvents="none"
+              style={{
+                backgroundColor: colors.bg,
+                borderColor: colors.contentBrand,
+                borderRadius: tokens.radius.full,
+                borderWidth: 2,
+                height: thumbDiameter,
+                left: thumbLeft,
+                opacity: dragging ? sliderRecipe.states.draggedOpacity : 1,
+                position: "absolute",
+                width: thumbDiameter,
+                zIndex: 2,
+              }}
+            />
+          </>
+        )}
       </View>
     </View>
   );

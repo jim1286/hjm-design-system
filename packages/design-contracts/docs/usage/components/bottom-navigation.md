@@ -279,3 +279,19 @@ Tab은 탐색 막대에 한 번 진입하고, 방향키·Home·End는 포커스�
 
 `presentation: "capsule"`의 선택 항목은 `selectionCapsule`의 neutral 선택 배경과 글자를 쓴다.
 기본 아이콘·글자 탐색의 위치 강조와 명시적 `selection: "tile"`의 브랜드 면은 기존 계약을 따른다.
+
+
+## 타일 바탕과 선택 강조 분리 (2026-10-25)
+
+오늘야구에서 선택된 파란 타일은 유지하면서 바탕을 흰색으로 사용하려는 요청으로
+`configuration.tone: "brand" | "neutral"`을 추가했다. 기본 `brand`는 기존 surfaceAccent 바탕을 유지한다.
+`neutral`은 `semanticColors.surface.default`(테마의 surface)를 사용한다. 라이트 기본 테마에서는 흰색,
+다크에서는 어두운 공통 표면이며 선택 타일의 primary/onPrimary와 모양·간격·동작은 유지한다.
+flat tile 전용이며 raised 표면과 함께 지정하면 오류다. 앱에서 팔레트나 style을 덮어쓰지 않는다.
+
+```tsx
+configuration={{ presentation: "floating", selection: "tile", tone: "neutral" }}
+```
+
+Web·Native의 `NeutralTiles`와 `NeutralTilesDark` Storybook 예제가 같은 공개 API를 사용한다.
+로컬 개발 API이며 게시된 패키지 지원은 해당 릴리스에 포함된 뒤 확인한다.

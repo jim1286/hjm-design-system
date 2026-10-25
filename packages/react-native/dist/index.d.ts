@@ -25,7 +25,7 @@ export { BottomInfo, type BottomInfoProps } from "./bottom-info.js";
 export { Collapsible, CollapsibleMarker, type CollapsibleProps } from "./collapsible.js";
 export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";
 export { TagsInput, type TagsInputProps } from "./tags-input.js";
-export { DateRangePicker, type DateRangePickerProps } from "./date-range.js";
+export { DateRangePicker, type DateRangePickerProps, type DateRangePresetOption, type DateRangeSummary } from "./date-range.js";
 export { Mentions, type MentionsProps, type MentionCandidate } from "./mentions.js";
 export { TransferList, type TransferListProps, type TransferListLabels } from "./transfer-list.js";
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior, type KeyboardAvoidingProps } from "./keyboard.js";

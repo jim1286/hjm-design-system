@@ -240,3 +240,22 @@ it("keeps the editing input mounted and locks cancellation until save settles", 
   await draw(true); await act(async () => host.querySelector<HTMLButtonElement>('[aria-label="수정 취소"]')!.click());
   expect(cancel).toHaveBeenCalledOnce(); await draw(false); expect(host.querySelector('textarea')).toBe(input);
 });
+
+it("gives profile actions equal width on one row even with a menu trigger", async () => {
+  const { ProfileSummary } = await import("../src/screen-flows.js");
+  const { Button } = await import("../src/actions.js");
+  const { Menu } = await import("../src/overlays.js");
+  await act(async () => root.render(<HjmProvider><div style={{ width: 320 }}>
+    <ProfileSummary name="Maker" avatar="🌼" actionsLayout="equal" actions={<>
+      <Menu label="Following" trigger={<Button fullWidth tone="secondary">Following</Button>}
+        items={[{ id: "unfollow", label: "Unfollow" }]} />
+      <Button fullWidth tone="secondary">Message</Button>
+    </>} />
+  </div></HjmProvider>));
+  const [follow, message] = [...host.querySelectorAll("button")].map(button => button.getBoundingClientRect());
+  expect(follow!.width).toBeGreaterThan(140);
+  expect(message!.width).toBeCloseTo(follow!.width, 0);
+  expect(message!.top).toBe(follow!.top);
+  expect(message!.height).toBe(follow!.height);
+  expect(message!.left - follow!.right).toBe(8);
+});

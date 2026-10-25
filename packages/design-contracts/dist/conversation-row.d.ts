@@ -1,6 +1,6 @@
 /** Conversation previews reserve metadata and unread status while truncating the message. */
 export declare const conversationRowRecipe: {
-    readonly avatarSize: 56;
+    readonly avatarSize: 48;
     readonly unreadSize: 10;
     readonly gap: 12;
     readonly paddingInline: 16;

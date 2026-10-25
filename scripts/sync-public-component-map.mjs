@@ -36,7 +36,7 @@ const supplemental = new Set([
   "CodeBlock", "ActivityHeatmap",
   // 2026-10-17 screen compositions registered: the 22 screen compositions (ScreenLayout, SettingsScreen, ChatScreen, …) are canonical
   // rows now (catalog.ts). The remaining names here are screen helpers without a contract of their own.
-  "ConversationRow", "SavedItemsScreen",
+  "ConversationRow", "ConversationListScreen", "SavedItemsScreen", "FollowListScreen",
   "OverviewScreen",
   // 2026-10-16: the context lets ScreenLayout/Sheet skip duplicate keyboard padding inside KeyboardAvoiding.
   // KeyboardAvoidanceContext is a companion of KeyboardAvoiding with no UI semantics of its own (stays supplemental).

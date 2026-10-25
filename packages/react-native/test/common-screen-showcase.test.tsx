@@ -52,3 +52,13 @@ it('keeps an inbox read error out of the conversation composer',async()=>{
 it('enters a ready conversation after retrying the login failure fixture',async()=>{
  vi.useFakeTimers();await render(<LoginScreenPreview stateKind="error"/>);const signIn=()=>act(()=>tree.root.findAllByType(AuthProviderButton)[0]!.props.onPress());signIn();await advance(650);expect(text()).toContain('로그인하지 못했어요');signIn();await advance(650);act(()=>tree.root.findAllByType(ListRow).find(row=>row.props.title==='서연과의 대화')!.props.onPress());expect(tree.root.findAllByType(MessageComposer)).toHaveLength(1);expect(text()).not.toContain('잠시 연결이 끊겼어요');
 });
+
+it('opens the peer profile from both chat avatar positions and preserves the draft on return',async()=>{
+ await render(<ChatScreenPreview/>);
+ act(()=>tree.root.findByType(MessageComposer).props.onValueChange('남겨 둔 메시지'));
+ const {ChatScreen}=await import('@hjmds/react-native/screens');
+ act(()=>tree.root.findByType(ChatScreen).props.avatarAction.onPress());expect(text()).toContain('산책하며 일상');
+ act(()=>tree.root.findAllByType(IconButton).find(n=>n.props.label==='대화로 돌아가기')!.props.onPress());
+ expect(tree.root.findByType(MessageComposer).props.value).toBe('남겨 둔 메시지');
+ act(()=>tree.root.findAllByType(ChatMessage)[0]!.props.avatarAction.onPress());expect(text()).toContain('산책하며 일상');
+});

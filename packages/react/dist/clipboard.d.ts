@@ -18,7 +18,7 @@ export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick" | "o
  * The last one is the part that was always missing — a label that only changes
  * visually tells a non-sighted user nothing happened.
  */
-export declare const ClipboardButton: import("react").ForwardRefExoticComponent<Omit<ButtonProps, "children" | "onCopy" | "onClick"> & Readonly<{
+export declare const ClipboardButton: import("react").ForwardRefExoticComponent<Omit<ButtonProps, "children" | "onClick" | "onCopy"> & Readonly<{
     value: string;
     /** Localized copy for both states; the renderer invents neither. */
     labels: Readonly<{
@@ -45,7 +45,7 @@ export type ClipboardIconButtonProps = Omit<IconButtonProps, "children" | "label
  * Copy as a tool action (a code block or share-link header): an icon button named by the localized label, copy → check
  * while the copied state lasts. A bordered text button there read as a form action (2026-10-17 review E10).
  */
-export declare const ClipboardIconButton: import("react").ForwardRefExoticComponent<Omit<IconButtonProps, "label" | "children" | "onCopy" | "onClick" | "selected"> & Readonly<{
+export declare const ClipboardIconButton: import("react").ForwardRefExoticComponent<Omit<IconButtonProps, "children" | "label" | "onClick" | "onCopy" | "selected"> & Readonly<{
     value: string;
     /** Localized accessible names for both states; the icon carries no visible text. */
     labels: Readonly<{

@@ -401,6 +401,7 @@ export declare const behaviorRegistry: {
             readonly labels: "visible";
             readonly selection: "emphasis";
             readonly surface: "flat";
+            readonly tone: "brand";
             readonly iconSize: "standard";
             readonly shape: "standard";
             readonly iconEmphasis: "scale";
@@ -941,7 +942,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly ["selected", "disabled"];
             readonly actions: readonly ["select"];
         };
-        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it"];
+        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it"];
     };
     readonly textFormat: {
         readonly controlled: readonly [];

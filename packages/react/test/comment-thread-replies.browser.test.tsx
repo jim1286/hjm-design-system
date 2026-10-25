@@ -49,3 +49,36 @@ it("bounds percentage media inside the shared comment column without cropping it
     expect(bounds.width / bounds.height).toBeCloseTo(4 / 3, 1);
   } finally { await act(async () => reactRoot.unmount()); host.remove(); }
 });
+
+it("opens a branch five replies at a time, then asks the product for its next server page", async () => {
+  const host = document.createElement("div"); document.body.append(host); const reactRoot = createRoot(host);
+  const reply = (index: number): CommentThreadItem => ({ id: `reply-${index}`, parentId: "root", author: "Author", timeLabel: "Now", body: <p>{`Reply ${index}`}</p>,
+    likeCountLabel: "", likeIcon: null, likeLabel: "Like", likeAction: null, canReply: false });
+  const requests: string[] = [];
+  function Example({ loaded, revealed }: { loaded: number; revealed?: string }) {
+    return <HjmProvider><CommentThreadScreen title="Comments" items={[{ id: "root", parentId: null, author: "Author", timeLabel: "Now", body: <p>Root</p>,
+      likeCountLabel: "", likeIcon: null, likeLabel: "Like", likeAction: null, canReply: false, repliesCount: 12, repliesPage: { onLoadMore: () => requests.push("next") } },
+      ...Array.from({ length: loaded }, (_, index) => reply(index))]}
+      expandedIds={["root"]} onExpandedChange={() => {}} onLike={() => {}} onReply={() => {}} replyLabel="Reply"
+      repliesLabel={(count, open) => `${open ? "Hide" : "Show"} ${count} replies`} moreRepliesLabel={count => `View ${count} more`}
+      {...(revealed ? { revealedReplyId: revealed } : {})} /></HjmProvider>;
+  }
+  const more = () => [...host.querySelectorAll("button")].find(button => button.textContent?.startsWith("View "));
+  try {
+    await act(async () => reactRoot.render(<Example loaded={7} />));
+    expect(host.textContent).toContain("Reply 4"); expect(host.textContent).not.toContain("Reply 5");
+    expect(more()!.textContent).toBe("View 7 more");
+    await act(async () => more()!.click());
+    expect(host.textContent).toContain("Reply 6"); expect(requests).toEqual([]);
+    expect(more()!.textContent).toBe("View 5 more");
+    await act(async () => more()!.click());
+    expect(requests).toEqual(["next"]);
+    await act(async () => reactRoot.render(<Example loaded={12} />));
+    expect(host.textContent).toContain("Reply 11"); expect(more()).toBeUndefined();
+    await act(async () => reactRoot.unmount());
+    const second = createRoot(host);
+    await act(async () => second.render(<Example loaded={12} revealed="reply-9" />));
+    expect(host.textContent).toContain("Reply 9"); expect(host.textContent).not.toContain("Reply 10");
+    await act(async () => second.unmount());
+  } finally { host.remove(); }
+});

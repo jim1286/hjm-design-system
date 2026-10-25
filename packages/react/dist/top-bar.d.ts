@@ -24,7 +24,7 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
-export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
+export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
     title?: string;
     /** Product control in the shared title slot; exclusive with text title affordances. */
     titleContent?: ReactNode;

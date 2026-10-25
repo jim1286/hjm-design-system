@@ -1,6 +1,7 @@
 "use client";
 import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { IdentityAction } from "./internal/identity-action.js";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
@@ -117,7 +118,7 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                     focused.current = { id: item.id, index, node: event.target }; }, className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
 });
-export const Avatar = forwardRef(function Avatar({ name, src, alt: altProp, decorative = false, fallback, renderFallback, renderImage, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, imageProps, className, layoutStyle, ...props }, ref) {
+export const Avatar = forwardRef(function Avatar({ name, action, src, alt: altProp, decorative = false, fallback, renderFallback, renderImage, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, imageProps, className, layoutStyle, ...props }, ref) {
     if (!decorative && (name === undefined || name.trim().length === 0))
         throw new TypeError("Avatar name must not be empty");
     if (renderImage && imageProps)
@@ -134,7 +135,7 @@ export const Avatar = forwardRef(function Avatar({ name, src, alt: altProp, deco
     const fail = () => { if (active.current === generation)
         setFailed(generation); };
     const initials = name !== undefined && name.trim().length > 0 ? resolveAvatarInitials(name) : null;
-    return (_jsxs("span", { ...props, "aria-hidden": decorative || props["aria-hidden"], style: { ...props.style, ...layoutStyle, "--hjm-avatar-size": `${diameter}px`,
+    const avatarNode = (_jsxs("span", { ...props, "aria-hidden": decorative || props["aria-hidden"], style: { ...props.style, ...(action ? {} : layoutStyle), "--hjm-avatar-size": `${diameter}px`,
             // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
             "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-frame": frame, "data-state": imageAvailable ? "image" : "fallback", children: [src && imageAvailable ? (renderImage ? (_jsx(Fragment, { children: renderImage({ src, alt, size: diameter, className: "hjm-avatar__image", onError: fail }) }, src)) : (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
                     if (active.current !== generation)
@@ -142,6 +143,7 @@ export const Avatar = forwardRef(function Avatar({ name, src, alt: altProp, deco
                     setFailed(generation);
                     onError?.(event);
                 } }))) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: diameter, decorative: true }) ?? fallback ?? initials })), accessory ? _jsx("span", { className: "hjm-avatar__accessory", "data-placement": accessoryPlacement, children: accessory }) : null] }));
+    return action ? _jsx(IdentityAction, { action: action, ...(layoutStyle ? { layoutStyle } : {}), children: avatarNode }) : avatarNode;
 });
 /**
  * Overlapping avatars. The overlap comes from the recipe ratio rather than a

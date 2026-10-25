@@ -119,7 +119,8 @@ import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
 export type { TabsAppearance };
 
-import { Button } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { Spinner } from "./feedback.js";
@@ -857,7 +858,7 @@ export function BottomNavigation<
     theme.palette,
   );
   const surfaceBackground = resolveColorReference(
-    raised ? raisedRecipe.background : tile ? tileRecipe.background : presentationRecipe.background,
+    raised ? raisedRecipe.background : tile ? (presentation.tone === "neutral" ? tileRecipe.neutralBackground : tileRecipe.background) : presentationRecipe.background,
     theme.palette,
   );
   const surfaceBorder = resolveColorReference(
@@ -1795,6 +1796,9 @@ export type MenuProps<
   Readonly<{
     triggerLabel: string;
     title?: string;
+    description?: string;
+    /** Header close keeps long modal action collections compact; footer preserves existing menus. */
+    dismissPlacement?: "header" | "footer" | "none";
     /** Native defaults to grouped; anchored follows the trigger, bottom presents an action list. */
     presentation?: MenuPresentation;
     items?: readonly MenuItem<Value>[];
@@ -1836,6 +1840,8 @@ export function Menu<
 >({
   triggerLabel,
   title = "",
+  description,
+  dismissPlacement = "footer",
   presentation = "grouped",
   items,
   sections,
@@ -2151,12 +2157,12 @@ export function Menu<
             onAccessibilityEscape={() => close("escape")}
             style={{
               alignSelf: "center",
-              backgroundColor: presentation === "bottom" ? "transparent" : colors.bg,
+              backgroundColor: presentation === "bottom" && dismissPlacement === "footer" ? "transparent" : colors.bg,
               borderRadius: theme.tokens.radius.lg,
               gap: presentationRecipe.gap,
               maxHeight: "75%",
               maxWidth: presentationRecipe.maxWidth,
-              padding: presentationRecipe.padding,
+              padding: dismissPlacement === "header" && presentation !== "anchored" ? spacing.sm : presentationRecipe.padding,
               width: "100%",
               ...(presentation === "bottom" ? {} : resolveNativeShadowElevation(theme.designProfile?.tokens.shadow.floating ?? shadow.floating, theme.designProfile !== undefined, 8)),
               ...(presentation === "anchored" ? {
@@ -2167,7 +2173,15 @@ export function Menu<
             }}
           >
             {/* Empty titles intentionally hide the heading; rendering an empty Text still reserves a line box. */}
-            {title.trim() ? <View onLayout={event => setHeadingHeight(event.nativeEvent.layout.height)}><Text tone="muted" variant="label" align="center">{title}</Text></View> : null}
+            {dismissPlacement === "header" && presentation !== "anchored" ? (
+              <View onLayout={event => setHeadingHeight(event.nativeEvent.layout.height)} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm, flexShrink: 0 }}>
+                <View style={{ flex: 1, minWidth: 0, gap: spacing.xxs }}>
+                  {title.trim() ? <Text variant="body" emphasis="strong" accessibilityRole="header">{title}</Text> : null}
+                  {description ? <Text tone="muted" variant="label" numberOfLines={1}>{description}</Text> : null}
+                </View>
+                <IconButton label={dismissLabel} onPress={() => close("programmatic")}><FixedGlyph fontSize={glyph.sm}>×</FixedGlyph></IconButton>
+              </View>
+            ) : title.trim() ? <View onLayout={event => setHeadingHeight(event.nativeEvent.layout.height)}><Text tone="muted" variant="label" align="center">{title}</Text>{description ? <Text tone="muted" variant="label">{description}</Text> : null}</View> : null}
             {/* A short action list must size to its content; ScrollView's default growth left empty modal space. */}
             <ScrollView onContentSizeChange={(_width, height) => setMenuHeight(height + presentationRecipe.padding * 2 + (title.trim() ? headingHeight + presentationRecipe.gap : 0))}
               style={{ flexGrow: 0, flexShrink: 1, borderRadius: theme.tokens.radius.md,
@@ -2190,7 +2204,7 @@ export function Menu<
               ) : collection}
               {asyncState.status === "loadingMore" ? <Spinner label={asyncState.message} /> : null}
             </ScrollView>
-            {presentation !== "anchored" ? <Button onPress={() => close("programmatic")} tone="secondary">{dismissLabel}</Button> : null}
+            {presentation !== "anchored" && dismissPlacement === "footer" ? <Button onPress={() => close("programmatic")} tone="secondary">{dismissLabel}</Button> : null}
           </View>
         </View>
       </Modal>
