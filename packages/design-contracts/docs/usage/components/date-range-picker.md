@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-25
 - 근거: [DateRange](../../date-range.md), 격자는 [Calendar](../../calendar.md), 규칙 함수 `src/date-range.ts`
 - 스토리북: `배포/컴포넌트/입력/기간 선택`
 
@@ -12,7 +12,8 @@
 
 시작~끝 날짜 **구간**을 고를 때 쓴다(통계 기간, 예약, 검색 필터). 필드 트리거나 오버레이 없이 달력 격자를
 그 자리에 펼쳐 둔다. 클릭 규칙은 계약이 정한다: 비었거나 완성된 구간에서 누르면 새로 시작하고,
-고르는 중에 시작보다 앞선 날을 누르면 두 값을 바꿔 담는다([표](../../date-range.md)).
+고르는 중에 시작보다 앞선 날을 누르면 두 값을 바꿔 담는다([표](../../date-range.md)). 고르는 중에는
+`maxRange`(기본 1년)를 넘는 날이 비활성이 된다.
 
 ## 쓰지 않을 때
 
@@ -76,6 +77,7 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | `descriptor.onFocusedMonthChange` | `(month: string, reason: "previous" \| "next" \| "jump") => void` | — | 없으면 이동 버튼이 비활성 |
 | `composeAccessibleName` | `(info: { date, isToday, isSelected, disabled, content? }) => string` | — (필수) | 구간 접미사는 컴포넌트가 붙인다 |
 | `rangeLabels` | `{ start: string, end: string, between: string }` | — (필수) | 셀 이름 뒤에 붙는 구간 위치 접미사 |
+| `maxRange` | `{ years?, months?, days? } \| null` | `{ years: 1 }` | 끝을 포함한 최대 길이. 달력 단위라 윤년을 낀 1월 1일~12월 31일도 1년이다. 고르는 중 범위 밖 날은 비활성, `null`이면 제한 없음. 넘는 `value`를 넘기면 `RangeError` |
 | `previousMonth` · `nextMonth` | `{ month: string, label: string }` | — | 없으면 이동 버튼이 없다 |
 | `renderCellContent` | `(date: string) => ReactNode` | — | 날짜 아래 보조 표시 |
 | Web `layoutStyle` | 배치 전용 style | — | 루트 배치 |
@@ -85,7 +87,8 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 날짜 셀은 `medium` `control.minTouchTarget` 44, `large` `glyph.xxl` 44로 같고 7열이다. Web 격자는 최소 폭 7×44 = 308을 잡는다. 월 이동 버튼 44 | `src/calendar.ts`(`calendarRecipe`), `packages/react/src/styles.css` `.hjm-calendar*` |
-| 간격 | 월 머리 안 간격·세로 간격 `spacing.xs` 8. Native 구간 점은 날짜 아래 `spacing.xxs` 4, 점 지름 구간 안 4·시작·끝 6. 스토리는 격자 아래 문구를 `Stack gap="md"`(16)로 띄운다 | `packages/react-native/src/date-range.tsx`, `showcase/web/src/patterns/DateRange.stories.tsx` |
+| 구간 칠하기 | 시작·끝은 Calendar 선택과 같은 채운 원(`action.brand`), 그 사이는 원 높이의 띠(`primary` 15%)가 시작 원 중심부터 끝 원 중심까지 잇고 주의 첫·끝 칸에서 둥글게 닫힌다. 하루 구간·시작만 고른 상태에는 띠가 없다. Web hover 미리보기의 끝은 채우지 않고 테두리만 둔다 | `dateRangeRecipe`(`src/date-range.ts`), 렌더러 `internal/calendar-grid.tsx` |
+| 간격 | 월 머리 안 간격·세로 간격 `spacing.xs` 8. 행 높이는 Calendar 날짜 셀(44) 그대로이며 구간 표시용 자리를 따로 두지 않는다. 스토리는 격자 아래 문구를 `Stack gap="md"`(16)로 띄운다 | `showcase/web/src/patterns/DateRange.stories.tsx` |
 | 순서·정렬 | 오버레이 없이 본문(폼·필터 영역·[Section](section.md)) 안에 격자를 펼쳐 둔다. 위에서 월 머리(이전 · 월 이름 · 다음) → 요일 → 날짜 격자. 선택 결과 문구와 제출 버튼은 격자 **아래**에 둔다(스토리는 `role="status"` 문구). 제출 버튼은 `isCompleteDateRange(value)`가 참일 때만 활성이다 | 같은 파일 |
 | 고정·스크롤 | 본문과 함께 스크롤한다(오버레이 없음) | — |
 | 좁은 폭·큰 글자 | Web 격자 최소 폭 308보다 좁은 컨테이너에 두지 않는다 | `packages/react/src/styles.css` `.hjm-calendar__grid` |
@@ -102,7 +105,7 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 구간 표시 | 셀 `data-range` band, 마우스 hover로 끝 미리보기 | 날짜 아래 점(고르는 중에는 반투명)과 셀 이름 |
+| 구간 표시 | 같은 원·띠. 날짜 버튼의 `data-range`·`data-range-band`, 마우스 hover로 끝 미리보기 | 같은 원·띠와 셀 이름(hover 없음) |
 | 배치 | `layoutStyle`(그 밖에 `className`) | 없음(감싸는 View로 배치) |
 
 ## 함정

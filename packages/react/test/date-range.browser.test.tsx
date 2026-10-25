@@ -19,7 +19,7 @@ const grid = {
 
 const day = (date: string) => [...document.querySelectorAll<HTMLElement>("[role='gridcell'] button, button[data-date]")]
   .find((node) => node.getAttribute("aria-label")?.startsWith(date) || node.textContent === String(Number(date.slice(-2))))!;
-const cellState = (date: string) => day(date).querySelector<HTMLElement>(".hjm-date-range__cell")?.dataset.range;
+const cellState = (date: string) => day(date).dataset.range ?? "none";
 
 function Fixture() {
   const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
@@ -77,8 +77,11 @@ it("selects the intended range through real pointer hit testing", async () => {
   await act(async () => page.getByRole("gridcell", { name: "2026-09-03", exact: true }).click());
   await act(async () => page.getByRole("gridcell", { name: "2026-09-07", exact: true }).click());
   expect(status()).toBe("2026-09-03 ~ 2026-09-07");
-  const label = day("2026-09-03").querySelector<HTMLElement>(".hjm-calendar__day-label")!;
-  expect(getComputedStyle(label).zIndex).toBe("1");
+  // Both edges are filled like a Calendar selection and the band joins them.
+  expect(day("2026-09-03").hasAttribute("data-selected")).toBe(true);
+  expect(day("2026-09-07").hasAttribute("data-selected")).toBe(true);
+  expect(day("2026-09-05").dataset.rangeBand).toBe("between");
+  expect(getComputedStyle(day("2026-09-05"), "::before").content).not.toBe("none");
 });
 
 
