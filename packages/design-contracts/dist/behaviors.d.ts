@@ -926,7 +926,7 @@ export declare const behaviorRegistry: {
     };
     readonly dateRange: {
         readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
-        readonly inputs: readonly ["grid", "monthLabel", "hoveredDate"];
+        readonly inputs: readonly ["grid", "monthLabel", "hoveredDate", "maxRange"];
         readonly stateAxes: {
             readonly value: readonly ["empty", "selecting", "complete"];
             readonly availability: readonly ["enabled", "disabled"];
@@ -941,7 +941,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly ["selected", "disabled"];
             readonly actions: readonly ["select"];
         };
-        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it"];
+        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "while-selecting-dates-beyond-the-maximum-range-are-disabled-not-rejected-after-a-press"];
     };
     readonly textFormat: {
         readonly controlled: readonly [];
