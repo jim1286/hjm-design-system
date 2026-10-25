@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "1.46.1",
+  "designSystemVersion": "1.47.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
@@ -2294,14 +2294,16 @@
       "storyId": "input/color-picker",
       "name": "ColorPicker",
       "label": "색상 선택기",
-      "companions": [],
+      "companions": [
+        "ColorSwatchPicker"
+      ],
       "extensions": [],
       "category": "input",
-      "platform": "web",
+      "platform": "adaptive",
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "unsupported"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -2321,6 +2323,18 @@
             "reduced-motion",
             "accessibility",
             "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],

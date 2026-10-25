@@ -1,11 +1,11 @@
 # Renderer evidence coverage
 
-> Generated for HJM 1.46.0. Do not edit directly; run `pnpm evidence:sync`.
+> Generated for HJM 1.47.0. Do not edit directly; run `pnpm evidence:sync`.
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
 - web: 131/131 active implementations; 130/131 required scenario sets
-- native: 113/113 active implementations; 110/113 required scenario sets
+- native: 114/114 active implementations; 111/114 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -182,6 +182,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | TimePicker | native | stable | @hjmds/react-native | ./time-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#time-picker, test/scenario-matrix.test.tsx#time-picker, test/time-picker.test.tsx#time-picker |
 | DatePicker | native | stable | @hjmds/react-native | ./date-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-picker, test/scenario-matrix.test.tsx#date-picker, test/stable-core.test.tsx#date-picker |
 | DateRangePicker | native | stable | @hjmds/react-native | ./date-range | default, dark, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-range-picker, test/scenario-matrix.test.tsx#date-range-picker, test/date-range-actions.test.tsx#date-range-picker |
+| ColorPicker | native | beta | @hjmds/react-native | ./color-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#color-picker, test/scenario-matrix.test.tsx#color-picker |
 | FilePicker | native | stable | @hjmds/react-native | ./file-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#file-picker, test/scenario-matrix.test.tsx#file-picker, test/file-picker-host-action.test.tsx#file-picker |
 | Form | native | stable | @hjmds/react-native | ./forms | default, dark, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#form, test/scenario-matrix.test.tsx#form, test/form.interaction.test.tsx#form |
 | Agreement | native | stable | @hjmds/react-native | ./agreement | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#agreement, test/scenario-matrix.test.tsx#agreement, test/agreement.interaction.test.tsx#agreement |

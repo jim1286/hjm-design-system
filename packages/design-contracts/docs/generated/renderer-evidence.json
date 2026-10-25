@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.46.0",
+  "designSystemVersion": "1.47.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.46.0",
+      "packageVersion": "1.47.0",
       "activeComponents": 131,
       "claimedComponents": 131,
       "completeScenarioComponents": 130,
@@ -2424,7 +2424,8 @@
           "claimed": true,
           "subpath": "./color-picker",
           "exportNames": [
-            "ColorPicker"
+            "ColorPicker",
+            "ColorSwatchPicker"
           ],
           "proofs": [
             {
@@ -7063,10 +7064,10 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.46.0",
-      "activeComponents": 113,
-      "claimedComponents": 113,
-      "completeScenarioComponents": 110,
+      "packageVersion": "1.47.0",
+      "activeComponents": 114,
+      "claimedComponents": 114,
+      "completeScenarioComponents": 111,
       "components": [
         {
           "componentId": "text",
@@ -9351,6 +9352,57 @@
             "reduced-motion",
             "accessibility",
             "native-actions"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "color-picker",
+          "name": "ColorPicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./color-picker",
+          "exportNames": [
+            "ColorPicker",
+            "ColorSwatchPicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "color-picker"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "color-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": []
         },
