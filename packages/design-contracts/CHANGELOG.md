@@ -1,5 +1,20 @@
 # @hjmds/design-contracts
 
+## 1.47.0
+
+### Minor Changes
+
+- 1c4f4ea: ColorPicker edits colour as HSV on Web and Native: a saturation/brightness area, hue and opacity bars, a HEX field with a round preview and preset swatches. `labels` now take `hue`, `saturation`, `brightness` (and `presets` with presets) instead of `color` and the Native RGB channel labels. The new companion `ColorSwatchPicker` picks one of several round swatches with radio semantics, in a wrapping group or a single scrolling toolbar row. Contracts add `pickerHsv`, `pickerHexFromHsv`, `pickerHueColor` and `pickerHueStops`. Native ColorPicker requires `react-native-svg`.
+- 1c4f4ea: Add FollowListScreen with controlled follower/following tabs, search, profile rows and isolated follow actions on Web and Native.
+
+  Use circular 48px standard member portraits on both renderers and profile/conversation summaries, retaining explicit compact avatar sizes. Add message actions and a sorting/search toolbar slot to relationship lists.
+
+  Make outlined avatars use a 1px borderControl outline at 50% alpha by default on Web and Native.
+
+- 1c4f4ea: Add a neutral background tone for flat tile bottom navigation, preserving the selected brand tile in light and dark themes.
+- 1c4f4ea: Unify date range paint, comment reply paging, settings groups, compact card headings and independent member actions across Web and Native. Refine notification previews, carousel gestures, menu dismissal and slider interaction while retaining product-owned destinations and content.
+- 1c4f4ea: Native `SheetPanel` takes `safeAreaBottom`: the space at its bottom edge that something else covers, such as a raised bottom-navigation item. The surface still reaches the edge; the body padding and the folded visible height grow by that amount so content and the handle stay uncovered.
+
 ## 1.46.1
 
 ### Patch Changes
