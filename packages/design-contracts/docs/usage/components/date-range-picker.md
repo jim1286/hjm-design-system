@@ -76,6 +76,7 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | `descriptor.onFocusedMonthChange` | `(month: string, reason: "previous" \| "next" \| "jump") => void` | — | 없으면 이동 버튼이 비활성 |
 | `composeAccessibleName` | `(info: { date, isToday, isSelected, disabled, content? }) => string` | — (필수) | 구간 접미사는 컴포넌트가 붙인다 |
 | `rangeLabels` | `{ start: string, end: string, between: string }` | — (필수) | 셀 이름 뒤에 붙는 구간 위치 접미사 |
+| `maxRange` | `{ years?, months?, days? } \| null` | `{ years: 1 }` | 끝을 포함한 최대 길이. 달력 단위라 윤년을 낀 1월 1일~12월 31일도 1년이다. 고르는 중 범위 밖 날은 비활성, `null`이면 제한 없음. 넘는 `value`를 넘기면 `RangeError` |
 | `previousMonth` · `nextMonth` | `{ month: string, label: string }` | — | 없으면 이동 버튼이 없다 |
 | `renderCellContent` | `(date: string) => ReactNode` | — | 날짜 아래 보조 표시. 넘길 때만 행에 보조 줄이 생긴다 |
 | `summary` | `{ startLabel, endLabel, placeholder, formatDate(date) }` | — | 격자 위 시작일·종료일 칸. 지금 고르는 쪽(`resolveDateRangeActiveEdge`: 비었으면 시작, 고르는 중이면 끝, 완성되면 없음)을 테두리로 표시한다. 문구는 i18n, 날짜 형식은 제품 소유 |

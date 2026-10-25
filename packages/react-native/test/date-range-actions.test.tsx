@@ -46,3 +46,31 @@ it("completes an accessible date range through the named native date actions", (
   expect(dateAction("2026-09-12").props.accessibilityLabel).toBe("2026-09-12, 기간 안");
   expect(dateAction("2026-09-14").props.accessibilityLabel).toBe("2026-09-14, 종료일");
 });
+
+it("disables dates past the maximum range while selecting", () => {
+  const grid = {
+    cells: Array.from({ length: 14 }, (_, index) => ({ date: `2026-09-${String(index + 1).padStart(2, "0")}` })),
+    weekdayLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const,
+    todayDate: "2026-09-10",
+  };
+  let renderer: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider>
+        <DateRangePicker
+          descriptor={{ grid, monthLabel: "September 2026" }}
+          composeAccessibleName={({ date }) => date}
+          rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }}
+          defaultValue={{ start: "2026-09-05", end: null }}
+          maxRange={{ days: 3 }}
+        />
+      </HjmNativeProvider>,
+    );
+  });
+  const disabled = (date: string) => renderer!.root.findAllByType(Pressable)
+    .find((node) => (node.props.accessibilityLabel as string).startsWith(date))!.props.accessibilityState.disabled;
+  expect(disabled("2026-09-07")).toBe(false);
+  expect(disabled("2026-09-08")).toBe(true);
+  expect(disabled("2026-09-03")).toBe(false);
+  expect(disabled("2026-09-02")).toBe(true);
+});

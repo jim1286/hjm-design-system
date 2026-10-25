@@ -15,7 +15,28 @@ export type DateRangeValue = Readonly<{
     end: string | null;
 }>;
 export declare const emptyDateRange: DateRangeValue;
-export declare function validateDateRange(value: DateRangeValue): void;
+/**
+ * 구간이 덮을 수 있는 최대 길이. 일수가 아니라 달력 단위로 센다 — "1년"을 365일로 두면 윤년을 낀
+ * 1월 1일~12월 31일이 막힌다. 끝은 포함이라 `{ years: 1 }`은 2026-01-01부터 2026-12-31까지다.
+ * 2026-10-25 사용자 요청으로 DateRangePicker 기본값은 1년이고, `null`이면 제한하지 않는다.
+ */
+export type DateRangeLimit = Readonly<{
+    years?: number;
+    months?: number;
+    days?: number;
+}>;
+export declare const defaultDateRangeLimit: DateRangeLimit;
+/** `start`를 한쪽 끝으로 둘 때 다른 끝이 올 수 있는 가장 이른·늦은 날(둘 다 포함). */
+export declare function resolveDateRangeLimitBounds(start: string, limit: DateRangeLimit): Readonly<{
+    earliest: string;
+    latest: string;
+}>;
+export declare function validateDateRange(value: DateRangeValue, limit?: DateRangeLimit | null): void;
+/**
+ * 고르는 중에 이 날짜를 끝으로 고를 수 있는지. 비었거나 완성된 구간에서는 누르면 새로 시작하므로
+ * 언제나 고를 수 있다. 막힌 날은 renderer가 비활성으로 그린다 — 눌렀다가 거절하면 이유를 알 수 없다.
+ */
+export declare function isDateWithinRangeLimit(value: DateRangeValue, date: string, limit: DateRangeLimit | null): boolean;
 /**
  * 날짜 하나를 눌렀을 때의 다음 값.
  *
@@ -25,7 +46,7 @@ export declare function validateDateRange(value: DateRangeValue): void;
  * - 고르는 중이면 **끝**을 정한다. 시작보다 앞선 날짜를 누르면 두 값을 바꿔 담는다 —
  *   거절하면 사용자가 왜 안 되는지 알 수 없다.
  */
-export declare function resolveDateRangeSelection(current: DateRangeValue, date: string): DateRangeValue;
+export declare function resolveDateRangeSelection(current: DateRangeValue, date: string, limit?: DateRangeLimit | null): DateRangeValue;
 export type DateRangeCellState = "start" | "end" | "between" | "none";
 /**
  * 한 칸이 구간 안에서 어떤 자리인지. 미리보기(`hoveredDate`)는 아직 확정되지 않은 끝을
@@ -150,4 +171,5 @@ export declare const dateRangeBehavior: {
     };
     readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it"];
 };
+export declare function dateRangeSpans(value: DateRangeValue, hoveredDate?: string | null): boolean;
 //# sourceMappingURL=date-range.d.ts.map

@@ -4,7 +4,41 @@ import { accentTint } from "./colors.js";
 import { themeColor } from "./color-references.js";
 import { spacing, stroke } from "./foundations.js";
 export const emptyDateRange = { start: null, end: null };
-export function validateDateRange(value) {
+export const defaultDateRangeLimit = { years: 1 };
+function assertDateRangeLimit(limit) {
+    const parts = [limit.years ?? 0, limit.months ?? 0, limit.days ?? 0];
+    if (parts.some((part) => !Number.isInteger(part) || part < 0) || parts.every((part) => part === 0)) {
+        throw new RangeError("Date range limit must be non-negative whole years/months/days and not empty");
+    }
+}
+function toUtc(date) {
+    return new Date(Date.UTC(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, Number(date.slice(8, 10))));
+}
+function toIso(date) {
+    return date.toISOString().slice(0, 10);
+}
+/** 달을 옮기면 그 달에 없는 날(1월 31일 + 1개월)은 말일로 맞춘다. 넘겨서 다음 달로 새지 않게 한다. */
+function shiftIsoDate(date, limit, sign) {
+    const base = toUtc(date);
+    const months = base.getUTCFullYear() * 12 + base.getUTCMonth() + sign * ((limit.years ?? 0) * 12 + (limit.months ?? 0));
+    const year = Math.floor(months / 12);
+    const month = months - year * 12;
+    const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    const shifted = new Date(Date.UTC(year, month, Math.min(base.getUTCDate(), lastDay)));
+    shifted.setUTCDate(shifted.getUTCDate() + sign * (limit.days ?? 0));
+    return toIso(shifted);
+}
+/** `start`를 한쪽 끝으로 둘 때 다른 끝이 올 수 있는 가장 이른·늦은 날(둘 다 포함). */
+export function resolveDateRangeLimitBounds(start, limit) {
+    assertIsoCalendarDate(start, "range start");
+    assertDateRangeLimit(limit);
+    const latest = toUtc(shiftIsoDate(start, limit, 1));
+    latest.setUTCDate(latest.getUTCDate() - 1);
+    const earliest = toUtc(shiftIsoDate(start, limit, -1));
+    earliest.setUTCDate(earliest.getUTCDate() + 1);
+    return { earliest: toIso(earliest), latest: toIso(latest) };
+}
+export function validateDateRange(value, limit = null) {
     if (value.start !== null)
         assertIsoCalendarDate(value.start, "range start");
     if (value.end !== null)
@@ -15,6 +49,22 @@ export function validateDateRange(value) {
     if (value.start !== null && value.end !== null && value.end < value.start) {
         throw new RangeError("Date range end must not precede start");
     }
+    if (limit !== null && value.start !== null && value.end !== null
+        && value.end > resolveDateRangeLimitBounds(value.start, limit).latest) {
+        throw new RangeError("Date range exceeds its maximum length");
+    }
+}
+/**
+ * 고르는 중에 이 날짜를 끝으로 고를 수 있는지. 비었거나 완성된 구간에서는 누르면 새로 시작하므로
+ * 언제나 고를 수 있다. 막힌 날은 renderer가 비활성으로 그린다 — 눌렀다가 거절하면 이유를 알 수 없다.
+ */
+export function isDateWithinRangeLimit(value, date, limit) {
+    assertIsoCalendarDate(date, "date");
+    validateDateRange(value, limit);
+    if (limit === null || value.start === null || value.end !== null)
+        return true;
+    const { earliest, latest } = resolveDateRangeLimitBounds(value.start, limit);
+    return date >= earliest && date <= latest;
 }
 /**
  * 날짜 하나를 눌렀을 때의 다음 값.
@@ -25,10 +75,11 @@ export function validateDateRange(value) {
  * - 고르는 중이면 **끝**을 정한다. 시작보다 앞선 날짜를 누르면 두 값을 바꿔 담는다 —
  *   거절하면 사용자가 왜 안 되는지 알 수 없다.
  */
-export function resolveDateRangeSelection(current, date) {
+export function resolveDateRangeSelection(current, date, limit = null) {
     assertIsoCalendarDate(date, "selected date");
-    validateDateRange(current);
-    if (current.start === null || current.end !== null) {
+    validateDateRange(current, limit);
+    // 최대 길이를 넘는 날은 renderer가 막지만, 그래도 들어오면 넘는 구간을 만들지 않고 거기서 새로 시작한다.
+    if (current.start === null || current.end !== null || !isDateWithinRangeLimit(current, date, limit)) {
         return { start: date, end: null };
     }
     return date < current.start
@@ -152,4 +203,11 @@ export const dateRangeBehavior = {
         "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it",
     ],
 };
+export function dateRangeSpans(value, hoveredDate) {
+    validateDateRange(value);
+    if (value.start === null)
+        return false;
+    const end = value.end ?? (hoveredDate != null && hoveredDate >= value.start ? hoveredDate : null);
+    return end !== null && end !== value.start;
+}
 //# sourceMappingURL=date-range.js.map

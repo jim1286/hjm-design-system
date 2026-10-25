@@ -3,6 +3,9 @@
 import {
   dateRangeRecipe,
   emptyDateRange,
+  defaultDateRangeLimit,
+  isDateWithinRangeLimit,
+  type DateRangeLimit,
   isCompleteDateRange,
   resolveDateRangeActiveEdge,
   resolveDateRangeCellPaint,
@@ -35,9 +38,12 @@ export type DateRangeSummary = Readonly<{
 /** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
 export type DateRangePresetOption = Readonly<{ id: string; label: string; length: DateRangePresetLength }>;
 
+// Preserve Calendar's controlled/uncontrolled month union when removing its single-date selection props.
+type RangeCalendarDescriptor<T> = T extends unknown ? Omit<T, "selectedDate" | "defaultSelectedDate" | "onSelectionChange"> : never;
+
 export type DateRangePickerProps<Content = unknown> = Readonly<{
   /** The same grid Calendar renders; the product still owns month data. */
-  descriptor: Omit<CalendarDescriptor<Content>, "selectedDate" | "defaultSelectedDate" | "onSelectionChange">;
+  descriptor: RangeCalendarDescriptor<CalendarDescriptor<Content>>;
   composeAccessibleName: ComposeCalendarAccessibleName<Content>;
   value?: DateRangeValue;
   defaultValue?: DateRangeValue;
@@ -46,6 +52,8 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   nextMonth?: CalendarMonthAction;
   /** Localized suffixes appended to a day's name when it is a range edge. */
   rangeLabels: Readonly<{ start: string; end: string; between: string }>;
+  /** Inclusive calendar span; one year by default, null removes the limit. */
+  maxRange?: DateRangeLimit | null;
   renderCellContent?: (date: string) => ReactNode;
   /** Start/end fields above the grid; the edge the next tap sets is marked (replaces a hint sentence). */
   summary?: DateRangeSummary;
@@ -65,6 +73,7 @@ export function DateRangePicker<Content = unknown>({
   previousMonth,
   nextMonth,
   rangeLabels,
+  maxRange = defaultDateRangeLimit,
   renderCellContent,
   summary,
   presets,
@@ -76,10 +85,11 @@ export function DateRangePicker<Content = unknown>({
     defaultValue: defaultValue ?? emptyDateRange,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
-  validateDateRange(value);
+  validateDateRange(value, maxRange);
   // The hovered date previews the not-yet-committed end through the same cell
   // state function the committed range uses.
-  const [hovered, setHovered] = useState<string | null>(null);
+  const [pointer, setPointer] = useState<string | null>(null);
+  const hovered = pointer !== null && isDateWithinRangeLimit(value, pointer, maxRange) ? pointer : null;
 
   const activeEdge = resolveDateRangeActiveEdge(value);
   const field = (edge: "start" | "end") => {
@@ -98,7 +108,7 @@ export function DateRangePicker<Content = unknown>({
       className={classNames("hjm-date-range", className)}
       data-selecting={value.start !== null && value.end === null ? "" : undefined}
       data-complete={isCompleteDateRange(value) || undefined}
-      onMouseLeave={() => setHovered(null)}
+      onMouseLeave={() => setPointer(null)}
     >
       {summary ? <div className="hjm-date-range__summary">{field("start")}{field("end")}</div> : null}
       {presets?.length ? (
@@ -109,6 +119,7 @@ export function DateRangePicker<Content = unknown>({
               <Chip key={preset.id} label={preset.label} size={dateRangeRecipe.presets.chipSize} selectionMode="single"
                 selected={range.start === value.start && range.end === value.end}
                 onSelectedChange={() => {
+                  validateDateRange(range, maxRange);
                   setValue(range);
                   // A preset ends today; bring its end month into view like a jump, so the band is visible.
                   const month = range.end!.slice(0, 7);
@@ -118,14 +129,17 @@ export function DateRangePicker<Content = unknown>({
           })}
         </div>
       ) : null}
-      <CalendarPaintContext.Provider value={{ paint: (date) => resolveDateRangeCellPaint(value, date, hovered), onDayHover: setHovered }}>
+      <CalendarPaintContext.Provider value={{ paint: (date) => resolveDateRangeCellPaint(value, date, hovered), onDayHover: setPointer }}>
         <Calendar<Content>
           descriptor={{
             ...descriptor,
+            // The range owns eligibility; Calendar keeps the same disabled-day interaction contract.
+            grid: { ...descriptor.grid, cells: descriptor.grid.cells.map(cell => cell.date === undefined ? cell :
+              { ...cell, disabled: cell.disabled === true || !isDateWithinRangeLimit(value, cell.date, maxRange) }) },
             // Calendar keeps single selection; the two edges and the band are painted through the internal
             // paint context, and each day's name carries the range position for assistive tech.
             selectedDate: value.end ?? value.start,
-            onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date)); },
+            onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date, maxRange)); },
           } as CalendarDescriptor<Content>}
           composeAccessibleName={(info) => {
             const state = resolveDateRangeCellState(value, info.date, hovered);

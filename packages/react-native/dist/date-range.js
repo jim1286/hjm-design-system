@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { dateRangeRecipe, emptyDateRange, resolveDateRangeActiveEdge, resolveDateRangeCellPaint, resolveDateRangeCellState, resolveDateRangePreset, resolveDateRangeSelection, validateDateRange, } from "@hjmds/design-contracts/components/date-range";
+import { dateRangeRecipe, emptyDateRange, defaultDateRangeLimit, isDateWithinRangeLimit, resolveDateRangeActiveEdge, resolveDateRangeCellPaint, resolveDateRangeCellState, resolveDateRangePreset, resolveDateRangeSelection, validateDateRange, } from "@hjmds/design-contracts/components/date-range";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { View } from "react-native";
 import { Calendar } from "./calendar.js";
@@ -8,13 +8,13 @@ import { Chip } from "./inputs.js";
 import { useControllableState } from "./internal/state.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function DateRangePicker({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, renderCellContent, summary, presets, }) {
+export function DateRangePicker({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, maxRange = defaultDateRangeLimit, renderCellContent, summary, presets, }) {
     const [value, setValue] = useControllableState({
         ...(controlledValue === undefined ? {} : { value: controlledValue }),
         defaultValue: defaultValue ?? emptyDateRange,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
-    validateDateRange(value);
+    validateDateRange(value, maxRange);
     const { palette, tokens } = useHjmNativeTheme();
     const color = (reference) => resolveColorReference(reference, palette);
     const activeEdge = resolveDateRangeActiveEdge(value);
@@ -31,6 +31,7 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
     return (_jsxs(View, { style: { gap: dateRangeRecipe.gap }, children: [summary ? _jsxs(View, { style: { flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }) : null, presets?.length ? (_jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }, children: presets.map((preset) => {
                     const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
                     return (_jsx(Chip, { label: preset.label, size: dateRangeRecipe.presets.chipSize, selectionMode: "single", selected: range.start === value.start && range.end === value.end, onPress: () => {
+                            validateDateRange(range, maxRange);
                             setValue(range);
                             // A preset ends today; bring its end month into view like a jump, so the band is visible.
                             const month = range.end.slice(0, 7);
@@ -39,11 +40,14 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
                         } }, preset.id));
                 }) })) : null, _jsx(CalendarPaintContext.Provider, { value: (date) => resolveDateRangeCellPaint(value, date, null), children: _jsx(Calendar, { descriptor: {
                         ...descriptor,
+                        // The range owns eligibility; Calendar keeps the same disabled-day interaction contract.
+                        grid: { ...descriptor.grid, cells: descriptor.grid.cells.map(cell => cell.date === undefined ? cell :
+                                { ...cell, disabled: cell.disabled === true || !isDateWithinRangeLimit(value, cell.date, maxRange) }) },
                         // Calendar keeps single selection; the two edges and the band are painted through the internal
                         // paint context, and each day's name carries the range position for assistive tech.
                         selectedDate: value.end ?? value.start,
                         onSelectionChange: (date) => { if (date !== null)
-                            setValue(resolveDateRangeSelection(value, date)); },
+                            setValue(resolveDateRangeSelection(value, date, maxRange)); },
                     }, composeAccessibleName: (info) => {
                         const state = resolveDateRangeCellState(value, info.date, null);
                         const base = composeAccessibleName(info);
