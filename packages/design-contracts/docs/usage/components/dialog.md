@@ -118,7 +118,7 @@ await handle.closed; // portal 제거·초점 복구 뒤. 다음 오버레이는
 | `size` | `small` · `medium` · `large` | `medium` | Native recipe 최대 폭 320 · 420 · 640. Web 최대 폭 28rem · 36rem · 48rem(아래 배치 표) |
 | `dismissible` | `true` · `false` | `true` | `false`면 닫기 버튼과 바깥·Escape/back 닫기가 사라진다 |
 | `busy` | `true` · `false` | `false` | 비동기 작업 중에는 `open`을 유지하고 `busy`로 반복 행동과 닫기를 막는다 |
-| `motionOrigin` | `{ x, y, width, height }`(`TransitionRect`) | 없음 | 열기 직전 측정한 출발 영역. Web viewport/Native window의 물리 좌표를 쓴다. 1.14.0 양 renderer의 게시 타입에 포함. 선택적 실험 표현이며 기기·성능 검증 완료와 구분한다 |
+| `motionOrigin` | `{ x, y, width, height }`(`TransitionRect`) | 없음 | 열기 직전 측정한 출발 영역. Web viewport/Native window의 물리 좌표를 쓴다. 1.14.0 양 renderer의 게시 타입에 포함. 선택적 stable 표현 계약이며 모든 기기·성능 검증 완료와 구분한다 |
 | `closeLabel` | 현지화 문자열 | — | 양쪽 필수. 닫기 버튼의 접근성 이름 |
 | `open`·`defaultOpen` | `boolean` | `false` | 제어형은 `open`+`onOpenChange`. Web 비제어형은 `trigger`가 필수다 |
 | `onOpenChange` | `(open: boolean, detail: { reason }) => void` | — | Web `reason`: `"trigger"`·`"close-action"`·`"escape"`·`"outside"`. Native: `"close-action"`·`"back"`·`"outside"`. `busy`이거나 `dismissible={false}`면 닫기 요청을 보내지 않는다 |
@@ -260,7 +260,7 @@ import { ImmersiveOverlay } from "@hjmds/react-native/overlays";
 - Native는 제어형과 비제어형을 렌더 중에 바꾸면 예외가 난다.
 - Native 기본 렌더러 예제는 실제 저장 서버가 없는 동기 완료 예시다. 제품에서는 저장 Promise를 반환하며, 예제의 영문 고정 문구는 제품 i18n 키로 치환한다. 닫기는 action이 요청하는 `close-action`이 맡는다.
 
-### 선택적인 트리거 형태 전환 (게시 API·실험 표현)
+### 선택적인 트리거 형태 전환 (게시 API·stable 표현 계약)
 
 2026-10-07 [확장 카드·그리드 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md) 중
 실제 npm 1.14.0 양 renderer tarball의 `dist/overlays.d.ts`에서 이 옵션을 확인했다. 기존 미게시 표기를
@@ -278,7 +278,7 @@ Web은 닫기 전환이 끝나야 portal을 제거하고 onDismissComplete와 �
 Native는 실제 Modal 콘텐츠를 측정하며 콜백이 오지 않으면 기존 enter 시간 내 일반 표시로
 복귀한다. 뒤늦은 측정으로 닫힌 세션을 되살리지 않는다. 측정이 없거나 모션 감소이면
 공간 전환 없이 기존 표현을 쓴다. Native에서 진입 후 크기가 달라지면 이전 측정으로
-닫지 않고 일반 fade로 복귀한다. 다음 open에서 다시 측정한다. 이 옵션의 실험은 `버튼에서 이어지는 편집` 구성이다.
+닫지 않고 일반 fade로 복귀한다. 다음 open에서 다시 측정한다. 이 옵션의 사용 예는 `버튼에서 이어지는 편집` 구성이다.
 
 초안은 제품 상태에 두고 닫을 때 삭제하지 않는다. 내용·화면 회전·키보드로 목적지 크기가
 달라지는 흐름은 실제 기기 검증 후 채택한다. 원점이 다른 좌표계를 혼합하지 않는다.

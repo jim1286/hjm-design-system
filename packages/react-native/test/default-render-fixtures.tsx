@@ -8,6 +8,7 @@ import { CommentThreadRow, CommentThreadScreen, EditorScreen, ListDetailScreen, 
 import { LineChart } from "../src/chart.js";
 import { DataTable } from "../src/data-table.js";
 import { Pagination } from "../src/pagination.js";
+import { ColorPicker } from "../src/color-picker.js";
 import { Masonry } from "../src/masonry.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { QRCode } from "../src/qr-code.js";
@@ -15,7 +16,7 @@ import { vi } from "vitest";
 import { ThinkingOrb } from "../src/thinking-orb.js";
 // Default proof exercises the opt-in entry without loading a native binary in Node.
 // Installed Skia linkage is checked separately by the focused showcase smoke.
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Rect: View, Path: View }; });
+vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Defs: View, LinearGradient: View, Pattern: View, Rect: View, Path: View, Stop: View }; });
 vi.mock("react-native-reanimated", async () => {
   const { useRef } = await import("react");
   return { useSharedValue: (value: unknown) => useRef({ value }).current };
@@ -153,6 +154,13 @@ const screenPhotoLabels = { title: "사진 가져오기", library: "앨범에서
 const screenComments = [{ id: "c1", parentId: null, author: "서연", body: "첫 댓글이에요", timeLabel: "방금", likeCountLabel: "좋아요 3개", likeIcon: <RNText>♡</RNText>, likeLabel: "좋아요" }];
 
 export const defaultRenderCases = [
+  // ColorPicker's declared environment proofs must render its actual public API,
+  // including the SVG gradient host, rather than refer to a missing fixture.
+  {
+    componentId: "color-picker",
+    render: () => <ColorPicker label="색상" labels={{ hex: "HEX", hue: "색조", saturation: "채도", brightness: "밝기", opacity: "불투명도", invalid: "유효한 색을 입력하세요" }} value="#123456" onValueChange={screenNoop} />,
+    renderLongCopy: (copy) => <ColorPicker label={copy} labels={{ hex: "HEX", hue: "색조", saturation: "채도", brightness: "밝기", opacity: "불투명도", invalid: "유효한 색을 입력하세요" }} value="#123456" onValueChange={screenNoop} />,
+  },
   {
     componentId: "design-system-provider",
     renderLongCopy: (copy) => <HjmNativeProvider reducedMotion><Text>{copy}</Text></HjmNativeProvider>,

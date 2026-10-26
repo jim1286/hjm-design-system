@@ -1785,7 +1785,7 @@
         {
           "componentId": "image-choice-group",
           "name": "ImageChoiceGroup",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./image-choice",
           "exportNames": [
@@ -3119,7 +3119,7 @@
         {
           "componentId": "page-indicator",
           "name": "PageIndicator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./carousel",
           "exportNames": [
@@ -4244,7 +4244,7 @@
         {
           "componentId": "chart",
           "name": "Chart",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./chart",
           "exportNames": [
@@ -6616,7 +6616,7 @@
         {
           "componentId": "typing-indicator",
           "name": "TypingIndicator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
@@ -6663,7 +6663,7 @@
         {
           "componentId": "chat-date-separator",
           "name": "ChatDateSeparator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
@@ -8724,7 +8724,7 @@
         {
           "componentId": "image-choice-group",
           "name": "ImageChoiceGroup",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./image-choice",
           "exportNames": [
@@ -9358,7 +9358,7 @@
         {
           "componentId": "color-picker",
           "name": "ColorPicker",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./color-picker",
           "exportNames": [
@@ -9931,7 +9931,7 @@
         {
           "componentId": "page-indicator",
           "name": "PageIndicator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./carousel",
           "exportNames": [
@@ -9978,7 +9978,7 @@
         {
           "componentId": "pagination",
           "name": "Pagination",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./pagination",
           "exportNames": [
@@ -10810,7 +10810,7 @@
         {
           "componentId": "data-table",
           "name": "DataTable",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./data-table",
           "exportNames": [
@@ -10866,7 +10866,7 @@
         {
           "componentId": "chart",
           "name": "Chart",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./chart",
           "exportNames": [
@@ -12673,7 +12673,7 @@
         {
           "componentId": "typing-indicator",
           "name": "TypingIndicator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [
@@ -12720,7 +12720,7 @@
         {
           "componentId": "chat-date-separator",
           "name": "ChatDateSeparator",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./screens",
           "exportNames": [

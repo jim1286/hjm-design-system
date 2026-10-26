@@ -6,6 +6,7 @@ import { ColorPicker, ColorSwatchPicker } from '../src/color-picker.js';
 import { TextField } from '../src/inputs.js';
 import { Slider } from '../src/slider.js';
 import { HjmNativeProvider } from '../src/provider.js';
+import { colorPickerRecipe } from '@hjmds/design-contracts/components/color-picker';
 const labels = { hex: 'HEX', hue: '색조', saturation: '채도', brightness: '밝기', opacity: '불투명도', invalid: '유효한 색을 입력하세요', presets: '추천 색' };
 const area = (tree: ReactTestRenderer) => tree.root.find(node => node.props.accessibilityRole === 'adjustable' && node.props.accessibilityLabel === `${labels.brightness}, ${labels.saturation}` && !!node.props.onResponderGrant);
 it('keeps an invalid HEX draft local, then commits a normalized corrected value', () => {
@@ -44,6 +45,18 @@ it('blocks every editing path while disabled', () => {
   act(() => tree.root.findByType(TextField).props.onSubmitEditing());
   expect(change).not.toHaveBeenCalled();
   expect(tree.root.findByType(TextField).props.disabled).toBe(true);
+  act(() => tree.unmount());
+});
+it('keeps the hue and opacity gradients aligned with a left-to-right drag in RTL', () => {
+  const change = vi.fn(); let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider direction="rtl"><ColorPicker label="색상" labels={labels} value="#ff000080" alpha onValueChange={change} /></HjmNativeProvider>); });
+  const track = (label: string) => tree.root.find(node => node.props.accessibilityRole === 'adjustable' && node.props.accessibilityLabel === label && !!node.props.onResponderGrant);
+  for (const label of [labels.hue, labels.opacity]) {
+    act(() => track(label).props.onLayout({ nativeEvent: { layout: { width: colorPickerRecipe.bar.thumbDiameter + 100 } } }));
+    act(() => track(label).props.onResponderGrant({ nativeEvent: { locationX: colorPickerRecipe.bar.thumbDiameter / 2 + 25 } }));
+    act(() => track(label).props.onResponderRelease());
+    expect(change).toHaveBeenLastCalledWith(label === labels.hue ? '#80ff0080' : '#ff000040');
+  }
   act(() => tree.unmount());
 });
 it('selects one swatch with radio semantics and reports nothing for the current swatch', () => {

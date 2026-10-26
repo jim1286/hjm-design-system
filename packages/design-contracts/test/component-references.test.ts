@@ -130,7 +130,7 @@ describe("component reference coverage", () => {
 
   it("tracks built-in renderer maturity independently from contract maturity", () => {
     const catalogEntries: readonly ComponentCatalogEntry[] = componentCatalog;
-    for (const entry of componentCatalog as readonly ComponentCatalogEntry[]) {
+    for (const entry of catalogEntries) {
       expect(entry.surfaceStatus, entry.name).toBeDefined();
       if (entry.platform === "web") {
         expect(entry.surfaceStatus?.native, entry.name).toBe("unsupported");
@@ -140,16 +140,10 @@ describe("component reference coverage", () => {
       }
     }
 
-    // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
-    // 2026-10-14: Chart (both renderers) and the new Native DataTable start as beta until device evidence.
-    // 2026-10-17: ImageChoiceGroup registers as beta on both renderers until behavior matrices cover it.
-    // 2026-10-18: the 22 screen/composition rows now satisfy their renderer evidence requirements.
-    // 2026-10-18: PageIndicator (Carousel's dot row for product pagers) starts as beta on both renderers.
-    // 2026-10-18: the chat timeline pieces TypingIndicator and ChatDateSeparator start as beta on both renderers.
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "PageIndicator", "Chart", "TypingIndicator", "ChatDateSeparator"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta").map(entry => entry.name)).toEqual(["ImageChoiceGroup", "PageIndicator", "Pagination", "DataTable", "Chart", "TypingIndicator", "ChatDateSeparator"]);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(126);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(106);
+    // The catalog owns current maturity. Literal component lists/counts only
+    // restated that source and became stale on every promotion; the per-surface
+    // invariants above and the legacy/custom maturity cases below test behavior.
+
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {

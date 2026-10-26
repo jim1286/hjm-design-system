@@ -6,7 +6,7 @@ import { describe, expect, it , vi } from "vitest";
 // Chart paints with react-native-svg; the test host renders its primitives as plain views (chart.test.tsx does the same).
 vi.mock("react-native-svg", async () => {
   const { View } = await import("react-native");
-  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
+  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Pattern: View, Path: View, Rect: View, Stop: View, Text: View };
 });
 import { HjmNativeProvider } from "../src/index.js";
 import { reactNativeRendererEvidence, type ReactNativeRendererEvidenceScenario } from "../src/evidence.js";
@@ -41,7 +41,7 @@ const environments = executedScenarioRegistry.executions.find(
 const baseline: Environment = { id: "default", theme: "light", direction: "ltr", textScale: 1, reducedMotion: false };
 const longCopy = "An unusually long product sentence with verylongunbrokenidentifierlikewordsthatmustwrap and a second clause that keeps going past one line.";
 
-type HostNode = Readonly<{ type: string; props: Record<string, unknown>; raw: ReactTestRendererJSON }>;
+type HostNode = Readonly<{ type: string; props: Record<string, unknown>; raw: ReactTestRendererJSON; explicitDirection: "ltr" | "rtl" | undefined }>;
 
 function render(environment: Environment, node: ReactNode): HostNode[] {
   let json: ReactTestRendererJSON | ReactTestRendererJSON[] | null = null;
@@ -62,10 +62,12 @@ function render(environment: Environment, node: ReactNode): HostNode[] {
   json = renderer!.toJSON();
   act(() => { renderer!.unmount(); });
   const nodes: HostNode[] = [];
-  const visit = (value: ReactTestRendererJSON | string) => {
+  const visit = (value: ReactTestRendererJSON | string, inheritedDirection?: "ltr" | "rtl") => {
     if (typeof value === "string") return;
-    nodes.push({ type: value.type, props: value.props, raw: value });
-    for (const child of value.children ?? []) visit(child);
+    const direction = flatStyle(value.props.style).direction;
+    const explicitDirection = direction === "ltr" || direction === "rtl" ? direction : inheritedDirection;
+    nodes.push({ type: value.type, props: value.props, raw: value, explicitDirection });
+    for (const child of value.children ?? []) visit(child, explicitDirection);
   };
   for (const value of Array.isArray(json) ? json : json ? [json] : []) visit(value);
   return nodes;
@@ -182,6 +184,12 @@ const checks: Readonly<Record<Exclude<ReactNativeRendererEvidenceScenario, "defa
       const after = flatStyle(rtl[index]!.props.style);
       for (const [start, end] of physicalPairs) {
         if (before[start] === before[end]) continue;
+        // Explicit coordinate systems (HSV, for example) retain their geometry;
+        // reading-direction inheritance must not reverse an LTR subtree.
+        if (node.explicitDirection && node.explicitDirection === rtl[index]!.explicitDirection) {
+          expect([after[start], after[end]], `${node.type} fixed direction geometry changed`).toEqual([before[start], before[end]]);
+          continue;
+        }
         if (start === "left" && item.componentId in positionMirroredByComputation) continue;
         expect([after[start], after[end]], `${node.type} ${start}/${end} is not mirrored`).toEqual([before[end], before[start]]);
       }

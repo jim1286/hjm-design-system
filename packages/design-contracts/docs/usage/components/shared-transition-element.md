@@ -5,7 +5,7 @@
 - 지원: Native
 - 적용: 1.12.1
 - 검토일: 2026-10-06
-- 근거: [Optional interaction adapters · Shared screen transition](../../../../../docs/interaction-adapters.md#shared-screen-transition)(Native 전용, experimental, supplemental, 카탈로그 계약 없음), `packages/react-native/src/screen-transition.tsx`, 시연은 구성 스토리 `배포/구성/직접 조작과 모션/끌기·밀기·화면 전환` › 카드 확대와 화면 전환. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
+- 근거: [Optional interaction adapters · Shared screen transition](../../../../../docs/interaction-adapters.md#shared-screen-transition)(Native 전용, 문서화한 host에서 stable, supplemental, 카탈로그 계약 없음), `packages/react-native/src/screen-transition.tsx`, 시연은 구성 스토리 `배포/구성/직접 조작과 모션/끌기·밀기·화면 전환` › 카드 확대와 화면 전환. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/구성/직접 조작과 모션/끌기·밀기·화면 전환`
 
 ## 언제 쓰나

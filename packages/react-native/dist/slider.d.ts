@@ -34,6 +34,7 @@ export type SliderPrivateProps = Readonly<{
         height: number;
         thumbDiameter: number;
         thumbBorder: number;
+        direction: "ltr" | "rtl";
     }>;
 }>;
 /** Dependency-free horizontal Slider using the Native responder system. */

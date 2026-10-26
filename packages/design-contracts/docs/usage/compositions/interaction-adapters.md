@@ -15,7 +15,7 @@
 순서 바꾸기·행 작업·내용 전환·카드 넘기기·달성 축하·카드 확대 화면 전환 같은 선택형 상호작용 어댑터를 한 화면에서 함께 쓸 때, 각 어댑터를 어디에 놓고 무엇으로 감싸야 하는지 확인하는 구성이다.
 
 스토리는 2026-10-06 사용자 승인으로 스토리북 배포됐다. 어댑터 API 자체의 성숙도는 따로다: `sortable`·`swipe-actions`·`content-transition`·`carousel-motion`·`celebration`은
-Web·Native stable, Native `screen-transition`은 experimental이다. 각 어댑터는 root에서 재노출되지 않고 subpath로만 import하며, 제품에 해당 peer를 설치해야 한다.
+Web·Native stable, Native `screen-transition`도 명시한 React Navigation host 범위에서 stable이다. 각 어댑터는 root에서 재노출되지 않고 subpath로만 import하며, 제품에 해당 peer를 설치해야 한다.
 
 ## 구성 요소
 
@@ -182,7 +182,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 | 행 작업 | 버튼 상시 노출 | 스와이프로 드러냄 + 상시 "작업 보기", `rowId`·`openRowId`·`actionsLabel` 필수 |
 | 카드 크기 | 부모 폭 | 측정한 `width`·`height` 필수 |
 | 축하 위치 | 자체 canvas | 스크롤 밖 화면 오버레이, Skia 필요 |
-| 화면 전환 | 없음(제품 라우터) | `screen-transition`(experimental, React Navigation 7.4.1 + exports patch) |
+| 화면 전환 | 없음(제품 라우터) | `screen-transition`(stable, React Navigation 7.4.1 + 문서화한 patch) |
 | 제스처 host | — | 화면 루트 `GestureHandlerRootView` |
 
 ## 함정

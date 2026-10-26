@@ -14,7 +14,7 @@
 
 Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다.
 
-네 어댑터(`image-viewer`·`sheet-gesture`·`context-menu-native`·`keyboard-controller`)는 모두 experimental이고 Native 전용이다. 링크된 네이티브 모듈이 필요하므로
+네 어댑터(`image-viewer`·`sheet-gesture`·`context-menu-native`·`keyboard-controller`)는 문서화한 peer/host 범위에서 stable이고 Native 전용이다. 링크된 네이티브 모듈이 필요하므로
 Expo Go가 아니라 호환 개발 클라이언트에서만 확인된다. 이 기능이 필요 없으면 기본 [Sheet](../components/sheet.md)·[ContextMenu](../components/context-menu.md)·
 [KeyboardAvoiding](../components/keyboard-avoiding.md)을 쓴다.
 
@@ -158,7 +158,7 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 지원 | 없음(기본 Sheet·ContextMenu 사용) | 네 어댑터 experimental |
+| 지원 | 없음(기본 Sheet·ContextMenu 사용) | 네 어댑터 stable(명시한 peer/host 범위) |
 | 실행 환경 | — | 호환 개발 클라이언트(Expo Go 불가) |
 
 ## 함정

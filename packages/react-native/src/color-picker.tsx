@@ -148,13 +148,13 @@ export function ColorPicker({ label, labels, value, onValueChange, alpha = false
     <ColorBar label={labels.hue} min={0} max={360} step={step} value={Math.round(hsv.hue)} disabled={disabled}
       decrementLabel={`${labels.hue} −`} incrementLabel={`${labels.hue} +`} getValueText={next => `${next}°`}
       onValueChange={next => emitHsv({ ...hsvRef.current, hue: next })}
-      hjmColorTrack={{ height: bar.height, thumbDiameter: bar.thumbDiameter, thumbBorder: bar.thumbBorder,
+      hjmColorTrack={{ direction: 'ltr', height: bar.height, thumbDiameter: bar.thumbDiameter, thumbBorder: bar.thumbBorder,
         fill: <Svg width="100%" height="100%"><Defs><LinearGradient id={`hjmHue${id}`} x1="0" y1="0" x2="1" y2="0">{pickerHueStops.map(stop => <Stop key={stop.offset} offset={String(stop.offset)} stopColor={stop.color} />)}</LinearGradient></Defs><Rect width="100%" height="100%" fill={`url(#hjmHue${id})`} /></Svg>,
         thumbFill: <View style={{ flex: 1, backgroundColor: pickerHueColor(hsv.hue) }} /> }} />
     {alpha ? <ColorBar label={labels.opacity} min={0} max={100} step={step} value={opacity} disabled={disabled}
       decrementLabel={`${labels.opacity} −`} incrementLabel={`${labels.opacity} +`} getValueText={next => `${next}%`}
       onValueChange={next => emit(withPickerOpacity(color, next))}
-      hjmColorTrack={{ height: bar.height, thumbDiameter: bar.thumbDiameter, thumbBorder: bar.thumbBorder,
+      hjmColorTrack={{ direction: 'ltr', height: bar.height, thumbDiameter: bar.thumbDiameter, thumbBorder: bar.thumbBorder,
         fill: <Svg width="100%" height="100%"><Checker id={`a${id}`} /><Defs><LinearGradient id={`hjmAlpha${id}`} x1="0" y1="0" x2="1" y2="0"><Stop offset="0" stopColor={opaque} stopOpacity={0} /><Stop offset="1" stopColor={opaque} stopOpacity={1} /></LinearGradient></Defs><Rect width="100%" height="100%" fill={`url(#hjmAlpha${id})`} /></Svg>,
         thumbFill: <Svg width="100%" height="100%"><Checker id={`t${id}`} /><Rect width="100%" height="100%" fill={opaque} fillOpacity={opacity / 100} /></Svg> }} /> : null}
     <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm }}>

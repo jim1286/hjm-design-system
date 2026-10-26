@@ -1,5 +1,42 @@
 # Stable Core
 
+## 2026-10-26 잔여 실험과 beta 승격
+
+사용자의 “다 올려” 지시에 따라 남아 있던 카탈로그 beta와 실험 화면을 승격했다.
+카탈로그의 계약/Web은 stable131·beta0, Native는 stable114·beta0·unsupported17이다.
+지원하지 않는 플랫폼을 새로 구현하거나 지원된다고 표시하지 않았다.
+
+- 계약·Web·Native: ImageChoiceGroup, PageIndicator, Chart, TypingIndicator, ChatDateSeparator.
+- Native surface: ColorPicker, Pagination, DataTable(Web/계약은 이미 stable).
+- Storybook Web·Native: FollowListScreen의 `팔로워와 팔로잉`을 배포로 이동. Web id `common-follow-list` 유지.
+- 선택형 image-viewer(Web·Native), Native keyboard-controller·sheet-gesture·context-menu-native 및
+  screen-transition은 문서화한 peer/host 범위의 API를 stable로 지원한다. optional import, native linking,
+  React Navigation7.4.1 host와 기존 package patch 전제는 유지한다. expo-router 통합을 새로 제공하지 않는다.
+- Dialog의 optional motionOrigin도 문서화한 상태·초안 보존·종료/재열기 계약을 stable로 지원한다.
+  모든 기기에서 같은 frame time이나 제품별 조합 검증을 보장한다는 뜻은 아니다.
+
+검사에서 ColorPicker의 누락된 default/environment fixture를 발견해 실제 공개 API fixture를 보완했다.
+새 fixture가 드러낸 RTL 문제는 색상 막대의 좌표 소유 위치인 Slider에서 고쳤다. painted track이 물리
+색상 축을 명시하고 드래그 계산·thumb·layout이 같은 방향을 쓰며, 일반 Slider는 제품 읽기 방향을 따른다.
+환경 proof는 명시적으로 고정한 하위 좌표계를 상속해 검사하고 고정 좌표가 그대로인지 단언한다.
+단순 catalog 이름/숫자를 복제하던 회귀 단언은 제거하고 per-surface 불변식과 독립 legacy/custom 검사를 유지했다.
+
+변경 범위 결과: Native 관련14파일69건, Web 관련9파일30건, 색상/일반 Slider 회귀15건(새 RTL 회귀 포함),
+승격 대상 환경 matrix Web35건·Native35건 통과. 최대 글자 조건은 실행하지 않았다. contracts의
+component-references13건과 세 package build/typecheck를 확인했다. 두 Showcase typecheck도 통과했다.
+현재 iPhone17 Pro/iOS26.5의 기존 SDK58 개발 클라이언트와8084 Metro에서 이미지 실제 로딩/닫기,
+키보드 입력321→완료(값 유지·IME 위 dock), 시트 입력789→닫힘, 공유 카드→상세→목록, Dialog의
+실패 후 초안 유지→닫기/재열기→성공 저장과 팔로워 화면의 맞팔로우→회원 프로필→목록 복귀를 Device Hub로 확인했다. NativeContextMenu의 시스템 메뉴
+Save 및 Android16 네 엔진 확인은 기존9월29일 증거를 재사용했다. 이번에 Android 연결 기기는 없었으며
+새 Android UI·물리 기기·VoiceOver/TalkBack·Release binary·성능 전수 결과로 확대하지 않는다.
+
+전체 Showcase 검사는 별개 기존 실패를 재현했다: 전체 스토리 규격74건 및 Native foundation token 문서
+2개 누락, Web Affix recipe fixture의 추가 sticky 값, 전체 usage의 Card/QuoteCard 문서3건이다.
+승격 대상 FollowList의 상태 표시 이름·스토리 순서는 고쳤으며 해당 두 스토리의 남은 규격 오류는0건이다.
+이번 FollowList 승격과 관계없는 항목을 수정하거나 전체 통과로 보고하지 않는다. 변경한 지침7개는
+선택 검사·색인 생성을 통과했다. 공개 source의 승격과 npm 게시·공개 Storybook 게시·제품 채택은
+별개이며, 이번 작업은1.47.0 버전을 유지하고 다음 train용 minor Changeset을 남긴다.
+
 ## 2026-10-19 TimePicker 개발 소스 승격
 
 사용자가 승인한 통합 시·분 열 디자인으로 `TimePicker`를 canonical catalog에 등록하고 계약·Web·Native

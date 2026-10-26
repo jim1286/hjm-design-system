@@ -1717,10 +1717,10 @@
       "extensions": [],
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2303,7 +2303,7 @@
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "beta"
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2912,10 +2912,10 @@
       "extensions": [],
       "category": "navigation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2964,7 +2964,7 @@
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "beta"
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3936,7 +3936,7 @@
       "contractStatus": "stable",
       "surfaces": {
         "web": "stable",
-        "native": "beta"
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3994,10 +3994,10 @@
       "extensions": [],
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -6210,10 +6210,10 @@
       "extensions": [],
       "category": "feedback",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -6259,10 +6259,10 @@
       "extensions": [],
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {

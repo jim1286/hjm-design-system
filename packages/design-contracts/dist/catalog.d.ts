@@ -511,14 +511,14 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "imageChoiceRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ImageChoiceGroup";
     readonly label: "이미지 선택";
     readonly category: "input";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "segmentedControlRecipe";
     readonly behavior: "segmentedControl";
@@ -663,7 +663,7 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "colorPickerRecipe";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "beta";
+        readonly native: "stable";
     };
     readonly name: "ColorPicker";
     readonly label: "색상 선택기";
@@ -827,20 +827,20 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "carouselRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "PageIndicator";
     readonly label: "페이지 위치 표시";
     readonly category: "navigation";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "paginationRecipe";
     readonly behavior: "pagination";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "beta";
+        readonly native: "stable";
     };
     readonly name: "Pagination";
     readonly label: "페이지 이동";
@@ -1096,7 +1096,7 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "dataTable";
     readonly surfaceStatus: {
         readonly web: "stable";
-        readonly native: "beta";
+        readonly native: "stable";
     };
     readonly name: "DataTable";
     readonly label: "데이터 표";
@@ -1108,15 +1108,15 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "chartRecipe";
     readonly behavior: "chart";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Chart";
     readonly label: "차트";
     readonly companions: readonly ["LineChart", "BarChart", "PieChart", "RadarChart", "ScatterChart", "Sparkline", "ChartLegend"];
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "treeRecipe";
     readonly behavior: "tree";
@@ -1648,25 +1648,25 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "typingIndicatorRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "TypingIndicator";
     readonly label: "입력 중 표시";
     readonly category: "feedback";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "chatDateSeparatorRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "ChatDateSeparator";
     readonly label: "대화 날짜 구분";
     readonly category: "data-display";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "notificationRowRecipe";
     readonly surfaceStatus: {

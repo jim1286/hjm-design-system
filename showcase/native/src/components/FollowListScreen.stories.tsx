@@ -39,8 +39,8 @@ function Preview({ empty = false, fail = false }: { empty?: boolean; fail?: bool
       setPeople(current => current.map(person => person.id === id ? { ...person, following } : person));
     }} /></View>;
 }
-export default { title: "실험/화면/소통/팔로워와 팔로잉", component: Preview, parameters: { layout: "fullscreen" } };
+export default { title: "배포/화면/소통/팔로워와 팔로잉", component: Preview, parameters: { layout: "fullscreen" } };
 export const Default = { name: "기본" };
-export const Dark = { name: "어두운 테마", globals: { theme: "dark" } };
-export const Empty = { name: "빈 목록", args: { empty: true } };
+export const Empty = { name: "비어 있음", args: { empty: true } };
 export const Failure = { name: "요청 실패", args: { fail: true } };
+export const Dark = { name: "어두운 테마", globals: { theme: "dark" } };

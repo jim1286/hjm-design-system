@@ -194,8 +194,8 @@ export const componentCatalog = [
   // Web Space and Native host press now verify selectable Chip state changes.
   { name: "Chip", label: "선택 칩", companions: ["ShortcutRail"], category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chipRecipe", behavior: "chip" },
   // Image tile single/multiple selection (2026-10-17 registration: independent radio/checkbox semantics).
-  // Beta until renderer behavior matrices cover it; unit tests cover toggle and validation only.
-  { name: "ImageChoiceGroup", label: "이미지 선택", category: "input", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "imageChoiceRecipe" },
+  // 2026-10-26: both renderer behavior/environment proofs now support the stable contract (stable-core.md).
+  { name: "ImageChoiceGroup", label: "이미지 선택", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "imageChoiceRecipe" },
   // Web arrow-key selection and Native host press now prove option changes.
   { name: "SegmentedControl", label: "버튼형 선택", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "segmentedControlRecipe", behavior: "segmentedControl" },
   // Web Space and Native host press now verify the pressed-id set transition.
@@ -214,7 +214,7 @@ export const componentCatalog = [
   { name: "TimePicker", label: "시각 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timePickerRecipe", behavior: "timePicker" },
   { name: "DatePicker", label: "날짜 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
   { name: "DateRangePicker", label: "기간 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "dateRangeRecipe", behavior: "dateRange" },
-  { name: "ColorPicker", label: "색상 선택기", companions: ["ColorSwatchPicker"], category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "colorPickerRecipe" },
+  { name: "ColorPicker", label: "색상 선택기", companions: ["ColorSwatchPicker"], category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "colorPickerRecipe" },
   { name: "FilePicker", label: "파일 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "filePickerRecipe", behavior: "filePicker", aliases: ["Upload"], ...evidenceNeeded("Web은 native file input과 dropzone 선택을, Native는 제품 소유 picker adapter 연결을 제공하고 양쪽이 같은 accept·size·count resolver를 사용합니다. 실제 OS picker 동작은 소비 앱 QA에서 확인합니다.") },
   // Both renderers now focus the product-selected first invalid field; field ordering and validation stay product-owned (docs/form.md).
   { name: "Form", label: "입력 양식", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "formRecipe", behavior: "form" },
@@ -235,8 +235,8 @@ export const componentCatalog = [
   { name: "Breadcrumb", label: "이동 경로", category: "navigation", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "breadcrumbRecipe", behavior: "breadcrumb" },
   // Numeric-only rendering has no visible prose slot; four-digit page layout remains in the 320px/2x/RTL proof.
   // Carousel's dot row on its own for a product-owned pager (Utilverse launcher, 2026-10-18); same recipe, no new visuals.
-  { name: "PageIndicator", label: "페이지 위치 표시", category: "navigation", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "carouselRecipe" },
-  { name: "Pagination", label: "페이지 이동", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "paginationRecipe", behavior: "pagination" },
+  { name: "PageIndicator", label: "페이지 위치 표시", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "carouselRecipe" },
+  { name: "Pagination", label: "페이지 이동", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "paginationRecipe", behavior: "pagination" },
   { name: "LoadMore", label: "더 보기", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "loadMoreRecipe", behavior: "loadMore", ...evidenceNeeded("Web keyboard fallback·viewport observer와 Native onEndReached·retry action에서 requestKey 중복 방지, busy/error/complete 상태와 긴 현지화 문구를 검증했습니다. Native FlatList/device 통합은 소비 앱 QA입니다.") },
   // This non-interactive progress summary now has long-label matrix coverage on both renderers.
   { name: "Steps", label: "단계 탐색", extensions: ["StepPlayer"], category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "stepsRecipe", ...evidenceNeeded("단일 cursor에서 상태를 파생하는 Web·Native renderer와 기본 실행 증거가 연결됐습니다. 실제 다단계 흐름과 보조기기 증거가 더 필요합니다.") },
@@ -261,10 +261,10 @@ export const componentCatalog = [
   { name: "Statistic", label: "수치 표시", companions: ["StatisticGroup"], extensions: ["AnimatedStatistic"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "statisticRecipe" },
   // Timeline labels are visible prose and now have long-copy matrix coverage on both renderers.
   { name: "Timeline", label: "타임라인", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "timelineRecipe", ...evidenceNeeded("두 제품의 이력 화면이 같은 항목 설명과 웹·앱의 점·연결선 렌더러를 씁니다. 남은 렌더러 증거는 자동 생성 보고서에서 추적합니다.") },
-  // 2026-10-14: Native DataTable renderer added (pinned columns, sortDescFirst, summary row); beta until device evidence.
-  { name: "DataTable", label: "데이터 표", companions: ["Table", "LineScore", "MatrixTable", "ComparisonTable"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "beta"), recipe: "dataTableRecipe", behavior: "dataTable" },
+  // 2026-10-26: the remaining renderer contracts are supported as stable after targeted behavior/environment proof; see stable-core.md.
+  { name: "DataTable", label: "데이터 표", companions: ["Table", "LineScore", "MatrixTable", "ComparisonTable"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dataTableRecipe", behavior: "dataTable" },
   // 2026-10-14 user request: chart drawing absorbed from product libraries (docs/chart.md); one family for all chart types.
-  { name: "Chart", label: "차트", companions: ["LineChart", "BarChart", "PieChart", "RadarChart", "ScatterChart", "Sparkline", "ChartLegend"], category: "data-display", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "chartRecipe", behavior: "chart" },
+  { name: "Chart", label: "차트", companions: ["LineChart", "BarChart", "PieChart", "RadarChart", "ScatterChart", "Sparkline", "ChartLegend"], category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chartRecipe", behavior: "chart" },
   { name: "Tree", label: "트리 목록", category: "data-display", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "treeRecipe", behavior: "tree" },
   { name: "Calendar", label: "달력", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "calendarRecipe", behavior: "calendar" },
   { name: "Carousel", label: "캐러셀", extensions: ["CarouselMotion"], category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "carouselRecipe", behavior: "carousel" },
@@ -328,9 +328,9 @@ export const componentCatalog = [
   // MediaAlbumPageStatus (2026-10-18): loading/failed page of ChatMessage/CommentThreadRow `mediaAlbum`.
   { name: "ChatMessage", label: "채팅 말풍선", companions: ["MediaAlbumPageStatus"], category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chatMessageRecipe" },
   // 2026-10-18 timeline pieces that products drew themselves (BurnTok DM typing row, Utilverse chat time row).
-  // New public API, so beta until both renderer proofs pass (docs/stable-promotion.md).
-  { name: "TypingIndicator", label: "입력 중 표시", category: "feedback", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "typingIndicatorRecipe" },
-  { name: "ChatDateSeparator", label: "대화 날짜 구분", category: "data-display", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "chatDateSeparatorRecipe" },
+  // 2026-10-26: both renderer proofs cover these public chat primitives (docs/stable-core.md).
+  { name: "TypingIndicator", label: "입력 중 표시", category: "feedback", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "typingIndicatorRecipe" },
+  { name: "ChatDateSeparator", label: "대화 날짜 구분", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "chatDateSeparatorRecipe" },
   { name: "NotificationRow", label: "알림 미리보기 행", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "notificationRowRecipe" },
   { name: "NotificationItem", label: "알림 목록 항목", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "listRowRecipe" },
   { name: "CommentThreadRow", label: "댓글 행", category: "data-display", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "commentThreadRecipe" },

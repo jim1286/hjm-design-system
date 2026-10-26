@@ -46,7 +46,7 @@ Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph
 
 Native viewport candidate (BT-QA-027, 2026-10-05): BurnTok local QA exposed a long confirmation extending beyond the visible screen. Dialog and AlertDialog now constrain the content surface and provide a shrinking scroll body, with actions outside that body and provider safe-area padding. Host tests cover those structural contracts and cancellation; they cannot prove Yoga geometry. Ordinary-size iOS confirmation and cancellation were checked. Enlarged-text device verification remains pending: the user stopped that QA scope before the candidate was confirmed, so this is not a completed device fix. Font caps and clipped copy were rejected because they remove readable content.
 
-## Optional measured origin motion (published API, experimental presentation)
+## Optional measured origin motion (published API, stable presentation contract)
 
 2026-10-07 Aceternity card/grid comparison exposed a stale publication label here.
 Both npm 1.14.0 renderer tarballs include `DialogProps.motionOrigin` in `dist/overlays.d.ts`,
@@ -61,8 +61,7 @@ the modal engine. It does not implement shared image/text identities or a new Po
 Web retains one subtree through exit and suppresses stale animation completion when reopened.
 Native uses the actual modal measurement and bounds its optional measurement wait by the existing
 enter duration, falling back to ordinary presentation if the host fails to reply. Reduced motion skips
-spatial interpolation. Device geometry, resizing/keyboard behavior, themes and performance remain
-experimental until the QA report verifies them. See the usage guide and
+spatial interpolation. The optional presentation contract is stable as of 2026-10-26: browser/host regressions and the current iOS failed-save → close → reopen → successful-save flow passed. Per-device geometry/performance and consuming-product certification remain scoped QA; stable does not promise a frame-rate target on every device. See the usage guide and
 [origin transition QA](../../../docs/qa/2026-10-07-overlay-origin-transition.md).
 
 ## Decorative layer and immersive presentation (1.31.0)

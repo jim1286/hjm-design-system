@@ -71,7 +71,7 @@ export type SliderProps = NativeSliderViewProps &
  * HJM-internal: ColorPicker's hue and opacity bars reuse this gesture and accessibility logic with a painted track.
  * The visible header is dropped (the bar itself shows the value) and the thumb shows the colour under it.
  */
-export type SliderPrivateProps = Readonly<{ hjmColorTrack?: Readonly<{ fill: ReactNode; thumbFill: ReactNode; height: number; thumbDiameter: number; thumbBorder: number }> }>;
+export type SliderPrivateProps = Readonly<{ hjmColorTrack?: Readonly<{ fill: ReactNode; thumbFill: ReactNode; height: number; thumbDiameter: number; thumbBorder: number; direction: "ltr" | "rtl" }> }>;
 
 /** Dependency-free horizontal Slider using the Native responder system. */
 export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, SliderProps>> = forwardRef<ComponentRef<typeof View>, SliderProps & SliderPrivateProps>(function Slider(
@@ -99,6 +99,9 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
 ) {
   assertNoRemovedStyleProps("Slider", viewProps, ["containerStyle", "controlStyle"]);
   const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+  // Painted colour tracks define a physical colour axis independently of the
+  // surrounding labels' reading order; gestures and thumb geometry share it.
+  const trackDirection = hjmColorTrack?.direction ?? environment.direction;
 
   const [currentValue, setCurrentValue] = useControllableState<number>({
     ...(value === undefined ? {} : { value }),
@@ -152,7 +155,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
       descriptor,
       offset,
       extent,
-      environment.direction,
+      trackDirection,
     ));
   };
   const performAction = (intent: "increment" | "decrement") => {
@@ -239,7 +242,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
 
   const fraction = resolveSliderFillFraction(descriptor);
   const travel = Math.max(0, layoutWidth - thumbDiameter);
-  const visualFraction = environment.direction === "rtl" ? 1 - fraction : fraction;
+  const visualFraction = trackDirection === "rtl" ? 1 - fraction : fraction;
   const thumbLeft = travel * visualFraction;
   const visibleValue = valueText ?? String(currentValue);
   const actionProps = disabled
@@ -332,6 +335,7 @@ export const Slider: ReturnType<typeof forwardRef<ComponentRef<typeof View>, Sli
             justifyContent: "center",
             minHeight: recipe.hitTarget,
             minWidth: recipe.hitTarget,
+            direction: trackDirection,
           },
         ]}
       >

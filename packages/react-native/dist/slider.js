@@ -12,6 +12,9 @@ const sliderIntentSlop = 6;
 export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, layoutStyle, hjmColorTrack, ...viewProps }, forwardedRef) {
     assertNoRemovedStyleProps("Slider", viewProps, ["containerStyle", "controlStyle"]);
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+    // Painted colour tracks define a physical colour axis independently of the
+    // surrounding labels' reading order; gestures and thumb geometry share it.
+    const trackDirection = hjmColorTrack?.direction ?? environment.direction;
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
         defaultValue: defaultValue ?? min,
@@ -63,7 +66,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
         if (extent <= 0)
             return;
         const offset = locationX - thumbDiameter / 2;
-        publish(resolveSliderValueFromOffset(descriptor, offset, extent, environment.direction));
+        publish(resolveSliderValueFromOffset(descriptor, offset, extent, trackDirection));
     };
     const performAction = (intent) => {
         if (disabled)
@@ -146,7 +149,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
     }, [disabled]);
     const fraction = resolveSliderFillFraction(descriptor);
     const travel = Math.max(0, layoutWidth - thumbDiameter);
-    const visualFraction = environment.direction === "rtl" ? 1 - fraction : fraction;
+    const visualFraction = trackDirection === "rtl" ? 1 - fraction : fraction;
     const thumbLeft = travel * visualFraction;
     const visibleValue = valueText ?? String(currentValue);
     const actionProps = disabled
@@ -208,6 +211,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                         justifyContent: "center",
                         minHeight: recipe.hitTarget,
                         minWidth: recipe.hitTarget,
+                        direction: trackDirection,
                     },
                 ], children: hjmColorTrack ? (_jsxs(_Fragment, { children: [_jsx(View, { pointerEvents: "none", style: {
                                 borderRadius: tokens.radius.full,

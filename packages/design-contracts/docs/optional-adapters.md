@@ -1,6 +1,22 @@
 # Optional presentation adapters
 
-## Image host extension — 2026-10-07 (unpublished)
+## Current support — 2026-10-26
+
+The four Native entries `image-viewer`, `keyboard-controller`, `sheet-gesture` and
+`context-menu-native` are **stable for the documented optional-peer/host contract**.
+The Web image viewer counterpart is stable as well. This is API support, not a claim
+that every OS, physical device or consuming product has been certified.
+
+The promotion reuses the installed iOS/Android engine observations linked below and
+reruns the affected host/browser behavior tests. The current iPhone 17 Pro / iOS 26.5
+Showcase additionally confirmed image loading and dismissal, keyboard entry with the
+dock above the IME and retained text after Done, and sheet input/open/close state.
+The existing iOS system-menu Save and Android engine checks remain historical evidence;
+Android was not connected for a new run. Spoken VoiceOver/TalkBack, release binaries
+and per-product peer/linking validation remain consumer QA as for other stable APIs.
+See [Stable Core](stable-core.md#2026-10-26-잔여-실험과-beta-승격).
+
+## Image host extension — 2026-10-07 implementation record
 
 Native ImageViewer accepts `renderImage` with the item, measured viewport width/height and
 `onReady`/`onError`. This lets a product retain Expo display events and cache policy without
@@ -18,7 +34,7 @@ previous/next buttons, not swipe paging. Mode, viewport, item and retry changes 
 retire callbacks and reset readiness/position. Output-size means layout units, not physical device pixels.
 Host width/height are the computed image dimensions in inspection mode (possibly larger than the viewport).
 The [image usage guide](usage/components/image.md) defines labels, placement and review invalidation.
-This is unpublished and is not proof of Expo onDisplay validation or Utilverse adoption.
+These host props are present in the 1.47.0 source/package train; their presence is not proof of Expo onDisplay validation or Utilverse adoption.
 The Native Modal accepts supportedOrientations in fullScreen presentation. Optional left/right
 safe-area insets protect controls and feedback in landscape while the gallery remains full width.
 Products must supply updated insets and permit rotation in their manifests; OS rotation lock still applies.
@@ -123,9 +139,9 @@ Expo Go cannot verify these linked native modules.
 
 Web stories: `배포/구성/직접 조작과 모션/숫자 변화와 메뉴 변형`. Native stories: `배포/구성/직접 조작과 모션/이미지·시트·키보드 조작` (the earlier 갤러리/모션 연동 and 실험실/선택적 연동 menus; moved by the 2026-10-06 user-approved Storybook promotion, which is not an API promotion).
 Tests cover adaptation logic and web browser behavior; native mocks cannot prove OS gestures,
-keyboard animation, accessibility focus, native linking or installed-device health. Keep native
-adapters experimental until iOS/Android device evidence exists. No consumer migration or publication
-is implied by adding these entries. The prior Motion Primitives candidate remains reference-only.
+keyboard animation, accessibility focus, native linking or installed-device health. The current
+stable decision also uses the installed-engine observations and scoped follow-up above. No consumer
+migration or publication is implied by changing support status. The prior Motion Primitives candidate remains reference-only.
 
 A removal replaces the optional imports with canonical Statistic/Menu/Sheet/KeyboardAvoiding or
 product image/menu behavior and removes the matching peers. There is no persisted-state migration.
