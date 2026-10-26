@@ -1,5 +1,16 @@
 # @hjmds/design-contracts
 
+## 1.48.0
+
+### Minor Changes
+
+- d303522: Add borderless semantic status badges and use selection colors for the current LineScore period independently of team-brand emphasis. Align the native table indentation assertion with its logical RTL-aware padding.
+- f19e165: Promote the remaining documented component and optional-adapter contracts to stable, and move the follower/following screen to the released Storybook section. Preserve the documented optional peer and router-host boundaries.
+
+  Correct Native ColorPicker hue/opacity tracks so their physical colour axis remains left-to-right in RTL, including drag calculations and thumb placement. Restore its missing default/environment fixture and make the environment proof honor explicitly directed coordinate subtrees.
+
+- 2f2263a: Add `ShareSheet` (`@hjmds/react/share-sheet`, `@hjmds/react-native/share-sheet`) with `shareSheetRecipe` and send-outcome helpers in `@hjmds/design-contracts/share-sheet`: one Sheet with optional in-app recipients (search, multi-select, sent lock, partial-failure retry) plus copy link and the OS share sheet, generalized from BurnTok's share sheets.
+
 ## 1.47.0
 
 ### Minor Changes
