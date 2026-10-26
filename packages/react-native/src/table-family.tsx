@@ -43,7 +43,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   // Nine innings plus R/H/E/B fit a 360pt phone without scrolling; a team mark (renderTeam) replaces the
   // visible name, which stays in the row's accessibility label (2026-10-14 Yajalal device check: "L…").
   const CELL = 23, TOTAL = 27, ROW = 36, NAME = renderTeam ? 40 : 64;
-  const header = color(dataTableRecipe.header.color), live = color(dataTableRecipe.sortButton.activeColor);
+  const header = color(dataTableRecipe.header.color), live = color(dataTableFamilyRecipe.currentPeriod.color);
   // Extra innings overflow the period strip. Open it at the live period (or the latest one) and flash the scroll
   // indicator; starting at inning 1 hid the 9th–11th and read as an eight-inning game (2026-10-17 review N4).
   const strip = useRef<ComponentRef<typeof ScrollView>>(null), viewport = useRef(0);
@@ -66,7 +66,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
       onLayout={event => { viewport.current = event.nativeEvent.layout.width; }} onContentSizeChange={revealPeriod}>
       {periods.map((column, index) => {
         const isLive = score.currentPeriod === index + 1;
-        return <View key={column.id} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ width: CELL, alignItems: "center", borderRadius: 8, backgroundColor: isLive ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
+        return <View key={column.id} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden style={{ width: CELL, alignItems: "center", borderRadius: 8, backgroundColor: isLive ? color(dataTableFamilyRecipe.currentPeriod.background) : "transparent" }}>
           <NativeText style={{ height: 26, lineHeight: 26, color: isLive ? live : header, fontSize: 11, fontWeight: textRecipe.emphasis.medium }}>{column.header}</NativeText>
           {teams.map(team => <NativeText key={team.id} style={{ height: ROW, lineHeight: ROW, color: team.periods[index] ? colors.text : colors.textMuted, fontSize: 14, fontWeight: team.periods[index] ? textRecipe.emphasis.medium : textRecipe.emphasis.regular, ...num }}>{formatLineScoreCell(team.periods[index])}</NativeText>)}
         </View>;

@@ -94,7 +94,7 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
     container.querySelector<HTMLElement>(`thead [data-period="${focusPeriod}"]`)?.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [focusPeriod, periods.length]);
   return (
-    <div ref={host} className={classNames("hjm-table-family", "hjm-line-score", className)} style={{ ...withFamilyStyle(layoutStyle), "--hjm-line-score-total-count": totalColumns.length } as CSSProperties}>
+    <div ref={host} className={classNames("hjm-table-family", "hjm-line-score", className)} style={{ ...withFamilyStyle(layoutStyle), "--hjm-line-score-current-background": tableCssColor(dataTableFamilyRecipe.currentPeriod.background), "--hjm-line-score-current-color": tableCssColor(dataTableFamilyRecipe.currentPeriod.color), "--hjm-line-score-total-count": totalColumns.length } as CSSProperties}>
       <table className="hjm-line-score__table" aria-label={accessibilityLabel}>
         <thead>
           <tr>

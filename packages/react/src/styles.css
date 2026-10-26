@@ -1014,6 +1014,18 @@
 /* Product classification color (Badge categoryColor): the renderer resolves fill, ink and stroke per theme and checks AA. */
 .hjm-badge[data-tone="category"] { color: var(--hjm-badge-category-content); background: var(--hjm-badge-category-background); }
 .hjm-badge[data-variant="outline"][data-tone="category"] { background: transparent; border-color: var(--hjm-badge-category-border); }
+
+/* Plain status badges keep semantic ink without a plate or outline. */
+.hjm-badge[data-variant="plain"] { background: transparent; border: 1px solid var(--hjm-color-border); color: var(--hjm-color-text-muted); }
+.hjm-badge[data-variant="plain"][data-tone="strong"] { color: var(--hjm-color-text); }
+.hjm-badge[data-variant="plain"][data-tone="brand"] { color: var(--hjm-color-content-brand); }
+.hjm-badge[data-variant="plain"][data-tone="danger"] { color: var(--hjm-color-danger); }
+.hjm-badge[data-variant="plain"][data-tone="info"] { background: transparent; color: var(--hjm-accent-info); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
+.hjm-badge[data-variant="plain"][data-tone="success"] { background: transparent; color: var(--hjm-accent-success); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
+.hjm-badge[data-variant="plain"][data-tone="warning"] { background: transparent; color: var(--hjm-accent-warning); border-color: color-mix(in srgb, var(--hjm-accent-warning) 30%, transparent); }
+.hjm-badge[data-variant="plain"][data-tone="attention"] { background: transparent; color: var(--hjm-accent-attention); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
+.hjm-badge[data-variant="plain"][data-tone="category"] { background: transparent; border-color: var(--hjm-badge-category-border); }
+.hjm-badge[data-variant="plain"] { border: 0; }
 .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: color-mix(in srgb, var(--hjm-accent-info) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
 .hjm-tag[data-tone="success"] { color: var(--hjm-accent-success); background: color-mix(in srgb, var(--hjm-accent-success) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-success) 30%, transparent); }
 .hjm-tag[data-tone="attention"] { color: var(--hjm-accent-attention); background: color-mix(in srgb, var(--hjm-accent-attention) 14%, transparent); border-color: color-mix(in srgb, var(--hjm-accent-attention) 30%, transparent); }
@@ -1471,8 +1483,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-line-score__table .hjm-line-score__team { inset-inline-start: 0; }
 .hjm-line-score__table td.hjm-line-score__period { min-inline-size: 26px; color: var(--hjm-color-text-sub); }
 .hjm-line-score__table td[data-scored] { color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-line-score__table [data-current] { background: var(--hjm-table-family-selected); }
-.hjm-line-score__table th[data-current] { color: var(--hjm-color-content-brand); }
+.hjm-line-score__table [data-current] { background: var(--hjm-line-score-current-background); }
+.hjm-line-score__table th[data-current] { color: var(--hjm-line-score-current-color); }
 .hjm-line-score__total { inline-size: var(--hjm-line-score-total-width); min-inline-size: var(--hjm-line-score-total-width); color: var(--hjm-color-text-muted); font-weight: var(--hjm-text-emphasis-medium); }
 /* A collapsed-table border stays with the table, not the pinned cell, so the edge is an inset shadow. */
 .hjm-line-score__total-edge { box-shadow: inset 1px 0 0 var(--hjm-color-border); }

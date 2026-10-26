@@ -70,7 +70,7 @@ const seriesColor = { light: "#216BA8", dark: "#216BA8" } as const; // 제품 �
 | --- | --- | --- | --- |
 | `tone` | `neutral` · `strong` · `brand` · `info` · `success` · `warning` · `attention` · `danger` | `neutral` | 단색 배경과 흰색 굵은 글자를 사용한다. `neutral`은 회색, `strong`은 더 진한 회색, 나머지는 각 의미의 solid fill이다. `outline`은 투명 배경과 의미색 글자다 |
 | `categoryColor` | `{ light: string; dark: string }`(6자리 hex) | — | `tone` 대신 쓰는 제품 분류 색. 글자색은 HJM이 고르고 AA를 검사한다(위 절). 개발 소스, 미게시 |
-| `variant` | `filled` · `outline` | `filled` | — |
+| `variant` | `filled` · `outline` · `plain` | `filled` | — |
 | `size` | `small` · `medium` | `medium` | — |
 | `leading` · `trailing` | `ReactNode \| (context: BadgeAdornmentContext) => ReactNode` | — | 라벨 왼쪽·오른쪽 아이콘. 양쪽 동시 사용 가능하며 보조기기에서 숨겨진다 |
 | Web `children` · Native `label` | `ReactNode` · `string \| number`(필수) | — | 표시 라벨 |
@@ -108,3 +108,12 @@ Web·Native 모두 `radius.sm`(8)의 둥근 사각형을 사용한다. 2026-10-1
 | 배치 | `layoutStyle` | `layoutStyle`(`style`은 제거된 속성) |
 | 라벨 스타일 훅 | 없음 | `labelStyle` 제거된 속성 — tone/토큰 |
 | 기본 폭 | inline | `alignSelf: "flex-start"` |
+
+### 테두리 없는 상태 — 개발 소스, 미게시
+
+2026-10-26 오늘야구 라이브 표시 요청에 따라 `variant="plain"`을 추가했다.
+outline과 같은 의미색 글자를 유지하고 배경·테두리를 없앤다. 점은 `leading`에 장식 노드로 전달한다.
+
+```tsx
+<Badge label="진행 중" tone="danger" variant="plain" size="small" />
+```

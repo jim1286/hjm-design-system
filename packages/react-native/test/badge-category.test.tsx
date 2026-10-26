@@ -40,3 +40,14 @@ it("lets a long label shrink beside a leading glyph so it wraps inside the pill"
   const text = tree!.root.findAllByType(Text).find(node => node.props.children === label)!;
   expect(flat(text.props.style).flexShrink).toBe(1);
 });
+
+it.each(["light", "dark"] as const)("plain live status keeps semantic ink without a background or border (%s)", theme => {
+  act(() => { tree = create(<HjmNativeProvider theme={theme}>
+    <Badge label="진행 중" tone="danger" variant="plain" />
+    <Badge label="분류" variant="plain" categoryColor={{ light: "#1762A0", dark: "#7FB8F0" }} />
+  </HjmNativeProvider>); });
+  const badges = tree!.root.findAllByType(View).filter(node => ["진행 중", "분류"].includes(node.props.accessibilityLabel));
+  expect(badges).toHaveLength(2);
+  for (const badge of badges) expect(flat(badge.props.style)).toMatchObject({ backgroundColor: "transparent", borderWidth: 0 });
+  expect(flat(tree!.root.findAllByType(Text)[1]!.props.style).color).toBe(theme === "light" ? "#1762A0" : "#7FB8F0");
+});

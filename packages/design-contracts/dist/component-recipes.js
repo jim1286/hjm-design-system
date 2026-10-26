@@ -160,6 +160,8 @@ export const badgeRecipe = {
             usesToneBackground: false,
             borderFallback: semanticColors.border.default,
         },
+        // Live status next to a score needs semantic ink without a surrounding plate (2026-10-26).
+        plain: { usesToneBackground: false, borderFallback: null },
     },
     // 2026-10-18: match the Today Baseball status plate reference: solid fill,
     // white copy and compact rounded corners. Outline retains its tone-colored copy.
@@ -209,14 +211,14 @@ export function resolveBadgeCategoryColor(color, options) {
     if (typeof value !== "string")
         throw new TypeError(`Badge categoryColor needs a ${theme} color`);
     const minimum = badgeRecipe.category.minimumContrast;
-    if (variant === "outline") {
+    if (variant !== "filled") {
         for (const background of [palette.bg, palette.surface]) {
             const ratio = contrastRatio(value, background);
             if (ratio < minimum) {
                 throw new RangeError(`Badge categoryColor ${value} reads ${ratio.toFixed(2)}:1 on the ${theme} background ${background}; outline labels need ${minimum}:1`);
             }
         }
-        return { background: null, content: value, border: value };
+        return { background: null, content: value, border: variant === "outline" ? value : null };
     }
     const [content, ratio] = [palette.onStatusFill, badgeRecipe.category.darkInk]
         .map(ink => [ink, contrastRatio(ink, value)])

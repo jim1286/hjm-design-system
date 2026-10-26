@@ -326,7 +326,7 @@ export type BadgeTone = "neutral"
  */
  | "strong" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
 export type BadgeSize = "small" | "medium";
-export type BadgeVariant = "filled" | "outline";
+export type BadgeVariant = "filled" | "outline" | "plain";
 /**
  * Values a `leading`/`trailing` render callback receives. `strokeWidth` follows the Icon weight scale like
  * BottomNavigation's icon context, so a product glyph renderer (Lucide etc.) draws the same line weight as HJM Icon.
@@ -370,6 +370,10 @@ export declare const badgeRecipe: {
                 key: "border";
                 alpha?: number;
             }>;
+        };
+        readonly plain: {
+            readonly usesToneBackground: false;
+            readonly borderFallback: null;
         };
     };
     readonly tones: {

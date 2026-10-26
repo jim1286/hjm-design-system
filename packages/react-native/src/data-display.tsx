@@ -167,7 +167,7 @@ export function Badge({
   });
   const contentColor = category?.content ?? resolveColorReference(outlined ? presentation.outlineContent : presentation.content, theme.palette);
   const iconContext = { color: contentColor, size: metrics.iconSize, strokeWidth: badgeRecipe.iconStrokeWidth };
-  const borderReference = outlined ? presentation.border ?? variantPresentation.borderFallback : null;
+  const borderReference = variant === "outline" ? presentation.border ?? variantPresentation.borderFallback : null;
   const borderColor = category
     ? category.border ?? "transparent"
     : borderReference === null ? "transparent" : resolveColorReference(borderReference, theme.palette);

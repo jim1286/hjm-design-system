@@ -23,7 +23,7 @@ it("draws header bands, labeled row groups, indented sub-rows and heat", () => {
     const all = texts(tree);
     expect(all).toEqual(expect.arrayContaining(["타격", "주루", "선발", "교체"]));
     expect(all.indexOf("선발")).toBeLessThan(all.indexOf("교체"));
-    const indented = hosts(tree, props => (props.style as { paddingLeft?: number } | undefined)?.paddingLeft !== undefined && (props.style as { paddingLeft: number }).paddingLeft > 12);
+    const indented = hosts(tree, props => (props.style as { paddingStart?: number } | undefined)?.paddingStart !== undefined && (props.style as { paddingStart: number }).paddingStart > 12);
     expect(indented.length).toBeGreaterThan(0);
     const heat = hosts(tree, props => (props.style as { opacity?: number } | undefined)?.opacity === 0.42);
     expect(heat).toHaveLength(1);

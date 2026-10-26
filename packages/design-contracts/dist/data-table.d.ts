@@ -384,6 +384,18 @@ export declare const dataTableFamilyRecipe: {
             alpha?: number;
         }>;
     };
+    readonly currentPeriod: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "surfaceSelected";
+            alpha?: number;
+        }>;
+        readonly color: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+    };
 };
 export type LineScoreTeam = Readonly<{
     id: string;

@@ -367,6 +367,8 @@ export const dataTableFamilyRecipe = {
      * canvas-colored selected row read as a white gap that split the table (2026-10-17 review E17).
      */
     highlight: { background: semanticColors.surface.brand },
+    // 2026-10-26: current inning follows category selection; my-team emphasis retains its brand role.
+    currentPeriod: { background: semanticColors.selection.background, color: semanticColors.selection.content },
 };
 /**
  * Period columns are padded to `minPeriods` (9 innings) and extend for extra innings; totals follow.

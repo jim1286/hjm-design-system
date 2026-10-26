@@ -26,3 +26,17 @@ it("shows opaque status plates and both icons in light and dark themes", async (
     }
   } finally { await act(async () => root.unmount()); host.remove(); }
 });
+
+it("plain status preserves outline ink while removing its frame", async () => {
+  const host = document.createElement("div"); document.body.append(host);
+  const root = createRoot(host);
+  try {
+    for (const theme of ["light", "dark"] as const) {
+      await act(async () => root.render(<HjmProvider theme={theme}><Badge tone="danger" variant="outline">기존</Badge><Badge tone="danger" variant="plain">진행 중</Badge></HjmProvider>));
+      const [outline, plain] = [...host.querySelectorAll(".hjm-badge")].map(node => getComputedStyle(node));
+      expect(plain!.color).toBe(outline!.color);
+      expect(plain!.backgroundColor).toBe("rgba(0, 0, 0, 0)");
+      expect(plain!.borderTopWidth).toBe("0px");
+    }
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});

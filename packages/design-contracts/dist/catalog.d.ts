@@ -2212,6 +2212,10 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
             };
+            readonly plain: {
+                readonly usesToneBackground: false;
+                readonly borderFallback: null;
+            };
         };
         readonly tones: {
             readonly neutral: {
