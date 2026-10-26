@@ -25,6 +25,9 @@ const supplemental = new Set([
   "Rating", "ImageComparison",
   // 2026-10-23: a settings choice row composed from ListRow, Sheet and RadioGroup; it owns its own story and guide.
   "ChoiceRow",
+  // 2026-10-26: link sharing composed from Sheet, ImageChoiceGroup, SearchField and IconButton (BurnTok share sheet
+  // generalized); no new state axis on Sheet, so it owns its own story and guide like ChoiceRow.
+  "ShareSheet",
   // Controlled collection compositions reuse FieldGroup, ActionSession and DataTable; no new canonical rows.
   "ChatRoomInvite", "ChatRoomDetails", "ChatRoomProfile", "ChatRoomMembers", "ChatRoomCreate", "ChatRoomActions",
   "StreamingAnswer", "ExpandableSearch", "ReplyMessage", "ReplyComposer", "ToggleFeedbackButton",

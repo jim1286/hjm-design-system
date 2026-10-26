@@ -180,6 +180,12 @@ export const Platform = {
   select: <Value,>(options: Readonly<Record<string, Value>> & { default?: Value }) =>
     options.android ?? options.default,
 };
+// ShareSheet's default system share. Tests replace `share` to observe the payload or simulate a dismissal.
+export const Share = {
+  sharedAction: "sharedAction" as const,
+  dismissedAction: "dismissedAction" as const,
+  share: async (_content: Readonly<Record<string, unknown>>, _options?: Readonly<Record<string, unknown>>): Promise<{ action: string }> => ({ action: "sharedAction" }),
+};
 export const InteractionManager = {
   runAfterInteractions: (callback: () => void) => {
     const timer = setTimeout(callback, 0);

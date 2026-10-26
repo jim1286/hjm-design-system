@@ -558,6 +558,9 @@ export const publicExportEntries = {
     SettingsScreen: [
         "./screens"
     ],
+    ShareSheet: [
+        "./share-sheet"
+    ],
     Sheet: [
         "./overlays"
     ],

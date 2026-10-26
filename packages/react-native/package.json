@@ -664,6 +664,12 @@
       "import": "./dist/shortcut-rail.js",
       "default": "./dist/shortcut-rail.js"
     },
+    "./share-sheet": {
+      "types": "./dist/share-sheet.d.ts",
+      "react-native": "./dist/share-sheet.js",
+      "import": "./dist/share-sheet.js",
+      "default": "./dist/share-sheet.js"
+    },
     "./time-picker": {
       "types": "./dist/time-picker.d.ts",
       "react-native": "./dist/time-picker.js",

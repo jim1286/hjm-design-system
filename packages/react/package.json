@@ -604,6 +604,11 @@
       "import": "./dist/shortcut-rail.js",
       "default": "./dist/shortcut-rail.js"
     },
+    "./share-sheet": {
+      "types": "./dist/share-sheet.d.ts",
+      "import": "./dist/share-sheet.js",
+      "default": "./dist/share-sheet.js"
+    },
     "./time-picker": {
       "types": "./dist/time-picker.d.ts",
       "import": "./dist/time-picker.js",

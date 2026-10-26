@@ -176,6 +176,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [SettingsScreen](components/settings-screen.md) | 레이아웃 | 앱의 설정 화면 전체에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SharedTransitionElement](components/shared-transition-element.md) | 구성/직접 조작과 모션 | 목록의 카드(사진·썸네일)를 눌러 상세 화면으로 갈 때, 같은 요소가 두 화면 사이에서 확대·축소되어 이어지는 공유 요소 전환에 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [SharedTransitionScreen](components/shared-transition-screen.md) | 구성/직접 조작과 모션 | `createHjmTransitionStack()`으로 만든 stack에서 공유 요소 전환을 쓸 때, **각 라우트 본문**을 감싼다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
+| [ShareSheet](components/share-sheet.md) | 오버레이 | 링크 하나를 **앱 안의 받는 사람에게 보내거나(선택), 링크를 복사하거나, 기기 공유 시트로 내보내는** 공유 시트에 쓴다. | 미게시(1.47.0 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
 | [Sheet](components/sheet.md) | 오버레이 | 현재 화면 위에 모달로 띄우는 보조 작업 패널에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ShortcutRecorder](components/shortcut-recorder.md) | 구성/직접 조작과 모션 | Web 앱에서 사용자가 수정키+키 조합을 눌러 기록하고, 확인 뒤 실제 단축키로 등록하게 할 때 쓴다. | 1.21.0 | Web | 개별 API 계약 참조 | 배포 |
 | [Sidebar](components/sidebar.md) | 탐색 | 데스크톱 Web의 세로 내비게이션에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |

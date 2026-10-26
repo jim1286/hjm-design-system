@@ -565,6 +565,9 @@ export const publicExportEntries = {
   SharedTransitionScreen: [
     "./screen-transition"
   ],
+  ShareSheet: [
+    "./share-sheet"
+  ],
   Sheet: [
     "./overlays"
   ],

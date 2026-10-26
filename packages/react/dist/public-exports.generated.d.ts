@@ -182,6 +182,7 @@ export declare const publicExportEntries: {
     readonly Select: readonly ["./forms"];
     readonly SelectionActionBar: readonly ["./collection-editing"];
     readonly SettingsScreen: readonly ["./screens"];
+    readonly ShareSheet: readonly ["./share-sheet"];
     readonly Sheet: readonly ["./overlays"];
     readonly ShortcutRail: readonly ["./shortcut-rail"];
     readonly ShortcutRecorder: readonly ["./authoring-tools"];

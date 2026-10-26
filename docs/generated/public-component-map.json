@@ -1741,6 +1741,15 @@
         "role": "canonical"
       },
       {
+        "name": "ShareSheet",
+        "source": "packages/react/src/share-sheet.tsx",
+        "entries": [
+          "./share-sheet"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Sheet",
         "source": "packages/react/src/overlays.tsx",
         "entries": [
@@ -4015,6 +4024,15 @@
         "source": "packages/react-native/src/screen-transition.tsx",
         "entries": [
           "./screen-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ShareSheet",
+        "source": "packages/react-native/src/share-sheet.tsx",
+        "entries": [
+          "./share-sheet"
         ],
         "canonicalComponent": null,
         "role": "supplemental"

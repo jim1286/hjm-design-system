@@ -182,6 +182,7 @@ export declare const publicExportEntries: {
     readonly SettingsScreen: readonly ["./screens"];
     readonly SharedTransitionElement: readonly ["./screen-transition"];
     readonly SharedTransitionScreen: readonly ["./screen-transition"];
+    readonly ShareSheet: readonly ["./share-sheet"];
     readonly Sheet: readonly ["./overlays"];
     readonly SheetPanel: readonly ["./sheet-panel"];
     readonly ShortcutRail: readonly ["./shortcut-rail"];

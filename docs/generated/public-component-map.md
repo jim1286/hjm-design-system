@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 239개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 240개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -191,6 +191,7 @@
 | Select | Select | canonical | root, ./forms |
 | SelectionActionBar | 별도 보조 기능 | supplemental | ./collection-editing |
 | SettingsScreen | SettingsScreen | canonical | ./screens |
+| ShareSheet | 별도 보조 기능 | supplemental | ./share-sheet |
 | Sheet | Sheet | canonical | root, ./overlays |
 | ShortcutRail | Chip | companion-or-alternative | ./shortcut-rail |
 | ShortcutRecorder | 별도 보조 기능 | supplemental | ./authoring-tools |
@@ -250,7 +251,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 229개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 230개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -437,6 +438,7 @@
 | SettingsScreen | SettingsScreen | canonical | ./screens |
 | SharedTransitionElement | 별도 보조 기능 | supplemental | ./screen-transition |
 | SharedTransitionScreen | 별도 보조 기능 | supplemental | ./screen-transition |
+| ShareSheet | 별도 보조 기능 | supplemental | ./share-sheet |
 | Sheet | Sheet | canonical | root, ./overlays |
 | SheetPanel | Sheet | optional-extension | ./sheet-panel |
 | ShortcutRail | Chip | companion-or-alternative | ./shortcut-rail |
