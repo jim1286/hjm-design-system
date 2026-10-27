@@ -39,6 +39,7 @@ import {
 } from "@hjmds/design-contracts/components/image";
 import {
   resolveTimelineDescriptor,
+  timelineDefaults,
   timelineRecipe,
   validateTimelineSelection,
   type ComposeTimelineAccessibleName,
@@ -312,6 +313,8 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Corner labels float above content without changing card height; keep their copy short. */
+    badgesPlacement?: "body" | "corner";
     /** Centre short metadata beneath artwork without product-owned badge layout. */
     badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
@@ -344,6 +347,7 @@ export function Card({
   mediaBadges,
   badges,
   badgesAlign = cardRecipe.defaults.badgesAlign,
+  badgesPlacement = cardRecipe.defaults.badgesPlacement,
   mediaAction,
   actions,
   headerActions,
@@ -406,6 +410,7 @@ export function Card({
           ...(backgroundMedia ? { flex: 1, justifyContent: "flex-end" } as const : {}),
         }}
       >
+        {badges !== undefined && badgesPlacement === "corner" ? <View pointerEvents="none" style={{ position: "absolute", top: cardRecipe.cornerBadge.inset, right: cardRecipe.cornerBadge.inset, transform: [{ rotate: `${cardRecipe.cornerBadge.rotation}deg` }], zIndex: 1 }}>{badges}</View> : null}
         {backgroundMedia ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill}>
           {backgroundMedia}
           <View style={[StyleSheet.absoluteFill, { backgroundColor: cardRecipe.backgroundMedia.scrim }]} />
@@ -420,7 +425,7 @@ export function Card({
           {mediaAction.icon ? <View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", end: cardRecipe.mediaAction.inset, bottom: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.border }}>{mediaAction.icon({ color: colors.text, size: cardRecipe.mediaAction.iconSize })}</View> : null}
         </Pressable> : <View>{media}</View>}
         <View onLayout={({ nativeEvent: { layout } }) => setHeaderBodyTop(layout.y)} style={{ gap: cardRecipe.body.gap, padding: bodyPadding, flexGrow: backgroundMedia ? 0 : 1 }}>
-          {badges === undefined ? null : <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: badgesAlign === "center" ? "center" : "flex-start", gap: cardRecipe.body.gap }}>{badges}</View>}
+          {badges === undefined || badgesPlacement !== "body" ? null : <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: badgesAlign === "center" ? "center" : "flex-start", gap: cardRecipe.body.gap }}>{badges}</View>}
           {hasHeader ? (
             <View
               onLayout={({ nativeEvent: { layout } }) => setHeaderRow(current => current?.top === layout.y && current.height === layout.height ? current : { top: layout.y, height: layout.height })}
@@ -2142,6 +2147,8 @@ export type TimelineProps<Id extends string = string> = Omit<
 > &
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
+    /** Unfilled reading rows with selected-record disclosure. */
+    variant?: "record" | "journal";
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Per-record commands of a passive Timeline. Not allowed together with selection. */
@@ -2149,7 +2156,7 @@ export type TimelineProps<Id extends string = string> = Omit<
     /**
      * Makes each record a selectable button (controlled, single). `null` = selectable with nothing chosen. Supply
      * together with `onSelectedIdChange`. The selected record reads as selected to assistive tech and paints the
-     * neutral selection surface (timelineRecipe.item.selected).
+     * neutral selection surface in variant="record"; journal uses a rail marker and expanded state.
      */
     selectedId?: Id | null;
     onSelectedIdChange?: (id: Id) => void;
@@ -2166,6 +2173,7 @@ export type TimelineProps<Id extends string = string> = Omit<
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
 export function Timeline<Id extends string = string>({
   items,
+  variant = timelineDefaults.variant,
   composeAccessibleName,
   renderMetadata,
   renderActions,
@@ -2177,8 +2185,15 @@ export function Timeline<Id extends string = string>({
 }: TimelineProps<Id>) {
   assertNoRemovedStyleProps("Timeline", props, ["style"]);
   const theme = useHjmNativeTheme();
-  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined, variant });
   const selectable = onSelectedIdChange !== undefined;
+  const journal = variant === "journal";
+  const [disclosure, setDisclosure] = useState({ id: selectedId, collapsed: false });
+  // A map or day change selects a new record and opens it; collapsing never clears the map selection.
+  if (disclosure.id !== selectedId) setDisclosure({ id: selectedId, collapsed: false });
+  const recordPadding = journal ? timelineRecipe.journal.paddingBlock : timelineRecipe.item.padding;
+  const recordGap = journal ? timelineRecipe.journal.gap : timelineRecipe.gap;
+  const dotDiameter = journal ? timelineRecipe.journal.dotDiameter : timelineRecipe.dot.diameter;
   const resolved = resolveTimelineDescriptor(
     selectable ? { items, selectedId: selectedId ?? null } : { items },
     { composeAccessibleName },
@@ -2188,10 +2203,11 @@ export function Timeline<Id extends string = string>({
   const labelLineHeight = theme.tokens.typography[timelineRecipe.label.textVariant].lineHeight * theme.textScaling.scale;
   const renderRecord = (item: ResolvedTimelineItemDescriptor<Id>, index: number) => {
         const actions = renderActions?.(item);
+        const expanded = !selectable || (item.selected && (disclosure.id !== selectedId || !disclosure.collapsed));
         const tone = timelineRecipe.dot.tones[item.tone];
         const accessibilityLabel = [
           item.accessibleName,
-          item.description,
+          !journal || expanded ? item.description : undefined,
           item.timestamp,
         ]
           .filter(Boolean)
@@ -2202,12 +2218,13 @@ export function Timeline<Id extends string = string>({
         const recordStyle = {
           flexDirection: "row",
           gap: spacing.sm,
-          padding: selectable ? timelineRecipe.item.padding - selectedStyle.borderWidth : timelineRecipe.item.padding,
+          padding: journal ? 0 : selectable ? recordPadding - selectedStyle.borderWidth : recordPadding,
+          ...(journal ? {paddingVertical: recordPadding, minHeight: 44} : {}),
           borderRadius: radius.md,
-          backgroundColor: item.selected
+          backgroundColor: journal ? undefined : item.selected
             ? resolveColorReference(selectedStyle.background, theme.palette)
             : item.emphasized ? resolveColorReference(timelineRecipe.item.emphasisBackground, theme.palette) : undefined,
-          ...(selectable ? {
+          ...(selectable && !journal ? {
             borderWidth: selectedStyle.borderWidth,
             borderColor: item.selected ? resolveColorReference(selectedStyle.border, theme.palette) : "transparent",
           } : {}),
@@ -2220,8 +2237,11 @@ export function Timeline<Id extends string = string>({
             key={item.id}
             {...(selectable ? {
               accessibilityRole: "button" as const,
-              accessibilityState: { selected: item.selected },
-              onPress: () => { if (item.id !== selectedId) onSelectedIdChange?.(item.id); },
+              accessibilityState: journal ? { selected: item.selected, expanded } : { selected: item.selected },
+              onPress: () => {
+                if (journal) setDisclosure({ id: item.id, collapsed: item.id === selectedId && !disclosure.collapsed });
+                if (item.id !== selectedId) onSelectedIdChange?.(item.id);
+              },
             } : {})}
             style={recordStyle}
           >
@@ -2232,19 +2252,19 @@ export function Timeline<Id extends string = string>({
               <View
                 style={{
                   backgroundColor: resolveColorReference(
-                    tone.fill,
+                    journal && item.tone === "neutral" ? item.selected ? timelineRecipe.label.color : timelineRecipe.connector.tone : tone.fill,
                     theme.palette,
                   ),
-                  borderColor: tone.border
+                  borderColor: !journal && tone.border
                     ? resolveColorReference(tone.border, theme.palette)
                     : "transparent",
                   borderRadius: radius.full,
-                  borderWidth: tone.border
+                  borderWidth: !journal && tone.border
                     ? timelineRecipe.dot.borderWidth
                     : 0,
-                  height: timelineRecipe.dot.diameter,
-                  marginTop: (labelLineHeight - timelineRecipe.dot.diameter) / 2,
-                  width: timelineRecipe.dot.diameter,
+                  height: dotDiameter,
+                  marginTop: (labelLineHeight - dotDiameter) / 2,
+                  width: dotDiameter,
                 }}
               />
               {index < resolved.length - 1 ? (
@@ -2255,8 +2275,8 @@ export function Timeline<Id extends string = string>({
                       theme.palette,
                     ),
                     position: "absolute",
-                    top: (labelLineHeight + timelineRecipe.dot.diameter) / 2,
-                    bottom: -timelineRecipe.gap - 2 * timelineRecipe.item.padding - labelLineHeight / 2,
+                    top: (labelLineHeight + dotDiameter) / 2,
+                    bottom: -recordGap - 2 * recordPadding - labelLineHeight / 2,
                     width: timelineRecipe.connector.width,
                   }}
                 />
@@ -2279,6 +2299,7 @@ export function Timeline<Id extends string = string>({
                 <Text
                   emphasis="medium"
                   style={{
+                    ...(journal ? {flex: 1} : {}),
                     color: resolveColorReference(
                       timelineRecipe.label.color,
                       theme.palette,
@@ -2288,9 +2309,11 @@ export function Timeline<Id extends string = string>({
                 >
                   {item.label}
                 </Text>
-                {renderMetadata?.(item)}
+                {!journal ? renderMetadata?.(item) : selectable ? <Text accessibilityElementsHidden importantForAccessibility="no-hide-descendants" tone="muted" variant="caption">{expanded ? "⌃" : "⌄"}</Text> : null}
               </View>
-              {item.description ? (
+              {journal && item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
+              {journal && expanded ? renderMetadata?.(item) : null}
+              {item.description && (!journal || expanded) ? (
                 <Text
                   style={{
                     color: resolveColorReference(
@@ -2303,13 +2326,13 @@ export function Timeline<Id extends string = string>({
                   {item.description}
                 </Text>
               ) : null}
-              {item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
+              {!journal && item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
             </View>
             {actions ? <View style={{ flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }}>{actions}</View> : null}
           </Record>
         );
   };
-  return <View {...props} style={[renderList ? {} : { gap: timelineRecipe.gap }, layoutStyle]}>
-    {renderList ? renderList({ items: resolved, renderItem: renderRecord, separator: <View style={{ height: timelineRecipe.gap }} /> }) : resolved.map(renderRecord)}
+  return <View {...props} style={[renderList ? {} : { gap: recordGap }, layoutStyle]}>
+    {renderList ? renderList({ items: resolved, renderItem: renderRecord, separator: <View style={{ height: recordGap }} /> }) : resolved.map(renderRecord)}
   </View>;
 }

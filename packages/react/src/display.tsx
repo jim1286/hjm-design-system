@@ -166,6 +166,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Corner labels float above content without changing card height; keep their copy short. */
+    badgesPlacement?: "body" | "corner";
     /** Centre short metadata beneath artwork without product-owned badge layout. */
     badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
@@ -205,6 +207,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
     mediaBadges,
     badges,
     badgesAlign = cardRecipe.defaults.badgesAlign,
+    badgesPlacement = cardRecipe.defaults.badgesPlacement,
     mediaAction,
     actions,
     headerActions,
@@ -264,6 +267,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
       style={{ "--hjm-card-background-scrim": cardRecipe.backgroundMedia.scrim, "--hjm-card-background-foreground": cardRecipe.backgroundMedia.foreground, "--hjm-card-disabled-opacity": cardRecipe.interaction.disabledOpacity,
         "--hjm-card-pressed-opacity": cardRecipe.interaction.pressedOpacity, ...props.style } as CSSProperties}
     >
+      {badges !== undefined && badgesPlacement === "corner" ? <div className="hjm-card__corner-badges" data-slot="corner-badges" style={{ top: cardRecipe.cornerBadge.inset, right: cardRecipe.cornerBadge.inset, transform: `rotate(${cardRecipe.cornerBadge.rotation}deg)` }}>{badges}</div> : null}
       {backgroundMedia ? <div className="hjm-card__background" aria-hidden="true">{backgroundMedia}<span className="hjm-card__scrim" /></div> : null}
       {backgroundInteraction === undefined ? null : <div className="hjm-card__background-interaction" data-slot="background-interaction">{backgroundInteraction}</div>}
       {mediaBadges === undefined ? null : <div className="hjm-card__media-badges" data-slot="media-badges">{mediaBadges}</div>}
@@ -276,7 +280,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
         data-slot="body"
         style={{ padding: surfaceGeometry.paddings[padding] }}
       >
-        {badges === undefined ? null : <div className="hjm-card__badges" data-slot="badges" data-align={badgesAlign}>{badges}</div>}
+        {badges === undefined || badgesPlacement !== "body" ? null : <div className="hjm-card__badges" data-slot="badges" data-align={badgesAlign}>{badges}</div>}
         {hasHeader ? (
           <div className="hjm-card__header" data-slot="header">
             {leading === undefined ? null : (

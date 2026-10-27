@@ -11,10 +11,13 @@ import { useState } from 'react';
 import { Timeline } from '@hjmds/react-native/data-display';
 // selectedId/onSelectedIdChange (2026-10-23): each record is a selected-state button HJM owns
 // (Diairy rebuilt it with Button tone toggles + accessibilityState.selected).
-function SelectableTimeline() {
+function SelectableTimeline({ journal = false }: { journal?: boolean }) {
   const [selected, setSelected] = useState<string | null>('b');
-  return <Timeline selectedId={selected} onSelectedIdChange={setSelected}
+  return <Timeline variant={journal ? "journal" : "record"} selectedId={selected} onSelectedIdChange={setSelected}
     composeAccessibleName={({ position, label }) => `${position}단계 · ${label}`}
     items={[{ id: 'a', label: '편지를 띄웠어요', timestamp: '9:00' }, { id: 'b', label: '바다를 건넜어요', description: '갈매기가 이어받았어요', timestamp: '13:20' }, { id: 'c', label: '도착했어요', timestamp: '18:05' }]} />;
 }
 export const Selectable: Story = { name: '항목 선택', render: () => <SelectableTimeline /> };
+
+// Travel journal: selected record expands; activating it again collapses details without moving the map.
+export const Journal: Story = { name: "여행 일지", render: () => <SelectableTimeline journal /> };

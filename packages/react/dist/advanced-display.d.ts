@@ -244,12 +244,14 @@ export type TableProps<Row> = Omit<TableHTMLAttributes<HTMLTableElement>, "child
 export declare const Table: <Row>(props: TableProps<Row> & RefAttributes<HTMLTableElement>) => ReactElement;
 export type TimelineProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
+    /** Default journal uses unfilled reading rows; selection adds record disclosure. "record" retains the earlier card surface. */
+    variant?: "record" | "journal";
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /**
-     * Makes the record list a single-select listbox (controlled). `null` = selectable with nothing chosen. Supply
+     * Makes records selectable (journal disclosure buttons; record variant listbox). `null` = nothing chosen. Supply
      * together with `onSelectedIdChange`; the list then needs `aria-label` or `aria-labelledby`.
      */
     selectedId?: Id | null;

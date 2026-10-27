@@ -54,3 +54,20 @@ it("keeps a focused tile mounted after it scrolls out of the window", async () =
   expect(host.querySelector('[aria-label="친구 0"]')).toBe(first);
   expect(document.activeElement).toBe(first);
 });
+
+// Sparse decoration lists retain the same columns as a full row instead of stretching to both edges.
+it.each([false, true])("keeps the second choice in its column with virtualization=%s", async (virtual) => {
+  host.style.width = "280px";
+  const render = async (count: number) => {
+    await act(async () => root.render(<HjmProvider><ImageChoiceGroup label="장식" selectionMode="single"
+      value={null} onValueChange={() => {}} items={people.slice(0, count)}
+      virtualized={virtual ? { height: 200 } : undefined} /></HjmProvider>));
+    await settle();
+    return [...host.querySelectorAll<HTMLElement>(".hjm-image-choice__tile")].map(tile => tile.getBoundingClientRect().left);
+  };
+  const full = await render(3);
+  const sparse = await render(2);
+  expect(sparse[0]).toBeCloseTo(full[0]!, 1);
+  expect(sparse[1]).toBeCloseTo(full[1]!, 1);
+  expect(sparse[1]!).toBeLessThan(full[2]!);
+});

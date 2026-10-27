@@ -133,3 +133,20 @@ it("keeps adjustable cover navigation independent from corner badges and content
   expect(adjust).toHaveBeenCalledOnce(); expect(comment).toHaveBeenCalledOnce();
   act(() => renderer.unmount());
 });
+
+
+it("takes corner labels out of layout while preserving whole-card activation", () => {
+  const open = vi.fn(); let renderer!: ReactTestRenderer;
+  act(() => { renderer = create(<HjmNativeProvider><Card title="Turtle" accessibilityLabel="Open turtle" onActivate={open}
+    badgesPlacement="corner" badges={<View testID="new-label" />} /></HjmNativeProvider>); });
+  const label = renderer.root.findByProps({ testID: "new-label" });
+  const style = StyleSheet.flatten(label.parent!.props.style);
+  expect(style.position).toBe("absolute");
+  expect(style.top).toBe(8);
+  expect(style.right).toBe(8);
+  expect(style.transform).toEqual([{ rotate: "12deg" }]);
+  expect(label.parent!.props.pointerEvents).toBe("none");
+  act(() => renderer.root.findByType(Pressable).props.onPress());
+  expect(open).toHaveBeenCalledOnce();
+  act(() => renderer.unmount());
+});

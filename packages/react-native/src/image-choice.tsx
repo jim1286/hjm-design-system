@@ -83,7 +83,8 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
       {item.description === undefined ? null : <Text variant={recipe.itemDescriptionVariant} tone={recipe.itemDescriptionTone} align="center" numberOfLines={recipe.itemDescriptionLines} accessible={false} importantForAccessibility="no">{item.description}</Text>}
     </Pressable>;
   };
-  const columns = width > 0 ? Math.min(items.length, resolveImageChoiceColumns(width)) : 0;
+  // Preserve empty columns so a short list fills the same slots as a full row (Diairy, 2026-10-27).
+  const columns = width > 0 ? resolveImageChoiceColumns(width) : 0;
   const rows = columns ? Array.from({ length: Math.ceil(items.length / columns) }, (_, row) => items.slice(row * columns, row * columns + columns)) : [];
   // Keep the first/last column on the group edges. Empty slots preserve the same columns in the final partial row.
   const renderRow = (row: readonly ImageChoiceItem[]) => <>

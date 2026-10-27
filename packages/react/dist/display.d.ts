@@ -65,6 +65,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Corner labels float above content without changing card height; keep their copy short. */
+    badgesPlacement?: "body" | "corner";
     /** Centre short metadata beneath artwork without product-owned badge layout. */
     badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
@@ -116,6 +118,8 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Corner labels float above content without changing card height; keep their copy short. */
+    badgesPlacement?: "body" | "corner";
     /** Centre short metadata beneath artwork without product-owned badge layout. */
     badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */

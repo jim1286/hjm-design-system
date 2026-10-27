@@ -202,7 +202,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
     });
     const policy = resolveSheetDismissPolicy(placement, dismissPolicy);
     const closeVisible = resolveSheetCloseButton(placement, showClose);
-    // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
+    // Drag-to-dismiss (2026-10-16 user decision; body touch pull-downs joined 2026-10-27): the sheet follows the pointer downward and a
     // release past the distance or velocity threshold closes with reason "swipe".
     const showHandle = (placement === "bottom" || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
     const closeBlocked = busy && !policy.dismissWhileBusy;
@@ -225,6 +225,84 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
         suppressDragClick.current = false;
         setDragY(0);
     }, [open, canSwipe]);
+    // State, not a ref: the portal mounts the body after this component's first commit.
+    const [bodyElement, setBodyElement] = useState(null);
+    const requestCloseRef = useRef(() => undefined);
+    useEffect(() => {
+        // Body drag-to-dismiss (2026-10-27 user decision): a touch pull-down on the body closes like the handle,
+        // but only while the body, and any scroller between the finger and it, is already at the top. Otherwise
+        // the same pull scrolls the content back first. Touch only: a mouse keeps text selection and uses the handle.
+        // Native listeners because React's touch handlers are passive and cannot stop the browser's own pan.
+        const body = bodyElement;
+        if (!open || !canSwipe || !body)
+            return undefined;
+        let drag = null;
+        const atTop = (target) => {
+            for (let node = target instanceof Element ? target : null; node && body.contains(node); node = node.parentElement) {
+                if (node.scrollTop > 0)
+                    return false;
+                if (node === body)
+                    break;
+            }
+            return body.scrollTop <= 0;
+        };
+        const onStart = (event) => {
+            const touch = event.touches[0];
+            const editable = event.target instanceof Element && event.target.closest("input,textarea,select,[contenteditable]:not([contenteditable='false'])");
+            drag = event.touches.length !== 1 || !touch || editable || !atTop(event.target)
+                ? null
+                : { x: touch.clientX, y: touch.clientY, t: event.timeStamp, state: "pending" };
+        };
+        const onMove = (event) => {
+            const touch = event.touches[0];
+            if (!drag || !touch || drag.state === "rejected")
+                return;
+            const dy = touch.clientY - drag.y;
+            const dx = Math.abs(touch.clientX - drag.x);
+            if (drag.state === "pending") {
+                // Upward or sideways movement belongs to scrolling, rails and swipe rows inside the body.
+                if (dy < 0 || dx > dy) {
+                    if (dy < 0 || dx > sheetDragRecipe.activationDistance)
+                        drag.state = "rejected";
+                    return;
+                }
+                // Hold the browser's pan from the first downward move so the pull is still cancelable once it activates.
+                if (event.cancelable)
+                    event.preventDefault();
+                if (dy < sheetDragRecipe.activationDistance)
+                    return;
+                drag.state = "dragging";
+            }
+            if (event.cancelable)
+                event.preventDefault();
+            setDragY(Math.max(0, dy));
+        };
+        const onEnd = (event) => {
+            const current = drag;
+            drag = null;
+            if (current?.state !== "dragging")
+                return;
+            setDragY(0);
+            const touch = event.changedTouches[0];
+            if (event.type === "touchcancel" || !touch)
+                return;
+            const dy = touch.clientY - current.y;
+            const velocity = dy / Math.max(1, event.timeStamp - current.t);
+            const height = contentRef.current?.getBoundingClientRect().height ?? 0;
+            if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity)
+                requestCloseRef.current("swipe");
+        };
+        body.addEventListener("touchstart", onStart, { passive: true });
+        body.addEventListener("touchmove", onMove, { passive: false });
+        body.addEventListener("touchend", onEnd);
+        body.addEventListener("touchcancel", onEnd);
+        return () => {
+            body.removeEventListener("touchstart", onStart);
+            body.removeEventListener("touchmove", onMove);
+            body.removeEventListener("touchend", onEnd);
+            body.removeEventListener("touchcancel", onEnd);
+        };
+    }, [open, canSwipe, bodyElement]);
     const lifecycleRef = useRef(createSheetLifecycle(open));
     const previousOpenRef = useRef(open);
     const currentOpenRef = useRef(open);
@@ -261,6 +339,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                 });
         }
     };
+    requestCloseRef.current = requestClose;
     useEffect(() => {
         if (open) {
             lifecycleRef.current.open();
@@ -355,7 +434,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                                                     onDetentChange?.(next);
                                             }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : showHandle ? (
                                     // Keep one close command: an explicit × owns it; otherwise the handle supports keyboard and switch users.
-                                    _jsx("div", { className: "hjm-sheet__handle-row", children: closeVisible ? (_jsx("div", { className: "hjm-sheet__handle", "aria-hidden": "true", children: _jsx("span", { className: "hjm-sheet__handle-bar" }) })) : (_jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) })) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: _jsx(ScreenFooterContext.Provider, { value: { bottomPadding: placement === "bottom" ? "calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px))" : "var(--hjm-space-sm)" }, children: _jsx(InitialFocusProvider, { scope: focusScope, children: footer }) }) }) : null] }) }) })) : null] }));
+                                    _jsx("div", { className: "hjm-sheet__handle-row", children: closeVisible ? (_jsx("div", { className: "hjm-sheet__handle", "aria-hidden": "true", children: _jsx("span", { className: "hjm-sheet__handle-bar" }) })) : (_jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": closeLabel, disabled: closeBlocked, onClick: () => requestClose("close-action"), children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) })) })) : null, description || (policy.dismissible && closeVisible) ? _jsxs("header", { className: "hjm-sheet__header", children: [description ? _jsx("div", { children: _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }) : null] }), children ? _jsx("div", { ref: setBodyElement, className: "hjm-sheet__body", children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(InitialFocusProvider, { scope: focusScope, children: children }) }) }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: _jsx(ScreenFooterContext.Provider, { value: { bottomPadding: placement === "bottom" ? "calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px))" : "var(--hjm-space-sm)" }, children: _jsx(InitialFocusProvider, { scope: focusScope, children: footer }) }) }) : null] }) }) })) : null] }));
 });
 export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({

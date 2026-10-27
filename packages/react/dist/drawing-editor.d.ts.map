@@ -1,0 +1,1 @@
+{"version":3,"file":"drawing-editor.d.ts","sourceRoot":"","sources":["../src/drawing-editor.tsx"],"names":[],"mappings":"AAWA,OAAO,EAE4E,KAAK,kBAAkB,EACzG,MAAM,mDAAmD,CAAC;AAC3D,YAAY,EAAE,kBAAkB,EAAE,mBAAmB,EAAE,YAAY,EAAE,MAAM,mDAAmD,CAAC;AAK/H;;yGAEyG;AACzG,wBAAgB,aAAa,CAAC,EAAE,MAAM,EAAE,MAAM,EAAE,QAAQ,EAAE,WAAoB,EAAE,MAAyB,EAAE,EAAE,kBAAkB,+BA4H9H"}

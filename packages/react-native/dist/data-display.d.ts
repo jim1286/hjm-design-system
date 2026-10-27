@@ -57,6 +57,8 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Non-interactive cover classification at the shared top/end inset. Requires backgroundMedia. */
     mediaBadges?: ReactNode;
     badges?: ReactNode;
+    /** Corner labels float above content without changing card height; keep their copy short. */
+    badgesPlacement?: "body" | "corner";
     /** Centre short metadata beneath artwork without product-owned badge layout. */
     badgesAlign?: "start" | "center";
     /** Activate only the passive cover; other card content/actions keep independent targets. */
@@ -83,7 +85,7 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign, badgesPlacement, mediaAction, actions, headerActions, selected, onActivate, disabled, accessibilityLabel, accessibilityHint, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
 export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
     children: ReactNode;
     attribution?: string;
@@ -373,6 +375,8 @@ export type StatisticGroupProps<Id extends string = string> = Omit<ViewProps, "a
 export declare function StatisticGroup<Id extends string = string>({ label, descriptor, availableWidth, density, presentation, composeAccessibilityLabel, arrangement, renderLeading, getValueColor, renderTrendMark, layoutStyle, onLayout, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
 export type TimelineProps<Id extends string = string> = Omit<ViewProps, "children" | "style"> & Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
+    /** Unfilled reading rows with selected-record disclosure. */
+    variant?: "record" | "journal";
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Per-record commands of a passive Timeline. Not allowed together with selection. */
@@ -380,7 +384,7 @@ export type TimelineProps<Id extends string = string> = Omit<ViewProps, "childre
     /**
      * Makes each record a selectable button (controlled, single). `null` = selectable with nothing chosen. Supply
      * together with `onSelectedIdChange`. The selected record reads as selected to assistive tech and paints the
-     * neutral selection surface (timelineRecipe.item.selected).
+     * neutral selection surface in variant="record"; journal uses a rail marker and expanded state.
      */
     selectedId?: Id | null;
     onSelectedIdChange?: (id: Id) => void;
@@ -394,6 +398,6 @@ export type TimelineProps<Id extends string = string> = Omit<ViewProps, "childre
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export declare function Timeline<Id extends string = string>({ items, composeAccessibleName, renderMetadata, renderActions, renderList, selectedId, onSelectedIdChange, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
+export declare function Timeline<Id extends string = string>({ items, variant, composeAccessibleName, renderMetadata, renderActions, renderList, selectedId, onSelectedIdChange, layoutStyle, ...props }: TimelineProps<Id>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=data-display.d.ts.map

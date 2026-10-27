@@ -687,6 +687,12 @@
       "react-native": "./dist/color-picker.js",
       "import": "./dist/color-picker.js",
       "default": "./dist/color-picker.js"
+    },
+    "./drawing-editor": {
+      "types": "./dist/drawing-editor.d.ts",
+      "react-native": "./dist/drawing-editor.js",
+      "import": "./dist/drawing-editor.js",
+      "default": "./dist/drawing-editor.js"
     }
   },
   "files": [

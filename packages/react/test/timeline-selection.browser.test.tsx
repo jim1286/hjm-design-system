@@ -19,14 +19,54 @@ const items = [
 ] as const;
 const changes: string[] = [];
 
-function Harness({ initial }: { initial: "a" | "b" | "c" | null }) {
+function Harness({ initial, journal = false }: { initial: "a" | "b" | "c" | null; journal?: boolean }) {
   const [selected, setSelected] = useState<"a" | "b" | "c" | null>(initial);
-  return <HjmProvider><Timeline aria-label="여정" items={items} composeAccessibleName={({ position, label }) => `${position}단계 ${label}`}
+  return <HjmProvider><Timeline variant={journal ? "journal" : "record"} aria-label="여정" items={items} composeAccessibleName={({ position, label }) => `${position}단계 ${label}`}
     selectedId={selected} onSelectedIdChange={id => { changes.push(id); setSelected(id); }} /></HjmProvider>;
 }
 const options = () => [...host.querySelectorAll<HTMLLIElement>("[role=option]")];
 const press = (key: string) => act(async () => {
   document.activeElement!.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+});
+
+it("journal uses unfilled disclosure buttons and reopens external keyboard selection", async () => {
+  changes.length = 0;
+  await act(async () => root.render(<Harness initial="a" journal />));
+  const buttons = () => [...host.querySelectorAll<HTMLButtonElement>("button[data-timeline-id]")];
+  expect(host.querySelector('[role="listbox"]')).toBeNull();
+  const first = buttons()[0]!;
+  expect(first.getAttribute("aria-expanded")).toBe("true");
+  expect(getComputedStyle(first).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(getComputedStyle(first).boxShadow).toBe("none");
+  const details = document.getElementById(first.getAttribute("aria-controls")!)!;
+  expect(details.hidden).toBe(false);
+  await act(async () => first.click());
+  expect(first.getAttribute("aria-expanded")).toBe("false");
+  expect(details.hidden).toBe(true);
+  expect(changes).toEqual([]);
+  await press("ArrowDown");
+  expect(buttons()[1]!.getAttribute("aria-expanded")).toBe("true");
+  await press("Home");
+  expect(first.getAttribute("aria-expanded")).toBe("true");
+  expect(details.hidden).toBe(false);
+  expect(changes).toEqual(["b", "a"]);
+});
+
+it("default passive journal preserves visible details, event tone and independent commands", async () => {
+  let restored = false;
+  await act(async () => root.render(<HjmProvider><Timeline aria-label="버전 기록"
+    items={[{id: "a", label: "Version 1", tone: "success", description: "Saved content", timestamp: "Today", emphasized: true}]}
+    composeAccessibleName={({label}) => label} renderMetadata={() => <span>Reviewed</span>}
+    renderActions={() => <button onClick={() => { restored = true; }}>Restore</button>} /></HjmProvider>));
+  const record = host.querySelector<HTMLElement>(".hjm-timeline__item")!;
+  expect(host.querySelector("ol")!.dataset.variant).toBe("journal");
+  expect(host.querySelectorAll("button")).toHaveLength(1);
+  expect(getComputedStyle(record).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(host.querySelector<HTMLElement>(".hjm-timeline__details")!.hidden).toBe(false);
+  expect(record.textContent).toContain("Saved content");
+  expect(getComputedStyle(host.querySelector(".hjm-timeline__dot")!).backgroundColor).not.toBe(getComputedStyle(record).backgroundColor);
+  await act(async () => host.querySelector("button")!.click());
+  expect(restored).toBe(true);
 });
 
 it("exposes a named vertical listbox with one roving tab stop and the neutral selection surface", async () => {

@@ -11,7 +11,7 @@ import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/desi
 import { resolveTagDescriptor, resolveTagPresentation, tagRecipe, } from "@hjmds/design-contracts/components/tag";
 import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
-import { resolveTimelineDescriptor, timelineRecipe, validateTimelineSelection, } from "@hjmds/design-contracts/components/timeline";
+import { resolveTimelineDescriptor, timelineDefaults, timelineRecipe, validateTimelineSelection, } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import { avatarRecipe, resolveAvatarInitialsTextVariant, resolveAvatarSize, skeletonRecipe, validateAvatarPresentation } from "@hjmds/design-contracts/recipes";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, iconRecipe, listRowRecipe, statisticRecipe, resolveBadgeCategoryColor, validateListRowTrailingAccessory, dividerRecipe, validateDividerLineStyle, } from "@hjmds/design-contracts/recipes";
@@ -103,7 +103,7 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props 
             layoutStyle,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, mediaAction, actions, headerActions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
+export function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, badgesPlacement = cardRecipe.defaults.badgesPlacement, mediaAction, actions, headerActions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens, colors } = useHjmNativeTheme();
     if (onActivate && !accessibilityLabel?.trim()) {
         throw new TypeError("Interactive Card requires accessibilityLabel");
@@ -137,8 +137,8 @@ export function Card({ children, title, description, leading, leadingAction, med
                 flexGrow: 1,
                 borderRadius: tokens.radius[cornerRadius],
                 ...(backgroundMedia ? { flex: 1, justifyContent: "flex-end" } : {}),
-            }, children: [backgroundMedia ? _jsxs(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: StyleSheet.absoluteFill, children: [backgroundMedia, _jsx(View, { style: [StyleSheet.absoluteFill, { backgroundColor: cardRecipe.backgroundMedia.scrim }] })] }) : null, backgroundInteraction === undefined ? null : _jsx(View, { pointerEvents: "box-none", style: StyleSheet.absoluteFill, children: backgroundInteraction }), mediaBadges === undefined ? null : _jsx(View, { pointerEvents: "box-none", style: { position: "absolute", top: cardRecipe.mediaAction.inset, end: cardRecipe.mediaAction.inset, flexDirection: "row", flexWrap: "wrap", gap: cardRecipe.body.gap, zIndex: 1 }, children: mediaBadges }), _jsxs(CardActivationRegion, { split: split, activation: activationA11y, disabled: disabled, onPress: activate, feedbackOpacity: feedbackOpacity, children: [media === undefined ? null : mediaAction ? _jsxs(Pressable, { accessibilityRole: "button", accessibilityLabel: mediaAction.label, accessibilityState: { disabled }, disabled: disabled, onPress: () => { if (!disabled)
-                                mediaAction.onActivate(); }, style: ({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }], children: [media, mediaAction.icon ? _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", end: cardRecipe.mediaAction.inset, bottom: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.border }, children: mediaAction.icon({ color: colors.text, size: cardRecipe.mediaAction.iconSize }) }) : null] }) : _jsx(View, { children: media }), _jsxs(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderBodyTop(layout.y), style: { gap: cardRecipe.body.gap, padding: bodyPadding, flexGrow: backgroundMedia ? 0 : 1 }, children: [badges === undefined ? null : _jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", justifyContent: badgesAlign === "center" ? "center" : "flex-start", gap: cardRecipe.body.gap }, children: badges }), hasHeader ? (_jsxs(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderRow(current => current?.top === layout.y && current.height === layout.height ? current : { top: layout.y, height: layout.height }), style: {
+            }, children: [badges !== undefined && badgesPlacement === "corner" ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: cardRecipe.cornerBadge.inset, right: cardRecipe.cornerBadge.inset, transform: [{ rotate: `${cardRecipe.cornerBadge.rotation}deg` }], zIndex: 1 }, children: badges }) : null, backgroundMedia ? _jsxs(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: StyleSheet.absoluteFill, children: [backgroundMedia, _jsx(View, { style: [StyleSheet.absoluteFill, { backgroundColor: cardRecipe.backgroundMedia.scrim }] })] }) : null, backgroundInteraction === undefined ? null : _jsx(View, { pointerEvents: "box-none", style: StyleSheet.absoluteFill, children: backgroundInteraction }), mediaBadges === undefined ? null : _jsx(View, { pointerEvents: "box-none", style: { position: "absolute", top: cardRecipe.mediaAction.inset, end: cardRecipe.mediaAction.inset, flexDirection: "row", flexWrap: "wrap", gap: cardRecipe.body.gap, zIndex: 1 }, children: mediaBadges }), _jsxs(CardActivationRegion, { split: split, activation: activationA11y, disabled: disabled, onPress: activate, feedbackOpacity: feedbackOpacity, children: [media === undefined ? null : mediaAction ? _jsxs(Pressable, { accessibilityRole: "button", accessibilityLabel: mediaAction.label, accessibilityState: { disabled }, disabled: disabled, onPress: () => { if (!disabled)
+                                mediaAction.onActivate(); }, style: ({ pressed }) => [minimumTargetStyle, { opacity: feedbackOpacity(pressed) }], children: [media, mediaAction.icon ? _jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", end: cardRecipe.mediaAction.inset, bottom: cardRecipe.mediaAction.inset, width: cardRecipe.mediaAction.diameter, height: cardRecipe.mediaAction.diameter, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius.full, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.border }, children: mediaAction.icon({ color: colors.text, size: cardRecipe.mediaAction.iconSize }) }) : null] }) : _jsx(View, { children: media }), _jsxs(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderBodyTop(layout.y), style: { gap: cardRecipe.body.gap, padding: bodyPadding, flexGrow: backgroundMedia ? 0 : 1 }, children: [badges === undefined || badgesPlacement !== "body" ? null : _jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", justifyContent: badgesAlign === "center" ? "center" : "flex-start", gap: cardRecipe.body.gap }, children: badges }), hasHeader ? (_jsxs(View, { onLayout: ({ nativeEvent: { layout } }) => setHeaderRow(current => current?.top === layout.y && current.height === layout.height ? current : { top: layout.y, height: layout.height }), style: {
                                         alignItems: cardRecipe.header.alignItems,
                                         direction: environment.direction,
                                         flexDirection: "row",
@@ -885,21 +885,30 @@ function StatisticGroupItem({ bar, barDivider, ...props }) {
     return renderStatistic(props, bar, barDivider);
 }
 /** Ordered record of completed events; unlike Steps it has no current cursor. */
-export function Timeline({ items, composeAccessibleName, renderMetadata, renderActions, renderList, selectedId, onSelectedIdChange, layoutStyle, ...props }) {
+export function Timeline({ items, variant = timelineDefaults.variant, composeAccessibleName, renderMetadata, renderActions, renderList, selectedId, onSelectedIdChange, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Timeline", props, ["style"]);
     const theme = useHjmNativeTheme();
-    validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+    validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined, variant });
     const selectable = onSelectedIdChange !== undefined;
+    const journal = variant === "journal";
+    const [disclosure, setDisclosure] = useState({ id: selectedId, collapsed: false });
+    // A map or day change selects a new record and opens it; collapsing never clears the map selection.
+    if (disclosure.id !== selectedId)
+        setDisclosure({ id: selectedId, collapsed: false });
+    const recordPadding = journal ? timelineRecipe.journal.paddingBlock : timelineRecipe.item.padding;
+    const recordGap = journal ? timelineRecipe.journal.gap : timelineRecipe.gap;
+    const dotDiameter = journal ? timelineRecipe.journal.dotDiameter : timelineRecipe.dot.diameter;
     const resolved = resolveTimelineDescriptor(selectable ? { items, selectedId: selectedId ?? null } : { items }, { composeAccessibleName });
     // Dot, label first line and timestamp share the label's rendered first line box (token × text scale), matching
     // Web's 1lh anchor (2026-10-17 measured audit: the dot sat at the top and the caption rode the baseline).
     const labelLineHeight = theme.tokens.typography[timelineRecipe.label.textVariant].lineHeight * theme.textScaling.scale;
     const renderRecord = (item, index) => {
         const actions = renderActions?.(item);
+        const expanded = !selectable || (item.selected && (disclosure.id !== selectedId || !disclosure.collapsed));
         const tone = timelineRecipe.dot.tones[item.tone];
         const accessibilityLabel = [
             item.accessibleName,
-            item.description,
+            !journal || expanded ? item.description : undefined,
             item.timestamp,
         ]
             .filter(Boolean)
@@ -910,12 +919,13 @@ export function Timeline({ items, composeAccessibleName, renderMetadata, renderA
         const recordStyle = {
             flexDirection: "row",
             gap: spacing.sm,
-            padding: selectable ? timelineRecipe.item.padding - selectedStyle.borderWidth : timelineRecipe.item.padding,
+            padding: journal ? 0 : selectable ? recordPadding - selectedStyle.borderWidth : recordPadding,
+            ...(journal ? { paddingVertical: recordPadding, minHeight: 44 } : {}),
             borderRadius: radius.md,
-            backgroundColor: item.selected
+            backgroundColor: journal ? undefined : item.selected
                 ? resolveColorReference(selectedStyle.background, theme.palette)
                 : item.emphasized ? resolveColorReference(timelineRecipe.item.emphasisBackground, theme.palette) : undefined,
-            ...(selectable ? {
+            ...(selectable && !journal ? {
                 borderWidth: selectedStyle.borderWidth,
                 borderColor: item.selected ? resolveColorReference(selectedStyle.border, theme.palette) : "transparent",
             } : {}),
@@ -923,26 +933,30 @@ export function Timeline({ items, composeAccessibleName, renderMetadata, renderA
         const Record = selectable ? Pressable : View;
         return (_jsxs(Record, { accessible: !actions, accessibilityLabel: actions ? undefined : accessibilityLabel, ...(selectable ? {
                 accessibilityRole: "button",
-                accessibilityState: { selected: item.selected },
-                onPress: () => { if (item.id !== selectedId)
-                    onSelectedIdChange?.(item.id); },
+                accessibilityState: journal ? { selected: item.selected, expanded } : { selected: item.selected },
+                onPress: () => {
+                    if (journal)
+                        setDisclosure({ id: item.id, collapsed: item.id === selectedId && !disclosure.collapsed });
+                    if (item.id !== selectedId)
+                        onSelectedIdChange?.(item.id);
+                },
             } : {}), style: recordStyle, children: [_jsxs(View, { importantForAccessibility: "no-hide-descendants", style: { alignItems: "center", width: 16 }, children: [_jsx(View, { style: {
-                                backgroundColor: resolveColorReference(tone.fill, theme.palette),
-                                borderColor: tone.border
+                                backgroundColor: resolveColorReference(journal && item.tone === "neutral" ? item.selected ? timelineRecipe.label.color : timelineRecipe.connector.tone : tone.fill, theme.palette),
+                                borderColor: !journal && tone.border
                                     ? resolveColorReference(tone.border, theme.palette)
                                     : "transparent",
                                 borderRadius: radius.full,
-                                borderWidth: tone.border
+                                borderWidth: !journal && tone.border
                                     ? timelineRecipe.dot.borderWidth
                                     : 0,
-                                height: timelineRecipe.dot.diameter,
-                                marginTop: (labelLineHeight - timelineRecipe.dot.diameter) / 2,
-                                width: timelineRecipe.dot.diameter,
+                                height: dotDiameter,
+                                marginTop: (labelLineHeight - dotDiameter) / 2,
+                                width: dotDiameter,
                             } }), index < resolved.length - 1 ? (_jsx(View, { style: {
                                 backgroundColor: resolveColorReference(timelineRecipe.connector.tone, theme.palette),
                                 position: "absolute",
-                                top: (labelLineHeight + timelineRecipe.dot.diameter) / 2,
-                                bottom: -timelineRecipe.gap - 2 * timelineRecipe.item.padding - labelLineHeight / 2,
+                                top: (labelLineHeight + dotDiameter) / 2,
+                                bottom: -recordGap - 2 * recordPadding - labelLineHeight / 2,
                                 width: timelineRecipe.connector.width,
                             } })) : null] }), _jsxs(View, { accessible: !!actions, accessibilityLabel: actions ? accessibilityLabel : undefined, importantForAccessibility: actions ? "auto" : "no-hide-descendants", style: { flex: 1, gap: spacing.xxs, minWidth: 0, paddingBottom: spacing.xxs }, children: [_jsxs(View, { style: {
                                 alignItems: "flex-start",
@@ -950,11 +964,12 @@ export function Timeline({ items, composeAccessibleName, renderMetadata, renderA
                                 flexWrap: "wrap",
                                 gap: spacing.xs,
                             }, children: [_jsx(Text, { emphasis: "medium", style: {
+                                        ...(journal ? { flex: 1 } : {}),
                                         color: resolveColorReference(timelineRecipe.label.color, theme.palette),
-                                    }, variant: timelineRecipe.label.textVariant, children: item.label }), renderMetadata?.(item)] }), item.description ? (_jsx(Text, { style: {
+                                    }, variant: timelineRecipe.label.textVariant, children: item.label }), !journal ? renderMetadata?.(item) : selectable ? _jsx(Text, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", tone: "muted", variant: "caption", children: expanded ? "⌃" : "⌄" }) : null] }), journal && item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null, journal && expanded ? renderMetadata?.(item) : null, item.description && (!journal || expanded) ? (_jsx(Text, { style: {
                                 color: resolveColorReference(timelineRecipe.description.color, theme.palette),
-                            }, variant: timelineRecipe.description.textVariant, children: item.description })) : null, item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null] }), actions ? _jsx(View, { style: { flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }, children: actions }) : null] }, item.id));
+                            }, variant: timelineRecipe.description.textVariant, children: item.description })) : null, !journal && item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null] }), actions ? _jsx(View, { style: { flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }, children: actions }) : null] }, item.id));
     };
-    return _jsx(View, { ...props, style: [renderList ? {} : { gap: timelineRecipe.gap }, layoutStyle], children: renderList ? renderList({ items: resolved, renderItem: renderRecord, separator: _jsx(View, { style: { height: timelineRecipe.gap } }) }) : resolved.map(renderRecord) });
+    return _jsx(View, { ...props, style: [renderList ? {} : { gap: recordGap }, layoutStyle], children: renderList ? renderList({ items: resolved, renderItem: renderRecord, separator: _jsx(View, { style: { height: recordGap } }) }) : resolved.map(renderRecord) });
 }
 //# sourceMappingURL=data-display.js.map

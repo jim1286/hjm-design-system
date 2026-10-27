@@ -33,3 +33,5 @@ function BackgroundMediaPreview() {
 export const BackgroundMedia: Story = { name: "배경 그림과 독립 행동", render: () => <BackgroundMediaPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+
+export const CornerBadge: Story = { name: "우상단 NEW 배지 · 미게시", render: () => <Card title="바다거북" description="1번 만남" badgesPlacement="corner" badges={<Badge label="NEW" tone="success" />} /> };

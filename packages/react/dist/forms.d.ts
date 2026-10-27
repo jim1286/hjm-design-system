@@ -247,7 +247,7 @@ export type PasswordFieldProps = Omit<TextFieldProps, "autoComplete" | "characte
     renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
 }>;
 /** Password input with an independently controlled, selection-safe reveal action. */
-export declare const PasswordField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "type" | "size" | "value" | "defaultValue" | "trailing" | "autoComplete" | "characterCount"> & Readonly<{
+export declare const PasswordField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "type" | "size" | "value" | "defaultValue" | "autoComplete" | "trailing" | "characterCount"> & Readonly<{
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
@@ -271,7 +271,7 @@ export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "characterCoun
     busy?: boolean;
 }>;
 /** One accessible numeric input rendered as decorative OTP slots. */
-export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "type" | "size" | "value" | "defaultValue" | "variant" | "leading" | "trailing" | "shape" | "maxLength" | "autoComplete" | "characterCount"> & Readonly<{
+export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "type" | "size" | "value" | "defaultValue" | "variant" | "shape" | "maxLength" | "autoComplete" | "leading" | "trailing" | "characterCount"> & Readonly<{
     length: number;
     value?: string;
     defaultValue?: string;

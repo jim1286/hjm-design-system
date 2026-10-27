@@ -69,7 +69,7 @@ import { ImageChoiceGroup } from "@hjmds/react-native/image-choice";
 | 크기 | 그림 72 정사각, 바깥 고리 2 + 간격 2(터치 영역 80), radius `radius.md` 12, 체크 원 20 | `imageChoiceRecipe` |
 | 간격 | 타일 사이 `spacing.xs` 8(가로·세로), 라벨–타일 8, 그림–항목 라벨 `spacing.xxs` 4. 이름과 설명 사이 0 | `imageChoiceRecipe.gap`, `itemLabelGap` |
 | 글자 칸 | 이름 줄(`itemLabelLines`) + 설명 줄(묶음에 설명이 있으면 1)을 caption 행간(16 × 글자 배율)으로 모든 타일이 같은 높이로 비워 둔다. 타일 높이 = 80 + 4 + 줄 수 × 행간(글자 칸이 없으면 80) | `resolveImageChoiceCaptionLines`, `resolveImageChoiceTileHeight` |
-| 순서·정렬 | `items` 순서대로 시작 쪽부터 줄바꿈 배치, 체크는 타일 끝 쪽 위 모서리 | 두 렌더러 |
+| 순서·정렬 | `items` 순서대로 시작 쪽부터 줄바꿈 배치. 항목이 적어도 화면 폭에 맞는 빈 칸을 유지해 다음 항목이 중간 칸부터 채워진다(2026-10-27 Diairy 양끝 벌어짐 수정). 체크는 타일 끝 쪽 위 모서리 | 두 렌더러 |
 | 고정·스크롤 | 기본은 자체 스크롤 없음(바깥 목록·화면이 스크롤). `virtualized`면 묶음이 `height` 높이로 스스로 스크롤한다. Web은 포커스 테두리가 잘리지 않게 안쪽 여백 4(`virtualViewportInset`), 열 수 = ⌊(폭 + 8) / 88⌋(최소 1) | 두 렌더러, `resolveImageChoiceColumns` |
 | 좁은 폭·큰 글자 | 남은 폭에서 줄바꿈, 타일 크기는 유지 | flex wrap |
 

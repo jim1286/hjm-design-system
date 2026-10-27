@@ -660,6 +660,17 @@ export declare const componentCatalog: readonly [{
     readonly platform: "adaptive";
     readonly status: "stable";
 }, {
+    readonly recipe: "drawingEditorRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "DrawingEditor";
+    readonly label: "손그림 편집기";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
     readonly recipe: "colorPickerRecipe";
     readonly surfaceStatus: {
         readonly web: "stable";
@@ -1754,6 +1765,19 @@ export declare function componentIdOf(entry: Pick<ComponentCatalogEntry, "name" 
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
+    readonly drawingEditorRecipe: {
+        readonly maxCanvas: 400;
+        readonly minCanvas: 160;
+        readonly gap: 12;
+        readonly radius: 16;
+        readonly sizePreviewMs: 700;
+        readonly brush: {
+            readonly min: 2;
+            readonly max: 32;
+            readonly step: 2;
+            readonly initial: 12;
+        };
+    };
     readonly timePickerRecipe: {
         readonly rowHeight: 44;
         readonly visibleRows: 5;
@@ -3747,6 +3771,7 @@ export declare const recipeRegistry: {
             readonly bordered: true;
             readonly headingLevel: 3;
             readonly badgesAlign: "start";
+            readonly badgesPlacement: "body";
             readonly padding: "md";
         };
         readonly selectedTone: "selected";
@@ -3762,6 +3787,10 @@ export declare const recipeRegistry: {
         readonly backgroundMedia: {
             readonly scrim: "rgba(0, 0, 0, 0.6)";
             readonly foreground: "#ffffff";
+        };
+        readonly cornerBadge: {
+            readonly inset: 8;
+            readonly rotation: 12;
         };
         readonly quotation: {
             readonly gap: 8;
@@ -8973,6 +9002,11 @@ export declare const recipeRegistry: {
     readonly timelineRecipe: {
         readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];
         readonly gap: 20;
+        readonly journal: {
+            readonly gap: 0;
+            readonly paddingBlock: 16;
+            readonly dotDiameter: 8;
+        };
         readonly item: {
             readonly padding: 12;
             readonly emphasisBackground: Readonly<{

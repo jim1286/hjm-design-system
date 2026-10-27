@@ -3,7 +3,7 @@ import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { SegmentedControl } from "../src/selection.js";
-import { Card } from "../src/display.js";
+import { Badge, Card } from "../src/display.js";
 import { HjmProvider } from "../src/provider.js";
 
 let host: HTMLDivElement, root: Root;
@@ -109,4 +109,27 @@ it("keeps cover contrast, artwork layout, and independent hit targets across the
       await act(async () => command.click()); expect(open).toHaveBeenCalledOnce();
     }
   }
+});
+
+
+it("keeps a tilted NEW label inside the upper-right corner without changing card height or activation", async () => {
+  host.style.width = "180px";
+  const open = vi.fn();
+  const card = (fresh: boolean) => <Card layoutStyle={{ width: "100%" }} title="바다거북" description="1번 만남" aria-label="Open turtle" onActivate={open}
+    media={<div style={{ height: 64 }}>Animal</div>} badgesPlacement="corner" badges={fresh ? <Badge tone="success">NEW</Badge> : undefined} />;
+  await render(card(false));
+  const height = host.querySelector(".hjm-card")!.getBoundingClientRect().height;
+  await render(card(true));
+  const element = host.querySelector<HTMLElement>(".hjm-card")!;
+  const bounds = element.getBoundingClientRect();
+  const label = host.querySelector<HTMLElement>('[data-slot="corner-badges"]')!;
+  const corner = label.getBoundingClientRect();
+  expect(bounds.height).toBe(height);
+  expect(host.querySelector('[data-slot="body"] [data-slot="badges"]')).toBeNull();
+  expect(corner.top).toBeGreaterThanOrEqual(bounds.top);
+  expect(corner.right).toBeLessThanOrEqual(bounds.right);
+  expect(corner.left).toBeGreaterThan(bounds.left + bounds.width / 2);
+  expect(getComputedStyle(label).transform).not.toBe("none");
+  await act(async () => { (hit(label) as HTMLElement).click(); });
+  expect(open).toHaveBeenCalledOnce();
 });

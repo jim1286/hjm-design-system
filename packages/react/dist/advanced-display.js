@@ -1,12 +1,12 @@
 "use client";
 import { createElement as _createElement } from "react";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { IdentityAction } from "./internal/identity-action.js";
 import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
-import { getTimelineSelectionTarget, resolveTimelineDescriptor, validateTimelineSelection, } from "@hjmds/design-contracts/components/timeline";
+import { getTimelineSelectionTarget, resolveTimelineDescriptor, timelineDefaults, validateTimelineSelection, } from "@hjmds/design-contracts/components/timeline";
 import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
 import { accordionRecipe, avatarRecipe, resolveAvatarSize, validateAvatarPresentation, dividerRecipe, listRecipe, validateDividerLineStyle, statisticRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, createElement, forwardRef, Fragment, isValidElement, useId, useLayoutEffect, useMemo, useRef, useState, } from "react";
@@ -270,9 +270,14 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
                                 } })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
-function TimelineInner({ items, composeAccessibleName, renderMetadata, renderActions, selectedId, onSelectedIdChange, className, layoutStyle, onKeyDown, ...props }, ref) {
-    validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+function TimelineInner({ items, variant = timelineDefaults.variant, composeAccessibleName, renderMetadata, renderActions, selectedId, onSelectedIdChange, className, layoutStyle, onKeyDown, ...props }, ref) {
+    validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined, variant });
     const selectable = onSelectedIdChange !== undefined;
+    const journal = variant === "journal";
+    // Anchor collapsed state to its selected record. External map/day selection opens the new record immediately.
+    const [disclosure, setDisclosure] = useState({ id: selectedId, collapsed: false });
+    if (disclosure.id !== selectedId)
+        setDisclosure({ id: selectedId, collapsed: false });
     if (selectable && !props["aria-label"] && !props["aria-labelledby"]) {
         throw new TypeError("A selectable Timeline needs aria-label or aria-labelledby (listbox name)");
     }
@@ -280,7 +285,9 @@ function TimelineInner({ items, composeAccessibleName, renderMetadata, renderAct
     const idPrefix = useId();
     // Roving tab stop: the selected record, or the first one before anything is chosen.
     const tabStopId = selectable ? (selectedId ?? resolved[0]?.id) : undefined;
-    const select = (list, id) => {
+    const select = (list, id, toggle = false) => {
+        if (journal)
+            setDisclosure({ id, collapsed: toggle && id === selectedId && !disclosure.collapsed });
         if (id !== selectedId)
             onSelectedIdChange?.(id);
         list.querySelector(`[data-timeline-id="${CSS.escape(id)}"]`)?.focus();
@@ -292,9 +299,9 @@ function TimelineInner({ items, composeAccessibleName, renderMetadata, renderAct
         const focusedId = event.target.closest("[data-timeline-id]")?.dataset.timelineId;
         if (focusedId === undefined)
             return;
-        if (event.key === "Enter" || event.key === " ") {
+        if (!journal && (event.key === "Enter" || event.key === " ")) {
             event.preventDefault();
-            select(event.currentTarget, focusedId);
+            select(event.currentTarget, focusedId, true);
             return;
         }
         const target = getTimelineSelectionTarget(items, focusedId, event.key);
@@ -303,20 +310,21 @@ function TimelineInner({ items, composeAccessibleName, renderMetadata, renderAct
         event.preventDefault();
         select(event.currentTarget, target);
     };
-    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), role: selectable ? "listbox" : props.role, "aria-orientation": selectable ? "vertical" : undefined, "data-selectable": selectable || undefined, onKeyDown: handleKeyDown, children: resolved.map((item, index) => {
+    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), role: selectable && !journal ? "listbox" : props.role, "aria-orientation": selectable && !journal ? "vertical" : undefined, "data-selectable": selectable || undefined, "data-variant": variant, onKeyDown: handleKeyDown, children: resolved.map((item, index) => {
             const actions = renderActions?.(item);
             const detailIds = selectable
                 ? [item.description ? `${idPrefix}-${index}-description` : null, item.timestamp ? `${idPrefix}-${index}-timestamp` : null].filter(Boolean).join(" ")
                 : "";
-            return (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, "data-emphasized": item.emphasized || undefined, ...(selectable ? {
-                    role: "option",
-                    "aria-selected": item.selected,
-                    "aria-describedby": detailIds || undefined,
-                    "data-timeline-id": item.id,
-                    "data-state": item.selected ? "selected" : undefined,
+            const expanded = !selectable || (item.selected && (disclosure.id !== selectedId || !disclosure.collapsed));
+            const body = _jsxs(_Fragment, { children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? _jsx("span", { className: "hjm-timeline__connector" }) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), !journal ? renderMetadata?.(item) : selectable ? _jsx("span", { className: "hjm-timeline__chevron", "aria-hidden": "true", children: "\u2304" }) : null] }), journal && item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, children: item.timestamp }) : null, _jsxs("span", { className: "hjm-timeline__details", id: `${idPrefix}-${index}-details`, hidden: journal && !expanded, children: [journal ? renderMetadata?.(item) : null, item.description ? _jsx("span", { className: "hjm-timeline__description", id: selectable && !journal ? `${idPrefix}-${index}-description` : undefined, children: item.description }) : null, !journal && item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, id: selectable ? `${idPrefix}-${index}-timestamp` : undefined, children: item.timestamp }) : null] })] }), actions ? _jsx("div", { className: "hjm-timeline__actions", children: actions }) : null] });
+            if (journal && selectable)
+                return _jsx("li", { children: _jsx("button", { type: "button", className: "hjm-timeline__item", "data-tone": item.tone, "data-state": item.selected ? "selected" : undefined, "data-timeline-id": item.id, "aria-label": [item.accessibleName, item.timestamp].filter(Boolean).join(", "), "aria-expanded": expanded, "aria-controls": `${idPrefix}-${index}-details`, "aria-describedby": expanded ? `${idPrefix}-${index}-details` : undefined, onClick: event => select(event.currentTarget.closest("ol"), item.id, true), children: body }) }, item.id);
+            return _jsx("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, "data-emphasized": item.emphasized || undefined, ...(selectable ? {
+                    role: "option", "aria-selected": item.selected, "aria-describedby": detailIds || undefined,
+                    "data-timeline-id": item.id, "data-state": item.selected ? "selected" : undefined,
                     tabIndex: item.id === tabStopId ? 0 : -1,
                     onClick: (event) => select(event.currentTarget.parentElement, item.id),
-                } : {}), children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), renderMetadata?.(item)] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", id: selectable ? `${idPrefix}-${index}-description` : undefined, children: item.description })) : null, item.timestamp ? _jsx("time", { className: "hjm-timeline__timestamp", dateTime: item.dateTime, id: selectable ? `${idPrefix}-${index}-timestamp` : undefined, children: item.timestamp }) : null] }), actions ? _jsx("div", { className: "hjm-timeline__actions", children: actions }) : null] }, item.id));
+                } : {}), children: body }, item.id);
         }) }));
 }
 export const Timeline = forwardRef(TimelineInner);

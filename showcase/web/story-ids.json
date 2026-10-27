@@ -160,6 +160,7 @@
     "components-data-display-badge--default",
     "components-data-display-badge--large-text",
     "components-data-display-card--background-media",
+    "components-data-display-card--corner-badge",
     "components-data-display-card--dark",
     "components-data-display-card--default",
     "components-data-display-card--destination-link",
@@ -246,6 +247,7 @@
     "components-data-display-tag--large-text",
     "components-data-display-timeline--dark",
     "components-data-display-timeline--default",
+    "components-data-display-timeline--journal",
     "components-data-display-timeline--large-text",
     "components-data-display-timeline--selectable",
     "components-data-display-upload-item--dark",
@@ -1289,7 +1291,10 @@
     "실험-구성-콘텐츠-바로가기-목록--wrapped",
     "실험-컴포넌트-데이터-표시-인용-카드--dark",
     "실험-컴포넌트-데이터-표시-인용-카드--default",
-    "실험-컴포넌트-데이터-표시-인용-카드--large-text"
+    "실험-컴포넌트-데이터-표시-인용-카드--large-text",
+    "실험-컴포넌트-입력-손그림-편집기--default",
+    "실험-컴포넌트-입력-손그림-편집기--save-failure",
+    "실험-컴포넌트-입력-손그림-편집기--square"
   ],
   "retired": {
     "compositions-information-video-preview--large-text": {

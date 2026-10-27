@@ -759,6 +759,15 @@
         "role": "optional-extension"
       },
       {
+        "name": "DrawingEditor",
+        "source": "packages/react/src/drawing-editor.tsx",
+        "entries": [
+          "./drawing-editor"
+        ],
+        "canonicalComponent": "DrawingEditor",
+        "role": "canonical"
+      },
+      {
         "name": "DurationField",
         "source": "packages/react/src/duration-field.tsx",
         "entries": [
@@ -2972,6 +2981,15 @@
         ],
         "canonicalComponent": "Card",
         "role": "optional-extension"
+      },
+      {
+        "name": "DrawingEditor",
+        "source": "packages/react-native/src/drawing-editor.tsx",
+        "entries": [
+          "./drawing-editor"
+        ],
+        "canonicalComponent": "DrawingEditor",
+        "role": "canonical"
       },
       {
         "name": "DurationField",

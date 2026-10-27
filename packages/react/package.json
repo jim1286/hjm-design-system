@@ -623,6 +623,11 @@
       "types": "./dist/follow-list.d.ts",
       "import": "./dist/follow-list.js",
       "default": "./dist/follow-list.js"
+    },
+    "./drawing-editor": {
+      "types": "./dist/drawing-editor.d.ts",
+      "import": "./dist/drawing-editor.js",
+      "default": "./dist/drawing-editor.js"
     }
   },
   "files": [

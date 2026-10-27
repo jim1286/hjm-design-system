@@ -43,3 +43,5 @@ function DestinationCardPreview() {
   </Card>;
 }
 export const DestinationLink: Story = { name: "목적지 링크 · 미게시", render: () => <DestinationCardPreview /> };
+
+export const CornerBadge: Story = { name: "우상단 NEW 배지 · 미게시", render: () => <Card title="바다거북" description="1번 만남" badgesPlacement="corner" badges={<Badge tone="success">NEW</Badge>} /> };

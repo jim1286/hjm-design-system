@@ -73,7 +73,7 @@ export type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & Pick<But
         ref: ForwardedRef<HTMLAnchorElement>;
     }) => ReactElement;
 }>;
-export declare const ButtonLink: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "appearance" | "layoutStyle" | "size" | "tone" | "align" | "leading" | "trailing" | "shape" | "fullWidth" | "edge"> & Readonly<{
+export declare const ButtonLink: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Pick<ButtonProps, "appearance" | "layoutStyle" | "size" | "align" | "tone" | "shape" | "leading" | "trailing" | "fullWidth" | "edge"> & Readonly<{
     href: string;
     disabled?: boolean;
     /** Framework routing adapter; HJM still owns the anchor destination, ref and disabled guards. */

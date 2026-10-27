@@ -36,6 +36,7 @@ export const cardRecipe = {
     bordered: true,
     headingLevel: 3,
     badgesAlign: "start",
+    badgesPlacement: "body",
     padding: "md",
   },
   selectedTone: "selected",
@@ -47,6 +48,8 @@ export const cardRecipe = {
   // Decorative artwork needs fixed contrast independent of brand onPrimary (which can be dark).
   // A 60% black scrim keeps white card text readable even over a white source image.
   backgroundMedia: { scrim: "rgba(0, 0, 0, 0.6)", foreground: "#ffffff" },
+  // Diairy NEW labels must not add a body row or change collection-card height.
+  cornerBadge: { inset: spacing.xs, rotation: 12 },
   quotation: { gap: spacing.xs, markSize: glyph.md },
   body: {
     padding: spacing.md,
@@ -97,12 +100,14 @@ export const cardRecipe = {
     bordered: boolean;
     headingLevel: CardHeadingLevel;
     badgesAlign: "start" | "center";
+    badgesPlacement: "body" | "corner";
     padding: SurfacePadding;
   };
   selectedTone: SurfaceTone;
   interaction: { disabledOpacity: number; pressedOpacity: number };
   mediaAction: { inset: number; diameter: number; iconSize: number };
   backgroundMedia: { scrim: string; foreground: string };
+  cornerBadge: { inset: number; rotation: number };
   quotation: { gap: number; markSize: number };
   body: { padding: number; gap: number };
   header: { gap: number; alignItems: "center" };

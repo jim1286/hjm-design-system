@@ -3,6 +3,7 @@ import { semanticColors } from "./semantic-colors.js";
 import { getCollectionNavigationIntent, getCollectionNavigationTarget } from "./collection.js";
 export const timelineDefaults = {
     itemTone: "neutral",
+    variant: "journal",
 };
 function assertNonEmpty(value, field) {
     if (value.trim().length === 0) {
@@ -60,6 +61,9 @@ export function validateTimelineDescriptor(descriptor) {
  * the passive Timeline.
  */
 export function validateTimelineSelection(selectedId, onSelectedIdChange, options = { hasActions: false }) {
+    if (options.variant !== undefined && options.variant !== "record" && options.variant !== "journal") {
+        throw new TypeError("Unsupported Timeline variant");
+    }
     if ((selectedId === undefined) !== (onSelectedIdChange === undefined)) {
         throw new TypeError("Timeline selectedId and onSelectedIdChange must be supplied together");
     }
@@ -125,6 +129,9 @@ export const timelineRecipe = {
         "description",
     ],
     gap: spacing.lg,
+    // 2026-10-27: the approved journey journal keeps the reading rail, without large selected cards.
+    // Passive histories keep every detail and command; selection adds disclosure without changing event semantics.
+    journal: { gap: 0, paddingBlock: spacing.md, dotDiameter: 8 },
     // A record remains passive: emphasis highlights its history without implying progress.
     item: {
         padding: spacing.sm,

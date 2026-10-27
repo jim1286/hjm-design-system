@@ -4,15 +4,32 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-23
+- 검토일: 2026-10-27
 - 근거: [Timeline](../../timeline.md), `src/timeline.ts`(`timelineRecipe`)
 - 스토리북: `배포/컴포넌트/데이터 표시/타임라인`
+
+## 기본 표현: 여행 일지 (2026-10-27 개발 소스, 미게시)
+
+사용자가 다이어리 비교 시안의 「여행 일지」를 선택한 뒤 옵션이 아닌 기본형으로 지정했다.
+`variant` 기본값은 `journal`이다. 박스·선택 배경 없이 작은 점과 연결선으로 기록을 잇고 제목 아래에
+시각을 둔다. 이전 면·테두리 표현이 꼭 필요한 경우에만 `variant="record"`를 명시한다.
+
+- 수동 기록은 모든 설명·metadata·기존 행동을 계속 표시한다. 경기 중계·버전 복구·활동 이력이 자동으로 접히지 않는다.
+- `selectedId`/`onSelectedIdChange`가 있으면 선택한 기록의 설명·metadata만 펼친다. 다시 누르면 상세만 접고 선택은 유지한다.
+- 다른 행·지도·날짜에서 선택을 바꾸면 새 기록을 펼친다. 제목·시각은 접어도 남는다. 펼침 상태·chevron은 HJM이 소유한다.
+- Web 기본형은 `<ol><li><button aria-expanded aria-controls>`의 disclosure 목록이다. 모든 기록 버튼에 Tab으로 접근하고 ↑/↓/Home/End로 이동·선택할 수 있다. Enter/Space는 native button 동작으로 펼침을 전환한다.
+- Native는 `Pressable`의 selected·expanded 상태를 제공한다. 접힌 설명은 접근성 이름에서도 제외한다.
+- `tone`의 의미와 독립 행동의 접근성·가상화 경계는 유지한다. `emphasized`의 큰 배경 면은 journal에 적용하지 않는다.
+
+현재 사용처: 다이어리 웹·앱 여정, 번뚝 웹·앱 버전/이야기/피드 기록, 야잘알 앱 경기 중계·선수 경력,
+Today갈게 partner-web·partner 활동 기록, portfolio-site 성과 이력. 이들은 기본 디자인 변경의 영향 대상이며
+제품별 기능·데이터를 바꾸거나 운영 반영을 확인했다는 뜻은 아니다. 웹·앱 Storybook에도 여행 일지 예제를 둔다.
 
 ## 언제 쓰나
 
 이미 일어난 일을 시간 순서대로 보여 줄 때 쓴다. 경기 플레이 기록, 이적·변경 이력, 주문 처리
 기록처럼 "무슨 일이 언제 있었나"를 위→아래 한 방향으로 나열한다. 현재 위치(커서)는 없다.
-기록 하나를 골라 옆의 지도·상세를 바꿔야 하면 `selectedId`/`onSelectedIdChange`로 기록 자체를 선택 대상으로 만든다(개발 소스, 미게시).
+기록 하나를 골라 옆의 지도·상세를 바꿔야 하면 `selectedId`/`onSelectedIdChange`로 기록 자체를 선택·펼침 대상으로 만든다(개발 소스, 미게시).
 
 ## 쓰지 않을 때
 
@@ -20,7 +37,7 @@
 | --- | --- |
 | 흐름에서 지금 어디에 있는지(현재 단계) | [Steps](steps.md) |
 | 항목을 눌러 다른 화면으로 이동 | [List](list.md), [ListRow](list-row.md) |
-| 기록 옆에 번호·선택 `Button`을 두고 `tone`·`aria-pressed`로 선택을 흉내 | `selectedId`/`onSelectedIdChange`. 선택 표현·키보드·접근성 의미는 Timeline이 소유한다 |
+| 기록 옆에 번호·선택 `Button`을 두고 `tone`·`aria-pressed`로 선택을 흉내 | `selectedId`/`onSelectedIdChange`. 선택·펼침·키보드·접근성 의미는 Timeline이 소유한다 |
 | 항목이 하나도 없음 | Timeline을 마운트하지 않고 [EmptyState](empty-state.md) |
 | 과거 기록을 더 불러옴 | Timeline 아래에 [LoadMore](load-more.md)를 합성 |
 | 항목별 짧은 배지 | `renderMetadata` 슬롯에 제품의 [Badge](badge.md) 또는 [Tag](tag.md)를 연결 |
@@ -73,6 +90,7 @@ import { Timeline } from "@hjmds/react-native/data-display";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
+| `variant` | `journal` · `record` | `journal` | 기본 여행 일지 / 이전 면·테두리 표현. 개발 소스, 미게시 |
 | `items`(필수) | `id`·`label` 필수, `timestamp`·`description`·`tone` 선택 | — | 배열 순서가 곧 표시 순서 |
 | `items[].dateTime` | string | — | timestamp의 원래 시각. Web time의 dateTime에 연결하며 표시 문구를 바꾸지 않는다. timestamp와 함께 사용 |
 | `items[].emphasized` | boolean | false | 기록 배경의 은은한 강조. 진행 커서·선택 상태를 만들지 않는다 |
@@ -88,6 +106,10 @@ import { Timeline } from "@hjmds/react-native/data-display";
 | 나머지 | Web `<ol>` 속성, Native `ViewProps`(`style` 제외) | — | — |
 
 ## 배치
+
+기본 `journal`은 항목 사이 0, 위아래 `spacing.md` 16, 가로 안쪽 여백 0, dot 8, connector 1이다.
+선택 배경·테두리는 없으며 펼친 설명 앞에는 `spacing.xs` 8(Web), 본문 기본 간격 `spacing.xxs` 4(Native)를 쓴다.
+아래 표의 24/12/10 배치·중립 선택 면은 호환 `variant="record"`에 해당한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
@@ -109,6 +131,8 @@ import { Timeline } from "@hjmds/react-native/data-display";
 - 배치는 `layoutStyle`로 한다. Web `className`/`style`과 Native에서 제거된 `style`로 dot·connector·글자 색을 덮지 않는다.
 
 ## 플랫폼 차이
+
+아래 선택형 listbox/option 설명은 `variant="record"`이다. 기본 journal의 disclosure 의미는 위 기본 표현 절을 따른다.
 
 | 항목 | Web | Native |
 | --- | --- | --- |

@@ -27,3 +27,9 @@ it("requires selectedId and onSelectedIdChange together and forbids actions on s
   expect(() => validateTimelineSelection(undefined, () => {})).toThrow(TypeError);
   expect(() => validateTimelineSelection(null, () => {}, { hasActions: true })).toThrow(TypeError);
 });
+
+it("supports passive journals and keeps record compatibility", () => {
+  expect(() => validateTimelineSelection(undefined, undefined, {hasActions: false, variant: "record"})).not.toThrow();
+  expect(() => validateTimelineSelection(undefined, undefined, {hasActions: false, variant: "journal"})).not.toThrow();
+  expect(() => validateTimelineSelection(null, () => {}, {hasActions: false, variant: "journal"})).not.toThrow();
+});

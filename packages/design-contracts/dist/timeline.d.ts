@@ -33,6 +33,7 @@ export type TimelineDescriptor<Id extends string = string> = Readonly<{
 }>;
 export declare const timelineDefaults: {
     readonly itemTone: "neutral";
+    readonly variant: "journal";
 };
 export type TimelineAccessibleNameInfo = Readonly<{
     position: number;
@@ -67,6 +68,7 @@ export declare function validateTimelineDescriptor<Id extends string>(descriptor
  */
 export declare function validateTimelineSelection(selectedId: unknown, onSelectedIdChange: unknown, options?: Readonly<{
     hasActions: boolean;
+    variant?: "record" | "journal";
 }>): void;
 /**
  * Keyboard target for a selectable Timeline (vertical listbox): ArrowDown/ArrowUp step one record, Home/End jump to
@@ -84,6 +86,11 @@ export declare function resolveTimelineDescriptor<Id extends string>(descriptor:
 export declare const timelineRecipe: {
     readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];
     readonly gap: 20;
+    readonly journal: {
+        readonly gap: 0;
+        readonly paddingBlock: 16;
+        readonly dotDiameter: 8;
+    };
     readonly item: {
         readonly padding: 12;
         readonly emphasisBackground: Readonly<{

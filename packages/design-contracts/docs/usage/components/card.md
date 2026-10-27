@@ -82,6 +82,7 @@ Web·Native 모두 기존 `raised` Surface의 테두리·그림자를 재사용�
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `tone` | `default` · `raised` · `accent` · `sunken` · `subtle` · `selected`(Surface tone) | `raised` | 테두리와 공통 raised shadow로 입체감 표시. 평면 카드는 `tone="default"` 지정 |
+| `badgesPlacement` | `body` · `corner` | `body` | 개발 소스·미게시. `corner`는 짧은 비상호작용 배지를 카드 우상단 8px에 12도 기울여 겹친다. 본문 높이를 늘리지 않는다. 다에리 NEW 배지 유무로 카드 높이가 달라진 문제를 해결하며 기존 `mediaBadges`의 배경 그림 전용 분류와 구분한다 |
 | `badgesAlign` | `start` · `center` | `start` | 미게시. 들판 대표 카드처럼 그림 아래의 배지 묶음을 가운데 배치할 때 `center` 사용. 줄바꿈된 행에도 적용 |
 | `bordered` | `boolean` | `true` | Surface 기본 `false`와 다르다 |
 | `padding` | spacing 이름 | `md`(16) | — |

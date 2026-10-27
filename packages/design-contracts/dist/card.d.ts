@@ -11,6 +11,7 @@ export declare const cardRecipe: {
         readonly bordered: true;
         readonly headingLevel: 3;
         readonly badgesAlign: "start";
+        readonly badgesPlacement: "body";
         readonly padding: "md";
     };
     readonly selectedTone: "selected";
@@ -26,6 +27,10 @@ export declare const cardRecipe: {
     readonly backgroundMedia: {
         readonly scrim: "rgba(0, 0, 0, 0.6)";
         readonly foreground: "#ffffff";
+    };
+    readonly cornerBadge: {
+        readonly inset: 8;
+        readonly rotation: 12;
     };
     readonly quotation: {
         readonly gap: 8;

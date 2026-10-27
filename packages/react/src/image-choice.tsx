@@ -116,7 +116,8 @@ function VirtualTileRows({ items, renderTile, label, role, height, overscan, est
     const rendered = host.current?.querySelector<HTMLElement>(".hjm-image-choice__row")?.offsetHeight ?? 0;
     if (rendered > 0 && rendered !== measuredTileHeight) setMeasuredTileHeight(rendered);
   });
-  const columns = width > 0 ? Math.min(items.length, resolveImageChoiceColumns(width)) : 0;
+  // Preserve empty columns so a short list fills the same slots as a full row (Diairy, 2026-10-27).
+  const columns = width > 0 ? resolveImageChoiceColumns(width) : 0;
   const stride = (measuredTileHeight || estimatedTileHeight) + imageChoiceRecipe.gap;
   const rowCount = columns ? Math.ceil(items.length / columns) : 0;
   const range = resolveVirtualWindow(rowCount, stride, height, scrollTop, overscan);

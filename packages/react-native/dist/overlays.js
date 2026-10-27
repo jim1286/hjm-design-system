@@ -967,7 +967,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
         inputRange: [0, 1],
         outputRange: [hiddenTranslation, 0],
     });
-    // Drag-to-dismiss (2026-10-16 user decision): the handle and header follow the finger downward;
+    // Drag-to-dismiss (2026-10-16 user decision; the body joined 2026-10-27): the sheet follows the finger downward;
     // release past the distance or velocity threshold closes with reason "swipe", otherwise it springs back.
     const [dragOffset] = useState(() => new Animated.Value(0));
     const sheetHeight = useRef(0);
@@ -976,20 +976,83 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     const canSwipe = showHandle && !closeBlocked;
     const requestCloseRef = useRef(requestClose);
     requestCloseRef.current = requestClose;
-    const settleDrag = () => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
-    const dragResponder = PanResponder.create({
-        onMoveShouldSetPanResponder: (_, gesture) => canSwipe && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx),
-        onPanResponderMove: (_, gesture) => dragOffset.setValue(Math.max(0, gesture.dy)),
-        onPanResponderRelease: (_, gesture) => {
-            if (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity)
-                requestCloseRef.current("swipe");
-            else
-                settleDrag();
-        },
-        onPanResponderTerminate: settleDrag,
+    const canSwipeRef = useRef(canSwipe);
+    canSwipeRef.current = canSwipe;
+    const settleDrag = useCallback(() => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start(), [dragOffset]);
+    // The scrollable body only hands a downward drag to the sheet when it is already at the top; otherwise the
+    // same finger movement scrolls the content back up (2026-10-27 user decision).
+    const bodyScrollY = useRef(0);
+    // The body ScrollView stops scrolling while the sheet owns the finger, so iOS does not bounce the content
+    // under a moving sheet.
+    const [bodyDragging, setBodyDragging] = useState(false);
+    const wantsDrag = (gesture) => canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx);
+    // PanResponder owns accumulated distance/velocity. Recreating it on keyboard,
+    // layout or owner updates replaces that state while the finger is still down.
+    // One gesture physics for every zone: the handle/header, a plain body, and a scrollable body at its top.
+    // 2026-10-27: the body used to ignore downward drags, so sheets only closed from the 44pt handle strip.
+    const [dragResponders] = useState(() => {
+        const physics = {
+            onPanResponderTerminationRequest: () => false,
+            onPanResponderGrant: () => dragOffset.stopAnimation(),
+            onPanResponderMove: (_, gesture) => { if (canSwipeRef.current)
+                dragOffset.setValue(Math.max(0, gesture.dy)); },
+            onPanResponderRelease: (_, gesture) => {
+                setBodyDragging(false);
+                if (canSwipeRef.current && (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity))
+                    requestCloseRef.current("swipe");
+                else
+                    settleDrag();
+            },
+            onPanResponderTerminate: () => { setBodyDragging(false); settleDrag(); },
+        };
+        return {
+            // Bubble phase: a pressable row or field keeps a tap, and yields once the finger clearly moves down.
+            // A nested native scroller still wins its own gesture, as before.
+            zone: PanResponder.create({ ...physics, onMoveShouldSetPanResponder: (_, gesture) => wantsDrag(gesture) }),
+            // Android only: capture phase so the sheet, not the ScrollView, takes the pull-down that starts at the top.
+            scroll: PanResponder.create({
+                ...physics,
+                onMoveShouldSetPanResponderCapture: (_, gesture) => bodyScrollY.current <= 0 && wantsDrag(gesture),
+                onPanResponderGrant: () => { setBodyDragging(true); dragOffset.stopAnimation(); },
+            }),
+        };
     });
-    useEffect(() => { if (visible)
-        dragOffset.setValue(0); }, [visible, dragOffset]);
+    const dragResponder = dragResponders.zone;
+    // iOS UIScrollView keeps its own pan even under a JS responder (RCTScrollViewComponentView only stops
+    // cancelling child touches), so the capture responder above never sees the pull: verified on the iOS 26.5
+    // simulator, 2026-10-27. There the pull is read from the native top overscroll instead. A drag that starts at
+    // the top opens a gate; the sheet follows the overscroll and the content is pinned to the sheet, so the whole
+    // panel slides down with UIKit's own resistance. Android has no top overscroll offset and keeps the responder.
+    const pullFromOverscroll = Platform.OS === "ios";
+    const [bodyPull] = useState(() => {
+        const offsetY = new Animated.Value(0);
+        const gate = new Animated.Value(0);
+        const pull = Animated.multiply(offsetY.interpolate({ inputRange: [-1, 0], outputRange: [1, 0], extrapolateRight: "clamp" }), gate);
+        return { offsetY, gate, pull, pin: Animated.multiply(pull, -1) };
+    });
+    const pullOpen = useRef(false);
+    const bodyUserDragging = useRef(false);
+    const bodyViewportHeight = useRef(0);
+    const setPullOpen = (next) => { pullOpen.current = next; bodyPull.gate.setValue(next ? 1 : 0); };
+    // UIKit's rubber band (offset = (1 - 1 / (x * 0.55 / d + 1)) * d), so the overscroll that matches the
+    // handle's finger distance threshold closes the sheet at the same point.
+    const overscrollForFinger = (finger) => {
+        const d = bodyViewportHeight.current || sheetHeight.current;
+        return d > 0 ? (1 - 1 / ((finger * 0.55) / d + 1)) * d : finger;
+    };
+    useEffect(() => {
+        if (visible || !canSwipe) {
+            dragOffset.stopAnimation();
+            dragOffset.setValue(0);
+        }
+    }, [visible, canSwipe, dragOffset]);
+    useEffect(() => {
+        if (visible)
+            return;
+        bodyScrollY.current = 0;
+        pullOpen.current = false;
+        bodyPull.gate.setValue(0);
+    }, [visible, bodyPull]);
     const translate = enterTranslate;
     // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
     // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.
@@ -1066,7 +1129,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                                 : side
                                                     ? [{ translateX: translate }, { translateY: dragOffset }]
                                                     // Two translateY entries compose: the enter/exit motion plus the live drag offset.
-                                                    : [{ translateY: translate }, { translateY: dragOffset }],
+                                                    : [{ translateY: translate }, { translateY: dragOffset }, { translateY: bodyPull.pull }],
                                             width: side ? "88%" : "100%",
                                         },
                                         contentStyle,
@@ -1081,17 +1144,44 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                                         // Without a description the × keeps its inline-end place (2026-10-17: no visible title).
                                                         justifyContent: "flex-end",
                                                         gap: spacing.sm,
-                                                    }, children: [description ? _jsx(View, { style: { flex: 1 }, children: _jsx(Text, { tone: "muted", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })) : null] }), scrollable ? (_jsx(ScrollView
-                                        // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
-                                        // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
-                                        // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
-                                        , { 
+                                                    }, children: [description ? _jsx(View, { style: { flex: 1 }, children: _jsx(Text, { tone: "muted", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })) : null] }), scrollable ? (_jsx(View, { ...(canSwipe && !pullFromOverscroll ? dragResponders.scroll.panHandlers : {}), style: { flexShrink: 1, minHeight: 0, ...bodyFill }, children: _jsx(Animated.ScrollView
                                             // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
                                             // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
                                             // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
-                                            style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, 
-                                            // Fill the scroll viewport so a CompositionLayout state can center in the sheet body.
-                                            contentContainerStyle: { flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }), footer ? (_jsx(View, { style: {
+                                            , { 
+                                                // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
+                                                // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
+                                                // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
+                                                style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, 
+                                                // Fill the scroll viewport so a CompositionLayout state can center in the sheet body.
+                                                contentContainerStyle: { flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, onLayout: (event) => { bodyViewportHeight.current = event.nativeEvent.layout.height; }, onScroll: Animated.event([{ nativeEvent: { contentOffset: { y: bodyPull.offsetY } } }], {
+                                                    useNativeDriver: true,
+                                                    listener: (event) => {
+                                                        const y = event.nativeEvent.contentOffset.y;
+                                                        bodyScrollY.current = y;
+                                                        // The released pull has bounced back: later momentum bounces stay inside the content.
+                                                        if (pullOpen.current && !bodyUserDragging.current && y >= 0)
+                                                            setPullOpen(false);
+                                                    },
+                                                }), scrollEventThrottle: 16, scrollEnabled: !bodyDragging, onScrollBeginDrag: (event) => {
+                                                    bodyUserDragging.current = true;
+                                                    // Only a drag that starts at the top may move the sheet; one that scrolls up to it does not.
+                                                    if (pullFromOverscroll && canSwipeRef.current && event.nativeEvent.contentOffset.y <= 0)
+                                                        setPullOpen(true);
+                                                }, onScrollEndDrag: (event) => {
+                                                    bodyUserDragging.current = false;
+                                                    if (!pullOpen.current)
+                                                        return;
+                                                    const pull = -event.nativeEvent.contentOffset.y;
+                                                    const downwardVelocity = -(event.nativeEvent.velocity?.y ?? 0);
+                                                    if (pull <= 0 || !canSwipeRef.current)
+                                                        return;
+                                                    if (pull > overscrollForFinger(sheetHeight.current * sheetDragRecipe.dismissDistanceRatio) || downwardVelocity > sheetDragRecipe.dismissVelocity) {
+                                                        // The gate stays open through the exit: the content stays pinned while UIKit bounces it back,
+                                                        // and the shrinking pull is far slower than the exit motion, so the sheet keeps moving down.
+                                                        requestCloseRef.current("swipe");
+                                                    }
+                                                }, children: _jsx(Animated.View, { style: { flexGrow: 1, gap: sheetRecipe.body.gap, transform: [{ translateY: bodyPull.pin }] }, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }) }) })) : _jsx(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }), footer ? (_jsx(View, { style: {
                                                 gap: sheetRecipe.footer.gap,
                                                 flexShrink: 0,
                                                 paddingTop: sheetRecipe.footer.paddingTop,

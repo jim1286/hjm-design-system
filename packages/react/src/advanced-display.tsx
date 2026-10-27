@@ -13,6 +13,7 @@ import {
 import {
   getTimelineSelectionTarget,
   resolveTimelineDescriptor,
+  timelineDefaults,
   validateTimelineSelection,
   type ComposeTimelineAccessibleName,
   type TimelineItemDescriptor,
@@ -881,12 +882,14 @@ export type TimelineProps<Id extends string = string> = Omit<
 > &
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
+    /** Default journal uses unfilled reading rows; selection adds record disclosure. "record" retains the earlier card surface. */
+    variant?: "record" | "journal";
     composeAccessibleName: ComposeTimelineAccessibleName;
     renderMetadata?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /** Per-record commands of a passive Timeline. Not allowed together with selection. */
     renderActions?: (item: TimelineItemDescriptor<Id>) => ReactNode;
     /**
-     * Makes the record list a single-select listbox (controlled). `null` = selectable with nothing chosen. Supply
+     * Makes records selectable (journal disclosure buttons; record variant listbox). `null` = nothing chosen. Supply
      * together with `onSelectedIdChange`; the list then needs `aria-label` or `aria-labelledby`.
      */
     selectedId?: Id | null;
@@ -899,6 +902,7 @@ export type TimelineProps<Id extends string = string> = Omit<
 function TimelineInner<Id extends string = string>(
   {
     items,
+    variant = timelineDefaults.variant,
     composeAccessibleName,
     renderMetadata,
     renderActions,
@@ -911,8 +915,12 @@ function TimelineInner<Id extends string = string>(
   }: TimelineProps<Id>,
   ref: ForwardedRef<HTMLOListElement>,
 ) {
-  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined });
+  validateTimelineSelection(selectedId, onSelectedIdChange, { hasActions: renderActions !== undefined, variant });
   const selectable = onSelectedIdChange !== undefined;
+  const journal = variant === "journal";
+  // Anchor collapsed state to its selected record. External map/day selection opens the new record immediately.
+  const [disclosure, setDisclosure] = useState({ id: selectedId, collapsed: false });
+  if (disclosure.id !== selectedId) setDisclosure({ id: selectedId, collapsed: false });
   if (selectable && !props["aria-label"] && !props["aria-labelledby"]) {
     throw new TypeError("A selectable Timeline needs aria-label or aria-labelledby (listbox name)");
   }
@@ -923,7 +931,8 @@ function TimelineInner<Id extends string = string>(
   const idPrefix = useId();
   // Roving tab stop: the selected record, or the first one before anything is chosen.
   const tabStopId = selectable ? (selectedId ?? resolved[0]?.id) : undefined;
-  const select = (list: HTMLOListElement, id: Id) => {
+  const select = (list: HTMLOListElement, id: Id, toggle = false) => {
+    if (journal) setDisclosure({ id, collapsed: toggle && id === selectedId && !disclosure.collapsed });
     if (id !== selectedId) onSelectedIdChange?.(id);
     list.querySelector<HTMLElement>(`[data-timeline-id="${CSS.escape(id)}"]`)?.focus();
   };
@@ -932,9 +941,9 @@ function TimelineInner<Id extends string = string>(
     if (!selectable || event.defaultPrevented) return;
     const focusedId = (event.target as HTMLElement).closest<HTMLElement>("[data-timeline-id]")?.dataset.timelineId as Id | undefined;
     if (focusedId === undefined) return;
-    if (event.key === "Enter" || event.key === " ") {
+    if (!journal && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
-      select(event.currentTarget, focusedId);
+      select(event.currentTarget, focusedId, true);
       return;
     }
     const target = getTimelineSelectionTarget(items, focusedId, event.key);
@@ -948,9 +957,10 @@ function TimelineInner<Id extends string = string>(
       style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-timeline", className)}
-      role={selectable ? "listbox" : props.role}
-      aria-orientation={selectable ? "vertical" : undefined}
+      role={selectable && !journal ? "listbox" : props.role}
+      aria-orientation={selectable && !journal ? "vertical" : undefined}
       data-selectable={selectable || undefined}
+      data-variant={variant}
       onKeyDown={handleKeyDown}
     >
       {resolved.map((item, index) => {
@@ -958,42 +968,41 @@ function TimelineInner<Id extends string = string>(
         const detailIds = selectable
           ? [item.description ? `${idPrefix}-${index}-description` : null, item.timestamp ? `${idPrefix}-${index}-timestamp` : null].filter(Boolean).join(" ")
           : "";
-        return (
-        <li
-          aria-label={item.accessibleName}
-          className="hjm-timeline__item"
-          data-tone={item.tone}
-          data-emphasized={item.emphasized || undefined}
-          key={item.id}
-          {...(selectable ? {
-            role: "option",
-            "aria-selected": item.selected,
-            "aria-describedby": detailIds || undefined,
-            "data-timeline-id": item.id,
-            "data-state": item.selected ? "selected" : undefined,
-            tabIndex: item.id === tabStopId ? 0 : -1,
-            onClick: (event: { currentTarget: HTMLLIElement }) => select(event.currentTarget.parentElement as HTMLOListElement, item.id),
-          } : {})}
-        >
+        const expanded = !selectable || (item.selected && (disclosure.id !== selectedId || !disclosure.collapsed));
+        const body = <>
           <span className="hjm-timeline__rail" aria-hidden="true">
             <span className="hjm-timeline__dot" />
-            {index < resolved.length - 1 ? (
-              <span className="hjm-timeline__connector" />
-            ) : null}
+            {index < resolved.length - 1 ? <span className="hjm-timeline__connector" /> : null}
           </span>
           <span className="hjm-timeline__content">
             <span className="hjm-timeline__heading">
               <strong className="hjm-timeline__label">{item.label}</strong>
-              {renderMetadata?.(item)}
+              {!journal ? renderMetadata?.(item) : selectable ? <span className="hjm-timeline__chevron" aria-hidden="true">⌄</span> : null}
             </span>
-            {item.description ? (
-              <span className="hjm-timeline__description" id={selectable ? `${idPrefix}-${index}-description` : undefined}>{item.description}</span>
-            ) : null}
-            {item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime} id={selectable ? `${idPrefix}-${index}-timestamp` : undefined}>{item.timestamp}</time> : null}
+            {journal && item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime}>{item.timestamp}</time> : null}
+            <span className="hjm-timeline__details" id={`${idPrefix}-${index}-details`} hidden={journal && !expanded}>
+              {journal ? renderMetadata?.(item) : null}
+              {item.description ? <span className="hjm-timeline__description" id={selectable && !journal ? `${idPrefix}-${index}-description` : undefined}>{item.description}</span> : null}
+              {!journal && item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime} id={selectable ? `${idPrefix}-${index}-timestamp` : undefined}>{item.timestamp}</time> : null}
+            </span>
           </span>
           {actions ? <div className="hjm-timeline__actions">{actions}</div> : null}
-        </li>
-      ); })}
+        </>;
+        if (journal && selectable) return <li key={item.id}>
+          <button type="button" className="hjm-timeline__item" data-tone={item.tone} data-state={item.selected ? "selected" : undefined}
+            data-timeline-id={item.id} aria-label={[item.accessibleName, item.timestamp].filter(Boolean).join(", ")}
+            aria-expanded={expanded} aria-controls={`${idPrefix}-${index}-details`} aria-describedby={expanded ? `${idPrefix}-${index}-details` : undefined}
+            onClick={event => select(event.currentTarget.closest("ol")!, item.id, true)}>{body}</button>
+        </li>;
+        return <li aria-label={item.accessibleName} className="hjm-timeline__item" data-tone={item.tone}
+          data-emphasized={item.emphasized || undefined} key={item.id}
+          {...(selectable ? {
+            role: "option", "aria-selected": item.selected, "aria-describedby": detailIds || undefined,
+            "data-timeline-id": item.id, "data-state": item.selected ? "selected" : undefined,
+            tabIndex: item.id === tabStopId ? 0 : -1,
+            onClick: (event: { currentTarget: HTMLLIElement }) => select(event.currentTarget.parentElement as HTMLOListElement, item.id),
+          } : {})}>{body}</li>
+      })}
     </ol>
   );
 }

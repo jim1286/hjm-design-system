@@ -1,5 +1,18 @@
 # Timeline contract
 
+## 기본 여행 일지 (2026-10-27, 개발 소스·미게시)
+
+사용자 승인 시안 「여행 일지」를 기본형으로 지정했다. 기본 `variant="journal"`은 배경 박스 없이
+8px dot·1px connector와 위아래 16px 여백을 사용한다. 수동 기록은 전체 설명과 독립 행동을 유지하고,
+선택형은 선택한 기록의 설명만 펼친다. 같은 기록을 다시 누르면 지도 선택을 유지하면서 상세를 접는다.
+새 선택(외부 지도·날짜 포함)은 해당 기록을 펼친다. 제목·시각은 남는다.
+
+Web은 disclosure button 목록과 `aria-expanded`·`aria-controls`, Native는 selected·expanded 상태를 제공한다.
+선택 색을 진행 상태로 해석하지 않으며 사건 tone과 행동/가상화 경계는 보존한다.
+이전 listbox·면/테두리 표현은 `variant="record"`로 명시할 때 제공한다.
+이하 2026-10-23까지의 선택 면/listbox 설명은 이 호환 표현의 이력이다.
+상세 소비·영향 범위는 [사용 지침](usage/components/timeline.md)을 따른다.
+
 ## 문제
 
 이미 일어난 일들을 시간 순서로 보여준다 — 야잘알의 경기 플레이 기록(PBP, "1회 초 안타 →

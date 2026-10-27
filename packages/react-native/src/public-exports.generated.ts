@@ -220,6 +220,9 @@ export const publicExportEntries = {
   DocumentResource: [
     "./document-resource"
   ],
+  DrawingEditor: [
+    "./drawing-editor"
+  ],
   DurationField: [
     "./duration-field"
   ],

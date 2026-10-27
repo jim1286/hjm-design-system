@@ -13,7 +13,7 @@ it("keeps the ordered record and a separate named command without hiding its met
   expect(html).toContain('dateTime="2026-10-19T00:00:00Z"');
   expect(html).toContain('data-emphasized="true"');
   expect(html).not.toContain("aria-current");
-  expect(html.indexOf("Original")).toBeLessThan(html.indexOf("Today"));
+  expect(html.indexOf("Today")).toBeLessThan(html.indexOf("Original"));
   expect(html).toContain('class="hjm-timeline__actions"><button>Restore version 1</button>');
   expect(html.match(/<button/gu)).toHaveLength(1);
 });

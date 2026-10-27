@@ -42,7 +42,8 @@ export type TimelineDescriptor<Id extends string = string> = Readonly<{
 
 export const timelineDefaults = {
   itemTone: "neutral",
-} as const satisfies Readonly<{ itemTone: TimelineItemTone }>;
+  variant: "journal",
+} as const satisfies Readonly<{ itemTone: TimelineItemTone; variant: "record" | "journal" }>;
 
 export type TimelineAccessibleNameInfo = Readonly<{
   position: number;
@@ -143,8 +144,11 @@ export function validateTimelineDescriptor<Id extends string>(
 export function validateTimelineSelection(
   selectedId: unknown,
   onSelectedIdChange: unknown,
-  options: Readonly<{ hasActions: boolean }> = { hasActions: false },
+  options: Readonly<{ hasActions: boolean; variant?: "record" | "journal" }> = { hasActions: false },
 ): void {
+  if (options.variant !== undefined && options.variant !== "record" && options.variant !== "journal") {
+    throw new TypeError("Unsupported Timeline variant");
+  }
   if ((selectedId === undefined) !== (onSelectedIdChange === undefined)) {
     throw new TypeError("Timeline selectedId and onSelectedIdChange must be supplied together");
   }
@@ -227,6 +231,9 @@ export const timelineRecipe = {
     "description",
   ] as const,
   gap: spacing.lg,
+  // 2026-10-27: the approved journey journal keeps the reading rail, without large selected cards.
+  // Passive histories keep every detail and command; selection adds disclosure without changing event semantics.
+  journal: { gap: 0, paddingBlock: spacing.md, dotDiameter: 8 },
   // A record remains passive: emphasis highlights its history without implying progress.
   item: {
     padding: spacing.sm,
@@ -284,6 +291,7 @@ export const timelineRecipe = {
 } as const satisfies {
   slots: readonly string[];
   gap: number;
+  journal: { gap: number; paddingBlock: number; dotDiameter: number };
   item: {
     padding: number;
     emphasisBackground: ColorReference;
