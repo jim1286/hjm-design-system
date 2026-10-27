@@ -32,7 +32,7 @@ function draw(tree: ReactTestRenderer) {
   act(() => canvas(tree).props.onResponderMove({ nativeEvent: { identifier: 1, locationX: 80, locationY: 90 } }));
   act(() => canvas(tree).props.onResponderEnd({ nativeEvent: { identifier: 1 } }));
 }
-const ink = (tree: ReactTestRenderer) => tree.root.findAll(node => node.type === 'Path' && node.props.strokeLinecap === 'round');
+const ink = (tree: ReactTestRenderer) => tree.root.findAll(node => typeof node.type === 'string' && node.props.strokeLinecap === 'round');
 
 it('keeps the owning finger and supports undo without yielding a vertical stroke', () => {
   const tree = mount();
