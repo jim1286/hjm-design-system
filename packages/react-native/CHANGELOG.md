@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 1.50.0
+
+### Minor Changes
+
+- 255f96f: Promote DrawingEditor and the ShareSheet composition to stable for their documented Web and Native contracts. Drawing input remains pointer or touch based; upload and platform integration stay product-owned.
+
 ## 1.49.0
 
 ### Minor Changes

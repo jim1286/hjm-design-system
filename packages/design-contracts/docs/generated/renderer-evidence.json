@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.49.0",
+  "designSystemVersion": "1.50.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.49.0",
+      "packageVersion": "1.50.0",
       "activeComponents": 132,
       "claimedComponents": 132,
       "completeScenarioComponents": 131,
@@ -2420,7 +2420,7 @@
         {
           "componentId": "drawing-editor",
           "name": "DrawingEditor",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./drawing-editor",
           "exportNames": [
@@ -7114,7 +7114,7 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.49.0",
+      "packageVersion": "1.50.0",
       "activeComponents": 115,
       "claimedComponents": 115,
       "completeScenarioComponents": 112,
@@ -9408,7 +9408,7 @@
         {
           "componentId": "drawing-editor",
           "name": "DrawingEditor",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./drawing-editor",
           "exportNames": [
