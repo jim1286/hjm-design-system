@@ -45,3 +45,15 @@ it('undo and redo restore the same stroke', async () => {
   expect(button(labels.save).disabled).toBe(true);
   await act(async () => button(labels.redo).click()); expect(canvas().querySelectorAll('path')).toHaveLength(1);
 });
+it('exposes named controls and retains drawing in a dark RTL reduced-motion host', async () => {
+  await act(async () => root.render(<HjmProvider theme="dark" direction="rtl" reducedMotion><DrawingEditor labels={labels} onSave={async () => {}} onCancel={() => {}} /></HjmProvider>));
+  expect(canvas().getAttribute('role')).toBe('img');
+  expect(canvas().getAttribute('aria-label')).toBe(labels.title);
+  expect(button(labels.undo).disabled).toBe(true);
+  await draw();
+  expect(button(labels.undo).disabled).toBe(false);
+  button(labels.undo).focus();
+  expect(document.activeElement).toBe(button(labels.undo));
+  await act(async () => button(labels.undo).click());
+  expect(canvas().querySelectorAll('path')).toHaveLength(0);
+});

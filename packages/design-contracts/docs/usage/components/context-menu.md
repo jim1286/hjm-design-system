@@ -12,7 +12,7 @@
 
 Web에서 제품이 소유한 영역(카드·목록 행·캔버스)의 우클릭·길게 누르기·Shift+F10에 명령 목록을
 띄울 때 쓴다. 같은 명령은 화면의 다른 경로(버튼·Menu)에도 있어야 한다. Native는 추가 의존성 없는
-canonical `ContextMenu`(`@hjmds/react-native/context-menu`, 미게시, 2026-10-16)가 채팅 길게 누르기 메뉴와 같은
+canonical `ContextMenu`(`@hjmds/react-native/context-menu`, 2026-10-16 도입)가 채팅 길게 누르기 메뉴와 같은
 모양(배경 어둡게 + 누른 위치 근처 카드, 행 높이 48, 아이콘 24 칸, 위험 항목 빨간 글자)으로 연다. 대화 목록·댓글처럼
 행을 길게 눌러 여는 동작 목록은 이것을 쓴다. OS 고유 메뉴가 꼭 필요할 때만 선택 어댑터 `NativeContextMenu`를 쓴다.
 
@@ -148,7 +148,7 @@ import { Pressable } from "react-native";
 | 메뉴 접근성 이름 | `accessibilityLabel`(필수) | 없음(자식 요소가 이름을 가짐) |
 | 항목 `textValue`·`shortcut` | 있음 | 없음 |
 | 열림 알림 | 없음 | `onOpenChange(open)` |
-| 성숙도 | stable | 실험적 어댑터(기기 증거 전까지 canonical unsupported) |
+| 성숙도 | stable | 선택형 어댑터 stable (canonical ContextMenu와 별도) |
 
 Web 활성 항목은 실제 마우스 이동으로만 바꾸며(1.15.0 변경), 늦은 경계 이벤트만으로 키보드 선택을 덮지 않는다. 클릭·키보드 실행·포커스 복귀와
 Native OS 어댑터는 기존 계약을 유지한다. 고정 대기 시간이 아니라 입력 의도로 구분한다.

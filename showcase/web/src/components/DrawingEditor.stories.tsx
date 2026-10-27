@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DrawingEditor } from '@hjmds/react/drawing-editor';
 import { drawingEditorLabels } from '../../../shared/drawing-editor';
 
-const meta = { title: "실험/컴포넌트/입력/손그림 편집기", component: DrawingEditor,
+const meta = { id: "components-inputs-drawing-editor", title: "배포/컴포넌트/입력/손그림 편집기", component: DrawingEditor,
   args: { labels: drawingEditorLabels, cropPreview: 'circle', onCancel: () => {}, onSave: async () => {} },
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof DrawingEditor>;

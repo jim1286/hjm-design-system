@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 `@hjmds/react-native/keyboard-controller` 어댑터(KeyboardDock, KeyboardFormScrollView)를 쓰는 앱의
-루트에 **한 번** 설치한다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의
+루트에 **한 번** 설치한다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `react-native-keyboard-controller`의
 `KeyboardProvider`이며, 어댑터를 준비하려고 OS 키보드를 미리 띄우지 않도록 `preload={false}`로 고정돼 있다.
 
 ## 쓰지 않을 때
@@ -83,4 +83,4 @@ import { KeyboardMotionProvider } from "@hjmds/react-native/keyboard-controller"
 - tsc·mock 테스트 통과는 peer 설치와 native 연결의 근거가 아니다. 다른 optional subpath
   (celebration·effect-surface·qr-code·thinking-orb·toast-liquid)에서 앱에 없는 peer 때문에
   기기 Metro에서만 크래시가 난 사례가 있다(2026-10). 개발 클라이언트로 실제 화면을 띄워 확인한다.
-- 이 어댑터의 API 성숙도는 실험이다(2026-10-06 Storybook 배포와 별개). 기기·보조기술 검증은 아직 없다([근거](../../optional-adapters.md#evidence-and-promotion)).
+- 문서화한 선택 peer 계약은 stable이다. 소비 기기의 키보드·보조기술 검증은 별도로 확인한다([근거](../../optional-adapters.md#current-support--2026-10-26)).

@@ -1,12 +1,14 @@
 # ShareSheet
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.47.0 이후)
+- 적용: 1.48.0
 - 검토일: 2026-10-26
 - 근거: `src/share-sheet.ts`의 `shareSheetRecipe`·`resolveShareSheetSendOutcome`·`filterShareSheetRecipients`; Web `src/share-sheet.tsx`, Native `src/share-sheet.tsx`
-- 스토리북: `실험/컴포넌트/오버레이/공유 시트`
+- 스토리북: `배포/컴포넌트/오버레이/공유 시트`
+
+1.48.0부터 제공하며 stable 지원은 다음 릴리스부터 적용된다.
 
 ## 언제 쓰나
 

@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이
-키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며,
+키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `KeyboardStickyView`이며,
 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다.
 
 ## 쓰지 않을 때
@@ -107,4 +107,4 @@ const keyboardOpen = useKeyboardState((state) => state.isVisible);
 
 - sticky 좌표는 창 기준이다. Storybook 캔버스처럼 아래에 다른 막대가 있는 host에서는 위치가 어긋나므로
   쇼케이스도 앱 크기 host에서 확인한다.
-- API 성숙도가 실험적 어댑터다(2026-10-06 Storybook 배포와 별개, [근거](../../optional-adapters.md#evidence-and-promotion)). 실제 키보드 애니메이션은 mock 테스트로 검증되지 않는다. 개발 클라이언트로 확인한다.
+- 문서화한 선택 peer 계약은 stable이다([근거](../../optional-adapters.md#current-support--2026-10-26)). 실제 키보드 애니메이션은 mock 테스트로 검증되지 않는다. 개발 클라이언트로 확인한다.

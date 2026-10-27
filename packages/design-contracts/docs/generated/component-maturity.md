@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 131 · beta 1
-- Web renderer: stable 131 · beta 1
-- Native renderer: stable 114 · beta 1 · unsupported 17
+- Contract: stable 132
+- Web renderer: stable 132
+- Native renderer: stable 115 · unsupported 17
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -54,7 +54,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | TimePicker | `input/time-picker` | stable | stable | stable | [authored](../time-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | DatePicker | `input/date-picker` | stable | stable | stable | [authored](../date-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | DateRangePicker | `input/date-range-picker` | stable | stable | stable | generated only | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |
-| DrawingEditor | `input/drawing-editor` | beta | beta | beta | [authored](../drawing-editor.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| DrawingEditor | `input/drawing-editor` | stable | stable | stable | [authored](../drawing-editor.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | ColorPicker | `input/color-picker` | stable | stable | stable | [authored](../color-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | FilePicker | `input/file-picker` | stable | stable | stable | [authored](../file-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Form | `input/form` | stable | stable | stable | [authored](../form.md) | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |

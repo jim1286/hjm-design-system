@@ -124,7 +124,7 @@ export const componentCatalog = [
     { name: "DatePicker", label: "날짜 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
     { name: "DateRangePicker", label: "기간 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "dateRangeRecipe", behavior: "dateRange" },
     // 2026-10-27: Diairy and Spint used duplicated paint editors; shared UI and history now live here.
-    { name: "DrawingEditor", label: "손그림 편집기", category: "input", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "drawingEditorRecipe" },
+    { name: "DrawingEditor", label: "손그림 편집기", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "drawingEditorRecipe" },
     { name: "ColorPicker", label: "색상 선택기", companions: ["ColorSwatchPicker"], category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "colorPickerRecipe" },
     { name: "FilePicker", label: "파일 선택", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "filePickerRecipe", behavior: "filePicker", aliases: ["Upload"], ...evidenceNeeded("Web은 native file input과 dropzone 선택을, Native는 제품 소유 picker adapter 연결을 제공하고 양쪽이 같은 accept·size·count resolver를 사용합니다. 실제 OS picker 동작은 소비 앱 QA에서 확인합니다.") },
     // Both renderers now focus the product-selected first invalid field; field ordering and validation stay product-owned (docs/form.md).

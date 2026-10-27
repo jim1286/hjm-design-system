@@ -662,14 +662,14 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "drawingEditorRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "DrawingEditor";
     readonly label: "손그림 편집기";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "colorPickerRecipe";
     readonly surfaceStatus: {

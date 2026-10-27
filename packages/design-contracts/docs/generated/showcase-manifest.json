@@ -2298,10 +2298,10 @@
       "extensions": [],
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {

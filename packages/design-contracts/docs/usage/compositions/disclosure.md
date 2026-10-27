@@ -123,8 +123,8 @@ import { Container, Stack, Text } from "@hjmds/react/layout";
 ```
 
 ```tsx
-// Native: 단일 펼침만. ContextMenu·Menubar는 Web 전용이고, 길게 누르기 메뉴는 실험적
-// `NativeContextMenu`(`/context-menu-native`)가 있다.
+// Native: 단일 펼침만. ContextMenu는 `/context-menu`에 있고 Menubar는 Web 전용이다.
+// OS 메뉴가 필요하면 선택형 `NativeContextMenu`(`/context-menu-native`)를 쓴다.
 import { Collapsible } from "@hjmds/react-native/collapsible";
 import { Text } from "@hjmds/react-native/primitives";
 
@@ -140,7 +140,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | 항목 | Web | Native |
 | --- | --- | --- |
 | `Collapsible` | `/collapsible`, 배치는 `layoutStyle`(또는 `className`) | `/collapsible`, 배치는 `layoutStyle`(`style`은 제거된 속성) |
-| 대상 메뉴 | `ContextMenu`(stable) | `NativeContextMenu`(실험적 어댑터) |
+| 대상 메뉴 | `ContextMenu`(stable) | `NativeContextMenu`(선택형 stable 어댑터) |
 | `Menubar` | 있음 | 없음 |
 
 ## 함정

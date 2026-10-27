@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.48.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 1.49.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -95,7 +95,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [DesignSystemProvider](components/design-system-provider.md) | 기반 기능 | 앱 루트에 한 번 둔다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Dialog](components/dialog.md) | 오버레이 | 화면 흐름을 잠시 멈추고 사용자의 주의가 필요한 **짧은 작업**에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Divider](components/divider.md) | 레이아웃 | 서로 다른 내용 묶음 사이에 얇은 구분선이 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [DrawingEditor](components/drawing-editor.md) | 입력 | 펜·지우개로 그림을 그리고 이미지로 저장하는 전체 편집 화면에 쓴다. | 미게시(1.48.0 이후) | Web · Native | Web beta / Native beta | 실험 |
+| [DrawingEditor](components/drawing-editor.md) | 입력 | 펜·지우개로 그림을 그리고 이미지로 저장하는 전체 편집 화면에 쓴다. | 1.49.0 | Web · Native | Web stable / Native stable | 배포 |
 | [EditorScreen](components/editor-screen.md) | 레이아웃 | 글쓰기·프로필 수정처럼 한 화면 전체가 편집 흐름일 때 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [EffectSurface](components/effect-surface.md) | 시각 효과 | 환영·온보딩·빈 히어로처럼 분위기를 주는 배경이 필요할 때 내용 뒤에 장식 레이어(mesh·glow·grain)를 깐다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [EmptyState](components/empty-state.md) | 상태와 알림 | 목록이 비었거나 검색 결과가 0건이라 **아직 없음**을 알릴 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -121,9 +121,9 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [InlineEdit](components/inline-edit.md) | 구성/입력과 작성 | 목록·상세의 제목처럼 이미 확정된 짧은 값 하나를 그 자리에서 명시적으로 편집·저장·취소할 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardAvoidanceContext](components/keyboard-avoidance-context.md) | — | 제품이 직접 만든 키보드 대응 영역 안에서 HJM `ScreenLayout`·`Sheet`가 여백을 두 번 주지 않게 할 때 쓴다. | 1.27.0 | Native | 개별 API 계약 참조 | 배포 |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
-| [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
-| [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
-| [KeyboardMotionProvider](components/keyboard-motion-provider.md) | 구성/직접 조작과 모션 | `@hjmds/react-native/keyboard-controller` 어댑터(KeyboardDock, KeyboardFormScrollView)를 쓰는 앱의 루트에 **한 번** 설치한다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardProvider`이며, 어댑터를 준비하려고 OS 키보드를 미리 띄우지 않도록 `preload={false}`로 고정돼 있다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
+| [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
+| [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
+| [KeyboardMotionProvider](components/keyboard-motion-provider.md) | 구성/직접 조작과 모션 | `@hjmds/react-native/keyboard-controller` 어댑터(KeyboardDock, KeyboardFormScrollView)를 쓰는 앱의 루트에 **한 번** 설치한다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `react-native-keyboard-controller`의 `KeyboardProvider`이며, 어댑터를 준비하려고 OS 키보드를 미리 띄우지 않도록 `preload={false}`로 고정돼 있다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [Layout](components/layout.md) | 레이아웃 | 앱의 상시 골격(header · sidebar · main · footer)을 한 번 세울 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Link](components/link.md) | 동작 | 사용자가 복사하거나 새 탭으로 열 수 있는 **목적지**로 이동할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [List](components/list.md) | 데이터 표시 | 이미 다 불러온, 개수가 많지 않은 행들을 이름 있는 목록 하나로 묶을 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
@@ -177,7 +177,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [SettingsScreen](components/settings-screen.md) | 레이아웃 | 앱의 설정 화면 전체에 쓴다. | 1.17.1 | Web · Native | Web stable / Native stable | 배포 |
 | [SharedTransitionElement](components/shared-transition-element.md) | 구성/직접 조작과 모션 | 목록의 카드(사진·썸네일)를 눌러 상세 화면으로 갈 때, 같은 요소가 두 화면 사이에서 확대·축소되어 이어지는 공유 요소 전환에 쓴다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
 | [SharedTransitionScreen](components/shared-transition-screen.md) | 구성/직접 조작과 모션 | `createHjmTransitionStack()`으로 만든 stack에서 공유 요소 전환을 쓸 때, **각 라우트 본문**을 감싼다. | 1.12.1 | Native | 개별 API 계약 참조 | 배포 |
-| [ShareSheet](components/share-sheet.md) | 오버레이 | 링크 하나를 **앱 안의 받는 사람에게 보내거나(선택), 링크를 복사하거나, 기기 공유 시트로 내보내는** 공유 시트에 쓴다. | 미게시(1.47.0 이후) | Web · Native | 개별 API 계약 참조 | 실험 |
+| [ShareSheet](components/share-sheet.md) | 오버레이 | 링크 하나를 **앱 안의 받는 사람에게 보내거나(선택), 링크를 복사하거나, 기기 공유 시트로 내보내는** 공유 시트에 쓴다. | 1.48.0 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Sheet](components/sheet.md) | 오버레이 | 현재 화면 위에 모달로 띄우는 보조 작업 패널에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [ShortcutRecorder](components/shortcut-recorder.md) | 구성/직접 조작과 모션 | Web 앱에서 사용자가 수정키+키 조합을 눌러 기록하고, 확인 뒤 실제 단축키로 등록하게 할 때 쓴다. | 1.21.0 | Web | 개별 API 계약 참조 | 배포 |
 | [Sidebar](components/sidebar.md) | 탐색 | 데스크톱 Web의 세로 내비게이션에 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |

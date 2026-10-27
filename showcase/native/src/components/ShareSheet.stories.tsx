@@ -47,7 +47,7 @@ function Preview({ state = "ready" }: PreviewProps) {
   </Stack>;
 }
 
-const meta = { title: "실험/컴포넌트/오버레이/공유 시트", component: Preview, args: { state: "ready" } } satisfies Meta<typeof Preview>;
+const meta = { title: "배포/컴포넌트/오버레이/공유 시트", component: Preview, args: { state: "ready" } } satisfies Meta<typeof Preview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

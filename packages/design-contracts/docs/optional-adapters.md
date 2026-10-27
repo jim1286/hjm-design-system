@@ -59,7 +59,7 @@ packages or migrate consumer applications.
 adoption. These are opt-in extensions, not six new canonical components or a stable promotion.
 The canonical Statistic/Menu/Sheet/KeyboardAvoiding APIs remain available without additional peers.
 ContextMenu's canonical Native status remains unsupported until the OS adapter has device evidence.
-ImageViewer and all native adapters are experimental pending device/assistive-technology checks.
+At this historical 2026-09-30 checkpoint ImageViewer and native adapters were experimental; current support is stated above.
 
 ## Entry points and ownership
 

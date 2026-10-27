@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에
-가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의
+가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. 문서화한 선택 peer 계약은 stable). 내부는 `react-native-keyboard-controller`의
 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다.
 
 ## 쓰지 않을 때
@@ -92,4 +92,4 @@ import { spacing } from "@hjmds/design-contracts/foundations";
   좌우 여백까지 스크롤 컨테이너에 직접 준다. 규칙은 세로 여백만 스크롤에, 좌우는 Container `gutter`다.
 
 - `refreshControl`, `onScroll` 같은 다른 ScrollView prop은 타입에서 빠져 있어 넘길 수 없다.
-- API 성숙도가 실험적 어댑터다(2026-10-06 Storybook 배포와 별개, [근거](../../optional-adapters.md#evidence-and-promotion)). 포커스 이동·키보드 애니메이션은 개발 클라이언트로 기기에서 확인한다.
+- 문서화한 선택 peer 계약은 stable이다([근거](../../optional-adapters.md#current-support--2026-10-26)). 포커스 이동·키보드 애니메이션은 개발 클라이언트로 기기에서 확인한다.

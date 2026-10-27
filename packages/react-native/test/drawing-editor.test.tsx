@@ -60,3 +60,17 @@ it('retains the picture after rejected upload and exports PNG through the suppli
   expect(save).toHaveBeenLastCalledWith({ base64: 'cG5n', mimeType: 'image/png' });
   act(() => tree.unmount());
 });
+
+it('exposes named actions and keeps undo usable in a dark RTL reduced-motion host', () => {
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider theme="dark" direction="rtl" reducedMotion><DrawingEditor labels={labels} onSave={async () => {}} onCancel={() => {}} /></HjmNativeProvider>); });
+  const stage = tree.root.find(node => node.props.style?.minHeight === 160 && !!node.props.onLayout);
+  act(() => stage.props.onLayout({ nativeEvent: { layout: { width: 320, height: 320 } } }));
+  expect(canvas(tree).props.accessibilityLabel).toBe(labels.title);
+  draw(tree);
+  const undo = tree.root.find(node => node.props.accessibilityLabel === labels.undo && !!node.props.onPress);
+  expect(undo.props.accessibilityState?.disabled).not.toBe(true);
+  act(() => undo.props.onPress());
+  expect(ink(tree)).toHaveLength(0);
+  act(() => tree.unmount());
+});

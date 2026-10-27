@@ -1,5 +1,17 @@
 # Stable Core
 
+## 2026-10-27 DrawingEditor와 ShareSheet 승격
+
+남은 실험의 승격 요청에 따라 DrawingEditor 계약과 Web·Native renderer를 stable로 올리고,
+독립 카탈로그가 아닌 ShareSheet 합성 API도 문서화한 입력·결과 계약의 stable 지원으로 전환한다.
+두 컴포넌트의 Web·Native 예시를 배포 섹션으로 옮긴다. DrawingEditor 획 입력은 포인터·터치이며
+키보드 그리기는 제공하지 않는다. ShareSheet의 실제 복사·기기 공유·전송은 제품 또는 OS가 소유한다.
+
+변경 범위 검사는 DrawingEditor·ShareSheet의 contracts 6건, Web 8건, Native 6건과
+DrawingEditor의 어두운 RTL 환경·이름 있는 도구 동작을 각 renderer에서 추가 확인했다.
+이는 Web 브라우저와 Native host 테스트이며 실제 OS 기기, VoiceOver/TalkBack, 제품 업로드나
+스토어 반영의 증거는 아니다. 기존 선택형 어댑터의 10월 26일 stable 판정과 어긋난 개별 지침도 맞춘다.
+
 ## 2026-10-26 잔여 실험과 beta 승격
 
 사용자의 “다 올려” 지시에 따라 남아 있던 카탈로그 beta와 실험 화면을 승격했다.
