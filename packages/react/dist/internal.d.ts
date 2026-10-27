@@ -28,7 +28,7 @@ export declare const DesignProfileContext: import("react").Context<Readonly<{
     tokens: Readonly<{
         radius: Readonly<Record<"sm" | "md" | "lg" | "xl" | "full", number>>;
         fontFamily: import("@hjmds/design-contracts/foundations").FontFamilyRoles;
-        typography: Readonly<Record<"label" | "title" | "caption" | "body" | "heading" | "bodyLarge" | "titleLarge", Readonly<{
+        typography: Readonly<Record<"label" | "title" | "caption" | "heading" | "body" | "bodyLarge" | "titleLarge", Readonly<{
             fontSize: number;
             lineHeight: number;
             fontWeight: import("@hjmds/design-contracts/foundations").FontWeightValue;

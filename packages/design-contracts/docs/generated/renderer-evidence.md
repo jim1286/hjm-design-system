@@ -1,11 +1,11 @@
 # Renderer evidence coverage
 
-> Generated for HJM 1.48.0. Do not edit directly; run `pnpm evidence:sync`.
+> Generated for HJM 1.49.0. Do not edit directly; run `pnpm evidence:sync`.
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 131/131 active implementations; 130/131 required scenario sets
-- native: 114/114 active implementations; 111/114 required scenario sets
+- web: 132/132 active implementations; 131/132 required scenario sets
+- native: 115/115 active implementations; 112/115 required scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -53,6 +53,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | TimePicker | web | stable | @hjmds/react | ./time-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#time-picker, test/scenario-matrix.browser.test.tsx#time-picker, test/time-picker.browser.test.tsx#time-picker |
 | DatePicker | web | stable | @hjmds/react | ./date-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#date-picker, test/scenario-matrix.browser.test.tsx#date-picker, test/stable-core.browser.test.tsx#date-picker |
 | DateRangePicker | web | stable | @hjmds/react | ./date-range | default, dark, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#date-range-picker, test/scenario-matrix.browser.test.tsx#date-range-picker, test/date-range.keyboard.browser.test.tsx#date-range-picker |
+| DrawingEditor | web | beta | @hjmds/react | ./drawing-editor | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#drawing-editor, test/scenario-matrix.browser.test.tsx#drawing-editor |
 | ColorPicker | web | stable | @hjmds/react | ./color-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#color-picker, test/scenario-matrix.browser.test.tsx#color-picker, test/web-additions.browser.test.tsx#color-picker |
 | FilePicker | web | stable | @hjmds/react | ./file-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#file-picker, test/scenario-matrix.browser.test.tsx#file-picker, test/file-picker.keyboard.browser.test.tsx#file-picker |
 | Form | web | stable | @hjmds/react | ./forms | default, dark, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#form, test/scenario-matrix.browser.test.tsx#form, test/form.keyboard.browser.test.tsx#form |
@@ -182,6 +183,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | TimePicker | native | stable | @hjmds/react-native | ./time-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#time-picker, test/scenario-matrix.test.tsx#time-picker, test/time-picker.test.tsx#time-picker |
 | DatePicker | native | stable | @hjmds/react-native | ./date-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-picker, test/scenario-matrix.test.tsx#date-picker, test/stable-core.test.tsx#date-picker |
 | DateRangePicker | native | stable | @hjmds/react-native | ./date-range | default, dark, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#date-range-picker, test/scenario-matrix.test.tsx#date-range-picker, test/date-range-actions.test.tsx#date-range-picker |
+| DrawingEditor | native | beta | @hjmds/react-native | ./drawing-editor | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#drawing-editor, test/scenario-matrix.test.tsx#drawing-editor |
 | ColorPicker | native | stable | @hjmds/react-native | ./color-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#color-picker, test/scenario-matrix.test.tsx#color-picker |
 | FilePicker | native | stable | @hjmds/react-native | ./file-picker | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#file-picker, test/scenario-matrix.test.tsx#file-picker, test/file-picker-host-action.test.tsx#file-picker |
 | Form | native | stable | @hjmds/react-native | ./forms | default, dark, large-text, rtl, reduced-motion, accessibility, native-actions | none | test/default-render.test.tsx#form, test/scenario-matrix.test.tsx#form, test/form.interaction.test.tsx#form |

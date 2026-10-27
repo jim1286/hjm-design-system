@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "designSystemVersion": "1.48.0",
+  "designSystemVersion": "1.49.0",
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
       "packageName": "@hjmds/react",
-      "packageVersion": "1.48.0",
-      "activeComponents": 131,
-      "claimedComponents": 131,
-      "completeScenarioComponents": 130,
+      "packageVersion": "1.49.0",
+      "activeComponents": 132,
+      "claimedComponents": 132,
+      "completeScenarioComponents": 131,
       "components": [
         {
           "componentId": "text",
@@ -2414,6 +2414,56 @@
             "reduced-motion",
             "accessibility",
             "keyboard"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "drawing-editor",
+          "name": "DrawingEditor",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./drawing-editor",
+          "exportNames": [
+            "DrawingEditor"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "drawing-editor"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "drawing-editor"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": []
         },
@@ -7064,10 +7114,10 @@
     },
     "native": {
       "packageName": "@hjmds/react-native",
-      "packageVersion": "1.48.0",
-      "activeComponents": 114,
-      "claimedComponents": 114,
-      "completeScenarioComponents": 111,
+      "packageVersion": "1.49.0",
+      "activeComponents": 115,
+      "claimedComponents": 115,
+      "completeScenarioComponents": 112,
       "components": [
         {
           "componentId": "text",
@@ -9352,6 +9402,56 @@
             "reduced-motion",
             "accessibility",
             "native-actions"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "drawing-editor",
+          "name": "DrawingEditor",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./drawing-editor",
+          "exportNames": [
+            "DrawingEditor"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "drawing-editor"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/scenario-matrix.test.tsx",
+              "caseId": "drawing-editor"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": []
         },

@@ -70,6 +70,7 @@ export declare const publicExportEntries: {
     readonly Dialog: readonly ["./overlays"];
     readonly Divider: readonly ["./data-display"];
     readonly DocumentResource: readonly ["./document-resource"];
+    readonly DrawingEditor: readonly ["./drawing-editor"];
     readonly DurationField: readonly ["./duration-field"];
     readonly EditorScreen: readonly ["./screen-flows"];
     readonly EffectSurface: readonly ["./effect-surface"];

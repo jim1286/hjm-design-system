@@ -1,5 +1,13 @@
 # @hjmds/design-contracts
 
+## 1.49.0
+
+### Minor Changes
+
+- 507ec5f: Add Card badgesPlacement="corner" for short tilted labels at the upper-right corner without increasing content height. Diairy uses it for NEW collection labels.
+- 507ec5f: Add an optional DrawingEditor entry with shared history, paint tools, crop preview and failed-save draft preservation. Diairy and Spint consume the shared editor while products retain account, upload and navigation ownership.
+- 507ec5f: Make the journal timeline the default with an explicit record variant, and preserve image-choice grid columns for short lists. Consumers using the previous timeline appearance can select the record variant.
+
 ## 1.48.0
 
 ### Minor Changes

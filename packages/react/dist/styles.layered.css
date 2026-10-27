@@ -2874,6 +2874,26 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-timeline[data-selectable] .hjm-timeline__item { cursor: pointer; }
 .hjm-timeline__item[aria-selected="true"] { background: var(--hjm-color-surface-selected); box-shadow: inset 0 0 0 1px var(--hjm-color-border-control); }
 .hjm-timeline__item[role="option"]:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
+.hjm-timeline__details { display: grid; gap: var(--hjm-space-xxs); }
+.hjm-timeline__details[hidden] { display: none; }
+/* Default journal (2026-10-27 user choice): unfilled reading rows. Passive histories keep
+   all details/actions; selectable histories add native disclosure buttons. "record" retains the previous surface. */
+.hjm-timeline[data-variant="journal"] { gap: 0; }
+.hjm-timeline[data-variant="journal"] .hjm-timeline__item {
+  inline-size: 100%; min-block-size: 44px; padding: var(--hjm-space-md) 0; border: 0;
+  border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: start;
+}
+.hjm-timeline[data-variant="journal"] .hjm-timeline__dot { inline-size: .5rem; block-size: .5rem; margin-block-start: calc((1lh - .5rem) / 2); background: var(--hjm-color-border); border: 0; }
+.hjm-timeline[data-variant="journal"] [data-state="selected"] .hjm-timeline__dot { background: var(--hjm-color-text); }
+.hjm-timeline[data-variant="journal"] [data-tone="info"] .hjm-timeline__dot { background: var(--hjm-accent-info); }
+.hjm-timeline[data-variant="journal"] [data-tone="success"] .hjm-timeline__dot { background: var(--hjm-accent-success); }
+.hjm-timeline[data-variant="journal"] [data-tone="attention"] .hjm-timeline__dot { background: var(--hjm-accent-attention); }
+.hjm-timeline[data-variant="journal"] .hjm-timeline__connector { inset-block: calc((1lh + .5rem) / 2) calc(-2 * var(--hjm-space-md) - .5lh); }
+.hjm-timeline[data-variant="journal"] .hjm-timeline__heading { flex-wrap: nowrap; justify-content: space-between; }
+.hjm-timeline__chevron { color: var(--hjm-color-text-muted); flex-shrink: 0; }
+.hjm-timeline [aria-expanded="true"] .hjm-timeline__chevron { transform: rotate(180deg); }
+.hjm-timeline[data-variant="journal"] .hjm-timeline__details { padding-block-start: var(--hjm-space-xs); }
+.hjm-timeline[data-variant="journal"] .hjm-timeline__item:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-accordion { border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-accordion__item { border-block-end: 1px solid var(--hjm-color-border); }
 .hjm-accordion__header { margin: 0; }
@@ -3635,7 +3655,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 
 .hjm-image-choice { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-image-choice__label { font-weight: var(--hjm-text-emphasis-medium); }
-.hjm-image-choice__tiles { display: grid; grid-template-columns: repeat(auto-fit, calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2)); justify-content: space-between; gap: var(--hjm-image-choice-gap); }
+.hjm-image-choice__tiles { display: grid; grid-template-columns: repeat(auto-fill, calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2)); justify-content: space-between; gap: var(--hjm-image-choice-gap); }
 /* The button is a column (ring frame, optional item label) so the label shares the tap target; the ring is drawn on
    the inner frame (2026-10-18 showItemLabels). */
 .hjm-image-choice__tile { display: flex; flex-direction: column; gap: var(--hjm-image-choice-item-label-gap); inline-size: calc(var(--hjm-image-choice-size) + (var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)) * 2); padding: 0; border: 0; border-radius: calc(var(--hjm-image-choice-radius) + var(--hjm-image-choice-ring) + var(--hjm-image-choice-offset)); background: none; color: inherit; cursor: pointer; }
@@ -3870,6 +3890,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-card__background-interaction > :first-child { width: 100%; height: 100%; }
 .hjm-card__media-badges { position: absolute; inset-block-start: var(--hjm-space-sm); inset-inline-end: var(--hjm-space-sm); display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); z-index: 1; }
 .hjm-card__scrim { position: absolute; inset: 0; background: var(--hjm-card-background-scrim); }
+.hjm-card:has(> .hjm-card__corner-badges) { position: relative; }
+.hjm-card__corner-badges { position: absolute; z-index: 1; pointer-events: none; display: flex; }
 .hjm-card__badges { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); }
 .hjm-card__badges[data-align="center"] { justify-content: center; }
 .hjm-card[data-background-media="true"] > .hjm-card__body { position: relative; flex: 0 1 auto; margin-block-start: auto; }
