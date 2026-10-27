@@ -40,6 +40,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -1506,17 +1507,24 @@ export function Sheet({
   const canSwipe = showHandle && !closeBlocked;
   const requestCloseRef = useRef(requestClose);
   requestCloseRef.current = requestClose;
-  const settleDrag = () => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
-  const dragResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: (_, gesture) => canSwipe && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx),
-    onPanResponderMove: (_, gesture) => dragOffset.setValue(Math.max(0, gesture.dy)),
+  const canSwipeRef = useRef(canSwipe);
+  canSwipeRef.current = canSwipe;
+  const settleDrag = useCallback(() => Animated.spring(dragOffset, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start(), [dragOffset]);
+  // PanResponder owns accumulated distance/velocity. Recreating it on keyboard,
+  // layout or owner updates replaces that state while the finger is still down.
+  const dragResponder = useMemo(() => PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gesture) => canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx),
+    onPanResponderGrant: () => dragOffset.stopAnimation(),
+    onPanResponderMove: (_, gesture) => { if (canSwipeRef.current) dragOffset.setValue(Math.max(0, gesture.dy)); },
     onPanResponderRelease: (_, gesture) => {
-      if (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity) requestCloseRef.current("swipe");
+      if (canSwipeRef.current && (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity)) requestCloseRef.current("swipe");
       else settleDrag();
     },
     onPanResponderTerminate: settleDrag,
-  });
-  useEffect(() => { if (visible) dragOffset.setValue(0); }, [visible, dragOffset]);
+  }), [dragOffset, settleDrag]);
+  useEffect(() => {
+    if (visible || !canSwipe) { dragOffset.stopAnimation(); dragOffset.setValue(0); }
+  }, [visible, canSwipe, dragOffset]);
   const translate = enterTranslate;
   // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
   // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.

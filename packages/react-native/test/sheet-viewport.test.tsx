@@ -336,3 +336,49 @@ describe('side Sheet downward reading-panel dismissal', () => {
     expect(zones()).toHaveLength(0);
   });
 });
+
+describe("Sheet swipe continuity", () => {
+  const zone = () => renderer!.root.findAllByType(View).find(view => typeof view.props.onMoveShouldSetResponder === "function")!;
+
+  it("keeps an active swipe across keyboard and owner rerenders and calls the latest owner", () => {
+    const previousOwner = vi.fn();
+    const currentOwner = vi.fn();
+    render(tree({ onOpenChange: previousOwner }));
+    act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+    const release = zone().props.onResponderRelease;
+    const move = zone().props.onResponderMove;
+    act(() => move({}, { dy: 180, dx: 0 }));
+    act(() => keyboard.__emit("keyboardDidShow", 240));
+    act(() => renderer!.update(tree({ onOpenChange: currentOwner })));
+    // RN keeps displacement/velocity inside the responder instance, so replacing
+    // its handlers here loses the gesture before the finger is released.
+    expect(zone().props.onResponderMove).toBe(move);
+    expect(zone().props.onResponderRelease).toBe(release);
+    act(() => zone().props.onResponderRelease({}, { dy: 180, vy: 0.1 }));
+    expect(previousOwner).not.toHaveBeenCalled();
+    expect(currentOwner).toHaveBeenCalledWith(false, { reason: "swipe" });
+  });
+
+  it("returns short or cancelled drags without closing and still allows a quick downward flick", () => {
+    const onOpenChange = vi.fn();
+    const spring = vi.spyOn(Animated, "spring");
+    render(tree({ onOpenChange }));
+    act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+    act(() => zone().props.onResponderRelease({}, { dy: 20, vy: 0.1 }));
+    expect(spring).toHaveBeenCalledTimes(1);
+    act(() => zone().props.onResponderTerminate());
+    expect(spring).toHaveBeenCalledTimes(2);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    act(() => zone().props.onResponderRelease({}, { dy: 40, vy: 0.8 }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "swipe" });
+  });
+
+  it("checks the current dismissal policy when a held swipe is released", () => {
+    const onOpenChange = vi.fn();
+    render(tree({ onOpenChange }));
+    const release = zone().props.onResponderRelease;
+    act(() => renderer!.update(tree({ onOpenChange, busy: true })));
+    act(() => release({}, { dy: 300, vy: 1 }));
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+});

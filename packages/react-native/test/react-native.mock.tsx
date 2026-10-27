@@ -78,6 +78,10 @@ export const Animated = {
     },
     stop: () => undefined,
   }),
+  spring: (value: AnimatedValue, configuration: Readonly<{ toValue: number }>): MockAnimation => ({
+    start: (callback) => { value.setValue(configuration.toValue); callback?.({ finished: true }); },
+    stop: () => undefined,
+  }),
   sequence: (animations: readonly MockAnimation[]): MockAnimation => ({
     start: (callback) => {
       for (const animation of animations) animation.start();
