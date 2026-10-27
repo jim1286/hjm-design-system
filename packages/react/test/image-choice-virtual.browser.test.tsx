@@ -61,7 +61,7 @@ it.each([false, true])("keeps the second choice in its column with virtualizatio
   const render = async (count: number) => {
     await act(async () => root.render(<HjmProvider><ImageChoiceGroup label="장식" selectionMode="single"
       value={null} onValueChange={() => {}} items={people.slice(0, count)}
-      virtualized={virtual ? { height: 200 } : undefined} /></HjmProvider>));
+      {...(virtual ? { virtualized: { height: 200 } } : {})} /></HjmProvider>));
     await settle();
     return [...host.querySelectorAll<HTMLElement>(".hjm-image-choice__tile")].map(tile => tile.getBoundingClientRect().left);
   };
