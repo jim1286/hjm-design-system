@@ -24,6 +24,18 @@ function ReadingPanelExample() {
 }
 export const ReadingPanel: Story = { name: "아래로 닫는 옆 읽기 패널 · 미게시", render: () => <ReadingPanelExample /> };
 
+// Body drag-to-dismiss check (2026-10-27): pull down at the top closes; after scrolling, the same pull scrolls back first.
+function LongScrollableExample() {
+  const [open, setOpen] = useState(false);
+  return <>
+    <Button onPress={() => setOpen(true)}>긴 목록 열기</Button>
+    <Sheet open={open} onOpenChange={setOpen} title="긴 목록" closeLabel="목록 닫기" scrollable>
+      {Array.from({ length: 30 }, (_, index) => <Text key={index}>{`항목 ${index + 1}`}</Text>)}
+    </Sheet>
+  </>;
+}
+export const LongScrollable: Story = { name: "긴 본문 스크롤 · 미게시", render: () => <LongScrollableExample /> };
+
 
 export const PersistentPanel: Story = { name: "지도와 함께 쓰는 하단 패널 · 미게시", render: () => <View style={{ height: 420, justifyContent: "flex-end" }}>
   <Text>뒤의 지도 영역은 계속 조작할 수 있습니다.</Text>

@@ -68,7 +68,8 @@ it("dismisses a collection through the shared downward gesture without changing 
  const responder=vi.spyOn(PanResponder,"create");
  const opened=vi.fn();const changed=vi.fn();
  render(<Select label="Language" items={items} defaultOpen placeholder="Choose" dismissLabel="Close" onOpenChange={opened} onSelectionChange={changed}/>);
- const gesture=responder.mock.calls.at(-1)![0];
+ // The Sheet also creates a capture-phase body responder; the handle zone is the bubble one.
+ const gesture=responder.mock.calls.map(call=>call[0]).filter(callbacks=>callbacks.onMoveShouldSetPanResponder).at(-1)!;
  const event={} as GestureResponderEvent;
  const motion={dx:0,dy:300,vy:1} as PanResponderGestureState;
  expect(gesture.onMoveShouldSetPanResponder?.(event,motion)).toBe(true);

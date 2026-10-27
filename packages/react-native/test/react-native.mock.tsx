@@ -69,6 +69,11 @@ type MockAnimation = Readonly<{
 export const Animated = {
   Value: AnimatedValue,
   View: host("AnimatedView"),
+  ScrollView: host("AnimatedScrollView"),
+  multiply: (a: unknown, b: unknown) => ({ __animatedMultiply: [a, b] }),
+  // Native-driven mapping is not observable here; tests drive the JS listener the renderer attaches.
+  event: (_mapping: unknown, configuration?: Readonly<{ listener?: (event: unknown) => void }>) =>
+    (event: unknown) => configuration?.listener?.(event),
   timing: (value: AnimatedValue, configuration: Readonly<{ toValue: number; duration?: number }>) => ({
     start: (callback?: (result: Readonly<{ finished: boolean }>) => void) => {
       // The reduced-motion scenario proof reads what actually started.
@@ -126,6 +131,7 @@ export const PanResponder = {
   create: (callbacks: Readonly<Record<string, unknown>>) => ({
     panHandlers: {
       onMoveShouldSetResponder: callbacks.onMoveShouldSetPanResponder,
+      onMoveShouldSetResponderCapture: callbacks.onMoveShouldSetPanResponderCapture,
       onResponderGrant: callbacks.onPanResponderGrant,
       onResponderMove: callbacks.onPanResponderMove,
       onResponderRelease: callbacks.onPanResponderRelease,

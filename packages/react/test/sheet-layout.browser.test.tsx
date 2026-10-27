@@ -258,3 +258,54 @@ it('does not begin Sheet dismissal for a horizontal gesture', async () => {
   expect(sheet.style.transform).toBe('');
   expect(onOpenChange).not.toHaveBeenCalled();
 });
+
+// 2026-10-27 user decision: a touch pull-down on the body closes too, but only once the body is at its top.
+async function scrollingBottomSheet() {
+  const onOpenChange = vi.fn();
+  await act(async () => root.render(<HjmProvider reducedMotion>
+    <Sheet open onOpenChange={onOpenChange} title="List" closeLabel="Close list">
+      {Array.from({ length: 60 }, (_, index) => <p key={index}>Item {index + 1}</p>)}
+    </Sheet>
+  </HjmProvider>));
+  const sheet = document.querySelector<HTMLElement>('.hjm-sheet')!;
+  const body = sheet.querySelector<HTMLElement>('.hjm-sheet__body')!;
+  const target = body.querySelector('p')!;
+  async function touch(type: 'touchstart' | 'touchmove' | 'touchend', y: number, t: number, x = 50) {
+    const point = new Touch({ identifier: 1, target, clientX: x, clientY: y });
+    const event = new TouchEvent(type, {
+      bubbles: true, cancelable: true,
+      touches: type === 'touchend' ? [] : [point], changedTouches: [point],
+    });
+    Object.defineProperty(event, 'timeStamp', { value: t + 10000 });
+    await act(async () => target.dispatchEvent(event));
+    return event;
+  }
+  return { sheet, body, touch, onOpenChange };
+}
+
+it('closes a bottom Sheet from a touch pull-down on its body at the top', async () => {
+  const { sheet, body, touch, onOpenChange } = await scrollingBottomSheet();
+  expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+  await touch('touchstart', 100, 0);
+  expect((await touch('touchmove', 104, 100)).defaultPrevented).toBe(true);
+  await touch('touchmove', 400, 1000);
+  expect(sheet.style.transform).toBe('translateY(300px)');
+  await touch('touchend', 400, 2000);
+  expect(sheet.style.transform).toBe('');
+  expect(onOpenChange).toHaveBeenCalledWith(false, { reason: 'swipe' });
+});
+
+it('lets a scrolled body scroll back instead of closing, and ignores an upward start', async () => {
+  const { sheet, body, touch, onOpenChange } = await scrollingBottomSheet();
+  body.scrollTop = 120;
+  await touch('touchstart', 100, 0);
+  expect((await touch('touchmove', 400, 1000)).defaultPrevented).toBe(false);
+  await touch('touchend', 400, 2000);
+  expect(sheet.style.transform).toBe('');
+  body.scrollTop = 0;
+  await touch('touchstart', 400, 3000);
+  await touch('touchmove', 380, 3100);
+  expect((await touch('touchmove', 700, 4000)).defaultPrevented).toBe(false);
+  await touch('touchend', 700, 5000);
+  expect(onOpenChange).not.toHaveBeenCalled();
+});

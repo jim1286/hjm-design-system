@@ -581,7 +581,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
   });
   const policy: SheetDismissPolicy = resolveSheetDismissPolicy(placement, dismissPolicy);
   const closeVisible = resolveSheetCloseButton(placement, showClose);
-  // Drag-to-dismiss (2026-10-16 user decision): handle and header follow the pointer downward and a
+  // Drag-to-dismiss (2026-10-16 user decision; body touch pull-downs joined 2026-10-27): the sheet follows the pointer downward and a
   // release past the distance or velocity threshold closes with reason "swipe".
   const showHandle = (placement === "bottom" || swipeDirection === "down") && policy.dismissible && policy.swipeDismiss;
   const closeBlocked = busy && !policy.dismissWhileBusy;
@@ -602,6 +602,70 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     suppressDragClick.current = false;
     setDragY(0);
   }, [open, canSwipe]);
+  // State, not a ref: the portal mounts the body after this component's first commit.
+  const [bodyElement, setBodyElement] = useState<HTMLDivElement | null>(null);
+  const requestCloseRef = useRef<(reason: SheetDismissReason) => void>(() => undefined);
+  useEffect(() => {
+    // Body drag-to-dismiss (2026-10-27 user decision): a touch pull-down on the body closes like the handle,
+    // but only while the body, and any scroller between the finger and it, is already at the top. Otherwise
+    // the same pull scrolls the content back first. Touch only: a mouse keeps text selection and uses the handle.
+    // Native listeners because React's touch handlers are passive and cannot stop the browser's own pan.
+    const body = bodyElement;
+    if (!open || !canSwipe || !body) return undefined;
+    let drag: { x: number; y: number; t: number; state: "pending" | "dragging" | "rejected" } | null = null;
+    const atTop = (target: EventTarget | null) => {
+      for (let node = target instanceof Element ? target : null; node && body.contains(node); node = node.parentElement) {
+        if (node.scrollTop > 0) return false;
+        if (node === body) break;
+      }
+      return body.scrollTop <= 0;
+    };
+    const onStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      const editable = event.target instanceof Element && event.target.closest("input,textarea,select,[contenteditable]:not([contenteditable='false'])");
+      drag = event.touches.length !== 1 || !touch || editable || !atTop(event.target)
+        ? null
+        : { x: touch.clientX, y: touch.clientY, t: event.timeStamp, state: "pending" };
+    };
+    const onMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!drag || !touch || drag.state === "rejected") return;
+      const dy = touch.clientY - drag.y;
+      const dx = Math.abs(touch.clientX - drag.x);
+      if (drag.state === "pending") {
+        // Upward or sideways movement belongs to scrolling, rails and swipe rows inside the body.
+        if (dy < 0 || dx > dy) { if (dy < 0 || dx > sheetDragRecipe.activationDistance) drag.state = "rejected"; return; }
+        // Hold the browser's pan from the first downward move so the pull is still cancelable once it activates.
+        if (event.cancelable) event.preventDefault();
+        if (dy < sheetDragRecipe.activationDistance) return;
+        drag.state = "dragging";
+      }
+      if (event.cancelable) event.preventDefault();
+      setDragY(Math.max(0, dy));
+    };
+    const onEnd = (event: TouchEvent) => {
+      const current = drag;
+      drag = null;
+      if (current?.state !== "dragging") return;
+      setDragY(0);
+      const touch = event.changedTouches[0];
+      if (event.type === "touchcancel" || !touch) return;
+      const dy = touch.clientY - current.y;
+      const velocity = dy / Math.max(1, event.timeStamp - current.t);
+      const height = contentRef.current?.getBoundingClientRect().height ?? 0;
+      if (dy > height * sheetDragRecipe.dismissDistanceRatio || velocity > sheetDragRecipe.dismissVelocity) requestCloseRef.current("swipe");
+    };
+    body.addEventListener("touchstart", onStart, { passive: true });
+    body.addEventListener("touchmove", onMove, { passive: false });
+    body.addEventListener("touchend", onEnd);
+    body.addEventListener("touchcancel", onEnd);
+    return () => {
+      body.removeEventListener("touchstart", onStart);
+      body.removeEventListener("touchmove", onMove);
+      body.removeEventListener("touchend", onEnd);
+      body.removeEventListener("touchcancel", onEnd);
+    };
+  }, [open, canSwipe, bodyElement]);
   const lifecycleRef = useRef(createSheetLifecycle(open));
   const previousOpenRef = useRef(open);
   const currentOpenRef = useRef(open);
@@ -637,6 +701,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
       });
     }
   };
+  requestCloseRef.current = requestClose;
   useEffect(() => {
     if (open) {
       lifecycleRef.current.open();
@@ -819,7 +884,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                 ) : null}
               </header> : null}
               </div>
-              {children ? <div className="hjm-sheet__body"><ScreenFooterContext.Provider value={null}><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></ScreenFooterContext.Provider></div> : null}
+              {children ? <div ref={setBodyElement} className="hjm-sheet__body"><ScreenFooterContext.Provider value={null}><InitialFocusProvider scope={focusScope}>{children}</InitialFocusProvider></ScreenFooterContext.Provider></div> : null}
               {/* The Sheet owns the footer inset. A nested BottomCTA must not draw a second bar (Choose Window, 2026-10-20). */}
               {footer ? <footer className="hjm-sheet__footer"><ScreenFooterContext.Provider value={{ bottomPadding: placement === "bottom" ? "calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px))" : "var(--hjm-space-sm)" }}><InitialFocusProvider scope={focusScope}>{footer}</InitialFocusProvider></ScreenFooterContext.Provider></footer> : null}
             </div>

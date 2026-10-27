@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Animated, Keyboard, Platform, Pressable, ScrollView, Text as NativeText, StyleSheet, View } from "react-native";
+import { Animated, Keyboard, Platform, Pressable, Text as NativeText, StyleSheet, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlays.js";
@@ -132,8 +132,9 @@ describe("Sheet input viewport", () => {
 
   it("keeps header/footer outside the scrolling body and disables duplicate UIKit clearance", () => {
     render(tree({ keyboardAvoidance: true, scrollable: true }));
-    expect(renderer!.root.findByType(ScrollView).props.contentContainerStyle.flexGrow).toBe(1);
-    const scroll = renderer!.root.findByType(ScrollView);
+    // Animated so iOS can read the top overscroll natively (body drag-to-dismiss, 2026-10-27).
+    expect(renderer!.root.findByType(Animated.ScrollView).props.contentContainerStyle.flexGrow).toBe(1);
+    const scroll = renderer!.root.findByType(Animated.ScrollView);
     expect(scroll.props).toMatchObject({ keyboardShouldPersistTaps: "handled", automaticallyAdjustKeyboardInsets: false });
     expect(scroll.findAllByType(Text).map((node) => node.props.children)).toEqual(["입력 본문"]);
     expect(dialog().findAllByType(Text).some((node) => node.props.children === "저장")).toBe(true);
@@ -371,6 +372,58 @@ describe("Sheet swipe continuity", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
     act(() => zone().props.onResponderRelease({}, { dy: 40, vy: 0.8 }));
     expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "swipe" });
+  });
+
+  // 2026-10-27 user decision: a downward drag on the body closes too, not only the 44pt handle strip.
+  it("closes from a plain body with the same zone gesture as the handle", () => {
+    const onOpenChange = vi.fn();
+    render(tree({ onOpenChange }));
+    act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+    const zones = renderer!.root.findAllByType(View).filter(view => typeof view.props.onMoveShouldSetResponder === "function");
+    const body = zones.find(view => view.findAllByType(Text).some(node => node.props.children === "입력 본문"))!;
+    expect(body).toBeDefined();
+    expect(body.props.onMoveShouldSetResponder({}, { dy: 20, dx: 2 })).toBe(true);
+    expect(body.props.onMoveShouldSetResponder({}, { dy: 20, dx: 30 })).toBe(false);
+    act(() => body.props.onResponderRelease({}, { dy: 200, vy: 0.1 }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "swipe" });
+  });
+
+  it("takes a scrollable body's pull only when it is already at the top (Android responder)", () => {
+    render(tree({ scrollable: true }));
+    const scroll = renderer!.root.findByType(Animated.ScrollView);
+    const wrapper = renderer!.root.findAllByType(View).find(view => typeof view.props.onMoveShouldSetResponderCapture === "function")!;
+    expect(wrapper.props.onMoveShouldSetResponderCapture({}, { dy: 20, dx: 0 })).toBe(true);
+    act(() => scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 120 } } }));
+    expect(wrapper.props.onMoveShouldSetResponderCapture({}, { dy: 20, dx: 0 })).toBe(false);
+  });
+
+  it("closes an iOS scrollable body from the top overscroll, never from a drag that scrolled up to it", () => {
+    const os = Platform.OS;
+    Object.assign(Platform, { OS: "ios" });
+    try {
+      const onOpenChange = vi.fn();
+      render(tree({ scrollable: true, onOpenChange }));
+      act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+      const scroll = () => renderer!.root.findByType(Animated.ScrollView);
+      act(() => scroll().props.onLayout({ nativeEvent: { layout: { height: 500 } } }));
+      expect(renderer!.root.findAllByType(View).some(view => typeof view.props.onMoveShouldSetResponderCapture === "function")).toBe(false);
+      // Started mid-content: the overscroll at release is the content's own bounce.
+      act(() => scroll().props.onScroll({ nativeEvent: { contentOffset: { y: 200 } } }));
+      act(() => scroll().props.onScrollBeginDrag({ nativeEvent: { contentOffset: { y: 200 } } }));
+      act(() => scroll().props.onScrollEndDrag({ nativeEvent: { contentOffset: { y: -90 }, velocity: { y: -2 } } }));
+      expect(onOpenChange).not.toHaveBeenCalled();
+      act(() => scroll().props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }));
+      // Started at the top: a short slow pull springs back, a pull past the rubber-banded threshold closes.
+      act(() => scroll().props.onScrollBeginDrag({ nativeEvent: { contentOffset: { y: 0 } } }));
+      act(() => scroll().props.onScrollEndDrag({ nativeEvent: { contentOffset: { y: -20 }, velocity: { y: -0.1 } } }));
+      expect(onOpenChange).not.toHaveBeenCalled();
+      act(() => scroll().props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }));
+      act(() => scroll().props.onScrollBeginDrag({ nativeEvent: { contentOffset: { y: 0 } } }));
+      act(() => scroll().props.onScrollEndDrag({ nativeEvent: { contentOffset: { y: -90 }, velocity: { y: -0.1 } } }));
+      expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "swipe" });
+    } finally {
+      Object.assign(Platform, { OS: os });
+    }
   });
 
   it("checks the current dismissal policy when a held swipe is released", () => {
