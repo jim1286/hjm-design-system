@@ -400,6 +400,7 @@
     "components-inputs--combobox",
     "components-inputs--date-picker",
     "components-inputs--date-range-picker",
+    "components-inputs--drawing-editor",
     "components-inputs--field",
     "components-inputs--file-picker",
     "components-inputs--form",

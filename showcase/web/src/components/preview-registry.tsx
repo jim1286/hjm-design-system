@@ -1,4 +1,6 @@
 import { TimePicker as HjmTimePicker } from "@hjmds/react/time-picker";
+import { DrawingEditor as HjmDrawingEditor } from "@hjmds/react/drawing-editor";
+import { drawingEditorLabels } from "../../../shared/drawing-editor.js";
 import { DialogPreview, AlertDialogPreview } from "./dialog-examples.js";
 // 2026-10-17 screen compositions registered.
 import { ScreenLayoutPreview, CompositionLayoutPreview, SettingsScreenPreview, SearchScreenPreview, EditorScreenPreview, PermissionScreenPreview, OnboardingScreenPreview, ModerationScreenPreview, ChatScreenPreview, NotificationInboxScreenPreview, CommentThreadScreenPreview, ListDetailScreenPreview, MediaSelectionScreenPreview, ProfileScreenPreview, ChatMessagePreview, NotificationRowPreview, NotificationItemPreview, CommentThreadRowPreview, ProfileSummaryPreview, IconTilePreview, MessageComposerPreview, PhotoSourceSheetPreview, TypingIndicatorPreview, ChatDateSeparatorPreview } from "../patterns/ScreenComponents.previews.js";
@@ -410,6 +412,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "TextArea": return <HjmTextArea label={textAreaExample.label} defaultValue={textAreaExample.value} description={textAreaExample.description} />;
     case "PasswordField": return <HjmPasswordField label={passwordFieldExample.label} autofillHint="current" revealLabel={passwordFieldExample.revealLabel} concealLabel={passwordFieldExample.concealLabel} defaultValue={passwordFieldExample.value} description={passwordFieldExample.description} />;
     case "ImageChoiceGroup": return <ImageChoicePreview />;
+    case "DrawingEditor": return <HjmDrawingEditor labels={drawingEditorLabels} cropPreview="circle" onCancel={() => {}} onSave={async () => {}} />;
     case "OtpField": return <HjmOtpField label={otpFieldExample.label} length={otpFieldExample.length} defaultValue={otpFieldExample.value} description={otpFieldExample.description} />;
     case "NumberField": return <HjmNumberField label={numberFieldExample.label} min={numberFieldExample.min} max={numberFieldExample.max} defaultValue={numberFieldExample.value} decrementLabel={numberFieldExample.decrementLabel} incrementLabel={numberFieldExample.incrementLabel} />;
     case "Slider": return <HjmSlider label={sliderExample.label} min={sliderExample.min} max={sliderExample.max} defaultValue={sliderExample.value} getValueText={sliderExample.valueText} />;

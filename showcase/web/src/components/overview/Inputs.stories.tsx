@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContractStory } from "../preview-registry";
 import { componentStory } from "../story-factory";
-const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","ImageChoiceGroup","SegmentedControl","ToggleGroup","TagsInput","Slider","NumberField","Select","Combobox","TimePicker","DatePicker","DateRangePicker","ColorPicker","FilePicker","Form","Agreement","Mentions","TransferList","MessageComposer"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+const meta = { includeStories: ["Field","SearchField","TextArea","PasswordField","OtpField","Checkbox","Radio","CheckboxGroup","RadioGroup","Switch","Chip","ImageChoiceGroup","SegmentedControl","ToggleGroup","TagsInput","Slider","NumberField","Select","Combobox","TimePicker","DatePicker","DateRangePicker","DrawingEditor","ColorPicker","FilePicker","Form","Agreement","Mentions","TransferList","MessageComposer"], id: "components-inputs", title: "배포/컴포넌트/개요/입력 모아 보기", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Field: Story = { ...componentStory("Field"), name: "입력 필드" };
@@ -27,6 +27,7 @@ export const Combobox: Story = { ...componentStory("Combobox"), name: "검색형
 export const TimePicker: Story = { ...componentStory("TimePicker"), name: "시각 선택" };
 export const DatePicker: Story = { ...componentStory("DatePicker"), name: "날짜 선택" };
 export const DateRangePicker: Story = { ...componentStory("DateRangePicker"), name: "기간 선택" };
+export const DrawingEditor: Story = { ...componentStory("DrawingEditor"), name: "손그림 편집기" };
 export const ColorPicker: Story = { ...componentStory("ColorPicker"), name: "색상 선택기" };
 export const FilePicker: Story = { ...componentStory("FilePicker"), name: "파일 선택" };
 export const Form: Story = { ...componentStory("Form"), name: "입력 양식" };
