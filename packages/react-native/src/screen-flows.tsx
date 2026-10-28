@@ -693,7 +693,8 @@ export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActi
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack gap={profileSummaryRecipe.stats.rowGap} layoutStyle={{ width: "100%" }}>{profileStatRows(stats).map((row, index) =>
       <Stack key={index} axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{row.map((stat, cell) => stat ?
-      <Stack key={stat.id} gap="xxs" align="center" justify="center" layoutStyle={{ flex: 1, minWidth: 0 }}>
+      // Cells start at the top: a label that wraps to two lines must not lower its value below its neighbours (2026-10-28).
+      <Stack key={stat.id} gap="xxs" align="center" justify="start" layoutStyle={{ flex: 1, minWidth: 0 }}>
         {stat.onPress ? <Button tone="ghost" accessibilityLabel={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onPress={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
           : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
       </Stack> : <View key={`empty-${cell}`} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flex: 1, minWidth: 0 }} />)}</Stack>)}</Stack> : null}
