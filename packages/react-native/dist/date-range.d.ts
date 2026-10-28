@@ -9,9 +9,9 @@ export type DateRangeSummary = Readonly<{
     placeholder: string;
     formatDate: (date: string) => string;
 }>;
-/** Fold the presets and grid behind `summary`, which becomes the toggle. */
+/** Fold the grid behind `summary`, which becomes the toggle; presets stay visible. */
 export type DateRangeCollapsible = Readonly<{
-    /** Controlled open state. Without it the picker opens while the range is incomplete and folds once it completes. */
+    /** Controlled open state. Without it the grid starts folded and folds again after a preset or a completing date. */
     expanded?: boolean;
     defaultExpanded?: boolean;
     onExpandedChange?: (expanded: boolean) => void;
@@ -46,8 +46,8 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
     /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
     presets?: readonly DateRangePresetOption[];
     /**
-     * Fold the presets and grid behind `summary` (required), which becomes a toggle button. A selection that completes
-     * the range folds it again (`resolveDateRangeExpanded`).
+     * Fold the grid behind `summary` (required), which becomes a toggle button; presets stay visible. A preset or a date
+     * that completes the range folds it again (`resolveDateRangeExpandedAfterSelection`).
      */
     collapsible?: DateRangeCollapsible;
 }>;

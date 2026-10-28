@@ -174,7 +174,7 @@ import {
 } from "../../shared/component-examples";
 import { calendarExampleGrid } from "../../shared/calendar-example";
 import { listRowRecipe } from "@hjmds/design-contracts/recipes";
-import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
+import { dateRangeRecipe, type DateRangeValue } from "@hjmds/design-contracts/components/date-range";
 const noop = () => undefined;
 
 // Shared calendar fixture keeps weekday placement identical to Web (the hand-written grid matched only February 2027).
@@ -563,7 +563,8 @@ return (<StoryFrame><Section title={copy.title} description={copy.description}><
 <Section title={copy.collapsibleTitle}>
   <DateRangePicker descriptor={{ grid: dateRangeGrid, monthLabel: copy.monthLabel }} composeAccessibleName={({ date }) => date}
     value={folded} onValueChange={setFolded} rangeLabels={copy.rangeLabels}
-    summary={{ ...copy.summary, formatDate: (date) => date }} collapsible={{}} />
+    summary={{ ...copy.summary, formatDate: (date) => date }} collapsible={{}}
+    presets={dateRangeRecipe.presets.standard.map((preset) => ({ ...preset, label: copy.presetLabels[preset.id] }))} />
 </Section></StoryFrame>);
 }
 

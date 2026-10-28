@@ -5043,6 +5043,32 @@ export declare const recipeRegistry: {
         readonly presets: {
             readonly gap: 8;
             readonly chipSize: "small";
+            readonly standard: readonly [{
+                readonly id: "day";
+                readonly length: {
+                    readonly days: 1;
+                };
+            }, {
+                readonly id: "week";
+                readonly length: {
+                    readonly days: 7;
+                };
+            }, {
+                readonly id: "month";
+                readonly length: {
+                    readonly months: 1;
+                };
+            }, {
+                readonly id: "quarter";
+                readonly length: {
+                    readonly months: 3;
+                };
+            }, {
+                readonly id: "all";
+                readonly length: {
+                    readonly all: true;
+                };
+            }];
         };
         readonly gap: 16;
         readonly toggle: {

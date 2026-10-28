@@ -10,7 +10,7 @@ import {
   resolveDateRangeActiveEdge,
   resolveDateRangeCellPaint,
   resolveDateRangeCellState,
-  resolveDateRangeExpanded,
+  resolveDateRangeExpandedAfterSelection,
   resolveDateRangePreset,
   type DateRangePresetLength,
   resolveDateRangeSelection,
@@ -37,9 +37,9 @@ export type DateRangeSummary = Readonly<{
   formatDate: (date: string) => string;
 }>;
 
-/** Fold the presets and grid behind `summary`, which becomes the toggle. */
+/** Fold the grid behind `summary`, which becomes the toggle; presets stay visible. */
 export type DateRangeCollapsible = Readonly<{
-  /** Controlled open state. Without it the picker opens while the range is incomplete and folds once it completes. */
+  /** Controlled open state. Without it the grid starts folded and folds again after a preset or a completing date. */
   expanded?: boolean;
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
@@ -70,8 +70,8 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
   presets?: readonly DateRangePresetOption[];
   /**
-   * Fold the presets and grid behind `summary` (required), which becomes a toggle button. A selection that completes
-   * the range folds it again (`resolveDateRangeExpanded`).
+   * Fold the grid behind `summary` (required), which becomes a toggle button; presets stay visible. A preset or a date
+   * that completes the range folds it again (`resolveDateRangeExpandedAfterSelection`).
    */
   collapsible?: DateRangeCollapsible;
   className?: string;
@@ -105,13 +105,13 @@ export function DateRangePicker<Content = unknown>({
   validateDateRange(value, maxRange);
   const [expanded, setExpanded] = useControllableState<boolean>({
     ...(collapsible?.expanded === undefined ? {} : { value: collapsible.expanded }),
-    defaultValue: collapsible?.defaultExpanded ?? resolveDateRangeExpanded(value),
+    defaultValue: collapsible?.defaultExpanded ?? false,
     ...(collapsible?.onExpandedChange === undefined ? {} : { onChange: collapsible.onExpandedChange }),
   });
   const open = collapsible === undefined || expanded;
-  const select = (next: DateRangeValue) => {
+  const select = (next: DateRangeValue, source: "date" | "preset") => {
     setValue(next);
-    if (collapsible && !resolveDateRangeExpanded(next)) setExpanded(false);
+    if (collapsible && !resolveDateRangeExpandedAfterSelection(next, source)) setExpanded(false);
   };
   // The hovered date previews the not-yet-committed end through the same cell
   // state function the committed range uses.
@@ -147,7 +147,7 @@ export function DateRangePicker<Content = unknown>({
             size={dateRangeRecipe.toggle.glyph} tone="secondary" decorative />
         </button>
       ) : summary ? <div className="hjm-date-range__summary">{field("start")}{field("end")}</div> : null}
-      {open && presets?.length ? (
+      {presets?.length ? (
         <div className="hjm-date-range__presets">
           {presets.map((preset) => {
             const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
@@ -156,10 +156,11 @@ export function DateRangePicker<Content = unknown>({
                 selected={range.start === value.start && range.end === value.end}
                 onSelectedChange={() => {
                   validateDateRange(range, maxRange);
-                  select(range);
+                  select(range, "preset");
                   // A preset ends today; bring its end month into view like a jump, so the band is visible.
-                  const month = range.end!.slice(0, 7);
-                  if (descriptor.focusedMonth !== month) descriptor.onFocusedMonthChange?.(month, "jump");
+                  // The `all` preset is the empty range and has no month to show.
+                  const month = range.end?.slice(0, 7);
+                  if (month !== undefined && descriptor.focusedMonth !== month) descriptor.onFocusedMonthChange?.(month, "jump");
                 }} />
             );
           })}
@@ -175,7 +176,7 @@ export function DateRangePicker<Content = unknown>({
             // Calendar keeps single selection; the two edges and the band are painted through the internal
             // paint context, and each day's name carries the range position for assistive tech.
             selectedDate: value.end ?? value.start,
-            onSelectionChange: (date) => { if (date !== null) select(resolveDateRangeSelection(value, date, maxRange)); },
+            onSelectionChange: (date) => { if (date !== null) select(resolveDateRangeSelection(value, date, maxRange), "date"); },
           } as CalendarDescriptor<Content>}
           composeAccessibleName={(info) => {
             const state = resolveDateRangeCellState(value, info.date, hovered);

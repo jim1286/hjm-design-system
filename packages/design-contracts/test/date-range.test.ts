@@ -7,7 +7,7 @@ import {
   resolveDateRangeLimitBounds,
   isCompleteDateRange,
   resolveDateRangeActiveEdge,
-  resolveDateRangeExpanded,
+  resolveDateRangeExpandedAfterSelection,
   resolveDateRangeCellPaint,
   resolveDateRangePreset,
   resolveDateRangeCellState,
@@ -96,9 +96,14 @@ describe("DateRange", () => {
     expect(() => resolveDateRangePreset("2026-10-25", { days: 0 })).toThrow(RangeError);
   });
 
-  it("keeps a collapsible picker open until a selection completes the range", () => {
-    expect(resolveDateRangeExpanded(emptyDateRange)).toBe(true);
-    expect(resolveDateRangeExpanded({ start: "2026-10-15", end: null })).toBe(true);
-    expect(resolveDateRangeExpanded({ start: "2026-10-15", end: "2026-10-24" })).toBe(false);
+  it("folds a collapsible picker after a preset or a completing date, never after a first tap", () => {
+    expect(resolveDateRangeExpandedAfterSelection({ start: "2026-10-15", end: null }, "date")).toBe(true);
+    expect(resolveDateRangeExpandedAfterSelection({ start: "2026-10-15", end: "2026-10-24" }, "date")).toBe(false);
+    expect(resolveDateRangeExpandedAfterSelection(emptyDateRange, "preset")).toBe(false);
+  });
+
+  it("treats the all preset as the empty range", () => {
+    expect(resolveDateRangePreset("2026-10-28", { all: true })).toEqual(emptyDateRange);
+    expect(resolveDateRangePreset("2026-10-28", { days: 1 })).toEqual({ start: "2026-10-28", end: "2026-10-28" });
   });
 });

@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { dateRangeRecipe, emptyDateRange, defaultDateRangeLimit, isDateWithinRangeLimit, resolveDateRangeActiveEdge, resolveDateRangeCellPaint, resolveDateRangeCellState, resolveDateRangeExpanded, resolveDateRangePreset, resolveDateRangeSelection, validateDateRange, } from "@hjmds/design-contracts/components/date-range";
+import { dateRangeRecipe, emptyDateRange, defaultDateRangeLimit, isDateWithinRangeLimit, resolveDateRangeActiveEdge, resolveDateRangeCellPaint, resolveDateRangeCellState, resolveDateRangeExpandedAfterSelection, resolveDateRangePreset, resolveDateRangeSelection, validateDateRange, } from "@hjmds/design-contracts/components/date-range";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { Pressable, View } from "react-native";
 import { glyph } from "@hjmds/design-contracts/foundations";
@@ -21,13 +21,13 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
     validateDateRange(value, maxRange);
     const [expanded, setExpanded] = useControllableState({
         ...(collapsible?.expanded === undefined ? {} : { value: collapsible.expanded }),
-        defaultValue: collapsible?.defaultExpanded ?? resolveDateRangeExpanded(value),
+        defaultValue: collapsible?.defaultExpanded ?? false,
         ...(collapsible?.onExpandedChange === undefined ? {} : { onChange: collapsible.onExpandedChange }),
     });
     const open = collapsible === undefined || expanded;
-    const select = (next) => {
+    const select = (next, source) => {
         setValue(next);
-        if (collapsible && !resolveDateRangeExpanded(next))
+        if (collapsible && !resolveDateRangeExpandedAfterSelection(next, source))
             setExpanded(false);
     };
     const { palette, tokens } = useHjmNativeTheme();
@@ -46,14 +46,15 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
     return (_jsxs(View, { style: { gap: dateRangeRecipe.gap }, children: [summary && collapsible ? (_jsxs(Pressable, { accessibilityRole: "button", accessibilityState: { expanded: open }, accessibilityLabel: [["start", summary.startLabel], ["end", summary.endLabel]].map(([edge, label]) => {
                     const date = value[edge];
                     return `${label}, ${date === null ? summary.placeholder : summary.formatDate(date)}`;
-                }).join(", "), onPress: () => setExpanded(!open), style: { flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }, children: [_jsxs(View, { style: { flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }), _jsx(DrawnChevron, { direction: open ? "up" : "down", size: glyph[dateRangeRecipe.toggle.glyph], color: color(dateRangeRecipe.summary.label.color) })] })) : summary ? _jsxs(View, { style: { flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }) : null, open && presets?.length ? (_jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }, children: presets.map((preset) => {
+                }).join(", "), onPress: () => setExpanded(!open), style: { flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }, children: [_jsxs(View, { style: { flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }), _jsx(DrawnChevron, { direction: open ? "up" : "down", size: glyph[dateRangeRecipe.toggle.glyph], color: color(dateRangeRecipe.summary.label.color) })] })) : summary ? _jsxs(View, { style: { flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }) : null, presets?.length ? (_jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }, children: presets.map((preset) => {
                     const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
                     return (_jsx(Chip, { label: preset.label, size: dateRangeRecipe.presets.chipSize, selectionMode: "single", selected: range.start === value.start && range.end === value.end, onPress: () => {
                             validateDateRange(range, maxRange);
-                            select(range);
+                            select(range, "preset");
                             // A preset ends today; bring its end month into view like a jump, so the band is visible.
-                            const month = range.end.slice(0, 7);
-                            if (descriptor.focusedMonth !== month)
+                            // The `all` preset is the empty range and has no month to show.
+                            const month = range.end?.slice(0, 7);
+                            if (month !== undefined && descriptor.focusedMonth !== month)
                                 descriptor.onFocusedMonthChange?.(month, "jump");
                         } }, preset.id));
                 }) })) : null, open ? _jsx(CalendarPaintContext.Provider, { value: (date) => resolveDateRangeCellPaint(value, date, null), children: _jsx(Calendar, { descriptor: {
@@ -65,7 +66,7 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
                         // paint context, and each day's name carries the range position for assistive tech.
                         selectedDate: value.end ?? value.start,
                         onSelectionChange: (date) => { if (date !== null)
-                            select(resolveDateRangeSelection(value, date, maxRange)); },
+                            select(resolveDateRangeSelection(value, date, maxRange), "date"); },
                     }, composeAccessibleName: (info) => {
                         const state = resolveDateRangeCellState(value, info.date, null);
                         const base = composeAccessibleName(info);

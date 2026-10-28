@@ -87,14 +87,17 @@ it("folds a collapsible native picker behind its summary toggle once the range c
       <HjmNativeProvider>
         <DateRangePicker descriptor={{ grid, monthLabel: "September 2026" }} composeAccessibleName={({ date }) => date}
           rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }} collapsible={{}}
-          summary={{ startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택", formatDate: (date) => date }} />
+          summary={{ startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택", formatDate: (date) => date }}
+          presets={[{ id: "all", label: "전체", length: { all: true } }]} />
       </HjmNativeProvider>,
     );
   });
   const pressables = () => renderer!.root.findAllByType(Pressable);
   const toggle = () => pressables().find((node) => node.props.accessibilityRole === "button" && (node.props.accessibilityLabel as string).startsWith("시작일"))!;
   const dateAction = (date: string) => pressables().find((node) => (node.props.accessibilityLabel as string).startsWith(date));
-  expect(toggle().props.accessibilityState.expanded).toBe(true);
+  expect(toggle().props.accessibilityState.expanded).toBe(false);
+  expect(dateAction("2026-09-05")).toBeUndefined();
+  act(() => toggle().props.onPress());
   act(() => dateAction("2026-09-03")!.props.onPress());
   act(() => dateAction("2026-09-07")!.props.onPress());
   expect(toggle().props.accessibilityState.expanded).toBe(false);

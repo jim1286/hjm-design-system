@@ -331,6 +331,8 @@ export const dateRangeExample = {
   // collapsible: 필터 영역에 접어 두는 기간(2026-10-28). 요약 칸이 펼침 버튼이다.
   collapsibleTitle: "필터에 접어 두는 기간",
   summary: { startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택" },
+  // dateRangeRecipe.presets.standard 순서의 문구(1일·1주일·1개월·3개월·전체).
+  presetLabels: { day: "1일", week: "1주일", month: "1개월", quarter: "3개월", all: "전체" },
 } as const;
 
 export const mentionsExample = {

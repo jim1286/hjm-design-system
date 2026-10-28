@@ -1,7 +1,7 @@
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
 import { dateRangeExample as dateRange } from "../../../shared/component-examples.js";
 import { useState } from "react";
-import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
+import { dateRangeRecipe, type DateRangeValue } from "@hjmds/design-contracts/components/date-range";
 import { DateRangePicker } from "@hjmds/react/date-range";
 import { OverlayStackProvider, useDialog, useSheet } from "@hjmds/react/overlay-stack";
 import { formatCurrency, formatNumber, formatPercent, formatBytes } from "@hjmds/design-contracts/formatters";
@@ -43,6 +43,7 @@ export function CollapsibleDateRangePreview() {
         onValueChange={setValue}
         rangeLabels={dateRange.rangeLabels}
         summary={{ ...dateRange.summary, formatDate: (date) => date }}
+        presets={dateRangeRecipe.presets.standard.map((preset) => ({ ...preset, label: dateRange.presetLabels[preset.id] }))}
         collapsible={{}}
       />
     </Section>

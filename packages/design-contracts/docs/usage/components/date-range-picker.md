@@ -80,8 +80,8 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | `previousMonth` · `nextMonth` | `{ month: string, label: string }` | — | 없으면 이동 버튼이 없다 |
 | `renderCellContent` | `(date: string) => ReactNode` | — | 날짜 아래 보조 표시. 넘길 때만 행에 보조 줄이 생긴다 |
 | `summary` | `{ startLabel, endLabel, placeholder, formatDate(date) }` | — | 격자 위 시작일·종료일 칸. 지금 고르는 쪽(`resolveDateRangeActiveEdge`: 비었으면 시작, 고르는 중이면 끝, 완성되면 없음)을 테두리로 표시한다. 문구는 i18n, 날짜 형식은 제품 소유 |
-| `presets` | `{ id, label, length: { days } \| { months } }[]` | — | 요약 아래 단일 선택 Chip 줄(최근 7일·1개월 등). 모두 `grid.todayDate`로 끝나고(`resolveDateRangePreset`), 값이 그 구간과 같을 때만 선택으로 보인다. 누르면 끝 달로 `onFocusedMonthChange(month, "jump")`를 요청한다 |
-| `collapsible` | `{ expanded?, defaultExpanded?, onExpandedChange? }` | 없음(늘 펼침) | 주면 `presets`·격자를 `summary` 뒤로 접는다. `summary`가 필수이고(없으면 `TypeError`) 그 줄이 펼침 버튼(`aria-expanded`·Native `expanded` 상태, 끝에 아래/위 화살표)이 된다. 구간을 완성하는 선택(두 번째 날짜·프리셋)은 다시 접는다(`resolveDateRangeExpanded`). `defaultExpanded`를 안 주면 완성된 값은 접힌 채, 비었거나 고르는 중이면 펼친 채 시작한다 |
+| `presets` | `{ id, label, length: { days } \| { months } \| { all: true } }[]` | — | 요약 아래 단일 선택 Chip 줄. `days`·`months`는 `grid.todayDate`로 끝나고 `all`은 빈 구간(날짜 제한 없음)이다(`resolveDateRangePreset`). 값이 그 구간과 같을 때만 선택으로 보인다. 누르면 끝 달로 `onFocusedMonthChange(month, "jump")`를 요청한다(`all` 제외). 기간 필터의 표준 칩은 `dateRangeRecipe.presets.standard`(1일·1주일·1개월·3개월·전체)이고 문구는 제품 i18n이다 |
+| `collapsible` | `{ expanded?, defaultExpanded?, onExpandedChange? }` | 없음(늘 펼침) | 주면 격자만 `summary` 뒤로 접고 `presets`는 계속 보인다. `summary`가 필수이고(없으면 `TypeError`) 그 줄이 펼침 버튼(`aria-expanded`·Native `expanded` 상태, 끝에 아래/위 화살표)이 된다. 접힌 채 시작하고(`defaultExpanded` 기본 `false`), 프리셋을 누르거나 날짜 탭으로 구간이 완성되면 다시 접는다(`resolveDateRangeExpandedAfterSelection`) |
 | Web `layoutStyle` | 배치 전용 style | — | 루트 배치 |
 
 ## 배치
@@ -99,7 +99,7 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 | 색 | 띠 `primary` 15% tint(두 끝과 같은 브랜드색. 처음 쓴 `surfaceSelected`는 기본 팔레트에서 #f0f1f3 회색이라 구간이 거의 보이지 않았다), 두 끝 Calendar 선택 원(`action.brand`). 칸 바탕 `surface.sunken`, 다음에 고를 칸 테두리 2 `action.brand`, 빈 값 `content.tertiary` | `dateRangeRecipe` |
 | 순서·정렬 | 오버레이 없이 본문(폼·필터 영역·[Section](section.md)) 안에 격자를 펼쳐 둔다. 위에서 `summary`(시작일 · 종료일) → `presets` 칩 줄 → 월 머리(이전 · 월 이름 · 다음) → 요일 → 날짜 격자. 제출 행동은 격자 **아래**에 둔다. 시트에서는 `footer`에 `BottomCTA` [보조(전체 날짜 등)][주(적용)] 한 줄로 두고 시트 높이는 `auto`로 맞춘다. `summary`를 쓰면 별도 안내·결과 문장을 두지 않는다. 제출 버튼은 `isCompleteDateRange(value)`가 참일 때만 활성이다 | 같은 파일 |
 | 고정·스크롤 | 본문과 함께 스크롤한다(오버레이 없음) | — |
-| 접기 | `collapsible`이면 요약 두 칸 뒤에 화살표 열(`dateRangeRecipe.toggle`: 아이콘 `glyph.sm` 20, 칸과 간격 `spacing.xs` 8)이 붙고 요약 줄 전체가 버튼이다. 접히면 요약만 남고 프리셋·격자는 그리지 않는다 | `dateRangeRecipe.toggle`, `.hjm-date-range__summary[data-toggle]` |
+| 접기 | `collapsible`이면 요약 두 칸 뒤에 화살표 열(`dateRangeRecipe.toggle`: 아이콘 `glyph.sm` 20, 칸과 간격 `spacing.xs` 8)이 붙고 요약 줄 전체가 버튼이다. 접히면 요약과 프리셋 칩 줄만 남고 격자는 그리지 않는다. 검색 필드가 있으면 그 아래에 요약 → 칩 → (펼쳤을 때) 격자 순서로 둔다 | `dateRangeRecipe.toggle`, `.hjm-date-range__summary[data-toggle]` |
 | 좁은 폭·큰 글자 | Web 격자 최소 폭 308보다 좁은 컨테이너에 두지 않는다 | `packages/react/src/styles.css` `.hjm-calendar__grid` |
 
 ## 꼭 지킬 것
@@ -109,9 +109,10 @@ import { DateRangePicker } from "@hjmds/react-native/date-range";
 - `rangeLabels`와 셀 이름(`composeAccessibleName`)은 i18n 키로 만든다. 구간 위치 접미사는 컴포넌트가
   셀 이름 뒤에 `, `로 붙인다.
 - 달을 넘기면 제품이 새 달의 `cells`와 `monthLabel`을 다시 만들어 넘긴다.
-- 필터처럼 고른 기간을 바로 반영하는 자리에서는 `collapsible`로 접어 둔다. 기간이 비어 있는 동안의 결과(예: 전체)는
-  제품이 정한다. 2026-10-28 사용자 "DateRangePicker도 접기 있게 해": 다에리 만난 동물 필터에서 기간을 고른 뒤에도
-  달력이 늘 펼쳐져 목록을 밀어냈다.
+- 필터처럼 고른 기간을 바로 반영하는 자리에서는 `collapsible`과 표준 프리셋(1일·1주일·1개월·3개월·전체)을 쓰고,
+  빈 값(전체)을 기본으로 둔다. [전체·오늘·기간 지정] 같은 별도 탭을 위에 겹쳐 두지 않는다. 프리셋과 같은 선택을 두 번 한다.
+  2026-10-28 사용자 요청: 다에리 만난 동물 필터에서 기간을 고른 뒤에도 달력이 늘 펼쳐져 목록을 밀어냈고, 탭과 프리셋이 겹쳤다.
+- 적용 버튼이 있는 시트에서는 `all` 칩 대신 `BottomCTA` 보조 행동(전체 날짜)을 둔다. 적용 버튼은 완성된 구간에서만 켜진다.
 
 ## 플랫폼 차이
 
