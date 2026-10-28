@@ -183,3 +183,7 @@ Steps 세 표현·SegmentedControl 브랜드 선택 기본값과 1.41.2 이후 �
 Changesets가 peer 범위 이탈을 major로 올리지 않도록 버전 생성 전에 두 renderer의 peer를 `>=1.42.0 <1.43.0`으로 옮긴다.
 과거 export/peer 목록을 복제하던 boundary 테스트는 manifest가 실제로 광고하는 산출물의 존재·분리·선택 peer 경계를 확인하도록 바꾼다.
 optional palette 테스트는 값이 없는 prop을 생략해 exactOptionalPropertyTypes 계약을 지키고, 동작 검증은 유지한다.
+
+### 2026-10-28 2.0.0 train 준비
+
+선택 상태의 배경·테두리 계약 제거가 포함된 major Changeset에 맞춰 두 renderer의 contracts peer를 버전 생성 전에 `>=2.0.0 <2.1.0`으로 옮긴다. 소비 제품은 게시된 같은 train을 적용하고 영향 경로를 확인한다.

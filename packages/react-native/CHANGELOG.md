@@ -1,5 +1,21 @@
 # @hjmds/react-native
 
+## 2.0.0
+
+### Minor Changes
+
+- a8e564f: Add an optional Native AuthScreenLayout backdrop that scrolls with the screen content.
+- 4fdd9a4: Add Avatar imageFit="contain" to preserve the whole picture, including its corners, within the avatar frame on Web and Native. Keep the existing cover treatment by default.
+- 7e3ac36: Add DateRangePicker `collapsible` on Web and Native. The summary becomes a toggle button for the grid while presets stay visible; the grid starts folded and folds again after a preset or a completing date (`resolveDateRangeExpandedAfterSelection`). Add the `{ all: true }` preset length (the empty range) and the standard filter presets `dateRangeRecipe.presets.standard` (1 day, 1 week, 1 month, 3 months, all). Pickers without `collapsible` are unchanged.
+- feab657: ProfileSummary wraps stats into rows of at most four equal cells (`profileSummaryRecipe.stats.maxPerRow`) on Web and Native; a short last row keeps the same cell width. Summaries with four or fewer stats render as before.
+- a2e9c6a: Add scrolling RadioGroup card and chip rails that keep selected and focused options visible while retaining disabled dates and radio semantics.
+
+### Patch Changes
+
+- 8c02a33: Keep Button and IconButton tone backgrounds and borders unchanged when selected. IconButtonLink follows the same treatment for the current destination. Preserve accessible state and filled-tone foreground contrast.
+
+  The selected recipe now contains only foreground treatment; read retained background and border from tones[tone] instead of states.selected. Component selected/current props remain unchanged.
+
 ## 1.50.0
 
 ### Minor Changes
