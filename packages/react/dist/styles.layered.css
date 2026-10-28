@@ -271,11 +271,11 @@
 /* A link-tone control is inline copy; the size axis' padding would push it out
    of alignment with the text around it. */
 .hjm-button[data-tone="link"] { color: var(--hjm-color-content-brand); background: transparent; padding-inline: 0; }
-/* Toggle treatment: aria-pressed already carried the state, so without a paired
-   visual every consumer painted the selected background in product styles.
-   Selection uses content color without an added border (2026-10-10 user request); focus stays separate. */
-/* IconButtonLink `current` (aria-current="page") reuses the selected surface: iconButtonRecipe.states.selected. */
-.hjm-button[data-selected="true"], .hjm-icon-button[data-selected="true"], .hjm-icon-button[aria-current="page"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-selected); border-color: transparent; }
+/* 2026-10-28: selection retains the tone's fill/border. Filled tones retain inverse content for contrast;
+   ghost/secondary/link may emphasize content without adding a selection plate. Focus remains independent. */
+.hjm-button[data-selected="true"]:not([data-tone="primary"]):not([data-tone="danger"]),
+.hjm-icon-button[data-selected="true"]:not([data-tone="primary"]):not([data-tone="danger"]),
+.hjm-icon-button[aria-current="page"]:not([data-tone="primary"]):not([data-tone="danger"]) { color: var(--hjm-color-text); }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { opacity: var(--hjm-button-pressed-opacity); }
 /* data-state="disabled" also covers focusable boundaries (aria-disabled, e.g. Carousel previous on the first slide),
    which looked enabled while Native dimmed them (2026-10-17 review E9). */
@@ -294,7 +294,6 @@
 .hjm-button[data-tone="primary"] { --hjm-button-face-fill: var(--hjm-color-primary); }
 .hjm-button[data-tone="secondary"] { --hjm-button-face-fill: var(--hjm-color-bg); --hjm-button-face-border: var(--hjm-color-border-control); }
 .hjm-button[data-tone="danger"] { --hjm-button-face-fill: var(--hjm-color-danger-fill); }
-.hjm-button[data-selected="true"] { --hjm-button-face-fill: var(--hjm-color-surface-selected); --hjm-button-face-border: transparent; }
 .hjm-button[data-raised="true"] { padding: 0 0 var(--hjm-button-depth); border: 0; gap: 0; flex-direction: column; background: color-mix(in srgb, var(--hjm-button-side), #000 var(--hjm-button-side-shade)); }
 .hjm-button__face { position: relative; display: flex; box-sizing: border-box; inline-size: 100%; min-block-size: inherit; flex: 1; align-items: center; justify-content: inherit; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-button-face-padding); border: 1px solid var(--hjm-button-face-border, transparent); border-radius: inherit; background: var(--hjm-button-face-fill); transition: transform var(--hjm-button-settle) ease-out; }
 .hjm-button[data-raised="true"]:active:not(:disabled):not([aria-disabled="true"]) { opacity: 1; }

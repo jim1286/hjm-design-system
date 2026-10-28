@@ -78,15 +78,9 @@ export const iconButtonRecipe = {
    */
   badge: { size: "small", variant: "floating", glyphOverlap: stroke.strong, inlineEnd: 0 },
   states: {
-    // `aria-pressed` / `accessibilityState.selected` already carried the toggle
-    // state; without a paired visual every consumer painted the pressed icon
-    // button in product styles. Mirrors `buttonRecipe.states.selected`.
-    selected: {
-      background: semanticColors.selection.background,
-      content: semanticColors.selection.content,
-      // Match Button: neutral selection does not introduce an outline.
-      border: null,
-    },
+    // 2026-10-28: the selected flower gained an unwanted surrounding plate. Selection keeps the tone's
+    // background/border; only foreground or the product's filled glyph conveys the persistent state.
+    selected: { content: semanticColors.selection.content },
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
   },
@@ -107,7 +101,7 @@ export const iconButtonRecipe = {
   elevation: { default: "none"; tones: readonly IconButtonTone[] };
   badge: { size: CounterBadgeSize; variant: CounterBadgeVariant; glyphOverlap: number; inlineEnd: number };
   states: {
-    selected: { background: ColorReference; content: ColorReference; border: ColorReference | null };
+    selected: { content: ColorReference };
     pressedOpacity: number;
     disabledOpacity: number;
   };
@@ -129,13 +123,16 @@ export function resolveIconButtonPresentation(
     background: ColorReference | null;
     content: ColorReference;
     border: ColorReference | null;
-  } = selected ? iconButtonRecipe.states.selected : iconButtonRecipe.tones[tone];
+  } = iconButtonRecipe.tones[tone];
+  // Filled tones keep inverse content so selecting never loses contrast against their retained fill.
+  const content = selected && tone !== "primary" && tone !== "danger"
+    ? iconButtonRecipe.states.selected.content : contract.content;
   return {
     background:
       contract.background === null
         ? null
         : resolveColorReference(contract.background, palette),
-    content: resolveColorReference(contract.content, palette),
+    content: resolveColorReference(content, palette),
     border:
       contract.border === null
         ? null

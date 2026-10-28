@@ -70,7 +70,7 @@ export type ButtonProps = Omit<
     appearance?: ButtonAppearance;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
-    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    /** Toggle state. Preserves tone background; reports selection to assistive tech. */
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
@@ -125,7 +125,7 @@ export type IconButtonProps = Omit<
     tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
-    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    /** Toggle state. Preserves tone background; reports selection to assistive tech. */
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
@@ -243,7 +243,7 @@ function iconButtonFrame(theme: ReturnType<typeof useHjmNativeTheme>, { tone, si
       backgroundColor: presentation.background ?? "transparent",
       borderColor: presentation.border ?? "transparent",
       borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
-      borderWidth: selected ? 0 : 1,
+      borderWidth: 1,
       height: visibleDiameter,
       justifyContent: "center" as const,
       minHeight: visibleDiameter,
@@ -316,7 +316,7 @@ export type IconButtonLinkProps = IconButtonLinkHostProps &
     /** Optional when `renderLink` lets the router own activation. */
     onNavigate?: (destination: LinkDestination) => void | Promise<void>;
     renderLink?: (props: IconButtonLinkRenderProps) => ReactElement;
-    /** The link points at the current screen: selected surface and `accessibilityState.selected`. */
+    /** The link points at the current screen: unchanged tone background and `accessibilityState.selected`. */
     current?: boolean;
     disabled?: boolean;
     tone?: IconButtonTone;

@@ -63,7 +63,7 @@ function iconButtonFrame(theme, { tone, size, shape, edge, selected }) {
             backgroundColor: presentation.background ?? "transparent",
             borderColor: presentation.border ?? "transparent",
             borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
-            borderWidth: selected ? 0 : 1,
+            borderWidth: 1,
             height: visibleDiameter,
             justifyContent: "center",
             minHeight: visibleDiameter,

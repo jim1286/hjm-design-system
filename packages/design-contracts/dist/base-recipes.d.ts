@@ -65,16 +65,9 @@ export declare const buttonRecipe: {
             readonly paddingHorizontal: 0;
         };
     };
-    /**
-     * Visual treatment for a control that is also a toggle. `accessibilityState`
-     * / `aria-pressed` already expressed the state; without a paired visual every
-     * consumer painted the selected background in product styles.
-     */
     readonly states: {
         readonly selected: {
-            readonly background: "surfaceSelected";
             readonly content: "text";
-            readonly border: null;
         };
     };
     readonly sizes: {

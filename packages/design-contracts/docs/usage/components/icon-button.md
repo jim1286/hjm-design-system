@@ -80,14 +80,13 @@ import { NotificationBell } from "@hjmds/react-native/notification-bell";
 ### 아이콘 링크 — `IconButtonLink` (2026-10-23, 개발 소스·미게시)
 
 Button에 대한 ButtonLink처럼 IconButton 틀(`tone`·`size`·`shape`·`edge`·`hitSlop`·`layoutStyle`)을 이동 링크에 쓴다.
-토글·로딩·변경 행동은 IconButton에 남는다. `current`는 지금 보고 있는 화면의 진입점이며 선택된 IconButton과 같은 면
-(`iconButtonRecipe.states.selected`)으로 칠하고 Web `aria-current="page"`, Native `accessibilityState.selected`로 알린다.
+토글·로딩·변경 행동은 IconButton에 남는다. `current`는 지금 보고 있는 화면의 진입점이며 선택된 IconButton과 같이 기존 tone의 배경을 유지하고 Web `aria-current="page"`, Native `accessibilityState.selected`로 알린다.
 
 | prop | Web | Native | 기본값 |
 | --- | --- | --- | --- |
 | 목적지 | `href: string` | `destination: LinkDestination` | 필수 |
 | 이름 | `label: string`(접근성 이름, 빈 값이면 `TypeError`) | 같음 | 필수 |
-| `current` | `boolean` → `aria-current="page"` + 선택 면 | `boolean` → `selected` + 선택 면 | `false` |
+| `current` | `boolean` → `aria-current="page"` + 기존 배경 유지 | `boolean` → `selected` + 기존 배경 유지 | `false` |
 | `disabled` | `href`를 지우고 클릭·가운데 클릭을 막는다(ButtonLink와 같다) | 누름을 막는다 | `false` |
 | router 연결 | `renderAnchor(props)` — `ref`·`href`·이름·`aria-current`·차단 핸들러가 담긴 props를 자기 링크에 펼친다 | `onNavigate(destination)` 또는 `renderLink(props)`(TopBarAction `intent="link"`와 같다). 둘 다 없으면 `TypeError` | — |
 
@@ -124,7 +123,7 @@ Client Component에서 연결한다.
 | `size` | `small` 36 · `medium` 44 · `large` 52 | `medium` | `small`은 터치 여백 4 추가. 아이콘 크기는 각각 `sm`·`md`·`lg` |
 | `shape` | `rounded` · `circle` | `rounded` | — |
 | `elevation` | `none` · `raised` · `floating` · `overlay` | `none` | 떠 있는 컨트롤(번뚝 Dock 가운데 버튼)의 그림자 토큰 단계(`iconButtonRecipe.elevation`). `primary`·`secondary`·`danger`만 받고 `ghost`에 주면 `TypeError`. Web은 `--hjm-shadow-<단계>`, Native는 iOS 그림자 + Android elevation. `IconButtonLink`에는 없다(미게시, 2026-10-23) |
-| `selected` | `true` · `false` | — | 주면 토글이 된다(Web `aria-pressed`, Native 접근성 state) |
+| `selected` | `true` · `false` | — | 주면 토글이 된다(Web `aria-pressed`, Native 접근성 state). 선택 전후 tone 배경은 유지한다 |
 | `edge` | `start` · `end` · `both` | — | 버튼이 놓인 컨테이너 가장자리(논리 방향, RTL에서 뒤집힘). `ghost`면 터치 영역은 그대로 두고 그 쪽으로 (보이는 지름 − 아이콘 칸) / 2만큼 내민다(`medium` 10, `small` 8, `large` 12, `resolveIconButtonEdgeOverhang`). 테두리·배경이 있는 tone은 틀이 정렬 기준이라 움직이지 않는다 |
 | `loading` | `true` · `false` | — | 누름을 막고 스피너로 바꾼다. Native는 기본으로 포커스를 유지한다(`disableWhileLoading`으로만 옛 동작) |
 | `loading` 중 `renderLoadingIndicator`(Native) | `(props: { color: string; size: "small" }) => ReactNode` | 기본 스피너 | 스피너를 바꿀 때만 |
@@ -187,8 +186,7 @@ TopBar
   `tone="inverse"`를 준다. 다른 아이콘 라이브러리의 컴포넌트를 직접 넣으면(Native) 색을 제품이 넘겨야 한다.
 - Native `IconButton`의 `style`은 제거되었다. 배치는 `layoutStyle`, 외형은 `tone`·`size`·`shape`로 지정한다.
 
-2026-10-10 사용자 요청: Button과 같은 선택 표현을 쓴다. 선택은 bg 바탕·contentBrand 아이콘으로
-표시하고 추가 선택 테두리는 없다. aria-pressed/Native selected와 키보드 focus outline은 유지한다.
+2026-10-28 사용자 지시: **선택해도 배경색은 바꾸지 않는다.** Button·IconButton·현재 경로인 IconButtonLink는 원래 tone의 배경과 테두리를 유지한다. ghost는 선택 후에도 투명하며 primary·danger는 원래 채움과 대비되는 글자색을 유지한다. 선택은 글자·아이콘의 전경 표현 또는 채운 glyph로 표시한다. Web `aria-pressed`/`aria-current`, Native `accessibilityState.selected`와 키보드 focus outline을 유지한다. 스핀트 꽃 반응 주변에 선택 면이 중복으로 생긴 사례가 계기이며 2026-10-10의 선택 배경 지침을 대체한다. 제품별 접근성 상태 우회나 배경 덮어쓰기를 추가하지 않고 `selected`를 그대로 쓴다.
 
 ## 근거
 
@@ -199,3 +197,5 @@ TopBar
   컴포넌트마다 오프셋을 따로 두지 않고 이 한 규칙과 계약 값으로 맞췄다. Toast 닫기(같은 날 `toastRecipe.close.inlineOverhang`)와 같은 식이다.
 - 도구성 행동은 IconButton: 2026-10-17 사용자 지시 — '나의 기록' 헤더의 새로고침·새 기록 글자 버튼.
 - 선택 표현: 2026-10-10 사용자 요청 — Button과 같은 선택 표현을 쓴다.
+
+공개 recipe 직접 소비 시 `states.selected.background`·`border` 대신 `tones[tone].background`·`border`를 읽는다. 선택 recipe는 전경만 소유한다. 이 recipe 필드 제거는 다음 게시 시 contracts의 major 변경으로 기록하며 컴포넌트의 `selected`·`current` 사용법은 바꾸지 않는다.

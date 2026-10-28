@@ -17,7 +17,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     fullWidth?: boolean;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
-    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    /** Toggle state. Preserves tone background and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
     /** Explicit confirmed mutation result. Both text labels remain measured in every state. */
@@ -46,7 +46,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     fullWidth?: boolean;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
-    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    /** Toggle state. Preserves tone background and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
     /** Explicit confirmed mutation result. Both text labels remain measured in every state. */
@@ -88,7 +88,7 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
     /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
     hitSlop?: number;
     shape?: IconButtonShape;
-    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    /** Toggle state. Preserves tone background and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
     /**
@@ -113,7 +113,7 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     /** Extra pointer area in pixels; compact header tools use 0. Defaults to the size recipe. */
     hitSlop?: number;
     shape?: IconButtonShape;
-    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    /** Toggle state. Preserves tone background and sets `aria-pressed`. */
     selected?: boolean;
     loading?: boolean;
     /**
@@ -141,7 +141,7 @@ export type IconButtonLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 
     href: string;
     /** Icon only; `label` is the accessible name. */
     children: ReactNode;
-    /** The link points at the current page: `aria-current="page"` with the selected surface (`iconButtonRecipe.states.selected`). */
+    /** The link points at the current page: `aria-current="page"` without changing the tone background. */
     current?: boolean;
     disabled?: boolean;
     /** Framework routing adapter; HJM still owns the anchor destination, ref, name, current state and disabled guards. */
@@ -153,7 +153,7 @@ export declare const IconButtonLink: import("react").ForwardRefExoticComponent<O
     href: string;
     /** Icon only; `label` is the accessible name. */
     children: ReactNode;
-    /** The link points at the current page: `aria-current="page"` with the selected surface (`iconButtonRecipe.states.selected`). */
+    /** The link points at the current page: `aria-current="page"` without changing the tone background. */
     current?: boolean;
     disabled?: boolean;
     /** Framework routing adapter; HJM still owns the anchor destination, ref, name, current state and disabled guards. */

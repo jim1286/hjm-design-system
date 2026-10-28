@@ -24,7 +24,7 @@ export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibil
     appearance?: ButtonAppearance;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
-    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    /** Toggle state. Preserves tone background; reports selection to assistive tech. */
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
@@ -67,7 +67,7 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
     tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
-    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    /** Toggle state. Preserves tone background; reports selection to assistive tech. */
     selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
@@ -118,7 +118,7 @@ export type IconButtonLinkProps = IconButtonLinkHostProps & IconButtonNameProps 
     /** Optional when `renderLink` lets the router own activation. */
     onNavigate?: (destination: LinkDestination) => void | Promise<void>;
     renderLink?: (props: IconButtonLinkRenderProps) => ReactElement;
-    /** The link points at the current screen: selected surface and `accessibilityState.selected`. */
+    /** The link points at the current screen: unchanged tone background and `accessibilityState.selected`. */
     current?: boolean;
     disabled?: boolean;
     tone?: IconButtonTone;

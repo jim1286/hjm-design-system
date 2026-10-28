@@ -28,7 +28,7 @@ it("server-renders an icon-only anchor named by its label", () => {
   expect(html).not.toContain("<button");
 });
 
-it("draws the IconButton frame and the selected surface for the current page", async () => {
+it("preserves the IconButton background while marking the current page", async () => {
   const link = await render();
   const button = host.querySelector("button")!;
   expect(link.getBoundingClientRect().width).toBe(44);
@@ -40,7 +40,7 @@ it("draws the IconButton frame and the selected surface for the current page", a
   await render({ current: true });
   expect(link.getAttribute("aria-current")).toBe("page");
   expect(getComputedStyle(link).backgroundColor).toBe(getComputedStyle(button).backgroundColor);
-  expect(getComputedStyle(link).backgroundColor).not.toBe(idleBackground);
+  expect(getComputedStyle(link).backgroundColor).toBe(idleBackground);
 });
 
 it("passes the anchor ref, name and current state through a router adapter and guards disabled navigation", async () => {

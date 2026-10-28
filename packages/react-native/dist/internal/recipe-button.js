@@ -52,7 +52,7 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
     const toneContract = buttonRecipe.tones[tone];
     const edgeOverhang = edge === undefined ? 0 : resolveButtonEdgeOverhang(tone, size);
     const sizeContract = buttonRecipe.sizes[size];
-    const selectedContract = selected === true ? buttonRecipe.states.selected : null;
+    const selectedContract = selected === true && tone !== "primary" && tone !== "danger" ? buttonRecipe.states.selected : null;
     const resolveColor = (key) => key === null ? "transparent" : colors[key];
     const contentColor = resolveColor(selectedContract?.content ?? toneContract.content);
     const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
@@ -73,10 +73,10 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
     const slots = _jsxs(_Fragment, { children: [loading && leading != null ? _jsx(View, { style: { opacity: 0 }, children: leading }) : leading, completion ? _jsxs(View, { style: { flexShrink: 1, minWidth: 0, height: slotHeight }, children: [_jsxs(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: 0, opacity: 0 }, children: [_jsx(Text, { fontRole: "ui", emphasis: "medium", variant: sizeContract.textVariant, ...(labelLines === null ? {} : { numberOfLines: labelLines }), onLayout: event => measureLabel("idle", event.nativeEvent.layout.height), style: [{ color: contentColor, flexShrink: 0, minWidth: 0 }, labelStyle], children: content }), _jsx(Text, { fontRole: "ui", emphasis: "medium", variant: sizeContract.textVariant, ...(labelLines === null ? {} : { numberOfLines: labelLines }), onLayout: event => measureLabel("complete", event.nativeEvent.layout.height), style: [{ color: contentColor, flexShrink: 0, minWidth: 0 }, labelStyle], children: completion.label })] }), _jsx(View, { pointerEvents: "none", style: { position: "absolute", inset: 0, justifyContent: "center", opacity: loading ? 0 : 1 }, children: _jsx(Text, { fontRole: "ui", align: align === "leading" ? "auto" : "center", emphasis: "medium", variant: sizeContract.textVariant, ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor, minWidth: 0 }, labelStyle], children: currentContent }) })] }) : textContent ? (_jsx(Text, { fontRole: "ui", align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor, flexShrink: 1, minWidth: 0 }, labelStyle, loading ? { opacity: 0 } : null], variant: sizeContract.textVariant, children: content })) : (loading ? _jsx(View, { importantForAccessibility: "no-hide-descendants", style: { opacity: 0 }, children: content }) : content), loading && trailing != null ? _jsx(View, { style: { opacity: 0 }, children: trailing }) : trailing, loading ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? _jsx(ActivityIndicator, { color: contentColor, size: "small" }) }) : null] });
     const faceStyle = () => ({
         alignItems: "center",
-        backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
-        borderColor: resolveColor((selectedContract ?? toneContract).border),
+        backgroundColor: resolveColor(toneContract.background),
+        borderColor: resolveColor(toneContract.border),
         borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
-        borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+        borderWidth: toneContract.border ? 1 : 0,
         direction: environment.direction,
         flexDirection: "row",
         gap: spacing.xs,
@@ -104,10 +104,10 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
         ] : [
             {
                 alignItems: "center",
-                backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
-                borderColor: resolveColor((selectedContract ?? toneContract).border),
+                backgroundColor: resolveColor(toneContract.background),
+                borderColor: resolveColor(toneContract.border),
                 borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
-                borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+                borderWidth: toneContract.border ? 1 : 0,
                 direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xs,

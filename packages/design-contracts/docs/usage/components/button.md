@@ -131,7 +131,7 @@ Web·Native와 라이트·다크 테마에 동일하게 적용한다.
   Native에서 `style`·`labelStyle`을 넘기면 실행 중 `TypeError`가 난다.
 - 색은 tone과 제품 테마 토큰으로 바꾼다. 버튼마다 브랜드 색을 하드코딩하지 않는다.
 - 진행 중 상태는 `loading`으로 표시하고 같은 자리에 별도 Spinner를 겹치지 않는다. children을 빈 문자열이나 다른 길이의 진행 문구로 바꾸지 않는다. 렌더러가 문구·아이콘을 숨긴 자리에 중앙 스피너만 표시하고 기존 크기·접근성 이름을 유지한다.
-- "한 화면 `primary` 하나"의 예외는 다음과 같다. `selected`를 준 버튼은 tone과 관계없이 `buttonRecipe.states.selected`(배경 `bg`, 글자 `contentBrand`, 선택 테두리 없음)로 칠해져 primary 채움이 아니므로 세지 않고(Web `.hjm-button[data-selected="true"]`, Native `internal/recipe-button.tsx`, 작품 카드의 저장 토글), Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`, 작품 탐색·랜딩 스토리의 시트).
+- `selected`도 원래 tone의 배경을 유지하므로 `primary` 버튼이면 주 행동 개수에 포함한다. Sheet·Dialog 안의 행동은 그 표면 안에서 primary 하나를 센다([Sheet](sheet.md) `footer`).
 
 - `selected` 버튼 여러 개를 나란히 두어 하나 고르기·여러 개 고르기·켜고 끄기를 흉내 내지 않는다. 그 의도는 [선택 조립 규칙](../SELECTION.md#조립-규칙필수)의 SegmentedControl·RadioGroup·Chip·Switch를 쓴다.
 
@@ -150,8 +150,7 @@ Web·Native와 라이트·다크 테마에 동일하게 적용한다.
 
 - footer 순서를 모든 본문 행동에 강제하지 않는다. 시간 선택처럼 주 행동 다음에 초기화가 오는 구성과 AlertDialog의 좁은 폭 순서는 각각 명시된 구성 계약을 따른다.
 
-`selected`에는 선택 테두리를 추가하지 않는다. `selected` 접근성 상태와
-contentBrand 글자·아이콘 색은 유지하며 키보드 focus outline은 선택과 별도로 유지한다.
+2026-10-28 사용자 지시: `selected`로 배경색을 바꾸지 않는다. 원래 tone의 배경·테두리를 유지하고 선택 테두리를 추가하지 않는다. ghost는 투명하게 남으며 primary·danger의 채움과 역상 글자색도 유지한다. 선택은 전경색·채운 아이콘 또는 상태 라벨로 표현하며 `aria-pressed`/Native 접근성 상태와 키보드 focus outline은 유지한다. 꽃 반응에 선택 면이 중복으로 생긴 사례 때문에 기존 선택 배경 지침을 대체했다. IconButton도 같은 규칙을 쓴다.
 
 ## 저장 확정 라벨과 프레임 예약 (npm 1.21.0 · 2026-10-15)
 
@@ -237,3 +236,5 @@ import { ButtonLink } from "@hjmds/react/actions";
 2026-10-20 다에리의 지도/장소 이동에서 초안 보호·오프라인 차단을 유지하기 위해 추가했다.
 전달받은 anchor props와 `ref`를 실제 링크에 그대로 연결하며, `href`가 없으면 내부 라우팅도 하지 않는다.
 버튼의 색/크기/초점/비활성·수정키/새 탭 의미는 HJM이 소유하고 제품은 목적지·이동 처리를 연결한다.
+
+선택 recipe 직접 소비의 변경: `states.selected`는 전경만 소유하며 배경·테두리는 `tones[tone]`에서 읽는다. 필드 제거는 다음 contracts major 게시 대상으로 기록하며 컴포넌트의 `selected` 사용법은 동일하다.

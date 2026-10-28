@@ -56,27 +56,24 @@ export const iconButtonRecipe = {
      */
     badge: { size: "small", variant: "floating", glyphOverlap: stroke.strong, inlineEnd: 0 },
     states: {
-        // `aria-pressed` / `accessibilityState.selected` already carried the toggle
-        // state; without a paired visual every consumer painted the pressed icon
-        // button in product styles. Mirrors `buttonRecipe.states.selected`.
-        selected: {
-            background: semanticColors.selection.background,
-            content: semanticColors.selection.content,
-            // Match Button: neutral selection does not introduce an outline.
-            border: null,
-        },
+        // 2026-10-28: the selected flower gained an unwanted surrounding plate. Selection keeps the tone's
+        // background/border; only foreground or the product's filled glyph conveys the persistent state.
+        selected: { content: semanticColors.selection.content },
         pressedOpacity: opacity.pressed,
         disabledOpacity: opacity.disabled,
     },
 };
 /** Resolve one recipe tone for non-CSS renderers without a second tone table. */
 export function resolveIconButtonPresentation(tone, palette, selected = false) {
-    const contract = selected ? iconButtonRecipe.states.selected : iconButtonRecipe.tones[tone];
+    const contract = iconButtonRecipe.tones[tone];
+    // Filled tones keep inverse content so selecting never loses contrast against their retained fill.
+    const content = selected && tone !== "primary" && tone !== "danger"
+        ? iconButtonRecipe.states.selected.content : contract.content;
     return {
         background: contract.background === null
             ? null
             : resolveColorReference(contract.background, palette),
-        content: resolveColorReference(contract.content, palette),
+        content: resolveColorReference(content, palette),
         border: contract.border === null
             ? null
             : resolveColorReference(contract.border, palette),

@@ -35,14 +35,10 @@ export const buttonRecipe = {
     // would push it out of alignment with the text around it.
     link: { background: null, content: "contentBrand", border: null, paddingHorizontal: 0 },
   },
-  /**
-   * Visual treatment for a control that is also a toggle. `accessibilityState`
-   * / `aria-pressed` already expressed the state; without a paired visual every
-   * consumer painted the selected background in product styles.
-   */
+  // 2026-10-28: selecting a toggle must preserve its tone's background/border; a second selection plate
+  // obscured Spint's already-filled flower. Accessible state and foreground/glyph evidence remain.
   states: {
-    // Persistent toggles share the neutral selection pair (2026-10-23); focus stays independent.
-    selected: { background: "surfaceSelected", content: "text", border: null },
+    selected: { content: "text" },
   },
   sizes: {
     small: {
@@ -96,9 +92,7 @@ export const buttonRecipe = {
   >;
   states: {
     selected: {
-      background: keyof ThemeColors;
       content: keyof ThemeColors;
-      border: keyof ThemeColors | null;
     };
   };
   sizes: Record<

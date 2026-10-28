@@ -181,3 +181,44 @@ describe("field focus reads as a shape change", () => {
     }
   });
 });
+
+
+it.each(["light", "dark"] as const)("keeps toggle backgrounds and filled-tone contrast after selection in %s mode", async theme => {
+  const render = (selected: boolean) => act(async () => root.render(<HjmProvider theme={theme} reducedMotion>
+    {(["primary", "secondary", "ghost", "danger"] as const).map(tone => <span key={tone}>
+      <Button tone={tone} selected={selected}>Save</Button>
+      <IconButton label="Save" tone={tone} selected={selected}>♥</IconButton>
+    </span>)}
+    <Button tone="link" selected={selected}>Save</Button>
+  </HjmProvider>));
+  await render(false);
+  const idle = Array.from(container.querySelectorAll("button"), button => {
+    const style = getComputedStyle(button);
+    return { background: style.backgroundColor, border: style.borderTopColor, width: style.borderTopWidth };
+  });
+  await render(true);
+  Array.from(container.querySelectorAll("button")).forEach((button, index) => {
+    const style = getComputedStyle(button);
+    expect(style.backgroundColor).toBe(idle[index]!.background);
+    expect(style.borderTopColor).toBe(idle[index]!.border);
+    expect(style.borderTopWidth).toBe(idle[index]!.width);
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    if (button.dataset.tone === "primary" || button.dataset.tone === "danger") {
+      expect(contrast(style.color, style.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+});
+
+it.each(["light", "dark"] as const)("retains the raised button face fill and border after selection in %s", async theme => {
+  const render = (selected: boolean) => act(async () => root.render(<HjmProvider theme={theme} reducedMotion>
+    <Button tone="primary" appearance="raised" selected={selected}>Save</Button>
+    <Button tone="secondary" appearance="raised" selected={selected}>Save</Button>
+  </HjmProvider>));
+  await render(false);
+  const idle = Array.from(container.querySelectorAll(".hjm-button__face"), face => ({ background: getComputedStyle(face).backgroundColor, border: getComputedStyle(face).borderTopColor }));
+  await render(true);
+  Array.from(container.querySelectorAll(".hjm-button__face")).forEach((face, index) => {
+    expect(getComputedStyle(face).backgroundColor).toBe(idle[index]!.background);
+    expect(getComputedStyle(face).borderTopColor).toBe(idle[index]!.border);
+  });
+});

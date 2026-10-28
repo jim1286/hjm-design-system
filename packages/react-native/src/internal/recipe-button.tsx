@@ -114,7 +114,7 @@ export const RecipeButton: ReturnType<typeof forwardRef<ComponentRef<typeof Nati
     const edgeOverhang = edge === undefined ? 0 : resolveButtonEdgeOverhang(tone, size);
     const sizeContract = buttonRecipe.sizes[size];
     const selectedContract =
-      selected === true ? buttonRecipe.states.selected : null;
+      selected === true && tone !== "primary" && tone !== "danger" ? buttonRecipe.states.selected : null;
     const resolveColor = (key: keyof ThemeColors | null): string =>
       key === null ? "transparent" : colors[key];
     const contentColor = resolveColor(
@@ -172,13 +172,13 @@ export const RecipeButton: ReturnType<typeof forwardRef<ComponentRef<typeof Nati
     const faceStyle = (): ViewStyle => ({
             alignItems: "center",
             backgroundColor: resolveColor(
-              selectedContract?.background ?? toneContract.background,
+              toneContract.background,
             ),
             borderColor: resolveColor(
-              (selectedContract ?? toneContract).border,
+              toneContract.border,
             ),
             borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
-            borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+            borderWidth: toneContract.border ? 1 : 0,
             direction: environment.direction,
             flexDirection: "row",
             gap: spacing.xs,
@@ -223,13 +223,13 @@ export const RecipeButton: ReturnType<typeof forwardRef<ComponentRef<typeof Nati
           {
             alignItems: "center",
             backgroundColor: resolveColor(
-              selectedContract?.background ?? toneContract.background,
+              toneContract.background,
             ),
             borderColor: resolveColor(
-              (selectedContract ?? toneContract).border,
+              toneContract.border,
             ),
             borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
-            borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
+            borderWidth: toneContract.border ? 1 : 0,
             direction: environment.direction,
             flexDirection: "row",
             gap: spacing.xs,

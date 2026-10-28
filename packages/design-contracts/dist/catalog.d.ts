@@ -3873,9 +3873,7 @@ export declare const recipeRegistry: {
         };
         readonly states: {
             readonly selected: {
-                readonly background: "surfaceSelected";
                 readonly content: "text";
-                readonly border: null;
             };
         };
         readonly sizes: {
@@ -5376,17 +5374,11 @@ export declare const recipeRegistry: {
         };
         readonly states: {
             readonly selected: {
-                readonly background: Readonly<{
-                    source: "theme";
-                    key: "surfaceSelected";
-                    alpha?: number;
-                }>;
                 readonly content: Readonly<{
                     source: "theme";
                     key: "text";
                     alpha?: number;
                 }>;
-                readonly border: null;
             };
             readonly pressedOpacity: 0.86;
             readonly disabledOpacity: 0.5;

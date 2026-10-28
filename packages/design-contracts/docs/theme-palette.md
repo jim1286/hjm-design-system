@@ -122,12 +122,14 @@ SegmentedControl의 `selectionTone="brand"`와 solid 탭은 브랜드 강조를 
 
 | 의미 | 색상 기준 | 해당 공개 표면 |
 | --- | --- | --- |
-| 지속되는 일반 선택 면 | `selection.background`/`selection.content`, 경계가 필요하면 `selection.border` | Chip·칩 그룹, neutral SegmentedControl, TimePicker, filled Tabs, capsule BottomNavigation, ReactionPicker, ToggleGroup, selected Button·IconButton, 선택 Card·ListRow·Select·Combobox·Menu·Tree·TransferList·DataTable 행 |
+| 지속되는 일반 선택 면 | `selection.background`/`selection.content`, 경계가 필요하면 `selection.border` | Chip·칩 그룹, neutral SegmentedControl, TimePicker, filled Tabs, capsule BottomNavigation, ReactionPicker, ToggleGroup, 선택 Card·ListRow·Select·Combobox·Menu·Tree·TransferList·DataTable 행 |
 | 현재 조작 위치 | 기존 focus/hover/pressed 역할. 확정 선택과 합치지 않음 | CommandPalette·Mentions·TagsInput 제안의 active descendant, Select·Combobox의 active 항목, 포커스 링 |
 | 진한 브랜드 면 | `primary`/`onPrimary` | `Tabs indicator="solid"`, `SegmentedControl` 기본 `selectionTone="brand"`, `BottomNavigation selection="tile"`, prominent destination |
 | 작은 값 표시·현재 위치 표시 | 기존 전용 체크·점·밑줄·테두리 계약 | Checkbox·Radio의 glyph, Switch on, Calendar 날짜 원, underline/text Tabs, 일반 BottomNavigation 아이콘·글자, Pagination·Steps·Anchor·Carousel 위치 표시, 읽기 전용 반응 요약 |
 | 브랜드·장식·업무 강조 | 기존 브랜드/상태 역할 | ChatMessage outgoing, 폴더 그림, liquid toast, 표의 `highlighted` 업무 강조, 브랜드 Surface/Badge, 오류·성공 등 상태 |
 | 미디어 위 선택 증거 | 읽을 수 있는 전용 링·스크림 유지 | ImageChoice·MediaSelection. 회색 면으로 사진을 덮지 않음 |
+
+행동 토글인 Button·IconButton과 현재 경로인 IconButtonLink는 2026-10-28 사용자 지시로 이 선택 면을 적용하지 않는다. 선택 전후 원래 tone 배경·테두리를 유지하며 전경 표현·채운 glyph와 접근성 상태로 선택을 알린다. 스핀트의 꽃 반응 주변에 선택 배경이 중복으로 생긴 사례에 따른 변경이다. 선택 컴포넌트의 전용 상태 계약은 해당 컴포넌트 지침이 소유한다.
 
 ### 적용 규칙
 
