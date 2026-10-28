@@ -1488,6 +1488,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     value?: Value | null;
     defaultValue?: Value | null;
     onValueChange?: (value: Value | null) => void;
+    /** One horizontal line of cards or chips, without grid; the selected item stays visible. */
+    overflow?: SelectionGroupOverflow;
     /** Visual preview only; the string label remains the accessible name. */
     renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
@@ -1498,31 +1500,37 @@ type ChipRail = Readonly<{
   ref: React.RefObject<ComponentRef<typeof ScrollView> | null>;
   onScroll: (event: { nativeEvent: { contentOffset: { x: number } } }) => void;
   onViewportLayout: (event: LayoutChangeEvent) => void;
+  onContentSizeChange: (width: number, height: number) => void;
   itemLayout: (id: string) => (event: LayoutChangeEvent) => void;
   reveal: (id: string) => void;
 }>;
 
 /** Measures chips in the rail and scrolls the least distance that shows a focused chip (resolveScrollRevealOffset). */
-function useChipRail(enabled: boolean): ChipRail | undefined {
+function useChipRail(enabled: boolean, selected?: string | null): ChipRail | undefined {
   const ref = useRef<ComponentRef<typeof ScrollView>>(null);
   const offset = useRef(0);
   const viewport = useRef(0);
+  const contentWidth = useRef(0);
   const rects = useRef<Record<string, Readonly<{ x: number; width: number }>>>({});
+  useEffect(() => { if (enabled && selected) rail?.reveal(selected); }, [enabled, selected]);
   if (!enabled) return undefined;
-  return {
+  const rail: ChipRail = {
     ref,
     onScroll: event => { offset.current = event.nativeEvent.contentOffset.x; },
-    onViewportLayout: event => { viewport.current = event.nativeEvent.layout.width; },
-    itemLayout: id => event => { const { x, width } = event.nativeEvent.layout; rects.current[id] = { x, width }; },
+    onViewportLayout: event => { viewport.current = event.nativeEvent.layout.width; if (selected) rail.reveal(selected); },
+    onContentSizeChange: width => { contentWidth.current = width; if (selected) rail.reveal(selected); },
+    itemLayout: id => event => { const { x, width } = event.nativeEvent.layout; rects.current[id] = { x, width }; if (id === selected) rail.reveal(id); },
     reveal: id => {
       const rect = rects.current[id];
-      if (!rect || viewport.current <= 0) return;
+      // Wait for the scroll content before revealing a controlled selection; early scrollTo gets clamped.
+      if (!rect || viewport.current <= 0 || (selected && contentWidth.current <= 0)) return;
       // Layout x is inside the padded content row; the scroll offset counts the content padding too.
       const inset = selectionGroupRecipe.overflow.scrollInset;
       const next = resolveScrollRevealOffset(offset.current, viewport.current, rect.x + inset, rect.width, inset);
       if (next !== offset.current) { offset.current = next; ref.current?.scrollTo({ x: next, animated: false }); }
     },
   };
+  return rail;
 }
 
 function ChoiceGroupFrame({
@@ -1602,6 +1610,7 @@ function ChoiceGroupFrame({
           horizontal
           keyboardShouldPersistTaps="handled"
           onScroll={rail.onScroll}
+          onContentSizeChange={rail.onContentSizeChange}
           scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}
           onLayout={rail.onViewportLayout}
@@ -1648,6 +1657,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   invalidLabel,
   orientation = selectionGroupBehaviorDefaults.orientation,
   grid,
+  overflow = selectionGroupRecipe.overflow.default,
   presentation = selectionGroupRecipe.defaults.presentation,
   size = selectionControlRecipe.defaults.size,
   indicator = "default",
@@ -1684,6 +1694,10 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   useEffect(() => {
     if (value === undefined && selected !== storedValue) setSelected(selected);
   }, [selected, setSelected, storedValue, value]);
+  if (overflow === "scroll" && (grid || !["card", "chips"].includes(presentation))) {
+    throw new TypeError('RadioGroup overflow="scroll" requires card or chips without grid');
+  }
+  const rail = useChipRail(overflow === "scroll", selected);
   const hasError = invalid || error !== undefined;
   return (
     <ChoiceGroupFrame
@@ -1694,6 +1708,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
       label={label}
       orientation={orientation}
       grid={grid}
+      rail={rail}
       presentation={presentation}
       readOnly={readOnly}
       readOnlyLabel={readOnlyLabel}
@@ -1709,6 +1724,8 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
           <ChoiceRow
             {...slotStyles}
             key={item.value}
+            onRailLayout={rail?.itemLayout(item.value)}
+            onRailFocus={() => rail?.reveal(item.value)}
             accessibilityHint={item.accessibilityHint}
             checked={optionSelected}
             description={item.description}

@@ -576,6 +576,8 @@ export type RadioGroupProps = Omit<
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    /** One horizontal line of cards or chips, without grid. */
+    overflow?: SelectionGroupOverflow;
     /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
     grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;
@@ -627,6 +629,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       onValueChange,
       orientation = selectionGroupRecipe.defaults.orientation,
       grid,
+      overflow = selectionGroupRecipe.overflow.default,
       presentation = selectionGroupRecipe.defaults.presentation,
       size = selectionControlRecipe.defaults.size,
       description,
@@ -687,6 +690,15 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
     useEffect(() => {
       if (!controlled && value !== storedValue) setValue(value);
     }, [controlled, setValue, storedValue, value]);
+    if (overflow === "scroll" && (grid || !["card", "chips"].includes(presentation))) {
+      throw new TypeError('RadioGroup overflow="scroll" requires card or chips without grid');
+    }
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    useLayoutEffect(() => {
+      const scroller = scrollerRef.current;
+      const option = scroller?.querySelector('[data-state="checked"]');
+      if (overflow === "scroll" && scroller && option) revealInScroller(scroller, option, selectionGroupRecipe.overflow.scrollInset);
+    }, [value, items, overflow]);
     const descriptionId = `${generatedName}-radio-description`;
     const errorId = `${generatedName}-radio-error`;
     return (
@@ -696,6 +708,12 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
         style={{ ...style, ...layoutStyle }}
         className={classNames("hjm-radio-group", className)}
         data-orientation={orientation}
+        data-overflow={overflow}
+        onFocusCapture={event => {
+          props.onFocusCapture?.(event);
+          const option = (event.target as HTMLElement).closest(".hjm-choice");
+          if (overflow === "scroll" && scrollerRef.current && option) revealInScroller(scrollerRef.current, option, selectionGroupRecipe.overflow.scrollInset);
+        }}
         data-presentation={presentation}
         data-size={size}
         data-state={error ? "invalid" : disabled ? "disabled" : "idle"}
@@ -708,7 +726,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
           {resolvedLabel}
         </legend>
         {description && !error ? <div id={descriptionId} className="hjm-field__description">{description}</div> : null}
-        <ChoiceItems grid={grid} className="hjm-radio-group__items">
+        {wrapChipScroller(overflow === "scroll", scrollerRef, <ChoiceItems grid={grid} className="hjm-radio-group__items">
           {items.map((item) => {
             const selected = item.value === value;
             const choice = (
@@ -768,7 +786,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                 aria-label={item.action.accessibilityLabel} onClick={item.action.onAction}>{item.action.label}</Button></span>
             </div>;
           })}
-        </ChoiceItems>
+        </ChoiceItems>)}
         <FieldError id={errorId} error={error} />
       </fieldset>
     );
