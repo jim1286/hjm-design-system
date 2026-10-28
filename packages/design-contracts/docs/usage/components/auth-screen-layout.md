@@ -88,6 +88,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용(Web·Native 모두) |
 | `initialFocus` | `first-input` · `none` | `first-input` | 페이지 진입 시 첫 유효 입력 또는 `initialFocusTarget` 칸에 한 번 포커스한다. 기본값·진입 한정 정책 변경은 1.33.0부터 제공. 진입 종료 뒤 단계 변경·입력 표시로 자동 포커스를 다시 시작하지 않으며 하단 시트 안에서는 자동 포커스하지 않는다. [진입 포커스](screen-layout.md#진입-포커스) |
 | Native `testID` | `string` | — | 본문 `ScrollView` 식별(머리 띠가 있어도 같은 `ScrollView`) |
+| Native `backdrop` | `ReactNode` | — | 미게시(checkout 개발). 스크롤 내용 맨 위 뒤에 깔리는 장식 장면(제품 하늘 띠 등). hero·main·footer와 **함께 스크롤**하고 터치·접근성에서 빠진다. 제품 노드는 내용 위 끝 기준 절대 위치로 놓으며 좌우 여백 밖까지 닿는다. 화면 뒤에 고정한 그림 위로 글자가 지나가지 않게 한다 |
 | Native `safeAreaBottom` | 0 이상의 유한수 | `0` | 화면이 닿는 창 아래 가장자리의 safe area(`useSafeAreaInsets().bottom`, 이미 아래를 들인 host 안이면 0). 아래 여백이 `max(paddingBlock, inset)` — `regular` max(40, inset), `compact` max(20, inset) — 으로 한 번만 들어간다(ScreenLayout과 같은 규칙, 합산 없음). 키보드가 열리면 paddingBlock만. 음수·무한대는 `RangeError` |
 | `AuthScreenHero` `title` · `eyebrow` · `description` · `mark` · `headingLevel` | 문자열 · `ReactNode` · `1`~`3` | `headingLevel` 1 | 제목은 필수이고 빈 문자열이면 `TypeError`. 밀도는 바깥 `AuthScreenLayout`을 따른다 |
 | `AuthScreenFooter` `links` · `notice` · `children` | 링크 배열(1개 이상) · `ReactNode` | — | 빈 링크 목록·빈 라벨은 `TypeError`(LS-04: 약관 링크는 로그인 전 같은 화면에 있어야 한다). `children`은 링크 아래 제품 내용 |
@@ -156,6 +157,7 @@ import { AuthScreenFooter, AuthScreenHero, AuthScreenLayout } from "@hjmds/react
 
 - `title`·`exit`를 쓰면 바깥에 얹던 TopBar·제품 헤더를 지운다. 둘 다 두면 머리가 두 줄이 된다. Native에서 host TopBar가 맡던 위 safe area(`safeAreaTop`)는 host의 SafeAreaView top으로 옮긴다.
 
+- Native에서 하늘 띠 같은 장식을 레이아웃 바깥(화면 뒤)에 고정하지 않는다. 내용이 넘쳐 스크롤되면 글자가 그림 위로 지나가 읽히지 않는다(2026-10-28 다에리 가입 단계). `backdrop`으로 넘긴다.
 - Native에서 아래 홈 인디케이터를 `SafeAreaView edges={['bottom']}`·`paddingBottom: insets.bottom` 래퍼로 들이지 말고 `safeAreaBottom`으로 넘긴다. 둘을 같이 주면 inset + paddingBlock이 다시 더해진다.
 - 1.28.0까지 Native는 iOS `contentInsetAdjustmentBehavior="automatic"`으로 위·아래 safe area를 iOS에서만 더했다. 1.28.1부터 위는 host, 아래는 `safeAreaBottom`이다. 위 safe area를 아무도 들이지 않던 화면은 host에서 TopBar `safeAreaTop`이나 SafeAreaView top으로 들인다.
 - Native는 자체로 키보드 스크롤 여백을 준다. 부모가 다시 keyboard avoidance를 하면 여백이 중복될 수 있으니

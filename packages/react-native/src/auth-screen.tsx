@@ -40,6 +40,13 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
     title?: string;
     /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
     exit?: ScreenExit;
+    /**
+     * Decorative scene behind the top of the scrolling content (a product sky band). It scrolls with hero/main/footer
+     * and is excluded from touch and accessibility; the product positions it absolutely from the content's top edge,
+     * full-bleed past the inline padding. Products kept the scene fixed behind this ScrollView, so a signup step tall
+     * enough to scroll slid the hero text across the picture until it could not be read (2026-10-28 diairy).
+     */
+    backdrop?: ReactNode;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -108,6 +115,7 @@ function AuthScreenHeader({ title, exit }: { title: string | undefined; exit: Sc
 export function AuthScreenLayout({
   title,
   exit,
+  backdrop,
   hero,
   main,
   footer,
@@ -156,6 +164,17 @@ export function AuthScreenLayout({
         paddingBottom,
       }}
     >
+      {/* First child so the in-flow blocks paint above it; an absolute box ignores the container padding. */}
+      {backdrop === undefined || backdrop === null ? null : (
+        <View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+        >
+          {backdrop}
+        </View>
+      )}
       <View
         style={{
           flexGrow: 1,
