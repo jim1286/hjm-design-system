@@ -5045,6 +5045,14 @@ export declare const recipeRegistry: {
             readonly chipSize: "small";
         };
         readonly gap: 16;
+        readonly toggle: {
+            readonly icon: {
+                readonly collapsed: "chevronDown";
+                readonly expanded: "chevronUp";
+            };
+            readonly glyph: "sm";
+            readonly gap: 8;
+        };
     };
     readonly dividerRecipe: {
         readonly slots: readonly ["root", "label"];

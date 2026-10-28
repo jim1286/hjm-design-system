@@ -20,7 +20,7 @@ import { AgreementPreview, TopPreview, AuthProviderButtonPreview, AuthScreenLayo
 import { HeadingPreview } from "../patterns/Heading.previews.js";
 import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.previews.js";
 import { SidebarPreview, BottomInfoPreview } from "../patterns/Sidebar.previews.js";
-import { DateRangePreview } from "../patterns/DateRange.previews.js";
+import { CollapsibleDateRangePreview, DateRangePreview } from "../patterns/DateRange.previews.js";
 import { TextFormatPreview } from "../patterns/TextFormat.previews.js";
 import { CollapsiblePreview, ContextMenuPreview, MenubarPreview } from "../patterns/Disclosure.previews.js";
 import { AssetPreview } from "../patterns/Asset.previews.js";
@@ -458,7 +458,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Sidebar": return <SidebarPreview />;
     case "BottomInfo": return <BottomInfoPreview />;
     case "SkipNav": return <SkipNavPreview />;
-    case "DateRangePicker": return <DateRangePreview />;
+    case "DateRangePicker": return <><DateRangePreview /><CollapsibleDateRangePreview /></>;
     case "TextFormat": return <TextFormatPreview />;
     case "Anchor": return <AnchorPreview />;
     case "Calendar": return <CalendarPreview />;

@@ -74,3 +74,33 @@ it("disables dates past the maximum range while selecting", () => {
   expect(disabled("2026-09-03")).toBe(false);
   expect(disabled("2026-09-02")).toBe(true);
 });
+
+it("folds a collapsible native picker behind its summary toggle once the range completes", () => {
+  const grid = {
+    cells: Array.from({ length: 14 }, (_, index) => ({ date: `2026-09-${String(index + 1).padStart(2, "0")}` })),
+    weekdayLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const,
+    todayDate: "2026-09-10",
+  };
+  let renderer: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(
+      <HjmNativeProvider>
+        <DateRangePicker descriptor={{ grid, monthLabel: "September 2026" }} composeAccessibleName={({ date }) => date}
+          rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }} collapsible={{}}
+          summary={{ startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택", formatDate: (date) => date }} />
+      </HjmNativeProvider>,
+    );
+  });
+  const pressables = () => renderer!.root.findAllByType(Pressable);
+  const toggle = () => pressables().find((node) => node.props.accessibilityRole === "button" && (node.props.accessibilityLabel as string).startsWith("시작일"))!;
+  const dateAction = (date: string) => pressables().find((node) => (node.props.accessibilityLabel as string).startsWith(date));
+  expect(toggle().props.accessibilityState.expanded).toBe(true);
+  act(() => dateAction("2026-09-03")!.props.onPress());
+  act(() => dateAction("2026-09-07")!.props.onPress());
+  expect(toggle().props.accessibilityState.expanded).toBe(false);
+  expect(toggle().props.accessibilityLabel).toBe("시작일, 2026-09-03, 종료일, 2026-09-07");
+  expect(dateAction("2026-09-05")).toBeUndefined();
+  act(() => toggle().props.onPress());
+  expect(dateAction("2026-09-05")).toBeDefined();
+});
+

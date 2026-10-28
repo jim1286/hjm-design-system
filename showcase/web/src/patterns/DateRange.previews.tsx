@@ -32,6 +32,23 @@ export function DateRangePreview() {
   );
 }
 
+export function CollapsibleDateRangePreview() {
+  const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
+  return (
+    <Section title={dateRange.collapsibleTitle}>
+      <DateRangePicker
+        descriptor={{ grid, monthLabel: dateRange.monthLabel }}
+        composeAccessibleName={({ date }) => date}
+        value={value}
+        onValueChange={setValue}
+        rangeLabels={dateRange.rangeLabels}
+        summary={{ ...dateRange.summary, formatDate: (date) => date }}
+        collapsible={{}}
+      />
+    </Section>
+  );
+}
+
 function ImperativeOverlayBody() {
   const openDialog = useDialog();
   const openSheet = useSheet();

@@ -149,27 +149,43 @@ export declare const dateRangeRecipe: {
         readonly chipSize: "small";
     };
     readonly gap: 16;
+    readonly toggle: {
+        readonly icon: {
+            readonly collapsed: "chevronDown";
+            readonly expanded: "chevronUp";
+        };
+        readonly glyph: "sm";
+        readonly gap: 8;
+    };
 };
+/**
+ * 접히는 기간 선택에서 이번 선택 뒤에 달력을 계속 펼쳐 둘지. 구간을 완성하는 선택(두 번째 날짜·프리셋)은 접고,
+ * 시작만 정한 첫 탭은 펼쳐 둔다. 처음 펼침 여부도 같은 규칙으로, 완성된 값이면 접힌 채 시작한다.
+ *
+ * 2026-10-28 사용자 "DateRangePicker도 접기 있게 해": 필터 영역에 둔 달력이 기간을 고른 뒤에도 늘 펼쳐져
+ * 목록을 밀어냈다(다에리 만난 동물). Sheet·Popover 합성 없이 본문 안에서 쓰는 접힘이고, 요약 칸이 그 버튼이다.
+ */
+export declare function resolveDateRangeExpanded(value: DateRangeValue): boolean;
 /** 구간이 실제로 쓸 수 있는 값인지. 제품의 제출 버튼이 읽는다. */
 export declare function isCompleteDateRange(value: DateRangeValue): boolean;
 export declare const dateRangeBehavior: {
-    readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+    readonly controlled: readonly ["value", "defaultValue", "onValueChange", "expanded", "defaultExpanded", "onExpandedChange"];
     readonly inputs: readonly ["grid", "monthLabel", "hoveredDate"];
     readonly stateAxes: {
-        readonly value: readonly ["empty", "selecting", "complete"];
+        readonly value: readonly ["empty", "selecting", "complete", "expanded"];
         readonly availability: readonly ["enabled", "disabled"];
     };
     readonly web: {
-        readonly roles: readonly ["grid", "gridcell"];
+        readonly roles: readonly ["grid", "gridcell", "button"];
         readonly keyboard: readonly ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Enter", "Space"];
         readonly focus: "roving";
     };
     readonly native: {
-        readonly roles: readonly [];
-        readonly states: readonly ["selected", "disabled"];
-        readonly actions: readonly ["select"];
+        readonly roles: readonly ["button"];
+        readonly states: readonly ["selected", "disabled", "expanded"];
+        readonly actions: readonly ["select", "activate"];
     };
-    readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it"];
+    readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it", "a-collapsible-picker-folds-behind-its-summary-once-a-selection-completes-the-range", "the-summary-is-the-toggle-and-reports-its-expanded-state"];
 };
 export declare function dateRangeSpans(value: DateRangeValue, hoveredDate?: string | null): boolean;
 //# sourceMappingURL=date-range.d.ts.map

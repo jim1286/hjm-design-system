@@ -9,6 +9,13 @@ export type DateRangeSummary = Readonly<{
     placeholder: string;
     formatDate: (date: string) => string;
 }>;
+/** Fold the presets and grid behind `summary`, which becomes the toggle. */
+export type DateRangeCollapsible = Readonly<{
+    /** Controlled open state. Without it the picker opens while the range is incomplete and folds once it completes. */
+    expanded?: boolean;
+    defaultExpanded?: boolean;
+    onExpandedChange?: (expanded: boolean) => void;
+}>;
 /** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
 export type DateRangePresetOption = Readonly<{
     id: string;
@@ -38,7 +45,12 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
     summary?: DateRangeSummary;
     /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
     presets?: readonly DateRangePresetOption[];
+    /**
+     * Fold the presets and grid behind `summary` (required), which becomes a toggle button. A selection that completes
+     * the range folds it again (`resolveDateRangeExpanded`).
+     */
+    collapsible?: DateRangeCollapsible;
 }>;
-export declare function DateRangePicker<Content = unknown>({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, maxRange, renderCellContent, summary, presets, }: DateRangePickerProps<Content>): import("react").JSX.Element;
+export declare function DateRangePicker<Content = unknown>({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, maxRange, renderCellContent, summary, presets, collapsible, }: DateRangePickerProps<Content>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=date-range.d.ts.map

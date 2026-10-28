@@ -47,7 +47,7 @@ export { TagsInput, type TagsInputProps } from "./tags-input.js";
 export { SkipNav, type SkipNavProps } from "./skip-nav.js";
 export { BottomInfo, type BottomInfoProps } from "./bottom-info.js";
 export { Sidebar, type SidebarLinkRenderProps, type SidebarProps, type SidebarSize } from "./sidebar.js";
-export { DateRangePicker, type DateRangePickerProps, type DateRangePresetOption, type DateRangeSummary } from "./date-range.js";
+export { DateRangePicker, type DateRangeCollapsible, type DateRangePickerProps, type DateRangePresetOption, type DateRangeSummary } from "./date-range.js";
 export { OverlayStackProvider, useOverlayStack, useDialog, useSheet, type OverlayStackApi, type OverlayStackProviderProps, type OverlayHandle, } from "./overlay-stack.js";
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
 export { AuthScreenLayout, AuthScreenHero, AuthScreenFooter, type AuthScreenLayoutProps, type AuthScreenHeroProps, type AuthScreenFooterProps, type AuthScreenPolicyLink } from "./auth-screen.js";

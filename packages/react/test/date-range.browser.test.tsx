@@ -91,3 +91,27 @@ it("completes a same-day range and restarts by activating its selected edge", as
   await act(async () => day("2026-09-10").click());
   expect(status()).toBe("2026-09-10 ~ -");
 });
+
+it("folds a collapsible picker behind its summary once the range completes", async () => {
+  function Collapsible() {
+    const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
+    return (
+      <HjmProvider reducedMotion>
+        <DateRangePicker descriptor={{ grid, monthLabel: "2026년 9월" }} composeAccessibleName={({ date }) => date}
+          value={value} onValueChange={setValue} rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }}
+          summary={{ startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택", formatDate: (date) => date }} collapsible={{}} />
+      </HjmProvider>
+    );
+  }
+  await act(async () => root.render(<Collapsible />));
+  const toggle = () => document.querySelector<HTMLButtonElement>(".hjm-date-range__summary")!;
+  expect(toggle().getAttribute("aria-expanded")).toBe("true");
+  await act(async () => day("2026-09-03").click());
+  expect(document.querySelector("[role='grid']")).not.toBeNull();
+  await act(async () => day("2026-09-07").click());
+  expect(toggle().getAttribute("aria-expanded")).toBe("false");
+  expect(document.querySelector("[role='grid']")).toBeNull();
+  expect(toggle().textContent).toContain("2026-09-07");
+  await act(async () => toggle().click());
+  expect(document.querySelector("[role='grid']")).not.toBeNull();
+});

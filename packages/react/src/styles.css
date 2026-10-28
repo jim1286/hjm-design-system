@@ -1762,6 +1762,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-date-range__field-label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-date-range__field-value { overflow: hidden; color: var(--hjm-color-text); font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 .hjm-date-range__field[data-empty] .hjm-date-range__field-value { color: var(--hjm-color-text-sub); }
+/* collapsible: the summary is the toggle; a chevron column follows the two fields (dateRangeRecipe.toggle). */
+.hjm-date-range__summary[data-toggle] { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; align-items: center; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.hjm-date-range__summary[data-toggle]:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); border-radius: var(--hjm-radius-md); }
 
 /* AvatarGroup: overlap comes from the recipe ratio, not a per-size pixel value. */
 .hjm-avatar-group { display: inline-flex; align-items: center; }

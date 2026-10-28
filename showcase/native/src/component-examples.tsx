@@ -554,11 +554,17 @@ const dateRangeGrid = calendarExampleGrid(dateRangeExample.month);
 function DateRangePickerExample({ variant }: { variant: PreviewVariant }) {
 const copy = dateRangeExample;
 const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });
+const [folded, setFolded] = useState<DateRangeValue>({ start: null, end: null });
 return (<StoryFrame><Section title={copy.title} description={copy.description}><Stack gap="md">
   <DateRangePicker descriptor={{ grid: dateRangeGrid, monthLabel: copy.monthLabel }} composeAccessibleName={({ date }) => date}
     value={value} onValueChange={setValue} rangeLabels={copy.rangeLabels} />
   <Text accessibilityLiveRegion="polite">{copy.status(value.start, value.end)}</Text>
-</Stack></Section></StoryFrame>);
+</Stack></Section>
+<Section title={copy.collapsibleTitle}>
+  <DateRangePicker descriptor={{ grid: dateRangeGrid, monthLabel: copy.monthLabel }} composeAccessibleName={({ date }) => date}
+    value={folded} onValueChange={setFolded} rangeLabels={copy.rangeLabels}
+    summary={{ ...copy.summary, formatDate: (date) => date }} collapsible={{}} />
+</Section></StoryFrame>);
 }
 
 function MentionsExample({ variant }: { variant: PreviewVariant }) {

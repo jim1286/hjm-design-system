@@ -172,25 +172,39 @@ export const dateRangeRecipe = {
     presets: { gap: spacing.xs, chipSize: "small" },
     // 요약·프리셋·달력 사이.
     gap: spacing.md,
+    // 접기(`collapsible`): 요약 줄이 펼침 버튼이 되고 끝에 방향 표시가 붙는다.
+    toggle: { icon: { collapsed: "chevronDown", expanded: "chevronUp" }, glyph: "sm", gap: spacing.xs },
 };
+/**
+ * 접히는 기간 선택에서 이번 선택 뒤에 달력을 계속 펼쳐 둘지. 구간을 완성하는 선택(두 번째 날짜·프리셋)은 접고,
+ * 시작만 정한 첫 탭은 펼쳐 둔다. 처음 펼침 여부도 같은 규칙으로, 완성된 값이면 접힌 채 시작한다.
+ *
+ * 2026-10-28 사용자 "DateRangePicker도 접기 있게 해": 필터 영역에 둔 달력이 기간을 고른 뒤에도 늘 펼쳐져
+ * 목록을 밀어냈다(다에리 만난 동물). Sheet·Popover 합성 없이 본문 안에서 쓰는 접힘이고, 요약 칸이 그 버튼이다.
+ */
+export function resolveDateRangeExpanded(value) {
+    validateDateRange(value);
+    return value.start === null || value.end === null;
+}
 /** 구간이 실제로 쓸 수 있는 값인지. 제품의 제출 버튼이 읽는다. */
 export function isCompleteDateRange(value) {
     validateDateRange(value);
     return value.start !== null && value.end !== null;
 }
 export const dateRangeBehavior = {
-    controlled: ["value", "defaultValue", "onValueChange"],
+    controlled: ["value", "defaultValue", "onValueChange", "expanded", "defaultExpanded", "onExpandedChange"],
     inputs: ["grid", "monthLabel", "hoveredDate"],
     stateAxes: {
-        value: ["empty", "selecting", "complete"],
+        // "expanded" applies only with `collapsible`; DisclosureGroup keeps the same state on the value axis.
+        value: ["empty", "selecting", "complete", "expanded"],
         availability: ["enabled", "disabled"],
     },
     web: {
-        roles: ["grid", "gridcell"],
+        roles: ["grid", "gridcell", "button"],
         keyboard: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Enter", "Space"],
         focus: "roving",
     },
-    native: { roles: [], states: ["selected", "disabled"], actions: ["select"] },
+    native: { roles: ["button"], states: ["selected", "disabled", "expanded"], actions: ["select", "activate"] },
     scenarios: [
         "a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move",
         "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it",
@@ -201,6 +215,8 @@ export const dateRangeBehavior = {
         "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band",
         "the-summary-marks-the-edge-being-picked-and-nothing-once-complete",
         "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it",
+        "a-collapsible-picker-folds-behind-its-summary-once-a-selection-completes-the-range",
+        "the-summary-is-the-toggle-and-reports-its-expanded-state",
     ],
 };
 export function dateRangeSpans(value, hoveredDate) {

@@ -7,6 +7,7 @@ import {
   resolveDateRangeLimitBounds,
   isCompleteDateRange,
   resolveDateRangeActiveEdge,
+  resolveDateRangeExpanded,
   resolveDateRangeCellPaint,
   resolveDateRangePreset,
   resolveDateRangeCellState,
@@ -93,5 +94,11 @@ describe("DateRange", () => {
     expect(resolveDateRangePreset("2026-03-31", { months: 1 })).toEqual({ start: "2026-03-01", end: "2026-03-31" });
     expect(resolveDateRangePreset("2026-01-15", { months: 3 })).toEqual({ start: "2025-10-16", end: "2026-01-15" });
     expect(() => resolveDateRangePreset("2026-10-25", { days: 0 })).toThrow(RangeError);
+  });
+
+  it("keeps a collapsible picker open until a selection completes the range", () => {
+    expect(resolveDateRangeExpanded(emptyDateRange)).toBe(true);
+    expect(resolveDateRangeExpanded({ start: "2026-10-15", end: null })).toBe(true);
+    expect(resolveDateRangeExpanded({ start: "2026-10-15", end: "2026-10-24" })).toBe(false);
   });
 });

@@ -926,23 +926,23 @@ export declare const behaviorRegistry: {
         readonly scenarios: readonly ["ios-uses-padding-and-android-uses-height-because-the-platforms-resize-differently", "the-safe-area-inset-is-counted-once-never-added-on-top-of-the-keyboard", "a-closed-keyboard-leaves-exactly-the-safe-area-inset-behind", "haptics-are-named-by-meaning-not-by-strength-so-one-app-stays-consistent", "a-change-the-user-did-not-start-never-vibrates", "reduce-motion-does-not-silence-haptics-they-are-different-settings", "the-design-system-never-bundles-a-native-haptics-module-the-product-plays-it"];
     };
     readonly dateRange: {
-        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange", "expanded", "defaultExpanded", "onExpandedChange"];
         readonly inputs: readonly ["grid", "monthLabel", "hoveredDate"];
         readonly stateAxes: {
-            readonly value: readonly ["empty", "selecting", "complete"];
+            readonly value: readonly ["empty", "selecting", "complete", "expanded"];
             readonly availability: readonly ["enabled", "disabled"];
         };
         readonly web: {
-            readonly roles: readonly ["grid", "gridcell"];
+            readonly roles: readonly ["grid", "gridcell", "button"];
             readonly keyboard: readonly ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Enter", "Space"];
             readonly focus: "roving";
         };
         readonly native: {
-            readonly roles: readonly [];
-            readonly states: readonly ["selected", "disabled"];
-            readonly actions: readonly ["select"];
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["selected", "disabled", "expanded"];
+            readonly actions: readonly ["select", "activate"];
         };
-        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it"];
+        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it", "the-range-is-one-band-between-two-filled-edges-and-a-one-day-range-has-no-band", "the-summary-marks-the-edge-being-picked-and-nothing-once-complete", "a-preset-ends-today-and-is-selected-only-while-the-value-equals-it", "a-collapsible-picker-folds-behind-its-summary-once-a-selection-completes-the-range", "the-summary-is-the-toggle-and-reports-its-expanded-state"];
     };
     readonly textFormat: {
         readonly controlled: readonly [];

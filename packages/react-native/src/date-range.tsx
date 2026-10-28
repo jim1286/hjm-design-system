@@ -7,6 +7,7 @@ import {
   resolveDateRangeActiveEdge,
   resolveDateRangeCellPaint,
   resolveDateRangeCellState,
+  resolveDateRangeExpanded,
   resolveDateRangePreset,
   type DateRangePresetLength,
   resolveDateRangeSelection,
@@ -19,7 +20,9 @@ import type {
 } from "@hjmds/design-contracts/components/calendar";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import type { ReactNode } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { DrawnChevron } from "./internal/drawn-glyphs.js";
 import { Calendar, type CalendarMonthAction } from "./calendar.js";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
 import { Chip } from "./inputs.js";
@@ -33,6 +36,14 @@ export type DateRangeSummary = Readonly<{
   /** Shown in a field whose date is not chosen yet. */
   placeholder: string;
   formatDate: (date: string) => string;
+}>;
+
+/** Fold the presets and grid behind `summary`, which becomes the toggle. */
+export type DateRangeCollapsible = Readonly<{
+  /** Controlled open state. Without it the picker opens while the range is incomplete and folds once it completes. */
+  expanded?: boolean;
+  defaultExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
 }>;
 
 /** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
@@ -59,6 +70,11 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   summary?: DateRangeSummary;
   /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
   presets?: readonly DateRangePresetOption[];
+  /**
+   * Fold the presets and grid behind `summary` (required), which becomes a toggle button. A selection that completes
+   * the range folds it again (`resolveDateRangeExpanded`).
+   */
+  collapsible?: DateRangeCollapsible;
 }>;
 
 export function DateRangePicker<Content = unknown>({
@@ -74,13 +90,25 @@ export function DateRangePicker<Content = unknown>({
   renderCellContent,
   summary,
   presets,
+  collapsible,
 }: DateRangePickerProps<Content>) {
+  if (collapsible && !summary) throw new TypeError("DateRangePicker collapsible needs summary to act as its toggle");
   const [value, setValue] = useControllableState<DateRangeValue>({
     ...(controlledValue === undefined ? {} : { value: controlledValue }),
     defaultValue: defaultValue ?? emptyDateRange,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   validateDateRange(value, maxRange);
+  const [expanded, setExpanded] = useControllableState<boolean>({
+    ...(collapsible?.expanded === undefined ? {} : { value: collapsible.expanded }),
+    defaultValue: collapsible?.defaultExpanded ?? resolveDateRangeExpanded(value),
+    ...(collapsible?.onExpandedChange === undefined ? {} : { onChange: collapsible.onExpandedChange }),
+  });
+  const open = collapsible === undefined || expanded;
+  const select = (next: DateRangeValue) => {
+    setValue(next);
+    if (collapsible && !resolveDateRangeExpanded(next)) setExpanded(false);
+  };
   const { palette, tokens } = useHjmNativeTheme();
   const color = (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, palette);
   const activeEdge = resolveDateRangeActiveEdge(value);
@@ -90,7 +118,7 @@ export function DateRangePicker<Content = unknown>({
     const text = date === null ? summary!.placeholder : summary!.formatDate(date);
     const recipe = dateRangeRecipe.summary;
     return (
-      <View key={edge} accessible accessibilityLabel={`${label}, ${text}`}
+      <View key={edge} accessible={!collapsible} {...(collapsible ? {} : { accessibilityLabel: `${label}, ${text}` })}
         style={{ flex: 1, minWidth: 0, gap: recipe.field.gap, paddingVertical: recipe.field.paddingVertical,
           paddingHorizontal: recipe.field.paddingHorizontal, borderRadius: tokens.radius[recipe.field.radius],
           backgroundColor: color(recipe.field.background), borderWidth: recipe.field.activeBorderWidth,
@@ -103,8 +131,19 @@ export function DateRangePicker<Content = unknown>({
   };
   return (
     <View style={{ gap: dateRangeRecipe.gap }}>
-      {summary ? <View style={{ flexDirection: "row", gap: dateRangeRecipe.summary.gap }}>{field("start")}{field("end")}</View> : null}
-      {presets?.length ? (
+      {summary && collapsible ? (
+        <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }}
+          accessibilityLabel={[["start", summary.startLabel], ["end", summary.endLabel]].map(([edge, label]) => {
+            const date = value[edge as "start" | "end"];
+            return `${label}, ${date === null ? summary.placeholder : summary.formatDate(date)}`;
+          }).join(", ")}
+          onPress={() => setExpanded(!open)}
+          style={{ flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }}>
+          <View style={{ flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }}>{field("start")}{field("end")}</View>
+          <DrawnChevron direction={open ? "up" : "down"} size={glyph[dateRangeRecipe.toggle.glyph]} color={color(dateRangeRecipe.summary.label.color)} />
+        </Pressable>
+      ) : summary ? <View style={{ flexDirection: "row", gap: dateRangeRecipe.summary.gap }}>{field("start")}{field("end")}</View> : null}
+      {open && presets?.length ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }}>
           {presets.map((preset) => {
             const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
@@ -113,7 +152,7 @@ export function DateRangePicker<Content = unknown>({
                 selected={range.start === value.start && range.end === value.end}
                 onPress={() => {
                   validateDateRange(range, maxRange);
-                  setValue(range);
+                  select(range);
                   // A preset ends today; bring its end month into view like a jump, so the band is visible.
                   const month = range.end!.slice(0, 7);
                   if (descriptor.focusedMonth !== month) descriptor.onFocusedMonthChange?.(month, "jump");
@@ -122,7 +161,7 @@ export function DateRangePicker<Content = unknown>({
           })}
         </View>
       ) : null}
-      <CalendarPaintContext.Provider value={(date) => resolveDateRangeCellPaint(value, date, null)}>
+      {open ? <CalendarPaintContext.Provider value={(date) => resolveDateRangeCellPaint(value, date, null)}>
         <Calendar<Content>
           descriptor={{
             ...descriptor,
@@ -132,7 +171,7 @@ export function DateRangePicker<Content = unknown>({
             // Calendar keeps single selection; the two edges and the band are painted through the internal
             // paint context, and each day's name carries the range position for assistive tech.
             selectedDate: value.end ?? value.start,
-            onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date, maxRange)); },
+            onSelectionChange: (date) => { if (date !== null) select(resolveDateRangeSelection(value, date, maxRange)); },
           } as CalendarDescriptor<Content>}
           composeAccessibleName={(info) => {
             const state = resolveDateRangeCellState(value, info.date, null);
@@ -143,7 +182,7 @@ export function DateRangePicker<Content = unknown>({
           {...(nextMonth === undefined ? {} : { nextMonth })}
           {...(renderCellContent === undefined ? {} : { renderCellContent: (cell: { date: string }) => renderCellContent(cell.date) })}
         />
-      </CalendarPaintContext.Provider>
+      </CalendarPaintContext.Provider> : null}
     </View>
   );
 }

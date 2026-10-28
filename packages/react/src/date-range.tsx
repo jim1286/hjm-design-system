@@ -10,6 +10,7 @@ import {
   resolveDateRangeActiveEdge,
   resolveDateRangeCellPaint,
   resolveDateRangeCellState,
+  resolveDateRangeExpanded,
   resolveDateRangePreset,
   type DateRangePresetLength,
   resolveDateRangeSelection,
@@ -21,6 +22,7 @@ import type {
   ComposeCalendarAccessibleName,
 } from "@hjmds/design-contracts/components/calendar";
 import { useState, type ReactNode } from "react";
+import { Icon } from "./supplemental-display.js";
 import { Calendar, type CalendarMonthAction } from "./calendar.js";
 import { classNames, useControllableState } from "./internal.js";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
@@ -33,6 +35,14 @@ export type DateRangeSummary = Readonly<{
   /** Shown in a field whose date is not chosen yet. */
   placeholder: string;
   formatDate: (date: string) => string;
+}>;
+
+/** Fold the presets and grid behind `summary`, which becomes the toggle. */
+export type DateRangeCollapsible = Readonly<{
+  /** Controlled open state. Without it the picker opens while the range is incomplete and folds once it completes. */
+  expanded?: boolean;
+  defaultExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
 }>;
 
 /** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
@@ -59,6 +69,11 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   summary?: DateRangeSummary;
   /** Shortcut chips between the summary and the grid; each ends on `descriptor.grid.todayDate`. */
   presets?: readonly DateRangePresetOption[];
+  /**
+   * Fold the presets and grid behind `summary` (required), which becomes a toggle button. A selection that completes
+   * the range folds it again (`resolveDateRangeExpanded`).
+   */
+  collapsible?: DateRangeCollapsible;
   className?: string;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -77,28 +92,42 @@ export function DateRangePicker<Content = unknown>({
   renderCellContent,
   summary,
   presets,
+  collapsible,
   className,
   layoutStyle,
 }: DateRangePickerProps<Content>) {
+  if (collapsible && !summary) throw new TypeError("DateRangePicker collapsible needs summary to act as its toggle");
   const [value, setValue] = useControllableState<DateRangeValue>({
     ...(controlledValue === undefined ? {} : { value: controlledValue }),
     defaultValue: defaultValue ?? emptyDateRange,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   validateDateRange(value, maxRange);
+  const [expanded, setExpanded] = useControllableState<boolean>({
+    ...(collapsible?.expanded === undefined ? {} : { value: collapsible.expanded }),
+    defaultValue: collapsible?.defaultExpanded ?? resolveDateRangeExpanded(value),
+    ...(collapsible?.onExpandedChange === undefined ? {} : { onChange: collapsible.onExpandedChange }),
+  });
+  const open = collapsible === undefined || expanded;
+  const select = (next: DateRangeValue) => {
+    setValue(next);
+    if (collapsible && !resolveDateRangeExpanded(next)) setExpanded(false);
+  };
   // The hovered date previews the not-yet-committed end through the same cell
   // state function the committed range uses.
   const [pointer, setPointer] = useState<string | null>(null);
   const hovered = pointer !== null && isDateWithinRangeLimit(value, pointer, maxRange) ? pointer : null;
 
   const activeEdge = resolveDateRangeActiveEdge(value);
+  // A button may only hold phrasing content, so the fields become spans when the summary is the toggle.
+  const Field = collapsible ? "span" : "div";
   const field = (edge: "start" | "end") => {
     const date = value[edge];
     return (
-      <div key={edge} className="hjm-date-range__field" data-active={activeEdge === edge || undefined} data-empty={date === null || undefined}>
+      <Field key={edge} className="hjm-date-range__field" data-active={activeEdge === edge || undefined} data-empty={date === null || undefined}>
         <span className="hjm-date-range__field-label">{edge === "start" ? summary!.startLabel : summary!.endLabel}</span>
         <span className="hjm-date-range__field-value">{date === null ? summary!.placeholder : summary!.formatDate(date)}</span>
-      </div>
+      </Field>
     );
   };
 
@@ -108,10 +137,17 @@ export function DateRangePicker<Content = unknown>({
       className={classNames("hjm-date-range", className)}
       data-selecting={value.start !== null && value.end === null ? "" : undefined}
       data-complete={isCompleteDateRange(value) || undefined}
+      data-expanded={collapsible ? String(open) : undefined}
       onMouseLeave={() => setPointer(null)}
     >
-      {summary ? <div className="hjm-date-range__summary">{field("start")}{field("end")}</div> : null}
-      {presets?.length ? (
+      {summary && collapsible ? (
+        <button type="button" className="hjm-date-range__summary" data-toggle="" aria-expanded={open} onClick={() => setExpanded(!open)}>
+          {field("start")}{field("end")}
+          <Icon name={open ? dateRangeRecipe.toggle.icon.expanded : dateRangeRecipe.toggle.icon.collapsed}
+            size={dateRangeRecipe.toggle.glyph} tone="secondary" decorative />
+        </button>
+      ) : summary ? <div className="hjm-date-range__summary">{field("start")}{field("end")}</div> : null}
+      {open && presets?.length ? (
         <div className="hjm-date-range__presets">
           {presets.map((preset) => {
             const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
@@ -120,7 +156,7 @@ export function DateRangePicker<Content = unknown>({
                 selected={range.start === value.start && range.end === value.end}
                 onSelectedChange={() => {
                   validateDateRange(range, maxRange);
-                  setValue(range);
+                  select(range);
                   // A preset ends today; bring its end month into view like a jump, so the band is visible.
                   const month = range.end!.slice(0, 7);
                   if (descriptor.focusedMonth !== month) descriptor.onFocusedMonthChange?.(month, "jump");
@@ -129,7 +165,7 @@ export function DateRangePicker<Content = unknown>({
           })}
         </div>
       ) : null}
-      <CalendarPaintContext.Provider value={{ paint: (date) => resolveDateRangeCellPaint(value, date, hovered), onDayHover: setPointer }}>
+      {open ? <CalendarPaintContext.Provider value={{ paint: (date) => resolveDateRangeCellPaint(value, date, hovered), onDayHover: setPointer }}>
         <Calendar<Content>
           descriptor={{
             ...descriptor,
@@ -139,7 +175,7 @@ export function DateRangePicker<Content = unknown>({
             // Calendar keeps single selection; the two edges and the band are painted through the internal
             // paint context, and each day's name carries the range position for assistive tech.
             selectedDate: value.end ?? value.start,
-            onSelectionChange: (date) => { if (date !== null) setValue(resolveDateRangeSelection(value, date, maxRange)); },
+            onSelectionChange: (date) => { if (date !== null) select(resolveDateRangeSelection(value, date, maxRange)); },
           } as CalendarDescriptor<Content>}
           composeAccessibleName={(info) => {
             const state = resolveDateRangeCellState(value, info.date, hovered);
@@ -150,7 +186,7 @@ export function DateRangePicker<Content = unknown>({
           {...(nextMonth === undefined ? {} : { nextMonth })}
           {...(renderCellContent === undefined ? {} : { renderCellContent: (cell: { date: string }) => renderCellContent(cell.date) })}
         />
-      </CalendarPaintContext.Provider>
+      </CalendarPaintContext.Provider> : null}
     </div>
   );
 }

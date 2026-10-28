@@ -328,6 +328,9 @@ export const dateRangeExample = {
   rangeLabels: { start: "시작일", end: "종료일", between: "기간 안" },
   status: (start: string | null, end: string | null) =>
     start === null ? "기간을 골라 주세요" : end === null ? `${start}부터 …` : `${start} ~ ${end}`,
+  // collapsible: 필터 영역에 접어 두는 기간(2026-10-28). 요약 칸이 펼침 버튼이다.
+  collapsibleTitle: "필터에 접어 두는 기간",
+  summary: { startLabel: "시작일", endLabel: "종료일", placeholder: "날짜 선택" },
 } as const;
 
 export const mentionsExample = {
