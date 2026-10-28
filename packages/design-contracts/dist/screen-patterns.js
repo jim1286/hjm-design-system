@@ -626,6 +626,11 @@ export const profileSummaryRecipe = Object.freeze({
      * nickname, so no separate "edit profile" button repeats either. Small ghost IconButton (36 + hitSlop 4 = 44 target).
      */
     nameEdit: Object.freeze({ icon: "edit", size: "small" }),
+    /**
+     * 수치는 한 줄에 최대 네 칸이고 넘치면 다음 줄로 간다. 마지막 줄도 같은 칸 폭을 지켜 세로 기준선이 맞는다.
+     * 2026-10-28 다에리 둥지: 아래 목록 일곱 페이지를 프로필 수치로 옮기자 한 줄 일곱 칸은 라벨이 잘렸다(사용자 결정).
+     */
+    stats: Object.freeze({ maxPerRow: 4, rowGap: "md" }),
     avatarGlyphSize: glyph.xxl,
     actionsLayouts: Object.freeze({
         inline: Object.freeze({ axis: "inline", gap: "xs" }),

@@ -50,7 +50,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | badge | ReactNode | 없음 | 이름 옆 배지 |
 | nameActions | ReactNode | 없음 | 이름 행의 행동 |
 | nameEdit | `{label,onAction,disabled?,pending?}` | 없음 | 이름 옆 편집(연필) 아이콘 버튼. 내 프로필에서 닉네임 바꾸기를 연다(2026-10-25, 아래 절) |
-| stats | `{id,value,label,onPress?,disabled?}[]` | `[]` | 통계 수치. `onPress`가 있으면 버튼 |
+| stats | `{id,value,label,onPress?,disabled?}[]` | `[]` | 통계 수치. `onPress`가 있으면 버튼. 한 줄 최대 4칸(`profileSummaryRecipe.stats.maxPerRow`), 넘치면 다음 줄로 가고 마지막 줄도 같은 칸 폭이다 |
 | actionsLayout | `inline` · `stacked` · `equal` | `inline` | 가로 보조 행동은 inline 줄바꿈 행, 세로 전체 폭은 stacked, 같은 폭의 가로 행동은 equal(개발 소스) |
 | actions | ReactNode | 없음 | 수치 아래 행동 줄. [ProfileScreen](profile-screen.md) `editPlacement="summary"` 안에서는 그 화면의 `edit`이 이 줄 맨 앞에 `secondary` `small` 버튼(`profileSummaryRecipe.editAction`)으로 먼저 들어간다(1.31.0) |
 | children | ReactNode | 없음 | 하단 footer |
@@ -62,7 +62,7 @@ import { ProfileSummary } from '@hjmds/react-native/screen-flows';
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 원형 아바타 프레임 48. ProfileScreen 수정 행동은 `Button` `secondary` `small` | `profileSummaryRecipe.avatarSize`·`editAction` |
-| 간격 | 수치 칸 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.xs` 8. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
+| 간격 | 수치 칸 사이·수치 줄 사이 `spacing.md` 16, 값·라벨 사이 `spacing.xxs` 4, 행동 사이 `spacing.xs` 8. 영역 간격은 [CompositionLayout](composition-layout.md) | 양 renderer |
 | 순서·정렬 | 머리(아바타 → 이름·배지 → nameActions) → 수치 줄 → actions → children, 수치 칸은 균등 폭·가운데 | `CompositionLayout` + `flex: 1` 칸 |
 | 고정·스크롤 | 없음. ProfileScreen 본문 스크롤 안에 놓인다 | — |
 | 좁은 폭·큰 글자 | 수치 칸은 `minWidth: 0`으로 나눠 갖고, 행동 줄은 `wrap` | 양 renderer |

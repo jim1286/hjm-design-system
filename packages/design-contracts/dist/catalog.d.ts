@@ -9852,6 +9852,10 @@ export declare const recipeRegistry: {
             readonly icon: "edit";
             readonly size: "small";
         }>;
+        stats: Readonly<{
+            readonly maxPerRow: 4;
+            readonly rowGap: "md";
+        }>;
         avatarGlyphSize: 44;
         actionsLayouts: Readonly<{
             inline: Readonly<{

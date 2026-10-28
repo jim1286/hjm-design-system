@@ -654,6 +654,19 @@ export type ProfileSummaryProps = Readonly<{
   children?: ReactNode;
 }>;
 
+type ProfileStat = NonNullable<ProfileSummaryProps["stats"]>[number];
+/** Rows of `profileSummaryRecipe.stats.maxPerRow` cells; a short last row is padded so every cell keeps one width. */
+function profileStatRows(stats: readonly ProfileStat[]): (ProfileStat | null)[][] {
+  const perRow = Math.min(profileSummaryRecipe.stats.maxPerRow, stats.length);
+  const rows: (ProfileStat | null)[][] = [];
+  for (let start = 0; start < stats.length; start += perRow) {
+    const row: (ProfileStat | null)[] = stats.slice(start, start + perRow);
+    while (row.length < perRow) row.push(null);
+    rows.push(row);
+  }
+  return rows;
+}
+
 /** Profile identity and counts are common; routing and mutations stay controlled by the product. */
 // Fragments group JSX without creating an action cell; menus remain one cell.
 function profileActionItems(actions: ReactNode): ReactNode[] {
@@ -678,11 +691,12 @@ export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActi
   const nameEditButton = nameEdit ? <IconButton label={nameEdit.label} tone="ghost" size={profileSummaryRecipe.nameEdit.size} disabled={!!(nameEdit.disabled || nameEdit.pending)} onPress={nameEdit.onAction}>{nameEdit.icon ?? <NameEditGlyph />}</IconButton> : null;
   return <CompositionLayout title={name} headingLevel={headingLevel} leading={<View style={{ alignItems: "center", justifyContent: "center", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }}>{avatar}</View>} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
-    {stats.length ? <Stack axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{stats.map(stat =>
+    {stats.length ? <Stack gap={profileSummaryRecipe.stats.rowGap} layoutStyle={{ width: "100%" }}>{profileStatRows(stats).map((row, index) =>
+      <Stack key={index} axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{row.map((stat, cell) => stat ?
       <Stack key={stat.id} gap="xxs" align="center" justify="center" layoutStyle={{ flex: 1, minWidth: 0 }}>
         {stat.onPress ? <Button tone="ghost" accessibilityLabel={`${stat.value} ${stat.label}`} disabled={stat.disabled ?? false} onPress={stat.onPress} layoutStyle={{ width: "100%" }}><Stack gap="xxs" align="center"><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></Stack></Button>
           : <><Text emphasis="strong">{stat.value}</Text><Text variant="caption" tone="muted">{stat.label}</Text></>}
-      </Stack>)}</Stack> : null}
+      </Stack> : <View key={`empty-${cell}`} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flex: 1, minWidth: 0 }} />)}</Stack>)}</Stack> : null}
     {editButton || actions ? actionsLayout === "equal" ? (
       <Grid columns={{ compact: Math.max(1, profileActionItems([editButton, actions]).length) }} gap={{ compact: actionLayout.gap }} style={{ width: "100%" }}>
         {profileActionItems([editButton, actions])}
