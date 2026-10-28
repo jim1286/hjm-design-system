@@ -330,7 +330,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                     trailingActionStyle,
                 ], children: trailingAction }) : null] }));
 }
-export function Avatar({ action, source, renderImage, name, initials, renderFallback, size: sizeProp = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, decorative = false, accessibilityLabel, layoutStyle, }) {
+export function Avatar({ imageFit = "cover", action, source, renderImage, name, initials, renderFallback, size: sizeProp = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, decorative = false, accessibilityLabel, layoutStyle, }) {
     const size = resolveAvatarSize(sizeProp);
     validateAvatarPresentation({ shape, frame, accessoryPlacement });
     const { palette, tokens } = useHjmNativeTheme();
@@ -358,6 +358,7 @@ export function Avatar({ action, source, renderImage, name, initials, renderFall
         ? { accessible: false }
         : { accessible: true, accessibilityLabel, accessibilityRole: "image" };
     const frameRecipe = avatarRecipe.frames[frame];
+    const imageSize = imageFit === "contain" ? (size - frameRecipe.borderWidth * 2) * avatarRecipe.containedImageRatio : size;
     // Rounded follows the nearest design profile like Asset; circle keeps its geometry.
     const cornerRadius = shape === "rounded" ? tokens.radius.md : radius.full;
     const fallbackNode = renderFallback?.({ size, decorative: true }) ?? (fallback === null ? null
@@ -374,7 +375,7 @@ export function Avatar({ action, source, renderImage, name, initials, renderFall
                     justifyContent: "center",
                     overflow: "hidden",
                     width: size,
-                }, children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: size, width: size }, children: renderImage({ source, size, onError: failImage, fallback: fallbackNode }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: fallbackNode })) }), accessory ? (_jsx(View, { style: [{ position: "absolute", end: offset }, accessoryPlacement === "top-end" ? { top: offset } : { bottom: offset }], children: accessory })) : null] }));
+                }, children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: imageSize, width: imageSize }, children: renderImage({ source, size: imageSize, onError: failImage, fallback: fallbackNode }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, resizeMode: imageFit, style: [{ height: imageSize, width: imageSize }] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: fallbackNode })) }), accessory ? (_jsx(View, { style: [{ position: "absolute", end: offset }, accessoryPlacement === "top-end" ? { top: offset } : { bottom: offset }], children: accessory })) : null] }));
     return action ? _jsx(IdentityAction, { action: action, ...(layoutStyle ? { layoutStyle } : {}), children: avatarNode }) : avatarNode;
 }
 export function Divider({ orientation = "horizontal", inset = 0, lineStyle = dividerRecipe.defaults.lineStyle, layoutStyle }) {

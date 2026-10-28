@@ -164,6 +164,8 @@ type AvatarBaseProps = Readonly<{
         disabled?: boolean;
     }>;
     source?: ImageSourcePropType;
+    /** contain preserves the entire picture inside the shaped frame, including its corners. */
+    imageFit?: "cover" | "contain";
     /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
     renderImage?: (props: AvatarImageRenderProps) => ReactNode;
     initials?: string;
@@ -196,7 +198,7 @@ type AvatarIdentity = Readonly<{
     name: string;
 }>;
 export type AvatarProps = AvatarBaseProps & AvatarIdentity;
-export declare function Avatar({ action, source, renderImage, name, initials, renderFallback, size: sizeProp, shape, frame, accessory, accessoryPlacement, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ imageFit, action, source, renderImage, name, initials, renderFallback, size: sizeProp, shape, frame, accessory, accessoryPlacement, decorative, accessibilityLabel, layoutStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;

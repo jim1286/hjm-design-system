@@ -2941,6 +2941,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-avatar[data-frame="surface"] { border-width: 0; }
 .hjm-avatar[data-frame="none"] { border-width: 0; background: transparent; }
 .hjm-avatar__image { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; border-radius: inherit; }
+.hjm-avatar[data-image-fit="contain"] > .hjm-avatar__image { transform: scale(var(--hjm-avatar-contained-ratio)); object-fit: contain; border-radius: 0; }
 .hjm-avatar__fallback { display: grid; place-items: center; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: inherit; }
 /* avatarRecipe.accessory.offset (outward overhang, 0): the mark sits on the avatar's box corner so the row layout does not move. */
 .hjm-avatar__accessory { position: absolute; inset-inline-end: var(--hjm-avatar-accessory-inset, 0px); display: inline-flex; line-height: 0; }

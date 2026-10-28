@@ -18,6 +18,7 @@ export const Presentation: Story = { name: "크기·모양·모서리 표식 · 
   <Avatar name="Lee Ha" size="touch" frame="surface" />
   <Avatar name="Park Jun" size="large" shape="rounded" accessory={teamMark} />
   <Avatar decorative size="touch" frame="none" fallback="⚡" />
+  <Avatar decorative name="전체 그림" size="xlarge" imageFit="contain" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" />
 </Stack> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

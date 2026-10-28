@@ -38,3 +38,15 @@ it("keeps the standard native Image path when no host is supplied", () => {
  act(() => tree!.root.findByType(Image).props.onError());
  expect(tree!.root.findAllByType(Image)).toHaveLength(0);
 });
+
+it("keeps every image corner inside the circular frame when containing artwork", () => {
+ act(() => { tree = create(<HjmNativeProvider><Avatar name="그림" decorative size={64} imageFit="contain" source={{uri:"drawing"}}/></HjmNativeProvider>); });
+ const image = tree!.root.findByType(Image);
+ const {width, height} = image.props.style[0];
+ // The image diagonal must fit the diameter remaining inside the 1pt border.
+ expect(Math.hypot(width, height)).toBeCloseTo(62);
+ expect(image.props.resizeMode).toBe("contain");
+ act(() => image.props.onError());
+ expect(tree!.root.findAllByType(Image)).toHaveLength(0);
+ expect(JSON.stringify(tree!.toJSON())).toContain("그");
+});

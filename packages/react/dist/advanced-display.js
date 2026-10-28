@@ -118,7 +118,7 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                     focused.current = { id: item.id, index, node: event.target }; }, className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
 });
-export const Avatar = forwardRef(function Avatar({ name, action, src, alt: altProp, decorative = false, fallback, renderFallback, renderImage, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, imageProps, className, layoutStyle, ...props }, ref) {
+export const Avatar = forwardRef(function Avatar({ name, action, src, imageFit = "cover", alt: altProp, decorative = false, fallback, renderFallback, renderImage, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, frame = avatarRecipe.defaults.frame, accessory, accessoryPlacement = avatarRecipe.defaults.accessoryPlacement, imageProps, className, layoutStyle, ...props }, ref) {
     if (!decorative && (name === undefined || name.trim().length === 0))
         throw new TypeError("Avatar name must not be empty");
     if (renderImage && imageProps)
@@ -136,8 +136,9 @@ export const Avatar = forwardRef(function Avatar({ name, action, src, alt: altPr
         setFailed(generation); };
     const initials = name !== undefined && name.trim().length > 0 ? resolveAvatarInitials(name) : null;
     const avatarNode = (_jsxs("span", { ...props, "aria-hidden": decorative || props["aria-hidden"], style: { ...props.style, ...(action ? {} : layoutStyle), "--hjm-avatar-size": `${diameter}px`,
+            "--hjm-avatar-contained-ratio": avatarRecipe.containedImageRatio,
             // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
-            "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-frame": frame, "data-state": imageAvailable ? "image" : "fallback", children: [src && imageAvailable ? (renderImage ? (_jsx(Fragment, { children: renderImage({ src, alt, size: diameter, className: "hjm-avatar__image", onError: fail }) }, src)) : (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
+            "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-image-fit": imageFit, "data-frame": frame, "data-state": imageAvailable ? "image" : "fallback", children: [src && imageAvailable ? (renderImage ? (_jsx(Fragment, { children: renderImage({ src, alt, size: diameter, className: "hjm-avatar__image", onError: fail }) }, src)) : (_createElement("img", { ...restImageProps, key: src, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
                     if (active.current !== generation)
                         return;
                     setFailed(generation);

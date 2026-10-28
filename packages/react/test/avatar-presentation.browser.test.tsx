@@ -61,3 +61,16 @@ it("draws the rounded shape, the recipe frames and an unclipped corner accessory
   await render(<Avatar name="Kim" frame="surface" />);
   expect(getComputedStyle(avatar()).borderTopWidth).toBe("0px");
 });
+
+it("contains the entire square picture inside the circle without rounding its corners again", async () => {
+  await render(<Avatar name="Drawing" size="xlarge" imageFit="contain" src={`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="navy"/></svg>')}`} />);
+  const image = host.querySelector("img")!;
+  await act(async () => { await image.decode(); });
+  const picture = image.getBoundingClientRect();
+  const frame = avatar().getBoundingClientRect();
+  expect(Math.hypot(picture.width, picture.height)).toBeCloseTo(frame.width - 2, 0);
+  expect(picture.x + picture.width / 2).toBeCloseTo(frame.x + frame.width / 2);
+  expect(picture.y + picture.height / 2).toBeCloseTo(frame.y + frame.height / 2);
+  expect(getComputedStyle(image).objectFit).toBe("contain");
+  expect(getComputedStyle(image).borderTopLeftRadius).toBe("0px");
+});

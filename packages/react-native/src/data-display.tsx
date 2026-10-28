@@ -917,6 +917,8 @@ type AvatarBaseProps = Readonly<{
   /** Profile navigation; products provide the member route and localized name. */
   action?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   source?: ImageSourcePropType;
+  /** contain preserves the entire picture inside the shaped frame, including its corners. */
+  imageFit?: "cover" | "contain";
   /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
   renderImage?: (props: AvatarImageRenderProps) => ReactNode;
   initials?: string;
@@ -947,6 +949,7 @@ type AvatarIdentity =
 export type AvatarProps = AvatarBaseProps & AvatarIdentity;
 
 export function Avatar({
+  imageFit = "cover",
   action,
   source,
   renderImage,
@@ -988,6 +991,7 @@ export function Avatar({
     ? { accessible: false as const }
     : { accessible: true as const, accessibilityLabel, accessibilityRole: "image" as const };
   const frameRecipe = avatarRecipe.frames[frame];
+  const imageSize = imageFit === "contain" ? (size - frameRecipe.borderWidth * 2) * avatarRecipe.containedImageRatio : size;
   // Rounded follows the nearest design profile like Asset; circle keeps its geometry.
   const cornerRadius = shape === "rounded" ? tokens.radius.md : radius.full;
   const fallbackNode = renderFallback?.({ size, decorative: true }) ?? (fallback === null ? null
@@ -1014,12 +1018,12 @@ export function Avatar({
       >
         {source !== undefined && !failed ? (
           renderImage ? (
-            <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: size, width: size }}>
-              {renderImage({ source, size, onError: failImage, fallback: fallbackNode })}
+            <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: imageSize, width: imageSize }}>
+              {renderImage({ source, size: imageSize, onError: failImage, fallback: fallbackNode })}
             </View>
           ) : (
-            <NativeImage accessible={false} onError={failImage} source={source}
-              style={[{ height: size, width: size }]} />
+            <NativeImage accessible={false} onError={failImage} source={source} resizeMode={imageFit}
+              style={[{ height: imageSize, width: imageSize }]} />
           )
         ) : (
           <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">

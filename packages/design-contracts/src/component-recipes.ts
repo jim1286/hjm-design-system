@@ -1847,6 +1847,8 @@ export const avatarRecipe = {
    * 픽셀로 적으면 네 벌이 되기 때문이다. 남은 인원은 제품이 문구로 만든다("+3").
    */
   overlapRatio: 0.3,
+  /** A square fits wholly inside a circle only when its diagonal fits the diameter (Spint drawing clipping, 2026-10-28). */
+  containedImageRatio: 1 / Math.SQRT2,
   // 2026-10-25: standard member portraits are circular 48px; dense lists choose a smaller step explicitly.
   defaults: { size: "large", shape: "circle", frame: "outlined", accessoryPlacement: "bottom-end" },
   /**

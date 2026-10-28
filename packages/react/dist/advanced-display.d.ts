@@ -81,6 +81,8 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Av
         disabled?: boolean;
     }>;
     src?: string;
+    /** contain preserves the entire picture inside the shaped frame, including its corners. */
+    imageFit?: "cover" | "contain";
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     /** Product image host in place of the built-in `<img>`. Exclusive with `imageProps`. */

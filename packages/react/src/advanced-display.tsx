@@ -286,6 +286,8 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
     /** Profile navigation; products provide the member route and localized name. */
     action?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
     src?: string;
+    /** contain preserves the entire picture inside the shaped frame, including its corners. */
+    imageFit?: "cover" | "contain";
     fallback?: ReactNode;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     /** Product image host in place of the built-in `<img>`. Exclusive with `imageProps`. */
@@ -307,6 +309,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     name,
     action,
     src,
+    imageFit = "cover",
     alt: altProp,
     decorative = false,
     fallback,
@@ -342,12 +345,14 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       {...props}
       aria-hidden={decorative || props["aria-hidden"]}
       style={{ ...props.style, ...(action ? {} : layoutStyle), "--hjm-avatar-size": `${diameter}px`,
+        "--hjm-avatar-contained-ratio": avatarRecipe.containedImageRatio,
         // Absolute children are placed from the padding edge; subtract the frame border so the offset is from the box.
         "--hjm-avatar-accessory-inset": `${0 - avatarRecipe.accessory.offset - avatarRecipe.frames[frame].borderWidth}px` } as CSSProperties}
       ref={ref}
       className={classNames("hjm-avatar", className)}
       data-size={size}
       data-shape={shape}
+      data-image-fit={imageFit}
       data-frame={frame}
       data-state={imageAvailable ? "image" : "fallback"}
     >

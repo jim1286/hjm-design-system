@@ -2148,6 +2148,7 @@ export declare const recipeRegistry: {
     readonly avatarRecipe: {
         readonly slots: readonly ["root", "image", "fallback", "badge", "group"];
         readonly overlapRatio: 0.3;
+        readonly containedImageRatio: number;
         readonly defaults: {
             readonly size: "large";
             readonly shape: "circle";
