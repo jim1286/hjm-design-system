@@ -148,6 +148,8 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    /** One horizontal line of cards or chips, without grid. */
+    overflow?: SelectionGroupOverflow;
     /** Equal-width responsive options; uses the shared Grid contract instead of intrinsic row widths. */
     grid?: GridDescriptor;
     presentation?: SelectionGroupPresentation;

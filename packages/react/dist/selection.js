@@ -148,7 +148,7 @@ function validateItems(component, items) {
         values.add(item.value);
     }
 }
-export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityLabel, items, value: valueProp, defaultValue = null, onValueChange, orientation = selectionGroupRecipe.defaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, description, error, name, required = false, readOnly = false, indicator = "default", renderLeading, renderLabel, disabled, className, layoutStyle, style, ...props }, ref) {
+export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityLabel, items, value: valueProp, defaultValue = null, onValueChange, orientation = selectionGroupRecipe.defaults.orientation, grid, overflow = selectionGroupRecipe.overflow.default, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, description, error, name, required = false, readOnly = false, indicator = "default", renderLeading, renderLabel, disabled, className, layoutStyle, style, ...props }, ref) {
     validateItems("RadioGroup", items);
     if (accessibilityLabel !== undefined &&
         accessibilityLabel.trim().length === 0)
@@ -193,9 +193,24 @@ export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityL
         if (!controlled && value !== storedValue)
             setValue(value);
     }, [controlled, setValue, storedValue, value]);
+    if (overflow === "scroll" && (grid || !["card", "chips"].includes(presentation))) {
+        throw new TypeError('RadioGroup overflow="scroll" requires card or chips without grid');
+    }
+    const scrollerRef = useRef(null);
+    useLayoutEffect(() => {
+        const scroller = scrollerRef.current;
+        const option = scroller?.querySelector('[data-state="checked"]');
+        if (overflow === "scroll" && scroller && option)
+            revealInScroller(scroller, option, selectionGroupRecipe.overflow.scrollInset);
+    }, [value, items, overflow]);
     const descriptionId = `${generatedName}-radio-description`;
     const errorId = `${generatedName}-radio-error`;
-    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-radio-group", className), "data-orientation": orientation, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label == null ? "hjm-visually-hidden" : undefined, children: resolvedLabel }), description && !error ? _jsx("div", { id: descriptionId, className: "hjm-field__description", children: description }) : null, _jsx(ChoiceItems, { grid: grid, className: "hjm-radio-group__items", children: items.map((item) => {
+    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-radio-group", className), "data-orientation": orientation, "data-overflow": overflow, onFocusCapture: event => {
+            props.onFocusCapture?.(event);
+            const option = event.target.closest(".hjm-choice");
+            if (overflow === "scroll" && scrollerRef.current && option)
+                revealInScroller(scrollerRef.current, option, selectionGroupRecipe.overflow.scrollInset);
+        }, "data-presentation": presentation, "data-size": size, "data-state": error ? "invalid" : disabled ? "disabled" : "idle", disabled: disabled, "aria-label": accessibilityLabel, "aria-describedby": error ? errorId : description ? descriptionId : undefined, "aria-readonly": readOnly || undefined, children: [_jsx("legend", { className: label == null ? "hjm-visually-hidden" : undefined, children: resolvedLabel }), description && !error ? _jsx("div", { id: descriptionId, className: "hjm-field__description", children: description }) : null, wrapChipScroller(overflow === "scroll", scrollerRef, _jsx(ChoiceItems, { grid: grid, className: "hjm-radio-group__items", children: items.map((item) => {
                     const selected = item.value === value;
                     const choice = (_jsxs("label", { className: item.action ? "hjm-choice__target" : "hjm-choice", "data-kind": "radio", "data-state": selected ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [_jsx("input", { className: "hjm-choice__input", type: "radio", name: name ?? generatedName, value: item.value, checked: selected, disabled: item.disabled, required: required, ...(renderLabel && typeof item.label === "string" ? { "aria-label": item.label } : {}), "aria-readonly": readOnly || undefined, onClick: readOnly ? (event) => event.preventDefault() : undefined, onChange: () => {
                                     if (!readOnly)
@@ -210,7 +225,7 @@ export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityL
                     // A button inside a label can activate its radio. Keep two independent targets
                     // inside one recipe-owned frame, including when the group is read-only.
                     return _jsxs("div", { className: "hjm-choice hjm-choice--with-action", "data-kind": "radio", "data-state": selected ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, "data-readonly": readOnly || undefined, "data-presentation": presentation, "data-size": size, children: [choice, _jsx("span", { className: "hjm-choice__action", children: _jsx(Button, { tone: "ghost", size: "small", disabled: disabled || item.disabled || item.action.disabled, "aria-label": item.action.accessibilityLabel, onClick: item.action.onAction, children: item.action.label }) })] }, item.value);
-                }) }), _jsx(FieldError, { id: errorId, error: error })] }));
+                }) })), _jsx(FieldError, { id: errorId, error: error })] }));
 });
 export const Switch = forwardRef(function Switch({ label, labelVisibility = "visible", description, presentation = switchRecipe.presentationDefaults.web, checked: checkedProp, defaultChecked = false, size = switchRecipe.defaults.size, onCheckedChange, disabled, type = "button", className, onClick, layoutStyle, style, ...props }, ref) {
     const labelId = useId();

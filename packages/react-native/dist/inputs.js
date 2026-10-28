@@ -561,21 +561,29 @@ export function Radio({ label, checked, defaultChecked = false, onCheckedChange,
     return (_jsx(ChoiceRow, { ...visual, accessibilityHint: accessibilityHint, checked: selected, description: description, disabled: disabled, indicator: visual.indicator ?? "default", invalid: invalid, invalidLabel: invalidLabel, kind: "radio", label: label, leading: leading, onActivate: () => setSelected(true), readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator, renderLeading: renderLeading, required: required, requiredLabel: requiredLabel }));
 }
 /** Measures chips in the rail and scrolls the least distance that shows a focused chip (resolveScrollRevealOffset). */
-function useChipRail(enabled) {
+function useChipRail(enabled, selected) {
     const ref = useRef(null);
     const offset = useRef(0);
     const viewport = useRef(0);
+    const contentWidth = useRef(0);
     const rects = useRef({});
+    useEffect(() => { if (enabled && selected)
+        rail?.reveal(selected); }, [enabled, selected]);
     if (!enabled)
         return undefined;
-    return {
+    const rail = {
         ref,
         onScroll: event => { offset.current = event.nativeEvent.contentOffset.x; },
-        onViewportLayout: event => { viewport.current = event.nativeEvent.layout.width; },
-        itemLayout: id => event => { const { x, width } = event.nativeEvent.layout; rects.current[id] = { x, width }; },
+        onViewportLayout: event => { viewport.current = event.nativeEvent.layout.width; if (selected)
+            rail.reveal(selected); },
+        onContentSizeChange: width => { contentWidth.current = width; if (selected)
+            rail.reveal(selected); },
+        itemLayout: id => event => { const { x, width } = event.nativeEvent.layout; rects.current[id] = { x, width }; if (id === selected)
+            rail.reveal(id); },
         reveal: id => {
             const rect = rects.current[id];
-            if (!rect || viewport.current <= 0)
+            // Wait for the scroll content before revealing a controlled selection; early scrollTo gets clamped.
+            if (!rect || viewport.current <= 0 || (selected && contentWidth.current <= 0))
                 return;
             // Layout x is inside the padded content row; the scroll offset counts the content padding too.
             const inset = selectionGroupRecipe.overflow.scrollInset;
@@ -586,6 +594,7 @@ function useChipRail(enabled) {
             }
         },
     };
+    return rail;
 }
 function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, readOnly, readOnlyLabel, disabled, description, error, role, orientation, presentation, grid, layoutStyle, rail, children, }) {
     const theme = useHjmNativeTheme();
@@ -604,7 +613,7 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
             // Same scroller as SegmentedControl overflow="scroll": an LTR scroll view with the reading direction on
             // its row. selectionGroupRecipe.overflow.scrollInset pads every side (focus ring, chip hit slop, equal end
             // gap) and the negative margin keeps the chips aligned with the column.
-            _jsx(ScrollView, { ref: rail.ref, horizontal: true, keyboardShouldPersistTaps: "handled", onScroll: rail.onScroll, scrollEventThrottle: 16, showsHorizontalScrollIndicator: false, onLayout: rail.onViewportLayout, style: { direction: "ltr", flexGrow: 0, margin: -selectionGroupRecipe.overflow.scrollInset }, contentContainerStyle: { padding: selectionGroupRecipe.overflow.scrollInset }, children: _jsx(View, { style: { direction: theme.environment.direction, flexDirection: "row", flexWrap: "nowrap", gap }, children: children }) })) : grid ? _jsx(Grid, { ...grid, children: children }) : (_jsx(View, { style: {
+            _jsx(ScrollView, { ref: rail.ref, horizontal: true, keyboardShouldPersistTaps: "handled", onScroll: rail.onScroll, onContentSizeChange: rail.onContentSizeChange, scrollEventThrottle: 16, showsHorizontalScrollIndicator: false, onLayout: rail.onViewportLayout, style: { direction: "ltr", flexGrow: 0, margin: -selectionGroupRecipe.overflow.scrollInset }, contentContainerStyle: { padding: selectionGroupRecipe.overflow.scrollInset }, children: _jsx(View, { style: { direction: theme.environment.direction, flexDirection: "row", flexWrap: "nowrap", gap }, children: children }) })) : grid ? _jsx(Grid, { ...grid, children: children }) : (_jsx(View, { style: {
                     direction: theme.environment.direction,
                     flexDirection: presentation === "chips" || (orientation === "horizontal" && theme.environment.textScale < 1.6) ? "row" : "column",
                     flexWrap: presentation === "chips" ? "wrap" : undefined,
@@ -612,7 +621,7 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
                 }, children: children })), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: selectionGroupRecipe.error.textVariant, children: error })) : null] }));
 }
 export function RadioGroup(props) {
-    const { label, accessibilityLabel, items, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, grid, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderLabel, renderIndicator, layoutStyle, ...slotStyles } = props;
+    const { label, accessibilityLabel, items, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, grid, overflow = selectionGroupRecipe.overflow.default, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderLabel, renderIndicator, layoutStyle, ...slotStyles } = props;
     // Removed aliases must not silently change the selected collection in JavaScript callers.
     if ("options" in props || !Array.isArray(items))
         throw new TypeError("RadioGroup requires items; options was removed");
@@ -643,11 +652,15 @@ export function RadioGroup(props) {
         if (value === undefined && selected !== storedValue)
             setSelected(selected);
     }, [selected, setSelected, storedValue, value]);
+    if (overflow === "scroll" && (grid || !["card", "chips"].includes(presentation))) {
+        throw new TypeError('RadioGroup overflow="scroll" requires card or chips without grid');
+    }
+    const rail = useChipRail(overflow === "scroll", selected);
     const hasError = invalid || error !== undefined;
-    return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, grid: grid, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", layoutStyle: layoutStyle, children: resolvedItems.map((item) => {
+    return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, grid: grid, rail: rail, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", layoutStyle: layoutStyle, children: resolvedItems.map((item) => {
             const optionDisabled = disabled || item.disabled === true;
             const optionSelected = selected === item.value;
-            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, labelContent: renderLabel?.(item), ...(item.action ? { action: item.action } : {}), leading: item.leading, onActivate: () => setSelected(item.value), webTabIndex: !optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
+            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, onRailLayout: rail?.itemLayout(item.value), onRailFocus: () => rail?.reveal(item.value), accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, labelContent: renderLabel?.(item), ...(item.action ? { action: item.action } : {}), leading: item.leading, onActivate: () => setSelected(item.value), webTabIndex: !optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */

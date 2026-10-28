@@ -38,7 +38,7 @@ function AuthScreenHeader({ title, exit }) {
  * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export function AuthScreenLayout({ title, exit, hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, safeAreaBottom = 0, layoutStyle, testID, initialFocus = initialFocusDefaults.auth, }) {
+export function AuthScreenLayout({ title, exit, backdrop, hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, safeAreaBottom = 0, layoutStyle, testID, initialFocus = initialFocusDefaults.auth, }) {
     if (title !== undefined && !title.trim())
         throw new TypeError("AuthScreenLayout title must not be empty");
     if (exit)
@@ -69,7 +69,7 @@ export function AuthScreenLayout({ title, exit, hero, main, footer, density, has
             paddingHorizontal: resolved.paddingInline,
             paddingTop: resolved.paddingBlock,
             paddingBottom,
-        }, children: [_jsxs(View, { style: {
+        }, children: [backdrop === undefined || backdrop === null ? null : (_jsx(View, { pointerEvents: "none", accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }, children: backdrop })), _jsxs(View, { style: {
                     flexGrow: 1,
                     flexShrink: 0,
                     width: "100%",

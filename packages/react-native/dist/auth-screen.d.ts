@@ -12,6 +12,13 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
     title?: string;
     /** Leaving the route: the same icon-only back/close as ScreenLayout `exit`, at the header's leading edge. */
     exit?: ScreenExit;
+    /**
+     * Decorative scene behind the top of the scrolling content (a product sky band). It scrolls with hero/main/footer
+     * and is excluded from touch and accessibility; the product positions it absolutely from the content's top edge,
+     * full-bleed past the inline padding. Products kept the scene fixed behind this ScrollView, so a signup step tall
+     * enough to scroll slid the hero text across the picture until it could not be read (2026-10-28 diairy).
+     */
+    backdrop?: ReactNode;
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -49,7 +56,7 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor & Readonly<{
  * inset adjustment is off because it added the home-indicator inset on iOS only, on top of paddingBlock, which made
  * every product add its own Android inset (spint) or wrap the layout (diairy, utilverse) — 2026-10-17.
  */
-export declare function AuthScreenLayout({ title, exit, hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, initialFocus, }: AuthScreenLayoutProps): import("react").JSX.Element;
+export declare function AuthScreenLayout({ title, exit, backdrop, hero, main, footer, density, hasFooter, pendingLabel, mainCard, safeAreaBottom, layoutStyle, testID, initialFocus, }: AuthScreenLayoutProps): import("react").JSX.Element;
 export type AuthScreenHeroProps = AuthScreenHeroDescriptor & Readonly<{
     /** Product mark asset. HJM never ships product marks. */
     mark?: ReactNode;
