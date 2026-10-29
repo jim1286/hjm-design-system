@@ -1,3 +1,5 @@
+"use client";
+
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import type { HjmCompositionStyleProp } from "../composition-style.js";
 import type { CSSProperties, ReactNode } from "react";

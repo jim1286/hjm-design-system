@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext } from "react";
 import type { DateRangeCellPaint } from "@hjmds/design-contracts/components/date-range";
 
