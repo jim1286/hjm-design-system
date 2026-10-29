@@ -200,9 +200,15 @@ describe("Web core normalization", () => {
     expect(css).toMatch(
       /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
     );
-    expect(css).toMatch(
-      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-selected\);/s,
-    );
+    // 2026-10-28 (8c02a337, button.md): selection keeps the tone's own fill and border and changes only the
+    // foreground of non-filled tones; primary/danger keep their inverse content.
+    const selectedRule = css.match(
+      /\.hjm-button\[data-selected="true"\]:not\(\[data-tone="primary"\]\):not\(\[data-tone="danger"\]\),\s*\.hjm-icon-button\[data-selected="true"\]:not\(\[data-tone="primary"\]\):not\(\[data-tone="danger"\]\),[^{]*\{([^}]*)\}/s,
+    )?.[1];
+    expect(selectedRule).toBeDefined();
+    expect(selectedRule).toContain("color: var(--hjm-color-text);");
+    expect(selectedRule).not.toMatch(/background|border/);
+    expect(css).not.toMatch(/\.hjm-(?:icon-)?button\[data-selected="true"\][^{}]*\{[^}]*(background|--hjm-button-face-fill|border-color)/s);
   });
 
   it("gives an icon-button toggle the same selected treatment", () => {
