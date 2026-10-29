@@ -2,6 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Spinner } from "./internal/spinner.js";
@@ -9,6 +11,8 @@ import { Button, IconButton } from "./actions.js";
 import { SegmentedControl } from "./inputs.js";
 import { ImageInspection } from "./internal/image-inspection.js";
 export { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
+// Profile-photo framing shares this subpath: it needs the same optional gesture peers (2026-10-29).
+export { CircularPhotoCropper } from "./internal/circular-photo-cropper.js";
 import { Surface, Text } from "./primitives.js";
 import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
@@ -60,6 +64,13 @@ export function ImageViewer(props) {
     // Photo presentation stays black in every product and system theme (2026-10-23 shared photo viewer request).
     return _jsx(HjmNativeProvider, { theme: "dark", brandPalette: { dark: { bg: "#000000" } }, children: _jsx(ImageViewerSession, { ...props }, JSON.stringify(props.items.map(item => [item.id, item.uri, item.width, item.height]))) });
 }
+/**
+ * 2026-10-30 user request: pulling an unzoomed photo down closes the viewer, like photo viewers elsewhere. The photo
+ * follows the finger and the chrome fades; a short pull springs back. Zoomed photos pan instead (Zoom Toolkit only
+ * reports a vertical pull at the resting scale). The close button stays the accessible way out.
+ */
+const PULL_CLOSE_DISTANCE = 120;
+const PULL_CLOSE_VELOCITY = 900;
 function ImageViewerSession(props) {
     const theme = useHjmNativeTheme();
     const gutter = containerRecipe.gutters[containerDefaults.gutter];
@@ -86,12 +97,31 @@ function ImageViewerSession(props) {
         if (currentStatus === "error" && Platform.OS === "ios")
             AccessibilityInfo.announceForAccessibility(props.errorLabel);
     }, [currentStatus, currentIndex, props.errorLabel]);
+    const pull = useSharedValue(0);
+    const reducedMotion = theme.environment.reducedMotion;
+    const onClose = props.onClose;
+    const onVerticalPull = ({ translateY, released, velocityY }) => {
+        "worklet";
+        // Only a downward pull closes; an upward pull just springs back.
+        const down = Math.max(0, translateY);
+        if (!released) {
+            pull.value = down;
+            return;
+        }
+        if (down > PULL_CLOSE_DISTANCE || velocityY > PULL_CLOSE_VELOCITY)
+            scheduleOnRN(onClose);
+        else
+            pull.value = reducedMotion ? 0 : withTiming(0, { duration: 200 });
+    };
+    const photoStyle = useAnimatedStyle(() => ({ transform: [{ translateY: pull.value },
+            { scale: interpolate(pull.value, [0, PULL_CLOSE_DISTANCE * 3], [1, 0.85], "clamp") }] }));
+    const chromeStyle = useAnimatedStyle(() => ({ opacity: interpolate(pull.value, [0, PULL_CLOSE_DISTANCE], [1, 0.2], "clamp") }));
     const reportImageStatus = (event) => {
         setStatuses(previous => new Map(previous).set(event.item.id, event.status));
         props.onImageStatusChange?.(event);
     };
-    return _jsx(Modal, { visible: true, presentationStyle: "fullScreen", supportedOrientations: props.supportedOrientations, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsxs(View, { style: { ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }, children: [_jsx(IconButton, { label: props.closeLabel, tone: "ghost", onPress: props.onClose, children: _jsx(DrawnClose, { size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }), props.actions ? _jsx(View, { style: { flex: 1, alignItems: "flex-end" }, children: props.actions }) : null] }), props.inspection ? _jsx(View, { style: controlInsets, children: _jsx(SegmentedControl, { label: props.inspection.labels.mode, value: props.inspection.mode, onValueChange: props.inspection.onModeChange, items: [{ value: "fit", label: props.inspection.labels.fit }, { value: "double", label: props.inspection.labels.double }, { value: "pixels", label: props.inspection.labels.pixels }] }) }) : null, props.inspection ? _jsx(ImageInspection, { config: props.inspection, imageSize: { width: props.items[currentIndex].width, height: props.items[currentIndex].height }, controlsInset: controlInsets, feedbackLabels: { loading: props.loadingLabel, error: props.errorLabel, retry: props.retryLabel }, renderImage: (width, height, report) => _jsx(ViewerImage, { item: props.items[currentIndex], width: width, height: height, renderImage: props.renderImage, onImageStatusChange: event => { report(event.status); reportImageStatus(event); } }) }, `${currentIndex}:${props.inspection.mode}`) : _jsxs(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
-                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: [_jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, renderImage: props.renderImage, onImageStatusChange: reportImageStatus }, item.uri) }, galleryKey), currentStatus !== "ready" ? _jsx(View, { pointerEvents: "box-none", style: { position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center", ...controlInsets }, children: _jsx(Surface, { padding: "md", children: currentStatus === "error" ? _jsxs(View, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", children: props.errorLabel }), _jsx(Button, { growWithContent: true, onPress: resetImages, children: props.retryLabel })] })
-                                        : _jsx(Spinner, { label: props.loadingLabel }) }) }) : null] }), _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }, children: [props.items.length > 1 ? _jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: _jsx(DrawnChevron, { direction: "start", size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", align: "center", numberOfLines: 2, accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), props.items.length > 1 ? _jsx(Text, { variant: "caption", tone: "muted", numeric: "tabular", align: "center", children: `${currentIndex + 1}/${props.items.length}` }) : null] }), props.items.length > 1 ? _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: _jsx(DrawnChevron, { direction: "end", size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }) : null] })] }) }) });
+    return _jsx(Modal, { visible: true, presentationStyle: "fullScreen", supportedOrientations: props.supportedOrientations, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsxs(Animated.View, { style: [{ ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }, chromeStyle], children: [_jsx(IconButton, { label: props.closeLabel, tone: "ghost", onPress: props.onClose, children: _jsx(DrawnClose, { size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }), props.actions ? _jsx(View, { style: { flex: 1, alignItems: "flex-end" }, children: props.actions }) : null] }), props.inspection ? _jsx(View, { style: controlInsets, children: _jsx(SegmentedControl, { label: props.inspection.labels.mode, value: props.inspection.mode, onValueChange: props.inspection.onModeChange, items: [{ value: "fit", label: props.inspection.labels.fit }, { value: "double", label: props.inspection.labels.double }, { value: "pixels", label: props.inspection.labels.pixels }] }) }) : null, props.inspection ? _jsx(ImageInspection, { config: props.inspection, imageSize: { width: props.items[currentIndex].width, height: props.items[currentIndex].height }, controlsInset: controlInsets, feedbackLabels: { loading: props.loadingLabel, error: props.errorLabel, retry: props.retryLabel }, renderImage: (width, height, report) => _jsx(ViewerImage, { item: props.items[currentIndex], width: width, height: height, renderImage: props.renderImage, onImageStatusChange: event => { report(event.status); reportImageStatus(event); } }) }, `${currentIndex}:${props.inspection.mode}`) : _jsxs(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
+                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: [_jsx(Animated.View, { style: [{ flex: 1 }, photoStyle], children: _jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, onVerticalPull: onVerticalPull, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, renderImage: props.renderImage, onImageStatusChange: reportImageStatus }, item.uri) }, galleryKey) }), currentStatus !== "ready" ? _jsx(View, { pointerEvents: "box-none", style: { position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center", ...controlInsets }, children: _jsx(Surface, { padding: "md", children: currentStatus === "error" ? _jsxs(View, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", children: props.errorLabel }), _jsx(Button, { growWithContent: true, onPress: resetImages, children: props.retryLabel })] })
+                                        : _jsx(Spinner, { label: props.loadingLabel }) }) }) : null] }), _jsxs(Animated.View, { style: [{ flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }, chromeStyle], children: [props.items.length > 1 ? _jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: _jsx(DrawnChevron, { direction: "start", size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }) : null, _jsxs(View, { style: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", align: "center", numberOfLines: 2, accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), props.items.length > 1 ? _jsx(Text, { variant: "caption", tone: "muted", numeric: "tabular", align: "center", children: `${currentIndex + 1}/${props.items.length}` }) : null] }), props.items.length > 1 ? _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: _jsx(DrawnChevron, { direction: "end", size: glyph[iconButtonRecipe.sizes.medium.glyph], color: theme.colors.text }) }) : null] })] }) }) });
 }
 //# sourceMappingURL=image-viewer.js.map

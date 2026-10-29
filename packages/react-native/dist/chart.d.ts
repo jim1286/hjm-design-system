@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { type PieVisibilitySummary, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 type FocusProps = Readonly<{
+    /** Keep the selected-point tooltip visible after release, including tap selection. */
+    showFocusLabel?: boolean;
     focusIndex?: number | null;
     defaultFocusIndex?: number | null;
     onFocusChange?: (index: number | null, detail: Readonly<{

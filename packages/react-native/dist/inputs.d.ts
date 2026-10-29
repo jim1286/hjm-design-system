@@ -217,6 +217,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     onValueChange?: (value: Value | null) => void;
     /** One horizontal line of cards or chips, without grid; the selected item stays visible. */
     overflow?: SelectionGroupOverflow;
+    /** Brand fill uses primary/onPrimary; brand-outline keeps canvas and emphasizes the primary border. */
+    selectionTone?: "neutral" | "brand" | "brand-outline";
     /** Visual preview only; the string label remains the accessible name. */
     renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;

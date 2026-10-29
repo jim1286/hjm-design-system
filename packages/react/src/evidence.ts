@@ -186,7 +186,7 @@ const activeWebEntries: readonly ComponentCatalogEntry[] = componentCatalog.filt
 export const reactRendererEvidence = {
   schemaVersion: reactRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react",
-  packageVersion: "2.0.0",
+  packageVersion: "3.0.0",
   surface: "web",
   components: activeWebEntries.map(derivedClaim),
 } as const satisfies ReactRendererEvidenceManifest;

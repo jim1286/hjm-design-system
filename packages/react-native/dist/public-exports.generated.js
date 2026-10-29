@@ -135,6 +135,9 @@ export const publicExportEntries = {
     ChoiceRow: [
         "./choice-row"
     ],
+    CircularPhotoCropper: [
+        "./image-viewer"
+    ],
     CodeBlock: [
         "./code-block"
     ],

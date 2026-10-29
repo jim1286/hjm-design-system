@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "2.0.0",
+  "designSystemVersion": "3.0.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
@@ -4295,7 +4295,8 @@
       "extensions": [
         "GridReveal",
         "ImageViewer",
-        "ImageViewerTrigger"
+        "ImageViewerTrigger",
+        "CircularPhotoCropper"
       ],
       "category": "data-display",
       "platform": "shared",

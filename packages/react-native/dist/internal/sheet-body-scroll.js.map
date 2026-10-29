@@ -1,0 +1,1 @@
+{"version":3,"file":"sheet-body-scroll.js","sourceRoot":"","sources":["../../src/internal/sheet-body-scroll.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,UAAU,EAAuB,MAAM,OAAO,CAAC;AAqBvE,MAAM,CAAC,MAAM,sBAAsB,GAAG,aAAa,CAAyB,IAAI,CAAC,CAAC;AAElF,MAAM,UAAU,kBAAkB;IAChC,OAAO,UAAU,CAAC,sBAAsB,CAAC,CAAC;AAC5C,CAAC"}

@@ -5,6 +5,7 @@ import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { setInputVisibilityFrame } from "./internal/field-visibility.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -444,7 +445,7 @@ layoutStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
                                 }) })] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
 });
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-function ChoiceRow({ kind, label, labelContent, action, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, webTabIndex, layoutStyle, onRailLayout, onRailFocus, }) {
+function ChoiceRow({ selectionTone = "neutral", kind, label, labelContent, action, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, webTabIndex, layoutStyle, onRailLayout, onRailFocus, }) {
     const theme = useHjmNativeTheme();
     const metrics = selectionControlRecipe.sizes[size];
     const chips = presentation === "chips", chipMetrics = chipRecipe.sizes[size];
@@ -452,22 +453,25 @@ function ChoiceRow({ kind, label, labelContent, action, description, checked, di
     const plate = selectionControlRecipe.presentations[presentation];
     const selected = checked === true || checked === "mixed";
     const chipState = chipRecipe.states[selected ? "selected" : "idle"];
+    const brandSelected = selected && selectionTone === "brand";
+    const outlineSelected = selected && selectionTone === "brand-outline";
+    const selectedContent = brandSelected ? resolveColorReference(selectionControlRecipe.states.selectedBrand.content, theme.palette) : undefined;
     const indicatorColor = resolveColorReference(chips ? chipState.content : selectionControlRecipe.states.indicator, theme.palette);
     const appearance = {
         checked,
         selected,
         disabled,
         readOnly,
-        color: indicatorColor,
+        color: selectedContent ?? indicatorColor,
         size: metrics.control,
     };
     const resolvedLeading = leading ?? renderLeading?.(appearance);
-    const plateBackground = chips ? chipState.background : selected
+    const plateBackground = outlineSelected ? selectionControlRecipe.states.idleBackground : brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.background : selected
         ? selectionControlRecipe.states.selectedBackground
         : plate.background ?? selectionControlRecipe.states.idleBackground;
     const plateBorder = invalid
         ? selectionControlRecipe.states.invalidBorder
-        : chips ? chipState.border : selected
+        : brandSelected || outlineSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.border : selected
             ? selectionControlRecipe.states.selectedBorder
             : plate.border;
     const frameStyle = {
@@ -515,18 +519,18 @@ function ChoiceRow({ kind, label, labelContent, action, description, checked, di
                 paddingVertical: chips ? 0 : plate.useSizePadding ? metrics.paddingVertical : 0,
             },
             action ? { flex: 1, minWidth: 0, backgroundColor: "transparent", borderWidth: 0, borderRadius: 0, opacity: pressed && !readOnly && !disabled ? 0.86 : 1 } : layoutStyle,
-        ], children: [chips && indicator === "default" && renderIndicator ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderIndicator(appearance) })) : !chips && indicator === "default" ? (_jsx(SelectionMark, { kind: kind, checked: checked, size: size, invalid: invalid ?? false, children: renderIndicator?.(appearance) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsxs(View, { style: [{ flexGrow: chips ? 0 : 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }], children: [labelContent != null && typeof labelContent !== "string" && typeof labelContent !== "number" ? labelContent : _jsx(Text, { fontRole: "ui", style: [
-                            {
-                                color: resolveColorReference(chips ? chipState.content : selectionControlRecipe.label.color, theme.palette),
-                                fontWeight: selected
-                                    ? selectionControlRecipe.label.checkedFontWeight
-                                    : selectionControlRecipe.label.fontWeight,
-                            },
-                        ], variant: chips ? chipMetrics.textVariant : metrics.labelVariant, children: labelContent ?? label }), description ? (_jsx(Text, { style: [
-                            {
-                                color: resolveColorReference(selectionControlRecipe.description.color, theme.palette),
-                            },
-                        ], variant: metrics.descriptionVariant, children: description })) : null] })] }));
+        ], children: [chips && indicator === "default" && renderIndicator ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderIndicator(appearance) })) : !chips && indicator === "default" ? (_jsx(SelectionMark, { kind: kind, checked: checked, size: size, invalid: invalid ?? false, children: renderIndicator?.(appearance) })) : null, resolvedLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: resolvedLeading })) : null, _jsx(InheritedTextColorContext.Provider, { value: selectedContent, children: _jsxs(View, { style: [{ flexGrow: chips ? 0 : 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }], children: [labelContent != null && typeof labelContent !== "string" && typeof labelContent !== "number" ? labelContent : _jsx(Text, { fontRole: "ui", style: [
+                                {
+                                    color: selectedContent ?? resolveColorReference(chips ? chipState.content : selectionControlRecipe.label.color, theme.palette),
+                                    fontWeight: selected
+                                        ? selectionControlRecipe.label.checkedFontWeight
+                                        : selectionControlRecipe.label.fontWeight,
+                                },
+                            ], variant: chips ? chipMetrics.textVariant : metrics.labelVariant, children: labelContent ?? label }), description ? (_jsx(Text, { style: [
+                                {
+                                    color: resolveColorReference(brandSelected ? selectionControlRecipe.states.selectedBrand.content : selectionControlRecipe.description.color, theme.palette),
+                                },
+                            ], variant: metrics.descriptionVariant, children: description })) : null] }) })] }));
     if (!action)
         return target;
     // The selection target owns its accessible label; the action is a separate sibling
@@ -621,7 +625,7 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
                 }, children: children })), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: selectionGroupRecipe.error.textVariant, children: error })) : null] }));
 }
 export function RadioGroup(props) {
-    const { label, accessibilityLabel, items, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, grid, overflow = selectionGroupRecipe.overflow.default, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderLabel, renderIndicator, layoutStyle, ...slotStyles } = props;
+    const { label, accessibilityLabel, items, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, grid, overflow = selectionGroupRecipe.overflow.default, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", selectionTone = "neutral", renderLeading, renderLabel, renderIndicator, layoutStyle, ...slotStyles } = props;
     // Removed aliases must not silently change the selected collection in JavaScript callers.
     if ("options" in props || !Array.isArray(items))
         throw new TypeError("RadioGroup requires items; options was removed");
@@ -660,7 +664,7 @@ export function RadioGroup(props) {
     return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, grid: grid, rail: rail, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", layoutStyle: layoutStyle, children: resolvedItems.map((item) => {
             const optionDisabled = disabled || item.disabled === true;
             const optionSelected = selected === item.value;
-            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, onRailLayout: rail?.itemLayout(item.value), onRailFocus: () => rail?.reveal(item.value), accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, labelContent: renderLabel?.(item), ...(item.action ? { action: item.action } : {}), leading: item.leading, onActivate: () => setSelected(item.value), webTabIndex: !optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
+            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, onRailLayout: rail?.itemLayout(item.value), onRailFocus: () => rail?.reveal(item.value), accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", selectionTone: selectionTone, label: item.label, labelContent: renderLabel?.(item), ...(item.action ? { action: item.action } : {}), leading: item.leading, onActivate: () => setSelected(item.value), webTabIndex: !optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */

@@ -1,5 +1,13 @@
 # @hjmds/design-contracts
 
+## 3.0.0
+
+### Minor Changes
+
+- 668566f: Add `CircularPhotoCropper` (image-viewer subpath, Web and Native): Instagram-style circular framing for profile photos with drag and pinch/wheel zoom. It returns the source-pixel square under the circle (`resolveCircularPhotoCrop`); the product crops and uploads it.
+- ad9e323: Make the outline capsule the default for static Tag metadata, with a transparent background and shared Web/Native geometry.
+- a58db00: Add opt-in RadioGroup selectionTone="brand" and "brand-outline" using the theme primary/onPrimary pair, including preview text contrast, while preserving neutral selection by default.
+
 ## 2.0.0
 
 ### Major Changes
