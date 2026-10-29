@@ -33,7 +33,7 @@
     "reference:antd:verify": "pnpm --filter @hjmds/design-contracts reference:antd:verify",
     "changeset": "changeset",
     "release:commit:check": "node scripts/check-release-commit.mjs",
-    "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
+    "release:version": "pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
     "release:check": "pnpm build && pnpm typecheck && pnpm test:release && pnpm --filter @hjmds/design-contracts bundle:check && pnpm --filter @hjmds/react-native bundle:check:built && pnpm bundle:renderer:check && node scripts/check-release-artifacts.mjs",
     "api-map:sync": "node scripts/sync-public-component-map.mjs --write",
