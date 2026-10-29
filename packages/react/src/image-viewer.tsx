@@ -19,7 +19,7 @@ export type ImageViewerProps = {
 };
 
 export type ImageViewerTriggerProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "aria-label" | "type" | "style"> & Readonly<{
-  /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
+  /** Localized accessible name, e.g. "View photo". The media inside is decorative. */
   label: string;
   /** Product media (HJM `Image` with `decorative`, `<img alt="">`). */
   children: ReactNode;
