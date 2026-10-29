@@ -1,5 +1,27 @@
 # @hjmds/react
 
+## 2.1.0
+
+### Minor Changes
+
+- e3e7d92: Allow chart labels to remain visible after selecting a point and center screen title badges in native layouts.
+- 668566f: Add `CircularPhotoCropper` (image-viewer subpath, Web and Native): Instagram-style circular framing for profile photos with drag and pinch/wheel zoom. It returns the source-pixel square under the circle (`resolveCircularPhotoCrop`); the product crops and uploads it.
+- e787b7f: CommentThreadRow draws the author name as the same member-profile action as `avatarAction` on Web and Native, keeping its text style. Rows without `avatarAction` are unchanged.
+- f42ea9e: Add `CommentThreadItem.textActions` on Web and Native: product text actions drawn after Reply in the comment's action line, styled like Reply (for example "See original"/"See translation"). Rows without it are unchanged.
+- ba24f1c: `ImageViewer` (Web) closes when an unzoomed photo is pulled down by touch or pen, matching Native: the photo follows the finger and the chrome fades; past 120 px or a fast flick calls `onClose`, a short pull springs back (instantly with reduced motion). A mouse keeps the close button and Escape; pinch and zoomed panning are unchanged.
+- ad9e323: Make the outline capsule the default for static Tag metadata, with a transparent background and shared Web/Native geometry.
+- 4de82db: Add `ProfileSummary.avatarView` on Web and Native: on another member's profile the avatar frame becomes an image button that opens the product's ImageViewer. Profiles without it are unchanged.
+- a58db00: Add opt-in RadioGroup selectionTone="brand" and "brand-outline" using the theme primary/onPrimary pair, including preview text contrast, while preserving neutral selection by default.
+- da8e49f: Declare `"use client"` on the internal calendar paint context and member identity action so Next App Router server components can import the modules that use them. NotificationRow, ProfileSummary, ImageChoiceGroup and DrawingEditor accept `layoutStyle` on their outermost element like every other in-flow Web root.
+
+### Patch Changes
+
+- Updated dependencies [668566f]
+- Updated dependencies [ad9e323]
+- Updated dependencies [a58db00]
+  - @hjmds/design-contracts@3.0.0
+
+
 ## 3.0.0
 
 ### Minor Changes

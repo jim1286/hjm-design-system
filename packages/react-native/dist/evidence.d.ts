@@ -32,7 +32,7 @@ export type ReactNativeRendererEvidenceManifest = Readonly<{
 export declare const reactNativeRendererEvidence: {
     readonly schemaVersion: 2;
     readonly packageName: "@hjmds/react-native";
-    readonly packageVersion: "3.0.0";
+    readonly packageVersion: "2.1.0";
     readonly surface: "native";
     readonly components: Readonly<{
         /** Canonical component id from the design-contracts catalog. */

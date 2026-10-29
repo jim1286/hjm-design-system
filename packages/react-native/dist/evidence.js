@@ -112,7 +112,7 @@ const activeNativeEntries = componentCatalog.filter((entry) => {
 export const reactNativeRendererEvidence = {
     schemaVersion: reactNativeRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react-native",
-    packageVersion: "3.0.0",
+    packageVersion: "2.1.0",
     surface: "native",
     components: activeNativeEntries.map(derivedClaim),
 };

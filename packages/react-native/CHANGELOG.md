@@ -1,5 +1,27 @@
 # @hjmds/react-native
 
+## 2.1.0
+
+### Minor Changes
+
+- e3e7d92: Allow chart labels to remain visible after selecting a point and center screen title badges in native layouts.
+- 668566f: Add `CircularPhotoCropper` (image-viewer subpath, Web and Native): Instagram-style circular framing for profile photos with drag and pinch/wheel zoom. It returns the source-pixel square under the circle (`resolveCircularPhotoCrop`); the product crops and uploads it.
+- e787b7f: CommentThreadRow draws the author name as the same member-profile action as `avatarAction` on Web and Native, keeping its text style. Rows without `avatarAction` are unchanged.
+- f42ea9e: Add `CommentThreadItem.textActions` on Web and Native: product text actions drawn after Reply in the comment's action line, styled like Reply (for example "See original"/"See translation"). Rows without it are unchanged.
+- 676a119: `ImageViewer` (Native) closes when an unzoomed photo is pulled down, like other photo viewers: the photo follows the finger and the chrome fades; a long or fast downward pull calls `onClose`, a short or upward one springs back. Zoomed photos keep panning. No product wiring is needed.
+- ad9e323: Make the outline capsule the default for static Tag metadata, with a transparent background and shared Web/Native geometry.
+- 4de82db: Add `ProfileSummary.avatarView` on Web and Native: on another member's profile the avatar frame becomes an image button that opens the product's ImageViewer. Profiles without it are unchanged.
+- a58db00: Add opt-in RadioGroup selectionTone="brand" and "brand-outline" using the theme primary/onPrimary pair, including preview text contrast, while preserving neutral selection by default.
+
+### Patch Changes
+
+- fb3f8c2: Keep a scrolled list inside a plain Sheet body (an embedded SearchScreen) from dragging the sheet: the list now drives the sheet pull and only a pull from its top moves the sheet.
+- Updated dependencies [668566f]
+- Updated dependencies [ad9e323]
+- Updated dependencies [a58db00]
+  - @hjmds/design-contracts@3.0.0
+
+
 ## 3.0.0
 
 ### Minor Changes

@@ -135,7 +135,7 @@ const activeWebEntries = componentCatalog.filter((entry) => {
 export const reactRendererEvidence = {
     schemaVersion: reactRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react",
-    packageVersion: "3.0.0",
+    packageVersion: "2.1.0",
     surface: "web",
     components: activeWebEntries.map(derivedClaim),
 };
