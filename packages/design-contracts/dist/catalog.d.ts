@@ -8884,7 +8884,7 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "label"];
         readonly defaults: {
             readonly tone: "neutral";
-            readonly variant: "default";
+            readonly variant: "outline";
         };
         readonly tones: {
             readonly neutral: {

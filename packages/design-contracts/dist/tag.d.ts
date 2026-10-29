@@ -3,7 +3,7 @@ export type TagTone = "neutral" | "info" | "success" | "attention" | "brand";
 export type TagVariant = "default" | "outline";
 export declare const tagDefaults: {
     readonly tone: "neutral";
-    readonly variant: "default";
+    readonly variant: "outline";
 };
 /**
  * A single piece of static metadata (a position, a grade, a season). Tag has
@@ -27,7 +27,7 @@ export declare const tagRecipe: {
     readonly slots: readonly ["root", "label"];
     readonly defaults: {
         readonly tone: "neutral";
-        readonly variant: "default";
+        readonly variant: "outline";
     };
     readonly tones: {
         readonly neutral: {

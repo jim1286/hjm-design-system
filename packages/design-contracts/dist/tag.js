@@ -3,7 +3,8 @@ import { semanticColors } from "./semantic-colors.js";
 import { fontWeight, spacing, stroke } from "./foundations.js";
 export const tagDefaults = {
     tone: "neutral",
-    variant: "default",
+    // The approved border-only capsule is the shared default (2026-10-29).
+    variant: "outline",
 };
 function assertCopy(value, field) {
     if (value.trim().length === 0) {

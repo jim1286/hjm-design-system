@@ -4,4 +4,4 @@
 "@hjmds/react-native": minor
 ---
 
-Add an opt-in outline capsule to static Tag metadata, with a transparent background and shared Web/Native geometry.
+Make the outline capsule the default for static Tag metadata, with a transparent background and shared Web/Native geometry.

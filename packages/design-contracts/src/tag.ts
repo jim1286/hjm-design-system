@@ -11,7 +11,8 @@ export type TagVariant = "default" | "outline";
 
 export const tagDefaults = {
   tone: "neutral",
-  variant: "default",
+  // The approved border-only capsule is the shared default (2026-10-29).
+  variant: "outline",
 } as const satisfies Readonly<{ tone: TagTone; variant: TagVariant }>;
 
 /**

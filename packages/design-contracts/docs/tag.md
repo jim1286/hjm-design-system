@@ -28,7 +28,8 @@ Notice/Badge의 역할이고, Tag는 사실을 나열할 뿐 위협하지 않습
 - `closable`(지울 수 있는 태그)은 이 계약에 **없습니다**. 태그를 지우는 것은 선택 해제이고,
   선택 해제는 Chip의 `selected` 축이 이미 소유한 문제입니다. Tag에 별도의 dismiss 축을
   추가하면 같은 "선택 해제"를 두 컴포넌트가 서로 다른 이름으로 계약하게 됩니다.
-- 기본은 radius `sm` 사각형입니다. `variant="outline"`은 배경 없는 capsule(`full`)입니다.
+- 기본은 `variant="outline"`인 배경 없는 capsule(`full`)입니다.
+  작은 사각형은 명시적인 `variant="default"`로 유지합니다.
   2026-10-29 선수 프로필 정보 시안 승인에 따라 선택 UI와 분리된 읽기 전용 형태로 추가했습니다.
   형태와 무관하게 버튼 role·선택 상태·포커스·활성화 이벤트를 추가하지 않습니다.
 - 야잘알의 `AppBadge`가 이 역할(포지션·등급·시즌 라벨)을 수행한 제품 근거에서 Tag 계약을
@@ -42,7 +43,7 @@ keyboard, focus, accessibilityState 계약이 필요 없습니다 — 접근성 
 노드 하나로 충분합니다. 여러 Tag를 한 줄에 나열할 때 간격 조합은 나중에 Stack/Inline
 recipe가 안정화되면 그쪽에 위임하고, 이 계약에는 넣지 않습니다.
 
-기본 높이는 20px이지만 고정 높이가 아닙니다. Dynamic Type에서 한 줄 라벨의 고유 높이만큼
+기본 최소 높이는 32px이며 고정 높이가 아닙니다. Dynamic Type에서 한 줄 라벨의 고유 높이만큼
 늘어나며, renderer는 라벨을 고정 프레임 안에서 자르지 않습니다.
 
 ## 현재 maturity와 남은 증거
@@ -57,7 +58,8 @@ stable은 전체 환경 인증을 뜻하지 않습니다. screen reader 실사�
 
 ## Outline 표현
 
-`variant`는 `default | outline`, 기본값은 `default`입니다. Outline은 투명 배경·1px 테두리·
+`variant`는 `default | outline`, 기본값은 `outline`입니다.
+2026-10-29 사용자가 승인한 테두리형을 기본으로 지정했습니다. Outline은 투명 배경·1px 테두리·
 `radius.full`, 최소 높이 32, 좌우 10·상하 6, caption regular(400)입니다.
 neutral 글자는 `content.primary`, 다른 tone은 기존 글자·테두리 의미를 유지합니다.
 흰 배경 전용 색을 하드코딩하지 않고 Provider의 light/dark 및 제품 팔레트를 따릅니다.

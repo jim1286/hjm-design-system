@@ -10,7 +10,7 @@ it("renders a static outline capsule with no plate on a white surface", async ()
   const host = document.createElement("div"); document.body.append(host);
   const root = createRoot(host);
   try {
-    await act(async () => root.render(<HjmProvider><Tag variant="outline">2017년 2차 3라운드</Tag></HjmProvider>));
+    await act(async () => root.render(<HjmProvider><Tag>2017년 2차 3라운드</Tag></HjmProvider>));
     const tag = host.querySelector<HTMLElement>(".hjm-tag")!;
     const style = getComputedStyle(tag);
     expect(style.backgroundColor).toBe("rgba(0, 0, 0, 0)");

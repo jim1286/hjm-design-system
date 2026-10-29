@@ -57,9 +57,10 @@ describe("Tag descriptor", () => {
     expect(resolveTagDescriptor(sample)).toEqual({
       label: "좌익수",
       tone: "neutral",
-      variant: "default",
+      variant: "outline",
     });
     expect(tagDefaults.tone).toBe("neutral");
+    expect(tagDefaults.variant).toBe("outline");
   });
 
   it("never grows a selection, close, or press field", () => {
