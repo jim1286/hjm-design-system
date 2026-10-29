@@ -47,6 +47,8 @@ import { Pagination } from "../src/pagination.js";
 import { Anchor } from "../src/anchor.js";
 import { FloatingActionButton } from "../src/floating-action-button.js";
 import { Carousel, PageIndicator } from "../src/carousel.js";
+import { DrawingEditor } from "../src/drawing-editor.js";
+import { drawingEditorLabels } from "../../../showcase/shared/drawing-editor.js";
 import type { ReactNode } from "react";
 
 import {
@@ -1276,5 +1278,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "image-choice-group",
     marker: "hjm-image-choice",
     render: () => <ImageChoiceGroup label="프로필 사진" selectionMode="single" value="a" onValueChange={screenNoop} items={[{ id: "a", label: "웃는 얼굴", image: <span aria-hidden="true" /> }, { id: "b", label: "윙크", image: <span aria-hidden="true" /> }]} />,
+  },
+  // 507ec5f9 registered DrawingEditor as a stable Web row without its default/long-copy fixture. The title is the
+  // editor's own heading slot; the screen root is EditorScreen's.
+  {
+    componentId: "drawing-editor",
+    marker: "hjm-screen",
+    renderLongCopy: (copy) => <DrawingEditor labels={{ ...drawingEditorLabels, title: copy }} onSave={async () => undefined} onCancel={() => undefined} />,
+    render: () => <DrawingEditor labels={drawingEditorLabels} onSave={async () => undefined} onCancel={() => undefined} />,
   },
 ];

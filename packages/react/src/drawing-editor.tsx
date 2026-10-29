@@ -11,9 +11,13 @@ import { Notice } from './feedback.js';
 import { IconButton } from './actions.js';
 import {
   DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
-  drawingQuickColors, drawingStrokeColor, drawingEditorRecipe, type DrawingStroke, type DrawingEditorProps,
+  drawingQuickColors, drawingStrokeColor, drawingEditorRecipe, type DrawingStroke, type DrawingEditorProps as DrawingEditorContractProps,
 } from '@hjmds/design-contracts/components/drawing-editor';
-export type { DrawingEditorProps, DrawingEditorLabels, DrawingImage } from '@hjmds/design-contracts/components/drawing-editor';
+import type { HjmCompositionStyleProp } from './composition-style.js';
+export type { DrawingEditorLabels, DrawingImage } from '@hjmds/design-contracts/components/drawing-editor';
+
+/** The shared contract plus Web placement of the editor screen root (every in-flow Web root takes `layoutStyle`). */
+export type DrawingEditorProps = DrawingEditorContractProps & Readonly<{ layoutStyle?: HjmCompositionStyleProp }>;
 
 /** How long the brush-size circle stays on the canvas after the size slider is released. */
 const SIZE_PREVIEW_MS = drawingEditorRecipe.sizePreviewMs;
@@ -21,7 +25,7 @@ const SIZE_PREVIEW_MS = drawingEditorRecipe.sizePreviewMs;
 /** Shared paint editor extracted from Diairy and Spint (2026-10-27).
  * Tools, history, crop preview and failed-save draft preservation have one owner per renderer.
  * The product supplies localized labels, upload and navigation; SVG/lucide stay optional entry peers. */
-export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', testID = 'drawing-editor' }: DrawingEditorProps) {
+export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', testID = 'drawing-editor', layoutStyle }: DrawingEditorProps) {
   const [history, dispatch] = useReducer(drawingReducer, emptyDrawing);
   const [draft, setDraft] = useState<DrawingStroke | null>(null);
   const strokes = draft ? [...history.present, draft] : history.present;
@@ -79,7 +83,7 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
   const showSize = (width: number) => { setBrushWidth(width); setSizePreview(true); if (sizeTimer.current) clearTimeout(sizeTimer.current); };
   const hideSize = () => { if (sizeTimer.current) clearTimeout(sizeTimer.current); sizeTimer.current = setTimeout(() => setSizePreview(false), SIZE_PREVIEW_MS); };
 
-  return <EditorScreen as="section" title={labels.title} initialFocus="none" dirty={hasInk}
+  return <EditorScreen as="section" title={labels.title} initialFocus="none" dirty={hasInk} {...(layoutStyle === undefined ? {} : { layoutStyle })}
     submit={{ label: labels.save, disabled: !hasInk || !!draft, pending: busy, onAction: () => void store() }}
     cancel={{ label: labels.close, disabled: busy, onAction: onCancel }}
     discard={{ mode: 'confirm', title: labels.discardTitle, description: labels.discardBody, confirmLabel: labels.discardConfirm,
