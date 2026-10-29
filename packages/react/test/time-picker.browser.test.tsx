@@ -7,6 +7,8 @@ import { TimePicker, type TimePickerProps } from "../src/time-picker.js";
 import { HjmProvider } from "../src/provider.js";
 import { THEMES } from "@hjmds/design-contracts/colors";
 import "../src/styles.css";
+// The evidence registry points the time-picker keyboard claim at this focused proof (src/evidence.ts claimExtras, 2be1c34d).
+// componentId: "time-picker"
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const labels = { label: "Time", hour: "Hour", minute: "Minute", placeholder: "Choose time", confirm: "Confirm", cancel: "Cancel" };
 let host: HTMLDivElement, root: Root;
