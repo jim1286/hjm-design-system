@@ -174,8 +174,10 @@ Chip/직접 wrap으로 조립하고 있었다. `presentation="chips"`는 기존 
 
 ### 선택 면의 브랜드 강조 (2026-10-29 개발 소스 · 미게시)
 
-`selectionTone="neutral" | "brand"`를 Web/Native에서 지정한다. 기본값은 `neutral`이다.
+`selectionTone="neutral" | "brand" | "brand-outline"`를 Web/Native에서 지정한다. 기본값은 `neutral`이다.
 오늘야구 날짜 카드의 선택일을 파란 배경·흰 글자로 강조해 달라는 요청이 계기다.
 `brand`는 테마의 `primary`/`onPrimary` 쌍을 사용하고 미선택 면은 기존 canvas를 유지한다(light는 흰색).
 라벨·설명과 Native `renderLabel` 안의 중립 Text는 선택 면의 글자색을 상속한다.
 브랜드색·상태색을 명시한 미리보기는 제품이 의미에 맞게 공급한다.
+
+같은 날 사용자 후속 요청으로 `brand-outline`은 선택 배경도 canvas(light 흰색)로 유지하고 테두리만 대표색 primary로 강조한다. 일반 글자색과 비활성 계약은 유지한다.

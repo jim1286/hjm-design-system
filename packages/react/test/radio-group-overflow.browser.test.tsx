@@ -40,3 +40,15 @@ it('uses the brand contrast pair for a selected card and restores the idle canva
     expect(getComputedStyle(cards()[1]!).backgroundColor).toBe('rgb(0, 107, 166)');
   } finally { await act(async () => root.unmount()); host.remove(); }
 });
+
+it('keeps selected outline cards white and uses the brand border', async () => {
+  const host = document.createElement('div'); document.body.append(host); const root = createRoot(host);
+  try {
+    await act(async () => root.render(<HjmProvider brandPalette={{ light: { primary: '#006BA6', onPrimary: '#FFFFFF' } }}>
+      <RadioGroup accessibilityLabel="날짜" items={[{ value: '27', label: '27일' }]} value="27" selectionTone="brand-outline" />
+    </HjmProvider>));
+    const style = getComputedStyle(host.querySelector('.hjm-choice')!);
+    expect(style.backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(style.borderColor).toBe('rgb(0, 107, 166)');
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});

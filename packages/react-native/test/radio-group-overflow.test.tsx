@@ -48,3 +48,14 @@ it('pairs a brand-selected card and its preview text while leaving idle cards wh
   expect(style(2).backgroundColor).toBe('#006BA6');
   expect(StyleSheet.flatten(cards()[2]!.findByType(NativeText).props.style).color).toBe('#FFFFFF');
 });
+
+it('keeps the selected canvas white with a brand border for outline emphasis', () => {
+  act(() => { tree = create(<HjmNativeProvider brandPalette={{ light: { primary: '#006BA6', onPrimary: '#FFFFFF' } }}>
+    <RadioGroup accessibilityLabel="날짜" items={items} value="27" selectionTone="brand-outline" indicator="none" />
+  </HjmNativeProvider>); });
+  const cards = tree!.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === 'radio');
+  const style = StyleSheet.flatten(cards[0]!.props.style({ pressed: false }));
+  expect(style.backgroundColor.toLowerCase()).toBe('#ffffff');
+  expect(style.borderColor).toBe('#006BA6');
+  expect(StyleSheet.flatten(cards[0]!.findByType(NativeText).props.style).color).not.toBe('#FFFFFF');
+});

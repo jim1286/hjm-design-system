@@ -4116,3 +4116,9 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
   color: var(--hjm-color-on-primary);
 }
 .hjm-choice[data-selection-tone="brand"][data-state="checked"] .hjm-choice__copy :is(.hjm-text[data-tone="primary"], .hjm-text[data-tone="body"], .hjm-text[data-tone="muted"], .hjm-text[data-tone="subtle"], .hjm-text[data-tone="weak"]) { color: inherit; }
+
+/* Date cards can keep a white canvas and emphasize only their selected boundary (2026-10-29). */
+.hjm-choice[data-selection-tone="brand-outline"][data-state="checked"] {
+  background: var(--hjm-color-bg);
+  border-color: var(--hjm-color-primary);
+}

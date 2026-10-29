@@ -1111,7 +1111,7 @@ type ChoiceVisualProps = Readonly<{
 }>;
 
 type ChoiceRowProps = ChoiceVisualProps & Readonly<{
-  selectionTone?: "neutral" | "brand";
+  selectionTone?: "neutral" | "brand" | "brand-outline";
   kind: "checkbox" | "radio";
   label: string;
   labelContent?: ReactNode;
@@ -1174,6 +1174,7 @@ function ChoiceRow({
   const selected = checked === true || checked === "mixed";
   const chipState = chipRecipe.states[selected ? "selected" : "idle"];
   const brandSelected = selected && selectionTone === "brand";
+  const outlineSelected = selected && selectionTone === "brand-outline";
   const selectedContent = brandSelected ? resolveColorReference(selectionControlRecipe.states.selectedBrand.content, theme.palette) : undefined;
   const indicatorColor = resolveColorReference(
     chips ? chipState.content : selectionControlRecipe.states.indicator,
@@ -1188,12 +1189,12 @@ function ChoiceRow({
     size: metrics.control,
   };
   const resolvedLeading = leading ?? renderLeading?.(appearance);
-  const plateBackground = brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.background : selected
+  const plateBackground = outlineSelected ? selectionControlRecipe.states.idleBackground : brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.background : selected
     ? selectionControlRecipe.states.selectedBackground
     : plate.background ?? selectionControlRecipe.states.idleBackground;
   const plateBorder = invalid
     ? selectionControlRecipe.states.invalidBorder
-    : brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.border : selected
+    : brandSelected || outlineSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.border : selected
       ? selectionControlRecipe.states.selectedBorder
       : plate.border;
   const frameStyle = {
@@ -1497,8 +1498,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     onValueChange?: (value: Value | null) => void;
     /** One horizontal line of cards or chips, without grid; the selected item stays visible. */
     overflow?: SelectionGroupOverflow;
-    /** Explicit brand emphasis uses the theme primary/onPrimary pair. */
-    selectionTone?: "neutral" | "brand";
+    /** Brand fill uses primary/onPrimary; brand-outline keeps canvas and emphasizes the primary border. */
+    selectionTone?: "neutral" | "brand" | "brand-outline";
     /** Visual preview only; the string label remains the accessible name. */
     renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;

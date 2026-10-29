@@ -584,8 +584,8 @@ export type RadioGroupProps = Omit<
     size?: SelectionControlSize;
     /** Hide the decorative dot when a product preview already communicates the choice. */
     indicator?: "default" | "none";
-    /** Explicit brand emphasis uses the theme primary/onPrimary pair. */
-    selectionTone?: "neutral" | "brand";
+    /** Brand fill uses primary/onPrimary; brand-outline keeps canvas and emphasizes the primary border. */
+    selectionTone?: "neutral" | "brand" | "brand-outline";
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
