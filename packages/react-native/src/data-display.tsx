@@ -22,6 +22,7 @@ import {
   resolveTagPresentation,
   tagRecipe,
   type TagTone as ContractTagTone,
+  type TagVariant,
 } from "@hjmds/design-contracts/components/tag";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import type { ListRowPrivateProps } from "./internal/list-row-private.js";
@@ -240,6 +241,7 @@ export type TagProps = Omit<
 > & Readonly<{
   children: string;
   tone?: TagTone;
+  variant?: TagVariant;
   accessibilityLabel?: string;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -248,6 +250,7 @@ export type TagProps = Omit<
 export function Tag({
   children,
   tone,
+  variant,
   accessibilityLabel,
   layoutStyle,
   ...props
@@ -261,8 +264,10 @@ export function Tag({
   const descriptor = resolveTagDescriptor({
     label: resolvedLabel,
     ...(tone === undefined ? {} : { tone }),
+    ...(variant === undefined ? {} : { variant }),
   });
-  const presentation = resolveTagPresentation(descriptor.tone, theme.palette);
+  const presentation = resolveTagPresentation(descriptor.tone, theme.palette, descriptor.variant);
+  const outlined = descriptor.variant === "outline";
   return (
     <View
       {...props}
@@ -274,20 +279,21 @@ export function Tag({
           alignSelf: "flex-start",
           backgroundColor: presentation.background,
           borderColor: presentation.border ?? "transparent",
-          borderRadius: theme.tokens.radius[tagRecipe.radius],
+          borderRadius: theme.tokens.radius[outlined ? tagRecipe.outline.radius : tagRecipe.radius],
           borderWidth: tagRecipe.borderWidth,
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: tagRecipe.size.gap,
-          minHeight: tagRecipe.size.minHeight,
-          paddingHorizontal: tagRecipe.size.paddingHorizontal,
+          minHeight: outlined ? tagRecipe.outline.minHeight : tagRecipe.size.minHeight,
+          paddingHorizontal: outlined ? tagRecipe.outline.paddingHorizontal : tagRecipe.size.paddingHorizontal,
+          paddingVertical: outlined ? tagRecipe.outline.paddingVertical : 0,
         },
         layoutStyle,
       ]}
     >
       <Text
         align="center"
-        emphasis="medium"
+        emphasis={outlined ? "regular" : "medium"}
         style={[{ color: presentation.content }]}
         variant={tagRecipe.size.textVariant}
       >

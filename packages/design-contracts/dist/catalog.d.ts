@@ -8884,6 +8884,7 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root", "label"];
         readonly defaults: {
             readonly tone: "neutral";
+            readonly variant: "default";
         };
         readonly tones: {
             readonly neutral: {
@@ -8978,6 +8979,19 @@ export declare const recipeRegistry: {
             readonly gap: 4;
             readonly textVariant: "caption";
             readonly fontWeight: "500";
+        };
+        readonly outline: {
+            readonly minHeight: 32;
+            readonly paddingHorizontal: 10;
+            readonly paddingVertical: 6;
+            readonly radius: "full";
+            readonly fontWeight: "400";
+            readonly background: "transparent";
+            readonly content: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
         };
         readonly radius: "sm";
         readonly borderWidth: 1;

@@ -1034,6 +1034,8 @@
 .hjm-tag[data-tone="info"] { background: var(--hjm-color-bg); }
 .hjm-tag[data-tone="success"] { background: color-mix(in srgb, var(--hjm-accent-success) 10%, transparent); }
 .hjm-tag[data-tone="attention"] { background: color-mix(in srgb, var(--hjm-accent-attention) 10%, transparent); }
+.hjm-tag[data-variant="outline"] { min-block-size: 32px; padding: 6px 10px; border-radius: var(--hjm-radius-full); background: transparent; font-weight: var(--hjm-text-emphasis-regular); }
+.hjm-tag[data-variant="outline"][data-tone="neutral"] { color: var(--hjm-color-text); }
 .hjm-icon { display: inline-block; flex: 0 0 auto; vertical-align: middle; }
 .hjm-icon[data-transform="mirror-inline"] { transform: scaleX(-1); }
 .hjm-icon[data-tone="primary"] { color: var(--hjm-color-text); }

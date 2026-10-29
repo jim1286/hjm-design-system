@@ -74,7 +74,7 @@ export function Badge({ label, tone: toneProp, categoryColor, size = badgeRecipe
                     },
                 ], variant: metrics.textVariant, children: label }), trailing === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: typeof trailing === "function" ? trailing(iconContext) : trailing }))] }));
 }
-export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props }) {
+export function Tag({ children, tone, variant, accessibilityLabel, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Tag", props, ["style", "labelStyle"]);
     const theme = useHjmNativeTheme();
     const resolvedLabel = children;
@@ -84,24 +84,27 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props 
     const descriptor = resolveTagDescriptor({
         label: resolvedLabel,
         ...(tone === undefined ? {} : { tone }),
+        ...(variant === undefined ? {} : { variant }),
     });
-    const presentation = resolveTagPresentation(descriptor.tone, theme.palette);
+    const presentation = resolveTagPresentation(descriptor.tone, theme.palette, descriptor.variant);
+    const outlined = descriptor.variant === "outline";
     return (_jsx(View, { ...props, accessibilityLabel: accessibilityLabel ?? descriptor.label, accessible: true, style: [
             {
                 alignItems: "center",
                 alignSelf: "flex-start",
                 backgroundColor: presentation.background,
                 borderColor: presentation.border ?? "transparent",
-                borderRadius: theme.tokens.radius[tagRecipe.radius],
+                borderRadius: theme.tokens.radius[outlined ? tagRecipe.outline.radius : tagRecipe.radius],
                 borderWidth: tagRecipe.borderWidth,
                 direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: tagRecipe.size.gap,
-                minHeight: tagRecipe.size.minHeight,
-                paddingHorizontal: tagRecipe.size.paddingHorizontal,
+                minHeight: outlined ? tagRecipe.outline.minHeight : tagRecipe.size.minHeight,
+                paddingHorizontal: outlined ? tagRecipe.outline.paddingHorizontal : tagRecipe.size.paddingHorizontal,
+                paddingVertical: outlined ? tagRecipe.outline.paddingVertical : 0,
             },
             layoutStyle,
-        ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
+        ], children: _jsx(Text, { align: "center", emphasis: outlined ? "regular" : "medium", style: [{ color: presentation.content }], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
 export function Card({ children, title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, badgesPlacement = cardRecipe.defaults.badgesPlacement, mediaAction, actions, headerActions, selected = cardRecipe.defaults.selected, onActivate, disabled = false, accessibilityLabel, accessibilityHint, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment, tokens, colors } = useHjmNativeTheme();

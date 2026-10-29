@@ -42,7 +42,7 @@ import { Tag } from "@hjmds/react/display";
 // Native
 import { Tag } from "@hjmds/react-native/data-display";
 
-<Tag layoutStyle={{ marginTop: 4 }}>{t("player.position.leftField")}</Tag>
+<Tag variant="outline" layoutStyle={{ marginTop: 4 }}>{t("player.position.leftField")}</Tag>
 ```
 
 ## 축과 기본값
@@ -51,15 +51,18 @@ import { Tag } from "@hjmds/react-native/data-display";
 | --- | --- | --- | --- |
 | `children` | 문자열 | — (필수) | 문자열만 받는다. 비어 있으면 `TypeError` |
 | `tone` | `neutral` · `info` · `success` · `attention` · `brand` | `neutral` | `warning`·`danger`는 없다(이유는 계약 문서) |
+| `variant` | `default` · `outline` | `default` | outline은 배경 없는 테두리형 캡슐 |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 바깥 여백·`alignSelf` 같은 배치. Web·Native 모두 |
 | `accessibilityLabel`(Native) | `string` | 라벨 | — |
 | `style`·`labelStyle`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `tone`. 현재 공개 props에서 제거되었다 |
 
-모양은 radius `sm` 사각형, 최소 높이 20(큰 글자에서 늘어남), caption 크기 medium(500) 글자다.
+기본은 radius `sm` 사각형, 최소 높이 20, caption medium(500)이다.
+`variant="outline"`은 투명 배경, radius `full`, 최소 높이 32, 좌우 10·상하 6, caption regular(400)이다.
+프로필의 긴 사실 정보처럼 배경 채움 없이 나열할 때 쓴다. neutral 글자는 `content.primary`를 따른다.
 
 ## 배치
 
-Native의 모서리는 Provider의 `tokens.radius.sm`이다. metadata 의미와 tone은 변하지 않는다.
+Native의 모서리는 기본 `tokens.radius.sm`, outline은 `tokens.radius.full`이다. metadata 의미와 tone은 변하지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

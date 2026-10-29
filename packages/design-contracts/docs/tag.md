@@ -4,7 +4,7 @@
 `2026 시즌` — 에 일관된 이름과 톤을 붙입니다. 이 라벨은 누를 수 없고, 선택되지도 않고,
 지워지지도 않습니다.
 
-**일반화한 계약.** 필수 `label`과 선택적 `tone`만 받는 표현 계약입니다(Statistic처럼
+**일반화한 계약.** 필수 `label`과 선택적 `tone`·`variant`를 받는 표현 계약입니다(Statistic처럼
 제품이 완성한 문자열을 받습니다). id, collection 멤버십, 선택 state는 없습니다 — Tag는
 Collection 기본 계약의 대상이 아니라 낱개 표시 단위입니다.
 
@@ -28,9 +28,9 @@ Notice/Badge의 역할이고, Tag는 사실을 나열할 뿐 위협하지 않습
 - `closable`(지울 수 있는 태그)은 이 계약에 **없습니다**. 태그를 지우는 것은 선택 해제이고,
   선택 해제는 Chip의 `selected` 축이 이미 소유한 문제입니다. Tag에 별도의 dismiss 축을
   추가하면 같은 "선택 해제"를 두 컴포넌트가 서로 다른 이름으로 계약하게 됩니다.
-- 모양도 다릅니다. `chipRecipe`와 `badgeRecipe`는 `radius: "full"`(pill)을 쓰지만
-  `tagRecipe`는 `radius: "sm"`의 사각형입니다. 정적 라벨을 pill로 그리면 누를 수 있다는
-  암묵적 신호를 주므로, 형태 자체로도 상호작용 가능성을 부정합니다.
+- 기본은 radius `sm` 사각형입니다. `variant="outline"`은 배경 없는 capsule(`full`)입니다.
+  2026-10-29 선수 프로필 정보 시안 승인에 따라 선택 UI와 분리된 읽기 전용 형태로 추가했습니다.
+  형태와 무관하게 버튼 role·선택 상태·포커스·활성화 이벤트를 추가하지 않습니다.
 - 야잘알의 `AppBadge`가 이 역할(포지션·등급·시즌 라벨)을 수행한 제품 근거에서 Tag 계약을
   추출했습니다. Web/RN 공식 renderer는 이 계약을 직접 소비하며, 제품의 기존 이름을 Tag로
   바꾸는 일 자체는 소비 앱의 후속 migration입니다.
@@ -54,3 +54,10 @@ scenario matrix가 dark(라이트 전용 색 누수 없음), 2배 글자, RTL, �
 
 stable은 전체 환경 인증을 뜻하지 않습니다. screen reader 실사용과 실제 device screenshot은
 제품 기기 QA의 범위입니다.
+
+## Outline 표현
+
+`variant`는 `default | outline`, 기본값은 `default`입니다. Outline은 투명 배경·1px 테두리·
+`radius.full`, 최소 높이 32, 좌우 10·상하 6, caption regular(400)입니다.
+neutral 글자는 `content.primary`, 다른 tone은 기존 글자·테두리 의미를 유지합니다.
+흰 배경 전용 색을 하드코딩하지 않고 Provider의 light/dark 및 제품 팔레트를 따릅니다.

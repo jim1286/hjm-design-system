@@ -41,6 +41,14 @@ function flattenStyle(style: unknown): Record<string, unknown> {
 }
 
 describe("Native core normalization", () => {
+  it("renders outline Tag as a static transparent capsule", () => {
+    const renderer = renderWithProvider(<Tag variant="outline" testID="outline-tag" accessibilityLabel="입단 2017년">2017년</Tag>);
+    const host = renderer.root.findAllByType(View).find(node => node.props.testID === "outline-tag")!;
+    expect(flattenStyle(host.props.style)).toMatchObject({ backgroundColor: "transparent", borderWidth: 1, borderRadius: 999, minHeight: 32, paddingHorizontal: 10, paddingVertical: 6 });
+    expect(host.props.accessibilityLabel).toBe("입단 2017년");
+    expect(host.props.onPress).toBeUndefined();
+    act(() => renderer.unmount());
+  });
   it.each(["light", "dark"] as const)("renders secondary action outlines from the %s palette", (theme) => {
     let renderer: ReactTestRenderer | undefined;
     act(() => {

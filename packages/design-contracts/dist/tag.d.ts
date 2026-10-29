@@ -1,7 +1,9 @@
 import { type ColorReferencePalette } from "./color-references.js";
 export type TagTone = "neutral" | "info" | "success" | "attention" | "brand";
+export type TagVariant = "default" | "outline";
 export declare const tagDefaults: {
     readonly tone: "neutral";
+    readonly variant: "default";
 };
 /**
  * A single piece of static metadata (a position, a grade, a season). Tag has
@@ -11,23 +13,21 @@ export declare const tagDefaults: {
 export type TagDescriptor = Readonly<{
     label: string;
     tone?: TagTone;
+    variant?: TagVariant;
 }>;
 export type ResolvedTagDescriptor = Readonly<{
     label: string;
     tone: TagTone;
+    variant: TagVariant;
 }>;
 export declare function validateTagDescriptor(descriptor: TagDescriptor): void;
 export declare function resolveTagDescriptor(descriptor: TagDescriptor): ResolvedTagDescriptor;
-/**
- * Rectangular, not the pill `radius.full` that `chipRecipe`
- * use, so a static Tag never reads as a pressable Chip or a status Badge at a
- * glance. No `states` and no `focus` contract: nothing here is ever pressed
- * or focused.
- */
+/** Static metadata has no focus or press contract, including the outline capsule. */
 export declare const tagRecipe: {
     readonly slots: readonly ["root", "label"];
     readonly defaults: {
         readonly tone: "neutral";
+        readonly variant: "default";
     };
     readonly tones: {
         readonly neutral: {
@@ -123,6 +123,19 @@ export declare const tagRecipe: {
         readonly textVariant: "caption";
         readonly fontWeight: "500";
     };
+    readonly outline: {
+        readonly minHeight: 32;
+        readonly paddingHorizontal: 10;
+        readonly paddingVertical: 6;
+        readonly radius: "full";
+        readonly fontWeight: "400";
+        readonly background: "transparent";
+        readonly content: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+    };
     readonly radius: "sm";
     readonly borderWidth: 1;
 };
@@ -132,5 +145,5 @@ export type ResolvedTagPresentation = Readonly<{
     border: string | null;
 }>;
 /** Resolve the same Tag recipe for non-CSS renderers. */
-export declare function resolveTagPresentation(tone: TagTone, palette: ColorReferencePalette): ResolvedTagPresentation;
+export declare function resolveTagPresentation(tone: TagTone, palette: ColorReferencePalette, variant?: TagVariant): ResolvedTagPresentation;
 //# sourceMappingURL=tag.d.ts.map

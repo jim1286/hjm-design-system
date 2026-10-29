@@ -10,6 +10,7 @@ import {
 } from "../src/index.js";
 import {
   resolveTagDescriptor,
+  resolveTagPresentation,
   tagDefaults,
   tagRecipe,
   validateTagDescriptor,
@@ -56,13 +57,28 @@ describe("Tag descriptor", () => {
     expect(resolveTagDescriptor(sample)).toEqual({
       label: "좌익수",
       tone: "neutral",
+      variant: "default",
     });
     expect(tagDefaults.tone).toBe("neutral");
   });
 
   it("never grows a selection, close, or press field", () => {
     const resolved = resolveTagDescriptor({ label: "A등급", tone: "brand" });
-    expect(Object.keys(resolved).sort()).toEqual(["label", "tone"]);
+    expect(Object.keys(resolved).sort()).toEqual(["label", "tone", "variant"]);
+  });
+});
+
+describe("Tag outline", () => {
+  it("validates the opt-in appearance without adding interaction", () => {
+    expect(resolveTagDescriptor({ label: "입단", variant: "outline" }).variant).toBe("outline");
+    expect(() => validateTagDescriptor({ label: "입단", variant: "selected" as never })).toThrow(/variant/);
+  });
+  it.each(["light", "dark"] as const)("keeps the %s surface visible through every outline tone", theme => {
+    const palette = { theme: THEMES[theme], statusAccents: ACCENTS[theme], statusAccentFills: accentFill };
+    for (const tone of ["neutral", "brand", "info", "success", "attention"] as const) {
+      expect(resolveTagPresentation(tone, palette, "outline").background).toBe("transparent");
+    }
+    expect(resolveTagPresentation("neutral", palette, "outline").content).toBe(THEMES[theme].text);
   });
 });
 

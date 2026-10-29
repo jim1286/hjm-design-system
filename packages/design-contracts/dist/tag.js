@@ -3,6 +3,7 @@ import { semanticColors } from "./semantic-colors.js";
 import { fontWeight, spacing, stroke } from "./foundations.js";
 export const tagDefaults = {
     tone: "neutral",
+    variant: "default",
 };
 function assertCopy(value, field) {
     if (value.trim().length === 0) {
@@ -18,6 +19,9 @@ const supportedTones = [
 ];
 export function validateTagDescriptor(descriptor) {
     assertCopy(descriptor.label, "label");
+    if (descriptor.variant !== undefined && !["default", "outline"].includes(descriptor.variant)) {
+        throw new TypeError(`Unsupported Tag variant: ${String(descriptor.variant)}`);
+    }
     if (descriptor.tone !== undefined &&
         !supportedTones.includes(descriptor.tone)) {
         throw new TypeError(`Unsupported Tag tone: ${String(descriptor.tone)}`);
@@ -28,14 +32,10 @@ export function resolveTagDescriptor(descriptor) {
     return {
         label: descriptor.label,
         tone: descriptor.tone ?? tagDefaults.tone,
+        variant: descriptor.variant ?? tagDefaults.variant,
     };
 }
-/**
- * Rectangular, not the pill `radius.full` that `chipRecipe`
- * use, so a static Tag never reads as a pressable Chip or a status Badge at a
- * glance. No `states` and no `focus` contract: nothing here is ever pressed
- * or focused.
- */
+/** Static metadata has no focus or press contract, including the outline capsule. */
 export const tagRecipe = {
     slots: ["root", "label"],
     defaults: tagDefaults,
@@ -77,15 +77,25 @@ export const tagRecipe = {
         textVariant: "caption",
         fontWeight: fontWeight.medium,
     },
+    // Profile fact rails need breathing room without a colored plate (2026-10-29 approved preview).
+    outline: {
+        minHeight: 32,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        radius: "full",
+        fontWeight: fontWeight.regular,
+        background: "transparent",
+        content: semanticColors.content.primary,
+    },
     radius: "sm",
     borderWidth: stroke.default,
 };
 /** Resolve the same Tag recipe for non-CSS renderers. */
-export function resolveTagPresentation(tone, palette) {
+export function resolveTagPresentation(tone, palette, variant = tagDefaults.variant) {
     const contract = tagRecipe.tones[tone];
     return {
-        background: resolveColorReference(contract.background, palette),
-        content: resolveColorReference(contract.content, palette),
+        background: variant === "outline" ? "transparent" : resolveColorReference(contract.background, palette),
+        content: resolveColorReference(variant === "outline" && tone === "neutral" ? tagRecipe.outline.content : contract.content, palette),
         border: contract.border === null
             ? null
             : resolveColorReference(contract.border, palette),

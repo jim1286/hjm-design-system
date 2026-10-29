@@ -1,5 +1,5 @@
 import { listRowRecipe, type BadgeAdornmentContext, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type BadgeCategoryColor, type ListRowDensity, type ListRowLeadingShape, type ListRowTrailingAccessory } from "@hjmds/design-contracts/recipes";
-import { type TagTone } from "@hjmds/design-contracts/components/tag";
+import { type TagTone, type TagVariant } from "@hjmds/design-contracts/components/tag";
 import { type CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
@@ -38,12 +38,14 @@ export declare const Badge: import("react").ForwardRefExoticComponent<HTMLAttrib
 export type TagProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     children: string;
     tone?: TagTone;
+    variant?: TagVariant;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Tag: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     children: string;
     tone?: TagTone;
+    variant?: TagVariant;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;

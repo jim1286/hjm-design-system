@@ -20,6 +20,7 @@ import { glyph } from "@hjmds/design-contracts/foundations";
 import {
   resolveTagDescriptor,
   type TagTone,
+  type TagVariant,
 } from "@hjmds/design-contracts/components/tag";
 import {
   cardRecipe,
@@ -126,17 +127,19 @@ export type TagProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
   Readonly<{
     children: string;
     tone?: TagTone;
+    variant?: TagVariant;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
-  { children, tone, className, layoutStyle, style, ...props },
+  { children, tone, variant, className, layoutStyle, style, ...props },
   ref,
 ) {
   const descriptor = resolveTagDescriptor({
     label: children,
     ...(tone === undefined ? {} : { tone }),
+    ...(variant === undefined ? {} : { variant }),
   });
   return (
     <span
@@ -145,6 +148,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
       ref={ref}
       className={classNames("hjm-tag", className)}
       data-tone={descriptor.tone}
+      data-variant={descriptor.variant}
     >
       <span className="hjm-tag__label">{descriptor.label}</span>
     </span>

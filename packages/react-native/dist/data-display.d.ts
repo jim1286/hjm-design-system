@@ -1,7 +1,7 @@
 import { type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { type DescriptionListDescriptor } from "@hjmds/design-contracts/components/description-list";
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
-import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/components/tag";
+import { type TagTone as ContractTagTone, type TagVariant } from "@hjmds/design-contracts/components/tag";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
 import { type ComposeTimelineAccessibleName, type ResolvedTimelineItemDescriptor, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
@@ -33,11 +33,12 @@ export type TagTone = ContractTagTone;
 export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     children: string;
     tone?: TagTone;
+    variant?: TagVariant;
     accessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Tag({ children, tone, accessibilityLabel, layoutStyle, ...props }: TagProps): import("react").JSX.Element;
+export declare function Tag({ children, tone, variant, accessibilityLabel, layoutStyle, ...props }: TagProps): import("react").JSX.Element;
 export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;

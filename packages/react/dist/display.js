@@ -34,12 +34,13 @@ export const Badge = forwardRef(function Badge({ tone: toneProp, categoryColor, 
             ...layoutStyle,
         }, ref: ref, className: classNames("hjm-badge", className), "data-tone": category ? "category" : tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof leading === "function" ? leading(iconContext) : leading })), _jsx("span", { className: "hjm-badge__label", children: children }), trailing === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: typeof trailing === "function" ? trailing(iconContext) : trailing }))] }));
 });
-export const Tag = forwardRef(function Tag({ children, tone, className, layoutStyle, style, ...props }, ref) {
+export const Tag = forwardRef(function Tag({ children, tone, variant, className, layoutStyle, style, ...props }, ref) {
     const descriptor = resolveTagDescriptor({
         label: children,
         ...(tone === undefined ? {} : { tone }),
+        ...(variant === undefined ? {} : { variant }),
     });
-    return (_jsx("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-tag", className), "data-tone": descriptor.tone, children: _jsx("span", { className: "hjm-tag__label", children: descriptor.label }) }));
+    return (_jsx("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-tag", className), "data-tone": descriptor.tone, "data-variant": descriptor.variant, children: _jsx("span", { className: "hjm-tag__label", children: descriptor.label }) }));
 });
 export const Card = forwardRef(function Card({ title, description, leading, leadingAction, media, backgroundMedia, backgroundInteraction, mediaBadges, badges, badgesAlign = cardRecipe.defaults.badgesAlign, badgesPlacement = cardRecipe.defaults.badgesPlacement, mediaAction, actions, headerActions, headingLevel = cardRecipe.defaults.headingLevel, 
 // An omitted selection is an ordinary action, not an unpressed toggle.
