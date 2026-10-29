@@ -802,6 +802,7 @@ export type ProfileSummaryProps = Readonly<{
   actions?: ReactNode;
   actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
   children?: ReactNode;
+  layoutStyle?: ScreenLayoutProps["layoutStyle"];
 }>;
 
 type ProfileStat = NonNullable<ProfileSummaryProps["stats"]>[number];
@@ -826,14 +827,14 @@ function profileActionItems(actions: ReactNode): ReactNode[] {
       : [action]);
 }
 
-export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children, layoutStyle }: ProfileSummaryProps) {
   const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];
   const edit = useContext(ProfileEditContext);
   const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
   const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onClick={edit.onAction}>{edit.label}</Button> : null;
   const nameEditButton = nameEdit ? <IconButton label={nameEdit.label} title={nameEdit.label} tone="ghost" size={profileSummaryRecipe.nameEdit.size} disabled={!!(nameEdit.disabled || nameEdit.pending)} onClick={nameEdit.onAction}>{nameEdit.icon ?? <Icon name={profileSummaryRecipe.nameEdit.icon} size="sm" />}</IconButton> : null;
   const avatarFrame = <span style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: profileSummaryRecipe.avatarGlyphSize, lineHeight: 1, width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>;
-  return <CompositionLayout title={name} headingLevel={headingLevel} leading={avatarView ? <ImageViewerTrigger className="hjm-profile-summary__avatar-view" label={avatarView.label} onClick={avatarView.onPress} disabled={avatarView.disabled}>{avatarFrame}</ImageViewerTrigger> : avatarFrame} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={avatarView ? <ImageViewerTrigger className="hjm-profile-summary__avatar-view" label={avatarView.label} onClick={avatarView.onPress} disabled={avatarView.disabled}>{avatarFrame}</ImageViewerTrigger> : avatarFrame} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children} {...(layoutStyle === undefined ? {} : { layoutStyle })}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack gap={profileSummaryRecipe.stats.rowGap} layoutStyle={{ width: "100%" }}>{profileStatRows(stats).map((row, index) =>
       <Stack key={index} axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{row.map((stat, cell) => stat ?

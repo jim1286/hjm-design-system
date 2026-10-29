@@ -241,16 +241,21 @@ describe("web composition style", () => {
 
   // Components with no in-flow box to place (see composition-style.ts). Every
   // other evidence fixture must carry `layoutStyle` to the root its marker names.
+  // PhotoSourceSheet is a modal portal surface, listed there since its fixture was registered (845c8edf).
   const unplaceable = new Set([
     "alert-dialog", "celebration", "command-palette", "design-system-provider", "dialog",
-    "floating-action-button", "overlay-stack", "popover", "sheet", "side-panel", "skip-nav",
+    "floating-action-button", "overlay-stack", "photo-source-sheet", "popover", "sheet", "side-panel", "skip-nav",
     "toast", "tour", "visually-hidden",
   ]);
 
   // Fixture markers that name an inner element; placement belongs on the outer root.
   // "field" renders a Fragment of two fields, so the explicit test above covers it.
+  // The screen fixtures (845c8edf) name inner parts too: ChatMessage is placed on its outer swipe <article>
+  // (f73174d6), ListDetailScreen on its two-pane host <div> (composition-style.ts), and CommentThreadRow on its
+  // row Stack while the fixture marks the measured body text. The explicit screen test below pins the first two.
   const rootMarkers: Readonly<Record<string, string>> = {
     "text-area": "hjm-field", tabs: "hjm-tabs", menu: "hjm-menu", mentions: "hjm-mentions",
+    "chat-message": "<article", "list-detail-screen": "<div", "comment-thread-row": "hjm-stack",
   };
 
   it.each(defaultRenderFixtures.filter(({ componentId }) => !unplaceable.has(componentId) && componentId !== "field"))(

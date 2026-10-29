@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { Text } from "./layout.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { typography } from "@hjmds/design-contracts/foundations";
@@ -37,6 +38,7 @@ type Base = Readonly<{
    * count follows the measured width.
    */
   virtualized?: ImageChoiceVirtualization;
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type ImageChoiceGroupProps = Base & (
   | Readonly<{ selectionMode: "single"; value: string | null; onValueChange(value: string): void }>
@@ -48,7 +50,7 @@ export type ImageChoiceGroupProps = Base & (
  * a brand ring plus a check when chosen; assistive tech hears radios (single) or checkboxes (multiple).
  */
 export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
-  const { label, showLabel = false, showItemLabels = false, itemLabelLines = imageChoiceRecipe.itemLabelLines, items, disabled = false, className, virtualized } = props;
+  const { label, showLabel = false, showItemLabels = false, itemLabelLines = imageChoiceRecipe.itemLabelLines, items, disabled = false, className, virtualized, layoutStyle } = props;
   validateImageChoiceItems(items);
   validateImageChoiceItemLabelLines(itemLabelLines);
   const theme = useOptionalHjmTheme();
@@ -82,7 +84,7 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
   };
   // First-paint estimate in px; the rendered row is measured afterwards because caption line height is rem-based.
   const estimatedTileHeight = resolveImageChoiceTileHeight(captionLines, typography[imageChoiceRecipe.itemLabelVariant].lineHeight * (theme?.environment.textScale ?? 1));
-  return <div className={["hjm-image-choice", className].filter(Boolean).join(" ")} style={style}>
+  return <div className={["hjm-image-choice", className].filter(Boolean).join(" ")} style={{ ...style, ...layoutStyle }}>
     {showLabel ? <span className="hjm-image-choice__label">{label}</span> : null}
     {virtualized
       ? <VirtualTileRows items={items} renderTile={renderTile} label={label} role={groupRole} height={virtualized.height} overscan={virtualized.overscan ?? virtualListRecipe.overscan} estimatedTileHeight={estimatedTileHeight} />

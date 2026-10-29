@@ -470,11 +470,12 @@ export type NotificationRowProps = Readonly<{
   separator?: boolean;
   /** One optional command around the passive preview; the product retains routing/permission decisions. */
   action?: Readonly<{ label: string; onActivate(): void; disabled?: boolean }>;
-
+  /** Placement of the outermost element (the command button when `action` is set). */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
-export function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread = false, separator = false, action }: NotificationRowProps) {
+export function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread = false, separator = false, action, layoutStyle }: NotificationRowProps) {
   const r = notificationRecipe;
   if (action && !action.label.trim()) throw new TypeError("NotificationRow action requires a localized label");
   const portrait = <span style={{position:"relative",display:"flex",width:r.avatarSize,height:r.avatarSize,flexShrink:0}}>
@@ -491,11 +492,11 @@ export function NotificationRow({ preview, metadata, avatar, avatarAction, avata
   const commandStyle = {"--hjm-notification-disabled-opacity":r.interaction.disabledOpacity,"--hjm-notification-pressed-opacity":r.interaction.pressedOpacity} as React.CSSProperties;
   const activate = () => {if(action&&!action.disabled)action.onActivate();};
   // Separate destinations share the same visual parts, with sibling controls rather than nested buttons.
-  if (avatarAction) return <div data-hjm-notification-row="true" style={rowStyle}>{divider}<IdentityAction action={avatarAction}>{portrait}</IdentityAction>
+  if (avatarAction) return <div data-hjm-notification-row="true" style={{...rowStyle,...layoutStyle}}>{divider}<IdentityAction action={avatarAction}>{portrait}</IdentityAction>
     {action?<button type="button" className="hjm-notification-row-action" aria-label={action.label} disabled={action.disabled} onClick={activate} style={{...commandStyle,flex:1,minWidth:0,minHeight:r.avatarSize}}><span aria-hidden="true" style={{display:"flex",alignItems:"center",gap:r.gap,width:"100%"}}>{copy}{image}</span></button>:<span style={{display:"flex",alignItems:"center",gap:r.gap,flex:1,minWidth:0}}>{copy}{image}</span>}
   </div>;
-  const content = <span aria-hidden="true" data-hjm-notification-row="true" style={rowStyle}>{divider}{portrait}{copy}{image}</span>;
-  return action?<button type="button" className="hjm-notification-row-action" aria-label={action.label} disabled={action.disabled} onClick={activate} style={commandStyle}>{content}</button>:content;
+  const content = <span aria-hidden="true" data-hjm-notification-row="true" style={action?rowStyle:{...rowStyle,...layoutStyle}}>{divider}{portrait}{copy}{image}</span>;
+  return action?<button type="button" className="hjm-notification-row-action" aria-label={action.label} disabled={action.disabled} onClick={activate} style={{...commandStyle,...layoutStyle}}>{content}</button>:content;
 }
 
 export type IconTileProps = Readonly<{
