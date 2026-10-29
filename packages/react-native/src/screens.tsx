@@ -243,6 +243,8 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
   // In the wrapping title row the heading kept its natural width and a long title dropped under a lone mark
   // (2026-10-23, same fault as StatisticGroup and CompositionLayout); the badge still wraps after the group.
   const markedTitle = (heading: ReactNode) => mark ? <Stack axis="inline" gap="xs" align="center" layoutStyle={{flexShrink: 1, minWidth: 0, maxWidth: "100%"}}>{mark}<View style={{ flexShrink: 1, minWidth: 0 }}>{heading}</View></Stack> : heading;
+  // Badge keeps itself start-aligned in column layouts; the title slot owns vertical centering beside the heading.
+  const badge = titleBadge != null ? <View style={{ alignSelf: "center" }}>{titleBadge}</View> : null;
   const standaloneMark = (centered: boolean) => mark ? <View accessible accessibilityRole="header" accessibilityLabel={title} style={{ alignItems: centered ? "center" : "flex-start" }}>{mark}</View> : null;
   const Root = pullToDismiss ? Animated.View : View;
   return <Root ref={rootRef} onAccessibilityEscape={pullToDismiss ? dismissal.close : undefined} testID={testID} accessibilityLabel={titleVisibility === "hidden" || header ? title : undefined} onTouchStart={focusScope.onTouchStart} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: surface === "transparent" || designProfile?.material.canvas ? "transparent" : colors.bg, ...(keyboardOverlap > 0 ? { paddingBottom: keyboardOverlap } : {}) }, layoutStyle, ...(pullToDismiss ? [{ transform: [{ translateY: dismissal.offset }] }] : [])]}>
@@ -262,7 +264,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
         <View onLayout={event => setLeadingWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-start", flexShrink: 0, flexDirection: "row", alignItems: "center" }}>{leading}</View>
       </View>
       <View style={{ flex: 1, minWidth: 0, alignItems: "center", gap: 4 }}>
-        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{markedTitle(<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>)}{titleBadge}</Stack> : standaloneMark(true)}
+        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify="center" layoutStyle={{flexWrap: "wrap"}}>{markedTitle(<Heading level={screenHeaderRecipe.centeredTitleLevel} semanticLevel={1} align="center">{title}</Heading>)}{badge}</Stack> : standaloneMark(true)}
       </View>
       <View style={{ minWidth: sideWidth, flexShrink: 0, alignItems: "flex-end" }}>
         <View onLayout={event => setActionsWidth(event.nativeEvent.layout.width)} style={{ alignSelf: "flex-end", flexShrink: 0, flexDirection: "row", alignItems: "center", gap: topBarRecipe.gap }}>{actions}</View>
@@ -271,7 +273,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
       {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
         {/* Same Heading level as Web (screenHeaderRecipe.titleLevel), with or without a design profile. */}
-        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap>{markedTitle(<Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>)}{titleBadge}</Stack> : standaloneMark(!!profileLayout?.centered)}
+        {titleVisibility === "visible" ? <Stack axis="inline" gap="xs" align="center" justify={profileLayout?.centered ? "center" : "start"} wrap>{markedTitle(<Heading level={screenHeaderRecipe.titleLevel} semanticLevel={1} {...(profileLayout?.centered ? { align: "center" as const } : {})}>{title}</Heading>)}{badge}</Stack> : standaloneMark(!!profileLayout?.centered)}
       </View><Stack axis="inline" align="center" gap={topBarRecipe.gap}>{actions}</Stack>
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}

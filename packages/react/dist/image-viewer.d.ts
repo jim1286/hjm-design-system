@@ -1,4 +1,5 @@
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { type CircularPhotoCropRect } from "@hjmds/design-contracts/components/image";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ImageViewerItem = {
     id: string;
@@ -22,7 +23,7 @@ export type ImageViewerProps = {
     renderImage?: (item: ImageViewerItem) => ReactNode;
 };
 export type ImageViewerTriggerProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "aria-label" | "type" | "style"> & Readonly<{
-    /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
+    /** Localized accessible name, e.g. "View photo". The media inside is decorative. */
     label: string;
     /** Product media (HJM `Image` with `decorative`, `<img alt="">`). */
     children: ReactNode;
@@ -34,7 +35,7 @@ export type ImageViewerTriggerProps = Omit<ButtonHTMLAttributes<HTMLButtonElemen
  * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
  */
 export declare const ImageViewerTrigger: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "type" | "style" | "aria-label"> & Readonly<{
-    /** Localized accessible name, e.g. "사진 크게 보기". The media inside is decorative. */
+    /** Localized accessible name, e.g. "View photo". The media inside is decorative. */
     label: string;
     /** Product media (HJM `Image` with `decorative`, `<img alt="">`). */
     children: ReactNode;
@@ -43,4 +44,28 @@ export declare const ImageViewerTrigger: import("react").ForwardRefExoticCompone
 }> & import("react").RefAttributes<HTMLButtonElement>>;
 /** Full viewport photo presentation; shares modal isolation, focus return and Escape with Dialog. */
 export declare function ImageViewer(props: ImageViewerProps): import("react").JSX.Element | null;
+export type CircularPhotoCropperProps = Readonly<{
+    open: boolean;
+    /** The picked photo with its intrinsic pixel size (read from the decoded image). */
+    source: Readonly<{
+        uri: string;
+        width: number;
+        height: number;
+    }>;
+    title: string;
+    /** Short instruction under the circle, e.g. "Drag and scroll or pinch to fit". */
+    hint?: string;
+    confirmLabel: string;
+    cancelLabel: string;
+    /** While the product crops/uploads; both actions are locked. */
+    busy?: boolean;
+    onCancel(): void;
+    /** Source-pixel square under the circle; the product crops (canvas) and uploads it. */
+    onConfirm(crop: CircularPhotoCropRect): void;
+}>;
+/**
+ * Instagram-style circular framing for profile photos (2026-10-29 user rule, all apps and web): drag to move, wheel or
+ * pinch to zoom inside a circular mask on the black photo surface. Same geometry as Native (contract functions).
+ */
+export declare function CircularPhotoCropper(props: CircularPhotoCropperProps): import("react").JSX.Element | null;
 //# sourceMappingURL=image-viewer.d.ts.map

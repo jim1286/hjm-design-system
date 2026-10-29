@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageChoiceItemDescriptor, type ImageChoiceItemLabelLines } from "@hjmds/design-contracts/components/image-choice";
 export type ImageChoiceItem = ImageChoiceItemDescriptor & Readonly<{
     image: ReactNode;
@@ -29,6 +30,7 @@ type Base = Readonly<{
      * count follows the measured width.
      */
     virtualized?: ImageChoiceVirtualization;
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type ImageChoiceGroupProps = Base & (Readonly<{
     selectionMode: "single";

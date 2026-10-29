@@ -205,7 +205,7 @@ export function CompositionLayout({ title, titleSize = "default", headingLevel =
     return _jsxs(Stack, { gap: "md", ...(layoutStyle === undefined ? {} : { layoutStyle }), children: [aside ? _jsxs(Stack, { axis: "inline", gap: "md", align: "start", children: [_jsx(Stack, { gap: "md", layoutStyle: { flex: 1, minWidth: 0 }, children: content }), _jsx(Stack, { layoutStyle: { flexShrink: 0, maxWidth: "40%" }, children: aside })] }) : content, footerAside ? _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", justify: "between", wrap: true, children: [footer ? _jsx(Stack, { layoutStyle: { flexGrow: 1, minWidth: 0 }, children: footer }) : null, footerAside] }) : footer] });
 }
 /** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
-export function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread = false, separator = false, action }) {
+export function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread = false, separator = false, action, layoutStyle }) {
     const r = notificationRecipe;
     if (action && !action.label.trim())
         throw new TypeError("NotificationRow action requires a localized label");
@@ -219,9 +219,9 @@ export function NotificationRow({ preview, metadata, avatar, avatarAction, avata
         action.onActivate(); };
     // Separate destinations share the same visual parts, with sibling controls rather than nested buttons.
     if (avatarAction)
-        return _jsxs("div", { "data-hjm-notification-row": "true", style: rowStyle, children: [divider, _jsx(IdentityAction, { action: avatarAction, children: portrait }), action ? _jsx("button", { type: "button", className: "hjm-notification-row-action", "aria-label": action.label, disabled: action.disabled, onClick: activate, style: { ...commandStyle, flex: 1, minWidth: 0, minHeight: r.avatarSize }, children: _jsxs("span", { "aria-hidden": "true", style: { display: "flex", alignItems: "center", gap: r.gap, width: "100%" }, children: [copy, image] }) }) : _jsxs("span", { style: { display: "flex", alignItems: "center", gap: r.gap, flex: 1, minWidth: 0 }, children: [copy, image] })] });
-    const content = _jsxs("span", { "aria-hidden": "true", "data-hjm-notification-row": "true", style: rowStyle, children: [divider, portrait, copy, image] });
-    return action ? _jsx("button", { type: "button", className: "hjm-notification-row-action", "aria-label": action.label, disabled: action.disabled, onClick: activate, style: commandStyle, children: content }) : content;
+        return _jsxs("div", { "data-hjm-notification-row": "true", style: { ...rowStyle, ...layoutStyle }, children: [divider, _jsx(IdentityAction, { action: avatarAction, children: portrait }), action ? _jsx("button", { type: "button", className: "hjm-notification-row-action", "aria-label": action.label, disabled: action.disabled, onClick: activate, style: { ...commandStyle, flex: 1, minWidth: 0, minHeight: r.avatarSize }, children: _jsxs("span", { "aria-hidden": "true", style: { display: "flex", alignItems: "center", gap: r.gap, width: "100%" }, children: [copy, image] }) }) : _jsxs("span", { style: { display: "flex", alignItems: "center", gap: r.gap, flex: 1, minWidth: 0 }, children: [copy, image] })] });
+    const content = _jsxs("span", { "aria-hidden": "true", "data-hjm-notification-row": "true", style: action ? rowStyle : { ...rowStyle, ...layoutStyle }, children: [divider, portrait, copy, image] });
+    return action ? _jsx("button", { type: "button", className: "hjm-notification-row-action", "aria-label": action.label, disabled: action.disabled, onClick: activate, style: { ...commandStyle, ...layoutStyle }, children: content }) : content;
 }
 /** Shared launcher/profile tile; simple activation and gesture-only presentation reuse identical content. */
 export function IconTile({ icon, label, overlay, labelLines = 1, ghost = false, frame = iconTileRecipe.defaults.frame, shape = iconTileRecipe.defaults.shape, size = iconTileRecipe.defaults.size, onActivate, activationLabel, disabled = false, locked = false, lockedLabel, accessory, accessoryPlacement = iconTileRecipe.defaults.accessoryPlacement, layoutStyle }) {

@@ -450,6 +450,11 @@ export type CommentThreadItem = Readonly<{
      */
     timePlacement?: "auto" | "actions";
     /**
+     * Text actions in the Reply line, after Reply, styled like Reply (2026-10-29 Spint comment translation: Instagram puts
+     * "See original"/"See translation" beside Reply). The product owns labels and state; HJM owns placement and order.
+     */
+    textActions?: readonly CommentTextActionDescriptor[];
+    /**
      * Inline per-comment panel (edit, report or block form) under the Reply line, outside the long-press target
      * (2026-10-18, Utilverse). The product owns its open state, focus, submit and close; HJM owns its place in the row.
      */
@@ -522,6 +527,13 @@ export type CommentThreadRowProps = Readonly<{
     replyLabel: string;
     commentMenu?: CommentMenu;
 }>;
+/** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
+export type CommentTextActionDescriptor = Readonly<{
+    id: string;
+    label: string;
+    onPress(): void;
+    disabled?: boolean;
+}>;
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export declare function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps): import("react").JSX.Element;
 /** Controlled thread: server ordering, permission checks and receipt-based draft clearing belong to the product. */
@@ -539,6 +551,17 @@ export type ProfileSummaryProps = Readonly<{
      * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
      */
     nameEdit?: ScreenFlowAction;
+    /**
+     * Another member's profile: tapping the picture opens it large (2026-10-29 user rule). HJM makes the avatar frame an
+     * image button with this localized label (e.g. "Show photo large"); the product opens `ImageViewer` from the
+     * image-viewer subpath, which also carries the photo report action. Omit it when there is no photo (initials only)
+     * and on one's own profile, where the picture is `Avatar.action` (change photo). Never combine the two.
+     */
+    avatarView?: Readonly<{
+        label: string;
+        onPress(): void;
+        disabled?: boolean;
+    }>;
     stats?: readonly Readonly<{
         id: string;
         value: string;
@@ -549,6 +572,7 @@ export type ProfileSummaryProps = Readonly<{
     actions?: ReactNode;
     actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
     children?: ReactNode;
+    layoutStyle?: ScreenLayoutProps["layoutStyle"];
 }>;
-export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, nameEdit, stats, actions, actionsLayout, children }: ProfileSummaryProps): import("react").JSX.Element;
+export declare function ProfileSummary({ name, headingLevel, avatar, badge, nameActions, nameEdit, avatarView, stats, actions, actionsLayout, children, layoutStyle }: ProfileSummaryProps): import("react").JSX.Element;
 //# sourceMappingURL=screen-flows.d.ts.map

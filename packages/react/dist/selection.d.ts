@@ -156,6 +156,8 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
     size?: SelectionControlSize;
     /** Hide the decorative dot when a product preview already communicates the choice. */
     indicator?: "default" | "none";
+    /** Brand fill uses primary/onPrimary; brand-outline keeps canvas and emphasizes the primary border. */
+    selectionTone?: "neutral" | "brand" | "brand-outline";
     description?: ReactNode;
     error?: ReactNode;
     name?: string;

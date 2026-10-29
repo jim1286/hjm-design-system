@@ -47,6 +47,7 @@ export declare const publicExportEntries: {
     readonly CheckboxGroup: readonly ["./selection"];
     readonly Chip: readonly ["./selection"];
     readonly ChoiceRow: readonly ["./choice-row"];
+    readonly CircularPhotoCropper: readonly ["./image-viewer"];
     readonly ClipboardButton: readonly ["./clipboard"];
     readonly ClipboardIconButton: readonly ["./clipboard"];
     readonly CodeBlock: readonly ["./code-block"];

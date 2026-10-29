@@ -17,7 +17,7 @@ export type DateRangeCollapsible = Readonly<{
     defaultExpanded?: boolean;
     onExpandedChange?: (expanded: boolean) => void;
 }>;
-/** A shortcut such as "최근 7일" or "1개월" that ends on the grid's `todayDate`. */
+/** A shortcut such as "Last 7 days" or "1 month" that ends on the grid's `todayDate`. */
 export type DateRangePresetOption = Readonly<{
     id: string;
     label: string;

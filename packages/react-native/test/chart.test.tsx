@@ -140,3 +140,14 @@ it.each([
     });
   } finally { act(() => tree.unmount()); }
 });
+
+it.each([LineChart, BarChart])("keeps the selected tooltip after tap release when requested (%s)", Chart => {
+  const tree = render(<Chart categories={categories} series={series} accessibilityLabel="기록" formatValue={fmt} missingLabel="—" showFocusLabel holdOnRelease />);
+  try {
+    layout(tree);
+    act(() => adjustable(tree).props.onResponderGrant({ nativeEvent: { locationX: 10, locationY: 50 } }));
+    act(() => adjustable(tree).props.onResponderRelease({ nativeEvent: {} }));
+    expect(adjustable(tree).props.accessibilityValue.text).toBe("3월 0.800");
+    expect(tree.root.findAll(n => n.props.pointerEvents === "none" && n.props.style?.position === "absolute").some(n => n.findAll(child => typeof child.props.children === "string" && child.props.children.includes("3월")).length > 0)).toBe(true);
+  } finally { act(() => tree.unmount()); }
+});

@@ -147,6 +147,9 @@ export const publicExportEntries = {
     ChoiceRow: [
         "./choice-row"
     ],
+    CircularPhotoCropper: [
+        "./image-viewer"
+    ],
     ClipboardButton: [
         "./clipboard"
     ],

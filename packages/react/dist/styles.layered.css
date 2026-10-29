@@ -4023,18 +4023,30 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer-trigger { display: block; inline-size: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: none; color: inherit; font: inherit; text-align: inherit; cursor: var(--hjm-image-viewer-trigger-cursor, zoom-in); }
 .hjm-image-viewer-trigger > * { display: block; }
 .hjm-image-viewer-trigger:active:not(:disabled) { opacity: var(--hjm-image-viewer-trigger-pressed-opacity); }
+/* Profile photo that opens large (ProfileSummary.avatarView): keeps the avatar's own size and circle, not the media width. */
+.hjm-profile-summary__avatar-view { inline-size: auto; flex-shrink: 0; border-radius: var(--hjm-radius-full, 9999px); }
 .hjm-image-viewer-trigger:disabled { cursor: default; opacity: var(--hjm-image-viewer-trigger-disabled-opacity); }
 .hjm-image-viewer-trigger:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-image-viewer { position: fixed; inset: 0; display: flex; flex-direction: column; min-inline-size: 0; background: #000; color: #fff; padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom); }
 .hjm-image-viewer__header, .hjm-image-viewer__footer { display: flex; align-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-left)) var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-right)); }
 .hjm-image-viewer__footer > span { flex: 1; text-align: center; }
 .hjm-image-viewer__stage { flex: 1; min-block-size: 0; overflow: hidden; position: relative; touch-action: none; }
+/* Circular profile-photo framing (2026-10-29): the mask's huge box-shadow dims everything outside the circle. */
+.hjm-photo-cropper__title { justify-content: center; }
+.hjm-photo-cropper__title h2 { margin: 0; font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+.hjm-photo-cropper__stage { cursor: grab; }
+.hjm-photo-cropper__image { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; max-inline-size: none; user-select: none; pointer-events: none; }
+.hjm-photo-cropper__mask { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 0 0 9999px var(--hjm-photo-cropper-mask); pointer-events: none; }
+.hjm-photo-cropper__footer { display: grid; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm) var(--hjm-space-lg) max(var(--hjm-space-md), env(safe-area-inset-bottom)); }
+.hjm-photo-cropper__footer p { margin: 0; text-align: center; color: rgba(255,255,255,0.72); font-size: var(--hjm-type-caption-size); }
+.hjm-photo-cropper__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--hjm-space-sm); }
 .hjm-image-viewer__image { inline-size: 100%; block-size: 100%; display: flex; align-items: center; justify-content: center; }
 .hjm-image-viewer__image img { inline-size: 100%; block-size: 100%; object-fit: contain; user-select: none; }
 .hjm-image-viewer__image > [role="status"], .hjm-image-viewer__image > [role="alert"] { position: absolute; background: #000; color: #fff; padding: var(--hjm-space-md); }
 .hjm-image-viewer .hjm-icon-button { color: #fff; background: #222; }
 
 .hjm-image-viewer__actions { margin-inline-start: auto; }
+@media (prefers-reduced-motion: reduce) { .hjm-image-viewer__image { transition: none !important; } }
 
 /* Persistent selection uses a neutral surface; active-descendant focus keeps its own treatment. */
 .hjm-surface[data-tone="selected"] { background: var(--hjm-color-surface-selected); }
@@ -4070,6 +4082,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-identity-action:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
 .hjm-identity-action:active { opacity: var(--hjm-identity-pressed-opacity); }
 .hjm-identity-action:disabled { cursor: default; }
+/* A name that opens the member profile stays text: no button chrome, same font, a focus ring only. */
+.hjm-identity-name-action { display: inline; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: inherit; cursor: pointer; }
+.hjm-identity-name-action:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; border-radius: var(--hjm-radius-sm); }
+.hjm-identity-name-action:disabled { cursor: default; }
 
 /* Independent identity navigation is a sibling of row commands, including links. */
 .hjm-list-row__profile { display: flex; flex: 0 0 auto; padding-inline-start: var(--hjm-list-row-inline); }
@@ -4093,5 +4109,22 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* A date/card radio rail shares the same inset scroller as chip groups (2026-10-28). */
 .hjm-radio-group[data-overflow="scroll"] .hjm-radio-group__items { flex-direction: row; flex-wrap: nowrap; inline-size: max-content; }
 .hjm-radio-group[data-overflow="scroll"] .hjm-choice { flex-shrink: 0; }
+
+/* Explicit brand choice emphasis keeps the neutral default and unselected canvas intact. */
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] {
+  background: var(--hjm-color-primary);
+  border-color: var(--hjm-color-primary);
+  color: var(--hjm-color-on-primary);
+}
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] :is(.hjm-choice__copy, .hjm-choice__description, .hjm-choice__leading) {
+  color: var(--hjm-color-on-primary);
+}
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] .hjm-choice__copy :is(.hjm-text[data-tone="primary"], .hjm-text[data-tone="body"], .hjm-text[data-tone="muted"], .hjm-text[data-tone="subtle"], .hjm-text[data-tone="weak"]) { color: inherit; }
+
+/* Date cards can keep a white canvas and emphasize only their selected boundary (2026-10-29). */
+.hjm-choice[data-selection-tone="brand-outline"][data-state="checked"] {
+  background: var(--hjm-color-bg);
+  border-color: var(--hjm-color-primary);
+}
 
 }

@@ -29,6 +29,8 @@ const decorativeSvgAccessibility = Platform.OS === "web" ? { "aria-hidden": true
  */
 
 type FocusProps = Readonly<{
+  /** Keep the selected-point tooltip visible after release, including tap selection. */
+  showFocusLabel?: boolean;
   focusIndex?: number | null;
   defaultFocusIndex?: number | null;
   onFocusChange?: (index: number | null, detail: Readonly<{ scrubbing: boolean }>) => void;
@@ -262,7 +264,7 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         <ChartLabel x={g.xs.at(-1)!} y={height - 4} fill={palette.label} textAnchor="end">{categories.at(-1)}</ChartLabel>
       </>}
     </Svg>}
-    {g && scrubbing && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
+    {g && (scrubbing || focusProps.showFocusLabel) && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
   </View>;
 }
 
@@ -317,7 +319,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <ChartLabel key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</ChartLabel>
         : <ChartLabel key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</ChartLabel>)}
     </Svg>}
-    {g && scrubbing && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
+    {g && (scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
   </View>;
 }
 

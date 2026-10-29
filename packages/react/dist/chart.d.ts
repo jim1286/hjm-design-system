@@ -5,6 +5,8 @@ type FocusDetail = Readonly<{
     scrubbing: boolean;
 }>;
 type FocusProps = Readonly<{
+    /** Keep the selected-point tooltip visible after release, including tap selection. */
+    showFocusLabel?: boolean;
     /** Controlled focused category; `null` shows no focus. */
     focusIndex?: number | null;
     defaultFocusIndex?: number | null;

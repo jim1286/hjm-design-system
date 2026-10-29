@@ -11,7 +11,7 @@ import { resolveVirtualWindow, virtualListRecipe } from "@hjmds/design-contracts
  * a brand ring plus a check when chosen; assistive tech hears radios (single) or checkboxes (multiple).
  */
 export function ImageChoiceGroup(props) {
-    const { label, showLabel = false, showItemLabels = false, itemLabelLines = imageChoiceRecipe.itemLabelLines, items, disabled = false, className, virtualized } = props;
+    const { label, showLabel = false, showItemLabels = false, itemLabelLines = imageChoiceRecipe.itemLabelLines, items, disabled = false, className, virtualized, layoutStyle } = props;
     validateImageChoiceItems(items);
     validateImageChoiceItemLabelLines(itemLabelLines);
     const theme = useOptionalHjmTheme();
@@ -34,7 +34,7 @@ export function ImageChoiceGroup(props) {
     };
     // First-paint estimate in px; the rendered row is measured afterwards because caption line height is rem-based.
     const estimatedTileHeight = resolveImageChoiceTileHeight(captionLines, typography[imageChoiceRecipe.itemLabelVariant].lineHeight * (theme?.environment.textScale ?? 1));
-    return _jsxs("div", { className: ["hjm-image-choice", className].filter(Boolean).join(" "), style: style, children: [showLabel ? _jsx("span", { className: "hjm-image-choice__label", children: label }) : null, virtualized
+    return _jsxs("div", { className: ["hjm-image-choice", className].filter(Boolean).join(" "), style: { ...style, ...layoutStyle }, children: [showLabel ? _jsx("span", { className: "hjm-image-choice__label", children: label }) : null, virtualized
                 ? _jsx(VirtualTileRows, { items: items, renderTile: renderTile, label: label, role: groupRole, height: virtualized.height, overscan: virtualized.overscan ?? virtualListRecipe.overscan, estimatedTileHeight: estimatedTileHeight })
                 : _jsx("div", { className: "hjm-image-choice__tiles", role: groupRole, "aria-label": label, children: items.map(renderTile) })] });
 }

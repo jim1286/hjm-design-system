@@ -122,6 +122,8 @@ function useMeasuredWidth(fallback: number): [(node: HTMLDivElement | null) => v
 
 type FocusDetail = Readonly<{ scrubbing: boolean }>;
 type FocusProps = Readonly<{
+  /** Keep the selected-point tooltip visible after release, including tap selection. */
+  showFocusLabel?: boolean;
   /** Controlled focused category; `null` shows no focus. */
   focusIndex?: number | null;
   defaultFocusIndex?: number | null;
@@ -423,7 +425,7 @@ export function LineChart({
             </>
           ) : null}
         </svg>
-        {scrubbing && focus !== null && g.xs[focus] !== undefined ? <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} /> : null}
+        {(scrubbing || focusProps.showFocusLabel) && focus !== null && g.xs[focus] !== undefined ? <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} /> : null}
       </div>
       <p id={descriptionId} className="hjm-visually-hidden">{describeChart(categories, series, formatValue, missingLabel)}</p>
     </div>
@@ -552,7 +554,7 @@ export function BarChart({
               : null
             : <text key={`c${i}`} className="hjm-chart__label" data-focused={focus === i || undefined} x={g.plot.left - 8} y={g.centers[i]} dominantBaseline="middle" textAnchor="end">{category}</text>)}
         </svg>
-        {scrubbing && focus !== null && vertical && g.centers[focus] !== undefined
+        {(scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && g.centers[focus] !== undefined
           ? <CursorBubble x={g.centers[focus]!} width={width} text={valueText(categories, series, focus, formatValue, missingLabel)} />
           : null}
       </div>

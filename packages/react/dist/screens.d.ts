@@ -317,9 +317,11 @@ export type NotificationRowProps = Readonly<{
         onActivate(): void;
         disabled?: boolean;
     }>;
+    /** Placement of the outermost element (the command button when `action` is set). */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Optional shared command host; passive previews remain compatible with existing router/gesture hosts. */
-export declare function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread, separator, action }: NotificationRowProps): import("react").JSX.Element;
+export declare function NotificationRow({ preview, metadata, avatar, avatarAction, avatarBadge, thumbnail, unread, separator, action, layoutStyle }: NotificationRowProps): import("react").JSX.Element;
 export type IconTileProps = Readonly<{
     /**
      * Icon artwork. A function receives the rendered edge (`IconTileArtwork`) so fixed-size artwork such as an image

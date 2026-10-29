@@ -116,6 +116,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `focusIndex` | `number \| null` | — | 제어 포커스 |
 | `defaultFocusIndex` | `number \| null` | 마지막 관측 index | 비제어 시작 포커스 |
 | `onFocusChange` | `(index: number \| null, detail: { scrubbing: boolean }) => void` | — | 스크럽 중 `scrubbing: true`, 손을 떼면 `false` |
+| `showFocusLabel` | `boolean` | `false` | LineChart·BarChart에서 누름을 놓은 뒤에도 선택한 점의 말풍선 유지 (2026-10-29 기록 차트 요청) |
 | `cursorLabel` | `(index: number) => string` | `categories[index]` | 스크럽 중 커서 위 말풍선 |
 
 ### BarChart
