@@ -103,6 +103,19 @@ Web의 텍스트/이모지 artwork는 원형72 프레임 안에서 glyph.xxl48 �
 - 남의 프로필에는 `nameEdit`를 넣지 않고, 사진은 회원 아바타 기준(확대·신고)을 따른다.
 - 제품이 ProfileSummary 대신 고유 머리를 그리는 경우에도 사진 = 사진 변경, 이름 = 닉네임 변경을 지킨다. 이름이 그림(예: Spint 내 정원의 나무 팻말)이면 연필을 따로 두지 않고 그 이름 그림 자체를 닉네임 변경 버튼으로 한다(2026-10-25 사용자 결정).
 
+### 남의 프로필: 사진을 누르면 크게 보기 (2026-10-29)
+
+사용자 지시로 모든 앱·웹의 회원 프로필 화면에서 **그 회원의 프로필 사진을 누르면 사진이 크게 열린다.** Spint 회원 프로필에서
+사진을 눌러도 반응이 없었고, Utilverse만 제품 코드로 확대를 따로 만들어 앱마다 동작이 달랐다.
+
+- `avatarView={{ label: t("photo.view"), onPress: () => setViewerOpen(true) }}`를 준다. HJM이 아바타 틀 전체를 이미지 버튼
+  (`ImageViewerTrigger`, Native `imagebutton` 역할)으로 만들고 크기·원형·누름 상태를 소유한다.
+- 제품은 `image-viewer` 하위 경로의 `ImageViewer`를 연다(Native는 gesture-handler·zoom-toolkit 선택 의존성이 그 경로에만 있다).
+  사진 조회·권한·캐시는 `items`/`renderImage`로 공급한다. 사진 신고는 제품의 기존 경로를 유지하며 확대 화면에 둘 때는 `actions`를 쓴다.
+- 사진이 없어 이니셜·기본 얼굴만 있으면 `avatarView`를 넣지 않는다(크게 볼 사진이 없다).
+- 내 프로필은 사진 = 사진 변경(`Avatar.action`)이므로 `avatarView`를 넣지 않는다. 두 행동을 한 사진에 같이 넣지 않는다.
+- 제품 고유 머리(ProfileSummary 대신 그린 카드)도 같은 규칙을 `ImageViewerTrigger` + `ImageViewer`로 지킨다.
+
 ### 프로필 카드 틀 (2026-10-25)
 
 같은 날 사용자 지적: Utilverse 프로필 카드(평평한 `default`, radius `lg`)가 BurnTok 카드(`raised` 그림자, 테두리, radius `xl`)와

@@ -20,3 +20,17 @@ it("wraps stats into rows of the recipe width and pads the last row", () => {
   const spacers = renderer!.root.findAll((node) => node.props.importantForAccessibility === "no-hide-descendants" && node.props.style?.flex === 1 && node.children.length === 0);
   expect(spacers.length).toBeGreaterThanOrEqual(2 * profileSummaryRecipe.stats.maxPerRow - 7);
 });
+
+// 2026-10-29 user rule: another member's profile photo opens large; the avatar frame becomes one image button.
+it("makes the avatar an image button that opens the product viewer", () => {
+  const opened: string[] = [];
+  let renderer: ReturnType<typeof create>;
+  act(() => {
+    renderer = create(<HjmNativeProvider><ProfileSummary name="바람" avatar={null} avatarView={{ label: "사진 크게 보기", onPress: () => opened.push("view") }} /></HjmNativeProvider>);
+  });
+  const trigger = renderer!.root.findAll((node) => node.props.accessibilityRole === "imagebutton" && node.props.accessibilityLabel === "사진 크게 보기")[0]!;
+  act(() => trigger.props.onPress());
+  expect(opened).toEqual(["view"]);
+  act(() => { renderer.update(<HjmNativeProvider><ProfileSummary name="바람" avatar={null} /></HjmNativeProvider>); });
+  expect(renderer!.root.findAll((node) => node.props.accessibilityRole === "imagebutton")).toHaveLength(0);
+});

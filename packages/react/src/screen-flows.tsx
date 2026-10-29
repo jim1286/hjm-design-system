@@ -2,6 +2,7 @@
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { Children, Fragment, isValidElement } from "react";
 import { IdentityAction, IdentityNameAction } from "./internal/identity-action.js";
+import { ImageViewerTrigger } from "./image-viewer.js";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
 import { createContext, useContext } from "react";
@@ -790,6 +791,13 @@ export type ProfileSummaryProps = Readonly<{
    * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
    */
   nameEdit?: ScreenFlowAction;
+  /**
+   * Another member's profile: tapping the picture opens it large (2026-10-29 user rule). HJM makes the avatar frame an
+   * image button with this localized label (e.g. "Show photo large"); the product opens `ImageViewer` from the
+   * image-viewer subpath, which also carries the photo report action. Omit it when there is no photo (initials only)
+   * and on one's own profile, where the picture is `Avatar.action` (change photo). Never combine the two.
+   */
+  avatarView?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   stats?: readonly Readonly<{ id: string; value: string; label: string; onPress?(): void; disabled?: boolean }>[];
   actions?: ReactNode;
   actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
@@ -818,13 +826,14 @@ function profileActionItems(actions: ReactNode): ReactNode[] {
       : [action]);
 }
 
-export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
   const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];
   const edit = useContext(ProfileEditContext);
   const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
   const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onClick={edit.onAction}>{edit.label}</Button> : null;
   const nameEditButton = nameEdit ? <IconButton label={nameEdit.label} title={nameEdit.label} tone="ghost" size={profileSummaryRecipe.nameEdit.size} disabled={!!(nameEdit.disabled || nameEdit.pending)} onClick={nameEdit.onAction}>{nameEdit.icon ?? <Icon name={profileSummaryRecipe.nameEdit.icon} size="sm" />}</IconButton> : null;
-  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<span style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: profileSummaryRecipe.avatarGlyphSize, lineHeight: 1, width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
+  const avatarFrame = <span style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: profileSummaryRecipe.avatarGlyphSize, lineHeight: 1, width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>{avatar}</span>;
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={avatarView ? <ImageViewerTrigger className="hjm-profile-summary__avatar-view" label={avatarView.label} onClick={avatarView.onPress} disabled={avatarView.disabled}>{avatarFrame}</ImageViewerTrigger> : avatarFrame} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack gap={profileSummaryRecipe.stats.rowGap} layoutStyle={{ width: "100%" }}>{profileStatRows(stats).map((row, index) =>
       <Stack key={index} axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{row.map((stat, cell) => stat ?

@@ -4020,6 +4020,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer-trigger { display: block; inline-size: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: none; color: inherit; font: inherit; text-align: inherit; cursor: var(--hjm-image-viewer-trigger-cursor, zoom-in); }
 .hjm-image-viewer-trigger > * { display: block; }
 .hjm-image-viewer-trigger:active:not(:disabled) { opacity: var(--hjm-image-viewer-trigger-pressed-opacity); }
+/* Profile photo that opens large (ProfileSummary.avatarView): keeps the avatar's own size and circle, not the media width. */
+.hjm-profile-summary__avatar-view { inline-size: auto; flex-shrink: 0; border-radius: var(--hjm-radius-full, 9999px); }
 .hjm-image-viewer-trigger:disabled { cursor: default; opacity: var(--hjm-image-viewer-trigger-disabled-opacity); }
 .hjm-image-viewer-trigger:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-image-viewer { position: fixed; inset: 0; display: flex; flex-direction: column; min-inline-size: 0; background: #000; color: #fff; padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom); }

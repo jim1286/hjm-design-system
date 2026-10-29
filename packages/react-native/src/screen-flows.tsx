@@ -27,6 +27,8 @@ import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View, type TextInpu
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
+// The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
+import { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
@@ -657,6 +659,13 @@ export type ProfileSummaryProps = Readonly<{
    * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
    */
   nameEdit?: ScreenFlowAction;
+  /**
+   * Another member's profile: tapping the picture opens it large (2026-10-29 user rule). HJM makes the avatar frame an
+   * image button with this localized label (e.g. "Show photo large"); the product opens `ImageViewer` from the
+   * image-viewer subpath, which also carries the photo report action. Omit it when there is no photo (initials only)
+   * and on one's own profile, where the picture is `Avatar.action` (change photo). Never combine the two.
+   */
+  avatarView?: Readonly<{ label: string; onPress(): void; disabled?: boolean }>;
   stats?: readonly Readonly<{ id: string; value: string; label: string; onPress?(): void; disabled?: boolean }>[];
   actions?: ReactNode;
   actionsLayout?: keyof typeof profileSummaryRecipe.actionsLayouts;
@@ -692,13 +701,14 @@ function NameEditGlyph() {
   return <DrawnPencil size={glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph]} color={resolveIconButtonPresentation("ghost", palette).content} />;
 }
 
-export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
+export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {
   const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];
   const edit = useContext(ProfileEditContext);
   const { tone: editTone, size: editSize } = profileSummaryRecipe.editAction;
   const editButton = edit ? <Button tone={editTone} size={editSize} disabled={!!(edit.disabled || edit.pending)} loading={edit.pending ?? false} onPress={edit.onAction}>{edit.label}</Button> : null;
   const nameEditButton = nameEdit ? <IconButton label={nameEdit.label} tone="ghost" size={profileSummaryRecipe.nameEdit.size} disabled={!!(nameEdit.disabled || nameEdit.pending)} onPress={nameEdit.onAction}>{nameEdit.icon ?? <NameEditGlyph />}</IconButton> : null;
-  return <CompositionLayout title={name} headingLevel={headingLevel} leading={<View style={{ alignItems: "center", justifyContent: "center", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }}>{avatar}</View>} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
+  const avatarFrame = <View style={{ alignItems: "center", justifyContent: "center", width: profileSummaryRecipe.avatarSize, height: profileSummaryRecipe.avatarSize, flexShrink: 0, borderRadius: profileSummaryRecipe.avatarSize / 2, overflow: "hidden" }}>{avatar}</View>;
+  return <CompositionLayout title={name} headingLevel={headingLevel} leading={avatarView ? <ImageViewerTrigger label={avatarView.label} onPress={avatarView.onPress} disabled={avatarView.disabled ?? false}>{avatarFrame}</ImageViewerTrigger> : avatarFrame} badge={badge} actions={nameEdit || nameActions ? <>{nameEditButton}{nameActions}</> : undefined} footer={children}>
     {/* Static and actionable counts occupy identical cells; button hit areas must not shift their baselines. */}
     {stats.length ? <Stack gap={profileSummaryRecipe.stats.rowGap} layoutStyle={{ width: "100%" }}>{profileStatRows(stats).map((row, index) =>
       <Stack key={index} axis="inline" gap="md" align="stretch" layoutStyle={{ width: "100%" }}>{row.map((stat, cell) => stat ?
