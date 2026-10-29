@@ -1,7 +1,8 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { Pressable, ScrollView } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text as NativeText } from 'react-native';
 import { afterEach, expect, it, vi } from 'vitest';
 import { RadioGroup } from '../src/inputs.js';
+import { Text } from '../src/primitives.js';
 import { HjmNativeProvider } from '../src/provider.js';
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let tree: ReactTestRenderer | undefined;
@@ -29,4 +30,21 @@ it('keeps a confirmed empty selected date visible and checked', () => {
   act(() => { tree = create(<HjmNativeProvider><RadioGroup accessibilityLabel="날짜" items={items} value="28" overflow="scroll" /></HjmNativeProvider>); });
   const selected = tree!.root.findAllByType(Pressable).find(node => node.props.accessibilityState?.checked);
   expect(selected!.props.disabled).toBe(true);
+});
+
+it('pairs a brand-selected card and its preview text while leaving idle cards white', () => {
+  const render = (value: string) => <HjmNativeProvider brandPalette={{ light: { primary: '#006BA6', onPrimary: '#FFFFFF' } }}>
+    <RadioGroup accessibilityLabel="날짜" items={items} value={value} selectionTone="brand" indicator="none"
+      renderLabel={item => <Text tone="muted">{item.label}</Text>} />
+  </HjmNativeProvider>;
+  act(() => { tree = create(render('27')); });
+  const cards = () => tree!.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === 'radio');
+  const style = (index: number) => StyleSheet.flatten(cards()[index]!.props.style({ pressed: false }));
+  expect(style(0).backgroundColor).toBe('#006BA6');
+  expect(style(2).backgroundColor.toLowerCase()).toBe('#ffffff');
+  expect(StyleSheet.flatten(cards()[0]!.findByType(NativeText).props.style).color).toBe('#FFFFFF');
+  act(() => tree!.update(render('29')));
+  expect(style(0).backgroundColor.toLowerCase()).toBe('#ffffff');
+  expect(style(2).backgroundColor).toBe('#006BA6');
+  expect(StyleSheet.flatten(cards()[2]!.findByType(NativeText).props.style).color).toBe('#FFFFFF');
 });

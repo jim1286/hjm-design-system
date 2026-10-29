@@ -959,6 +959,8 @@ export const selectionControlRecipe = {
         checkedBackground: semanticColors.action.brand.background,
         checkedBorder: semanticColors.border.focus,
         indicator: semanticColors.action.brand.content,
+        // Date rails can explicitly request brand emphasis without changing other choice surfaces (2026-10-29).
+        selectedBrand: { background: semanticColors.action.brand.background, content: semanticColors.action.brand.content },
         // The full plate uses neutral selection; the compact checked glyph remains primary.
         selectedBackground: semanticColors.selection.background,
         selectedBorder: semanticColors.selection.border,

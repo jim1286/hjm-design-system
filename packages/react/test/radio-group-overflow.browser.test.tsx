@@ -22,3 +22,21 @@ it('scrolls date cards in one row and reveals a selected disabled date', async (
     expect(rect.right).toBeLessThanOrEqual(scroller.getBoundingClientRect().right + 1);
   } finally { await act(async () => root.unmount()); host.remove(); }
 });
+
+it('uses the brand contrast pair for a selected card and restores the idle canvas on change', async () => {
+  const host = document.createElement('div'); document.body.append(host); const root = createRoot(host);
+  const render = (value: string) => <HjmProvider brandPalette={{ light: { primary: '#006BA6', onPrimary: '#FFFFFF' } }}>
+    <RadioGroup accessibilityLabel="날짜" items={[{ value: '27', label: '27일' }, { value: '29', label: '오늘' }]}
+      value={value} selectionTone="brand" indicator="none" />
+  </HjmProvider>;
+  try {
+    await act(async () => root.render(render('27')));
+    const cards = () => [...host.querySelectorAll<HTMLElement>('.hjm-choice')];
+    expect(getComputedStyle(cards()[0]!).backgroundColor).toBe('rgb(0, 107, 166)');
+    expect(getComputedStyle(cards()[0]!.querySelector('.hjm-choice__copy')!).color).toBe('rgb(255, 255, 255)');
+    expect(getComputedStyle(cards()[1]!).backgroundColor).toBe('rgb(255, 255, 255)');
+    await act(async () => root.render(render('29')));
+    expect(getComputedStyle(cards()[0]!).backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(getComputedStyle(cards()[1]!).backgroundColor).toBe('rgb(0, 107, 166)');
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});

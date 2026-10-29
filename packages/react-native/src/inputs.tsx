@@ -4,6 +4,7 @@ import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { setInputVisibilityFrame } from "./internal/field-visibility.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
+import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
@@ -1110,6 +1111,7 @@ type ChoiceVisualProps = Readonly<{
 }>;
 
 type ChoiceRowProps = ChoiceVisualProps & Readonly<{
+  selectionTone?: "neutral" | "brand";
   kind: "checkbox" | "radio";
   label: string;
   labelContent?: ReactNode;
@@ -1137,6 +1139,7 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 function ChoiceRow({
+  selectionTone = "neutral",
   kind,
   label,
   labelContent,
@@ -1170,6 +1173,8 @@ function ChoiceRow({
   const plate = selectionControlRecipe.presentations[presentation];
   const selected = checked === true || checked === "mixed";
   const chipState = chipRecipe.states[selected ? "selected" : "idle"];
+  const brandSelected = selected && selectionTone === "brand";
+  const selectedContent = brandSelected ? resolveColorReference(selectionControlRecipe.states.selectedBrand.content, theme.palette) : undefined;
   const indicatorColor = resolveColorReference(
     chips ? chipState.content : selectionControlRecipe.states.indicator,
     theme.palette,
@@ -1179,16 +1184,16 @@ function ChoiceRow({
     selected,
     disabled,
     readOnly,
-    color: indicatorColor,
+    color: selectedContent ?? indicatorColor,
     size: metrics.control,
   };
   const resolvedLeading = leading ?? renderLeading?.(appearance);
-  const plateBackground = chips ? chipState.background : selected
+  const plateBackground = brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.background : selected
     ? selectionControlRecipe.states.selectedBackground
     : plate.background ?? selectionControlRecipe.states.idleBackground;
   const plateBorder = invalid
     ? selectionControlRecipe.states.invalidBorder
-    : chips ? chipState.border : selected
+    : brandSelected ? selectionControlRecipe.states.selectedBrand.background : chips ? chipState.border : selected
       ? selectionControlRecipe.states.selectedBorder
       : plate.border;
   const frameStyle = {
@@ -1266,12 +1271,13 @@ function ChoiceRow({
       ) : null}
       {/* Keep an intrinsic basis: basis 0 collapsed horizontal labels (2026-10-17 review).
           Chip copy must also stop growing, or it expands each content-sized chip to the entire group width. */}
+      <InheritedTextColorContext.Provider value={selectedContent}>
       <View style={[{ flexGrow: chips ? 0 : 1, flexShrink: 1, gap: spacing.xxs, minWidth: 0 }]}>
         {labelContent != null && typeof labelContent !== "string" && typeof labelContent !== "number" ? labelContent : <Text
               fontRole="ui"
           style={[
             {
-              color: resolveColorReference(chips ? chipState.content : selectionControlRecipe.label.color, theme.palette),
+              color: selectedContent ?? resolveColorReference(chips ? chipState.content : selectionControlRecipe.label.color, theme.palette),
               fontWeight: selected
                 ? selectionControlRecipe.label.checkedFontWeight
                 : selectionControlRecipe.label.fontWeight,
@@ -1286,7 +1292,7 @@ function ChoiceRow({
             style={[
               {
                 color: resolveColorReference(
-                  selectionControlRecipe.description.color,
+                  brandSelected ? selectionControlRecipe.states.selectedBrand.content : selectionControlRecipe.description.color,
                   theme.palette,
                 ),
               },
@@ -1297,6 +1303,7 @@ function ChoiceRow({
           </Text>
         ) : null}
       </View>
+      </InheritedTextColorContext.Provider>
     </Pressable>
   );
   if (!action) return target;
@@ -1490,6 +1497,8 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     onValueChange?: (value: Value | null) => void;
     /** One horizontal line of cards or chips, without grid; the selected item stays visible. */
     overflow?: SelectionGroupOverflow;
+    /** Explicit brand emphasis uses the theme primary/onPrimary pair. */
+    selectionTone?: "neutral" | "brand";
     /** Visual preview only; the string label remains the accessible name. */
     renderLabel?: (item: RadioGroupItem<Value>) => ReactNode;
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
@@ -1661,6 +1670,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   presentation = selectionGroupRecipe.defaults.presentation,
   size = selectionControlRecipe.defaults.size,
   indicator = "default",
+  selectionTone = "neutral",
   renderLeading,
   renderLabel,
   renderIndicator,
@@ -1734,6 +1744,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
             invalid={hasError}
             invalidLabel={invalidLabel ?? error}
             kind="radio"
+            selectionTone={selectionTone}
             label={item.label}
             labelContent={renderLabel?.(item)}
             {...(item.action ? { action: item.action } : {})}

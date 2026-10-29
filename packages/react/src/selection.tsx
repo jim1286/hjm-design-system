@@ -584,6 +584,8 @@ export type RadioGroupProps = Omit<
     size?: SelectionControlSize;
     /** Hide the decorative dot when a product preview already communicates the choice. */
     indicator?: "default" | "none";
+    /** Explicit brand emphasis uses the theme primary/onPrimary pair. */
+    selectionTone?: "neutral" | "brand";
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
@@ -638,6 +640,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       required = false,
       readOnly = false,
       indicator = "default",
+      selectionTone = "neutral",
       renderLeading,
       renderLabel,
       disabled,
@@ -734,6 +737,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                 key={item.value}
                 className={item.action ? "hjm-choice__target" : "hjm-choice"}
                 data-kind="radio"
+                data-selection-tone={selectionTone}
                 data-state={selected ? "checked" : "unchecked"}
                 data-disabled={item.disabled || undefined}
                 data-readonly={readOnly || undefined}
@@ -777,7 +781,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
             // A button inside a label can activate its radio. Keep two independent targets
             // inside one recipe-owned frame, including when the group is read-only.
             return <div key={item.value} className="hjm-choice hjm-choice--with-action"
-              data-kind="radio" data-state={selected ? "checked" : "unchecked"}
+              data-kind="radio" data-selection-tone={selectionTone} data-state={selected ? "checked" : "unchecked"}
               data-disabled={item.disabled || undefined} data-readonly={readOnly || undefined}
               data-presentation={presentation} data-size={size}>
               {choice}

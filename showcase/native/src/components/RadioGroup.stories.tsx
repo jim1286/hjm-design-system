@@ -37,7 +37,7 @@ export const ChipChoices: Story = { name: "칩 선택과 미선택 · 미게시"
 
 function EqualCardsPreview() {
   const [value, setValue] = useState<string | null>("public");
-  return <RadioGroup label="공개 범위" size="small" value={value} onValueChange={setValue}
+  return <RadioGroup label="공개 범위" selectionTone="brand" size="small" value={value} onValueChange={setValue}
     grid={{ columns: { compact: 2 }, gap: { compact: "xs" }, minColumnWidth: { compact: 152 } }}
     items={[{ value: "public", label: "장소 공개 허용", description: "설명이 길어도 같은 폭으로 비교해요" }, { value: "private", label: "받는 사람만", description: "한 사람에게 전해요" }]} />;
 }

@@ -4105,3 +4105,14 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 /* A date/card radio rail shares the same inset scroller as chip groups (2026-10-28). */
 .hjm-radio-group[data-overflow="scroll"] .hjm-radio-group__items { flex-direction: row; flex-wrap: nowrap; inline-size: max-content; }
 .hjm-radio-group[data-overflow="scroll"] .hjm-choice { flex-shrink: 0; }
+
+/* Explicit brand choice emphasis keeps the neutral default and unselected canvas intact. */
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] {
+  background: var(--hjm-color-primary);
+  border-color: var(--hjm-color-primary);
+  color: var(--hjm-color-on-primary);
+}
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] :is(.hjm-choice__copy, .hjm-choice__description, .hjm-choice__leading) {
+  color: var(--hjm-color-on-primary);
+}
+.hjm-choice[data-selection-tone="brand"][data-state="checked"] .hjm-choice__copy :is(.hjm-text[data-tone="primary"], .hjm-text[data-tone="body"], .hjm-text[data-tone="muted"], .hjm-text[data-tone="subtle"], .hjm-text[data-tone="weak"]) { color: inherit; }

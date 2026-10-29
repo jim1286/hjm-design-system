@@ -7327,6 +7327,18 @@ export declare const recipeRegistry: {
                 key: "onPrimary";
                 alpha?: number;
             }>;
+            readonly selectedBrand: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+            };
             readonly selectedBackground: Readonly<{
                 source: "theme";
                 key: "surfaceSelected";
