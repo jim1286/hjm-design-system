@@ -9,7 +9,7 @@ import { KeyboardDock, KeyboardMotionProvider } from "../src/keyboard-controller
 import { NativeContextMenu } from "../src/context-menu-native.js";
 const methods = vi.hoisted(() => ({ present: vi.fn(), dismiss: vi.fn() }));
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
-vi.mock("react-native-reanimated", () => ({ ReduceMotion: { Always: "always", System: "system" } }));
+vi.mock("react-native-reanimated", () => import("./reanimated.stub.js"));
 vi.mock("react-native-zoom-toolkit", () => ({ Gallery: (props: { data: unknown[]; renderItem: (item: unknown, index: number) => ReactNode; initialIndex: number }) => createElement("Gallery", props, props.renderItem(props.data[props.initialIndex], props.initialIndex)) }));
 vi.mock("react-native-keyboard-controller", () => ({ KeyboardProvider: "KeyboardProvider", KeyboardStickyView: "Sticky", KeyboardAwareScrollView: "Aware" }));
 vi.mock("zeego/context-menu", () => ({ Root: "ContextRoot", Trigger: "ContextTrigger", Content: "ContextContent", Item: "ContextItem", ItemTitle: "ContextTitle" }));

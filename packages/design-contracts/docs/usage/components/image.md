@@ -66,6 +66,13 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
   errorLabel={t("viewer.loadFailed")} retryLabel={t("common.retry")} />
 ```
 
+### 아래로 끌어 닫기 (Native, 2026-10-30)
+
+다른 사진 뷰어처럼 확대하지 않은 사진을 아래로 끌면 `onClose`가 불린다(사용자 요청). 사진이 손가락을 따라
+내려오고 위아래 조작부가 흐려지며, 120pt 이상 끌거나 빠르게 내리면 닫힌다. 짧게 끌거나 위로 끌면 제자리로
+돌아온다. 확대한 사진은 끌면 이동하므로 닫히지 않는다. 제품은 따로 연결할 것이 없고, 닫기 버튼은 접근성 경로로 남는다.
+Web 뷰어는 닫기 버튼과 Esc로 닫는다.
+
 ### 사진을 눌러 크게 보기 (`ImageViewerTrigger`, 2026-10-23)
 
 사진을 원시 `button`·`Pressable`로 감싸 뷰어를 열지 않는다(포트폴리오 사이트 `App.tsx`, Spint `MarkPhoto`·`ComposeScreen`이던 우회).

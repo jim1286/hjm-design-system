@@ -19,7 +19,7 @@ vi.mock("react-native-sortables", () => ({ default: { Handle: "Handle", Grid: (p
 vi.mock("react-native-gesture-handler/ReanimatedSwipeable", () => ({ default: "Swipeable" }));
 vi.mock("react-native-reanimated-carousel", () => ({ Carousel: "Carousel" }));
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
-vi.mock("react-native-reanimated", () => ({ ReduceMotion: { Always: "always", System: "system" } }));
+vi.mock("react-native-reanimated", () => import("./reanimated.stub.js"));
 vi.mock("react-native-zoom-toolkit", () => ({ Gallery: (props: { data: unknown[]; renderItem: (item: unknown, index: number) => ReactNode; initialIndex: number }) => createElement("Gallery", props, props.renderItem(props.data[props.initialIndex], props.initialIndex)) }));
 vi.mock("@gorhom/bottom-sheet", async () => {
   const { forwardRef, useImperativeHandle, createElement: h } = await import("react");

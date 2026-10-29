@@ -7,6 +7,7 @@ import { Text } from "../src/primitives.js";
 import { Button, IconButton } from "../src/actions.js";
 import { ImageViewer, type ImageViewerImageRenderProps, type ImageViewerProps } from "../src/image-viewer.js";
 
+vi.mock("react-native-reanimated", () => import("./reanimated.stub.js"));
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
 vi.mock("react-native-zoom-toolkit", () => ({
   Gallery: (props: { data: unknown[]; renderItem: (item: unknown) => ReactNode; initialIndex: number }) =>
@@ -160,4 +161,19 @@ it("pages with explicit accessible controls, shows position and removes navigati
   expect(close).toHaveBeenCalledTimes(1);
   render();
   expect(tree!.root.findAllByType(IconButton).map(node => node.props.label)).toEqual(["닫기"]);
+});
+
+// 2026-10-30 user request: pulling an unzoomed photo down closes the viewer like other photo viewers.
+it("closes on a long or fast downward pull and springs back from a short or upward one", () => {
+  const onClose = vi.fn();
+  render({ onClose });
+  const pull = tree!.root.findByType("Gallery" as never).props.onVerticalPull as
+    (options: { translateY: number; released: boolean; velocityY: number }) => void;
+  act(() => pull({ translateY: 60, released: false, velocityY: 0 }));
+  act(() => pull({ translateY: 60, released: true, velocityY: 100 }));
+  act(() => pull({ translateY: -300, released: true, velocityY: -2000 }));
+  expect(onClose).not.toHaveBeenCalled();
+  act(() => pull({ translateY: 200, released: true, velocityY: 0 }));
+  act(() => pull({ translateY: 30, released: true, velocityY: 1500 }));
+  expect(onClose).toHaveBeenCalledTimes(2);
 });

@@ -7,6 +7,7 @@ import { Button } from "../src/actions.js";
 import { ImageViewer, type ImageViewerImageRenderProps, type ImageViewerInspection } from "../src/image-viewer.js";
 
 const engine = vi.hoisted(() => ({ state: { translateX: 0, translateY: 0, scale: 1 }, set: vi.fn(), reset: vi.fn() }));
+vi.mock("react-native-reanimated", () => import("./reanimated.stub.js"));
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
 vi.mock("react-native-zoom-toolkit", async () => {
   const { forwardRef, useImperativeHandle } = await import("react");

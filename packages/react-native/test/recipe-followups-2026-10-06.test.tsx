@@ -23,7 +23,7 @@ import { Text } from "../src/primitives.js";
 import { UploadItem } from "../src/upload-item.js";
 
 vi.mock("react-native-gesture-handler", () => ({ GestureHandlerRootView: "GestureRoot" }));
-vi.mock("react-native-reanimated", () => ({ ReduceMotion: { Always: "always", System: "system" } }));
+vi.mock("react-native-reanimated", () => import("./reanimated.stub.js"));
 vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Rect: View, Path: View }; });
 vi.mock("react-native-zoom-toolkit", () => ({ Gallery: (props: { data: unknown[]; renderItem: (item: unknown, index: number) => ReactNode; initialIndex: number }) => createElement("Gallery", props, props.renderItem(props.data[props.initialIndex], props.initialIndex)) }));
 

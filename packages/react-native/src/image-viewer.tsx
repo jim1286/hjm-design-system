@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions, type ModalProps } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Gallery } from "react-native-zoom-toolkit";
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
+import { Gallery, type VerticalPullOptions } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Spinner } from "./internal/spinner.js";
 import { Button, IconButton } from "./actions.js";
@@ -111,6 +113,14 @@ export function ImageViewer(props: ImageViewerProps) {
   return <HjmNativeProvider theme="dark" brandPalette={{ dark: { bg: "#000000" } }}><ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri, item.width, item.height]))} {...props} /></HjmNativeProvider>;
 }
 
+/**
+ * 2026-10-30 user request: pulling an unzoomed photo down closes the viewer, like photo viewers elsewhere. The photo
+ * follows the finger and the chrome fades; a short pull springs back. Zoomed photos pan instead (Zoom Toolkit only
+ * reports a vertical pull at the resting scale). The close button stays the accessible way out.
+ */
+const PULL_CLOSE_DISTANCE = 120;
+const PULL_CLOSE_VELOCITY = 900;
+
 function ImageViewerSession(props: ImageViewerProps) {
   const theme = useHjmNativeTheme();
   const gutter = containerRecipe.gutters[containerDefaults.gutter];
@@ -136,6 +146,20 @@ function ImageViewerSession(props: ImageViewerProps) {
   useEffect(() => {
     if (currentStatus === "error" && Platform.OS === "ios") AccessibilityInfo.announceForAccessibility(props.errorLabel);
   }, [currentStatus, currentIndex, props.errorLabel]);
+  const pull = useSharedValue(0);
+  const reducedMotion = theme.environment.reducedMotion;
+  const onClose = props.onClose;
+  const onVerticalPull = ({ translateY, released, velocityY }: VerticalPullOptions) => {
+    "worklet";
+    // Only a downward pull closes; an upward pull just springs back.
+    const down = Math.max(0, translateY);
+    if (!released) { pull.value = down; return; }
+    if (down > PULL_CLOSE_DISTANCE || velocityY > PULL_CLOSE_VELOCITY) scheduleOnRN(onClose);
+    else pull.value = reducedMotion ? 0 : withTiming(0, { duration: 200 });
+  };
+  const photoStyle = useAnimatedStyle(() => ({ transform: [{ translateY: pull.value },
+    { scale: interpolate(pull.value, [0, PULL_CLOSE_DISTANCE * 3], [1, 0.85], "clamp") }] }));
+  const chromeStyle = useAnimatedStyle(() => ({ opacity: interpolate(pull.value, [0, PULL_CLOSE_DISTANCE], [1, 0.2], "clamp") }));
   const reportImageStatus = (event: ImageViewerImageStatusEvent) => {
     setStatuses(previous => new Map(previous).set(event.item.id, event.status));
     props.onImageStatusChange?.(event);
@@ -147,10 +171,10 @@ function ImageViewerSession(props: ImageViewerProps) {
         {/* Controls and caption share the page gutter (Container's default); they
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
-        <View style={{ ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }}>
+        <Animated.View style={[{ ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }, chromeStyle]}>
           <IconButton label={props.closeLabel} tone="ghost" onPress={props.onClose}><DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton>
           {props.actions ? <View style={{ flex: 1, alignItems: "flex-end" }}>{props.actions}</View> : null}
-        </View>
+        </Animated.View>
         {props.inspection ? <View style={controlInsets}><SegmentedControl label={props.inspection.labels.mode}
           value={props.inspection.mode} onValueChange={props.inspection.onModeChange}
           items={[{ value: "fit", label: props.inspection.labels.fit }, { value: "double", label: props.inspection.labels.double }, { value: "pixels", label: props.inspection.labels.pixels }]} /></View> : null}
@@ -159,11 +183,11 @@ function ImageViewerSession(props: ImageViewerProps) {
           feedbackLabels={{ loading: props.loadingLabel, error: props.errorLabel, retry: props.retryLabel }}
           renderImage={(width, height, report) => <ViewerImage item={props.items[currentIndex]!} width={width} height={height}
             renderImage={props.renderImage} onImageStatusChange={event => { report(event.status); reportImageStatus(event); }} />} /> : <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>
-          <Gallery key={galleryKey} data={[...props.items]} initialIndex={currentIndex} keyExtractor={item => item.id}
-            rtl={theme.environment.direction === "rtl"} onIndexChange={change}
+          <Animated.View style={[{ flex: 1 }, photoStyle]}><Gallery key={galleryKey} data={[...props.items]} initialIndex={currentIndex} keyExtractor={item => item.id}
+            rtl={theme.environment.direction === "rtl"} onIndexChange={change} onVerticalPull={onVerticalPull}
             snapTimingConfig={{ duration: theme.environment.reducedMotion ? 0 : 250 }}
             renderItem={item => <ViewerImage key={item.uri} item={item} width={viewport.width} height={viewport.height}
-              renderImage={props.renderImage} onImageStatusChange={reportImageStatus} />} />
+              renderImage={props.renderImage} onImageStatusChange={reportImageStatus} />} /></Animated.View>
           {/* Zoom Toolkit places a gesture layer above its rendered images. Keep feedback
               beside Gallery, not inside renderItem, so retry receives actual native touches.
               An opaque semantic surface keeps the copy legible over decoded photo pixels. */}
@@ -175,14 +199,14 @@ function ImageViewerSession(props: ImageViewerProps) {
           </View> : null}
         </View>}
         {/* Gallery navigation is neutral chrome, not three stacked primary actions (BurnTok image QA, 2026-10-20). */}
-        <View style={{ flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }}>
+        <Animated.View style={[{ flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }, chromeStyle]}>
           {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}><DrawnChevron direction="start" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text variant="caption" align="center" numberOfLines={2} accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
             {props.items.length > 1 ? <Text variant="caption" tone="muted" numeric="tabular" align="center">{`${currentIndex + 1}/${props.items.length}`}</Text> : null}
           </View>
           {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}><DrawnChevron direction="end" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
-        </View>
+        </Animated.View>
       </View>
     </GestureHandlerRootView>
   </Modal>;
