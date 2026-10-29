@@ -23,3 +23,12 @@ it("renders the inline panel under the reply line, outside the hold target", () 
   const trigger = html.slice(html.indexOf("hjm-comment-row__reactions"), html.indexOf(">답글<"));
   expect(trigger).not.toContain("data-panel");
 });
+
+// 2026-10-29 Spint translation: "See original" sits after Reply in the same line, styled as Reply.
+it("draws product text actions after Reply in the action line", () => {
+  const html = render({ ...base, timePlacement: "actions", textActions: [{ id: "original", label: "원본 보기", onPress: () => {} }] });
+  expect(html.indexOf(">원본 보기<")).toBeGreaterThan(html.indexOf(">답글<"));
+  expect(html.match(/hjm-comment-row__action/g)?.length).toBeGreaterThanOrEqual(2);
+  const reply = render({ ...base, parentId: "p", textActions: [{ id: "original", label: "원본 보기", onPress: () => {} }] });
+  expect(reply).toContain(">원본 보기<");
+});

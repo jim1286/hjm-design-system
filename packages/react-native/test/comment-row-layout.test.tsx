@@ -33,3 +33,14 @@ it("renders the inline panel after the reply line", () => {
   const texts = order({ ...base, panel: <RNText testID="panel">신고 양식</RNText> });
   expect(texts.indexOf("#panel")).toBeGreaterThan(texts.indexOf("답글"));
 });
+
+// 2026-10-29 Spint translation: "See original" sits after Reply in the same line, also on replies without Reply.
+it("draws product text actions after Reply in the action line", () => {
+  const onPress = vi.fn();
+  const texts = order({ ...base, timePlacement: "actions", textActions: [{ id: "original", label: "원본 보기", onPress }] });
+  expect(texts.indexOf("원본 보기")).toBeGreaterThan(texts.indexOf("답글"));
+  act(() => tree!.root.findByProps({ accessibilityLabel: "원본 보기" }).props.onPress());
+  expect(onPress).toHaveBeenCalledTimes(1);
+  act(() => tree!.unmount()); tree = undefined;
+  expect(order({ ...base, parentId: "p", textActions: [{ id: "original", label: "원본 보기", onPress }] })).toContain("원본 보기");
+});

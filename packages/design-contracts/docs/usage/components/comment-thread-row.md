@@ -65,6 +65,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | `id`·`parentId`·`author`·`body`·`timeLabel`·`likeCountLabel`·`likeIcon`·`likeLabel` | 필수 | `parentId`가 `null`이면 최상위 댓글 |
 | `bodyText` | 없음 | 주면 `author`와 본문을 한 문장으로, 시각은 아래 행동 줄로 옮긴다 |
 | `timePlacement` | `"auto"` | 미게시. `"auto"`는 `bodyText`가 없으면 시각을 작성자 옆에 둔다. `"actions"`는 글이 아닌 본문(꽃 도장·카드)에서도 시각을 본문 아래 반응 요약·답글과 같은 줄 맨 앞으로 옮긴다 |
+| `textActions` | 없음 | 미게시. 답글 줄의 답글 뒤에 붙는 제품 문구 행동 `{ id, label, onPress, disabled? }[]`. 답글과 같은 muted caption 문구 버튼이며 순서대로 놓인다(예: 번역 댓글의 "원본 보기"/"번역 보기"). 문구·상태는 제품이 소유한다 |
 | `panel` | 없음 | 미게시. 댓글별 인라인 패널(수정·신고·차단 양식). 답글 줄 아래, 길게 누르기 대상 밖에 `panelGap` 8 간격으로 놓인다. 열림 상태·초점·제출·닫기는 제품이 소유한다 |
 | `mediaAlbum` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음 `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }`. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다. 불러오는 중·실패 장은 `MediaAlbumPageStatus`(`@hjmds/react(-native)/screens`, [ChatMessage](chat-message.md#축과-기본값))로 그려 안쪽 내용이 낭독기에 닿게 한다. `media`와 함께 주면 `TypeError`. 본문 아래, 길게 누르기 대상 밖에 놓인다 |
 | `authorBadge` | 없음 | 미게시. 닉네임 바로 뒤, 같은 줄에 놓는 제품 배지. 간격 `spacing.xxs` 4, 좁은 폭에서는 줄바꿈한다. `bodyText` 모드에서도 작성자·배지·본문 순서로 배치한다. 배지 문구·노출 조건은 제품이 소유한다 |
@@ -92,7 +93,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 
 - 가상화 host에서 행 사이 간격(`commentThreadRecipe.rowGap`)과 답글 들여쓰기(`replyIndent`)를 직접 줄 때도 recipe 값을 쓴다. 제품 숫자로 다시 정하지 않는다.
 - 답글 펼치기·정렬·권한·좋아요 저장은 제품이 소유한다. 행은 콜백만 호출한다.
-- 행 안에 두 번째 레이아웃을 만들지 말고 `actions`·`likeAction`·`media`·`mediaAlbum`·`panel` 슬롯으로 추가한다. 시각·답글 줄을 본문 노드 안에 다시 그리지 말고 `timePlacement: "actions"`와 `canReply`를 쓴다.
+- 행 안에 두 번째 레이아웃을 만들지 말고 `actions`·`likeAction`·`media`·`mediaAlbum`·`panel` 슬롯으로 추가한다. 시각·답글 줄을 본문 노드 안에 다시 그리지 말고 `timePlacement: "actions"`와 `canReply`를 쓴다. 답글 옆 문구 행동도 본문에 버튼을 두지 말고 `textActions`로 준다.
 - `mediaAlbum`의 사진 조회·권한 확인·캐시 수명은 제품이 `renderPage` 안에서 소유한다. HJM은 보이는 장만 마운트하고 넘김 상태를 행 안에 둔다(제어형은 `index`+`onIndexChange`).
 
 ## 상태와 상호작용
@@ -106,6 +107,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 - 2026-10-20 Spint의 “나” 배지가 본문 첫 줄을 차지하던 문제를 해결하기 위해 `authorBadge` 슬롯을 추가했다. 작성자에 붙는 표시는 HJM이 닉네임 옆에 배치하고 제품은 배지 내용만 공급한다. 개발 소스 변경이며 미게시다.
 
 - 2026-10-20 Spint 댓글이 촘촘하다는 사용자 피드백에 따라 공통 행 사이 간격을 12→20, 내부 줄 사이 간격을 2→4로 조정했다. Web·Native가 같은 recipe를 사용한다. 개발 소스 변경이며 미게시다.
+- `textActions`: 2026-10-29 Spint 댓글 번역. 사용자가 Instagram처럼 "답글 달기" 옆에 "원본 보기"/"번역 보기"를 두라고 요청했는데, 답글 줄에 제품 행동 자리가 없어 본문 아래 별도 줄로 그리고 있었다.
 - `timePlacement`·`panel`·`mediaAlbum`: 2026-10-18 HJM 1.30.0 채택 감사. Spint는 꽃 도장 본문에서 시각을 답글 줄에 두려고 시각·답글 행을 본문 안에 다시 그렸고, Utilverse는 수정·신고·차단 양식을 본문 노드 안(길게 누르기 대상 안)에 넣었으며, 사진 묶음은 선택한 장만 조회하는 제품 앨범을 따로 만들었다.
 
 ## 플랫폼 차이

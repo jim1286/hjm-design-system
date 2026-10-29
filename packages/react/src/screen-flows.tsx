@@ -679,6 +679,11 @@ export type CommentThreadItem = Readonly<{
   */
  timePlacement?:"auto"|"actions";
  /**
+  * Text actions in the Reply line, after Reply, styled like Reply (2026-10-29 Spint comment translation: Instagram puts
+  * "See original"/"See translation" beside Reply). The product owns labels and state; HJM owns placement and order.
+  */
+ textActions?:readonly CommentTextActionDescriptor[];
+ /**
   * Inline per-comment panel (edit, report or block form) under the Reply line, outside the long-press target
   * (2026-10-18, Utilverse). The product owns its open state, focus, submit and close; HJM owns its place in the row.
   */
@@ -716,6 +721,8 @@ export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[
  revealedReplyId?:string};
 export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string; commentMenu?: CommentMenu }>;
 /** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
+export type CommentTextActionDescriptor=Readonly<{id:string;label:string;onPress():void;disabled?:boolean}>;
+
 function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{label:string;onPress():void;disabled?:boolean;expanded?:boolean}>){
  return <button type="button" className="hjm-comment-row__action" disabled={disabled} aria-expanded={expanded} onClick={onPress}>{label}</button>;
 }
@@ -744,7 +751,7 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text>{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.authorBadge}{timeInActions?null:time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{inlineSize:commentThreadRecipe.mediaMaxWidth,maxInlineSize:"100%",borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {item.mediaAlbum?<MediaAlbumView className="hjm-comment-row__album" album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/>:null}
- {(timeInActions&&time)||canReply||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
+ {(timeInActions&&time)||canReply||item.reactionSummary||item.textActions?.length?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}{item.textActions?.map(action=><CommentTextAction key={action.id} label={action.label} disabled={action.disabled??false} onPress={action.onPress}/>)}</Stack>:null}
  {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
  {item.panel!=null?<div className="hjm-comment-row__panel" style={{marginBlockStart:commentThreadRecipe.panelGap-commentThreadRecipe.lineGap}}>{item.panel}</div>:null}</div>
  <div className="hjm-comment-row__like" {...(menuItems.length||item.actions==null&&item.likeAction===undefined?{"data-edge":"end"}:{})} style={{"--hjm-comment-anchor-line":`var(--hjm-type-${item.bodyText!==undefined?commentThreadRecipe.actionAnchor.inlineTextVariant:commentThreadRecipe.actionAnchor.authorTextVariant}-line-height)`} as CSSProperties}><Stack axis="inline" style={{gap:0}} align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" size={commentThreadRecipe.actionButtonSize} onClick={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<div className="hjm-comment-row__like-count" style={{inlineSize:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted">{item.likeCountLabel}</Text></div>:null}</div></Stack>;

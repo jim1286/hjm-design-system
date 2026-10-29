@@ -538,6 +538,11 @@ export type CommentThreadItem = Readonly<{
   */
  timePlacement?:"auto"|"actions";
  /**
+  * Text actions in the Reply line, after Reply, styled like Reply (2026-10-29 Spint comment translation: Instagram puts
+  * "See original"/"See translation" beside Reply). The product owns labels and state; HJM owns placement and order.
+  */
+ textActions?:readonly CommentTextActionDescriptor[];
+ /**
   * Inline per-comment panel (edit, report or block form) under the Reply line, outside the long-press target
   * (2026-10-18, Utilverse). The product owns its open state, focus, submit and close; HJM owns its place in the row.
   */
@@ -576,6 +581,8 @@ export type CommentThreadScreenProps = Base & {items:readonly CommentThreadItem[
  revealedReplyId?:string};
 export type CommentThreadRowProps = Readonly<{ layoutStyle?: ScreenLayoutProps["layoutStyle"]; item: CommentThreadItem; onLike(id: string): void; onReply(id: string): void; replyLabel: string; commentMenu?: CommentMenu }>;
 /** Quiet secondary actions (reply, expand) read as muted copy beside the body, not as filled buttons. */
+export type CommentTextActionDescriptor=Readonly<{id:string;label:string;onPress():void;disabled?:boolean}>;
+
 function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{label:string;onPress():void;disabled?:boolean;expanded?:boolean}>){
  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{disabled,...(expanded===undefined?{}:{expanded})}} disabled={disabled} hitSlop={commentThreadRecipe.avatarGap} onPress={onPress} style={{alignSelf:"flex-start",opacity:disabled?0.5:1}}><Text variant="caption" tone="muted" emphasis="strong">{label}</Text></Pressable>;
 }
@@ -611,7 +618,7 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text>{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.authorBadge}{item.timeLabel&&!timeInActions?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}</Stack>:null}
  {item.body}{item.media?<View style={{width:commentThreadRecipe.mediaMaxWidth,maxWidth:"100%",borderRadius:commentThreadRecipe.mediaRadius,overflow:"hidden",marginTop:commentThreadRecipe.avatarGap/2,alignSelf:"flex-start"}}>{item.media}</View>:null}</>;return item.reactions?<MessageReactions previewSurface {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})}><View style={{gap:commentThreadRecipe.lineGap}}>{identity}</View></MessageReactions>:identity;})()}
  {item.mediaAlbum?<View style={{marginTop:commentThreadRecipe.avatarGap/2,alignSelf:"flex-start"}}><MediaAlbumView album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/></View>:null}
- {(timeInActions&&item.timeLabel)||(item.canReply??item.parentId===null)||item.reactionSummary?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.reactionSummary}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}</Stack>:null}
+ {(timeInActions&&item.timeLabel)||(item.canReply??item.parentId===null)||item.reactionSummary||item.textActions?.length?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions&&item.timeLabel?<Text variant="caption" tone="muted">{item.timeLabel}</Text>:null}{item.reactionSummary}{(item.canReply??item.parentId===null)?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}{item.textActions?.map(action=><CommentTextAction key={action.id} label={action.label} disabled={action.disabled??false} onPress={action.onPress}/>)}</Stack>:null}
  {/* The text column already spaces lines by lineGap; the panel adds the rest of panelGap. */}
  {item.panel!=null?<View style={{marginTop:commentThreadRecipe.panelGap-commentThreadRecipe.lineGap}}>{item.panel}</View>:null}</View>
  <View style={{flexShrink:0,marginTop:anchorOffset,...(edgeOverhang?{marginEnd:-edgeOverhang}:{})}}><Stack axis="inline" gap={0} align="center" layoutStyle={{flexShrink:0}}>{item.likeAction!==undefined?item.likeAction:<IconButton label={item.likeLabel} tone="ghost" size={commentThreadRecipe.actionButtonSize} onPress={()=>onLike(item.id)}>{item.likeIcon}</IconButton>}{item.actions}{commentMenu&&menuItems.length?<CommentMenuButton item={item} menu={commentMenu} items={menuItems}/>:null}</Stack>{item.likeCountLabel?<View style={{width:commentThreadRecipe.likeColumnWidth}}><Text variant="caption" tone="muted" align="center">{item.likeCountLabel}</Text></View>:null}</View></Stack>;
