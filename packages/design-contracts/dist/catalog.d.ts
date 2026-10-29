@@ -1189,7 +1189,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Image";
     readonly label: "이미지";
-    readonly extensions: readonly ["GridReveal", "ImageViewer", "ImageViewerTrigger"];
+    readonly extensions: readonly ["GridReveal", "ImageViewer", "ImageViewerTrigger", "CircularPhotoCropper"];
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "stable";

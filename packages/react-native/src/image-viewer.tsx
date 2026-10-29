@@ -9,6 +9,8 @@ import { SegmentedControl } from "./inputs.js";
 import { ImageInspection, type ImageViewerInspection } from "./internal/image-inspection.js";
 export type { ImageViewerInspection } from "./internal/image-inspection.js";
 export { ImageViewerTrigger, type ImageViewerTriggerProps } from "./internal/image-viewer-trigger.js";
+// Profile-photo framing shares this subpath: it needs the same optional gesture peers (2026-10-29).
+export { CircularPhotoCropper, type CircularPhotoCropperProps } from "./internal/circular-photo-cropper.js";
 import { Surface, Text } from "./primitives.js";
 import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
 import { glyph } from "@hjmds/design-contracts/foundations";

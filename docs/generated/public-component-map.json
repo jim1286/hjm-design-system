@@ -464,6 +464,15 @@
         "role": "supplemental"
       },
       {
+        "name": "CircularPhotoCropper",
+        "source": "packages/react/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "ClipboardButton",
         "source": "packages/react/src/clipboard.tsx",
         "entries": [
@@ -2718,6 +2727,15 @@
         ],
         "canonicalComponent": null,
         "role": "supplemental"
+      },
+      {
+        "name": "CircularPhotoCropper",
+        "source": "packages/react-native/src/internal/circular-photo-cropper.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
       },
       {
         "name": "CodeBlock",

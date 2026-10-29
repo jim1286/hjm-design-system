@@ -4028,6 +4028,15 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer__header, .hjm-image-viewer__footer { display: flex; align-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-left)) var(--hjm-space-xs) max(var(--hjm-space-md), env(safe-area-inset-right)); }
 .hjm-image-viewer__footer > span { flex: 1; text-align: center; }
 .hjm-image-viewer__stage { flex: 1; min-block-size: 0; overflow: hidden; position: relative; touch-action: none; }
+/* Circular profile-photo framing (2026-10-29): the mask's huge box-shadow dims everything outside the circle. */
+.hjm-photo-cropper__title { justify-content: center; }
+.hjm-photo-cropper__title h2 { margin: 0; font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+.hjm-photo-cropper__stage { cursor: grab; }
+.hjm-photo-cropper__image { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; max-inline-size: none; user-select: none; pointer-events: none; }
+.hjm-photo-cropper__mask { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 0 0 9999px var(--hjm-photo-cropper-mask); pointer-events: none; }
+.hjm-photo-cropper__footer { display: grid; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm) var(--hjm-space-lg) max(var(--hjm-space-md), env(safe-area-inset-bottom)); }
+.hjm-photo-cropper__footer p { margin: 0; text-align: center; color: rgba(255,255,255,0.72); font-size: var(--hjm-type-caption-size); }
+.hjm-photo-cropper__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--hjm-space-sm); }
 .hjm-image-viewer__image { inline-size: 100%; block-size: 100%; display: flex; align-items: center; justify-content: center; }
 .hjm-image-viewer__image img { inline-size: 100%; block-size: 100%; object-fit: contain; user-select: none; }
 .hjm-image-viewer__image > [role="status"], .hjm-image-viewer__image > [role="alert"] { position: absolute; background: #000; color: #fff; padding: var(--hjm-space-md); }

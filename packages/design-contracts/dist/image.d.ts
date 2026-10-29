@@ -108,5 +108,41 @@ export declare const imageViewerTriggerRecipe: {
     readonly disabledOpacity: 0.5;
 };
 export declare function validateImageViewerTriggerLabel(label: string): void;
+/**
+ * Circular profile-photo crop (2026-10-29 user rule: profile photos are framed in a circle like Instagram before
+ * upload). Web and Native draw the same square viewport with a circular mask; the product crops the returned
+ * source-pixel square and uploads it. The square keeps the circle's bounding box, so a cover-fitted avatar shows
+ * exactly the framed circle.
+ */
+export declare const circularPhotoCropRecipe: {
+    /** Largest zoom over the cover scale; beyond this a small photo turns into blur. */
+    readonly maxZoom: 4;
+    /** Mask outside the circle (on the black editing surface). */
+    readonly maskOpacity: 0.6;
+    /** Hairline around the circle so its edge reads on dark and light photos. */
+    readonly ringWidth: 1;
+    /** Horizontal space kept around the viewport, in px/pt. */
+    readonly gutter: 24;
+};
+export type CircularPhotoCropState = Readonly<{
+    zoom: number;
+    x: number;
+    y: number;
+}>;
+export type CircularPhotoCropRect = Readonly<{
+    originX: number;
+    originY: number;
+    width: number;
+    height: number;
+}>;
+/** Display px per source px at zoom 1: the photo covers the viewport on its short side. */
+export declare function circularPhotoCoverScale(sourceWidth: number, sourceHeight: number, viewport: number): number;
+/**
+ * Keeps the photo covering the viewport: zoom within [1, maxZoom] and the offset (photo centre from viewport
+ * centre, display px) within the overhang, so the circle never shows empty space.
+ */
+export declare function clampCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropState;
+/** Source-pixel square under the viewport, rounded inside the photo bounds. */
+export declare function resolveCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropRect;
 export {};
 //# sourceMappingURL=image.d.ts.map

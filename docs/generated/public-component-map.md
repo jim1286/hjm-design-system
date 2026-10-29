@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 241개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 242개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -56,6 +56,7 @@
 | CheckboxGroup | CheckboxGroup | canonical | root, ./selection |
 | Chip | Chip | canonical | root, ./selection |
 | ChoiceRow | 별도 보조 기능 | supplemental | ./choice-row |
+| CircularPhotoCropper | Image | optional-extension | ./image-viewer |
 | ClipboardButton | Button | companion-or-alternative | root, ./clipboard |
 | ClipboardIconButton | IconButton | companion-or-alternative | root, ./clipboard |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
@@ -252,7 +253,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 231개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 232개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -299,6 +300,7 @@
 | CheckboxGroup | CheckboxGroup | canonical | root, ./inputs |
 | Chip | Chip | canonical | root, ./inputs |
 | ChoiceRow | 별도 보조 기능 | supplemental | ./choice-row |
+| CircularPhotoCropper | Image | optional-extension | ./image-viewer |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
 | CohortRetentionTable | 별도 보조 기능 | supplemental | ./data-workflows |
 | Collapsible | Collapsible | canonical | root, ./collapsible |

@@ -1,11 +1,11 @@
 "use client";
 
 import { forwardRef, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode, type PointerEvent } from "react";
-import { imageViewerTriggerRecipe, validateImageViewerTriggerLabel } from "@hjmds/design-contracts/components/image";
+import { circularPhotoCoverScale, circularPhotoCropRecipe, clampCircularPhotoCrop, imageViewerTriggerRecipe, resolveCircularPhotoCrop, validateImageViewerTriggerLabel, type CircularPhotoCropRect, type CircularPhotoCropState } from "@hjmds/design-contracts/components/image";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
-import { IconButton } from "./actions.js";
+import { Button, IconButton } from "./actions.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string };
 export type ImageViewerProps = {
@@ -120,4 +120,76 @@ function ImageAttempt({ item, loadingLabel, errorLabel, retryLabel, onRetry }: P
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   return <><img src={item.uri} alt={item.label} draggable={false} onLoad={() => setStatus(current => current === 'error' ? current : 'ready')} onError={() => setStatus("error")} />
     {status === "loading" ? <span role="status">{loadingLabel}</span> : status === "error" ? <div role="alert">{errorLabel}<button type="button" onClick={onRetry}>{retryLabel}</button></div> : null}</>;
+}
+
+export type CircularPhotoCropperProps = Readonly<{
+  open: boolean;
+  /** The picked photo with its intrinsic pixel size (read from the decoded image). */
+  source: Readonly<{ uri: string; width: number; height: number }>;
+  title: string;
+  /** Short instruction under the circle, e.g. "Drag and scroll or pinch to fit". */
+  hint?: string;
+  confirmLabel: string;
+  cancelLabel: string;
+  /** While the product crops/uploads; both actions are locked. */
+  busy?: boolean;
+  onCancel(): void;
+  /** Source-pixel square under the circle; the product crops (canvas) and uploads it. */
+  onConfirm(crop: CircularPhotoCropRect): void;
+}>;
+
+/**
+ * Instagram-style circular framing for profile photos (2026-10-29 user rule, all apps and web): drag to move, wheel or
+ * pinch to zoom inside a circular mask on the black photo surface. Same geometry as Native (contract functions).
+ */
+export function CircularPhotoCropper(props: CircularPhotoCropperProps) {
+  if (!props.open) return null;
+  if ([props.title, props.confirmLabel, props.cancelLabel].some(label => !label.trim()) || !props.source.uri.trim() ||
+    !(props.source.width > 0 && props.source.height > 0)) throw new TypeError("CircularPhotoCropper needs labels and a sized source");
+  return <CropSession key={props.source.uri} {...props} />;
+}
+function CropSession({ source, title, hint, confirmLabel, cancelLabel, busy = false, onCancel, onConfirm }: CircularPhotoCropperProps) {
+  const contentRef = useRef<HTMLDivElement>(null), cancelRef = useRef<HTMLButtonElement>(null);
+  const [viewport, setViewport] = useState(0);
+  const [state, setState] = useState<CircularPhotoCropState>({ zoom: 1, x: 0, y: 0 });
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
+  useModalFocus({ active: true, contentRef, initialFocusRef: cancelRef, onEscape: () => { if (!busy) onCancel(); } });
+  const update = (next: CircularPhotoCropState) => { if (viewport > 0) setState(clampCircularPhotoCrop(next, source.width, source.height, viewport)); };
+  const cover = viewport > 0 ? circularPhotoCoverScale(source.width, source.height, viewport) : 0;
+  return <HjmPortal><div className="hjm-image-viewer hjm-photo-cropper" style={{ zIndex: getModalLayer(0) }} ref={contentRef}
+    role="dialog" aria-modal="true" aria-label={title} data-hjm-modal-content="" tabIndex={-1}>
+    <div className="hjm-image-viewer__header hjm-photo-cropper__title"><h2>{title}</h2></div>
+    <div className="hjm-image-viewer__stage hjm-photo-cropper__stage" aria-label={hint ?? title}
+      ref={node => { if (node && !viewport) { const box = node.getBoundingClientRect(); setViewport(Math.max(1, Math.min(box.width - circularPhotoCropRecipe.gutter * 2, box.height - circularPhotoCropRecipe.gutter * 2))); } }}
+      onWheel={event => update({ ...state, zoom: state.zoom * (event.deltaY < 0 ? 1.1 : 1 / 1.1), x: state.x, y: state.y })}
+      onPointerDown={event => { pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY }); event.currentTarget.setPointerCapture(event.pointerId); }}
+      onPointerMove={event => {
+        const previous = pointers.current.get(event.pointerId);
+        if (!previous) return;
+        const others = [...pointers.current.entries()].filter(([id]) => id !== event.pointerId).map(([, point]) => point);
+        if (others.length) {
+          // Two-finger pinch: zoom by the change in finger distance around the circle centre.
+          const other = others[0]!, before = Math.hypot(previous.x - other.x, previous.y - other.y), after = Math.hypot(event.clientX - other.x, event.clientY - other.y);
+          const zoom = before > 0 ? state.zoom * after / before : state.zoom;
+          update({ zoom, x: state.x * zoom / state.zoom, y: state.y * zoom / state.zoom });
+        } else update({ ...state, x: state.x + event.clientX - previous.x, y: state.y + event.clientY - previous.y });
+        pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      }}
+      onPointerUp={event => pointers.current.delete(event.pointerId)} onPointerCancel={event => pointers.current.delete(event.pointerId)}>
+      {viewport > 0 ? <>
+        <img src={source.uri} alt="" draggable={false} className="hjm-photo-cropper__image"
+          style={{ inlineSize: source.width * cover, blockSize: source.height * cover, transform: `translate(-50%, -50%) translate(${state.x}px, ${state.y}px) scale(${state.zoom})` }} />
+        <div className="hjm-photo-cropper__mask" aria-hidden="true"
+          style={{ inlineSize: viewport, blockSize: viewport, "--hjm-photo-cropper-mask": `rgba(0,0,0,${circularPhotoCropRecipe.maskOpacity})` } as CSSProperties} />
+      </> : null}
+    </div>
+    <div className="hjm-photo-cropper__footer">
+      {hint ? <p>{hint}</p> : null}
+      <div className="hjm-photo-cropper__actions">
+        <Button ref={cancelRef} tone="secondary" fullWidth disabled={busy} onClick={onCancel}>{cancelLabel}</Button>
+        <Button tone="primary" fullWidth loading={busy} disabled={busy || viewport <= 0}
+          onClick={() => onConfirm(resolveCircularPhotoCrop(state, source.width, source.height, viewport))}>{confirmLabel}</Button>
+      </div>
+    </div>
+  </div></HjmPortal>;
 }

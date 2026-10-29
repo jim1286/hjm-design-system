@@ -195,3 +195,53 @@ export const imageViewerTriggerRecipe = {
 export function validateImageViewerTriggerLabel(label: string): void {
   if (typeof label !== "string" || label.trim().length === 0) throw new TypeError("ImageViewerTrigger needs a localized label");
 }
+
+/**
+ * Circular profile-photo crop (2026-10-29 user rule: profile photos are framed in a circle like Instagram before
+ * upload). Web and Native draw the same square viewport with a circular mask; the product crops the returned
+ * source-pixel square and uploads it. The square keeps the circle's bounding box, so a cover-fitted avatar shows
+ * exactly the framed circle.
+ */
+export const circularPhotoCropRecipe = {
+  /** Largest zoom over the cover scale; beyond this a small photo turns into blur. */
+  maxZoom: 4,
+  /** Mask outside the circle (on the black editing surface). */
+  maskOpacity: 0.6,
+  /** Hairline around the circle so its edge reads on dark and light photos. */
+  ringWidth: 1,
+  /** Horizontal space kept around the viewport, in px/pt. */
+  gutter: 24,
+} as const;
+
+export type CircularPhotoCropState = Readonly<{ zoom: number; x: number; y: number }>;
+export type CircularPhotoCropRect = Readonly<{ originX: number; originY: number; width: number; height: number }>;
+
+/** Display px per source px at zoom 1: the photo covers the viewport on its short side. */
+export function circularPhotoCoverScale(sourceWidth: number, sourceHeight: number, viewport: number): number {
+  if (!(sourceWidth > 0 && sourceHeight > 0 && viewport > 0)) throw new RangeError("Crop needs positive source and viewport sizes");
+  return viewport / Math.min(sourceWidth, sourceHeight);
+}
+
+/**
+ * Keeps the photo covering the viewport: zoom within [1, maxZoom] and the offset (photo centre from viewport
+ * centre, display px) within the overhang, so the circle never shows empty space.
+ */
+export function clampCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropState {
+  const zoom = Math.min(circularPhotoCropRecipe.maxZoom, Math.max(1, state.zoom));
+  const scale = circularPhotoCoverScale(sourceWidth, sourceHeight, viewport) * zoom;
+  const limitX = Math.max(0, (sourceWidth * scale - viewport) / 2);
+  const limitY = Math.max(0, (sourceHeight * scale - viewport) / 2);
+  return { zoom, x: Math.min(limitX, Math.max(-limitX, state.x)), y: Math.min(limitY, Math.max(-limitY, state.y)) };
+}
+
+/** Source-pixel square under the viewport, rounded inside the photo bounds. */
+export function resolveCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropRect {
+  const clamped = clampCircularPhotoCrop(state, sourceWidth, sourceHeight, viewport);
+  const scale = circularPhotoCoverScale(sourceWidth, sourceHeight, viewport) * clamped.zoom;
+  const size = Math.min(sourceWidth, sourceHeight, Math.round(viewport / scale));
+  const centreX = sourceWidth / 2 - clamped.x / scale;
+  const centreY = sourceHeight / 2 - clamped.y / scale;
+  const originX = Math.min(sourceWidth - size, Math.max(0, Math.round(centreX - size / 2)));
+  const originY = Math.min(sourceHeight - size, Math.max(0, Math.round(centreY - size / 2)));
+  return { originX, originY, width: size, height: size };
+}
