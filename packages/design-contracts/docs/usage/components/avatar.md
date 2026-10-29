@@ -180,6 +180,10 @@ Avatar를 쓰지 못한 이유(이름 필수, Web 이미지 호스트 없음, 4�
 일반 목록은 `ListRow.leadingAction`, 카드 작성자는 `Card.leadingAction`, 대화 목록은 `ConversationRow.avatarAction` + `renderBody`, 참여자는 `ChatRoomMembers.memberProfile`이다.
 같은 사진에 `Avatar.action`과 상위 `avatarAction`을 함께 넣지 않는다. 본문 링크/버튼과 독립 프로필 버튼은 형제다.
 
+사진 옆에 따로 보이는 회원 닉네임도 같은 프로필로 이동한다(2026-10-29 사용자 지시: Spint 댓글에서 닉네임을 눌러도 반응이 없었다).
+댓글 `CommentThreadRow`는 `avatarAction`이 있으면 작성자 이름도 같은 행동·접근성 이름의 글자 버튼으로 그린다(Web `hjm-identity-name-action`,
+Native 중첩 `Text` press). 제품은 추가 prop 없이 `avatarAction`만 공급한다. 행 전체가 대화방·알림 목적지인 글자 안의 이름은 버튼을 중첩하지 않는다.
+
 회원 식별자가 없는 장식·방 사진을 회원 프로필로 연결하지 않는다. 명시적인 사진 편집·공유 대상 선택은 원래 작업을 유지한다.
 
 내 프로필 화면의 내 사진은 예외로 그 자체가 사진 변경 버튼이다(2026-10-25 사용자 지시). `action={{label: t("photo.change"), onPress: openPhotoPicker}}`를 연결하고 사진 고르기·자르기·업로드는 제품이 소유한다. 같은 화면에 중복 "사진 바꾸기" 버튼을 두지 않는다.

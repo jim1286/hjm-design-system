@@ -70,6 +70,7 @@ import { CommentThreadRow } from "@hjmds/react-native/screen-flows";
 | `mediaAlbum` | 없음 | 미게시. 한 장씩 넘기는 사진 묶음 `{ count, renderPage(index), pageLabel(index, count), previousLabel, nextLabel, aspectRatio?, onPress?(index), index?·onIndexChange?·defaultIndex? }`. `renderPage`는 화면에 보이는 장에만 호출되어 제품이 그 사진만 조회·디코딩한다. 불러오는 중·실패 장은 `MediaAlbumPageStatus`(`@hjmds/react(-native)/screens`, [ChatMessage](chat-message.md#축과-기본값))로 그려 안쪽 내용이 낭독기에 닿게 한다. `media`와 함께 주면 `TypeError`. 본문 아래, 길게 누르기 대상 밖에 놓인다 |
 | `authorBadge` | 없음 | 미게시. 닉네임 바로 뒤, 같은 줄에 놓는 제품 배지. 간격 `spacing.xxs` 4, 좁은 폭에서는 줄바꿈한다. `bodyText` 모드에서도 작성자·배지·본문 순서로 배치한다. 배지 문구·노출 조건은 제품이 소유한다 |
 | `avatar` | 없음 | 제품 아바타. 최상위 32·답글 24 폭 칸에 둔다 |
+| `avatarAction` | 없음 | 회원 프로필 이동 `{ label, onPress, disabled? }`. 사진과 **작성자 이름**이 같은 행동을 쓴다(이름은 2026-10-29부터, [Avatar 지침](avatar.md#회원-프로필-이동-2026-10-25)) |
 | `canReply` | `parentId === null` | 답글 행동 표시 여부 |
 | `replyDisabled` | false | 답글 행동 비활성 |
 | `likeAction`·`actions` | 없음 | 기본 좋아요 버튼 대체·옆에 추가 |

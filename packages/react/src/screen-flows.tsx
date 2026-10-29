@@ -1,7 +1,7 @@
 "use client";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { Children, Fragment, isValidElement } from "react";
-import { IdentityAction } from "./internal/identity-action.js";
+import { IdentityAction, IdentityNameAction } from "./internal/identity-action.js";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
 import { createContext, useContext } from "react";
@@ -738,6 +738,8 @@ function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;me
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }: CommentThreadRowProps) {
  validateMediaSetChoice(item.media!=null,item.mediaAlbum!==undefined);
  const [albumIndex,setAlbumIndex]=useMediaAlbumIndex(item.mediaAlbum);
+ // The nickname opens the same member profile as the picture (2026-10-29); without avatarAction it stays plain text.
+ const authorName=(name:ReactNode)=>item.avatarAction?<IdentityNameAction action={item.avatarAction}>{name}</IdentityNameAction>:name;
  // bodyText inlines the author, so its time always moves under the body; rich bodies opt in with timePlacement.
  const timeInActions=item.bodyText!==undefined||item.timePlacement==="actions";
  const avatarSize=item.parentId===null?commentThreadRecipe.avatarSize:commentThreadRecipe.replyAvatarSize;
@@ -748,7 +750,7 @@ export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyl
  return <Stack key={item.id} axis="inline" align="start" gap="xs" {...(layoutStyle === undefined ? {} : {layoutStyle})}>{item.avatar?<div className="hjm-comment-row__avatar" style={{inlineSize:item.avatarAction?iconButtonRecipe.sizes.medium.diameter:avatarSize}}>{item.avatarAction?<IdentityAction action={item.avatarAction}>{item.avatar}</IdentityAction>:item.avatar}</div>:null}<div className="hjm-comment-row__text" style={{gap:commentThreadRecipe.lineGap}}>
  {/* A definite media width resolves percentage-sized children; the parent cap preserves narrow comment columns (Spint photo adoption). */}
  {/* Only identity and body are the hold target, so the reply action keeps its own button semantics. */}
- {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}><Text emphasis="strong">{item.author}</Text>{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text><Text emphasis="strong">{item.author}</Text>{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?<Text variant="caption" emphasis="strong">{item.author}</Text>:null}{item.authorBadge}{timeInActions?null:time}</Stack>:null}
+ {(()=>{const identity=<>{item.bodyText!==undefined?(item.authorBadge?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{authorName(<Text emphasis="strong">{item.author}</Text>)}{item.authorBadge}<Text>{item.bodyText}</Text></Stack>:<Text>{authorName(<Text emphasis="strong">{item.author}</Text>)}{" "}{item.bodyText}</Text>):(item.author||item.authorBadge||(item.timeLabel&&!timeInActions))?<Stack axis="inline" gap="xxs" align="center" layoutStyle={{flexWrap:"wrap"}}>{item.author?authorName(<Text variant="caption" emphasis="strong">{item.author}</Text>):null}{item.authorBadge}{timeInActions?null:time}</Stack>:null}
  {item.body}{item.media?<div className="hjm-comment-row__media" style={{inlineSize:commentThreadRecipe.mediaMaxWidth,maxInlineSize:"100%",borderRadius:commentThreadRecipe.mediaRadius}}>{item.media}</div>:null}</>;return item.reactions?<MessageReactions {...item.reactions} {...((item.canReply??item.parentId===null)&&!item.replyDisabled ? {replyAction:{label:replyLabel,onPress:()=>onReply(item.id),...(item.reactions.replyIcon===undefined?{}:{icon:item.reactions.replyIcon})}} : {})} triggerClassName="hjm-comment-row__reactions">{identity}</MessageReactions>:identity;})()}
  {item.mediaAlbum?<MediaAlbumView className="hjm-comment-row__album" album={item.mediaAlbum} index={albumIndex} onIndexChange={setAlbumIndex} width={commentThreadRecipe.mediaMaxWidth} radius={commentThreadRecipe.mediaRadius}/>:null}
  {(timeInActions&&time)||canReply||item.reactionSummary||item.textActions?.length?<Stack axis="inline" gap="sm" align="center" layoutStyle={{flexWrap:"wrap"}}>{timeInActions?time:null}{item.reactionSummary}{canReply?<CommentTextAction label={replyLabel} disabled={item.replyDisabled??false} onPress={()=>onReply(item.id)}/>:null}{item.textActions?.map(action=><CommentTextAction key={action.id} label={action.label} disabled={action.disabled??false} onPress={action.onPress}/>)}</Stack>:null}

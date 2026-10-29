@@ -4067,6 +4067,10 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-identity-action:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; }
 .hjm-identity-action:active { opacity: var(--hjm-identity-pressed-opacity); }
 .hjm-identity-action:disabled { cursor: default; }
+/* A name that opens the member profile stays text: no button chrome, same font, a focus ring only. */
+.hjm-identity-name-action { display: inline; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: inherit; cursor: pointer; }
+.hjm-identity-name-action:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: 2px; border-radius: var(--hjm-radius-sm); }
+.hjm-identity-name-action:disabled { cursor: default; }
 
 /* Independent identity navigation is a sibling of row commands, including links. */
 .hjm-list-row__profile { display: flex; flex: 0 0 auto; padding-inline-start: var(--hjm-list-row-inline); }

@@ -32,3 +32,12 @@ it("draws product text actions after Reply in the action line", () => {
   const reply = render({ ...base, parentId: "p", textActions: [{ id: "original", label: "원본 보기", onPress: () => {} }] });
   expect(reply).toContain(">원본 보기<");
 });
+
+// 2026-10-29: the nickname opens the same member profile as the picture; without the action it stays text.
+it("makes the author name the avatar's profile action", () => {
+  const avatarAction = { label: "서연 프로필 열기", onPress: () => {} };
+  const html = render({ ...base, avatar: <span data-avatar />, avatarAction });
+  expect(html.match(/aria-label="서연 프로필 열기"/g)).toHaveLength(2);
+  expect(html).toMatch(/class="hjm-identity-name-action"[^>]*>.*서연/);
+  expect(render(base)).not.toContain("hjm-identity-name-action");
+});

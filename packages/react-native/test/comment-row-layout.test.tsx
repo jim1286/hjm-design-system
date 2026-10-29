@@ -44,3 +44,12 @@ it("draws product text actions after Reply in the action line", () => {
   act(() => tree!.unmount()); tree = undefined;
   expect(order({ ...base, parentId: "p", textActions: [{ id: "original", label: "원본 보기", onPress }] })).toContain("원본 보기");
 });
+
+// 2026-10-29: the nickname opens the same member profile as the picture; without the action it stays text.
+it("makes the author name the avatar's profile action", () => {
+  const onPress = vi.fn();
+  order({ ...base, avatar: <RNText>사진</RNText>, avatarAction: { label: "서연 프로필 열기", onPress } });
+  const name = tree!.root.findAll(node => node.props.accessibilityLabel === "서연 프로필 열기" && typeof node.props.onPress === "function" && node.props.suppressHighlighting === true)[0]!;
+  act(() => name.props.onPress({ stopPropagation() {} }));
+  expect(onPress).toHaveBeenCalledTimes(1);
+});
