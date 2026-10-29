@@ -37,3 +37,30 @@ it('fills a black viewport, preserves image ratio, resets zoom on page changes a
   expect(document.querySelector('[role="dialog"]')).toBeNull();
   expect(document.activeElement).toBe(opener);
 });
+
+// 2026-10-30 user request (a default for every product): pulling an unzoomed photo down by touch closes the viewer.
+it('closes on a long downward touch pull, springs back from a short one and ignores mouse drags', async () => {
+  await act(async () => root.render(<Fixture />));
+  await act(async () => host.querySelector('button')!.click());
+  const stage = document.querySelector<HTMLElement>('.hjm-image-viewer__stage')!;
+  // Synthetic pointers are not active pointers, so capture would throw; the browser owns it for real touches.
+  stage.setPointerCapture = () => undefined;
+  const drag = async (pointerType: string, from: number, to: number, ms: number) => {
+    const at = (type: string, y: number, timeStamp: number) => {
+      const event = new PointerEvent(type, { bubbles: true, pointerId: 7, pointerType, clientX: 50, clientY: y });
+      Object.defineProperty(event, 'timeStamp', { value: timeStamp });
+      return event;
+    };
+    // React reads a zero timeStamp as "now", so the synthetic clock starts at 1.
+    await act(async () => stage.dispatchEvent(at('pointerdown', from, 1)));
+    await act(async () => stage.dispatchEvent(at('pointermove', to, 1 + ms)));
+    await act(async () => stage.dispatchEvent(at('pointerup', to, 1 + ms)));
+  };
+  await drag('touch', 100, 160, 400);
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.querySelector<HTMLElement>('.hjm-image-viewer__image')!.style.transform).toContain('translate(0px, 0px)');
+  await drag('mouse', 100, 400, 400);
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+  await drag('touch', 100, 300, 400);
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+});

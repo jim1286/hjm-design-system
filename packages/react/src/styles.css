@@ -4045,6 +4045,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer .hjm-icon-button { color: #fff; background: #222; }
 
 .hjm-image-viewer__actions { margin-inline-start: auto; }
+@media (prefers-reduced-motion: reduce) { .hjm-image-viewer__image { transition: none !important; } }
 
 /* Persistent selection uses a neutral surface; active-descendant focus keeps its own treatment. */
 .hjm-surface[data-tone="selected"] { background: var(--hjm-color-surface-selected); }

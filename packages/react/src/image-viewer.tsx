@@ -54,11 +54,21 @@ export function ImageViewer(props: ImageViewerProps) {
     throw new TypeError("ImageViewer needs named images, localized controls and a valid index");
   return <ViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri]))} {...props} />;
 }
+/**
+ * 2026-10-30 user request, a default for every product: pulling an unzoomed photo down closes the viewer, like
+ * photo viewers elsewhere (Native shares the thresholds). Touch and pen only; a mouse keeps the button and Escape.
+ */
+const PULL_CLOSE_DISTANCE = 120;
+const PULL_CLOSE_VELOCITY = 0.9; // px per ms
+
 function ViewerSession(props: ImageViewerProps) {
   const contentRef = useRef<HTMLDivElement>(null), closeRef = useRef<HTMLButtonElement>(null);
   const [index, setIndex] = useState(props.initialIndex ?? 0);
   const [view, setView] = useState({ scale: 1, x: 0, y: 0 });
   const pointers = useRef(new Map<number, { x: number; y: number }>());
+  const pullStart = useRef<{ id: number; y: number; time: number } | null>(null);
+  const [pull, setPull] = useState(0);
+  const [settling, setSettling] = useState(false);
   const item = props.items[index]!;
   useModalFocus({ active: true, contentRef, initialFocusRef: closeRef, onEscape: props.onClose });
   const move = (next: number) => { pointers.current.clear(); setView({ scale: 1, x: 0, y: 0 }); setIndex(next); props.onIndexChange?.(next); };
@@ -75,6 +85,11 @@ function ViewerSession(props: ImageViewerProps) {
   const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const old = pointers.current.get(event.pointerId);
     if (!old) return;
+    if (pullStart.current?.id === event.pointerId && pointers.current.size === 1) {
+      pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      setPull(Math.max(0, event.clientY - pullStart.current.y));
+      return;
+    }
     const other = [...pointers.current.entries()].find(([id]) => id !== event.pointerId)?.[1];
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (other) {
@@ -84,12 +99,27 @@ function ViewerSession(props: ImageViewerProps) {
   };
   return <HjmPortal><div className="hjm-image-viewer" style={{ zIndex: getModalLayer(0) }} ref={contentRef}
     role="dialog" aria-modal="true" aria-label={item.label} data-hjm-modal-content="" tabIndex={-1}>
-    <div className="hjm-image-viewer__header"><IconButton ref={closeRef} label={props.closeLabel} tone="ghost" onClick={props.onClose}>×</IconButton>{props.actions ? <div className="hjm-image-viewer__actions">{props.actions}</div> : null}</div>
+    <div className="hjm-image-viewer__header" style={{ opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }}><IconButton ref={closeRef} label={props.closeLabel} tone="ghost" onClick={props.onClose}>×</IconButton>{props.actions ? <div className="hjm-image-viewer__actions">{props.actions}</div> : null}</div>
     <div className="hjm-image-viewer__stage" onDoubleClick={() => clamp(view.scale === 1 ? 2 : 1, 0, 0)}
       onPointerDown={event => {
         if ((event.target as HTMLElement).closest("button")) return;
         pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY }); event.currentTarget.setPointerCapture(event.pointerId);
-      }} onPointerMove={pointerMove} onPointerUp={event => pointers.current.delete(event.pointerId)} onPointerCancel={event => pointers.current.delete(event.pointerId)}
+        setSettling(false);
+        // A second finger turns the gesture into a pinch; only a lone touch at the resting scale can pull.
+        pullStart.current = pointers.current.size === 1 && view.scale === 1 && event.pointerType !== "mouse"
+          ? { id: event.pointerId, y: event.clientY, time: event.timeStamp } : null;
+        if (!pullStart.current) setPull(0);
+      }} onPointerMove={pointerMove}
+      onPointerUp={event => {
+        pointers.current.delete(event.pointerId);
+        const start = pullStart.current;
+        if (start?.id !== event.pointerId) return;
+        pullStart.current = null;
+        const distance = event.clientY - start.y;
+        if (distance > PULL_CLOSE_DISTANCE || (distance > 0 && distance / Math.max(1, event.timeStamp - start.time) > PULL_CLOSE_VELOCITY)) props.onClose();
+        else { setSettling(true); setPull(0); }
+      }}
+      onPointerCancel={event => { pointers.current.delete(event.pointerId); if (pullStart.current?.id === event.pointerId) { pullStart.current = null; setSettling(true); setPull(0); } }}
       onKeyDown={event => {
         if (event.key === "+" || event.key === "=") { event.preventDefault(); clamp(Math.min(4, view.scale + 1)); }
         if (event.key === "-") { event.preventDefault(); clamp(Math.max(1, view.scale - 1)); }
@@ -100,11 +130,12 @@ function ViewerSession(props: ImageViewerProps) {
           else if (event.key === 'ArrowRight' && index + 1 < props.items.length) move(index + 1);
         }
       }} tabIndex={0} aria-label={item.label}>
-      <div className="hjm-image-viewer__image" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}>
+      <div className="hjm-image-viewer__image" style={{ transform: `translate(${view.x}px, ${view.y + pull}px) scale(${view.scale * (1 - 0.15 * Math.min(1, pull / (PULL_CLOSE_DISTANCE * 3)))})`,
+        transition: settling ? "transform 200ms ease-out" : "none" }}>
         {props.renderImage ? props.renderImage(item) : <ViewerImage key={item.uri} item={item} {...props} />}
       </div>
     </div>
-    <div className="hjm-image-viewer__footer">
+    <div className="hjm-image-viewer__footer" style={{ opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }}>
       {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => move(index - 1)}>‹</IconButton> : null}
       <span aria-live="polite">{item.label}{props.items.length > 1 ? ` · ${index + 1}/${props.items.length}` : ""}</span>
       {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.items.length - 1} onClick={() => move(index + 1)}>›</IconButton> : null}
