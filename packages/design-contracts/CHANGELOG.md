@@ -1,5 +1,12 @@
 # @hjmds/design-contracts
 
+## 2.2.0
+
+### Minor Changes
+
+- Layout Web descriptor accepts an explicit `skipLink: false` opt-out: no skip link, bypass by the shell landmarks (WCAG ARIA11). The default still requires `skipLinkLabel`; combining both throws.
+- `layoutRecipe.sidebar.width` (280) is no longer applied by Layout and is deprecated; the persistent sidebar column takes its content's width. Kept for 2.x compatibility.
+
 ## 2.1.0
 
 ### Minor Changes

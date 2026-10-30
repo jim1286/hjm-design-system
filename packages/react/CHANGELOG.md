@@ -1,5 +1,16 @@
 # @hjmds/react
 
+## 2.2.0
+
+### Minor Changes
+
+- `Layout` accepts `skipLink={false}` (see design-contracts 2.2.0) and no longer forces the persistent sidebar column to 280 px: the column takes its content's width, so `Sidebar` (260/220, collapsed 72) fills it without a gap.
+- `Sidebar` adds `header` and `footer` slots: product content above the groups (brand, primary action) and pinned at the bottom (settings, language).
+
+### Patch Changes
+
+- `DrawingEditor` centres its canvas column in block screen bodies (`alignSelf` was ignored there and the column sat on the start edge).
+
 ## 2.1.0
 
 ### Minor Changes

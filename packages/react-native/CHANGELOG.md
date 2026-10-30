@@ -1,5 +1,11 @@
 # @hjmds/react-native
 
+## 2.2.0
+
+### Patch Changes
+
+- Version aligned with the 2.2.0 train (design-contracts peer `>=2.2.0 <2.3.0`); no Native API change.
+
 ## 2.1.0
 
 ### Minor Changes

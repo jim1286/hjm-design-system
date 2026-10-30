@@ -4,7 +4,7 @@ import { sidebarDefaults, sidebarRecipe, validateSidebarDescriptor, } from "@hjm
 import { forwardRef, useState, } from "react";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames, useControllableState } from "./internal.js";
-export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "standard", size = sidebarDefaults.size, collapsed: controlledCollapsed, defaultCollapsed, onCollapsedChange, collapseLabels, onNavigate, renderLink, renderIcon, renderBadge, className, layoutStyle, }, forwardedRef) {
+export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "standard", size = sidebarDefaults.size, collapsed: controlledCollapsed, defaultCollapsed, onCollapsedChange, collapseLabels, onNavigate, renderLink, renderIcon, renderBadge, header, footer, className, layoutStyle, }, forwardedRef) {
     validateSidebarDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
     const animate = theme !== null && !theme.environment.reducedMotion;
@@ -34,7 +34,7 @@ export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "s
             "--hjm-sidebar-item-radius": `var(--hjm-radius-md, ${sidebarRecipe.itemRadius}px)`,
             "--hjm-sidebar-gap": `${sidebarRecipe.gap}px`,
             "--hjm-sidebar-group-gap": `${sidebarRecipe.groupGap}px`,
-        }, children: [collapseLabels ? (_jsx("button", { type: "button", className: "hjm-sidebar__toggle", "aria-expanded": !collapsed, "aria-label": collapsed ? collapseLabels.expand : collapseLabels.collapse, onClick: () => setCollapsed(!collapsed), children: _jsx("span", { "aria-hidden": "true", children: collapsed ? "»" : "«" }) })) : null, descriptor.groups.map((group) => (_jsxs("div", { className: "hjm-sidebar__group", role: "group", "aria-label": group.label, children: [group.label ? _jsx("p", { className: "hjm-sidebar__group-label", "aria-hidden": "true", children: group.label }) : null, _jsx("ul", { className: "hjm-sidebar__list", children: group.items.map((item) => {
+        }, children: [collapseLabels ? (_jsx("button", { type: "button", className: "hjm-sidebar__toggle", "aria-expanded": !collapsed, "aria-label": collapsed ? collapseLabels.expand : collapseLabels.collapse, onClick: () => setCollapsed(!collapsed), children: _jsx("span", { "aria-hidden": "true", children: collapsed ? "»" : "«" }) })) : null, header ? _jsx("div", { className: "hjm-sidebar__header", children: header }) : null, descriptor.groups.map((group) => (_jsxs("div", { className: "hjm-sidebar__group", role: "group", "aria-label": group.label, children: [group.label ? _jsx("p", { className: "hjm-sidebar__group-label", "aria-hidden": "true", children: group.label }) : null, _jsx("ul", { className: "hjm-sidebar__list", children: group.items.map((item) => {
                             const current = descriptor.currentId === item.id;
                             const href = item.destination?.href;
                             const content = (_jsxs(_Fragment, { children: [renderIcon ? _jsx("span", { "aria-hidden": "true", className: "hjm-sidebar__icon", children: renderIcon(item) }) : null, _jsx("span", { className: "hjm-sidebar__label", children: item.label }), item.badgeCount !== undefined ? (_jsx("span", { className: "hjm-sidebar__badge", children: renderBadge?.(item.badgeCount, item) ?? item.badgeCount })) : null] }));
@@ -71,6 +71,6 @@ export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "s
                             return (_jsx("li", { children: renderLink && href !== undefined && !item.disabled
                                     ? renderLink({ ...linkProps, href })
                                     : _jsx("a", { ...linkProps }) }, item.id));
-                        }) })] }, group.id)))] }));
+                        }) })] }, group.id))), footer ? _jsx("div", { className: "hjm-sidebar__footer", children: footer }) : null] }));
 });
 //# sourceMappingURL=sidebar.js.map

@@ -29,7 +29,13 @@ export function validateLayoutRegions(descriptor) {
 export function validateLayoutWebDescriptor(descriptor) {
     validateLayoutRegions(descriptor);
     const needsSkipLink = descriptor.hasHeader === true || descriptor.sidebar !== undefined;
-    if (needsSkipLink && descriptor.skipLinkLabel === undefined) {
+    if (descriptor.skipLink === false && descriptor.skipLinkLabel !== undefined) {
+        throw new TypeError("Layout skipLink={false} cannot be combined with skipLinkLabel");
+    }
+    if (descriptor.skipLink !== undefined && descriptor.skipLink !== false) {
+        throw new TypeError("Layout skipLink only accepts false");
+    }
+    if (needsSkipLink && descriptor.skipLinkLabel === undefined && descriptor.skipLink !== false) {
         throw new TypeError("Layout requires skipLinkLabel when a header or sidebar region precedes main");
     }
 }
@@ -65,6 +71,10 @@ export const layoutRecipe = {
         maxWidth: layoutFoundation.contentMaxWidth,
         paddingHorizontal: layoutFoundation.pagePadding.regular,
     },
+    /**
+     * @deprecated Layout no longer applies this width (2.2): the persistent column takes its content's width, and
+     * Sidebar owns its steps (`sidebarRecipe.sizes`). Kept for 2.x compatibility of the exported recipe shape.
+     */
     sidebar: {
         width: 280,
     },

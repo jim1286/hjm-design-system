@@ -2026,6 +2026,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   Collapsed hides the labels only. Every item, its badge and its accessible
   name stay — collapsing is density, not a different menu.
 */
+.hjm-sidebar__header { display: flex; flex-direction: column; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); }
+.hjm-sidebar__footer { display: flex; flex-direction: column; gap: var(--hjm-space-sm); margin-block-start: auto; padding: var(--hjm-space-sm) var(--hjm-space-sm) var(--hjm-space-xs); border-block-start: 1px solid var(--hjm-color-border); }
 .hjm-sidebar[data-collapsed] .hjm-sidebar__label,
 .hjm-sidebar[data-collapsed] .hjm-sidebar__group-label { display: none; }
 .hjm-sidebar[data-collapsed] .hjm-sidebar__item { justify-content: center; padding-inline: var(--hjm-space-xxs); }

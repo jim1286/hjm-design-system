@@ -37,6 +37,10 @@ export type SidebarProps<Id extends string = string, GroupId extends string = st
     /** Product-owned icon per item; required for the collapsed rail to stay usable. */
     renderIcon?: (item: SidebarItemDescriptor<Id>) => ReactNode;
     renderBadge?: (count: number, item: SidebarItemDescriptor<Id>) => ReactNode;
+    /** Product slot above the groups (brand mark, primary action). Diairy and BurnTok shells drew it outside HJM. */
+    header?: ReactNode;
+    /** Product slot pinned to the bottom (settings, language). Stays at the end however short the groups are. */
+    footer?: ReactNode;
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

@@ -24,7 +24,7 @@ function assertMainId(id) {
     }
 }
 /** Accessible Web app shell with real landmarks and bypass navigation. */
-export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, mainId: mainIdProp, mainRef: forwardedMainRef, headerProps, mainProps, footerProps, skipLinkProps, className, layoutStyle, ...props }, ref) {
+export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, skipLink, mainId: mainIdProp, mainRef: forwardedMainRef, headerProps, mainProps, footerProps, skipLinkProps, className, layoutStyle, ...props }, ref) {
     const generatedId = `hjm-main-${useId().replaceAll(":", "")}`;
     const internalMainRef = useRef(null);
     const mainId = mainIdProp ?? generatedId;
@@ -44,6 +44,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                 },
             }),
         ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
+        ...(skipLink === undefined ? {} : { skipLink }),
     };
     validateLayoutWebDescriptor(descriptor);
     if (sidebar?.mode === "overlay" &&
@@ -63,12 +64,9 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
             className: classNames("hjm-layout__sidebar", sidebarClassName),
             "aria-label": sidebar.label,
             "data-mode": sidebar.mode,
-            style: {
-                ...(sidebar.mode === "persistent"
-                    ? { inlineSize: layoutRecipe.sidebar.width }
-                    : {}),
-                ...sidebarStyle,
-            },
+            // The persistent column (`auto` track) takes its content's width. Forcing 280 here left a gap beside
+            // Sidebar's own 260/220 steps and a 208px strip beside its collapsed 72 rail (2026-10-30 BurnTok/Diairy).
+            style: sidebarStyle,
         }, sidebar.children);
         sidebarNode = sidebar.mode === "overlay"
             ? sidebar.renderOverlay(sidebarLandmark)

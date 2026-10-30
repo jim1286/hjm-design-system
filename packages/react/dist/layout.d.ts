@@ -35,6 +35,8 @@ export type LayoutProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Rea
     footer?: ReactNode;
     sidebar?: LayoutSidebar;
     skipLinkLabel?: string;
+    /** `false`: no skip link; the landmarks provide bypass (see `LayoutDescriptor.skipLink`). */
+    skipLink?: false;
     /** Stable product id for deep links; a hydration-safe id is generated when omitted. */
     mainId?: string;
     mainRef?: Ref<HTMLElement>;
@@ -52,6 +54,8 @@ export declare const Layout: import("react").ForwardRefExoticComponent<Omit<HTML
     footer?: ReactNode;
     sidebar?: LayoutSidebar;
     skipLinkLabel?: string;
+    /** `false`: no skip link; the landmarks provide bypass (see `LayoutDescriptor.skipLink`). */
+    skipLink?: false;
     /** Stable product id for deep links; a hydration-safe id is generated when omitted. */
     mainId?: string;
     mainRef?: Ref<HTMLElement>;
