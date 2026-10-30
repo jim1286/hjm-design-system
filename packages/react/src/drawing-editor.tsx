@@ -89,7 +89,9 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
     discard={{ mode: 'confirm', title: labels.discardTitle, description: labels.discardBody, confirmLabel: labels.discardConfirm,
       cancelLabel: labels.cancel, fallbackErrorMessage: labels.failed }}
     notice={failed ? <Notice tone="danger" title={labels.failed} /> : undefined}>
-    <Stack gap="md" layoutStyle={{ width: '100%', maxWidth: drawingEditorRecipe.maxCanvas, alignSelf: 'center' }}>
+    {/* marginInline, not alignSelf: the editor body is a block box, where alignSelf is ignored and the canvas column sat
+        on the start edge while the save footer spanned the screen (2026-10-30 Diairy desktop web report). */}
+    <Stack gap="md" layoutStyle={{ width: '100%', maxWidth: drawingEditorRecipe.maxCanvas, marginInline: 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex' }}>
           <IconButton label={labels.undo} tone="ghost" disabled={busy || !!draft || !history.past.length} onClick={() => dispatch({ type: 'undo' })}><Undo2 aria-hidden size={20} /></IconButton>
