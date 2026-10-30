@@ -121,6 +121,10 @@ export const layoutRecipe = {
     maxWidth: layoutFoundation.contentMaxWidth,
     paddingHorizontal: layoutFoundation.pagePadding.regular,
   },
+  /**
+   * @deprecated Layout no longer applies this width (2.2): the persistent column takes its content's width, and
+   * Sidebar owns its steps (`sidebarRecipe.sizes`). Kept for 2.x compatibility of the exported recipe shape.
+   */
   sidebar: {
     width: 280,
   },

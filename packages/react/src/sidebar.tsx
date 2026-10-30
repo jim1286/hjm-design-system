@@ -58,6 +58,10 @@ export type SidebarProps<Id extends string = string, GroupId extends string = st
   /** Product-owned icon per item; required for the collapsed rail to stay usable. */
   renderIcon?: (item: SidebarItemDescriptor<Id>) => ReactNode;
   renderBadge?: (count: number, item: SidebarItemDescriptor<Id>) => ReactNode;
+  /** Product slot above the groups (brand mark, primary action). Diairy and BurnTok shells drew it outside HJM. */
+  header?: ReactNode;
+  /** Product slot pinned to the bottom (settings, language). Stays at the end however short the groups are. */
+  footer?: ReactNode;
   className?: string;
   /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -76,6 +80,8 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
     renderLink,
     renderIcon,
     renderBadge,
+    header,
+    footer,
     className,
     layoutStyle,
   }: SidebarProps<Id, GroupId>,
@@ -132,6 +138,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
           <span aria-hidden="true">{collapsed ? "»" : "«"}</span>
         </button>
       ) : null}
+      {header ? <div className="hjm-sidebar__header">{header}</div> : null}
       {descriptor.groups.map((group) => (
         <div key={group.id} className="hjm-sidebar__group" role="group" aria-label={group.label}>
           {/*
@@ -188,6 +195,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
           </ul>
         </div>
       ))}
+      {footer ? <div className="hjm-sidebar__footer">{footer}</div> : null}
     </nav>
   );
 }) as <Id extends string = string, GroupId extends string = string>(

@@ -71,13 +71,13 @@ import { Layout } from "@hjmds/react-native/primitives";
 
 - 이벤트 콜백은 없다. 사이드바 열림 상태는 `renderOverlay` 안의 SidePanel `open`·`onOpenChange`가 소유한다.
 
-- Web persistent 사이드바 폭은 recipe 280. main 최대 폭·좌우 여백은 foundations의 `contentMaxWidth`·`pagePadding.regular`.
+- Web persistent 사이드바 폭은 안에 넣은 Sidebar의 폭 단계를 따른다. main 최대 폭·좌우 여백은 foundations의 `contentMaxWidth`·`pagePadding.regular`.
 
 ## 배치
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | Web: persistent 사이드바 칸 폭 280(`layoutRecipe.sidebar.width`), main 최대 폭 1200(`layout.contentMaxWidth`). Native: 루트·main은 `flex: 1`이고 여백·폭 제한은 없다 | `design-contracts/src/layout.ts`(`layoutRecipe`), `react/src/layout.tsx`, `react-native/src/primitives.tsx`(Layout) |
+| 크기 | Web: persistent 사이드바 칸은 내용 폭을 따른다 — [Sidebar](sidebar.md)의 폭 단계(260·220·접힘 72)가 정한다(2026-10-30, 예전 280 고정은 Sidebar 옆에 빈 띠를 남겼다. `layoutRecipe.sidebar.width`는 2.x 호환으로만 남는다). main 최대 폭 1200(`layout.contentMaxWidth`). Native: 루트·main은 `flex: 1`이고 여백·폭 제한은 없다 | `design-contracts/src/layout.ts`(`layoutRecipe`), `react/src/layout.tsx`, `react-native/src/primitives.tsx`(Layout) |
 | 간격 | Web: main 좌우 여백 `spacing.lg` 20(`layout.pagePadding.regular`). skip link는 화면 왼쪽 위에서 `spacing.sm` 12 떨어진다 | `design-contracts/src/foundations.ts`(`layout`), `react/src/styles.css`(`.hjm-layout__skip-link`) |
 | 순서·정렬 | Web: 루트는 grid다. header·footer는 전체 폭, persistent 사이드바는 왼쪽(RTL에서는 오른쪽) 칸, main은 나머지 칸에서 가운데 정렬된다. Native: header → (persistent 사이드바) → main → footer 순서로 세로로 쌓인다 | `react/src/styles.css`(`.hjm-layout`), `react-native/src/primitives.tsx`(Layout) |
 | 고정·스크롤 | 스크롤은 main 안의 내용이 소유한다. header·footer는 main 바깥이라 스크롤되지 않는다. Web skip link는 화면에 고정되고 키보드 포커스 때만 내려온다. overlay 사이드바는 그리드 칸을 차지하지 않고 `renderOverlay`의 SidePanel이 위를 덮는다 | `react/src/styles.css`(`.hjm-layout`), `react/src/layout.tsx` |

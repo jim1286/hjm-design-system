@@ -231,12 +231,9 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
         className: classNames("hjm-layout__sidebar", sidebarClassName),
         "aria-label": sidebar.label,
         "data-mode": sidebar.mode,
-        style: {
-          ...(sidebar.mode === "persistent"
-            ? { inlineSize: layoutRecipe.sidebar.width }
-            : {}),
-          ...sidebarStyle,
-        },
+        // The persistent column (`auto` track) takes its content's width. Forcing 280 here left a gap beside
+        // Sidebar's own 260/220 steps and a 208px strip beside its collapsed 72 rail (2026-10-30 BurnTok/Diairy).
+        style: sidebarStyle,
       },
       sidebar.children,
     );

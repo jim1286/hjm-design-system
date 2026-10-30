@@ -94,6 +94,8 @@ Native: 없음. 폰은 BottomNavigation, 태블릿 split view는 navigator가 �
 | `renderLink` | `(props: SidebarLinkRenderProps) => ReactElement` | 일반 `<a>` | client router 어댑터. props(`href`·`className`·`aria-current`·접힘 `aria-label`·`onClick`·`children` 등)를 모두 자기 링크에 펼친다. 비활성·`destination` 없는 항목은 어댑터를 거치지 않는다. `BottomNavigation.renderLink`와 같은 계약. 개발 소스·미게시 |
 | `renderIcon` | `(item) => ReactNode` | — | 접힌 레일에 필수 |
 | `renderBadge` | `(count: number, item) => ReactNode` | 숫자 배지 | — |
+| `header` | `ReactNode` | — | 그룹 위 제품 칸(브랜드 표식·주 행동). 2026-10-30 다에리·번뚝 데스크탑 셸이 HJM 밖에 따로 그리던 자리 |
+| `footer` | `ReactNode` | — | 맨 아래에 붙는 제품 칸(설정·언어). 그룹이 짧아도 바닥에 선다(위 경계선 1px) |
 | `className` · `layoutStyle` | 문자열 · 배치 전용 style 객체 | — | 루트 배치만. 폭·색은 recipe 소유 |
 
 ## 배치
