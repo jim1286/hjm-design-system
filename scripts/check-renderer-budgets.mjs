@@ -792,11 +792,13 @@ async function checkRenderer(renderer) {
     // Social and toggle compositions explicitly opt into AnimatedStatistic (usage/compositions/{social-compositions,toggle-feedback}.md).
     // Native gesture panels and SVG compositions likewise opt into their host peers through dedicated subpaths.
     // Keep these boundaries aligned with their existing public implementations; the root remains peer-free.
+    // DrawingEditor (Web lucide-react; Native react-native-svg + lucide-react-native) and ColorPicker (Native
+    // react-native-svg like Chart) opt into these peers as their usage guides state; the gate treated them as peer-free, so every release check failed (2026-10-30).
     const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./icon-svg", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     const compositionPeers = renderer.packageName === "@hjmds/react"
-      ? { "./social-compositions": ["@number-flow/react"], "./toggle-feedback": ["@number-flow/react"] }
+      ? { "./social-compositions": ["@number-flow/react"], "./toggle-feedback": ["@number-flow/react"], "./drawing-editor": ["lucide-react"] }
       : { "./sheet-panel": ["react-native-reanimated", "react-native-worklets", "react-native-gesture-handler"],
-          "./chart": ["react-native-svg"], "./data-workflows": ["react-native-svg"],
+          "./chart": ["react-native-svg"], "./color-picker": ["react-native-svg"], "./drawing-editor": ["react-native-svg", "lucide-react-native"], "./data-workflows": ["react-native-svg"],
           "./media-transport": ["react-native-svg"], "./authoring-tools": ["react-native-svg"],
           "./toggle-feedback": ["react-native-svg"] };
     if (!optionalEntries.has(exportPath)) {
