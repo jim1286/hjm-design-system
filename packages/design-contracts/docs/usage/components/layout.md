@@ -65,6 +65,7 @@ import { Layout } from "@hjmds/react-native/primitives";
 | `sidebar.renderOverlay` | Web `(sidebarLandmark: ReactElement) => ReactNode` · Native `(sidebar: ReactNode) => ReactNode` | — | `mode: "overlay"`에서만, 그리고 필수다. 받은 landmark(사이드바 영역)를 SidePanel 등 안에 넣어 돌려준다. 열림·닫힘은 그 SidePanel이 소유한다 |
 | `sidebar` 모양 | `{ role, mode, label, children, renderOverlay? }` + Web `landmarkProps`·`landmarkRef`, Native `containerProps` | — | `label`은 현지화 문자열 |
 | `skipLinkLabel`(Web) | 현지화 문자열 | — | Web skip link는 키보드 포커스가 닿을 때만 보인다 |
+| `skipLink`(Web) | `false` | — | skip link를 만들지 않고 랜드마크(`nav`·`main`)로 건너뛰기를 제공한다(WCAG ARIA11). 제품이 기록된 결정으로 링크를 없앤 경우에만 쓴다(다에리 2026-10-02 결정, 2026-10-30 추가). `skipLinkLabel`과 함께 쓰면 `TypeError` |
 | `mainId`(Web) | 공백 없는 문자열 | 자동 생성 | 비거나 공백이 있으면 `TypeError` |
 | `layoutStyle`(Web) | 배치 key만 | — | 루트 배치. Native는 `layoutStyle`이 없고 `style`(layout primitive, 1.13 deprecated 제외 대상)만 받는다 |
 
@@ -97,7 +98,7 @@ Web (persistent sidebar)                         Native
 
 ## 꼭 지킬 것
 
-- Web에서 `header`나 `sidebar`가 있으면 `skipLinkLabel`(현지화)이 필수다. 없으면 `TypeError`.
+- Web에서 `header`나 `sidebar`가 있으면 `skipLinkLabel`(현지화)이 필수다. 없으면 `TypeError`. 명시적 `skipLink={false}`만 예외다.
 - 화면마다 Layout을 다시 세우지 않는다. `main` landmark는 하나여야 한다.
 - 어느 화면 폭에서 persistent↔overlay를 바꿀지는 제품이 정한다. Layout은 전환 규칙을 갖지 않는다.
 - 사이드바 내용·헤더 내용·푸터 내용은 각 컴포넌트가 소유한다. Layout에 상태를 다시 만들지 않는다.

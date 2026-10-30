@@ -20,7 +20,9 @@ stable)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 �
   랜드마크는 **정확히 하나**여야 하고, 헤더나 사이드바처럼 반복되는 내비게이션이
   `main` 앞에 있으면 WCAG 2.4.1(Bypass Blocks)에 따라 skip link가 있어야 한다.
   Web 전용 `validateLayoutWebDescriptor`가 이 규칙을 강제한다 — `hasHeader`나
-  `sidebar`가 있는데 `skipLinkLabel`이 없으면 던진다. 공통
+  `sidebar`가 있는데 `skipLinkLabel`이 없으면 던진다. 예외는 명시적 `skipLink: false`뿐이다 — skip link 없이
+  랜드마크(`nav`·`main`)로 건너뛰기를 제공한다(WCAG 기법 ARIA11). 제품이 기록된 결정으로 링크를 없앤 경우를 위한
+  것이다(다에리 2026-10-02 사용자 결정, 2026-10-30 HJM Layout 채택 때 추가). `skipLinkLabel`과 함께 쓰면 던진다. 공통
   `validateLayoutRegions`는 region/sidebar 구조만 검사하므로, bypass-link 개념이
   없는 Native에 Web 요구를 강제하지 않는다. 기존 `validateLayoutDescriptor` 호환 alias는 2.0에서 제거했다.
 - **플랫폼 번역**: 성립하지만 비대칭적으로 성립한다. Web은 실제 랜드마크

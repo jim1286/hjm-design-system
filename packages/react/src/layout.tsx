@@ -114,6 +114,8 @@ export type LayoutProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
     footer?: ReactNode;
     sidebar?: LayoutSidebar;
     skipLinkLabel?: string;
+    /** `false`: no skip link; the landmarks provide bypass (see `LayoutDescriptor.skipLink`). */
+    skipLink?: false;
     /** Stable product id for deep links; a hydration-safe id is generated when omitted. */
     mainId?: string;
     mainRef?: Ref<HTMLElement>;
@@ -149,6 +151,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
     footer,
     sidebar,
     skipLinkLabel,
+    skipLink,
     mainId: mainIdProp,
     mainRef: forwardedMainRef,
     headerProps,
@@ -181,6 +184,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
           } satisfies LayoutSidebarDescriptor,
         }),
     ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
+    ...(skipLink === undefined ? {} : { skipLink }),
   };
   validateLayoutWebDescriptor(descriptor);
 

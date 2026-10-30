@@ -107,3 +107,23 @@ describe("Layout visual and behavior contract", () => {
     expect(layoutBehavior.native).toEqual({ roles: [], states: [], actions: [] });
   });
 });
+
+describe("Layout skipLink opt-out", () => {
+  it("accepts skipLink={false} in place of a skip-link label", () => {
+    expect(() => validateLayoutWebDescriptor({ hasHeader: true, skipLink: false })).not.toThrow();
+    expect(() =>
+      validateLayoutWebDescriptor({
+        sidebar: { role: "navigation", mode: "persistent", label: "주 메뉴" },
+        skipLink: false,
+      }),
+    ).not.toThrow();
+  });
+  it("rejects combining the opt-out with a label or any other value", () => {
+    expect(() =>
+      validateLayoutWebDescriptor({ hasHeader: true, skipLink: false, skipLinkLabel: "본문으로 건너뛰기" }),
+    ).toThrow(/skipLink/);
+    expect(() =>
+      validateLayoutWebDescriptor({ hasHeader: true, skipLink: true as unknown as false }),
+    ).toThrow(/skipLink/);
+  });
+});

@@ -31,6 +31,12 @@ export type LayoutDescriptor = Readonly<{
   sidebar?: LayoutSidebarDescriptor;
   /** Web-only: required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
   skipLinkLabel?: string;
+  /**
+   * Web-only explicit opt-out: `false` renders no skip link and relies on the shell's landmarks (`nav`, `main`) for
+   * bypass (WCAG technique ARIA11). For products that removed the link by a recorded product decision (Diairy,
+   * 2026-10-02); the default still requires `skipLinkLabel`. Cannot be combined with `skipLinkLabel`.
+   */
+  skipLink?: false;
 }>;
 
 function assertNonEmpty(value: string, field: string): void {
@@ -63,7 +69,13 @@ export function validateLayoutRegions(descriptor: LayoutDescriptor): void {
 export function validateLayoutWebDescriptor(descriptor: LayoutDescriptor): void {
   validateLayoutRegions(descriptor);
   const needsSkipLink = descriptor.hasHeader === true || descriptor.sidebar !== undefined;
-  if (needsSkipLink && descriptor.skipLinkLabel === undefined) {
+  if (descriptor.skipLink === false && descriptor.skipLinkLabel !== undefined) {
+    throw new TypeError("Layout skipLink={false} cannot be combined with skipLinkLabel");
+  }
+  if (descriptor.skipLink !== undefined && descriptor.skipLink !== false) {
+    throw new TypeError("Layout skipLink only accepts false");
+  }
+  if (needsSkipLink && descriptor.skipLinkLabel === undefined && descriptor.skipLink !== false) {
     throw new TypeError(
       "Layout requires skipLinkLabel when a header or sidebar region precedes main",
     );
