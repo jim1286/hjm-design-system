@@ -9,6 +9,8 @@ allowBuilds:
 # 전이 의존성의 보안 하한. 상위 패키지가 선언한 range 안에 패치가 있는데도 lockfile이
 # 옛 버전에 고정돼 있을 때만 쓴다. 상위가 따라오면 항목을 지우고 같은 버전이 나오는지 확인한다.
 overrides:
+  # Align Expo core with its published Xcode 27.2 Swift compiler fix (expo/expo#52631).
+  expo-modules-core: 58.0.29
   # Expo 57 prebuilt RN requires these upstream podspec fixes (RCT_USE_RN_DEP).
   # Zeego pins older peers; override only after full native adapter validation.
   react-native-ios-context-menu: 3.2.1
@@ -49,3 +51,7 @@ patchedDependencies:
   # Guard optional teleport native views too: installed JS alone caused a red native placeholder.
   # Remove each fix when upstream ships it. See docs/interaction-adapters.md.
   react-native-screen-transitions@4.0.0: patches/react-native-screen-transitions@4.0.0.patch
+
+# Official Expo compiler-crash fix; exact registry release.
+minimumReleaseAgeExclude:
+  - 'expo-modules-core@58.0.29'
