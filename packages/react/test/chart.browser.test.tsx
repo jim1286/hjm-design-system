@@ -163,3 +163,20 @@ it.each(["light", "dark"] as const)("keeps percentage labels on a readable plate
   expect(ink.width).toBeLessThanOrEqual(background.width);
   expect(ink.height).toBeLessThanOrEqual(background.height);
 });
+
+
+it.each([false, true])("keeps both extrema clear of the persistent cursor bubble (invert=%s)", async invert => {
+  await render(<LineChart categories={["3월", "4월", "10월"]}
+    series={[{ id: "avg", label: "타율", values: [.2, .195, .283] }]}
+    width={320} height={168} domain={[.195, .283]} invert={invert} showFocusLabel
+    extremes={{ high: "최고", low: "최저" }} accessibilityLabel="타율" formatValue={format} missingLabel="—" />);
+  const bubble = host.querySelector(".hjm-chart__bubble")!.getBoundingClientRect();
+  const plot = slider().getBoundingClientRect();
+  const labels = host.querySelectorAll(".hjm-chart__extreme");
+  expect(labels).toHaveLength(2);
+  for (const label of labels) {
+    const bounds = label.getBoundingClientRect();
+    expect(bounds.top).toBeGreaterThan(bubble.bottom);
+    expect(bounds.bottom).toBeLessThanOrEqual(plot.bottom);
+  }
+});

@@ -151,3 +151,20 @@ it.each([LineChart, BarChart])("keeps the selected tooltip after tap release whe
     expect(tree.root.findAll(n => n.props.pointerEvents === "none" && n.props.style?.position === "absolute").some(n => n.findAll(child => typeof child.props.children === "string" && child.props.children.includes("3월")).length > 0)).toBe(true);
   } finally { act(() => tree.unmount()); }
 });
+
+
+it.each([false, true])("keeps both extreme labels below the persistent bubble and inside the chart (invert=%s)", invert => {
+  const tree = render(<LineChart categories={["3월", "4월", "10월"]}
+    series={[{ id: "avg", label: "타율", values: [.2, .195, .283] }]}
+    height={168} domain={[.195, .283]} invert={invert} showFocusLabel
+    extremes={{ high: "최고", low: "최저" }} accessibilityLabel="타율" formatValue={fmt} missingLabel="—" />);
+  try {
+    layout(tree);
+    for (const prefix of ["최고 ", "최저 "]) {
+      const label = tree.root.find(n => typeof n.type === "string" && typeof n.props.children === "string" && n.props.children.startsWith(prefix));
+      // A 12pt SVG label needs its whole glyph above the baseline clear of the 28pt bubble.
+      expect(label.props.y - 12).toBeGreaterThanOrEqual(28);
+      expect(label.props.y).toBeLessThanOrEqual(166);
+    }
+  } finally { act(() => tree.unmount()); }
+});
