@@ -228,6 +228,6 @@ function CropSession({ source, title, hint, confirmLabel, cancelLabel, busy = fa
 
 // One optional photo under written content (2026-11-03, Spint marks and Diairy letters). It opens this viewer, so it
 // shares the subpath; the factory hands ImageViewer over without an import cycle.
-export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentUpload, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
+export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
 export const PhotoAttachmentField = createPhotoAttachmentField({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });
 export const AttachedPhoto = createAttachedPhoto({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });

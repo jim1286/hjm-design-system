@@ -146,18 +146,26 @@ export declare function clampCircularPhotoCrop(state: CircularPhotoCropState, so
 export declare function resolveCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropRect;
 /**
  * One optional photo attached to written content (2026-11-03 user request: Spint marks and Diairy letters attach a
- * photo the same way, so the add → source sheet → preview → viewer → replace/remove flow lives here once instead of in
- * each compose screen). HJM owns the order, the action states and the viewer; the product owns picking (system picker,
- * permission, decoding), the upload and when it runs, and every message. One photo only: several photos are the
- * MediaSelectionScreen/MessageComposer flows.
+ * photo the same way). Shape follows common composers the user asked to reference (Threads/X post composer, Slowly
+ * letters): a small icon action under the text, then the attached photo as a preview with a corner remove button —
+ * no full-width buttons and no separate replace (remove, then add). No hint copy (2026-11-03 user decision). HJM owns
+ * the order, the locks and the viewer; the product owns picking, the upload (at submit) and the messages. One photo
+ * only: several photos are the MediaSelectionScreen/MessageComposer flows.
  */
 export declare const photoAttachmentRecipe: {
-    /** Space between the choose button, preview and its actions. */
+    /** Space between the text above, the choose action and the preview. */
     readonly gap: "xs";
-    /** Choose sits under the text like other secondary field actions; remove is the quieter neighbour of replace. */
-    readonly chooseTone: "secondary";
-    readonly removeTone: "ghost";
-    readonly actionSize: "small";
+    /** The choose action is quieter than the text and the submit action. */
+    readonly chooseTone: "ghost";
+    readonly chooseSize: "small";
+    /**
+     * Remove sits inside the preview's top-end corner, always visible: a hover-only remove cannot be used on touch
+     * screens. A filled circle keeps it readable over light and dark photos.
+     */
+    readonly removeTone: "secondary";
+    readonly removeSize: "small";
+    readonly removeShape: "circle";
+    readonly removeInset: "xs";
     /**
      * Preview keeps the photo's ratio down to 3:4; a taller photo is cover-cropped to 3:4 so it cannot push the text
      * off screen. A ratio (not a height) keeps Web and Native identical at every width. The viewer shows the whole photo.
@@ -169,18 +177,10 @@ export type PhotoAttachmentPhoto = Readonly<{
     width: number;
     height: number;
 }>;
-/** Product upload of the attached photo; absent when the product uploads later (at submit) or already finished. */
-export type PhotoAttachmentUpload = Readonly<{
-    status: "uploading";
-    progress: number | null;
-    progressLabel?: string;
-}> | Readonly<{
-    status: "error";
-    message: string;
-}>;
 export type PhotoAttachmentActionState = Readonly<{
+    /** Only without a photo: one photo per content, so changing it is remove then add. */
     choose: Readonly<{
-        label: "add" | "replace";
+        visible: boolean;
         disabled: boolean;
         loading: boolean;
     }>;
@@ -188,25 +188,24 @@ export type PhotoAttachmentActionState = Readonly<{
         visible: boolean;
         disabled: boolean;
     }>;
-    /** Opening the viewer never changes the draft, so only an absent photo hides it. */
+    /** Opening the viewer never changes the draft, so it stays available while editing is locked. */
     preview: Readonly<{
         visible: boolean;
     }>;
 }>;
 /**
- * While the system picker is open or the photo is uploading, choose and remove are locked: a second picker or a removal
- * would race the result the product is waiting for (Spint ComposeScreen kept a ref for this). An upload error unlocks
- * them again — the user may retry, replace or drop the photo. `disabled` is the host's own lock (submitting, limits).
+ * While the system picker is open, choose shows its spinner and cannot open a second picker (Spint ComposeScreen kept a
+ * ref for this). `disabled` is the host's own lock (submitting, limits): it locks choose and remove, not the viewer.
  */
 export declare function resolvePhotoAttachmentActions(input: Readonly<{
     hasPhoto: boolean;
     picking?: boolean;
     disabled?: boolean;
-    upload?: PhotoAttachmentUpload["status"];
 }>): PhotoAttachmentActionState;
 export type PhotoAttachmentLabels = Readonly<{
+    /** Visible label of the choose action, e.g. "Photo". */
     add: string;
-    replace: string;
+    /** Accessible name of the corner remove button, e.g. "Remove photo". */
     remove: string;
     /** Accessible name of the preview button and the viewer item, e.g. "View attached photo". */
     preview: string;

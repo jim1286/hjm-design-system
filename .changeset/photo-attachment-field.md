@@ -4,4 +4,4 @@
 "@hjmds/react-native": minor
 ---
 
-Add PhotoAttachmentField and AttachedPhoto to the image-viewer subpath: one optional photo under written content (choose → photo source sheet → preview → viewer, replace/remove, optional upload row), shared by Spint marks and Diairy letters. The contract adds photoAttachmentRecipe, resolvePhotoAttachmentActions and resolvePhotoAttachmentPreviewSize. PhotoSourceSheet keeps its screen-flows export.
+Add PhotoAttachmentField and AttachedPhoto to the image-viewer subpath: one optional photo under written content, shared by Spint marks and Diairy letters. A small "photo" action opens the common PhotoSourceSheet; the attached photo shows as a preview (opens ImageViewer) with an always-visible corner remove button. The product uploads at submit. The contract adds photoAttachmentRecipe, resolvePhotoAttachmentActions and resolvePhotoAttachmentPreviewSize. PhotoSourceSheet keeps its screen-flows export.

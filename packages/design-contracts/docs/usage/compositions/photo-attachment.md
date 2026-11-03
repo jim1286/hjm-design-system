@@ -16,62 +16,53 @@
 여러 장은 [사진 선택과 업로드](../screens/flow-media.md), 채팅 입력의 첨부는 [메시지 작성](purpose-input-message.md)을 쓴다.
 `ImageViewer`와 같은 `image-viewer` 하위 경로라 Native는 그 선택 peer(gesture-handler·reanimated·worklets·zoom-toolkit)가 필요하다.
 
+2026-11-03 사용자 지시로 흔한 작성 화면(Threads·X 글 작성, Slowly 편지)을 참고해 모양을 정했다. 글 아래 작은 아이콘 행동으로 붙이고,
+붙인 사진은 미리보기와 모서리 ×로 뺀다. 폭을 채운 버튼과 따로 된 "바꾸기"는 두지 않는다(빼고 다시 붙인다). 안내 문구 자리도 없다(같은 날 사용자 결정).
+
 ## 구성 요소
 
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
-| PhotoAttachmentField | 작성: 붙이기 → 출처 시트 → 미리보기 → 크게 보기, 바꾸기·빼기, 업로드 상태 | [Image](../components/image.md) |
+| PhotoAttachmentField | 작성: 작은 "사진" 행동 → 출처 시트, 붙인 뒤 미리보기(크게 보기) + 모서리 × | [Image](../components/image.md) |
 | AttachedPhoto | 읽기: 글 아래 사진, 누르면 ImageViewer(아래로 끌어 닫기) | [Image](../components/image.md) |
-| PhotoSourceSheet | 앨범·촬영 고르기(내부에서 연다) | [공개 계약](../components/photo-source-sheet.md) |
-| UploadItem | 고르자마자 올리는 제품의 진행·재시도·취소 | [UploadItem](../components/upload-item.md) |
+| PhotoSourceSheet | 공통 하단 시트에서 앨범·촬영 고르기(내부에서 연다) | [공개 계약](../components/photo-source-sheet.md) |
 
 ## 배치
 
 ```text
 글 입력(제품: TextArea·편지지)
 └─ PhotoAttachmentField
-   ├─ [사진 붙이기 | 사진 바꾸기]  secondary     ← 사진이 있으면 이름만 바뀐다
-   ├─ hint(caption, muted)                       ← 제품 문구, 선택
+   ├─ [▣ 사진]  ghost small, 시작 끝 정렬          ← 사진이 없을 때만
    ├─ Notice danger                              ← 고르기 실패 문구(제품), 초안 유지
-   ├─ 미리보기 ImageViewerTrigger > Image cover   ← 사진 비율, 3:4보다 길면 3:4로 잘라 보임
-   ├─ UploadItem                                 ← 고르자마자 올리는 제품만
-   └─ [사진 빼기] ghost small
+   └─ 미리보기 ImageViewerTrigger > Image cover   ← 사진이 있을 때만, 최소 3:4
+      └─ 위·끝 모서리 [×] IconButton secondary small circle (항상 보임)
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | PhotoAttachmentField(Stack) | 글 입력 바로 아래, 제출 행동 위 | 부모 폭, 사이 `photoAttachmentRecipe.gap`(`spacing.xs`) |
-| 내용 | 미리보기 Image | 고르기 버튼 아래 | 사진 비율, 최소 3:4(`previewMinAspectRatio`, `resolvePhotoAttachmentPreviewSize`) cover. 크게 보기는 전체 |
-| 행동 | Button 고르기·빼기 | 미리보기 위·아래 | 고르기 `secondary`, 빼기 `ghost small` — 연속 버튼 색 구분 |
+| 내용 | 미리보기 Image | 고르기 행동 자리 | 사진 비율, 최소 3:4(`previewMinAspectRatio`, `resolvePhotoAttachmentPreviewSize`) cover. 크게 보기는 전체 |
+| 행동 | 고르기 Button ghost small(사진 아이콘) · 빼기 IconButton | 고르기는 글 아래 시작 끝, 빼기는 미리보기 위·끝 모서리 안쪽 `spacing.xs` | `photoAttachmentRecipe.choose*`·`remove*`. 터치 화면을 위해 ×는 마우스 올림 없이 항상 보인다 |
 
 ## 흐름과 상태
 
-1. 고르기 → PhotoSourceSheet에서 앨범·촬영 → 제품 picker(`onSelectSource`). Native는 시트가 닫힌 뒤, Web은 클릭 안에서 부른다(파일 입력의 사용자 활성화 유지).
-2. 제품이 기기에서 줄인 사진을 `photo`로 넘긴다. 업로드는 제품이 정한 시점에 한다.
+1. "사진" → 공통 하단 시트(PhotoSourceSheet)에서 앨범·촬영 → 제품 picker(`onSelectSource`). Native는 시트가 닫힌 뒤, Web은 클릭 안에서 부른다(파일 입력의 사용자 활성화 유지).
+2. 제품이 기기에서 줄인 사진을 `photo`로 넘긴다. 업로드는 글을 보낼 때 제품이 한다(쓰다 버린 사진을 올리지 않는다).
 3. 실패·취소·권한 거부에도 글과 붙인 사진을 지우지 않는다. 서버가 확정한 뒤에만 초안을 정리한다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |
-| 기본 | 사진 없음은 붙이기 버튼만, 사진 있음은 바꾸기·미리보기·빼기 | 미리보기는 `labels.preview` 이름의 버튼, 누르면 ImageViewer |
-| 진행 중 | 고르는 중은 버튼 spinner, 올리는 중은 UploadItem 진행 | 고르기·빼기 잠금, 포커스를 옮기지 않음 |
-| 실패 | 고르기 실패는 `error` Notice, 올리기 실패는 UploadItem 재시도 | Notice·UploadItem이 오류를 읽음, 글과 사진 유지 |
+| 기본 | 사진 없음은 "사진" 행동만, 사진 있음은 미리보기 + 모서리 × | 미리보기는 `labels.preview`, ×는 `labels.remove` 이름의 버튼 |
+| 진행 중 | 고르는 중은 "사진" 행동 spinner, 보내는 중(`disabled`)은 × 잠금 | 크게 보기는 계속 열린다, 포커스를 옮기지 않음 |
+| 실패 | 고르기 실패는 `error` Notice. 올리기 실패는 제품의 제출 행동이 알린다 | Notice가 오류를 읽음, 글과 사진 유지 |
 
 행동별 잠금은 `resolvePhotoAttachmentActions`(design-contracts `components/image`)가 정한다.
 
-| 상태 | 고르기 | 빼기 | 미리보기 |
-| --- | --- | --- | --- |
-| 사진 없음 | `add` 활성 | 없음 | 없음 |
-| 사진 있음 | `replace` 활성 | 활성 | 열림 |
-| 고르는 중(`picking`) | 잠금 + spinner | 잠금 | 열림 |
-| 올리는 중(`upload.status="uploading"`) | 잠금 | 잠금 | 열림, UploadItem 취소 |
-| 올리기 실패(`upload.status="error"`) | 활성 | 활성 | 열림, UploadItem 재시도 |
-| 제품 잠금(`disabled`: 제출 중·제한) | 잠금 | 잠금 | 열림 |
-
 ## 제품이 소유하는 것
 
-- 시스템 사진 선택기·권한·디코드·기기 축소(포트폴리오 MU-02), 서버 업로드와 그 시점, 초안 보존, 모든 문구.
-- 업로드를 글 제출 때 하는 제품(Spint)은 `upload`를 넘기지 않고 제출 행동의 진행·실패로 보인다. 고르자마자 올리는 제품만 `upload`·`onRetryUpload`·`onCancelUpload`를 넘긴다.
+- 시스템 사진 선택기·권한·디코드·기기 축소(포트폴리오 MU-02), 서버 업로드(보낼 때), 초안 보존, 모든 문구.
 - 인증이 필요한 사진 주소는 `imageHost`로 제품 이미지 호스트를 넘긴다. Native `sourceAdapter`·`renderImage`(미리보기)와 `renderViewerImage`(크게 보기), Web `renderImage`·`renderViewerImage`.
+- 읽기 화면에서 주소가 거부되는 경우는 `AttachedPhoto`의 `onLoadStatusChange`로 받아 제품이 재시도를 보인다.
 
 ## 코드 골격
 
@@ -83,9 +74,8 @@ import { AttachedPhoto, PhotoAttachmentField } from "@hjmds/react/image-viewer";
 <PhotoAttachmentField
   photo={draft.photo /* { uri, width, height } | null */}
   disabled={submitting}
-  hint={t("photo.hint")}
   error={photoError ? t(photoError) : undefined}
-  labels={photoLabels /* add·replace·remove·preview + source + upload */}
+  labels={{ add: t("photo.add"), remove: t("photo.remove"), preview: t("photo.preview"), source: sourceLabels }}
   viewerLabels={viewerLabels}
   onSelectSource={() => input.current?.click()}
   onRemove={() => setPhoto(null)}
@@ -101,7 +91,7 @@ import { AttachedPhoto, PhotoAttachmentField } from "@hjmds/react-native/image-v
   photo={draft.photo}
   picking={picking}
   disabled={submitting}
-  labels={photoLabels}
+  labels={{ add: t("photo.add"), remove: t("photo.remove"), preview: t("photo.preview"), source: sourceLabels }}
   viewerLabels={viewerLabels}
   safeAreaInsets={insets}
   onSelectSource={(source) => void pick(source)}

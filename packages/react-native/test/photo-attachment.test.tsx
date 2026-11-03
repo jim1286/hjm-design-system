@@ -2,10 +2,9 @@ import { createElement, type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
-import { Button } from "../src/actions.js";
+import { Button, IconButton } from "../src/actions.js";
 import { ListRow } from "../src/data-display.js";
 import { Sheet } from "../src/overlays.js";
-import { UploadItem } from "../src/upload-item.js";
 import { ImageViewer, PhotoAttachmentField, type PhotoAttachmentFieldProps } from "../src/image-viewer.js";
 import { ImageViewerTrigger } from "../src/internal/image-viewer-trigger.js";
 
@@ -19,43 +18,41 @@ vi.mock("react-native-zoom-toolkit", () => ({
 let tree: ReactTestRenderer;
 afterEach(() => { if (tree) act(() => tree.unmount()); });
 const labels: PhotoAttachmentFieldProps["labels"] = {
-  add: "Add photo", replace: "Replace photo", remove: "Remove photo", preview: "View photo",
+  add: "Photo", remove: "Remove photo", preview: "View photo",
   source: { title: "Choose a photo", library: "Library", camera: "Camera", cancel: "Cancel" },
-  upload: { pending: "Waiting", uploading: "Uploading", success: "Uploaded", cancel: "Cancel upload", retry: "Retry upload" },
 };
 const viewerLabels = { closeLabel: "Close", previousLabel: "Previous", nextLabel: "Next", loadingLabel: "Loading", errorLabel: "Failed", retryLabel: "Retry" };
 const photo = { uri: "file:///photo.jpg", width: 1200, height: 900 };
 const render = (props: Partial<PhotoAttachmentFieldProps> = {}) => <HjmNativeProvider>
   <PhotoAttachmentField photo={null} labels={labels} onSelectSource={() => {}} onRemove={() => {}}
     viewerLabels={viewerLabels} safeAreaInsets={{ top: 0, bottom: 0 }} {...props} /></HjmNativeProvider>;
-const button = (label: string) => tree.root.findAllByType(Button).find(node => node.props.children === label)!;
+const buttons = (label: string) => tree.root.findAllByType(Button).filter(node => node.props.children === label);
+const remove = () => tree.root.findAllByType(IconButton).find(node => node.props.label === "Remove photo");
 
-it("opens the source sheet and hands the chosen source over after it closes", () => {
+it("opens the source sheet from the small choose action and hands the source over after it closes", () => {
   const select = vi.fn();
   act(() => { tree = create(render({ onSelectSource: select })); });
-  act(() => button("Add photo").props.onPress());
+  expect(remove()).toBeUndefined();
+  act(() => buttons("Photo")[0]!.props.onPress());
   expect(tree.root.findByType(Sheet).props.open).toBe(true);
   act(() => tree.root.findAllByType(ListRow).find(row => row.props.title === "Library")!.props.onPress());
   act(() => tree.root.findByType(Sheet).props.onDismissComplete({ reason: "programmatic" }));
   expect(select).toHaveBeenCalledExactlyOnceWith("library");
 });
 
-it("shows replace, remove and a preview that opens the viewer", () => {
-  const remove = vi.fn();
-  act(() => { tree = create(render({ photo, onRemove: remove })); });
-  expect(button("Replace photo")).toBeDefined();
+it("replaces the choose action with the preview and a corner remove button", () => {
+  const onRemove = vi.fn();
+  act(() => { tree = create(render({ photo, onRemove })); });
+  expect(buttons("Photo")).toHaveLength(0);
   act(() => tree.root.findByType(ImageViewerTrigger).props.onPress());
   expect(tree.root.findByType(ImageViewer).props.open).toBe(true);
-  act(() => button("Remove photo").props.onPress());
-  expect(remove).toHaveBeenCalledOnce();
+  act(() => remove()!.props.onPress());
+  expect(onRemove).toHaveBeenCalledOnce();
 });
 
-it("locks choose and remove during an upload and offers retry after it fails", () => {
-  const retry = vi.fn();
-  act(() => { tree = create(render({ photo, upload: { status: "uploading", progress: 0.4 }, onCancelUpload: () => {} })); });
-  expect([button("Replace photo").props.disabled, button("Remove photo").props.disabled]).toEqual([true, true]);
-  act(() => tree.update(render({ photo, upload: { status: "error", message: "Upload failed" }, onRetryUpload: retry })));
-  expect([button("Replace photo").props.disabled, button("Remove photo").props.disabled]).toEqual([false, false]);
-  act(() => tree.root.findByType(UploadItem).props.onRetry("x"));
-  expect(retry).toHaveBeenCalledOnce();
+it("locks remove while the host submits and choose while picking", () => {
+  act(() => { tree = create(render({ photo, disabled: true })); });
+  expect(remove()!.props.disabled).toBe(true);
+  act(() => tree.update(render({ picking: true })));
+  expect([buttons("Photo")[0]!.props.disabled, buttons("Photo")[0]!.props.loading]).toEqual([true, true]);
 });

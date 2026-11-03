@@ -34,7 +34,7 @@
 | `ImageViewer` | 확장 — 전체 화면 넘겨 보기·확대 | `/image-viewer` (개발 소스) | `/image-viewer` (optional) |
 | `ImageViewerTrigger` | 확장 — 사진을 눌러 `ImageViewer` 열기 | `/image-viewer` | `/image-viewer` (optional) |
 | `CircularPhotoCropper` | 확장 — 프로필 사진을 원 안에 맞추기([ProfileSummary](profile-summary.md#프로필-사진-올리기-원으로-맞추기-2026-10-29)) | `/image-viewer` | `/image-viewer` (optional) |
-| `PhotoAttachmentField` | 확장 — 글에 사진 한 장 붙이기([글과 사진 한 장](../compositions/photo-attachment.md)) | `/image-viewer` | `/image-viewer` (optional) |
+| `PhotoAttachmentField` | 확장 — 글에 사진 한 장 붙이기: 작은 사진 행동, 미리보기 + 모서리 ×([글과 사진 한 장](../compositions/photo-attachment.md)) | `/image-viewer` | `/image-viewer` (optional) |
 | `AttachedPhoto` | 확장 — 글 아래 붙인 사진, 눌러 크게 보기([글과 사진 한 장](../compositions/photo-attachment.md)) | `/image-viewer` | `/image-viewer` (optional) |
 
 `GridReveal`은 추가 peer가 없다. `ImageViewer`는 granular subpath로만 import 되며 optional peer

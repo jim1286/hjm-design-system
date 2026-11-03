@@ -215,6 +215,6 @@ function ImageViewerSession(props: ImageViewerProps) {
 
 // One optional photo under written content (2026-11-03, Spint marks and Diairy letters). It opens this viewer, so it
 // shares the subpath and its optional peers; the factory hands ImageViewer over without an import cycle.
-export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentUpload, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
+export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
 export const PhotoAttachmentField = createPhotoAttachmentField(ImageViewer);
 export const AttachedPhoto = createAttachedPhoto(ImageViewer);

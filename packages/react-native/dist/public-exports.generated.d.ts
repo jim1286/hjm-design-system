@@ -10,6 +10,7 @@ export declare const publicExportEntries: {
     readonly AspectRatio: readonly ["./primitives"];
     readonly Asset: readonly ["./asset"];
     readonly AssetGroup: readonly ["./asset"];
+    readonly AttachedPhoto: readonly ["./image-viewer"];
     readonly AuthProviderButton: readonly ["./provider-button"];
     readonly AuthScreenFooter: readonly ["./auth-screen"];
     readonly AuthScreenHero: readonly ["./auth-screen"];
@@ -151,6 +152,7 @@ export declare const publicExportEntries: {
     readonly PasswordRulesField: readonly ["./task-controls"];
     readonly PendingContent: readonly ["./feedback"];
     readonly PermissionScreen: readonly ["./screen-flows"];
+    readonly PhotoAttachmentField: readonly ["./image-viewer"];
     readonly PhotoSourceSheet: readonly ["./screen-flows"];
     readonly PieChart: readonly ["./chart"];
     readonly PricingChoice: readonly ["./task-controls"];

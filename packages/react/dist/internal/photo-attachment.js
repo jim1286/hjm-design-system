@@ -1,18 +1,19 @@
 "use client";
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { photoAttachmentRecipe, resolvePhotoAttachmentActions, resolvePhotoAttachmentPreviewSize, validatePhotoAttachment, } from "@hjmds/design-contracts/components/image";
-import { Button } from "../actions.js";
+import { glyph } from "@hjmds/design-contracts/foundations";
+import { Button, IconButton } from "../actions.js";
 import { Notice } from "../feedback.js";
-import { Stack, Text } from "../layout.js";
+import { Stack } from "../layout.js";
 import { Image } from "../supplemental-display.js";
-import { UploadItem } from "../upload-item.js";
+import { PhotoSourceGlyph } from "./photo-source-icon.js";
 import { PhotoSourceSheet } from "./photo-source-sheet.js";
-function PhotoPreview({ photo, label, disabled, viewerLabels, imageHost, parts }) {
+function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, imageHost, parts, corner }) {
     const [open, setOpen] = useState(false);
     const frame = resolvePhotoAttachmentPreviewSize(photo);
     const { Viewer, Trigger } = parts;
-    return _jsxs(_Fragment, { children: [_jsx(Trigger, { label: label, disabled: disabled, onClick: () => setOpen(true), children: _jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) }) }), _jsx(Viewer, { open: open, onClose: () => setOpen(false), items: [{ id: photo.uri, uri: photo.uri, label }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
+    return _jsxs("div", { className: "hjm-photo-attachment__preview", children: [_jsx(Trigger, { label: label, onClick: () => setOpen(true), children: _jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, ...(onLoadStatusChange ? { onLoadStatusChange } : {}), ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) }) }), corner ? _jsx("div", { className: "hjm-photo-attachment__corner", children: corner }) : null, _jsx(Viewer, { open: open, onClose: () => setOpen(false), items: [{ id: photo.uri, uri: photo.uri, label }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
 }
 export function createAttachedPhoto(parts) {
     /** A posted photo under its text: click to open the shared viewer. */
@@ -24,8 +25,8 @@ export function createAttachedPhoto(parts) {
 }
 export function createPhotoAttachmentField(parts) {
     /**
-     * One optional photo under written content (photoAttachmentRecipe): choose → PhotoSourceSheet → preview → viewer,
-     * replace/remove, and the upload row when the product uploads on pick. The product keeps the draft and the photo.
+     * One optional photo under written content (photoAttachmentRecipe): a small choose action → PhotoSourceSheet, then
+     * the preview (opens the viewer) with a corner remove button. The product keeps the draft and uploads at submit.
      */
     return function PhotoAttachmentField(props) {
         validatePhotoAttachment(props.labels, props.photo);
@@ -34,12 +35,9 @@ export function createPhotoAttachmentField(parts) {
             hasPhoto: props.photo !== null,
             ...(props.picking === undefined ? {} : { picking: props.picking }),
             ...(props.disabled === undefined ? {} : { disabled: props.disabled }),
-            ...(props.upload ? { upload: props.upload.status } : {}),
         });
         const { labels } = props;
-        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [_jsx(Button, { type: "button", tone: photoAttachmentRecipe.chooseTone, disabled: actions.choose.disabled, loading: actions.choose.loading, onClick: () => setSourceOpen(true), children: labels[actions.choose.label] }), props.hint ? _jsx(Text, { variant: "caption", tone: "muted", children: props.hint }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", title: props.error }) : null, props.photo ? _jsxs(_Fragment, { children: [_jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, parts: parts, ...(props.imageHost ? { imageHost: props.imageHost } : {}) }), props.upload ? _jsx(UploadItem, { labels: labels.upload, descriptor: { id: props.photo.uri, name: labels.preview, state: props.upload.status === "uploading"
-                                    ? { status: "uploading", progress: props.upload.progress, ...(props.upload.progressLabel ? { progressLabel: props.upload.progressLabel } : {}) }
-                                    : { status: "error", message: props.upload.message } }, ...(props.onRetryUpload ? { onRetry: () => props.onRetryUpload() } : {}), ...(props.onCancelUpload ? { onCancel: () => props.onCancelUpload() } : {}) }) : null, _jsx(Button, { type: "button", tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.actionSize, disabled: actions.remove.disabled, onClick: props.onRemove, children: labels.remove })] }) : null] });
+        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [actions.choose.visible ? _jsx("div", { className: "hjm-photo-attachment__choose", children: _jsx(Button, { type: "button", tone: photoAttachmentRecipe.chooseTone, size: photoAttachmentRecipe.chooseSize, edge: "start", disabled: actions.choose.disabled, loading: actions.choose.loading, leading: _jsx(PhotoSourceGlyph, { source: "library", size: glyph.sm }), onClick: () => setSourceOpen(true), children: labels.add }) }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", title: props.error }) : null, props.photo ? _jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, parts: parts, ...(props.imageHost ? { imageHost: props.imageHost } : {}), corner: _jsx(IconButton, { type: "button", label: labels.remove, tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.removeSize, shape: photoAttachmentRecipe.removeShape, disabled: actions.remove.disabled, onClick: props.onRemove, children: "\u00D7" }) }) : null] });
     };
 }
 //# sourceMappingURL=photo-attachment.js.map

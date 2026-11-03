@@ -4025,6 +4025,11 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-viewer-trigger { display: block; inline-size: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--hjm-radius-md); background: none; color: inherit; font: inherit; text-align: inherit; cursor: var(--hjm-image-viewer-trigger-cursor, zoom-in); }
 .hjm-image-viewer-trigger > * { display: block; }
 .hjm-image-viewer-trigger:active:not(:disabled) { opacity: var(--hjm-image-viewer-trigger-pressed-opacity); }
+/* PhotoAttachmentField (photoAttachmentRecipe): the choose action keeps its own width; remove sits in the preview's top-end
+   corner over the photo, always visible because a hover-only remove cannot be used on touch screens. */
+.hjm-photo-attachment__choose { align-self: flex-start; }
+.hjm-photo-attachment__preview { position: relative; }
+.hjm-photo-attachment__corner { position: absolute; inset-block-start: var(--hjm-space-xs); inset-inline-end: var(--hjm-space-xs); }
 /* Profile photo that opens large (ProfileSummary.avatarView): keeps the avatar's own size and circle, not the media width. */
 .hjm-profile-summary__avatar-view { inline-size: auto; flex-shrink: 0; border-radius: var(--hjm-radius-full, 9999px); }
 .hjm-image-viewer-trigger:disabled { cursor: default; opacity: var(--hjm-image-viewer-trigger-disabled-opacity); }

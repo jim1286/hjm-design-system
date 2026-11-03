@@ -35,6 +35,9 @@ export const publicExportEntries = {
     AssetGroup: [
         "./asset"
     ],
+    AttachedPhoto: [
+        "./image-viewer"
+    ],
     AuthProviderButton: [
         "./provider-button"
     ],
@@ -471,6 +474,9 @@ export const publicExportEntries = {
     ],
     PermissionScreen: [
         "./screen-flows"
+    ],
+    PhotoAttachmentField: [
+        "./image-viewer"
     ],
     PhotoSourceSheet: [
         "./screen-flows"

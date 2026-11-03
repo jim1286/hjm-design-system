@@ -55,7 +55,7 @@ export type ImageViewerProps = {
 };
 /** Unmount the session on close so every open starts at the requested image. */
 export declare function ImageViewer(props: ImageViewerProps): import("react").JSX.Element | null;
-export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentUpload, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
+export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
 export declare const PhotoAttachmentField: (props: import("./image-viewer.js").PhotoAttachmentFieldProps) => import("react").JSX.Element;
 export declare const AttachedPhoto: ({ photo, label, layoutStyle, ...viewer }: import("./image-viewer.js").AttachedPhotoProps) => import("react").JSX.Element;
 //# sourceMappingURL=image-viewer.d.ts.map
