@@ -6,6 +6,7 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { Button, IconButton } from "./actions.js";
+import { createAttachedPhoto, createPhotoAttachmentField } from "./internal/photo-attachment.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string };
 export type ImageViewerProps = {
@@ -224,3 +225,9 @@ function CropSession({ source, title, hint, confirmLabel, cancelLabel, busy = fa
     </div>
   </div></HjmPortal>;
 }
+
+// One optional photo under written content (2026-11-03, Spint marks and Diairy letters). It opens this viewer, so it
+// shares the subpath; the factory hands ImageViewer over without an import cycle.
+export type { AttachedPhotoProps, PhotoAttachmentFieldProps, PhotoAttachmentImageHost, PhotoAttachmentLabels, PhotoAttachmentPhoto, PhotoAttachmentUpload, PhotoAttachmentViewerLabels } from "./internal/photo-attachment.js";
+export const PhotoAttachmentField = createPhotoAttachmentField({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });
+export const AttachedPhoto = createAttachedPhoto({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });

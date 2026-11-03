@@ -33,6 +33,9 @@
 | `GridReveal` | 확장 — 로드 완료 시 4×4 마스크 연출(optional) | `/grid-reveal` | `/grid-reveal` |
 | `ImageViewer` | 확장 — 전체 화면 넘겨 보기·확대 | `/image-viewer` (개발 소스) | `/image-viewer` (optional) |
 | `ImageViewerTrigger` | 확장 — 사진을 눌러 `ImageViewer` 열기 | `/image-viewer` | `/image-viewer` (optional) |
+| `CircularPhotoCropper` | 확장 — 프로필 사진을 원 안에 맞추기([ProfileSummary](profile-summary.md#프로필-사진-올리기-원으로-맞추기-2026-10-29)) | `/image-viewer` | `/image-viewer` (optional) |
+| `PhotoAttachmentField` | 확장 — 글에 사진 한 장 붙이기([글과 사진 한 장](../compositions/photo-attachment.md)) | `/image-viewer` | `/image-viewer` (optional) |
+| `AttachedPhoto` | 확장 — 글 아래 붙인 사진, 눌러 크게 보기([글과 사진 한 장](../compositions/photo-attachment.md)) | `/image-viewer` | `/image-viewer` (optional) |
 
 `GridReveal`은 추가 peer가 없다. `ImageViewer`는 granular subpath로만 import 되며 optional peer
 `react-native-zoom-toolkit` 5.1.1, `react-native-gesture-handler` 2.32.0과 Reanimated·Worklets 설치가 필요하다.

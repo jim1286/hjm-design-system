@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 242개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 244개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -21,6 +21,7 @@
 | AspectRatio | AspectRatio | canonical | root, ./layout |
 | Asset | Asset | canonical | root, ./asset |
 | AssetGroup | Asset | companion-or-alternative | root, ./asset |
+| AttachedPhoto | Image | optional-extension | ./image-viewer |
 | AuthProviderButton | AuthProviderButton | canonical | root, ./provider-button |
 | AuthScreenFooter | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
 | AuthScreenHero | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
@@ -163,6 +164,7 @@
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
 | PendingContent | Spinner | companion-or-alternative | root, ./feedback |
 | PermissionScreen | PermissionScreen | canonical | ./screen-flows |
+| PhotoAttachmentField | Image | optional-extension | ./image-viewer |
 | PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
 | Popover | Popover | canonical | root, ./popover |
@@ -253,7 +255,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 232개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 234개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -268,6 +270,7 @@
 | AspectRatio | AspectRatio | canonical | root, ./primitives |
 | Asset | Asset | canonical | root, ./asset |
 | AssetGroup | Asset | companion-or-alternative | root, ./asset |
+| AttachedPhoto | Image | optional-extension | ./image-viewer |
 | AuthProviderButton | AuthProviderButton | canonical | root, ./provider-button |
 | AuthScreenFooter | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
 | AuthScreenHero | AuthScreenLayout | companion-or-alternative | root, ./auth-screen |
@@ -409,6 +412,7 @@
 | PasswordRulesField | 별도 보조 기능 | supplemental | ./task-controls |
 | PendingContent | Spinner | companion-or-alternative | root, ./feedback |
 | PermissionScreen | PermissionScreen | canonical | ./screen-flows |
+| PhotoAttachmentField | Image | optional-extension | ./image-viewer |
 | PhotoSourceSheet | PhotoSourceSheet | canonical | ./screen-flows |
 | PieChart | Chart | companion-or-alternative | ./chart |
 | PricingChoice | 별도 보조 기능 | supplemental | ./task-controls |

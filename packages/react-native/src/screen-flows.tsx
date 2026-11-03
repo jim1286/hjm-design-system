@@ -14,7 +14,7 @@ import { AlertDialog, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus } from "@hjmds/design-contracts/screen-patterns";
 import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { DrawnMoreVertical, DrawnPencil } from "./internal/drawn-glyphs.js";
@@ -27,7 +27,6 @@ import { AccessibilityInfo, Animated, Keyboard, Pressable, ScrollView, View, typ
 import { useSheetBodyScroll } from "./internal/sheet-body-scroll.js";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
-import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
 import { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
@@ -157,27 +156,8 @@ export function ModerationForm(props:ModerationFormProps){
 }
 
 
-/** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
-export type PhotoSourceSheetProps = Readonly<{
- open:boolean;onOpenChange(open:boolean):void;onSelect(source:PhotoSource):void;
- labels:PhotoSourceLabels;disabled?:boolean;cameraAvailable?:boolean;
-}>;
-export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=false,cameraAvailable=true}:PhotoSourceSheetProps){
- const queued=useRef<PhotoSource|null>(null);
- useEffect(()=>()=>{queued.current=null;},[]);
- // iOS cannot present a camera/picker over a dismissing Modal. Sheet owns the real
- // dismissal completion (including Android fallback), so a timer is not a safe substitute.
- const select=(source:PhotoSource)=>{if(disabled||queued.current)return;queued.current=source;onOpenChange(false);};
- const complete=()=>{const source=queued.current;queued.current=null;if(source&&!disabled&&(source!=="camera"||cameraAvailable))onSelect(source);};
- // A later close action is cancellation, even if the controlled owner previously
- // deferred closing after source selection. Do not launch that abandoned picker.
- const dismiss=(next:boolean)=>{if(!next)queued.current=null;onOpenChange(next);};
- // Source choices are peer list actions; the shared row owns touch geometry and label alignment.
- return <Sheet open={open} onOpenChange={dismiss} title={labels.title} closeLabel={labels.cancel} onDismissComplete={complete}><Stack gap="xxs">
- <ListRow title={labels.library} leading={<PhotoSourceIcon source="library"/>} disabled={disabled} onPress={()=>select("library")}/>
- {cameraAvailable?<ListRow title={labels.camera} leading={<PhotoSourceIcon source="camera"/>} disabled={disabled} onPress={()=>select("camera")}/>:null}
- </Stack></Sheet>;
-}
+// PhotoSourceSheet moved to internal so PhotoAttachmentField (image-viewer subpath) composes it without the screen-flows graph.
+export { PhotoSourceSheet, type PhotoSourceSheetProps } from "./internal/photo-source-sheet.js";
 
 export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:ReactNode};
 /**

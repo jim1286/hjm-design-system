@@ -22,12 +22,11 @@ import { AlertDialog, Menu, Sheet, type SheetProps } from "./overlays.js";
 import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
 import { Icon } from "./supplemental-display.js";
-import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 
@@ -170,21 +169,8 @@ export function ModerationForm(props:ModerationFormProps){
 }
 
 
-/** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
-export type PhotoSourceSheetProps = Readonly<{
- open:boolean;onOpenChange(open:boolean):void;onSelect(source:PhotoSource):void;
- labels:PhotoSourceLabels;disabled?:boolean;cameraAvailable?:boolean;
-}>;
-export function PhotoSourceSheet({open,onOpenChange,onSelect,labels,disabled=false,cameraAvailable=true}:PhotoSourceSheetProps){
- // File-input click must stay in the user's activation stack. Deferring until the
- // sheet animation ends can cause browsers to reject camera/album selection.
- const select=(source:PhotoSource)=>{if(disabled)return;onOpenChange(false);onSelect(source);};
- // Same peer list actions as Native, without changing the browser activation stack.
- return <Sheet open={open} onOpenChange={onOpenChange} title={labels.title} closeLabel={labels.cancel}><Stack gap="xxs">
- <ListRow title={labels.library} leading={<PhotoSourceIcon source="library"/>} disabled={disabled} onClick={()=>select("library")}/>
- {cameraAvailable?<ListRow title={labels.camera} leading={<PhotoSourceIcon source="camera"/>} disabled={disabled} onClick={()=>select("camera")}/>:null}
- </Stack></Sheet>;
-}
+// PhotoSourceSheet moved to internal so PhotoAttachmentField (image-viewer subpath) composes it without an import cycle.
+export { PhotoSourceSheet, type PhotoSourceSheetProps } from "./internal/photo-source-sheet.js";
 
 export type MediaSelectionItem = {descriptor:UploadItemDescriptor;preview?:ReactNode};
 /**

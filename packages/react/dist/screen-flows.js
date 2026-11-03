@@ -25,7 +25,6 @@ import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
 import { Icon } from "./supplemental-display.js";
-import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
 // `edge`: the action ends a header/row edge (IconButton/Button edge rule, 2026-10-17 audit); framed tones ignore it.
@@ -135,14 +134,8 @@ export function ModerationForm(props) {
     const { body, actions, dialogs } = useModeration(props, true, props.cancel);
     return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.description === undefined ? {} : { description: props.description }), ...(props.actions === undefined ? {} : { actions: props.actions }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
 }
-export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
-    // File-input click must stay in the user's activation stack. Deferring until the
-    // sheet animation ends can cause browsers to reject camera/album selection.
-    const select = (source) => { if (disabled)
-        return; onOpenChange(false); onSelect(source); };
-    // Same peer list actions as Native, without changing the browser activation stack.
-    return _jsx(Sheet, { open: open, onOpenChange: onOpenChange, title: labels.title, closeLabel: labels.cancel, children: _jsxs(Stack, { gap: "xxs", children: [_jsx(ListRow, { title: labels.library, leading: _jsx(PhotoSourceIcon, { source: "library" }), disabled: disabled, onClick: () => select("library") }), cameraAvailable ? _jsx(ListRow, { title: labels.camera, leading: _jsx(PhotoSourceIcon, { source: "camera" }), disabled: disabled, onClick: () => select("camera") }) : null] }) });
-}
+// PhotoSourceSheet moved to internal so PhotoAttachmentField (image-viewer subpath) composes it without an import cycle.
+export { PhotoSourceSheet } from "./internal/photo-source-sheet.js";
 /**
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
  * virtualized host (VirtualList, FlatList renderItem) renders the same cell as the screen grid instead of a copy.

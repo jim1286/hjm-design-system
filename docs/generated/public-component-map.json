@@ -128,6 +128,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "AttachedPhoto",
+        "source": "packages/react/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "AuthProviderButton",
         "source": "packages/react/src/provider-button.tsx",
         "entries": [
@@ -1479,8 +1488,17 @@
         "role": "canonical"
       },
       {
+        "name": "PhotoAttachmentField",
+        "source": "packages/react/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "PhotoSourceSheet",
-        "source": "packages/react/src/screen-flows.tsx",
+        "source": "packages/react/src/internal/photo-source-sheet.tsx",
         "entries": [
           "./screen-flows"
         ],
@@ -2418,6 +2436,15 @@
         ],
         "canonicalComponent": "Asset",
         "role": "companion-or-alternative"
+      },
+      {
+        "name": "AttachedPhoto",
+        "source": "packages/react-native/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
       },
       {
         "name": "AuthProviderButton",
@@ -3759,8 +3786,17 @@
         "role": "canonical"
       },
       {
+        "name": "PhotoAttachmentField",
+        "source": "packages/react-native/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
         "name": "PhotoSourceSheet",
-        "source": "packages/react-native/src/screen-flows.tsx",
+        "source": "packages/react-native/src/internal/photo-source-sheet.tsx",
         "entries": [
           "./screen-flows"
         ],

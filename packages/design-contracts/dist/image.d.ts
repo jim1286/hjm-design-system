@@ -144,5 +144,79 @@ export declare function circularPhotoCoverScale(sourceWidth: number, sourceHeigh
 export declare function clampCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropState;
 /** Source-pixel square under the viewport, rounded inside the photo bounds. */
 export declare function resolveCircularPhotoCrop(state: CircularPhotoCropState, sourceWidth: number, sourceHeight: number, viewport: number): CircularPhotoCropRect;
+/**
+ * One optional photo attached to written content (2026-11-03 user request: Spint marks and Diairy letters attach a
+ * photo the same way, so the add → source sheet → preview → viewer → replace/remove flow lives here once instead of in
+ * each compose screen). HJM owns the order, the action states and the viewer; the product owns picking (system picker,
+ * permission, decoding), the upload and when it runs, and every message. One photo only: several photos are the
+ * MediaSelectionScreen/MessageComposer flows.
+ */
+export declare const photoAttachmentRecipe: {
+    /** Space between the choose button, preview and its actions. */
+    readonly gap: "xs";
+    /** Choose sits under the text like other secondary field actions; remove is the quieter neighbour of replace. */
+    readonly chooseTone: "secondary";
+    readonly removeTone: "ghost";
+    readonly actionSize: "small";
+    /**
+     * Preview keeps the photo's ratio down to 3:4; a taller photo is cover-cropped to 3:4 so it cannot push the text
+     * off screen. A ratio (not a height) keeps Web and Native identical at every width. The viewer shows the whole photo.
+     */
+    readonly previewMinAspectRatio: number;
+};
+export type PhotoAttachmentPhoto = Readonly<{
+    uri: string;
+    width: number;
+    height: number;
+}>;
+/** Product upload of the attached photo; absent when the product uploads later (at submit) or already finished. */
+export type PhotoAttachmentUpload = Readonly<{
+    status: "uploading";
+    progress: number | null;
+    progressLabel?: string;
+}> | Readonly<{
+    status: "error";
+    message: string;
+}>;
+export type PhotoAttachmentActionState = Readonly<{
+    choose: Readonly<{
+        label: "add" | "replace";
+        disabled: boolean;
+        loading: boolean;
+    }>;
+    remove: Readonly<{
+        visible: boolean;
+        disabled: boolean;
+    }>;
+    /** Opening the viewer never changes the draft, so only an absent photo hides it. */
+    preview: Readonly<{
+        visible: boolean;
+    }>;
+}>;
+/**
+ * While the system picker is open or the photo is uploading, choose and remove are locked: a second picker or a removal
+ * would race the result the product is waiting for (Spint ComposeScreen kept a ref for this). An upload error unlocks
+ * them again — the user may retry, replace or drop the photo. `disabled` is the host's own lock (submitting, limits).
+ */
+export declare function resolvePhotoAttachmentActions(input: Readonly<{
+    hasPhoto: boolean;
+    picking?: boolean;
+    disabled?: boolean;
+    upload?: PhotoAttachmentUpload["status"];
+}>): PhotoAttachmentActionState;
+export type PhotoAttachmentLabels = Readonly<{
+    add: string;
+    replace: string;
+    remove: string;
+    /** Accessible name of the preview button and the viewer item, e.g. "View attached photo". */
+    preview: string;
+}>;
+export declare function validatePhotoAttachment(labels: PhotoAttachmentLabels, photo: PhotoAttachmentPhoto | null): void;
+/** Preview frame size for Image: the photo's own size, or a 3:4 frame of the same width for taller photos. */
+export declare function resolvePhotoAttachmentPreviewSize(photo: PhotoAttachmentPhoto): Readonly<{
+    width: number;
+    height: number;
+    fit: "cover";
+}>;
 export {};
 //# sourceMappingURL=image.d.ts.map

@@ -3,7 +3,7 @@ import { type ScreenLayoutProps } from "./screens.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { profileSummaryRecipe, type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { profileSummaryRecipe, type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus } from "@hjmds/design-contracts/screen-patterns";
 import { type MediaAlbum } from "./internal/media-album.js";
 export type { MediaAlbum } from "./internal/media-album.js";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
@@ -133,16 +133,7 @@ export type ModerationFormProps = ModerationFields & Readonly<{
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
 }>;
 export declare function ModerationForm(props: ModerationFormProps): import("react").JSX.Element;
-/** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
-export type PhotoSourceSheetProps = Readonly<{
-    open: boolean;
-    onOpenChange(open: boolean): void;
-    onSelect(source: PhotoSource): void;
-    labels: PhotoSourceLabels;
-    disabled?: boolean;
-    cameraAvailable?: boolean;
-}>;
-export declare function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled, cameraAvailable }: PhotoSourceSheetProps): import("react").JSX.Element;
+export { PhotoSourceSheet, type PhotoSourceSheetProps } from "./internal/photo-source-sheet.js";
 export type MediaSelectionItem = {
     descriptor: UploadItemDescriptor;
     preview?: ReactNode;

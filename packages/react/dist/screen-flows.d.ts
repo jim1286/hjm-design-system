@@ -7,7 +7,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { profileSummaryRecipe, type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { profileSummaryRecipe, type CommentMenuItemDescriptor, type SearchFiltersRole, type PermissionScreenStatus } from "@hjmds/design-contracts/screen-patterns";
 import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
 /** Copy, pending state and mutations are controlled by the consuming product. */
 /** `icon` renders an icon-only button named by `label`; header actions (top-right) use it so a centered title keeps its width (2026-10-17). */
@@ -132,16 +132,7 @@ export type ModerationFormProps = ModerationFields & Readonly<{
     layoutStyle?: ScreenLayoutProps["layoutStyle"];
 }>;
 export declare function ModerationForm(props: ModerationFormProps): import("react").JSX.Element;
-/** Source choice only: permission, capture, decoding and draft persistence belong to the host. */
-export type PhotoSourceSheetProps = Readonly<{
-    open: boolean;
-    onOpenChange(open: boolean): void;
-    onSelect(source: PhotoSource): void;
-    labels: PhotoSourceLabels;
-    disabled?: boolean;
-    cameraAvailable?: boolean;
-}>;
-export declare function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled, cameraAvailable }: PhotoSourceSheetProps): import("react").JSX.Element;
+export { PhotoSourceSheet, type PhotoSourceSheetProps } from "./internal/photo-source-sheet.js";
 export type MediaSelectionItem = {
     descriptor: UploadItemDescriptor;
     preview?: ReactNode;

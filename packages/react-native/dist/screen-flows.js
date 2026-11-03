@@ -26,7 +26,6 @@ import { AccessibilityInfo, Animated, Keyboard, Pressable, ScrollView, View } fr
 import { useSheetBodyScroll } from "./internal/sheet-body-scroll.js";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
-import { PhotoSourceIcon } from "./internal/photo-source-icon.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
 import { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
@@ -122,22 +121,8 @@ export function ModerationForm(props) {
     const { body, actions, dialogs } = useModeration(props, true, props.cancel);
     return _jsxs(_Fragment, { children: [_jsx(CompositionLayout, { ...(props.title === undefined ? {} : { title: props.title }), ...(props.headingLevel === undefined ? {} : { headingLevel: props.headingLevel }), ...(props.description === undefined ? {} : { description: props.description }), ...(props.actions === undefined ? {} : { actions: props.actions }), ...(props.layoutStyle === undefined ? {} : { layoutStyle: props.layoutStyle }), footer: actions, children: body }), dialogs] });
 }
-export function PhotoSourceSheet({ open, onOpenChange, onSelect, labels, disabled = false, cameraAvailable = true }) {
-    const queued = useRef(null);
-    useEffect(() => () => { queued.current = null; }, []);
-    // iOS cannot present a camera/picker over a dismissing Modal. Sheet owns the real
-    // dismissal completion (including Android fallback), so a timer is not a safe substitute.
-    const select = (source) => { if (disabled || queued.current)
-        return; queued.current = source; onOpenChange(false); };
-    const complete = () => { const source = queued.current; queued.current = null; if (source && !disabled && (source !== "camera" || cameraAvailable))
-        onSelect(source); };
-    // A later close action is cancellation, even if the controlled owner previously
-    // deferred closing after source selection. Do not launch that abandoned picker.
-    const dismiss = (next) => { if (!next)
-        queued.current = null; onOpenChange(next); };
-    // Source choices are peer list actions; the shared row owns touch geometry and label alignment.
-    return _jsx(Sheet, { open: open, onOpenChange: dismiss, title: labels.title, closeLabel: labels.cancel, onDismissComplete: complete, children: _jsxs(Stack, { gap: "xxs", children: [_jsx(ListRow, { title: labels.library, leading: _jsx(PhotoSourceIcon, { source: "library" }), disabled: disabled, onPress: () => select("library") }), cameraAvailable ? _jsx(ListRow, { title: labels.camera, leading: _jsx(PhotoSourceIcon, { source: "camera" }), disabled: disabled, onPress: () => select("camera") }) : null] }) });
-}
+// PhotoSourceSheet moved to internal so PhotoAttachmentField (image-viewer subpath) composes it without the screen-flows graph.
+export { PhotoSourceSheet } from "./internal/photo-source-sheet.js";
 /**
  * One picked item: preview, upload status, then move/rotate/remove. Exported (2026-10-18, Utilverse photo tools) so a
  * virtualized host (FlatList renderItem) renders the same cell as the screen grid instead of a copy.

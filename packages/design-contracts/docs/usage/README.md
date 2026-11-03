@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 1.50.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 2.2.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -246,6 +246,7 @@ Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품
 | [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 1.14.0 | Web · Native | 구성 API별 | 배포 |
 | [채팅방 관리](compositions/chat-room.md) | 입력과 작성 | `@hjmds/react/communication`, `@hjmds/react-native/communication`에서 제공한다. | 1.45.0 | Web · Native | 구성 API별 | 배포 |
 | [첫 작업을 만들고 이어하기](compositions/reference-first.md) | 입력과 작성 | 첫 기록을 단계별 작성하고 중단한 초안 이어가기 흐름이 필요할 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 배포 |
+| [글과 사진 한 장](compositions/photo-attachment.md) | 선택과 필터 | 글(편지·게시글·댓글)에 선택 사진 **한 장**을 붙이고, 붙인 사진을 글 아래에서 크게 볼 때 쓴다. | 구성 API 지침 참조 | Web · Native | 구성 API별 | 실험 |
 | [날짜 선택과 예정 목록](compositions/stea-schedule-card.md) | 선택과 필터 | 한 주처럼 짧은 날짜 범위에서 날짜 하나를 고르면 같은 카드 안의 일정 목록이 그 날짜로 바뀌는 요약 카드에 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |
 | [날짜와 시각 선택](compositions/date-time-selection.md) | 선택과 필터 | 기록·알림의 날짜 하나와 하루 안의 시각을 함께 고를 때 쓴다. | 1.16.0 | Web · Native | 구성 API별 | 배포 |
 | [대표 항목과 묶음 전체 선택](compositions/selection-scope.md) | 선택과 필터 | 사진 묶음·스레드처럼 대표 항목 하나와 묶음 전체가 같은 모양으로 보일 때, 공유·삭제·이동 전에 대상 범위와 개수를 고르고 문구로 확인한 뒤 적용하게 할 때 쓴다. | 1.12.1 | Web · Native | 구성 API별 | 배포 |

@@ -5,6 +5,7 @@ import { circularPhotoCoverScale, circularPhotoCropRecipe, clampCircularPhotoCro
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { Button, IconButton } from "./actions.js";
+import { createAttachedPhoto, createPhotoAttachmentField } from "./internal/photo-attachment.js";
 /**
  * Button around product media that opens ImageViewer. The product keeps the viewer's `open` state and calls it from
  * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
@@ -171,4 +172,6 @@ function CropSession({ source, title, hint, confirmLabel, cancelLabel, busy = fa
                         pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
                     }, onPointerUp: event => pointers.current.delete(event.pointerId), onPointerCancel: event => pointers.current.delete(event.pointerId), children: viewport > 0 ? _jsxs(_Fragment, { children: [_jsx("img", { src: source.uri, alt: "", draggable: false, className: "hjm-photo-cropper__image", style: { inlineSize: source.width * cover, blockSize: source.height * cover, transform: `translate(-50%, -50%) translate(${state.x}px, ${state.y}px) scale(${state.zoom})` } }), _jsx("div", { className: "hjm-photo-cropper__mask", "aria-hidden": "true", style: { inlineSize: viewport, blockSize: viewport, "--hjm-photo-cropper-mask": `rgba(0,0,0,${circularPhotoCropRecipe.maskOpacity})` } })] }) : null }), _jsxs("div", { className: "hjm-photo-cropper__footer", children: [hint ? _jsx("p", { children: hint }) : null, _jsxs("div", { className: "hjm-photo-cropper__actions", children: [_jsx(Button, { ref: cancelRef, tone: "secondary", fullWidth: true, disabled: busy, onClick: onCancel, children: cancelLabel }), _jsx(Button, { tone: "primary", fullWidth: true, loading: busy, disabled: busy || viewport <= 0, onClick: () => onConfirm(resolveCircularPhotoCrop(state, source.width, source.height, viewport)), children: confirmLabel })] })] })] }) });
 }
+export const PhotoAttachmentField = createPhotoAttachmentField({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });
+export const AttachedPhoto = createAttachedPhoto({ Viewer: ImageViewer, Trigger: ImageViewerTrigger });
 //# sourceMappingURL=image-viewer.js.map
