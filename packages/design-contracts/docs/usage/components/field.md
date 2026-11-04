@@ -74,6 +74,7 @@ import { Field } from "@hjmds/react-native/forms";
 | `variant`(`TextField`) | `surface` · `inset` | `surface` | — |
 | `shape`(`TextField`) | `medium` · `large` · `full` | `medium` | — |
 | `align`(`TextField`) | `start` · `center` | `start` | `center`는 닉네임·코드처럼 짧은 한 값 |
+| `contentFontFamily`(`TextField`·`TextArea`) | 글꼴 이름 | UI 기본 글꼴 | 제품이 불러온 필체를 입력값에만 적용한다. 라벨·도움말은 UI 글꼴을 유지한다 |
 | `onValueChange`(`TextField`) | `(value: string) => void` | — | Web·Native 같은 이름·모양. Web은 DOM `onChange`(이벤트)도 함께 불린다. 공용 폼 코드는 `onValueChange`를 쓴다 |
 | `children`(`Field` render-prop) | `(control: FieldControlProps) => ReactNode` 또는 `ReactNode` | — | Web `FieldControlProps`는 `{ id, required, disabled, "aria-invalid"?: true, "aria-describedby"? }`, Native는 `{ accessibilityLabel, accessibilityHint?, accessibilityState: { disabled } }`(hint는 오류 우선) |
 | `busy`(Native `TextField`) | `boolean` | `false` | 편집을 막고 접근성 busy를 싣는다 |

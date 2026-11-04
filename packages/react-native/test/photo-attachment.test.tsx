@@ -56,3 +56,16 @@ it("locks remove while the host submits and choose while picking", () => {
   act(() => tree.update(render({ picking: true })));
   expect([buttons("Photo")[0]!.props.disabled, buttons("Photo")[0]!.props.loading]).toEqual([true, true]);
 });
+
+it("lets the host control the source sheet and decorate the preview", () => {
+  const onSourceOpenChange = vi.fn();
+  const PostcardFrame = ({ children }: { children: ReactNode }) => children;
+  act(() => { tree = create(render({ chooseAction: 'none', sourceOpen: true, onSourceOpenChange })); });
+  expect(buttons('Photo')).toHaveLength(0);
+  expect(tree.root.findByType(Sheet).props.open).toBe(true);
+  act(() => tree.root.findByType(Sheet).props.onOpenChange(false));
+  expect(onSourceOpenChange).toHaveBeenCalledWith(false);
+  act(() => tree.update(render({ photo, decoratePreview: image => createElement(PostcardFrame, { children: image }) })));
+  expect(tree.root.findAllByType(PostcardFrame)).toHaveLength(1);
+  expect(remove()).toBeDefined();
+});

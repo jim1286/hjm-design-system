@@ -52,3 +52,15 @@ it("locks remove while the host submits", async () => {
   await render({ photo, disabled: true });
   expect(button("사진 빼기")!.disabled).toBe(true);
 });
+
+it("lets the host control the source sheet and decorate the preview", async () => {
+  const onSourceOpenChange = vi.fn();
+  await render({ chooseAction: 'none', sourceOpen: true, onSourceOpenChange });
+  expect(button('사진')).toBeUndefined();
+  expect(button('앨범')).toBeDefined();
+  await act(async () => button('닫기')!.click());
+  expect(onSourceOpenChange).toHaveBeenCalledWith(false);
+  await render({ photo, decoratePreview: image => <div data-testid="postcard-frame">{image}</div> });
+  expect(host.querySelector('[data-testid="postcard-frame"] img')).not.toBeNull();
+  expect(button('사진 빼기')).toBeDefined();
+});

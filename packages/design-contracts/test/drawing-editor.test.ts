@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { emptyDrawing, drawingHasContent, drawingReducer as reduce, drawingStrokeColor, DRAWING_PAPER, type DrawingStroke } from '../src/drawing-editor.js';
+import { emptyDrawing, drawingHasContent, drawingReducer as reduce, drawingStrokeColor, drawingEraseRuns, DRAWING_PAPER, DRAWING_TRANSPARENT, type DrawingStroke } from '../src/drawing-editor.js';
 const ink: DrawingStroke = { color: '#333d4b', width: 12, points: [[10, 10], [20, 20]] };
 const eraser: DrawingStroke = { erase: true, width: 24, points: [[10, 10]] };
 it('preserves each stroke width and makes erasing and clearing reversible', () => {
@@ -24,4 +24,10 @@ it('paints erasers with the current background and counts a changed background a
   expect(drawingHasContent([eraser], DRAWING_PAPER)).toBe(false);
   expect(drawingHasContent([eraser], '#d0ebff')).toBe(true);
   expect(drawingHasContent([ink], DRAWING_PAPER)).toBe(true);
+});
+it('keeps a transparent blank empty and groups erasers without erasing later ink', () => {
+  expect(drawingHasContent([], DRAWING_TRANSPARENT)).toBe(false);
+  expect(drawingHasContent([eraser], DRAWING_TRANSPARENT)).toBe(false);
+  expect(drawingHasContent([ink, eraser], DRAWING_TRANSPARENT)).toBe(true);
+  expect(drawingEraseRuns([ink, eraser, eraser, ink]).map(run => [run.erase, run.strokes.length])).toEqual([[false, 1], [true, 2], [false, 1]]);
 });

@@ -7,7 +7,7 @@ vi.mock('react-native-svg', async () => {
     return createElement('Svg', props, props.children as never);
   });
   const shape = (name: string) => (props: Record<string, unknown>) => createElement(name, props, props.children as never);
-  return { default: Svg, Path: shape('Path'), Rect: shape('Rect'), Circle: shape('Circle'), Defs: shape('Defs'), Pattern: shape('Pattern'), LinearGradient: shape('LinearGradient'), Stop: shape('Stop') };
+  return { default: Svg, Path: shape('Path'), Rect: shape('Rect'), Circle: shape('Circle'), Defs: shape('Defs'), G: shape('G'), Mask: shape('Mask'), Pattern: shape('Pattern'), LinearGradient: shape('LinearGradient'), Stop: shape('Stop') };
 });
 vi.mock('lucide-react-native', async () => {
   const { View } = await import('react-native');
@@ -47,6 +47,18 @@ it('keeps the owning finger and supports undo without yielding a vertical stroke
   act(() => tree.root.find(node => node.props.label === labels.undo && !!node.props.onPress).props.onPress());
   expect(ink(tree)).toHaveLength(0);
   expect(tree.root.findByType(EditorScreen).props.submit.disabled).toBe(true);
+  act(() => tree.unmount());
+});
+it('uses transparent ground for sticker drawing and returns a PNG', async () => {
+  const save = vi.fn(async (_image: DrawingImage) => {});
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><DrawingEditor labels={labels} ground="transparent" onSave={save} onCancel={() => {}} /></HjmNativeProvider>); });
+  const stage = tree.root.find(node => node.props.style?.minHeight === 160 && !!node.props.onLayout);
+  act(() => stage.props.onLayout({ nativeEvent: { layout: { width: 320, height: 320 } } }));
+  expect(tree.root.findByType(EditorScreen).props.submit.disabled).toBe(true);
+  draw(tree);
+  await act(async () => tree.root.findByType(EditorScreen).props.submit.onAction());
+  expect(save).toHaveBeenCalledWith({ base64: 'cG5n', mimeType: 'image/png' });
   act(() => tree.unmount());
 });
 

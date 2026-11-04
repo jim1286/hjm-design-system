@@ -9,6 +9,11 @@ import "../src/styles.css";
 let host: HTMLDivElement, root: Root;
 beforeEach(() => { host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
+it('applies the product handwriting font to the input without changing the label', async () => {
+  await act(async () => root.render(<HjmProvider><TextArea label="Draft" contentFontFamily="DiairyHand" /></HjmProvider>));
+  expect(host.querySelector('textarea')!.style.fontFamily).toBe('DiairyHand');
+  expect(host.querySelector('label')!.style.fontFamily).toBe('');
+});
 it.each(["single", "multiline", "number"] as const)("%s uses a thicker invalid frame with an external message, including while disabled, and clears it on recovery", async kind => {
   async function draw(invalid: AriaAttributes["aria-invalid"], disabled = false) {
     const props = { label: "Draft", disabled, "aria-invalid": invalid === false ? undefined : invalid, "aria-describedby": "validation-note" };

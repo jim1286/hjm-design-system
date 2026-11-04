@@ -461,6 +461,11 @@ export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded (same axis as native).
+     * Field chrome keeps the UI face; omitted while the face is still loading.
+     */
+    contentFontFamily?: string;
   }>;
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -486,6 +491,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       "aria-label": ariaLabel,
       minVisibleLines,
       maxVisibleLines,
+      contentFontFamily,
       style,
       layoutStyle,
       initialFocusTarget,
@@ -538,7 +544,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             ref={composeRefs(control, ref)}
             id={ids.controlId}
             className={classNames("hjm-field__input", className)}
-            style={{ ...style, ...lineBounds }}
+            style={{ ...style, ...lineBounds, ...(contentFontFamily ? { fontFamily: contentFontFamily } : {}) }}
             required={required}
             disabled={disabled}
             {...(count.maxLength === undefined ? {} : { maxLength: count.maxLength })}

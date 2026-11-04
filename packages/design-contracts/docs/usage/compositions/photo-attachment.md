@@ -16,6 +16,8 @@
 여러 장은 [사진 선택과 업로드](../screens/flow-media.md), 채팅 입력의 첨부는 [메시지 작성](purpose-input-message.md)을 쓴다.
 `ImageViewer`와 같은 `image-viewer` 하위 경로라 Native는 그 선택 peer(gesture-handler·reanimated·worklets·zoom-toolkit)가 필요하다.
 
+엽서처럼 사진 미리보기 위에 제품 장식을 그릴 때 `decoratePreview`로 이미지를 감싼다. 확대 뷰어는 원본 사진을 보여 주며 삭제 행동은 HJM이 소유한다. 작성 도구가 사진 선택 행동을 따로 제공하면 `chooseAction="none"`과 `sourceOpen`·`onSourceOpenChange`로 같은 사진 원본 선택 시트를 제어한다.
+
 2026-11-03 사용자 지시로 흔한 작성 화면(Threads·X 글 작성, Slowly 편지)을 참고해 모양을 정했다. 글 아래 작은 아이콘 행동으로 붙이고,
 붙인 사진은 미리보기와 모서리 ×로 뺀다. 폭을 채운 버튼과 따로 된 "바꾸기"는 두지 않는다(빼고 다시 붙인다). 안내 문구 자리도 없다(같은 날 사용자 결정).
 

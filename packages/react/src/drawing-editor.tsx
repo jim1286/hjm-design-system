@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useReducer, useRef, useState, type PointerEvent } from 'react';
+import { useEffect, useReducer, useRef, useState, type PointerEvent, type ReactNode } from 'react';
 import { PaintBucket, Redo2, Palette, Trash2, Undo2 } from 'lucide-react';
 import { EditorScreen } from './screen-flows.js';
 import { Stack } from './layout.js';
@@ -10,7 +10,7 @@ import { Sheet } from './overlays.js';
 import { Notice } from './feedback.js';
 import { IconButton } from './actions.js';
 import {
-  DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
+  DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, DRAWING_TRANSPARENT, drawingEraseRuns, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
   drawingQuickColors, drawingStrokeColor, drawingEditorRecipe, type DrawingStroke, type DrawingEditorProps as DrawingEditorContractProps,
 } from '@hjmds/design-contracts/components/drawing-editor';
 import type { HjmCompositionStyleProp } from './composition-style.js';
@@ -25,14 +25,16 @@ const SIZE_PREVIEW_MS = drawingEditorRecipe.sizePreviewMs;
 /** Shared paint editor extracted from Diairy and Spint (2026-10-27).
  * Tools, history, crop preview and failed-save draft preservation have one owner per renderer.
  * The product supplies localized labels, upload and navigation; SVG/lucide stay optional entry peers. */
-export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', testID = 'drawing-editor', layoutStyle }: DrawingEditorProps) {
+export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', ground = 'paper', testID = 'drawing-editor', layoutStyle }: DrawingEditorProps) {
   const [history, dispatch] = useReducer(drawingReducer, emptyDrawing);
   const [draft, setDraft] = useState<DrawingStroke | null>(null);
   const strokes = draft ? [...history.present, draft] : history.present;
   const [brushWidth, setBrushWidth] = useState<number>(drawingEditorRecipe.brush.initial);
   const [colorOpen, setColorOpen] = useState(false);
   const [color, setColor] = useState<string>(DRAWING_INK_COLORS[0]);
-  const [background, setBackground] = useState<string>(DRAWING_PAPER);
+  const transparent = ground === 'transparent';
+  const [chosenBackground, setBackground] = useState<string>(DRAWING_PAPER);
+  const background = transparent ? DRAWING_TRANSPARENT : chosenBackground;
   const [backgroundOpen, setBackgroundOpen] = useState(false);
   const [sizePreview, setSizePreview] = useState(false);
   const [pointer, setPointer] = useState<[number, number] | null>(null);
@@ -62,7 +64,17 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
     setColorOpen(open);
     if (!open) setRecent(previous => previous.includes(color) || quickColors.includes(color) ? previous : [color, ...previous].slice(0, 4));
   };
-  const paths = strokes.map((stroke, index) => <path key={index} d={drawingInkPath(stroke)} stroke={drawingStrokeColor(stroke, background)} strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round" fill="none" />);
+  const inkPath = (stroke: DrawingStroke, key: number | string, colorOverride?: string) => <path key={key} d={drawingInkPath(stroke)}
+    stroke={colorOverride ?? drawingStrokeColor(stroke, background)} strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round" fill="none" />;
+  // Same as native: on a transparent ground each eraser run masks everything drawn before it.
+  const paths: ReactNode = transparent
+    ? drawingEraseRuns(strokes).reduce<ReactNode[]>((layer, run, runIndex) => run.erase
+      ? [<g key={`e${runIndex}`} mask={`url(#hjm-erase-${runIndex})`}>
+          <defs><mask id={`hjm-erase-${runIndex}`} maskUnits="userSpaceOnUse" x={0} y={0} width={256} height={256}>
+            <rect width="256" height="256" fill="#ffffff" />{run.strokes.map((stroke, i) => inkPath(stroke, i, '#000000'))}
+          </mask></defs>{layer}</g>]
+      : [...layer, ...run.strokes.map((stroke, i) => inkPath(stroke, `${runIndex}-${i}`))], [])
+    : strokes.map((stroke, index) => inkPath(stroke, index));
   const store = async () => {
     if (saving.current || busy || draft || !svg.current || !hasInk) return;
     saving.current = true; setBusy(true); setFailed(false);
@@ -75,9 +87,11 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
         await new Promise<void>((resolve, reject) => { image.onload = () => resolve(); image.onerror = () => reject(new Error('drawing_decode')); image.src = url; });
         const canvas = document.createElement('canvas'); canvas.width = canvas.height = 512;
         const context = canvas.getContext('2d'); if (!context) throw new Error('drawing_canvas');
-        context.drawImage(image, 0, 0, 512, 512); photo = canvas.toDataURL('image/jpeg', 0.9).split(',')[1]!;
+        context.drawImage(image, 0, 0, 512, 512);
+        // JPEG has no alpha: a transparent ground must stay PNG or the cut-out turns black.
+        photo = (transparent ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', 0.9)).split(',')[1]!;
       } finally { URL.revokeObjectURL(url); }
-      await onSave({ base64: photo, mimeType: 'image/jpeg' });
+      await onSave({ base64: photo, mimeType: transparent ? 'image/png' : 'image/jpeg' });
     } catch { setFailed(true); } finally { saving.current = false; setBusy(false); }
   };
   const showSize = (width: number) => { setBrushWidth(width); setSizePreview(true); if (sizeTimer.current) clearTimeout(sizeTimer.current); };
@@ -98,11 +112,13 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
           <IconButton label={labels.redo} tone="ghost" disabled={busy || !!draft || !history.future.length} onClick={() => dispatch({ type: 'redo' })}><Redo2 aria-hidden size={20} /></IconButton>
         </div>
         <div style={{ display: 'flex' }}>
-          <IconButton label={labels.background} tone="ghost" disabled={busy || !!draft} onClick={() => setBackgroundOpen(true)}><PaintBucket aria-hidden size={20} /></IconButton>
+          {transparent ? null : <IconButton label={labels.background} tone="ghost" disabled={busy || !!draft} onClick={() => setBackgroundOpen(true)}><PaintBucket aria-hidden size={20} /></IconButton>}
           <IconButton label={labels.clear} tone="ghost" disabled={busy || !!draft || !strokes.length} onClick={() => dispatch({ type: 'clear' })}><Trash2 aria-hidden size={20} /></IconButton>
         </div>
       </div>
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '1', borderRadius: drawingEditorRecipe.radius, overflow: 'hidden', border: '1px solid var(--hjm-color-border)' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '1', borderRadius: drawingEditorRecipe.radius, overflow: 'hidden', border: '1px solid var(--hjm-color-border)',
+        // On-screen only: the checkerboard is the container's background, never part of the exported SVG.
+        ...(transparent ? { backgroundImage: 'repeating-conic-gradient(var(--hjm-color-border) 0% 25%, transparent 0% 50%)', backgroundSize: `${(drawingEditorRecipe.checker / 128) * 100}% ${(drawingEditorRecipe.checker / 128) * 100}%` } : {}) }}>
         <svg ref={svg} xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 256 256"
           role="img" aria-label={labels.title} data-testid={`${testID}-canvas`}
           // touch-action none keeps a stroke from scrolling the page; the pointer capture keeps it on the canvas.
@@ -121,13 +137,13 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
             const stroke = { ...active.current.stroke, points: [...active.current.stroke.points, point(event)] };
             active.current = { pointer: event.pointerId, stroke }; setDraft(stroke);
           }} onPointerUp={finishStroke} onPointerCancel={finishStroke} onPointerLeave={() => setPointer(null)}>
-          <rect width="256" height="256" fill={background} />{paths}
+          {transparent ? null : <rect width="256" height="256" fill={background} />}{paths}
         </svg>
         {/* The saved photo is shown as a circle; shade the corners it will lose. Not part of the exported image. */}
         <svg aria-hidden viewBox="0 0 256 256" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           {cropPreview === 'circle' ? <><path d="M0 0H256V256H0Z M128 0A128 128 0 1 0 128 256A128 128 0 1 0 128 0Z" fillRule="evenodd" style={{ fill: 'var(--hjm-color-text)', fillOpacity: 0.06 }} />
           <circle cx="128" cy="128" r="127" fill="none" strokeWidth="1" strokeDasharray="4 4" style={{ stroke: 'var(--hjm-color-text-muted)', strokeOpacity: 0.5 }} /></> : null}
-          {sizePreview && !draft ? <circle data-testid={`${testID}-size`} cx="128" cy="128" r={strokeWidth / 2} fill={tool === 'eraser' ? background : color} strokeWidth="0.5" style={{ stroke: 'var(--hjm-color-text)', strokeOpacity: 0.4 }} /> : null}
+          {sizePreview && !draft ? <circle data-testid={`${testID}-size`} cx="128" cy="128" r={strokeWidth / 2} fill={tool === 'eraser' ? (transparent ? 'none' : background) : color} strokeWidth="0.5" style={{ stroke: 'var(--hjm-color-text)', strokeOpacity: 0.4 }} /> : null}
           {pointer && !busy ? <circle cx={pointer[0]} cy={pointer[1]} r={strokeWidth / 2 + 1} fill="none" strokeWidth="0.5" style={{ stroke: 'var(--hjm-color-text)', strokeOpacity: 0.5 }} /> : null}
         </svg>
       </div>

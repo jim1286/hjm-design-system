@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { View, type GestureResponderEvent } from 'react-native';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Defs, G, Mask, Path, Pattern, Rect } from 'react-native-svg';
+import type { ReactNode } from 'react';
 import { EditorScreen } from './screen-flows.js';
 import { SegmentedControl } from './inputs.js';
 import { Sheet } from './overlays.js';
@@ -11,7 +12,7 @@ import { IconButton } from './actions.js';
 import { Icon } from './primitives.js';
 import { useHjmNativeTheme } from './provider.js';
 import {
-  DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
+  DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, DRAWING_TRANSPARENT, drawingEraseRuns, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
   drawingQuickColors, drawingStrokeColor, drawingEditorRecipe, type DrawingStroke, type DrawingEditorProps,
 } from '@hjmds/design-contracts/components/drawing-editor';
 import { PaintBucket, Palette, Redo2, Trash2, Undo2 } from 'lucide-react-native';
@@ -25,7 +26,7 @@ const SIZE_PREVIEW_MS = drawingEditorRecipe.sizePreviewMs;
 /** Shared paint editor extracted from Diairy and Spint (2026-10-27).
  * Tools, history, crop preview and failed-save draft preservation have one owner per renderer.
  * The product supplies localized labels, upload and navigation; SVG/lucide stay optional entry peers. */
-export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', safeAreaBottom = 0, testID = 'drawing-editor' }: DrawingEditorProps) {
+export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', ground = 'paper', safeAreaBottom = 0, testID = 'drawing-editor' }: DrawingEditorProps) {
   const { colors } = useHjmNativeTheme();
   const [history, dispatch] = useReducer(drawingReducer, emptyDrawing);
   const [draft, setDraft] = useState<DrawingStroke | null>(null);
@@ -33,7 +34,9 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
   const [brushWidth, setBrushWidth] = useState<number>(drawingEditorRecipe.brush.initial);
   const [colorOpen, setColorOpen] = useState(false);
   const [color, setColor] = useState<string>(DRAWING_INK_COLORS[0]);
-  const [background, setBackground] = useState<string>(DRAWING_PAPER);
+  const transparent = ground === 'transparent';
+  const [chosenBackground, setBackground] = useState<string>(DRAWING_PAPER);
+  const background = transparent ? DRAWING_TRANSPARENT : chosenBackground;
   const [backgroundOpen, setBackgroundOpen] = useState(false);
   const [sizePreview, setSizePreview] = useState(false);
   const sizeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -70,7 +73,17 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
     setColorOpen(open);
     if (!open) setRecent(previous => previous.includes(color) || quickColors.includes(color) ? previous : [color, ...previous].slice(0, 4));
   };
-  const paths = strokes.map((stroke, index) => <Path key={index} d={drawingInkPath(stroke)} stroke={drawingStrokeColor(stroke, background)} strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round" fill="none" />);
+  const inkPath = (stroke: DrawingStroke, key: number | string, colorOverride?: string) => <Path key={key} d={drawingInkPath(stroke)}
+    stroke={colorOverride ?? drawingStrokeColor(stroke, background)} strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round" fill="none" />;
+  // A transparent ground cannot paint the eraser in a background colour: each eraser run masks everything drawn before it.
+  const paths: ReactNode = transparent
+    ? drawingEraseRuns(strokes).reduce<ReactNode[]>((layer, run, runIndex) => run.erase
+      ? [<G key={`e${runIndex}`} mask={`url(#hjm-erase-${runIndex})`}>
+          <Defs><Mask id={`hjm-erase-${runIndex}`} maskUnits="userSpaceOnUse" x={0} y={0} width={256} height={256}>
+            <Rect width="256" height="256" fill="#ffffff" />{run.strokes.map((stroke, i) => inkPath(stroke, i, '#000000'))}
+          </Mask></Defs>{layer}</G>]
+      : [...layer, ...run.strokes.map((stroke, i) => inkPath(stroke, `${runIndex}-${i}`))], [])
+    : strokes.map((stroke, index) => inkPath(stroke, index));
   const store = async () => {
     if (saving.current || busy || draft || !hasInk) return;
     saving.current = true; setBusy(true); setFailed(false);
@@ -111,7 +124,7 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
           <IconButton label={labels.redo} tone="ghost" disabled={busy || !!draft || !history.future.length} onPress={() => dispatch({ type: 'redo' })}>{glyph('redo')}</IconButton>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <IconButton label={labels.background} tone="ghost" disabled={busy || !!draft} onPress={() => setBackgroundOpen(true)}>{glyph('background')}</IconButton>
+          {transparent ? null : <IconButton label={labels.background} tone="ghost" disabled={busy || !!draft} onPress={() => setBackgroundOpen(true)}>{glyph('background')}</IconButton>}
           <IconButton label={labels.clear} tone="ghost" disabled={busy || !!draft || !strokes.length} onPress={() => dispatch({ type: 'clear' })}>{glyph('clear')}</IconButton>
         </View>
       </View>
@@ -138,13 +151,22 @@ export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', 
           // A stroke keeps its touch: no parent gesture may claim it mid-line.
           onResponderTerminationRequest={() => false}
           onResponderTerminate={finishStroke}>
-          <Svg ref={svg} pointerEvents="none" width={canvas} height={canvas} viewBox="0 0 256 256"><Rect width="256" height="256" fill={background} />{paths}</Svg>
+          {/* The checkerboard says "see-through"; it sits under the exported SVG and is not part of the image. */}
+          {transparent ? <Svg pointerEvents="none" width={canvas} height={canvas} viewBox="0 0 256 256" style={{ position: 'absolute', top: 0, left: 0 }}>
+            <Defs><Pattern id="hjm-drawing-checker" width={drawingEditorRecipe.checker * 2} height={drawingEditorRecipe.checker * 2} patternUnits="userSpaceOnUse">
+              <Rect width={drawingEditorRecipe.checker * 2} height={drawingEditorRecipe.checker * 2} fill={colors.surface} />
+              <Rect width={drawingEditorRecipe.checker} height={drawingEditorRecipe.checker} fill={colors.border} fillOpacity={0.35} />
+              <Rect x={drawingEditorRecipe.checker} y={drawingEditorRecipe.checker} width={drawingEditorRecipe.checker} height={drawingEditorRecipe.checker} fill={colors.border} fillOpacity={0.35} />
+            </Pattern></Defs>
+            <Rect width="256" height="256" fill="url(#hjm-drawing-checker)" />
+          </Svg> : null}
+          <Svg ref={svg} pointerEvents="none" width={canvas} height={canvas} viewBox="0 0 256 256">{transparent ? null : <Rect width="256" height="256" fill={background} />}{paths}</Svg>
           {/* The saved photo is shown as a circle; shade the corners it will lose. Not part of the exported image. */}
           <Svg pointerEvents="none" width={canvas} height={canvas} viewBox="0 0 256 256" style={{ position: 'absolute', top: 0, left: 0 }}>
             {cropPreview === 'circle' ? <><Path d="M0 0H256V256H0Z M128 0A128 128 0 1 0 128 256A128 128 0 1 0 128 0Z" fillRule="evenodd" fill={colors.textBody} fillOpacity={0.06} />
             <Circle cx={128} cy={128} r={127} stroke={colors.textMuted} strokeOpacity={0.5} strokeWidth={1} strokeDasharray="4 4" fill="none" /></> : null}
             {/* Brush size at its real scale: filled in the centre while the slider moves, a ring under the stroke end. */}
-            {sizePreview && !draft ? <Circle cx={128} cy={128} r={strokeWidth / 2} fill={tool === 'eraser' ? background : color} stroke={colors.textBody} strokeOpacity={0.4} strokeWidth={1 / (scale || 1)} /> : null}
+            {sizePreview && !draft ? <Circle cx={128} cy={128} r={strokeWidth / 2} fill={tool === 'eraser' ? (transparent ? 'none' : background) : color} stroke={colors.textBody} strokeOpacity={0.4} strokeWidth={1 / (scale || 1)} /> : null}
             {lastPoint ? <Circle cx={lastPoint[0]} cy={lastPoint[1]} r={strokeWidth / 2 + 1} fill="none" stroke={colors.textBody} strokeOpacity={0.5} strokeWidth={1 / (scale || 1)} /> : null}
           </Svg>
         </View> : null}

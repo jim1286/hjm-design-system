@@ -70,6 +70,7 @@ import { DrawingEditor } from '@hjmds/react/drawing-editor';
 | onSave | `(image: DrawingImage) => Promise<void>` | 필수 | 이미지 업로드 성공/실패를 제품이 확정 |
 | onCancel | `() => void` | 필수 | 변경 취소 확인 후 나가기 |
 | cropPreview | `circle`, `none` | `none` | 출력에 포함하지 않는 원형 잘림 안내 |
+| ground | `paper`, `transparent` | `paper` | 투명 스티커는 `transparent`: 배경 선택을 숨기고 투명 PNG로 내보내며 지우개가 잉크를 지운다. 격자 배경은 화면에만 표시한다 |
 | safeAreaBottom | number | 0 | Native host의 아래 안전 영역 |
 | testID | string | `drawing-editor` | 테스트 식별자와 캔버스 접두사 |
 

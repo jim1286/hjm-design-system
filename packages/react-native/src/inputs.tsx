@@ -161,6 +161,11 @@ type BaseFieldProps = Omit<
      * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
      */
     align?: FieldAlign;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded. Field chrome (label,
+     * helper, counter) keeps the UI face. Omitted or undefined while the face is still loading uses the UI face.
+     */
+    contentFontFamily?: string;
     onValueChange?: (value: string) => void;
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
@@ -293,6 +298,7 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
       maxVisibleLines,
       minVisibleLines,
       align = fieldRecipe.defaults.align,
+      contentFontFamily,
       search,
       recipeMinHeight,
       recipeTextVariant,
@@ -439,9 +445,10 @@ const FieldRenderer = forwardRef<ComponentRef<typeof TextInput>, FieldRendererPr
               )
             : colors.text,
           flex: 1,
-          ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
+          ...(contentFontFamily ? { fontFamily: contentFontFamily } : resolveNativeFontStyle(theme.tokens.fontFamily.ui)),
           fontSize: textStyle.fontSize,
-          fontWeight: textStyle.fontWeight,
+          // A product face ships one weight; a synthesized bold would distort the handwriting.
+          ...(contentFontFamily ? {} : { fontWeight: textStyle.fontWeight }),
           lineHeight: textStyle.lineHeight,
           minHeight: minHeight - borderWidth * 2,
           // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.

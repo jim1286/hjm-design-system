@@ -45,6 +45,21 @@ it('undo and redo restore the same stroke', async () => {
   expect(button(labels.save).disabled).toBe(true);
   await act(async () => button(labels.redo).click()); expect(canvas().querySelectorAll('path')).toHaveLength(1);
 });
+it('exports transparent sticker drawings as PNG without the checkerboard', async () => {
+  const save = vi.fn(async (_image: DrawingImage) => {});
+  await act(async () => root.render(<HjmProvider><DrawingEditor labels={labels} ground="transparent" onSave={save} onCancel={() => {}} /></HjmProvider>));
+  expect(button(labels.save).disabled).toBe(true);
+  await draw();
+  await act(async () => button(labels.save).click());
+  await vi.waitFor(() => expect(save).toHaveBeenCalledOnce());
+  expect(save.mock.calls[0]?.[0]).toMatchObject({ mimeType: 'image/png', base64: expect.stringMatching(/^iVBOR/) });
+  const image = new Image();
+  image.src = `data:image/png;base64,${save.mock.calls[0]![0].base64}`;
+  await image.decode();
+  const pixels = document.createElement('canvas'); pixels.width = image.width; pixels.height = image.height;
+  const ctx = pixels.getContext('2d')!; ctx.drawImage(image, 0, 0);
+  expect(ctx.getImageData(0, 0, 1, 1).data[3]).toBe(0);
+});
 it('exposes named controls and retains drawing in a dark RTL reduced-motion host', async () => {
   await act(async () => root.render(<HjmProvider theme="dark" direction="rtl" reducedMotion><DrawingEditor labels={labels} onSave={async () => {}} onCancel={() => {}} /></HjmProvider>));
   expect(canvas().getAttribute('role')).toBe('img');

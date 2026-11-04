@@ -8,6 +8,11 @@ import { NumberField } from "../src/number-field.js";
 let tree: ReactTestRenderer;
 afterEach(() => act(() => tree?.unmount()));
 const flatten = (style: unknown): Record<string, unknown> => Array.isArray(style) ? Object.assign({}, ...style.map(flatten)) : (style ?? {}) as Record<string, unknown>;
+it('uses the product handwriting font for the editable value', () => {
+  act(() => { tree = create(<HjmNativeProvider><TextArea label="Draft" contentFontFamily="DiairyHand" /></HjmNativeProvider>); });
+  const input = tree.root.find(node => node.props.accessibilityLabel === 'Draft' && !!node.props.onChangeText);
+  expect(flatten(input.props.style).fontFamily).toBe('DiairyHand');
+});
 it.each(["single", "multiline", "number"] as const)("%s keeps invalid thickness when disabled and restores the normal frame on recovery", kind => {
   const ui = (invalid: boolean, disabled = false) => <HjmNativeProvider theme="light">
     {kind === "multiline" ? <TextArea label="Draft" invalid={invalid} disabled={disabled} /> : kind === "number" ? <NumberField label="Draft" min={0} max={10} incrementLabel="Increase" decrementLabel="Decrease" disabled={disabled} {...(invalid ? { error: "Invalid" } : {})} /> : <TextField label="Draft" invalid={invalid} disabled={disabled} />}

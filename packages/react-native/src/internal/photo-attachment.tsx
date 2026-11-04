@@ -38,19 +38,21 @@ type ViewerProps = Readonly<{
   Viewer: (props: ImageViewerProps) => ReactNode;
 }>;
 
-function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, safeAreaInsets, imageHost, Viewer, corner }: ViewerProps & Readonly<{
+function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, safeAreaInsets, imageHost, Viewer, corner, decoratePreview }: ViewerProps & Readonly<{
   photo: PhotoAttachmentPhoto; label: string; onLoadStatusChange?: ImageProps["onLoadStatusChange"]; corner?: ReactNode;
+  decoratePreview?: (image: ReactNode) => ReactNode;
 }>) {
   const [open, setOpen] = useState(false);
   const { tokens } = useHjmNativeTheme();
   const frame = resolvePhotoAttachmentPreviewSize(photo);
   const inset = tokens.spacing[photoAttachmentRecipe.removeInset];
+  const decorate = decoratePreview ?? ((image: ReactNode) => image);
   return <View>
     <ImageViewerTrigger label={label} onPress={() => setOpen(true)} layoutStyle={{ alignSelf: "stretch" }}>
-      <Image src={photo.uri} width={frame.width} height={frame.height} fit={frame.fit} decorative layoutStyle={{ width: "100%" }}
+      {decorate(<Image src={photo.uri} width={frame.width} height={frame.height} fit={frame.fit} decorative layoutStyle={{ width: "100%" }}
         {...(onLoadStatusChange ? { onLoadStatusChange } : {})}
         {...(imageHost?.sourceAdapter ? { sourceAdapter: imageHost.sourceAdapter } : {})}
-        {...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {})} />
+        {...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {})} />)}
     </ImageViewerTrigger>
     {/* A sibling over the trigger, not inside it: nesting a button in the preview button would merge their names. */}
     {corner ? <View style={{ position: "absolute", top: inset, end: inset }}>{corner}</View> : null}
@@ -66,6 +68,11 @@ export type AttachedPhotoProps = Omit<ViewerProps, "Viewer"> & Readonly<{
   label: string;
   /** Load result of the photo under the text, e.g. to offer a retry when an authorized address is refused. */
   onLoadStatusChange?: ImageProps["onLoadStatusChange"];
+  /**
+   * Product art around and over the preview image (a postcard frame, stickers). Receives the image and returns what the
+   * preview button shows; the corner remove button and the viewer stay HJM's. The viewer opens the bare photo.
+   */
+  decoratePreview?: (image: ReactNode) => ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
@@ -82,6 +89,19 @@ export type PhotoAttachmentFieldProps = Omit<ViewerProps, "Viewer"> & Readonly<{
   cameraAvailable?: boolean;
   /** Product message for a failed pick (permission, unreadable photo). The draft is kept. */
   error?: string;
+  /**
+   * `none`: the host shows its own choose action (for example in a compose toolbar) and opens the source sheet through
+   * `sourceOpen`. The preview, error and sheet stay here so a toolbar product does not rebuild them.
+   */
+  chooseAction?: "inline" | "none";
+  /** Controlled source sheet. Uncontrolled when omitted. */
+  sourceOpen?: boolean;
+  onSourceOpenChange?(open: boolean): void;
+  /**
+   * Product art around and over the preview image (a postcard frame, stickers). Receives the image and returns what the
+   * preview button shows; the corner remove button and the viewer stay HJM's. The viewer opens the bare photo.
+   */
+  decoratePreview?: (image: ReactNode) => ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
@@ -102,7 +122,9 @@ export function createPhotoAttachmentField(Viewer: ViewerProps["Viewer"]) {
   return function PhotoAttachmentField(props: PhotoAttachmentFieldProps) {
     validatePhotoAttachment(props.labels, props.photo);
     const { colors } = useHjmNativeTheme();
-    const [sourceOpen, setSourceOpen] = useState(false);
+    const [ownSourceOpen, setOwnSourceOpen] = useState(false);
+    const sourceOpen = props.sourceOpen ?? ownSourceOpen;
+    const setSourceOpen = (open: boolean) => { if (props.sourceOpen === undefined) setOwnSourceOpen(open); props.onSourceOpenChange?.(open); };
     const actions = resolvePhotoAttachmentActions({
       hasPhoto: props.photo !== null,
       ...(props.picking === undefined ? {} : { picking: props.picking }),
@@ -110,7 +132,7 @@ export function createPhotoAttachmentField(Viewer: ViewerProps["Viewer"]) {
     });
     const { labels } = props;
     return <Stack gap={photoAttachmentRecipe.gap} {...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {})}>
-      {actions.choose.visible ? <View style={{ alignSelf: "flex-start" }}>
+      {actions.choose.visible && props.chooseAction !== "none" ? <View style={{ alignSelf: "flex-start" }}>
         <Button tone={photoAttachmentRecipe.chooseTone} size={photoAttachmentRecipe.chooseSize} edge="start"
           disabled={actions.choose.disabled} loading={actions.choose.loading}
           leading={<PhotoSourceGlyph source="library" color={colors.textMuted} background="transparent" size={glyph.sm} />}
@@ -120,6 +142,7 @@ export function createPhotoAttachmentField(Viewer: ViewerProps["Viewer"]) {
         {...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable })} onSelect={props.onSelectSource} />
       {props.error ? <Notice tone="danger" announcement="assertive" title={props.error} /> : null}
       {props.photo ? <PhotoPreview photo={props.photo} label={labels.preview} viewerLabels={props.viewerLabels}
+        {...(props.decoratePreview ? { decoratePreview: props.decoratePreview } : {})}
         safeAreaInsets={props.safeAreaInsets} Viewer={Viewer} {...(props.imageHost ? { imageHost: props.imageHost } : {})}
         corner={<IconButton label={labels.remove} tone={photoAttachmentRecipe.removeTone} size={photoAttachmentRecipe.removeSize}
           shape={photoAttachmentRecipe.removeShape} disabled={actions.remove.disabled} onPress={props.onRemove}>
