@@ -27,7 +27,7 @@ export { Toast, ToastProvider, useToast, } from "./toast.js";
 export { AlertDialog, Dialog, ImmersiveOverlay, Menu, Sheet, Tooltip, } from "./overlays.js";
 export { Carousel, PageIndicator } from "./carousel.js";
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance } from "./floating-action-button.js";
-export { Calendar } from "./calendar.js";
+export { Calendar, CalendarFoldHeader } from "./calendar.js";
 export { Anchor } from "./anchor.js";
 export { Popover } from "./popover.js";
 export { SidePanel } from "./side-panel.js";

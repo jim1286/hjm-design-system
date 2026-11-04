@@ -1,2 +1,2 @@
 /** Package release shown by documentation surfaces. Kept in sync by a test. */
-export const designSystemVersion = "2.2.1" as const;
+export const designSystemVersion = "2.3.0" as const;

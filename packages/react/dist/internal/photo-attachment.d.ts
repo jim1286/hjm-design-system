@@ -26,6 +26,11 @@ export type AttachedPhotoProps = ViewerProps & Readonly<{
     label: string;
     /** Load result of the photo under the text, e.g. to offer a retry when an authorized address is refused. */
     onLoadStatusChange?: ImageProps["onLoadStatusChange"];
+    /**
+     * Product art around and over the preview image (a postcard frame, stickers). Receives the image and returns what the
+     * preview button shows; the corner remove button and the viewer stay HJM's. The viewer opens the bare photo.
+     */
+    decoratePreview?: (image: ReactNode) => ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type PhotoAttachmentFieldProps = ViewerProps & Readonly<{
@@ -43,6 +48,19 @@ export type PhotoAttachmentFieldProps = ViewerProps & Readonly<{
     cameraAvailable?: boolean;
     /** Product message for a failed pick (unsupported or unreadable file). The draft is kept. */
     error?: string;
+    /**
+     * `none`: the host shows its own choose action (for example in a compose toolbar) and opens the source sheet through
+     * `sourceOpen`. The preview, error and sheet stay here so a toolbar product does not rebuild them.
+     */
+    chooseAction?: "inline" | "none";
+    /** Controlled source sheet. Uncontrolled when omitted. */
+    sourceOpen?: boolean;
+    onSourceOpenChange?(open: boolean): void;
+    /**
+     * Product art around and over the preview image (a postcard frame, stickers). Receives the image and returns what the
+     * preview button shows; the corner remove button and the viewer stay HJM's. The viewer opens the bare photo.
+     */
+    decoratePreview?: (image: ReactNode) => ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare function createAttachedPhoto(parts: ViewerParts): ({ photo, label, layoutStyle, ...viewer }: AttachedPhotoProps) => import("react").JSX.Element;

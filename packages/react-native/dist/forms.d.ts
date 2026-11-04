@@ -67,6 +67,7 @@ export type FormProps<Values> = Readonly<{
 export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, actions, ref, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, firstInvalidFieldRef, layoutStyle, }: FormProps<Values>): import("react").JSX.Element;
 export type SelectSection<Value extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Value, SectionKey>;
 export type SelectLeadingRenderProps = NativeCollectionLeadingRenderProps;
+export type SelectSelectionMode = "single" | "multiple";
 export type SelectProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "style" | "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
@@ -78,6 +79,16 @@ export type SelectProps<Value extends string = string, SectionKey extends string
     onSelectionChange?: (value: Value | null) => void;
     selectedItem?: SelectItemDescriptor<Value>;
     disallowEmptySelection?: boolean;
+    /**
+     * `multiple` keeps the list open and toggles each pressed option; the trigger lists every chosen label.
+     * Added 2026-11-04 for 오늘야구 metric charts, where one field picks any number of stats (no count limit).
+     */
+    selectionMode?: SelectSelectionMode;
+    selectedKeys?: ReadonlySet<Value>;
+    defaultSelectedKeys?: ReadonlySet<Value>;
+    onSelectedKeysChange?: (keys: ReadonlySet<Value>) => void;
+    /** Trigger text for several chosen items; defaults to their labels joined with ", ". */
+    formatSelectedLabels?: (items: readonly SelectItemDescriptor<Value>[]) => string;
     open?: boolean;
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean, reason: SelectOpenChangeReason) => void;
@@ -108,7 +119,7 @@ export type SelectProps<Value extends string = string, SectionKey extends string
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
-export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, selectionMode, selectedKeys, defaultSelectedKeys, onSelectedKeysChange, formatSelectedLabels, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
 export type ComboboxLeadingRenderProps = NativeCollectionLeadingRenderProps;
 export type ComboboxProps<Key extends string = string, SectionKey extends string = string> = Omit<ModalProps, "style" | "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;

@@ -106,7 +106,7 @@ export function Form({ label, values, onSubmit, children, submitLabel, actions, 
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
-export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }) {
+export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, selectionMode = "single", selectedKeys, defaultSelectedKeys, onSelectedKeysChange, formatSelectedLabels, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, layoutStyle, ...modalProps }) {
     assertNoRemovedStyleProps("Select", modalProps, ["style"]);
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
@@ -161,6 +161,24 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
         }
     }, [reconciledSelected, requestedControlled, selected, setSelected]);
     const resolvedSelectedItem = resolveSelectSelectedItem(source, reconciledSelected, selectedItem);
+    const multiple = selectionMode === "multiple";
+    if (multiple && (selectedKey !== undefined || defaultSelectedKey !== undefined)) {
+        throw new TypeError("Select selectionMode=\"multiple\" uses selectedKeys, not selectedKey");
+    }
+    const [chosenKeys, setChosenKeys] = useControllableState({
+        ...(selectedKeys === undefined ? {} : { value: selectedKeys }),
+        defaultValue: defaultSelectedKeys ?? new Set(),
+        onChange: (next) => {
+            onSelectedKeysChange?.(next);
+        },
+    });
+    // Collection order, not press order, so the trigger text stays stable as options toggle.
+    const chosenItems = multiple ? collectionItems.filter((item) => chosenKeys.has(item.id)) : [];
+    const triggerText = multiple
+        ? chosenItems.length === 0
+            ? null
+            : formatSelectedLabels?.(chosenItems) ?? chosenItems.map((item) => item.selectedLabel ?? item.label).join(", ")
+        : resolvedSelectedItem?.selectedLabel ?? resolvedSelectedItem?.label ?? null;
     const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
     const visible = open ?? uncontrolledOpen;
     const requestOpen = useCallback((next, reason) => {
@@ -198,7 +216,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
             close("programmatic");
     }, [close, disabled, readOnly, visible]);
     const focusInitialOption = () => {
-        const initialValue = reconciledSelected ?? collectionItems.find((option) => !option.disabled)?.id;
+        const initialValue = (multiple ? chosenItems[0]?.id : reconciledSelected) ?? collectionItems.find((option) => !option.disabled)?.id;
         if (initialValue === undefined)
             return;
         const target = optionRefs.current.get(initialValue);
@@ -208,7 +226,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
         const viewport = optionViewport.current;
         const scroll = optionsScroll.current;
         const content = optionsContent.current;
-        const key = reconciledSelected ?? collectionItems.find(option => !option.disabled)?.id;
+        const key = (multiple ? chosenItems[0]?.id : reconciledSelected) ?? collectionItems.find(option => !option.disabled)?.id;
         const target = key === undefined ? undefined : optionRefs.current.get(key);
         if (!visible || !viewport.presented || viewport.positioned || viewport.measuring || !scroll || !content || !target || viewport.height <= 0 || viewport.contentHeight <= 0)
             return;
@@ -234,7 +252,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
         size: glyph[sizeContract.glyph],
     });
     const renderOption = (option) => {
-        const checked = option.id === reconciledSelected;
+        const checked = multiple ? chosenKeys.has(option.id) : option.id === reconciledSelected;
         const optionDisabled = option.disabled === true || disabled || readOnly || busy;
         const optionLeading = renderOptionLeading?.(option, {
             placement: "option",
@@ -248,7 +266,16 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                     optionRefs.current.set(option.id, node);
                 else
                     optionRefs.current.delete(option.id);
-            }, accessibilityHint: option.description, accessibilityLabel: option.label, accessibilityRole: "radio", accessibilityState: { checked, disabled: optionDisabled }, disabled: optionDisabled, onPress: () => {
+            }, accessibilityHint: option.description, accessibilityLabel: option.label, accessibilityRole: multiple ? "checkbox" : "radio", accessibilityState: { checked, disabled: optionDisabled }, disabled: optionDisabled, onPress: () => {
+                if (multiple) {
+                    const next = new Set(chosenKeys);
+                    if (next.has(option.id))
+                        next.delete(option.id);
+                    else
+                        next.add(option.id);
+                    setChosenKeys(next);
+                    return;
+                }
                 setSelected(option.id);
                 close("selection", onSelectionAfterDismiss
                     ? () => onSelectionAfterDismiss(option.id)
@@ -287,7 +314,7 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                     busy: busy || asyncState.status === "loading",
                     disabled: disabled || readOnly || busy,
                     expanded: visible,
-                }, accessibilityValue: { text: resolvedSelectedItem?.label ?? placeholder }, disabled: disabled || readOnly || busy, onPress: () => {
+                }, accessibilityValue: { text: multiple ? triggerText ?? placeholder : resolvedSelectedItem?.label ?? placeholder }, disabled: disabled || readOnly || busy, onPress: () => {
                     if (!readOnly)
                         requestOpen(!visible, "trigger");
                 }, style: ({ pressed }) => [
@@ -307,12 +334,12 @@ export function Select({ label, accessibilityLabel, source: sourceProp, items, s
                         paddingHorizontal: sizeContract.paddingHorizontal,
                         position: "relative",
                     },
-                ], children: [triggerLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: { opacity: busy ? 0 : 1 }, children: triggerLeading })) : null, _jsx(Text, { fontRole: "ui", style: { flex: 1, opacity: busy ? 0 : 1 }, tone: resolvedSelectedItem ? "body" : "muted", variant: sizeContract.textVariant, children: resolvedSelectedItem?.label ?? placeholder }), _jsx(Text, { accessible: false, style: { opacity: busy ? 0 : 1 }, tone: "muted", children: "\u2304" }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { size: glyph[selectRecipe.busyIndicator.glyph] }) }) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Sheet, { ...modalProps, open: visible, title: label ?? accessibleName, closeLabel: dismissLabel, onOpenChange: (next, detail) => { if (!next)
+                ], children: [triggerLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: { opacity: busy ? 0 : 1 }, children: triggerLeading })) : null, _jsx(Text, { fontRole: "ui", numberOfLines: multiple ? 1 : undefined, style: { flex: 1, opacity: busy ? 0 : 1 }, tone: triggerText ? "body" : "muted", variant: sizeContract.textVariant, children: triggerText ?? placeholder }), _jsx(Text, { accessible: false, style: { opacity: busy ? 0 : 1 }, tone: "muted", children: "\u2304" }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { size: glyph[selectRecipe.busyIndicator.glyph] }) }) : null] }), error ? (_jsx(FieldErrorText, { error: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Sheet, { ...modalProps, open: visible, title: label ?? accessibleName, closeLabel: dismissLabel, onOpenChange: (next, detail) => { if (!next)
                     close(collectionDismissReason(detail.reason)); }, onDismissComplete: modalDismiss.onDismiss, onShow: () => {
                     optionViewport.current.presented = true;
                     revealInitialOption();
                     focusInitialOption();
-                }, children: _jsx(View, { accessibilityLabel: optionsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", style: { flexShrink: 1 }, children: _jsx(ScrollView, { ref: optionsScroll, onLayout: event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }, onContentSizeChange: (_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }, children: _jsxs(View, { ref: optionsContent, collapsable: false, children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }) }) }) })] }));
+                }, children: _jsx(View, { accessibilityLabel: optionsAccessibilityLabel ?? accessibleName, accessibilityRole: multiple ? "list" : "radiogroup", style: { flexShrink: 1 }, children: _jsx(ScrollView, { ref: optionsScroll, onLayout: event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }, onContentSizeChange: (_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }, children: _jsxs(View, { ref: optionsContent, collapsable: false, children: [blockingState ? (_jsxs(View, { accessibilityLabel: asyncState.status === "loading" ? asyncState.message : undefined, accessibilityRole: asyncState.status === "loading" ? "progressbar" : undefined, style: { alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, asyncState.status !== "loading" ? _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }) : null, asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsx(View, { accessibilityLabel: asyncState.message, accessibilityRole: "progressbar", accessibilityState: { busy: true }, style: { alignItems: "center", justifyContent: "center" }, children: _jsx(ActivityIndicator, {}) })) : null] }) }) }) })] }));
 }
 /**
  * How long focus events are ignored after a result is chosen. It covers the

@@ -35,6 +35,11 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
      * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
      */
     align?: FieldAlign;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded. Field chrome (label,
+     * helper, counter) keeps the UI face. Omitted or undefined while the face is still loading uses the UI face.
+     */
+    contentFontFamily?: string;
     onValueChange?: (value: string) => void;
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
@@ -282,7 +287,11 @@ type SegmentedControlCollectionProps<Value extends string> = Readonly<{
 }>;
 export type SegmentedControlProps<Value extends string = string> = SegmentedControlCollectionProps<Value> & Readonly<{
     label: string;
-    value?: Value;
+    /**
+     * Controlled `null` selects nothing, for `pills` only: a filter that pages its options (a decade of seasons) shows no pill
+     * while the chosen value is on another page. Connected/text switches always show the current view (2026-11-04).
+     */
+    value?: Value | null;
     defaultValue?: Value;
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;

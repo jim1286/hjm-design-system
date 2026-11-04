@@ -6,7 +6,7 @@ export { AspectRatio, Container, Grid, Layout, Section, Stack, Surface, Text, Vi
 export { Button, ButtonLink, type ButtonLinkProps, IconButton, IconButtonLink, type IconButtonLinkProps, Link, type ButtonAlign, type ButtonProps, type ButtonShape, type ButtonAppearance, type ButtonSize, type ButtonTone, type IconButtonProps, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkRenderProps, type LinkProps, } from "./actions.js";
 export { Field, OtpField, PasswordField, SearchField, TextArea, TextField, type FieldControlProps, type FieldProps, type OtpFieldProps, type PasswordFieldProps, type PasswordFieldToggleRenderProps, type SearchFieldProps, type SearchFieldIconRenderProps, type TextAreaProps, type TextFieldProps, } from "./forms.js";
 export { Combobox, Form, type ComboboxItem, type ComboboxOpenChangeReason, type ComboboxProps, type FormProps, type FormSubmitHandler, NativeSelect, type NativeSelectProps, type SelectOption, } from "./advanced-forms.js";
-export { Select, type SelectItem, type SelectLeadingRenderProps, type SelectOptionLeadingRenderProps, type SelectProps, type SelectSection, } from "./select.js";
+export { Select, type SelectItem, type SelectLeadingRenderProps, type SelectOptionLeadingRenderProps, type SelectProps, type SelectSelectionMode, type SelectSection, } from "./select.js";
 export { NumberField, type NumberFieldProps, } from "./number-field.js";
 export { Slider, type SliderProps, } from "./slider.js";
 export { DatePicker, type DatePickerMonthAction, type DatePickerProps, } from "./date-picker.js";
@@ -27,7 +27,7 @@ export { Toast, ToastProvider, useToast, type ToastApi, type ToastProps, type To
 export { AlertDialog, Dialog, ImmersiveOverlay, Menu, Sheet, Tooltip, type AlertDialogProps, type DialogOpenChangeReason, type DialogProps, type ImmersiveOverlayOpenChangeReason, type ImmersiveOverlayProps, type MenuItem, type MenuAsyncState, type MenuOpenChangeReason, type MenuProps, type MenuSection, type OverlayTrigger, type SheetPlacement, type SheetProps, type SheetSize, type TooltipProps, } from "./overlays.js";
 export { Carousel, PageIndicator, type CarouselProps, type CarouselLabels, type PageIndicatorProps } from "./carousel.js";
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
-export { Calendar, type CalendarProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";
+export { Calendar, CalendarFoldHeader, type CalendarProps, type CalendarFoldHeaderProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";
 export { Anchor, type AnchorProps } from "./anchor.js";
 export { Popover, type PopoverProps, type PopoverContentActions } from "./popover.js";
 export { SidePanel, type SidePanelProps } from "./side-panel.js";

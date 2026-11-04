@@ -16,7 +16,7 @@ export { EmptyState, Notice, Progress, Result, Skeleton, Spinner, PendingContent
 export { AlertDialog, Dialog, ImmersiveOverlay, Sheet, } from "./overlays.js";
 export { Carousel, PageIndicator } from "./carousel.js";
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance } from "./floating-action-button.js";
-export { Calendar } from "./calendar.js";
+export { Calendar, CalendarFoldHeader } from "./calendar.js";
 export { Agreement } from "./agreement.js";
 export { Top } from "./top.js";
 export { Heading } from "./heading.js";

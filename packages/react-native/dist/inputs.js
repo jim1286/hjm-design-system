@@ -65,7 +65,7 @@ function CharacterCountRow({ state }) {
     const color = colors[characterCountRecipe.colors[tone]];
     return (_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", testID: "hjm-field-character-count", style: { flexDirection: "row", alignItems: "flex-start", gap: characterCountRecipe.gap, direction: environment.direction }, children: [state.message ? _jsx(Text, { variant: characterCountRecipe.textVariant, style: { color, flex: 1 }, children: state.message }) : null, _jsx(Text, { variant: characterCountRecipe.textVariant, style: { color, flexShrink: 0, marginStart: "auto", fontVariant: [characterCountRecipe.numeric], fontWeight: characterCountRecipe.counterFontWeight[tone] }, children: state.counter })] }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, hjmDescriptionAlign = "start", initialFocusTarget, onBlur, onFocus, onContentSizeChange, onSelectionChange, characterCount, maxLength: ownMaxLength, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, contentFontFamily, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, hjmDescriptionAlign = "start", initialFocusTarget, onBlur, onFocus, onContentSizeChange, onSelectionChange, characterCount, maxLength: ownMaxLength, ...props }, ref) {
     const resolvedDisabledOpacity = disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
@@ -164,9 +164,10 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 ? resolveColorReference(searchFieldRecipe.colors.content, theme.palette)
                 : colors.text,
             flex: 1,
-            ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
+            ...(contentFontFamily ? { fontFamily: contentFontFamily } : resolveNativeFontStyle(theme.tokens.fontFamily.ui)),
             fontSize: textStyle.fontSize,
-            fontWeight: textStyle.fontWeight,
+            // A product face ships one weight; a synthesized bold would distort the handwriting.
+            ...(contentFontFamily ? {} : { fontWeight: textStyle.fontWeight }),
             lineHeight: textStyle.lineHeight,
             minHeight: minHeight - borderWidth * 2,
             // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.
@@ -814,7 +815,9 @@ export function SegmentedControl(props) {
     const collectionFallback = resolveInitialTabValue(descriptors);
     if (collectionFallback === undefined)
         throw new Error("SegmentedControl requires an enabled option");
-    if (value !== undefined)
+    if (value === null && !pills)
+        throw new TypeError("SegmentedControl value null (no selection) is only for pills");
+    if (value !== undefined && value !== null)
         resolveInitialTabValue(descriptors, value);
     const initialRef = useRef(null);
     if (initialRef.current === null) {
@@ -823,20 +826,23 @@ export function SegmentedControl(props) {
             throw new Error("SegmentedControl requires an enabled option");
         initialRef.current = { value: initial };
     }
+    const empty = value === null;
+    // A controlled `null` stays controlled: passing nothing would flip the state hook to uncontrolled whenever a paged
+    // filter moved between a page with its value and one without (2026-11-04 render error). `empty` hides the stand-in.
     const [storedValue, setSelected] = useControllableState({
-        ...(value === undefined ? {} : { value }),
+        ...(value === undefined ? {} : { value: value ?? collectionFallback }),
         defaultValue: initialRef.current.value,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const storedValueValid = descriptors.some((item) => item.id === storedValue && !item.disabled);
-    const selected = storedValueValid ? storedValue : collectionFallback;
+    const selected = empty ? null : storedValueValid ? storedValue : collectionFallback;
     const controlled = value !== undefined;
     useEffect(() => {
         if (!controlled && !storedValueValid)
             setSelected(collectionFallback);
     }, [collectionFallback, controlled, setSelected, storedValueValid]);
     const [itemRects, setItemRects] = useState({});
-    const selectedRect = itemRects[selected];
+    const selectedRect = selected === null ? undefined : itemRects[selected];
     const selectionMotion = textOnly ? "none" : suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
     const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
     const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
@@ -872,7 +878,7 @@ export function SegmentedControl(props) {
         gap: textOnly ? segmentedControlRecipe.text.gap : pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
         padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
     };
-    const content = (_jsxs(_Fragment, { children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled, brand: selectionTone === "brand" }) : null, resolvedItems.map((item) => {
+    const content = (_jsxs(_Fragment, { children: [movingHighlight && highlightRect && selected !== null ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled, brand: selectionTone === "brand" }) : null, resolvedItems.map((item) => {
                 const isSelected = item.value === selected;
                 const optionDisabled = disabled || item.disabled === true;
                 const contentColor = resolveColorReference(isSelected

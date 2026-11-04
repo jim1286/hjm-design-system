@@ -70,7 +70,18 @@ type SelectBaseProps<Key extends string> = Omit<ButtonHTMLAttributes<HTMLButtonE
     locale?: string | readonly string[];
     renderLeading?: (item: SelectItemDescriptor<Key> | null, appearance: SelectLeadingRenderProps) => ReactNode;
     renderOptionLeading?: (item: SelectItemDescriptor<Key>, appearance: SelectOptionLeadingRenderProps) => ReactNode;
+    /**
+     * `multiple` keeps the listbox open and toggles each committed option; the trigger lists every chosen label.
+     * Same contract as Native (2026-11-04, 오늘야구 metric charts pick any number of stats in one field).
+     */
+    selectionMode?: SelectSelectionMode;
+    selectedKeys?: ReadonlySet<Key>;
+    defaultSelectedKeys?: ReadonlySet<Key>;
+    onSelectedKeysChange?: (keys: ReadonlySet<Key>) => void;
+    /** Trigger text for several chosen items; defaults to their labels joined with ", ". */
+    formatSelectedLabels?: (items: readonly SelectItemDescriptor<Key>[]) => string;
 }>;
+export type SelectSelectionMode = "single" | "multiple";
 export type SelectProps<Key extends string = string, SectionKey extends string = string> = SelectBaseProps<Key> & SelectSourceProps<Key, SectionKey> & SelectSelectionProps<Key> & SelectOpenProps & SelectLabelProps;
 export declare const Select: <Key extends string = string, SectionKey extends string = string>(props: SelectProps<Key, SectionKey> & RefAttributes<HTMLButtonElement>) => ReactElement | null;
 export {};

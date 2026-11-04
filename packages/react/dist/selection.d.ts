@@ -210,7 +210,11 @@ export type SegmentedControlItem = Readonly<{
 export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "defaultValue" | "onChange" | "value"> & Readonly<{
     label: string;
     items: readonly SegmentedControlItem[];
-    value?: string;
+    /**
+     * Controlled `null` selects nothing, for `pills` only: a filter that pages its options (a decade of seasons) shows no pill
+     * while the chosen value is on another page. Connected/text switches always show the current view (2026-11-04).
+     */
+    value?: string | null;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
@@ -229,7 +233,11 @@ export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElem
 export declare const SegmentedControl: import("react").ForwardRefExoticComponent<Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "value" | "defaultValue" | "onChange"> & Readonly<{
     label: string;
     items: readonly SegmentedControlItem[];
-    value?: string;
+    /**
+     * Controlled `null` selects nothing, for `pills` only: a filter that pages its options (a decade of seasons) shows no pill
+     * while the chosen value is on another page. Connected/text switches always show the current view (2026-11-04).
+     */
+    value?: string | null;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;

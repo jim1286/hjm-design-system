@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useContext, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
-import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor, getCalendarNavigationIntent, getCalendarNavigationTarget, } from "@hjmds/design-contracts/components/calendar";
+import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor, getCalendarNavigationIntent, getCalendarNavigationTarget, resolveCalendarVisibleRows, calendarFoldStep, } from "@hjmds/design-contracts/components/calendar";
 import { classNames, useControllableState } from "./internal.js";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
 import { Icon } from "./supplemental-display.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
-export function Calendar({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, layoutStyle, ref }) {
+export function Calendar({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size = "medium", fold, monthLabelVisibility = "visible", autoFocus = false, className, layoutStyle, ref }) {
     validateCalendarDescriptor(descriptor);
     for (const action of [previousMonth, nextMonth]) {
         if (!action)
@@ -24,6 +24,10 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
         ...(descriptor.onSelectionChange ? { onChange: descriptor.onSelectionChange } : {}),
     });
     const cells = resolveCalendarGridDescriptor(descriptor.grid, selected, { composeAccessibleName });
+    if (fold && !fold.label.trim())
+        throw new TypeError("Calendar fold label must not be empty");
+    const visibleRows = resolveCalendarVisibleRows(cells, fold?.expanded ?? true);
+    const gridId = `hjm-calendar-grid-${useId()}`;
     const dates = cells.filter((cell) => !("filler" in cell));
     const initial = dates.find((cell) => cell.isSelected) ?? dates.find((cell) => cell.isToday) ?? dates[0];
     const [focused, setFocused] = useState(initial?.date);
@@ -54,7 +58,8 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
     return _jsxs("div", { ref: root, className: classNames("hjm-calendar", className), "data-size": size, style: { "--hjm-calendar-max-width": `${recipe.maxWidth}px`, ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
             "--hjm-calendar-indicator-size": `${recipe.sizes[size].indicatorDiameter}px`,
             "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
-            "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity }, children: [_jsxs("div", { className: "hjm-calendar__header", children: [previousMonth ? _jsx("button", { type: "button", "aria-label": previousMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous"), children: _jsx(Icon, { name: recipe.header.navIcon.previous, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {}), _jsx("strong", { id: titleId, "aria-live": "polite", "aria-atomic": "true", children: descriptor.monthLabel }), nextMonth ? _jsx("button", { type: "button", "aria-label": nextMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(nextMonth.month, "next"), children: _jsx(Icon, { name: recipe.header.navIcon.next, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {})] }), _jsx("div", { className: "hjm-calendar__viewport", children: _jsxs("div", { role: "grid", "aria-labelledby": titleId, className: "hjm-calendar__grid", children: [_jsx("div", { role: "row", className: "hjm-calendar__week", children: descriptor.grid.weekdayLabels.map((label, index) => _jsx("span", { role: "columnheader", className: "hjm-calendar__weekday", children: label }, index)) }), Array.from({ length: cells.length / 7 }, (_, row) => _jsx("div", { role: "row", className: "hjm-calendar__week", children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
+            "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity, "--hjm-calendar-content-gap": `${recipe.day.contentGap}px`,
+        }, children: [_jsxs("div", { className: "hjm-calendar__header", children: [previousMonth ? _jsx("button", { type: "button", "aria-label": previousMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous"), children: _jsx(Icon, { name: recipe.header.navIcon.previous, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {}), _jsx("strong", { id: titleId, "aria-live": "polite", "aria-atomic": "true", className: monthLabelVisibility === "hidden" ? "hjm-visually-hidden" : undefined, children: descriptor.monthLabel }), nextMonth ? _jsx("button", { type: "button", "aria-label": nextMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(nextMonth.month, "next"), children: _jsx(Icon, { name: recipe.header.navIcon.next, size: recipe.sizes[size].glyph, tone: "secondary", decorative: true }) }) : _jsx("span", {})] }), _jsx("div", { className: "hjm-calendar__viewport", children: _jsxs("div", { role: "grid", id: gridId, "aria-labelledby": titleId, className: "hjm-calendar__grid", children: [_jsx("div", { role: "row", className: "hjm-calendar__week", children: descriptor.grid.weekdayLabels.map((label, index) => _jsx("span", { role: "columnheader", className: "hjm-calendar__weekday", children: label }, index)) }), visibleRows.map((row) => _jsx("div", { role: "row", className: "hjm-calendar__week", children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
                                 ? _jsx("span", { role: "gridcell", "aria-hidden": "true" }, `filler-${column}`)
                                 : (() => {
                                     const range = rangePaint?.paint(cell.date);
@@ -81,6 +86,17 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
                                             else if (target.overflow)
                                                 onNavigateBeyondGrid?.({ date: cell.date, intent, overflow: target.overflow }, focusDate);
                                         }, children: [range && range.band !== "none" ? _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__band" }) : null, _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__day-label", children: Number(cell.date.slice(-2)) }), renderCellContent ? _jsx("span", { "aria-hidden": "true", className: "hjm-calendar__content", children: renderCellContent(cell) }) : null] }, cell.date);
-                                })()) }, row))] }) })] });
+                                })()) }, row))] }) }), fold ? _jsx("button", { type: "button", className: "hjm-calendar__fold", "aria-label": fold.label, "aria-expanded": fold.expanded, "aria-controls": gridId, onClick: () => fold.onExpandedChange(!fold.expanded), children: _jsx(Icon, { name: fold.expanded ? recipe.fold.handle.icon.collapse : recipe.fold.handle.icon.expand, size: recipe.fold.handle.glyph, tone: "secondary", decorative: true }) }) : null] });
+}
+/** ‹ month › for a folding Calendar placed in a host header; a week per step folded, a month unfolded (same as Native). */
+export function CalendarFoldHeader({ monthLabel, expanded, selectedDate, focusedMonth, labels, onSelectedDateChange, onFocusedMonthChange, className, layoutStyle }) {
+    const step = (direction) => {
+        const next = calendarFoldStep({ expanded, selectedDate, focusedMonth }, direction);
+        if ("selectedDate" in next)
+            onSelectedDateChange(next.selectedDate);
+        else
+            onFocusedMonthChange(next.focusedMonth);
+    };
+    return _jsxs("div", { className: classNames("hjm-calendar__header hjm-calendar-fold-header", className), style: layoutStyle, children: [_jsx("button", { type: "button", "aria-label": expanded ? labels.previousMonth : labels.previousWeek, onClick: () => step(-1), children: _jsx(Icon, { name: recipe.header.navIcon.previous, size: recipe.sizes.medium.glyph, tone: "secondary", decorative: true }) }), _jsx("strong", { "aria-live": "polite", "aria-atomic": "true", children: monthLabel }), _jsx("button", { type: "button", "aria-label": expanded ? labels.nextMonth : labels.nextWeek, onClick: () => step(1), children: _jsx(Icon, { name: recipe.header.navIcon.next, size: recipe.sizes.medium.glyph, tone: "secondary", decorative: true }) })] });
 }
 //# sourceMappingURL=calendar.js.map

@@ -261,10 +261,14 @@ selectionTone = "brand", textEmphasis = "strong", selectionMotion: suppliedSelec
         initialValueRef.current = { value: initial };
     }
     const generatedName = useId();
+    if (valueProp === null && presentation !== "pills") {
+        throw new TypeError("SegmentedControl value null (no selection) is only for pills");
+    }
     const [storedValue, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
         defaultValue: initialValueRef.current.value,
-        ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+        ...(onValueChange === undefined ? {} : { onChange: (next) => { if (next !== null)
+                onValueChange(next); } }),
     });
     const controlled = valueProp !== undefined;
     if (controlled)
@@ -272,7 +276,7 @@ selectionTone = "brand", textEmphasis = "strong", selectionMotion: suppliedSelec
     const value = controlled
         ? storedValue
         : reconcileRadioSelection(descriptors, storedValue, true);
-    if (value === null) {
+    if (value === null && valueProp !== null) {
         throw new TypeError("SegmentedControl requires at least one enabled item");
     }
     useEffect(() => {
@@ -292,8 +296,12 @@ selectionTone = "brand", textEmphasis = "strong", selectionMotion: suppliedSelec
             return;
         }
         const selected = Array.from(track.querySelectorAll(".hjm-segmented__item")).find(item => item.dataset.state === "checked");
-        if (!selected)
+        // No selection (pills value null) hides the artwork instead of leaving it on the last pill.
+        if (!selected) {
+            previousSelection.current = null;
+            delete track.dataset.highlightReady;
             return;
+        }
         const place = (animate) => {
             // CSS owns reduced motion (both provider and OS); no provider import is
             // added to this small selection entry just for decorative artwork.

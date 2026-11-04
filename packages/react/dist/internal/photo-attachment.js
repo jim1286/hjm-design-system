@@ -9,11 +9,12 @@ import { Stack } from "../layout.js";
 import { Image } from "../supplemental-display.js";
 import { PhotoSourceGlyph } from "./photo-source-icon.js";
 import { PhotoSourceSheet } from "./photo-source-sheet.js";
-function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, imageHost, parts, corner }) {
+function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, imageHost, parts, corner, decoratePreview }) {
     const [open, setOpen] = useState(false);
     const frame = resolvePhotoAttachmentPreviewSize(photo);
     const { Viewer, Trigger } = parts;
-    return _jsxs("div", { className: "hjm-photo-attachment__preview", children: [_jsx(Trigger, { label: label, onClick: () => setOpen(true), children: _jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, ...(onLoadStatusChange ? { onLoadStatusChange } : {}), ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) }) }), corner ? _jsx("div", { className: "hjm-photo-attachment__corner", children: corner }) : null, _jsx(Viewer, { open: open, onClose: () => setOpen(false), items: [{ id: photo.uri, uri: photo.uri, label }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
+    const decorate = decoratePreview ?? ((image) => image);
+    return _jsxs("div", { className: "hjm-photo-attachment__preview", children: [_jsx(Trigger, { label: label, onClick: () => setOpen(true), children: decorate(_jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, ...(onLoadStatusChange ? { onLoadStatusChange } : {}), ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) })) }), corner ? _jsx("div", { className: "hjm-photo-attachment__corner", children: corner }) : null, _jsx(Viewer, { open: open, onClose: () => setOpen(false), items: [{ id: photo.uri, uri: photo.uri, label }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
 }
 export function createAttachedPhoto(parts) {
     /** A posted photo under its text: click to open the shared viewer. */
@@ -30,14 +31,17 @@ export function createPhotoAttachmentField(parts) {
      */
     return function PhotoAttachmentField(props) {
         validatePhotoAttachment(props.labels, props.photo);
-        const [sourceOpen, setSourceOpen] = useState(false);
+        const [ownSourceOpen, setOwnSourceOpen] = useState(false);
+        const sourceOpen = props.sourceOpen ?? ownSourceOpen;
+        const setSourceOpen = (open) => { if (props.sourceOpen === undefined)
+            setOwnSourceOpen(open); props.onSourceOpenChange?.(open); };
         const actions = resolvePhotoAttachmentActions({
             hasPhoto: props.photo !== null,
             ...(props.picking === undefined ? {} : { picking: props.picking }),
             ...(props.disabled === undefined ? {} : { disabled: props.disabled }),
         });
         const { labels } = props;
-        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [actions.choose.visible ? _jsx("div", { className: "hjm-photo-attachment__choose", children: _jsx(Button, { type: "button", tone: photoAttachmentRecipe.chooseTone, size: photoAttachmentRecipe.chooseSize, edge: "start", disabled: actions.choose.disabled, loading: actions.choose.loading, leading: _jsx(PhotoSourceGlyph, { source: "library", size: glyph.sm }), onClick: () => setSourceOpen(true), children: labels.add }) }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", title: props.error }) : null, props.photo ? _jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, parts: parts, ...(props.imageHost ? { imageHost: props.imageHost } : {}), corner: _jsx(IconButton, { type: "button", label: labels.remove, tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.removeSize, shape: photoAttachmentRecipe.removeShape, disabled: actions.remove.disabled, onClick: props.onRemove, children: "\u00D7" }) }) : null] });
+        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [actions.choose.visible && props.chooseAction !== "none" ? _jsx("div", { className: "hjm-photo-attachment__choose", children: _jsx(Button, { type: "button", tone: photoAttachmentRecipe.chooseTone, size: photoAttachmentRecipe.chooseSize, edge: "start", disabled: actions.choose.disabled, loading: actions.choose.loading, leading: _jsx(PhotoSourceGlyph, { source: "library", size: glyph.sm }), onClick: () => setSourceOpen(true), children: labels.add }) }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", title: props.error }) : null, props.photo ? _jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, ...(props.decoratePreview ? { decoratePreview: props.decoratePreview } : {}), parts: parts, ...(props.imageHost ? { imageHost: props.imageHost } : {}), corner: _jsx(IconButton, { type: "button", label: labels.remove, tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.removeSize, shape: photoAttachmentRecipe.removeShape, disabled: actions.remove.disabled, onClick: props.onRemove, children: "\u00D7" }) }) : null] });
     };
 }
 //# sourceMappingURL=photo-attachment.js.map

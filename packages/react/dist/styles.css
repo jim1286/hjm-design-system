@@ -860,7 +860,8 @@
 .hjm-radio-group__items { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
 .hjm-radio-group[data-presentation="plain"] .hjm-radio-group__items { gap: var(--hjm-space-xxs); }
 .hjm-radio-group[data-presentation="grouped"] .hjm-radio-group__items { gap: 0; overflow: hidden; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); }
-.hjm-radio-group[data-orientation="horizontal"] .hjm-radio-group__items { flex-direction: row; flex-wrap: wrap; gap: var(--hjm-space-md); }
+.hjm-radio-group[data-orientation="horizontal"] .hjm-radio-group__items { flex-direction: row; flex-wrap: wrap; gap: var(--hjm-space-xs); }
+/* selectionGroupRecipe horizontal card gap 8 (was 16, 2026-11-04). */
 .hjm-radio-group[data-orientation="horizontal"][data-presentation="plain"] .hjm-radio-group__items { gap: var(--hjm-space-sm); }
 .hjm-radio-group[data-orientation="horizontal"][data-presentation="grouped"] .hjm-radio-group__items { gap: 0; }
 /* Radio option actions are siblings of the label, never nested interactive controls. */
@@ -3282,10 +3283,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-calendar__grid { min-inline-size: calc(7 * var(--hjm-calendar-cell-size)); }
 .hjm-calendar__week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .hjm-calendar__weekday { padding-block: var(--hjm-space-xs); text-align: center; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); overflow-wrap: anywhere; }
-.hjm-calendar__day { display: grid; justify-items: center; align-content: start; gap: var(--hjm-space-xxs); min-inline-size: var(--hjm-calendar-cell-size); min-block-size: var(--hjm-calendar-cell-size); padding: 0; border: 0; border-radius: var(--hjm-radius-full); background: transparent; color: var(--hjm-color-text-body); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; }
+.hjm-calendar__day { display: grid; justify-items: center; align-content: start; gap: var(--hjm-calendar-content-gap, var(--hjm-space-xxs)); min-inline-size: var(--hjm-calendar-cell-size); min-block-size: var(--hjm-calendar-cell-size); padding: 0; border: 0; border-radius: var(--hjm-radius-full); background: transparent; color: var(--hjm-color-text-body); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; }
 .hjm-calendar__day[data-today] .hjm-calendar__day-label { border-color: var(--hjm-color-focus); }
 .hjm-calendar__day[data-selected] .hjm-calendar__day-label { background: var(--hjm-color-primary); color: var(--hjm-color-on-primary); }
 .hjm-calendar__day[data-outside] { opacity: var(--hjm-calendar-outside-opacity); }
+.hjm-calendar__fold { justify-self: center; display: grid; place-items: center; min-inline-size: var(--hjm-control-min-touch-target); min-block-size: calc(var(--hjm-control-min-touch-target) / 2); padding: 0; border: 0; border-radius: var(--hjm-radius-full); background: transparent; cursor: pointer; }
 .hjm-calendar__day[data-disabled] { opacity: var(--hjm-calendar-disabled-opacity); cursor: not-allowed; }
 .hjm-calendar__content { max-inline-size: 100%; min-block-size: var(--hjm-type-label-line-height); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); overflow-wrap: anywhere; }
 .hjm-calendar__header button:focus-visible, .hjm-calendar__day:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
@@ -3944,7 +3946,11 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-shortcut-rail__action, .hjm-shortcut-rail__remove { position: relative; display: inline-flex; align-items: center; justify-content: center; min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); background: transparent; color: inherit; font: inherit; font-weight: var(--hjm-text-emphasis-medium); border: 0; border-radius: 999px; cursor: pointer; }
 .hjm-shortcut-rail__action { gap: var(--hjm-space-xxs); padding-inline: var(--hjm-space-sm); white-space: nowrap; }
 .hjm-shortcut-rail[data-size="medium"] .hjm-shortcut-rail__action { gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); }
-.hjm-shortcut-rail__remove { inline-size: var(--hjm-control-min-touch-target); padding: 0; }
+.hjm-shortcut-rail__remove { inline-size: var(--hjm-space-xl); min-inline-size: 0; padding: 0; }
+/* shortcutRailRecipe.removeWidth/removeHitSlop (2026-11-04): only 24px of the × is painted; the 44px target extends past the
+   trailing edge, where it overlaps nothing, and the label drops its trailing padding beside the ×. */
+.hjm-shortcut-rail__remove::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: var(--hjm-control-min-touch-target); }
+.hjm-shortcut-rail__item:has(.hjm-shortcut-rail__remove) .hjm-shortcut-rail__action { padding-inline-end: 0; }
 .hjm-shortcut-rail__remove > span { font-size: 14px; line-height: 1; }
 .hjm-shortcut-rail__item[data-disabled] { opacity: 0.5; }
 .hjm-shortcut-rail button:disabled { cursor: not-allowed; }

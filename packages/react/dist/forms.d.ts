@@ -138,6 +138,11 @@ export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<S
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded (same axis as native).
+     * Field chrome keeps the UI face; omitted while the face is still loading.
+     */
+    contentFontFamily?: string;
 }>;
 export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
     /**
@@ -160,6 +165,11 @@ export declare const TextArea: import("react").ForwardRefExoticComponent<Textare
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded (same axis as native).
+     * Field chrome keeps the UI face; omitted while the face is still loading.
+     */
+    contentFontFamily?: string;
 }> & import("react").RefAttributes<HTMLTextAreaElement>>;
 export type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size" | "value" | "defaultValue"> & SharedInputProps & Readonly<{
     value?: string;
