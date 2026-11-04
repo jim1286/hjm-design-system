@@ -13,12 +13,13 @@ import { DrawnClose } from "./drawn-glyphs.js";
 import { ImageViewerTrigger } from "./image-viewer-trigger.js";
 import { PhotoSourceGlyph } from "./photo-source-icon.js";
 import { PhotoSourceSheet } from "./photo-source-sheet.js";
-function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, safeAreaInsets, imageHost, Viewer, corner }) {
+function PhotoPreview({ photo, label, onLoadStatusChange, viewerLabels, safeAreaInsets, imageHost, Viewer, corner, decoratePreview }) {
     const [open, setOpen] = useState(false);
     const { tokens } = useHjmNativeTheme();
     const frame = resolvePhotoAttachmentPreviewSize(photo);
     const inset = tokens.spacing[photoAttachmentRecipe.removeInset];
-    return _jsxs(View, { children: [_jsx(ImageViewerTrigger, { label: label, onPress: () => setOpen(true), layoutStyle: { alignSelf: "stretch" }, children: _jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, layoutStyle: { width: "100%" }, ...(onLoadStatusChange ? { onLoadStatusChange } : {}), ...(imageHost?.sourceAdapter ? { sourceAdapter: imageHost.sourceAdapter } : {}), ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) }) }), corner ? _jsx(View, { style: { position: "absolute", top: inset, end: inset }, children: corner }) : null, _jsx(Viewer, { open: open, onClose: () => setOpen(false), safeAreaInsets: safeAreaInsets, items: [{ id: photo.uri, uri: photo.uri, label, width: photo.width, height: photo.height }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
+    const decorate = decoratePreview ?? ((image) => image);
+    return _jsxs(View, { children: [_jsx(ImageViewerTrigger, { label: label, onPress: () => setOpen(true), layoutStyle: { alignSelf: "stretch" }, children: decorate(_jsx(Image, { src: photo.uri, width: frame.width, height: frame.height, fit: frame.fit, decorative: true, layoutStyle: { width: "100%" }, ...(onLoadStatusChange ? { onLoadStatusChange } : {}), ...(imageHost?.sourceAdapter ? { sourceAdapter: imageHost.sourceAdapter } : {}), ...(imageHost?.renderImage ? { renderImage: imageHost.renderImage } : {}) })) }), corner ? _jsx(View, { style: { position: "absolute", top: inset, end: inset }, children: corner }) : null, _jsx(Viewer, { open: open, onClose: () => setOpen(false), safeAreaInsets: safeAreaInsets, items: [{ id: photo.uri, uri: photo.uri, label, width: photo.width, height: photo.height }], ...viewerLabels, ...(imageHost?.renderViewerImage ? { renderImage: imageHost.renderViewerImage } : {}) })] });
 }
 export function createAttachedPhoto(Viewer) {
     /** A posted photo under its text: tap to open the shared viewer (pull down to close). */
@@ -36,14 +37,17 @@ export function createPhotoAttachmentField(Viewer) {
     return function PhotoAttachmentField(props) {
         validatePhotoAttachment(props.labels, props.photo);
         const { colors } = useHjmNativeTheme();
-        const [sourceOpen, setSourceOpen] = useState(false);
+        const [ownSourceOpen, setOwnSourceOpen] = useState(false);
+        const sourceOpen = props.sourceOpen ?? ownSourceOpen;
+        const setSourceOpen = (open) => { if (props.sourceOpen === undefined)
+            setOwnSourceOpen(open); props.onSourceOpenChange?.(open); };
         const actions = resolvePhotoAttachmentActions({
             hasPhoto: props.photo !== null,
             ...(props.picking === undefined ? {} : { picking: props.picking }),
             ...(props.disabled === undefined ? {} : { disabled: props.disabled }),
         });
         const { labels } = props;
-        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [actions.choose.visible ? _jsx(View, { style: { alignSelf: "flex-start" }, children: _jsx(Button, { tone: photoAttachmentRecipe.chooseTone, size: photoAttachmentRecipe.chooseSize, edge: "start", disabled: actions.choose.disabled, loading: actions.choose.loading, leading: _jsx(PhotoSourceGlyph, { source: "library", color: colors.textMuted, background: "transparent", size: glyph.sm }), onPress: () => setSourceOpen(true), children: labels.add }) }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", announcement: "assertive", title: props.error }) : null, props.photo ? _jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, safeAreaInsets: props.safeAreaInsets, Viewer: Viewer, ...(props.imageHost ? { imageHost: props.imageHost } : {}), corner: _jsx(IconButton, { label: labels.remove, tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.removeSize, shape: photoAttachmentRecipe.removeShape, disabled: actions.remove.disabled, onPress: props.onRemove, children: _jsx(DrawnClose, { size: glyph[iconButtonRecipe.sizes[photoAttachmentRecipe.removeSize].glyph], color: colors.text }) }) }) : null] });
+        return _jsxs(Stack, { gap: photoAttachmentRecipe.gap, ...(props.layoutStyle ? { layoutStyle: props.layoutStyle } : {}), children: [actions.choose.visible && props.chooseAction !== "none" ? _jsx(View, { style: { alignSelf: "flex-start" }, children: _jsx(Button, { tone: photoAttachmentRecipe.chooseTone, size: photoAttachmentRecipe.chooseSize, edge: "start", disabled: actions.choose.disabled, loading: actions.choose.loading, leading: _jsx(PhotoSourceGlyph, { source: "library", color: colors.textMuted, background: "transparent", size: glyph.sm }), onPress: () => setSourceOpen(true), children: labels.add }) }) : null, _jsx(PhotoSourceSheet, { open: sourceOpen, onOpenChange: setSourceOpen, labels: labels.source, disabled: actions.choose.disabled, ...(props.cameraAvailable === undefined ? {} : { cameraAvailable: props.cameraAvailable }), onSelect: props.onSelectSource }), props.error ? _jsx(Notice, { tone: "danger", announcement: "assertive", title: props.error }) : null, props.photo ? _jsx(PhotoPreview, { photo: props.photo, label: labels.preview, viewerLabels: props.viewerLabels, ...(props.decoratePreview ? { decoratePreview: props.decoratePreview } : {}), safeAreaInsets: props.safeAreaInsets, Viewer: Viewer, ...(props.imageHost ? { imageHost: props.imageHost } : {}), corner: _jsx(IconButton, { label: labels.remove, tone: photoAttachmentRecipe.removeTone, size: photoAttachmentRecipe.removeSize, shape: photoAttachmentRecipe.removeShape, disabled: actions.remove.disabled, onPress: props.onRemove, children: _jsx(DrawnClose, { size: glyph[iconButtonRecipe.sizes[photoAttachmentRecipe.removeSize].glyph], color: colors.text }) }) }) : null] });
     };
 }
 //# sourceMappingURL=photo-attachment.js.map

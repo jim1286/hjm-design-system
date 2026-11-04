@@ -65,7 +65,7 @@ function CharacterCountRow({ state }) {
     const color = colors[characterCountRecipe.colors[tone]];
     return (_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", testID: "hjm-field-character-count", style: { flexDirection: "row", alignItems: "flex-start", gap: characterCountRecipe.gap, direction: environment.direction }, children: [state.message ? _jsx(Text, { variant: characterCountRecipe.textVariant, style: { color, flex: 1 }, children: state.message }) : null, _jsx(Text, { variant: characterCountRecipe.textVariant, style: { color, flexShrink: 0, marginStart: "auto", fontVariant: [characterCountRecipe.numeric], fontWeight: characterCountRecipe.counterFontWeight[tone] }, children: state.counter })] }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, hjmDescriptionAlign = "start", initialFocusTarget, onBlur, onFocus, onContentSizeChange, onSelectionChange, characterCount, maxLength: ownMaxLength, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, contentFontFamily, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, hjmDescriptionAlign = "start", initialFocusTarget, onBlur, onFocus, onContentSizeChange, onSelectionChange, characterCount, maxLength: ownMaxLength, ...props }, ref) {
     const resolvedDisabledOpacity = disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
@@ -164,9 +164,10 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 ? resolveColorReference(searchFieldRecipe.colors.content, theme.palette)
                 : colors.text,
             flex: 1,
-            ...resolveNativeFontStyle(theme.tokens.fontFamily.ui),
+            ...(contentFontFamily ? { fontFamily: contentFontFamily } : resolveNativeFontStyle(theme.tokens.fontFamily.ui)),
             fontSize: textStyle.fontSize,
-            fontWeight: textStyle.fontWeight,
+            // A product face ships one weight; a synthesized bold would distort the handwriting.
+            ...(contentFontFamily ? {} : { fontWeight: textStyle.fontWeight }),
             lineHeight: textStyle.lineHeight,
             minHeight: minHeight - borderWidth * 2,
             // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.

@@ -1771,6 +1771,7 @@ export declare const recipeRegistry: {
         readonly gap: 12;
         readonly radius: 16;
         readonly sizePreviewMs: 700;
+        readonly checker: 16;
         readonly brush: {
             readonly min: 2;
             readonly max: 32;

@@ -35,6 +35,11 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
      * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
      */
     align?: FieldAlign;
+    /**
+     * Face for the value the person writes, such as a handwriting font the product loaded. Field chrome (label,
+     * helper, counter) keeps the UI face. Omitted or undefined while the face is still loading uses the UI face.
+     */
+    contentFontFamily?: string;
     onValueChange?: (value: string) => void;
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;

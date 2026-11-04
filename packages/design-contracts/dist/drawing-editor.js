@@ -6,9 +6,32 @@ export const DRAWING_BACKGROUND_COLORS = ['#fffaf2', '#ffffff', '#f1f3f5', '#ffe
 export function drawingStrokeColor(stroke, background) {
     return stroke.erase ? background : stroke.color;
 }
+/**
+ * Transparent ground (2026-11-03, Diairy drawn postcard stickers): the export keeps alpha, the background control is
+ * hidden and the eraser removes ink instead of painting a colour. Only ink counts as content.
+ */
+export const DRAWING_TRANSPARENT = 'transparent';
 /** Something worth saving: an ink stroke, or a background other than the default paper. */
 export function drawingHasContent(strokes, background) {
+    if (background === DRAWING_TRANSPARENT)
+        return strokes.some(stroke => !stroke.erase);
     return background !== DRAWING_PAPER || strokes.some(stroke => !stroke.erase);
+}
+/**
+ * On a transparent ground an eraser masks the ink drawn before it, never ink drawn after it. Returns the strokes as
+ * alternating runs so a renderer nests one mask per eraser run around everything earlier (depth = eraser runs).
+ */
+export function drawingEraseRuns(strokes) {
+    const runs = [];
+    for (const stroke of strokes) {
+        const erase = Boolean(stroke.erase);
+        const last = runs.at(-1);
+        if (last && last.erase === erase)
+            last.strokes.push(stroke);
+        else
+            runs.push({ erase, strokes: [stroke] });
+    }
+    return runs;
 }
 export function drawingInkPath(stroke) {
     return stroke.points.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ') + (stroke.points.length === 1 ? ' l0.1,0.1' : '');
@@ -38,6 +61,8 @@ export function drawingQuickColors(recent) {
 /** Shared editor geometry; the 400px cap leaves tools visible on phone-sized hosts. */
 export const drawingEditorRecipe = {
     maxCanvas: 400, minCanvas: 160, gap: 12, radius: 16, sizePreviewMs: 700,
+    /** Checkerboard cell (canvas units) behind a transparent ground. Shown only on screen, never exported. */
+    checker: 16,
     brush: { min: 2, max: 32, step: 2, initial: 12 },
 };
 //# sourceMappingURL=drawing-editor.js.map
