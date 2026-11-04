@@ -38,7 +38,7 @@ function Read() {
   </Stack></Container>;
 }
 
-const meta = { id: "compositions-selection-photo-attachment", title: "실험/구성/선택과 필터/글과 사진 한 장", component: Compose } satisfies Meta<typeof Compose>;
+const meta = { id: "compositions-selection-photo-attachment", title: "배포/구성/선택과 필터/글과 사진 한 장", component: Compose } satisfies Meta<typeof Compose>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
