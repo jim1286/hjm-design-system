@@ -1,4 +1,4 @@
-import { solidAccentColor, themeColor, type ColorReference } from "./color-references.js";
+import { solidAccentColor, type ColorReference } from "./color-references.js";
 import { THEMES, type ResolvedTheme, type ThemeColors } from "./colors.js";
 import { contrastRatio } from "./palette-contrast.js";
 import {
@@ -1866,7 +1866,7 @@ export const avatarRecipe = {
    * surface는 바탕만, none은 바탕·테두리를 모두 뺀다.
    */
   frames: {
-    outlined: { background: semanticColors.canvas, border: themeColor("borderControl", 0.5), borderWidth: 1 },
+    outlined: { background: semanticColors.canvas, border: semanticColors.border.controlSubtle, borderWidth: 1 },
     surface: { background: semanticColors.canvas, border: null, borderWidth: 0 },
     none: { background: null, border: null, borderWidth: 0 },
   },

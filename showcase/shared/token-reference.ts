@@ -53,7 +53,7 @@ export const foundationGroups = {
  typography: {title:"타이포그래피", description:"글자 단계·제목 단계·굵기·서체를 실제 글자로 보여 줍니다.", keys:["typography","heading","fontWeight","fontFamily","pretendardNativeFaces","letterSpacing","numeric","largeTextThreshold"]},
  layout: {title:"화면 여백과 너비", description:"화면 가장자리 여백, 구역 간격, 행 높이, 최대 너비와 화면 너비 구간입니다.", keys:["layout","breakpoint"]},
  stroke: {title:"테두리", description:"테두리와 초점 표시에 쓰는 선 두께입니다.", keys:["stroke"]},
- effects: {title:"그림자와 투명도", description:"떠 있는 표면의 그림자와 상태·가림막 투명도입니다.", keys:["shadow","opacity","stateLayer","overlay","backdrop","scrim"]},
+ effects: {title:"그림자와 투명도", description:"떠 있는 표면의 그림자와 상태·가림막 투명도입니다. 표면의 높이 단계(elevationSteps)와 앱에서 그림자 토큰이 없을 때 쓰는 Android elevation 값(nativeElevationFallback)도 여기에 둡니다.", keys:["shadow","elevationSteps","nativeElevationFallback","opacity","stateLayer","overlay","backdrop","scrim"]},
  layers: {title:"겹침 순서", description:"겹치는 요소의 쌓임 순서입니다. 값이 클수록 위에 놓입니다.", keys:["layer"]},
 } as const;
 export type FoundationGroup = keyof typeof foundationGroups;
@@ -102,6 +102,8 @@ const sectionSpecs: Readonly<Record<string, SectionSpec>> = {
  stroke: {title:"선 두께", columns:small, specimen:(_, value) => ({kind:"stroke", width:num(value)})},
  shadow: {title:"그림자", columns:wide, itemize:"entries", format:value => { const shadow = record(value); return `흐림 ${num(shadow.radius)} · 아래 ${num(shadow.offsetY)} · 불투명도 ${num(shadow.opacity)}`; },
   specimen:(_, value) => { const shadow = record(value); return {kind:"shadow", color:String(shadow.color), opacity:num(shadow.opacity), radius:num(shadow.radius), offsetY:num(shadow.offsetY)}; }},
+ elevationSteps: {title:"높이 단계", description:"표면이 쓸 수 있는 높이 단계 이름입니다. 각 단계의 그림자는 위 그림자 토큰이 정합니다.", columns:wide, itemize:"entries", format:value => String(value), specimen:none},
+ nativeElevationFallback: {title:"앱 기본 elevation", description:"디자인 프로필이 그림자 토큰을 주지 않을 때 Android가 쓰는 elevation 값입니다.", columns:small, specimen:(_, value, all) => ({kind:"ratio", fraction:num(value) / maxOf(all)})},
  opacity: {title:"투명도", columns:small, specimen:(_, value) => ({kind:"opacity", opacity:num(value)})},
  stateLayer: {title:"상태 레이어", description:"누름·초점 같은 상태에서 표면 위에 겹치는 색의 불투명도입니다.", columns:small, specimen:(_, value) => ({kind:"opacity", opacity:num(value)})},
  overlay: {title:"가림막 불투명도", columns:small, specimen:(_, value, __, tokens) => ({kind:"opacity", opacity:num(value), color:String(record(record(tokens.backdrop).modal).color)})},

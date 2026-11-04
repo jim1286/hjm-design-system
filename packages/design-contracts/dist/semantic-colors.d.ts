@@ -131,6 +131,12 @@ export declare const semanticColors: {
             key: "borderControl";
             alpha?: number;
         }>;
+        /** Half-strength control outline, e.g. the outlined Avatar frame (2026-10-25 번뚝 1px line made the default). */
+        readonly controlSubtle: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
         readonly strong: Readonly<{
             source: "theme";
             key: "textWeak";

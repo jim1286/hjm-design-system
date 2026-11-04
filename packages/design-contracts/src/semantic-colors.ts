@@ -46,6 +46,8 @@ export const semanticColors = {
     default: themeColor("border"),
     /** Resting outline of an interactive control. */
     control: themeColor("borderControl"),
+    /** Half-strength control outline, e.g. the outlined Avatar frame (2026-10-25 번뚝 1px line made the default). */
+    controlSubtle: themeColor("borderControl", 0.5),
     strong: themeColor("textWeak"),
     focus: themeColor("contentBrand"),
     danger: themeColor("danger"),

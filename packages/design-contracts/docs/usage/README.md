@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 2.2.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 2.4.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포는 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `배포/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -54,7 +54,7 @@ Storybook 배포는 예제 분류이며 npm 게시·기기 검증·제품 반영
 | [Breadcrumb](components/breadcrumb.md) | 탐색 | Web의 깊은 계층 화면에서 현재 위치까지의 경로를 보여 주고 상위 계층으로 바로 돌아가게 할 때 쓴다. | 1.12.1 | Web | Web stable / Native unsupported | 배포 |
 | [Button](components/button.md) | 동작 | 사용자가 누르면 무언가가 일어나는 텍스트 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Calendar](components/calendar.md) | 데이터 표시 | 화면에 항상 펼쳐진 한 달 격자에서 날짜 하나를 고를 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
-| [Card](components/card.md) | — | 인용문과 출처를 묶으면 미게시 동반 API `QuoteCard`를 사용한다. |  |  | Web stable / Native stable |  |
+| [Card](components/card.md) | 데이터 표시 | 인용문과 출처를 묶으면 미게시 동반 API `QuoteCard`를 사용한다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 1.12.1 | Web · Native | 개별 API 계약 참조 | 배포 |
 | [Chart](components/chart.md) | 데이터 표시 | 수치의 흐름·비교·몫·모양·관계를 그림으로 읽게 할 때 쓴다. | 1.21.0 | Web · Native | Web stable / Native stable | 배포 |

@@ -1622,9 +1622,10 @@ describe("expanded cross-platform component contracts", () => {
       menuRecipe.density.compact.description.color,
     );
     expect(menuRecipe.density.compact.focus.width).toBeGreaterThanOrEqual(2);
-    expect(menuRecipe.density.compact.focus.color).toEqual(
-      menuRecipe.indicator.color,
-    );
+    // Focus stays the brand focus ring while the selected-row indicator follows the neutral selection role
+    // (88ba6e84 split these on purpose); they must not be tied together again.
+    expect(menuRecipe.density.compact.focus.color).toEqual(focusIndicatorContract.color);
+    expect(menuRecipe.indicator.color).toEqual(semanticColors.selection.content);
     expect(menuRecipe.dangerIndicator.color).toEqual(menuRecipe.tones.danger);
     expect(menuRecipe.dangerIndicator.mark).toBe("alert");
     expect(menuRecipe.slots).toContain("dangerIndicator");

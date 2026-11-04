@@ -60,6 +60,15 @@ it("documents every foundation token group", async () => {
   expect(Object.values(foundationGroups).flatMap(group => [...group.keys]).sort()).toEqual(tokenKeys.sort());
 });
 
+it("builds every foundation token page", async () => {
+  // A key listed in a group without its section spec only failed when the story rendered ("No token section").
+  const tokens = await import("@hjmds/design-contracts/foundations");
+  const { foundationGroups, foundationPage } = await import("../../shared/token-reference");
+  for (const group of Object.keys(foundationGroups) as (keyof typeof foundationGroups)[]) {
+    expect(() => foundationPage(tokens as never, group)).not.toThrow();
+  }
+});
+
 it("rejects Native includeStories because the pinned runtime drops default metadata", async () => {
   const checker = pathToFileURL(join(sourceRoot, "../../../scripts/check-storybook.mjs")).href;
   const { collectModel, checkModel, parseStoryFile } = await import(/* @vite-ignore */ checker);
