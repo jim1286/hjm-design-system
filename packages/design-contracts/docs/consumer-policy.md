@@ -44,7 +44,7 @@ Flutter renderer는 2026-10-18 전사 제거 요청으로 퇴역했다. 과거 �
 
 `surfaceStatus`가 사용 플랫폼의 채택 기준입니다. contract `status`가 stable이어도
 다른 renderer까지 안정화됐다는 뜻은 아닙니다. 현재 값은 설치 버전의
-[성숙도 표](generated/component-maturity.md)를 확인합니다. Storybook의 배포/실험은 API 안정성이나 npm 게시 상태가 아닙니다.
+[성숙도 표](generated/component-maturity.md)를 확인합니다. Storybook 등록(`배포/`, 2026-11-04 실험 단계 폐지)은 API 안정성이나 npm 게시 상태가 아닙니다.
 
 신규 앱 scaffold의 기본 선택은 Stable Core입니다(SHOULD). Beta 사용은 정책 예외가 아닙니다.
 앱의 기존 contract 또는 TASKS 한 곳에 컴포넌트·표면, 사용하는 이유, 담당자와 관련 회귀
@@ -165,7 +165,7 @@ The [optional adapter contract](optional-adapters.md) lists platform-specific en
 2026-10-02 사용자가 참고 인터랙션 수준의 제품 품질을 요청한 데 따른 구체 적용 기준이다.
 기존 상태 피드백·접근성 책임을 제품의 입력 → 반응 → 확정 → 복구 흐름까지 연결한다.
 
-- 제품은 설치된 HJM 버전의 API와 Storybook 배포/실험 상태를 확인하고 해당 범위에서 재사용한다.
+- 제품은 설치된 HJM 버전의 API를 확인하고 해당 범위에서 재사용한다.
   새 동작이 필요한 경우 기존 Button·Sheet·Toast를 합성하며 같은 상태를 두 계층에서 관리하지 않는다.
 - 성공은 서버 또는 제품의 실제 확정 뒤에 표시한다. 연속 입력·실패·역순 응답·중간 이탈에서도
   초안과 복구 경로를 보존한다. 웹·앱 입력 방식이 달라도 같은 사용자 의도를 유지한다.

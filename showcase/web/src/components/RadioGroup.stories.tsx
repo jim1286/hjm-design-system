@@ -10,6 +10,9 @@ const meta = { id: "components-inputs-radio-group", title: "배포/컴포넌트/
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const OptionActions: Story = { name: "미리보기와 항목 행동 · 미게시", render: () => <OptionActionsPreview /> };
+export const ChipChoices: Story = { name: "칩 선택과 미선택 · 미게시", render: () => <ChipChoicesPreview /> };
+export const EqualCards: Story = { name: "동일 폭 선택 카드 · 미게시", render: () => <EqualCardsPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
@@ -21,7 +24,6 @@ function OptionActionsPreview() {
     <Text>{managed ? "선택을 바꾸지 않고 이름 변경을 열었습니다." : "보조 행동과 선택을 따로 사용할 수 있습니다."}</Text>
   </Stack>;
 }
-export const OptionActions: Story = { name: "미리보기와 항목 행동 · 미게시", render: () => <OptionActionsPreview /> };
 
 // Unpublished: unlike SegmentedControl, these chip groups permit no selection or several selections.
 function ChipChoicesPreview() {
@@ -35,7 +37,6 @@ function ChipChoicesPreview() {
     <Text>{season ?? "시즌 미선택"} · {years.size}개 선택</Text>
   </Stack>;
 }
-export const ChipChoices: Story = { name: "칩 선택과 미선택 · 미게시", render: () => <ChipChoicesPreview /> };
 
 function EqualCardsPreview() {
   const [value, setValue] = useState<string | null>("public");
@@ -43,4 +44,3 @@ function EqualCardsPreview() {
     grid={{ columns: { compact: 2 }, gap: { compact: "xs" }, minColumnWidth: { compact: 152 } }}
     items={[{ value: "public", label: "장소 공개 허용", description: "설명이 길어도 같은 폭으로 비교해요" }, { value: "private", label: "받는 사람만", description: "한 사람에게 전해요" }]} />;
 }
-export const EqualCards: Story = { name: "동일 폭 선택 카드 · 미게시", render: () => <EqualCardsPreview /> };

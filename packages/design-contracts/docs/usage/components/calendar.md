@@ -35,6 +35,21 @@ import는 `@hjmds/design-contracts/components/calendar`이며 Web/Native가 같�
 월·오늘·시간대·업무별 선택 제한과 콘텐츠는 제품이 정하고 함수는 시계를 읽지 않는다.
 실행 예제는 양 renderer가 공유하는 `showcase/shared/calendar-example.ts`다(2026-10-19 중복 월 계산 제거).
 
+## 접어서 한 주만 보기 (`fold`)
+
+2026-11-04 오늘야구 경기 화면에서 날짜 카드 줄을 걷어내고, 평소엔 한 주만 보이다가 그 자리에서 한 달로 펼치는
+달력을 쓰자는 사용자 결정으로 추가했다. 양 renderer 공통이다.
+
+- `fold={{ expanded, onExpandedChange, label }}`. 접힌 상태는 선택한 날짜가 있는 주, 없으면 오늘이 있는 주, 그것도 없으면 첫 주를 보인다(`resolveCalendarVisibleRows`).
+- 격자 아래 손잡이(접혔을 때 아래 화살표, 펼쳤을 때 위 화살표, `calendarRecipe.fold.handle`)를 누르면 펼치고 접는다. 짧은 막대는 열린다는 뜻이 드러나지 않아 같은 날 화살표로 바꿨다. 손잡이 접근성 이름 `label`은 제품이 상태에 맞게 지역화한다(「달력 펼치기」/「달력 접기」).
+- 접힌 상태에서 주 단위 이동·스와이프는 제품이 날짜를 바꿔 처리한다. 월 이동 버튼은 주지 않으면 그리지 않는다.
+- 날짜별 점(경기 있음 등)은 기존 `renderCellContent`로 붙인다.
+
+```tsx
+<Calendar fold={{ expanded, onExpandedChange: setExpanded, label: expanded ? t("calendar.collapse") : t("calendar.expand") }}
+  descriptor={{ grid, monthLabel, selectedDate, onSelectionChange: setDate }} composeAccessibleName={name} />
+```
+
 ## 최소 사용 예
 
 ```tsx

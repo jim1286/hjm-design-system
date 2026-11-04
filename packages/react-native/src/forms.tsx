@@ -278,6 +278,8 @@ export type SelectSection<
 
 export type SelectLeadingRenderProps = NativeCollectionLeadingRenderProps;
 
+export type SelectSelectionMode = "single" | "multiple";
+
 export type SelectProps<
   Value extends string = string,
   SectionKey extends string = string,
@@ -303,6 +305,16 @@ export type SelectProps<
     onSelectionChange?: (value: Value | null) => void;
     selectedItem?: SelectItemDescriptor<Value>;
     disallowEmptySelection?: boolean;
+    /**
+     * `multiple` keeps the list open and toggles each pressed option; the trigger lists every chosen label.
+     * Added 2026-11-04 for 오늘야구 metric charts, where one field picks any number of stats (no count limit).
+     */
+    selectionMode?: SelectSelectionMode;
+    selectedKeys?: ReadonlySet<Value>;
+    defaultSelectedKeys?: ReadonlySet<Value>;
+    onSelectedKeysChange?: (keys: ReadonlySet<Value>) => void;
+    /** Trigger text for several chosen items; defaults to their labels joined with ", ". */
+    formatSelectedLabels?: (items: readonly SelectItemDescriptor<Value>[]) => string;
     open?: boolean;
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean, reason: SelectOpenChangeReason) => void;
@@ -356,6 +368,11 @@ export function Select<
   onSelectionChange,
   selectedItem,
   disallowEmptySelection = false,
+  selectionMode = "single",
+  selectedKeys,
+  defaultSelectedKeys,
+  onSelectedKeysChange,
+  formatSelectedLabels,
   open,
   defaultOpen = false,
   onOpenChange,
@@ -442,6 +459,24 @@ export function Select<
     reconciledSelected,
     selectedItem,
   );
+  const multiple = selectionMode === "multiple";
+  if (multiple && (selectedKey !== undefined || defaultSelectedKey !== undefined)) {
+    throw new TypeError("Select selectionMode=\"multiple\" uses selectedKeys, not selectedKey");
+  }
+  const [chosenKeys, setChosenKeys] = useControllableState<ReadonlySet<Value>>({
+    ...(selectedKeys === undefined ? {} : { value: selectedKeys }),
+    defaultValue: defaultSelectedKeys ?? new Set<Value>(),
+    onChange: (next) => {
+      onSelectedKeysChange?.(next);
+    },
+  });
+  // Collection order, not press order, so the trigger text stays stable as options toggle.
+  const chosenItems = multiple ? collectionItems.filter((item) => chosenKeys.has(item.id)) : [];
+  const triggerText = multiple
+    ? chosenItems.length === 0
+      ? null
+      : formatSelectedLabels?.(chosenItems) ?? chosenItems.map((item) => item.selectedLabel ?? item.label).join(", ")
+    : resolvedSelectedItem?.selectedLabel ?? resolvedSelectedItem?.label ?? null;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const visible = open ?? uncontrolledOpen;
   const requestOpen = useCallback((next: boolean, reason: SelectOpenChangeReason) => {
@@ -478,7 +513,7 @@ export function Select<
 
   const focusInitialOption = () => {
     const initialValue =
-      reconciledSelected ?? collectionItems.find((option) => !option.disabled)?.id;
+      (multiple ? chosenItems[0]?.id : reconciledSelected) ?? collectionItems.find((option) => !option.disabled)?.id;
     if (initialValue === undefined) return;
     const target = optionRefs.current.get(initialValue);
     focusAccessibleHost(target);
@@ -487,7 +522,7 @@ export function Select<
     const viewport = optionViewport.current;
     const scroll = optionsScroll.current;
     const content = optionsContent.current;
-    const key = reconciledSelected ?? collectionItems.find(option => !option.disabled)?.id;
+    const key = (multiple ? chosenItems[0]?.id : reconciledSelected) ?? collectionItems.find(option => !option.disabled)?.id;
     const target = key === undefined ? undefined : optionRefs.current.get(key);
     if (!visible || !viewport.presented || viewport.positioned || viewport.measuring || !scroll || !content || !target || viewport.height <= 0 || viewport.contentHeight <= 0) return;
     // Accessibility focus does not scroll a native Select. Measure actual rows (including section headings and
@@ -511,7 +546,7 @@ export function Select<
     size: glyph[sizeContract.glyph],
   });
   const renderOption = (option: SelectItemDescriptor<Value>) => {
-    const checked = option.id === reconciledSelected;
+    const checked = multiple ? chosenKeys.has(option.id) : option.id === reconciledSelected;
     const optionDisabled = option.disabled === true || disabled || readOnly || busy;
     const optionLeading = renderOptionLeading?.(option, {
       placement: "option",
@@ -529,10 +564,17 @@ export function Select<
         }}
         accessibilityHint={option.description}
         accessibilityLabel={option.label}
-        accessibilityRole="radio"
+        accessibilityRole={multiple ? "checkbox" : "radio"}
         accessibilityState={{ checked, disabled: optionDisabled }}
         disabled={optionDisabled}
         onPress={() => {
+          if (multiple) {
+            const next = new Set(chosenKeys);
+            if (next.has(option.id)) next.delete(option.id);
+            else next.add(option.id);
+            setChosenKeys(next);
+            return;
+          }
           setSelected(option.id);
           close("selection", onSelectionAfterDismiss
             ? () => onSelectionAfterDismiss(option.id)
@@ -621,7 +663,7 @@ export function Select<
           disabled: disabled || readOnly || busy,
           expanded: visible,
         }}
-        accessibilityValue={{ text: resolvedSelectedItem?.label ?? placeholder }}
+        accessibilityValue={{ text: multiple ? triggerText ?? placeholder : resolvedSelectedItem?.label ?? placeholder }}
         disabled={disabled || readOnly || busy}
         onPress={() => {
           if (!readOnly) requestOpen(!visible, "trigger");
@@ -651,8 +693,8 @@ export function Select<
           </View>
         ) : null}
         <Text
-              fontRole="ui" style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={resolvedSelectedItem ? "body" : "muted"} variant={sizeContract.textVariant}>
-          {resolvedSelectedItem?.label ?? placeholder}
+              fontRole="ui" numberOfLines={multiple ? 1 : undefined} style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={triggerText ? "body" : "muted"} variant={sizeContract.textVariant}>
+          {triggerText ?? placeholder}
         </Text>
         <Text accessible={false} style={{ opacity: busy ? 0 : 1 }} tone="muted">⌄</Text>
         {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator size={glyph[selectRecipe.busyIndicator.glyph]} /></View> : null}
@@ -676,7 +718,7 @@ export function Select<
           focusInitialOption();
         }}
       >
-          <View accessibilityLabel={optionsAccessibilityLabel ?? accessibleName} accessibilityRole="radiogroup" style={{ flexShrink: 1 }}>
+          <View accessibilityLabel={optionsAccessibilityLabel ?? accessibleName} accessibilityRole={multiple ? "list" : "radiogroup"} style={{ flexShrink: 1 }}>
             <ScrollView ref={optionsScroll}
               onLayout={event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }}
               onContentSizeChange={(_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }}>

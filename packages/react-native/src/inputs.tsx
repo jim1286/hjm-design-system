@@ -2095,7 +2095,11 @@ function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disab
 export type SegmentedControlProps<Value extends string = string> =
   SegmentedControlCollectionProps<Value> & Readonly<{
     label: string;
-    value?: Value;
+    /**
+     * Controlled `null` selects nothing, for `pills` only: a filter that pages its options (a decade of seasons) shows no pill
+     * while the chosen value is on another page. Connected/text switches always show the current view (2026-11-04).
+     */
+    value?: Value | null;
     defaultValue?: Value;
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
@@ -2160,28 +2164,32 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
     }));
   const collectionFallback = resolveInitialTabValue(descriptors);
   if (collectionFallback === undefined) throw new Error("SegmentedControl requires an enabled option");
-  if (value !== undefined) resolveInitialTabValue(descriptors, value);
+  if (value === null && !pills) throw new TypeError("SegmentedControl value null (no selection) is only for pills");
+  if (value !== undefined && value !== null) resolveInitialTabValue(descriptors, value);
   const initialRef = useRef<Readonly<{ value: Value }> | null>(null);
   if (initialRef.current === null) {
     const initial = resolveInitialTabValue(descriptors, value ?? defaultValue);
     if (initial === undefined) throw new Error("SegmentedControl requires an enabled option");
     initialRef.current = { value: initial };
   }
+  const empty = value === null;
+  // A controlled `null` stays controlled: passing nothing would flip the state hook to uncontrolled whenever a paged
+  // filter moved between a page with its value and one without (2026-11-04 render error). `empty` hides the stand-in.
   const [storedValue, setSelected] = useControllableState({
-    ...(value === undefined ? {} : { value }),
+    ...(value === undefined ? {} : { value: value ?? collectionFallback }),
     defaultValue: initialRef.current.value,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   const storedValueValid = descriptors.some(
     (item) => item.id === storedValue && !item.disabled,
   );
-  const selected = storedValueValid ? storedValue : collectionFallback;
+  const selected: Value | null = empty ? null : storedValueValid ? storedValue : collectionFallback;
   const controlled = value !== undefined;
   useEffect(() => {
     if (!controlled && !storedValueValid) setSelected(collectionFallback);
   }, [collectionFallback, controlled, setSelected, storedValueValid]);
   const [itemRects, setItemRects] = useState<Record<string, SelectionHighlightRect>>({});
-  const selectedRect = itemRects[selected];
+  const selectedRect = selected === null ? undefined : itemRects[selected];
   const selectionMotion = textOnly ? "none" : suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
   const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
   const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
@@ -2220,7 +2228,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
           padding: pills || textOnly ? 0 : segmentedControlRecipe.container.padding,
   } as const;
   const content = (<>
-      {movingHighlight && highlightRect ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} brand={selectionTone === "brand"} /> : null}
+      {movingHighlight && highlightRect && selected !== null ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} brand={selectionTone === "brand"} /> : null}
       {resolvedItems.map((item) => {
         const isSelected = item.value === selected;
         const optionDisabled = disabled || item.disabled === true;

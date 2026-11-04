@@ -11,6 +11,7 @@ const meta = { id: "components-data-display-image", title: "배포/컴포넌트/
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const FullScreenPhoto: Story = { name: "전체 화면 사진", render: () => <PhotoViewerExample /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 function PhotoViewerExample() {
@@ -21,4 +22,3 @@ function PhotoViewerExample() {
   </ImageViewerTrigger><ImageViewer open={open} onClose={() => setOpen(false)} items={[{ id: "mountains", uri: revealImage, label: "햇살과 겹친 산 능선" }]}
     closeLabel="사진 닫기" previousLabel="이전 사진" nextLabel="다음 사진" loadingLabel="사진 불러오는 중" errorLabel="사진을 불러오지 못했어요" retryLabel="다시 시도" /></>;
 }
-export const FullScreenPhoto: Story = { name: "전체 화면 사진", render: () => <PhotoViewerExample /> };

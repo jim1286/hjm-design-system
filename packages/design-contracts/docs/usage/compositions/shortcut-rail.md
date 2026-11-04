@@ -42,9 +42,10 @@
 | 바깥 틀 | 가로 목록 | 한 줄, 내용 폭 항목 | 항목 간 spacing.xs8 |
 | 표면 | chipRecipe | 열기/삭제 뒤 하나의 pill | small36, medium44, full 모서리, idle 배경/테두리 |
 | 열기 | button/Pressable | 이름 앞 leading 장식 가능 | 최소44 터치 영역, small 좌우 sm12/아이콘 간 xxs4, medium md16/xs8 |
-| 삭제 | button/Pressable | 열기와 나란한 끝 쪽 | 폭44, 최소 높이44, 기본 glyph.xs14의 × |
+| 삭제 | button/Pressable | 열기와 나란한 끝 쪽 | 보이는 폭 xl24(`removeWidth`), 터치 폭 44는 pill 끝 바깥으로 20 확장(`removeHitSlop`), 최소 높이44, 기본 glyph.xs14의 ×. 삭제가 있으면 열기의 끝 쪽 여백은 0 |
 
-36 표면도 각 버튼이 최소44 터치 영역을 가지며 영역을 서로 겹치지 않는다.
+36 표면도 각 버튼이 최소44 터치 영역을 가지며 영역을 서로 겹치지 않는다. 2026-11-04 오늘야구 「퓨처스 ×」가 이름의 두 배쯤으로
+보여, 삭제의 터치 영역을 그리는 대신 끝 바깥으로 넓혔다.
 모든 항목이 마운트된 가로 한 줄이며 자동 회전·선택·가상화는 없다.
 Native는 물리 LTR scroll 좌표와 RTL 행 배치를 분리한다.
 

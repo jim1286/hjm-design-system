@@ -436,6 +436,9 @@ export const calendarRecipe = {
   },
   day: {
     radius: "full" as const,
+    // Space between the date circle and product content (dots, results). Native drew content flush against a
+    // selected circle while Web already used this gap (2026-11-04 오늘야구 games screen).
+    contentGap: spacing.xxs,
     label: { color: semanticColors.content.body, numericVariant: "tabular" },
     outsideFocusedMonthOpacity: opacity.muted,
     disabledOpacity: opacity.disabled,
@@ -445,6 +448,14 @@ export const calendarRecipe = {
       content: semanticColors.action.brand.content,
     },
     focus: focusIndicatorContract,
+  },
+  /**
+   * Folded calendar (2026-11-04, 오늘야구 games screen): one week row with a handle under it that unfolds the month in
+   * place. The handle is a chevron pointing where the grid will go (down folded, up unfolded): a plain grab bar did not
+   * say it opens anything (same-day user request). It keeps the full touch target.
+   */
+  fold: {
+    handle: { icon: { expand: "chevronDown", collapse: "chevronUp" }, glyph: "md", color: semanticColors.content.secondary, touchTarget: control.minTouchTarget },
   },
 } as const satisfies {
   slots: readonly string[];
@@ -460,6 +471,7 @@ export const calendarRecipe = {
   sizes: Record<CalendarSize, { cellDiameter: number; indicatorDiameter: number; textVariant: TextVariant; glyph: GlyphSize }>;
   day: {
     radius: "full";
+    contentGap: number;
     label: { color: ColorReference; numericVariant: "tabular" };
     outsideFocusedMonthOpacity: number;
     disabledOpacity: number;
@@ -467,7 +479,74 @@ export const calendarRecipe = {
     selected: { background: ColorReference; content: ColorReference };
     focus: typeof focusIndicatorContract;
   };
+  fold: { handle: { icon: { expand: SemanticIconName; collapse: SemanticIconName }; glyph: GlyphSize; color: ColorReference; touchTarget: number } };
 };
+
+/** Folds the month to one week row and unfolds it again; both renderers render the same row. */
+export type CalendarFold = Readonly<{
+  expanded: boolean;
+  onExpandedChange(expanded: boolean): void;
+  /** Localized accessible name of the handle, such as 「달력 펼치기」/「달력 접기」. */
+  label: string;
+}>;
+
+/** Row indexes of a grid to draw: all unfolded; folded, the week of the selected date, then today, then the first date. */
+function visibleRowIndexes(
+  cells: readonly Readonly<{ date?: string }>[],
+  { expanded, selectedDate, todayDate }: Readonly<{ expanded: boolean; selectedDate?: string | null; todayDate?: string }>,
+): readonly number[] {
+  const rows = Array.from({ length: Math.ceil(cells.length / GRID_COLUMNS) }, (_, index) => index);
+  if (expanded) return rows;
+  const index = [selectedDate, todayDate].map((date) => date ? cells.findIndex((cell) => cell.date === date) : -1).find((found) => found >= 0)
+    ?? cells.findIndex((cell) => cell.date !== undefined);
+  return index >= 0 ? [Math.floor(index / GRID_COLUMNS)] : rows.slice(0, 1);
+}
+
+/**
+ * The week rows a calendar shows: every row when unfolded, otherwise the row holding the selected date, then today,
+ * then the first date of the grid (2026-11-04).
+ */
+export function resolveCalendarVisibleRows<Content>(
+  cells: readonly ResolvedCalendarGridCell<Content>[],
+  expanded: boolean,
+): readonly number[] {
+  const dated = cells.filter((cell): cell is ResolvedCalendarDateCell<Content> => !("filler" in cell));
+  return visibleRowIndexes(cells.map((cell) => "filler" in cell ? {} : { date: cell.date }), {
+    expanded, selectedDate: dated.find((cell) => cell.isSelected)?.date ?? null, todayDate: dated.find((cell) => cell.isToday)?.date ?? "",
+  });
+}
+
+/**
+ * First and last date the calendar will draw, so a product loads exactly that (2026-11-04: 오늘야구 asked for a six-week
+ * grid, past its range API's 31-day limit, and lost every game dot). Folded, that is one week, which may cross into the
+ * adjacent month when its cells come from `createCalendarMonthCells(..., { outsideMonth: "adjacent" })`.
+ */
+export function calendarVisibleDateRange(
+  cells: readonly CalendarDateCellDescriptor[],
+  view: Readonly<{ expanded: boolean; selectedDate?: string | null; todayDate?: string }>,
+): Readonly<{ from: string; to: string }> | null {
+  const dates = visibleRowIndexes(cells, view)
+    .flatMap((row) => cells.slice(row * GRID_COLUMNS, row * GRID_COLUMNS + GRID_COLUMNS))
+    .flatMap((cell) => cell.date ? [cell.date] : []);
+  return dates.length ? { from: dates[0]!, to: dates[dates.length - 1]! } : null;
+}
+
+/**
+ * The header arrows of a folding calendar move one week while folded (the selected date) and one month while unfolded
+ * (the focused month), so the folded week never jumps a whole month (2026-11-04 오늘야구 games screen).
+ */
+export function calendarFoldStep(
+  view: Readonly<{ expanded: boolean; selectedDate: string; focusedMonth: string }>,
+  direction: -1 | 1,
+): Readonly<{ selectedDate: string }> | Readonly<{ focusedMonth: string }> {
+  assertIsoCalendarDate(view.selectedDate, "selectedDate");
+  assertIsoCalendarMonth(view.focusedMonth, "focusedMonth");
+  if (view.expanded) {
+    const [year, month] = view.focusedMonth.split("-").map(Number);
+    return { focusedMonth: new Date(Date.UTC(year!, month! - 1 + direction, 1)).toISOString().slice(0, 7) };
+  }
+  return { selectedDate: new Date(Date.parse(`${view.selectedDate}T00:00:00Z`) + direction * 7 * 86_400_000).toISOString().slice(0, 10) };
+}
 
 /**
  * Calendar is `shared`, not `adaptive`: the grid is always visible inline

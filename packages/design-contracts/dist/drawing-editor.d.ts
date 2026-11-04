@@ -18,8 +18,21 @@ export type DrawingStroke = Readonly<{
     color?: never;
 })>;
 export declare function drawingStrokeColor(stroke: DrawingStroke, background: string): string;
+/**
+ * Transparent ground (2026-11-03, Diairy drawn postcard stickers): the export keeps alpha, the background control is
+ * hidden and the eraser removes ink instead of painting a colour. Only ink counts as content.
+ */
+export declare const DRAWING_TRANSPARENT = "transparent";
 /** Something worth saving: an ink stroke, or a background other than the default paper. */
 export declare function drawingHasContent(strokes: readonly DrawingStroke[], background: string): boolean;
+/**
+ * On a transparent ground an eraser masks the ink drawn before it, never ink drawn after it. Returns the strokes as
+ * alternating runs so a renderer nests one mask per eraser run around everything earlier (depth = eraser runs).
+ */
+export declare function drawingEraseRuns(strokes: readonly DrawingStroke[]): readonly Readonly<{
+    erase: boolean;
+    strokes: readonly DrawingStroke[];
+}>[];
 export declare function drawingInkPath(stroke: DrawingStroke): string;
 export type DrawingHistory = Readonly<{
     past: readonly (readonly DrawingStroke[])[];
@@ -47,6 +60,8 @@ export declare const drawingEditorRecipe: {
     readonly gap: 12;
     readonly radius: 16;
     readonly sizePreviewMs: 700;
+    /** Checkerboard cell (canvas units) behind a transparent ground. Shown only on screen, never exported. */
+    readonly checker: 16;
     readonly brush: {
         readonly min: 2;
         readonly max: 32;
@@ -90,6 +105,8 @@ export type DrawingEditorProps = Readonly<{
     onSave(image: DrawingImage): Promise<void>;
     onCancel(): void;
     cropPreview?: 'circle' | 'none';
+    /** `transparent` for cut-out art such as stickers: PNG with alpha, no background control. Default `paper`. */
+    ground?: 'paper' | 'transparent';
     safeAreaBottom?: number;
     testID?: string;
 }>;

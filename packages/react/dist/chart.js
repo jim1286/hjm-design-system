@@ -229,7 +229,16 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
     const [measure, width] = useMeasuredWidth(fallbackWidth);
     const available = useMemo(() => observedIndices(series), [series]);
     const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
-    const insets = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+    // The persistent cursor bubble occupies the top row. Reserve it in the geometry,
+    // plus room below the low point, so neither extreme label is covered or clipped.
+    const insets = useMemo(() => {
+        const base = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
+        return {
+            ...base,
+            top: base.top + (focusProps.showFocusLabel ? spacing.xxxl : 0),
+            bottom: extremes ? Math.max(base.bottom, spacing.lg) : base.bottom,
+        };
+    }, [showAxis, valueAxis, focusProps.showFocusLabel, !!extremes]);
     const g = useMemo(() => resolveLineGeometry({
         categories, series, width, height, insets, invert, stacked,
         ...(domain ? { domain } : {}), ...(includeZero === undefined ? {} : { includeZero }),

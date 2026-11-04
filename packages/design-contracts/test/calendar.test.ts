@@ -11,6 +11,9 @@ import {
   getCalendarNavigationTarget,
   resolveCalendarDescriptor,
   resolveCalendarGridDescriptor,
+  resolveCalendarVisibleRows,
+  calendarVisibleDateRange,
+  calendarFoldStep,
   validateCalendarDescriptor,
   validateCalendarGridDescriptor,
   validateCalendarMonthNavigation,
@@ -336,5 +339,34 @@ describe("Calendar behavior contract", () => {
 
   it("documents that range selection is out of scope", () => {
     expect(calendarBehavior.scenarios).toContain("range-selection-is-not-part-of-the-contract");
+  });
+});
+
+describe("folded calendar rows", () => {
+  const grid = { cells: createCalendarMonthCells("2026-11"), weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"] as const, todayDate: "2026-11-04" };
+  const rows = (selected: string | null, expanded: boolean) =>
+    resolveCalendarVisibleRows(resolveCalendarGridDescriptor(grid, selected, { composeAccessibleName: ({ date }) => date }), expanded);
+  it("keeps every week unfolded and only the selected (else today's) week folded", () => {
+    expect(rows("2026-11-18", true)).toHaveLength(grid.cells.length / 7);
+    expect(rows("2026-11-18", false)).toEqual([2]);
+    expect(rows(null, false)).toEqual([0]);
+  });
+  it("points the fold handle where the grid goes and keeps a touch target", () => {
+    expect(calendarRecipe.fold.handle.touchTarget).toBeGreaterThanOrEqual(44);
+    expect(calendarRecipe.fold.handle.icon).toEqual({ expand: "chevronDown", collapse: "chevronUp" });
+  });
+});
+
+describe("folding calendar range and steps", () => {
+  const cells = createCalendarMonthCells("2026-10", { weekStartsOn: 1, outsideMonth: "adjacent" });
+  it("draws only the weeks October needs and reports the folded week's dates across the month edge", () => {
+    expect(cells).toHaveLength(35);
+    expect(calendarVisibleDateRange(cells, { expanded: false, selectedDate: "2026-10-28" })).toEqual({ from: "2026-10-26", to: "2026-11-01" });
+    const month = createCalendarMonthCells("2026-10", { weekStartsOn: 1, outsideMonth: "blank" });
+    expect(calendarVisibleDateRange(month, { expanded: true })).toEqual({ from: "2026-10-01", to: "2026-10-31" });
+  });
+  it("moves a week folded and a month unfolded", () => {
+    expect(calendarFoldStep({ expanded: false, selectedDate: "2026-10-28", focusedMonth: "2026-10" }, 1)).toEqual({ selectedDate: "2026-11-04" });
+    expect(calendarFoldStep({ expanded: true, selectedDate: "2026-10-28", focusedMonth: "2026-01" }, -1)).toEqual({ focusedMonth: "2025-12" });
   });
 });

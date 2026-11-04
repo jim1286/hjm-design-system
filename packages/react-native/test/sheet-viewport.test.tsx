@@ -313,6 +313,28 @@ describe("Native Select sheet title", () => {
 });
 
 
+describe("Native Select multiple selection", () => {
+  it("toggles any number of options without closing and lists the chosen labels in collection order", () => {
+    const onSelectedKeysChange = vi.fn();
+    const onOpenChange = vi.fn();
+    render(<HjmNativeProvider reducedMotion>
+      <Select label="지표" placeholder="지표" open onOpenChange={onOpenChange} dismissLabel="닫기" selectionMode="multiple" onSelectedKeysChange={onSelectedKeysChange}
+        items={[{ id: "avg", label: "타율", textValue: "타율" }, { id: "hr", label: "홈런", textValue: "홈런" }, { id: "rbi", label: "타점", textValue: "타점" }]} />
+    </HjmNativeProvider>);
+    const option = (label: string) => renderer!.root.findAll((node) => node.props.accessibilityRole === "checkbox" && node.props.accessibilityLabel === label && typeof node.props.onPress === "function")[0]!;
+    act(() => option("타점").props.onPress());
+    act(() => option("타율").props.onPress());
+    act(() => option("홈런").props.onPress());
+    act(() => option("홈런").props.onPress());
+    expect([...onSelectedKeysChange.mock.calls.at(-1)![0]].sort()).toEqual(["avg", "rbi"]);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(option("타율").props.accessibilityState.checked).toBe(true);
+    expect(option("홈런").props.accessibilityState.checked).toBe(false);
+    const trigger = renderer!.root.findAll((node) => node.props.accessibilityRole === "combobox" && typeof node.props.onPress === "function")[0]!;
+    expect(trigger.props.accessibilityValue.text).toBe("타율, 타점");
+  });
+});
+
 describe('side Sheet downward reading-panel dismissal', () => {
   it('opts into the shared handle and swipe lifecycle without changing side geometry', () => {
     const onOpenChange = vi.fn();

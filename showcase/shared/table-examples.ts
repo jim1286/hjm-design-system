@@ -29,12 +29,12 @@ export const tableFamilyCopy = {
 export const hitterColumns = [
   { id: "name", header: "선수", pinned: "start" as const },
   { id: "team", header: "팀" },
-  { id: "avg", header: "타율", align: "end" as const },
-  { id: "hr", header: "홈런", align: "end" as const },
-  { id: "rbi", header: "타점", align: "end" as const },
-  { id: "ops", header: "OPS", align: "end" as const },
-  { id: "sb", header: "도루", align: "end" as const },
-  { id: "cs", header: "도루자", align: "end" as const },
+  { id: "avg", header: "타율" },
+  { id: "hr", header: "홈런" },
+  { id: "rbi", header: "타점" },
+  { id: "ops", header: "OPS" },
+  { id: "sb", header: "도루" },
+  { id: "cs", header: "도루자" },
 ];
 
 /** 타격 | 주루 header bands; 선수·팀 stay ungrouped (placeholder bands). */
@@ -81,9 +81,9 @@ export const lineupColumns = [
   { id: "order", header: "타순" },
   { id: "name", header: "선수" },
   { id: "position", header: "포지션" },
-  { id: "ab", header: "타수", align: "end" as const },
-  { id: "h", header: "안타", align: "end" as const },
-  { id: "rbi", header: "타점", align: "end" as const },
+  { id: "ab", header: "타수" },
+  { id: "h", header: "안타" },
+  { id: "rbi", header: "타점" },
 ];
 
 export const lineup: readonly LineupRow[] = [

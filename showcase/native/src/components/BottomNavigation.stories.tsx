@@ -16,9 +16,9 @@ export const ProminentDestination: Story = { name: "솟은 가운데 목적지",
 export const AppIconSlots: Story = { name: "앱 아이콘 자리", render: () => <AppIconSlotsPreview /> };
 export const DockShapes: Story = { name: "테마별 막대 모양", render: () => <DockShapesPreview /> };
 export const OverlayInset: Story = { name: "떠 있는 막대와 화면 여백", render: () => <OverlayInsetPreview /> };
+export const NeutralTiles: Story = { name: "중립 배경 타일", render: () => <NeutralTilesPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
-export const NeutralTiles: Story = { name: "중립 배경 타일", render: () => <NeutralTilesPreview /> };
 export const NeutralTilesDark: Story = { name: "중립 배경 타일 · 어두운 테마", globals: { theme: "dark" }, render: () => <NeutralTilesPreview /> };
 
 function ProminentDestinationPreview() {

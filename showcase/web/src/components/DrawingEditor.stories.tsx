@@ -11,3 +11,4 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: '기본' };
 export const Square: Story = { name: '사각형 그림', args: { cropPreview: 'none' } };
 export const SaveFailure: Story = { name: '저장 실패 후 다시 시도', args: { onSave: async () => { throw new Error('Example upload failure'); } } };
+export const Dark: Story = { name: '어두운 테마', globals: { theme: 'dark' } };

@@ -9,6 +9,7 @@ const meta = { title: "배포/컴포넌트/레이아웃/검색 화면", componen
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
+export const Embedded: Story = { name: "시트 안 검색", render: () => <EmbeddedPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
@@ -26,4 +27,3 @@ function EmbeddedPreview() {
     </Sheet>
   </>;
 }
-export const Embedded: Story = { name: "시트 안 검색", render: () => <EmbeddedPreview /> };

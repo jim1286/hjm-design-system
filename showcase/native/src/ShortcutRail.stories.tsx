@@ -16,7 +16,7 @@ function Preview() {
 const meta = { title: "배포/구성/탐색과 이동/바로가기 목록", component: Preview } satisfies Meta<typeof Preview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = { name: "열기와 기록 삭제" };
+export const Default: Story = { name: "기본" };
 
 function WrappedPreview() {
  const [opened,setOpened]=useState("");
@@ -38,3 +38,4 @@ function FilterSummaryPreview() {
  </Stack>;
 }
 export const FilterSummary: Story = { name: "조건 열기와 선택적 해제", render:()=> <FilterSummaryPreview/> };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };

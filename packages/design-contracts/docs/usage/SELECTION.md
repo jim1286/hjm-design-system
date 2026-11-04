@@ -120,7 +120,7 @@ HJM의 기존 API를 확장하거나 하위 구성을 공개한다. 도메인 �
 | --- | --- | --- |
 | 제공 기준 | 컴포넌트 지침의 적용 버전과 설치 패키지 exports/타입 | 확인한 기본 API의 게시 버전이며 최초 출시 버전이나 후속 prop 전체의 제공 보증은 아님 |
 | 플랫폼 지원·API 안정성 | 설치 버전 catalog의 surfaceStatus와 선택형 API 계약 | canonical과 supplemental·optional API를 구분. catalog 밖 API를 자동 stable로 간주하지 않음 |
-| Storybook 분류 | 스토리 제목의 배포/실험 | 예제 분류. npm 게시·소비 앱 반영을 의미하지 않음 |
+| Storybook 분류 | 스토리 제목의 단계·분류 | 예제 분류. npm 게시·소비 앱 반영을 의미하지 않음 |
 | 검증 | 해당 SHA·플랫폼·환경의 실행 결과 | 타입·브라우저·host mock·기기 결과의 범위를 구분 |
 
 구성·화면은 여러 API를 사용하므로 별도 라이브러리 버전을 복제하지 않고 각 API 지침을 참조한다.

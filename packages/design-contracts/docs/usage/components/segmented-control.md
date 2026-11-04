@@ -76,7 +76,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | `presentation` | `connected` · `pills` | `connected` | 연결된 보기 전환 / 독립된 카테고리 필터. `pills`는 1.13.0 변경 |
 | `selectionTone` | `neutral` · `brand` | `brand` | 기본 선택 면은 `primary`와 `onPrimary`. `neutral`은 `surfaceSelected`와 `text`로 차분하게 표시한다. `text` 표현은 채움 없이 기존 표시를 유지한다 |
 | `size` | `small` · `medium` | `medium` | 항목 최소 높이 36(+hitSlop 4) · 44 |
-| `value` · `defaultValue` | 항목 값 | 첫 번째 활성 항목 | 선택 해제 상태는 없다 |
+| `value` · `defaultValue` | 항목 값 · `value`만 `null` | 첫 번째 활성 항목 | `pills` 전용으로 제어 `value={null}`이면 아무 알약도 선택되지 않는다. 선택지를 나눠 보여 주는 필터(10년 단위 시즌 연도)에서 고른 값이 다른 구간에 있을 때 쓴다. 누르면 그 값으로 `onValueChange`가 불린다. `connected`·`text`에 `null`을 주면 `TypeError`(보기 전환은 항상 현재 보기를 보여 준다). 2026-11-04 추가 |
 | `onValueChange` | Web `(value: string) => void` · Native `(value: Value) => void` | — | 다른 항목을 고를 때. `null`은 오지 않는다 |
 | `label` | `string` | 필수 | 화면에 보이지 않는 접근성 이름. 보이는 제목은 바깥에 둔다 |
 | `disabled` | `boolean` | `false` | 전체 비활성(Web은 fieldset 속성) |

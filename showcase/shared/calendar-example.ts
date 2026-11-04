@@ -23,3 +23,16 @@ export function calendarExampleOverflowDate(date: string, intent: string): strin
   const day = new Date(`${date}T00:00:00Z`); day.setUTCDate(day.getUTCDate() + offset);
   return day.toISOString().slice(0, 10);
 }
+
+/**
+ * Folding calendar example (2026-11-04): folded, the week runs into the adjacent month; unfolded, only the month's
+ * dates draw. Same cells drive calendarVisibleDateRange, the range a product would load.
+ */
+export function calendarFoldExampleGrid(month: string, expanded: boolean): CalendarGridDescriptor<string> {
+  return {
+    todayDate: "2026-09-16",
+    weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"] as const,
+    cells: createCalendarMonthCells(month, { outsideMonth: expanded ? "blank" : "adjacent" }).map(cell =>
+      cell.date ? { ...cell, content: Number(cell.date.slice(-2)) % 3 === 0 ? "기록 있음" : "" } : {}),
+  };
+}

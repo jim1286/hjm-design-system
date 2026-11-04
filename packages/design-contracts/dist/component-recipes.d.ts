@@ -256,7 +256,7 @@ export declare const selectionGroupRecipe: {
             readonly direction: "row";
             readonly gap: {
                 readonly plain: 12;
-                readonly card: 16;
+                readonly card: 8;
                 readonly grouped: 0;
                 readonly chips: 8;
             };

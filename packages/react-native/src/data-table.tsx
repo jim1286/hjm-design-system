@@ -116,10 +116,11 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   }
   const heatBase = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
   function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string, decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null = null, indent = 0) {
-    const align = alignOf(column.align ?? dataTableColumnDefaults.align, direction);
+    const logicalAlign = column.align ?? dataTableColumnDefaults.align, align = alignOf(logicalAlign, direction);
     const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;
     // Yoga inherits the table direction: start/end alignment and indentation stay logical.
-    return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingStart: pad.paddingHorizontal / 2 + indent, justifyContent: "center", alignItems: column.align === "end" ? "flex-end" : column.align === "center" ? "center" : "flex-start" }}>
+    return <View key={key} style={{ width: widthOf(column, pinnedColumn), flexShrink: 0, height: rowHeight - 1, paddingHorizontal: pad.paddingHorizontal / 2, paddingStart: pad.paddingHorizontal / 2 + indent, // The column default applies to non-text cells too; Yoga's flex-start/end are already logical (direction-aware).
+      justifyContent: "center", alignItems: logicalAlign === "end" ? "flex-end" : logicalAlign === "center" ? "center" : "flex-start" }}>
       {heat && <View pointerEvents="none" style={{ position: "absolute", left: 2, right: 2, top: 4, bottom: 4, borderRadius: 6, backgroundColor: heatBase[heat.side], opacity: dataTableFamilyRecipe.heatAlpha[heat.strength] }} />}
       {typeof node === "string" || typeof node === "number"
         // The measured natural column width preserves complete values; do not ellipsize while native layout settles.

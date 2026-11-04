@@ -238,6 +238,9 @@
     "components-data-display-qr-code--dark",
     "components-data-display-qr-code--default",
     "components-data-display-qr-code--large-text",
+    "components-data-display-quote-card--dark",
+    "components-data-display-quote-card--default",
+    "components-data-display-quote-card--large-text",
     "components-data-display-statistic--bar",
     "components-data-display-statistic--dark",
     "components-data-display-statistic--default",
@@ -441,6 +444,7 @@
     "components-inputs-date-picker--dark",
     "components-inputs-date-picker--default",
     "components-inputs-date-picker--large-text",
+    "components-inputs-drawing-editor--dark",
     "components-inputs-drawing-editor--default",
     "components-inputs-drawing-editor--save-failure",
     "components-inputs-drawing-editor--square",
@@ -857,6 +861,10 @@
     "compositions-media-transport--dark",
     "compositions-media-transport--default",
     "compositions-media-transport--large-text",
+    "compositions-navigation-shortcut-rail--dark",
+    "compositions-navigation-shortcut-rail--default",
+    "compositions-navigation-shortcut-rail--filter-summary",
+    "compositions-navigation-shortcut-rail--wrapped",
     "compositions-reply-composer--dark",
     "compositions-reply-composer--default",
     "compositions-reply-composer--large-text",
@@ -1294,16 +1302,7 @@
     "screen-flow-permission--error",
     "screen-flow-permission--large-text",
     "screen-flow-permission--loading",
-    "screen-flow-permission--recovery",
-    "실험-구성-콘텐츠-바로가기-목록--default",
-    "실험-구성-콘텐츠-바로가기-목록--filter-summary",
-    "실험-구성-콘텐츠-바로가기-목록--wrapped",
-    "실험-컴포넌트-데이터-표시-인용-카드--dark",
-    "실험-컴포넌트-데이터-표시-인용-카드--default",
-    "실험-컴포넌트-데이터-표시-인용-카드--large-text",
-    "실험-컴포넌트-입력-손그림-편집기--default",
-    "실험-컴포넌트-입력-손그림-편집기--save-failure",
-    "실험-컴포넌트-입력-손그림-편집기--square"
+    "screen-flow-permission--recovery"
   ],
   "retired": {
     "compositions-information-video-preview--large-text": {
@@ -2085,6 +2084,51 @@
       "replacement": "components-navigation-steps--vertical",
       "date": "2026-10-23",
       "reason": "실험 전체 승급: 기존 단계 탐색 항목으로 표현을 합치고 공개 Steps id 유지"
+    },
+    "실험-구성-콘텐츠-바로가기-목록--default": {
+      "replacement": "compositions-navigation-shortcut-rail--default",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-구성-콘텐츠-바로가기-목록--filter-summary": {
+      "replacement": "compositions-navigation-shortcut-rail--filter-summary",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-구성-콘텐츠-바로가기-목록--wrapped": {
+      "replacement": "compositions-navigation-shortcut-rail--wrapped",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-데이터-표시-인용-카드--default": {
+      "replacement": "components-data-display-quote-card--default",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-데이터-표시-인용-카드--dark": {
+      "replacement": "components-data-display-quote-card--dark",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-데이터-표시-인용-카드--large-text": {
+      "replacement": "components-data-display-quote-card--large-text",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-입력-손그림-편집기--default": {
+      "replacement": "components-inputs-drawing-editor--default",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-입력-손그림-편집기--save-failure": {
+      "replacement": "components-inputs-drawing-editor--save-failure",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
+    },
+    "실험-컴포넌트-입력-손그림-편집기--square": {
+      "replacement": "components-inputs-drawing-editor--square",
+      "date": "2026-11-04",
+      "reason": "실험 단계 폐지(2026-11-04)로 배포 제목에 통합하고 Web meta id ASCII kebab 규칙 적용"
     }
   }
 }

@@ -145,7 +145,19 @@ type SelectBaseProps<Key extends string> = Omit<
       item: SelectItemDescriptor<Key>,
       appearance: SelectOptionLeadingRenderProps,
     ) => ReactNode;
+    /**
+     * `multiple` keeps the listbox open and toggles each committed option; the trigger lists every chosen label.
+     * Same contract as Native (2026-11-04, 오늘야구 metric charts pick any number of stats in one field).
+     */
+    selectionMode?: SelectSelectionMode;
+    selectedKeys?: ReadonlySet<Key>;
+    defaultSelectedKeys?: ReadonlySet<Key>;
+    onSelectedKeysChange?: (keys: ReadonlySet<Key>) => void;
+    /** Trigger text for several chosen items; defaults to their labels joined with ", ". */
+    formatSelectedLabels?: (items: readonly SelectItemDescriptor<Key>[]) => string;
   }>;
+
+export type SelectSelectionMode = "single" | "multiple";
 
 export type SelectProps<
   Key extends string = string,
@@ -184,6 +196,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
     locale,
     renderLeading,
     renderOptionLeading,
+    selectionMode = "single",
+    selectedKeys,
+    defaultSelectedKeys,
+    onSelectedKeysChange,
+    formatSelectedLabels,
     className,
     id: idProp,
     name,
@@ -266,6 +283,23 @@ function SelectInner<Key extends string, SectionKey extends string>(
       : undefined,
   );
 
+  const multiple = selectionMode === "multiple";
+  if (multiple && (selectedKeyProp !== undefined || defaultSelectedKey !== undefined)) {
+    throw new TypeError("Select selectionMode=\"multiple\" uses selectedKeys, not selectedKey");
+  }
+  const [chosenKeys, setChosenKeys] = useControllableState<ReadonlySet<Key>>({
+    ...(selectedKeys === undefined ? {} : { value: selectedKeys }),
+    defaultValue: defaultSelectedKeys ?? new Set<Key>(),
+    ...(onSelectedKeysChange === undefined ? {} : { onChange: onSelectedKeysChange }),
+  });
+  // Collection order, not press order, so the trigger text stays stable as options toggle.
+  const chosenItems = multiple ? flatItems.filter((item) => chosenKeys.has(item.id)) : [];
+  const triggerText = multiple
+    ? chosenItems.length === 0
+      ? null
+      : formatSelectedLabels?.(chosenItems) ?? chosenItems.map((item) => item.selectedLabel ?? item.label).join(", ")
+    : resolvedSelectedItem?.selectedLabel ?? resolvedSelectedItem?.label ?? null;
+
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const openControlled = openProp !== undefined;
   const open = openControlled ? openProp : internalOpen;
@@ -310,7 +344,8 @@ function SelectInner<Key extends string, SectionKey extends string>(
   const typeaheadRef = useRef({ value: "", time: 0 });
   const restoreFocusRef = useRef(false);
   const showOptions = asyncState.status === "idle" || asyncState.status === "loadingMore";
-  const emptySelectionAvailable = !disallowEmptySelection && showOptions;
+  // Multiple selection is empty when nothing is checked, so it has no separate empty entry.
+  const emptySelectionAvailable = !multiple && !disallowEmptySelection && showOptions;
   const selectionItemInSource = resolveCollectionItem(source, reconciledSelectedKey);
   const initialHighlight = selectionItemInSource && !selectionItemInSource.disabled
     ? selectionItemInSource.id
@@ -457,6 +492,13 @@ function SelectInner<Key extends string, SectionKey extends string>(
       readOnly ||
       asyncState.status === "loading"
     ) return;
+    if (multiple) {
+      const next = new Set(chosenKeys);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      setChosenKeys(next);
+      return;
+    }
     setSelectedKey(key);
     restoreFocusRef.current = true;
     changeOpen(false, "selection");
@@ -534,7 +576,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
   const describedBy = error ? errorId : description ? descriptionId : undefined;
 
   const renderOption = (item: SelectItemDescriptor<Key>) => {
-    const selected = item.id === reconciledSelectedKey;
+    const selected = multiple ? chosenKeys.has(item.id) : item.id === reconciledSelectedKey;
     const active = item.id === activeKey;
     const leadingSize = iconRecipe.sizes[selectRecipe.optionLeading.glyph];
     const leading = renderOptionLeading?.(item, {
@@ -648,9 +690,9 @@ function SelectInner<Key extends string, SectionKey extends string>(
           ) : null}
           <span
             className="hjm-select__value"
-            data-state={resolvedSelectedItem ? "selected" : "placeholder"}
+            data-state={triggerText ? "selected" : "placeholder"}
           >
-            {resolvedSelectedItem?.label ?? placeholder}
+            {triggerText ?? placeholder}
           </span>
           {busy ? (
             <span className="hjm-select__busy-overlay" aria-hidden="true"><span className="hjm-select__busy-indicator" /></span>
@@ -669,6 +711,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
               id={listboxId}
               role="listbox"
               aria-label={accessibleName}
+              aria-multiselectable={multiple || undefined}
               className="hjm-select__listbox"
               data-density={density}
               data-placement={popupPosition.placement}
@@ -687,7 +730,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
                 starts on this entry, and a trailing position made that starting point
                 the bottom of the list, where ArrowDown has nowhere to go (issue #18).
                 moveHighlight follows this DOM order. */}
-            {!disallowEmptySelection && showOptions ? (
+            {emptySelectionAvailable ? (
               <div
                 ref={(node) => {
                   if (node) optionRefs.current.set(emptySelectionKey, node);
@@ -735,7 +778,9 @@ function SelectInner<Key extends string, SectionKey extends string>(
         <div id={descriptionId} className="hjm-field__description">{description}</div>
       ) : null}
       <FieldError id={errorId} error={error} />
-      {name ? <input type="hidden" name={name} value={reconciledSelectedKey ?? ""} /> : null}
+      {name ? multiple
+        ? chosenItems.map((item) => <input key={item.id} type="hidden" name={name} value={item.id} />)
+        : <input type="hidden" name={name} value={reconciledSelectedKey ?? ""} /> : null}
     </div>
   );
 }

@@ -6,7 +6,7 @@
 // 앞으로 만드는 토큰·컴포넌트·구성·화면은 지침을 필수로 두며, 지침은 정해진 규격으로 나와야 한다.
 // 계약 문서 안에 사용 절을 넣는 대안은 이력 서술과 섞이고 형식을 검사하기 어려워 버렸다.
 // 단위: 컴포넌트는 public-component-map의 계약(계약 없는 supplemental은 이름 하나). 토큰·구성·화면은 showcase의
-// `<배포|실험>/<단계>/<분류>/<항목>` Storybook 제목이고, 컴포넌트 단계의 항목 제목(`컴포넌트/개요/*` 문서 제외)도
+// `배포/<단계>/<분류>/<항목>` Storybook 제목이고, 컴포넌트 단계의 항목 제목(`컴포넌트/개요/*` 문서 제외)도
 // 어느 지침이 담당해야 한다. 제목 형식 자체는 scripts/check-storybook.mjs가 검사한다.
 // 규격 변경은 STANDARD.md·templates/·이 파일 중 영향을 받는 부분만 갱신한다. 형식 감사는 선택 사항이다.
 
@@ -163,7 +163,7 @@ async function walk(directory, predicate) {
 }
 
 // 템플릿 문자열 제목(`${...}`)은 같은 제목을 정적으로 선언한 Web 스토리가 있어 건너뛴다.
-// 담당 대상은 모든 단계의 항목 제목(`<배포|실험>/<단계>/<분류>/<항목>`, docs/STORYBOOK_NAVIGATION.md §1)이다.
+// 담당 대상은 모든 단계의 항목 제목(`배포/<단계>/<분류>/<항목>`, docs/STORYBOOK_NAVIGATION.md §1)이다.
 // `컴포넌트/개요/...`(사용 안내·컴포넌트 찾기·구현·검증 현황·<역할> 모아 보기)는 컴포넌트 탐색 문서라 대상이 아니다.
 // 2026-10-06 규격 확정 전에는 Web 컴포넌트가 역할 묶음(깊이 3) 안의 스토리 `name`이라 `<묶음 제목>/<name>`을 담당 키로
 // 만들었고, 같은 이름의 개별 제목과 키가 17개 겹쳐 어느 쪽을 담당하는지 구분하지 못했다. 같은 날 묶음 9개를
@@ -173,7 +173,7 @@ async function collectStories() {
   const files = await walk(resolve(root, "showcase"), (name) => /\.stories\.(tsx|ts|mdx)$/.test(name));
   for (const file of files) {
     const source = await readFile(file, "utf8");
-    for (const match of source.matchAll(/title:\s*"((?:배포|실험)\/(토큰|컴포넌트|구성|화면)\/[^"$]+)"/g)) {
+    for (const match of source.matchAll(/title:\s*"((?:배포)\/(토큰|컴포넌트|구성|화면)\/[^"$]+)"/g)) {
       const required = !match[1].includes("/컴포넌트/개요/");
       const surface = file.includes("/showcase/native/") ? "native" : "web";
       const story = stories.get(match[1]) ?? { stage: match[2], required, web: false, native: false };
@@ -212,7 +212,7 @@ function validate(stage, label, markdown, problems) {
   }
   const values = Object.fromEntries(header);
   if (values["단계"] && values["단계"] !== stage.label) problems.push(`${label}: 단계가 ${stage.label}가 아니다`);
-  if (values["상태"] && !["배포", "실험"].includes(values["상태"])) problems.push(`${label}: 상태는 배포|실험`);
+  if (values["상태"] && values["상태"] !== "배포") problems.push(`${label}: 상태는 배포(실험 단계는 2026-11-04 폐지)`);
   if (values["지원"] && !SUPPORT.has(values["지원"])) problems.push(`${label}: 지원은 Web · Native|Web|Native`);
   if (values["검토일"] && !/^\d{4}-\d{2}-\d{2}$/.test(values["검토일"])) problems.push(`${label}: 검토일 형식`);
 
@@ -267,11 +267,6 @@ function validate(stage, label, markdown, problems) {
     if (!missing.optional) problems.push(`${label}: 필수 절 "${missing.name}" 없음`);
   }
   const declared = [...(values["스토리북"] ?? "").matchAll(/`([^`]+)`/g)].map((m) => m[1]);
-  // 상태는 담당 스토리의 단계와 맞아야 한다. 배포 항목이 하나라도 있으면 배포, 모두 실험이면 실험.
-  if (declared.length > 0 && values["상태"]) {
-    const expected = declared.some((title) => title.startsWith("배포/")) ? "배포" : "실험";
-    if (values["상태"] !== expected) problems.push(`${label}: 상태가 ${expected}여야 한다(담당 스토리 기준)`);
-  }
   return { values, declared };
 }
 
@@ -318,8 +313,8 @@ function renderIndex(sections) {
     "이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.",
     "제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.",
     `API 안정성은 ${manifest.designSystemVersion}의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.`,
-    "Storybook 배포/실험은 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.",
-    "`분류`는 Storybook 제목 `<배포|실험>/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.",
+    "Storybook 배포는 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.",
+    "`분류`는 Storybook 제목 `배포/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.",
   ];
   for (const { stage, rows } of sections) {
     lines.push(

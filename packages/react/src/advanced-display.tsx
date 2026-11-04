@@ -3,7 +3,7 @@ import { IdentityAction } from "./internal/identity-action.js";
 
 import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
-import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
+import { dataTableColumnDefaults, getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import {
   resolveDescriptionListColumnCount,
   resolveDescriptionListDescriptor,
@@ -830,7 +830,7 @@ function TableInner<Row>(
                 key={column.id}
                 scope="col"
                 className="hjm-table__header"
-                data-align={column.align ?? "start"}
+                data-align={column.align ?? dataTableColumnDefaults.align}
                 aria-sort={column.sortDirection ?? (column.sortable ? "none" : undefined)}
               >
                 {column.sortable ? (
@@ -863,7 +863,7 @@ function TableInner<Row>(
                   <td
                     key={column.id}
                     className="hjm-table__cell"
-                    data-align={column.align ?? "start"}
+                    data-align={column.align ?? dataTableColumnDefaults.align}
                   >
                     {column.cell(row, rowIndex)}
                   </td>

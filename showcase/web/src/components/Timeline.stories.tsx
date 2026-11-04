@@ -7,6 +7,9 @@ const meta = { id: "components-data-display-timeline", title: "배포/컴포넌�
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const Selectable: Story = { name: '항목 선택', render: () => <SelectableTimeline /> };
+// Travel journal: selected record expands; activating it again collapses details without moving the map.
+export const Journal: Story = { name: "여행 일지", render: () => <SelectableTimeline journal /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
@@ -20,7 +23,3 @@ function SelectableTimeline({ journal = false }: { journal?: boolean }) {
     composeAccessibleName={({ position, label }) => `${position}단계 · ${label}`}
     items={[{ id: 'a', label: '편지를 띄웠어요', timestamp: '9:00' }, { id: 'b', label: '바다를 건넜어요', description: '갈매기가 이어받았어요', timestamp: '13:20' }, { id: 'c', label: '도착했어요', timestamp: '18:05' }]} />;
 }
-export const Selectable: Story = { name: '항목 선택', render: () => <SelectableTimeline /> };
-
-// Travel journal: selected record expands; activating it again collapses details without moving the map.
-export const Journal: Story = { name: "여행 일지", render: () => <SelectableTimeline journal /> };

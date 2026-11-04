@@ -23,7 +23,7 @@ Web은 popover listbox, Native는 modal sheet로 목록을 연다.
 | 입력하며 후보를 거름 | [Combobox](combobox.md) |
 | 설정 화면의 즉시 저장 한 값 선택(언어·화면 테마) | [ChoiceRow](choice-row.md) |
 | 행동 목록(편집·삭제) | [Menu](menu.md) |
-| 여러 개 선택 | [CheckboxGroup](checkbox-group.md), [TransferList](transfer-list.md) |
+| 여러 개를 펼쳐 보이며 선택 | [CheckboxGroup](checkbox-group.md), [TransferList](transfer-list.md). 접힌 필드 하나에서 고르면 아래 [여러 개 선택](#여러-개-선택-selectionmodemultiple) |
 | Web 폼 제출·자동완성·모바일 브라우저 picker가 중요 | `NativeSelect`(아래) |
 
 ## 공개 이름과 import
@@ -72,11 +72,29 @@ import { NativeSelect } from "@hjmds/react/forms";
   options={[{ value: "kr", label: t("country.kr") }]} value={code} onValueChange={setCode} />
 ```
 
+## 여러 개 선택 (`selectionMode="multiple"`)
+
+2026-11-04 오늘야구 선수 기록 그래프에서 「지표」와 「비교 안 함」 두 필드로 나눠 고르던 것을 필드 하나에서 개수 제한 없이
+고르자는 사용자 요청으로 추가했다. 양 renderer 공통이다.
+
+- `selectedKeys`·`defaultSelectedKeys`(`ReadonlySet`)와 `onSelectedKeysChange`를 쓴다. `selectedKey` 계열과 함께 주면 오류다.
+- 항목을 누르면 체크만 바뀌고 목록은 열린 채로 남는다. 닫기·바깥 누름·Escape로 닫는다.
+- 필드에는 고른 항목의 `selectedLabel ?? label`을 **목록 순서대로** `, `로 이어 한 줄로 보인다(누른 순서 아님).
+  다른 형식이 필요하면 `formatSelectedLabels`로 지역화한다. 아무것도 고르지 않으면 `placeholder`다.
+- 빈 선택 항목(`emptySelectionLabel`)은 나오지 않는다. 체크를 모두 끄면 빈 선택이다.
+- Web listbox는 `aria-multiselectable`, Native 항목은 `checkbox` 역할이다. `name`이 있으면 고른 값마다 hidden input을 둔다.
+- 개수 상한은 제품이 정한다. HJM은 제한하지 않는다.
+
+```tsx
+<Select label="지표" placeholder="지표" dismissLabel="닫기" selectionMode="multiple"
+  selectedKeys={metrics} onSelectedKeysChange={setMetrics} items={metricItems} />
+```
+
 ## 축과 기본값
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `items` / `sections` | `readonly { id, label: string, textValue: string, description?, disabled? }[]` / 섹션 `{ id, label?, accessibilityLabel?, items }` | — | 항목 필수 필드는 `id`·`label`·`textValue`. Native는 `source`도 가능 |
+| `items` / `sections` | `readonly { id, label: string, textValue: string, description?, selectedLabel?, disabled? }[]` / 섹션 `{ id, label?, accessibilityLabel?, items }` | — | 항목 필수 필드는 `id`·`label`·`textValue`. Native는 `source`도 가능. `selectedLabel`은 고른 뒤 닫힌 선택 창에만 보이는 짧은 이름(목록·접근성 값은 `label`). 목록은 「도루저지율 (CSP)」, 선택 창은 「도루저지율」처럼 반폭 창이 두 줄로 넘치지 않게 할 때 쓴다(2026-11-04) |
 | `size` | `medium` · `large` | `medium` | 트리거 높이 44 · 52 |
 | `density` | `compact` · `comfortable` | `comfortable` | 선택지 행 44 · 56 |
 | `selectedKey` · `defaultSelectedKey` | 키 · `null` | 비제어 `null` | 제어하면 Web은 `onSelectionChange` 필수 |

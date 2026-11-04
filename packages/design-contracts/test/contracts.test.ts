@@ -583,7 +583,7 @@ describe("expanded cross-platform component contracts", () => {
     });
     expect(selectionGroupRecipe.orientations).toEqual({
       vertical: { direction: "column", gap: { plain: 4, card: 8, grouped: 0, chips: 8 } },
-      horizontal: { direction: "row", gap: { plain: 12, card: 16, grouped: 0, chips: 8 } },
+      horizontal: { direction: "row", gap: { plain: 12, card: 8, grouped: 0, chips: 8 } },
     });
     expect(selectionControlRecipe.defaults).toEqual({
       kind: "checkbox",

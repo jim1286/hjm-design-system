@@ -8,7 +8,6 @@ const meta = { id: "components-layout-comment-thread-screen", title: "배포/컴
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const RepliesRecovery: Story = { name: "답글 실패와 복구", render: () => <CommentRepliesPreview /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
-
-export const RepliesRecovery: Story = { name: "답글 실패와 복구", render: () => <CommentRepliesPreview /> };

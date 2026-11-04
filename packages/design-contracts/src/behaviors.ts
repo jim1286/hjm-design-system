@@ -1367,7 +1367,16 @@ export type AsyncCollectionState =
 export type SelectItemDescriptor<
   Key extends CollectionKey = CollectionKey,
 > = Omit<CollectionItemDescriptor<Key>, "shortcut" | "tone"> &
-  Readonly<{ shortcut?: never; tone?: never }>;
+  Readonly<{
+    shortcut?: never;
+    tone?: never;
+    /**
+     * Shorter text for the closed field once this item is chosen; the option list and the accessible value keep
+     * `label`. A full option name with its code ("도루저지율 (CSP)") wrapped a half-width field to two lines
+     * (오늘야구 기록실, 2026-11-04).
+     */
+    selectedLabel?: string;
+  }>;
 
 export type ControlledSelectSelection<
   Key extends CollectionKey = CollectionKey,

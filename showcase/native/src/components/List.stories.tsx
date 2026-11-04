@@ -6,9 +6,6 @@ const meta = { title: "배포/컴포넌트/데이터 표시/목록", component: 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
-export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
-export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
-
 export const StandaloneSeparators: Story = {
   name: "독립 구분선",
   render: () => <Stack gap="md" layoutStyle={{ margin: 16 }}>
@@ -17,3 +14,5 @@ export const StandaloneSeparators: Story = {
     <Text>앞 아이콘 다음 글자 열</Text><ListSeparator separator="indented" leading />
   </Stack>,
 };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

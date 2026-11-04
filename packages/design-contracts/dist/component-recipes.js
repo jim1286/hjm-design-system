@@ -129,7 +129,9 @@ export const selectionGroupRecipe = {
         },
         horizontal: {
             direction: "row",
-            gap: { plain: spacing.sm, card: spacing.md, grouped: 0, chips: spacing.xs },
+            // A horizontal card rail (오늘야구 일자 카드) read as scattered cards at 16; it now matches the vertical card gap
+            // (2026-11-04 user request).
+            gap: { plain: spacing.sm, card: spacing.xs, grouped: 0, chips: spacing.xs },
         },
     },
     label: formSupportContract.label,

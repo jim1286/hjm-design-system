@@ -30,3 +30,20 @@ it("keeps actions outside the scrolled radio group and reveals layout/focus targ
     act(() => action.props.onPress()); expect(added).toHaveBeenCalledOnce(); expect(changed).toHaveBeenCalledTimes(1);
   } finally { act(() => tree.unmount()); }
 });
+it("selects no pill for a controlled null value and still reports a press (2026-11-04 paged season filter)", () => {
+  const changed = vi.fn(); let tree!: ReactTestRenderer;
+  const items = [{ value: "2019", label: "2019" }, { value: "2018", label: "2018" }];
+  try {
+    act(() => { tree = create(<HjmNativeProvider><SegmentedControl label="Season" presentation="pills" value={null} onValueChange={changed} items={items} /></HjmNativeProvider>); });
+    const options = tree.root.findAllByType(Pressable).filter(node => node.props.accessibilityRole === "radio");
+    expect(options.map(node => node.props.accessibilityState?.selected ?? node.props.accessibilityState?.checked)).toEqual([false, false]);
+    act(() => options[1]!.props.onPress()); expect(changed).toHaveBeenCalledWith("2018");
+    // Moving between a chosen value and no selection keeps the control controlled.
+    act(() => tree.update(<HjmNativeProvider><SegmentedControl label="Season" presentation="pills" value="2019" onValueChange={changed} items={items} /></HjmNativeProvider>));
+    act(() => tree.update(<HjmNativeProvider><SegmentedControl label="Season" presentation="pills" value={null} onValueChange={changed} items={items} /></HjmNativeProvider>));
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    let wrong: ReactTestRenderer | undefined;
+    expect(() => act(() => { wrong = create(<HjmNativeProvider><SegmentedControl label="View" value={null} items={items} /></HjmNativeProvider>); })).toThrow(/only for pills/);
+    wrong?.unmount(); consoleError.mockRestore();
+  } finally { act(() => tree.unmount()); }
+});

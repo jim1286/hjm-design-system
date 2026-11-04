@@ -110,6 +110,7 @@ export {
   type SelectLeadingRenderProps,
   type SelectOptionLeadingRenderProps,
   type SelectProps,
+  type SelectSelectionMode,
   type SelectSection,
 } from "./select.js";
 
@@ -313,7 +314,7 @@ export { Carousel, PageIndicator, type CarouselProps, type CarouselLabels, type 
 
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
 
-export { Calendar, type CalendarProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";
+export { Calendar, CalendarFoldHeader, type CalendarProps, type CalendarFoldHeaderProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";
 
 export { Anchor, type AnchorProps } from "./anchor.js";
 

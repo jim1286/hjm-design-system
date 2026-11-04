@@ -94,3 +94,14 @@ it("bleeds the scroll rail over the host gutter when the screen has no inset of 
   const field = host.querySelector<HTMLElement>(".hjm-field")!.getBoundingClientRect();
   expect(Math.round(host.querySelector(".hjm-search-screen__filters button")!.getBoundingClientRect().left)).toBe(Math.round(field.left));
 });
+
+it("checks no pill for a controlled null value and still reports a pick (2026-11-04 paged season filter)", async () => {
+  const picked: string[] = [];
+  await act(async () => root.render(<HjmProvider><SegmentedControl label="Season" presentation="pills" value={null} onValueChange={value => picked.push(value)}
+    items={[{ value: "2019", label: "2019" }, { value: "2018", label: "2018" }]} /></HjmProvider>));
+  const radios = Array.from(host.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
+  expect(radios.map(radio => radio.checked)).toEqual([false, false]);
+  expect(host.querySelector('[data-state="checked"]')).toBeNull();
+  await userEvent.click(page.getByText("2018"));
+  expect(picked).toEqual(["2018"]);
+});

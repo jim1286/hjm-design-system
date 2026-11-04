@@ -32,6 +32,8 @@ function BackgroundMediaPreview() {
     actions={<Button onClick={() => setOpened(true)}>자세히 보기</Button>} /></div>;
 }
 export const BackgroundMedia: Story = { name: "배경 그림과 독립 행동", render: () => <BackgroundMediaPreview /> };
+export const DestinationLink: Story = { name: "목적지 링크 · 미게시", render: () => <DestinationCardPreview /> };
+export const CornerBadge: Story = { name: "우상단 NEW 배지 · 미게시", render: () => <Card title="바다거북" description="1번 만남" badgesPlacement="corner" badges={<Badge tone="success">NEW</Badge>} /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 
@@ -42,6 +44,3 @@ function DestinationCardPreview() {
     <Text>미리보기·새 탭·가운데 클릭은 브라우저 링크를 사용해요.</Text>
   </Card>;
 }
-export const DestinationLink: Story = { name: "목적지 링크 · 미게시", render: () => <DestinationCardPreview /> };
-
-export const CornerBadge: Story = { name: "우상단 NEW 배지 · 미게시", render: () => <Card title="바다거북" description="1번 만남" badgesPlacement="corner" badges={<Badge tone="success">NEW</Badge>} /> };

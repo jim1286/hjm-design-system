@@ -1771,6 +1771,7 @@ export declare const recipeRegistry: {
         readonly gap: 12;
         readonly radius: 16;
         readonly sizePreviewMs: 700;
+        readonly checker: 16;
         readonly brush: {
             readonly min: 2;
             readonly max: 32;
@@ -3723,6 +3724,7 @@ export declare const recipeRegistry: {
         };
         readonly day: {
             readonly radius: "full";
+            readonly contentGap: 4;
             readonly label: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -3761,6 +3763,21 @@ export declare const recipeRegistry: {
                 }>;
                 readonly width: 2;
                 readonly offset: 2;
+            };
+        };
+        readonly fold: {
+            readonly handle: {
+                readonly icon: {
+                    readonly expand: "chevronDown";
+                    readonly collapse: "chevronUp";
+                };
+                readonly glyph: "md";
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly touchTarget: 44;
             };
         };
     };
@@ -6969,7 +6986,7 @@ export declare const recipeRegistry: {
                 readonly direction: "row";
                 readonly gap: {
                     readonly plain: 12;
-                    readonly card: 16;
+                    readonly card: 8;
                     readonly grouped: 0;
                     readonly chips: 8;
                 };

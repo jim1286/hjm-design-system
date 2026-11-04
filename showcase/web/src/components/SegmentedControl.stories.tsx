@@ -12,6 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Pills: Story = { name: "알약 모양", render: () => <SegmentedPillsPreview /> };
 export const Disabled: Story = { name: "비활성", render: () => <SegmentedPillsPreview disabled /> };
+export const ScrollRail: Story = {name:"가로 필터와 고정 행동 · 미게시", render:() => <ScrollRailPreview />};
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
 // 1.13.1: pills keep their row at large text (wrap here, one line in a rail) instead of stacking a column.
@@ -26,4 +27,3 @@ function ScrollRailPreview() {
       const next = String(items.length); setItems(previous => [...previous, {value:next,label:`장소 ${items.length+1}`,accessibilityLabel:`방문 장소 ${items.length+1}`}]); setValue(next);
     }}><span aria-hidden="true">＋</span></IconButton>} /></div>;
 }
-export const ScrollRail: Story = {name:"가로 필터와 고정 행동 · 미게시", render:() => <ScrollRailPreview />};

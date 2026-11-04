@@ -47,6 +47,19 @@ it("retries rejected Select opening and avoids committing highlights on blur",as
  await render(ui(true));await key(trigger,"ArrowDown");await act(async()=>trigger.dispatchEvent(new FocusEvent("focusout",{bubbles:true,relatedTarget:document.body})));
  expect(changed).not.toHaveBeenCalled();
 });
+it("toggles multiple Select options without closing and lists them in collection order",async()=>{
+ const changed=vi.fn();const opened=vi.fn();
+ await render(<Select label="Pick" items={nodes} selectionMode="multiple" defaultOpen onOpenChange={opened} onSelectedKeysChange={changed} placeholder="Choose" emptySelectionLabel="Clear" name="pick"/>);
+ const option=(label:string)=>[...document.querySelectorAll<HTMLElement>('[role="option"]')].find(node=>node.querySelector(".hjm-select__option-copy")?.textContent===label||node.textContent===label)!;
+ expect(document.querySelector('[role="listbox"]')!.getAttribute("aria-multiselectable")).toBe("true");
+ expect(option("Clear")).toBeUndefined();
+ await act(async()=>option("Beta").click());await act(async()=>option("Alpha").click());
+ expect([...changed.mock.calls.at(-1)![0]].sort()).toEqual(["a","b"]);expect(opened).not.toHaveBeenCalled();
+ expect(host.querySelector(".hjm-select__value")!.textContent).toBe("Alpha, Beta");
+ expect([...host.querySelectorAll<HTMLInputElement>('input[name="pick"]')].map(input=>input.value)).toEqual(["a","b"]);
+ await act(async()=>option("Alpha").click());
+ expect(option("Alpha").getAttribute("aria-selected")).toBe("false");expect(host.querySelector(".hjm-select__value")!.textContent).toBe("Beta");
+});
 it("closes an uncontrolled Select popup when the field becomes readonly",async()=>{
  const changed=vi.fn();const opened=vi.fn();
  const ui=(readOnly:boolean)=><Select label="Pick" items={nodes} defaultOpen readOnly={readOnly} onOpenChange={opened} onSelectionChange={changed} placeholder="Choose" emptySelectionLabel="Clear"/>;

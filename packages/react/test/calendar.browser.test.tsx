@@ -135,3 +135,18 @@ it("shrinks compact selection circles while keeping full date hit targets", asyn
   expect(target.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
   await act(async () => date("2026-09-04").click()); expect(change).toHaveBeenCalledWith("2026-09-04");
 });
+it("folds the month to the selected week and unfolds it from the handle", async () => {
+  function Fixture() {
+    const [expanded, setExpanded] = useState(false);
+    return <Calendar fold={{ expanded, onExpandedChange: setExpanded, label: expanded ? "달력 접기" : "달력 펼치기" }}
+      descriptor={{ grid, monthLabel: "2026년 9월", selectedDate: "2026-09-09", onSelectionChange: () => {} }} composeAccessibleName={({ date }) => date} />;
+  }
+  await act(async () => root.render(<Fixture />));
+  expect(host.querySelectorAll("[data-date]")).toHaveLength(7);
+  expect(date("2026-09-09")).not.toBeNull(); expect(date("2026-09-01")).toBeNull();
+  const handle = host.querySelector<HTMLButtonElement>(".hjm-calendar__fold")!;
+  expect(handle.getAttribute("aria-expanded")).toBe("false");
+  await act(async () => handle.click());
+  expect(host.querySelectorAll("[data-date]")).toHaveLength(13);
+  expect(handle.getAttribute("aria-expanded")).toBe("true"); expect(handle.getAttribute("aria-label")).toBe("달력 접기");
+});

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Storybook 탐색 규격(docs/STORYBOOK_NAVIGATION.md)을 Web·Native 스토리 소스에서 정적으로 검사한다.
-// 2026-10-06 사용자 결정: "스토리북 규격도 잡아줘. 지금 좀 난잡해" → 제목을 `<배포|실험>/<단계>/<분류>/<항목>` 4마디로
+// 2026-10-06 사용자 결정: "스토리북 규격도 잡아줘. 지금 좀 난잡해" → 제목을 `<배포|실험>/<단계>/<분류>/<항목>` 4마디로(2026-11-04 실험 폐지 후 `배포/<단계>/<분류>/<항목>`)
 // 고정하고 분류·스토리 이름을 고정 어휘로 둔다. 그전에는 같은 단계 안에서 깊이 3·4·5가 섞였고, 항목 1개짜리 폴더가 12개,
 // 같은 export(Empty·Recovery)가 파일마다 다른 뜻으로 쓰였다. 항목별 제목을 하드코딩한 테스트
 // (showcase/native/src/component-stories.test.ts)는 승격 때마다 깨져 규칙 대신 목록을 지켰으므로 이 규칙 검사로 대체한다.
@@ -22,7 +22,9 @@ const snapshotPath = resolve(root, "showcase/web/story-ids.json");
 
 // ── 규격 상수. 바꾸면 docs/STORYBOOK_NAVIGATION.md §1과 두 preview.tsx의 storySort를 같은 변경에서 고친다. ──
 
-export const ROOTS = ["배포", "실험"];
+// 2026-11-04 사용자 지시("실험 없애고 통합하자 바로 등록 되도록"): 실험 단계를 없애고 새 항목도 바로 `배포/`에 등록한다.
+// 첫 마디는 기존 Web story id(URL)를 바꾸지 않으려고 `배포` 하나로 남긴다.
+export const ROOTS = ["배포"];
 export const STAGES = ["토큰", "컴포넌트", "구성", "화면"];
 // 분류는 "사용자가 그 항목으로 하는 일"로 고른다. 출처·작업 묶음 이름(공통 화면·기본 흐름·상호작용 예제)은
 // 승격 때마다 재분류를 낳아 버렸다(2026-10-06 실측: 둘째 분류 19개 중 12개가 항목 1개).
@@ -49,7 +51,7 @@ export function expectedStorySort() {
       return items ? [category, items] : [category];
     }),
   ]);
-  return { method: "alphabetical", locales: "ko", order: ["배포", layers, "실험", layers, "*"] };
+  return { method: "alphabetical", locales: "ko", order: ["배포", layers, "*"] };
 }
 
 // 항목 이름 금지어: 출처·작업명·실험명·기술명. 2026-10-06 정리 전 제목에 남아 있던 것(공통 화면, 기본 흐름, 상호작용 예제,
@@ -124,6 +126,7 @@ export const PLATFORM_ONLY = {
     "컴포넌트/탐색/사이드바 전환": WEB_API,
     "구성/탐색과 이동/보관함과 페이지 이동": "넓은 화면 사이드바·이동 경로·페이지 이동 조합. 구성 요소가 Web 전용 API다",
     "구성/직접 조작과 모션/숫자 변화와 메뉴 변형": "Web 모션 연동 예제. Native 대응은 끌기·밀기·화면 전환과 이미지·시트·키보드 조작이 맡는다",
+    "구성/직접 조작과 모션/단축키 조합 기록": "ShortcutRecorder는 Web 전용 API다. Native authoring-tools는 이식 가능한 브라우저 키보드 등록면이 없어 제공하지 않는다",
     "구성/비교와 검증/웹 전용 보조 컴포넌트": "Web 전용 API 모음 자체가 대상이다",
     "구성/비교와 검증/환경 조합 검증": "Web 브라우저 환경 조합(테마·방향·글자·움직임) 증거 표",
     "화면/화면 틀과 도구/목업 편집": "Web 작성 도구. 통합 계획이 Native runtime UI 밖에 두기로 했다(docs/plans 참조)",
@@ -429,8 +432,8 @@ export async function checkModel(model) {
     }
     const parts = file.title.split("/");
     const [rootName, stage, category, item] = parts;
-    if (parts.length !== 4) problems.push(`S1 ${label}: 제목은 정확히 4마디 <배포|실험>/<단계>/<분류>/<항목>(현재 ${parts.length}마디 "${file.title}")`);
-    if (!ROOTS.includes(rootName)) problems.push(`S1 ${label}: 첫 마디는 배포|실험`);
+    if (parts.length !== 4) problems.push(`S1 ${label}: 제목은 정확히 4마디 배포/<단계>/<분류>/<항목>(현재 ${parts.length}마디 "${file.title}")`);
+    if (!ROOTS.includes(rootName)) problems.push(`S1 ${label}: 첫 마디는 배포(실험 단계는 2026-11-04 폐지)`);
     if (!STAGES.includes(stage)) problems.push(`S1 ${label}: 둘째 마디는 ${STAGES.join("|")}`);
     if (parts.length === 4 && STAGES.includes(stage)) {
       if (!CATEGORIES[stage].includes(category)) problems.push(`S2 ${label}: ${stage} 분류 "${category}"는 어휘에 없다(${CATEGORIES[stage].join("·")})`);
@@ -478,12 +481,11 @@ export async function checkModel(model) {
     }
   }
 
-  // S2 분류당 항목 2개 이상(두 플랫폼·두 루트 합산). S3 이름 유일, 같은 항목이 배포와 실험에 동시에 있으면 안 된다.
+  // S2 분류당 항목 2개 이상(두 플랫폼 합산). S3 이름 유일.
   const perCategory = new Map();
   for (const [name, entry] of items) {
     if (entry.keys.size > 1) problems.push(`S3 항목 이름 "${name}"이 여러 곳에 있다: ${[...entry.keys].join(", ")}`);
     for (const [key, roots] of entry.roots) {
-      if (roots.size > 1) problems.push(`S1 ${key}: 배포와 실험에 동시에 있다`);
       const category = key.split("/").slice(0, 2).join("/");
       perCategory.set(category, (perCategory.get(category) ?? 0) + 1);
     }
@@ -571,10 +573,9 @@ async function syncCatalogStories() {
       const web = surface === "web";
       const component = web ? "ContractStory" : "NativeComponentPreview";
       const args = web ? `name: "${entry.name}"` : `componentId: "${entry.id}", variant: "default"`;
-      const source = `// Catalog scaffold. Keep custom examples here; metadata is checked against catalog.ts.\nimport type { Meta, StoryObj } from "@storybook/${web ? "react-vite" : "react-native"}";\nimport { ${component} } from "${web ? "./preview-registry" : "../component-examples"}";\nconst meta = { ${web ? `id: "components-${roleSlugs[entry.category]}-${entry.id}", ` : ""}title: "실험/${title}", component: ${component}, args: { ${args} }, parameters: { ${web ? "" : `hjm: { componentIds: ["${entry.id}"] }, `}controls: { disable: true } } } satisfies Meta<typeof ${component}>;\nexport default meta;\ntype Story = StoryObj<typeof meta>;\nexport const Default: Story = { name: "기본" };\nexport const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };\n`;
-      // A newly supported counterpart inherits the existing item's navigation root, never its API maturity.
-      const counterpart = model.files.find(file => file.platform !== surface && file.title?.split("/").slice(1).join("/") === title);
-      await writeFile(path, counterpart ? source.replace(`title: "실험/`, `title: "${counterpart.title.split("/")[0]}/`) : source);
+      const source = `// Catalog scaffold. Keep custom examples here; metadata is checked against catalog.ts.\nimport type { Meta, StoryObj } from "@storybook/${web ? "react-vite" : "react-native"}";\nimport { ${component} } from "${web ? "./preview-registry" : "../component-examples"}";\nconst meta = { ${web ? `id: "components-${roleSlugs[entry.category]}-${entry.id}", ` : ""}title: "배포/${title}", component: ${component}, args: { ${args} }, parameters: { ${web ? "" : `hjm: { componentIds: ["${entry.id}"] }, `}controls: { disable: true } } } satisfies Meta<typeof ${component}>;\nexport default meta;\ntype Story = StoryObj<typeof meta>;\nexport const Default: Story = { name: "기본" };\nexport const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };\n`;
+      // New items register straight under 배포/ (no experimental stage since 2026-11-04).
+      await writeFile(path, source);
     }
   }
   const overviewFiles = { foundation: "Foundation", layout: "Layout", action: "Actions", input: "Inputs", navigation: "Navigation", "data-display": "DataDisplay", feedback: "Feedback", overlay: "Overlays", utility: "Infrastructure" };

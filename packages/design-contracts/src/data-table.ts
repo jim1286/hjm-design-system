@@ -32,8 +32,13 @@ export type DataTableColumnDescriptor<Key extends CollectionKey = CollectionKey>
   pinned?: "start";
 }>;
 
+/**
+ * Every table column centres its header and cells by default (2026-11-04 user decision for all HJM tables). Record tables
+ * hold mostly 1–2 digit counts under headers of very different length, so end-aligned numbers looked scattered under them.
+ * `align` stays for compatibility; new tables leave it unset.
+ */
 export const dataTableColumnDefaults = {
-  align: "start",
+  align: "center",
   sortable: false,
 } as const satisfies Readonly<{ align: DataTableAlign; sortable: boolean }>;
 

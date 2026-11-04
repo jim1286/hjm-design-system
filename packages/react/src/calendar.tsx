@@ -3,8 +3,8 @@
 import { useContext, useEffect, useId, useImperativeHandle, useRef, useState, type CSSProperties, type ReactNode, type Ref } from "react";
 import {
   calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor,
-  getCalendarNavigationIntent, getCalendarNavigationTarget,
-  type CalendarDescriptor, type CalendarSize, type CalendarNavigationIntent,
+  getCalendarNavigationIntent, getCalendarNavigationTarget, resolveCalendarVisibleRows, calendarFoldStep,
+  type CalendarDescriptor, type CalendarFold, type CalendarSize, type CalendarNavigationIntent,
   type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell,
 } from "@hjmds/design-contracts/components/calendar";
 import { classNames, useControllableState } from "./internal.js";
@@ -25,6 +25,10 @@ export type CalendarProps<Content = unknown> = Readonly<{
   onNavigateBeyondGrid?: (detail: CalendarOverflow, focusDate: CalendarHandle["focusDate"]) => void;
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
   size?: CalendarSize;
+  /** Shows one week with a handle that unfolds the month in place (see `CalendarFold`). */
+  fold?: CalendarFold;
+  /** `hidden` keeps the month label as the grid's accessible name without drawing it (same contract as Native). */
+  monthLabelVisibility?: "visible" | "hidden";
   autoFocus?: boolean;
   className?: string;
   ref?: Ref<CalendarHandle>;
@@ -34,7 +38,7 @@ export type CalendarProps<Content = unknown> = Readonly<{
 
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
 export function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth,
-  onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, layoutStyle, ref }: CalendarProps<Content>) {
+  onNavigateBeyondGrid, renderCellContent, size = "medium", fold, monthLabelVisibility = "visible", autoFocus = false, className, layoutStyle, ref }: CalendarProps<Content>) {
   validateCalendarDescriptor(descriptor);
   for (const action of [previousMonth, nextMonth]) {
     if (!action) continue;
@@ -49,6 +53,9 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     ...(descriptor.onSelectionChange ? { onChange: descriptor.onSelectionChange } : {}),
   });
   const cells = resolveCalendarGridDescriptor(descriptor.grid, selected, { composeAccessibleName });
+  if (fold && !fold.label.trim()) throw new TypeError("Calendar fold label must not be empty");
+  const visibleRows = resolveCalendarVisibleRows(cells, fold?.expanded ?? true);
+  const gridId = `hjm-calendar-grid-${useId()}`;
   const dates = cells.filter((cell): cell is ResolvedCalendarDateCell<Content> => !("filler" in cell));
   const initial = dates.find((cell) => cell.isSelected) ?? dates.find((cell) => cell.isToday) ?? dates[0];
   const [focused, setFocused] = useState(initial?.date);
@@ -74,20 +81,21 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     style={{ "--hjm-calendar-max-width": `${recipe.maxWidth}px`, ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
       "--hjm-calendar-indicator-size": `${recipe.sizes[size].indicatorDiameter}px`,
       "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
-      "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity } as CSSProperties}>
+      "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity, "--hjm-calendar-content-gap": `${recipe.day.contentGap}px`,
+    } as CSSProperties}>
     <div className="hjm-calendar__header">
       {previousMonth ? <button type="button" aria-label={previousMonth.label} disabled={!descriptor.onFocusedMonthChange}
         onClick={() => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous")}><Icon name={recipe.header.navIcon.previous} size={recipe.sizes[size].glyph} tone="secondary" decorative /></button> : <span />}
-      <strong id={titleId} aria-live="polite" aria-atomic="true">{descriptor.monthLabel}</strong>
+      <strong id={titleId} aria-live="polite" aria-atomic="true" className={monthLabelVisibility === "hidden" ? "hjm-visually-hidden" : undefined}>{descriptor.monthLabel}</strong>
       {nextMonth ? <button type="button" aria-label={nextMonth.label} disabled={!descriptor.onFocusedMonthChange}
         onClick={() => descriptor.onFocusedMonthChange?.(nextMonth.month, "next")}><Icon name={recipe.header.navIcon.next} size={recipe.sizes[size].glyph} tone="secondary" decorative /></button> : <span />}
     </div>
     <div className="hjm-calendar__viewport">
-      <div role="grid" aria-labelledby={titleId} className="hjm-calendar__grid">
+      <div role="grid" id={gridId} aria-labelledby={titleId} className="hjm-calendar__grid">
         <div role="row" className="hjm-calendar__week">
           {descriptor.grid.weekdayLabels.map((label, index) => <span role="columnheader" className="hjm-calendar__weekday" key={index}>{label}</span>)}
         </div>
-        {Array.from({ length: cells.length / 7 }, (_, row) => <div role="row" className="hjm-calendar__week" key={row}>
+        {visibleRows.map((row) => <div role="row" className="hjm-calendar__week" key={row}>
           {cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
             ? <span role="gridcell" aria-hidden="true" key={`filler-${column}`} />
             : (() => {
@@ -125,5 +133,32 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
         </div>)}
       </div>
     </div>
+    {fold ? <button type="button" className="hjm-calendar__fold" aria-label={fold.label} aria-expanded={fold.expanded} aria-controls={gridId}
+      onClick={() => fold.onExpandedChange(!fold.expanded)}><Icon name={fold.expanded ? recipe.fold.handle.icon.collapse : recipe.fold.handle.icon.expand} size={recipe.fold.handle.glyph} tone="secondary" decorative /></button> : null}
+  </div>;
+}
+
+export type CalendarFoldHeaderProps = Readonly<{
+  monthLabel: string;
+  expanded: boolean;
+  selectedDate: string;
+  focusedMonth: string;
+  labels: Readonly<{ previousWeek: string; nextWeek: string; previousMonth: string; nextMonth: string }>;
+  onSelectedDateChange(date: string): void;
+  onFocusedMonthChange(month: string): void;
+  className?: string;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/** ‹ month › for a folding Calendar placed in a host header; a week per step folded, a month unfolded (same as Native). */
+export function CalendarFoldHeader({ monthLabel, expanded, selectedDate, focusedMonth, labels, onSelectedDateChange, onFocusedMonthChange, className, layoutStyle }: CalendarFoldHeaderProps) {
+  const step = (direction: -1 | 1) => {
+    const next = calendarFoldStep({ expanded, selectedDate, focusedMonth }, direction);
+    if ("selectedDate" in next) onSelectedDateChange(next.selectedDate); else onFocusedMonthChange(next.focusedMonth);
+  };
+  return <div className={classNames("hjm-calendar__header hjm-calendar-fold-header", className)} style={layoutStyle}>
+    <button type="button" aria-label={expanded ? labels.previousMonth : labels.previousWeek} onClick={() => step(-1)}><Icon name={recipe.header.navIcon.previous} size={recipe.sizes.medium.glyph} tone="secondary" decorative /></button>
+    <strong aria-live="polite" aria-atomic="true">{monthLabel}</strong>
+    <button type="button" aria-label={expanded ? labels.nextMonth : labels.nextWeek} onClick={() => step(1)}><Icon name={recipe.header.navIcon.next} size={recipe.sizes.medium.glyph} tone="secondary" decorative /></button>
   </div>;
 }

@@ -41,6 +41,7 @@ export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAc
     if (x !== offset.current) scroll.current?.scrollTo({ x, animated: false });
   }
   function reveal(id: string) { revealFrame(frames.current.get(id)); }
+  const removable = (item: Item) => !!onRemove && isRemovable?.(item) !== false;
   if (!items.length && !hasLeading) return null;
   const controls = hasLeading ? <View onLayout={event => { leadingFrame.current = event.nativeEvent.layout; }}
     onFocus={() => { if (layout === "scroll") revealFrame(leadingFrame.current); }}
@@ -54,12 +55,14 @@ export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAc
       <Pressable accessibilityRole="button" accessibilityLabel={item.label} accessibilityHint={item.description} accessibilityState={{ disabled: !!item.disabled }}
         disabled={item.disabled} testID={testID ? `${testID}-${item.id}` : undefined} onPress={() => { if (!item.disabled) onAction(item); }}
         style={({ pressed }) => ({ ...(layout === "wrap" ? { flexShrink: 1 } : {}), flexDirection: "row", alignItems: "center", gap: metrics.gap,
-          minWidth: shortcutRailRecipe.actionMinWidth, minHeight: targetHeight, paddingHorizontal: metrics.paddingHorizontal,
+          minWidth: shortcutRailRecipe.actionMinWidth, minHeight: targetHeight, paddingStart: metrics.paddingHorizontal,
+          paddingEnd: removable(item) ? 0 : metrics.paddingHorizontal,
           borderRadius: tokens.radius[chipRecipe.radius], opacity: pressed ? chipRecipe.states.pressedOpacity : 1 })}>
         {renderLeading ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{renderLeading(item)}</View> : null}
         <Text fontRole="ui" variant={metrics.textVariant} style={{ ...(layout === "wrap" ? { flexShrink: 1, minWidth: 0 } : {}), color: content, fontWeight: chipRecipe.label.fontWeight }}>{item.label}</Text>
       </Pressable>
-      {onRemove && isRemovable?.(item) !== false ? <Pressable accessibilityRole="button" accessibilityLabel={removeLabel(item)} accessibilityState={{ disabled: !!item.disabled }}
+      {onRemove && removable(item) ? <Pressable accessibilityRole="button" accessibilityLabel={removeLabel(item)} accessibilityState={{ disabled: !!item.disabled }}
+        hitSlop={environment.direction === "rtl" ? { left: shortcutRailRecipe.removeHitSlop } : { right: shortcutRailRecipe.removeHitSlop }}
         disabled={item.disabled} testID={testID ? `${testID}-remove-${item.id}` : undefined} onPress={() => { if (!item.disabled) onRemove(item); }}
         style={({ pressed }) => ({ width: shortcutRailRecipe.removeWidth, minHeight: targetHeight, alignItems: "center", justifyContent: "center",
           borderRadius: tokens.radius[chipRecipe.radius], opacity: pressed ? chipRecipe.states.pressedOpacity : 1 })}>

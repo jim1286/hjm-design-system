@@ -52,7 +52,7 @@ import { DataTable } from "@hjmds/react/data-table";
 <DataTable
   columns={[
     { id: "name", header: t("orders.col.name"), sortable: true },
-    { id: "total", header: t("orders.col.total"), align: "end" },
+    { id: "total", header: t("orders.col.total") },
   ]}
   rows={orders.map((order) => ({ id: order.id }))}
   renderCell={(rowId, columnId) => cellFor(rowId, columnId)}
@@ -83,8 +83,8 @@ import {
 
 const columns = [
   { id: "name", header: t("record.col.player"), pinned: "start" as const },
-  { id: "avg", header: t("record.col.avg"), align: "end" as const, sortable: true, sortDescFirst: true },
-  { id: "era", header: t("record.col.era"), align: "end" as const, sortable: true },
+  { id: "avg", header: t("record.col.avg"), sortable: true, sortDescFirst: true },
+  { id: "era", header: t("record.col.era"), sortable: true },
 ];
 const [sort, setSort] = useState<DataTableSortState<string>>({ columnId: "avg", direction: "descending" });
 // 표시 문자열("0.340", "—")에서 정렬 키를 만들고, 빈 값은 방향과 상관없이 마지막이다.
@@ -117,7 +117,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | `selection` | `{ mode: "none" }` · `{ mode: "single", selectedKey: Key \| null, onSelectionChange: (key: Key \| null) => void, disallowEmptySelection? }` · `{ mode: "multiple", selectedKeys: ReadonlySet<Key>, onSelectionChange: (keys: ReadonlySet<Key>) => void }` | 없음(선택 열 없음) | Web만. 제어(`selectedKey(s)`) 대신 `defaultSelectedKey(s)`를 주면 비제어로 내부 상태가 유지된다 |
 | `asyncState` | `{ status: "idle" }` · `{ status: "loading" \| "loadingMore" \| "empty" \| "error", message: string }` | `{ status: "idle" }` | `error`는 `role="alert"`, 나머지는 `role="status"`로 표 위에 나온다 |
 | `density` | `regular` · `compact` | Provider 밀도 | 지정하지 않으면 Provider 밀도를 따른다(`comfortable` → `regular`) |
-| 열 `align` | `start` · `center` · `end` | `start` | 머리 칸과 본문 칸 모두에 적용 |
+| 열 `align` | `start` · `center` · `end` | `center` | 머리 칸과 본문 칸 모두에 적용. 2026-11-04부터 모든 열 가운데가 기본이며 새 표에서 지정하지 않는다(호환용으로 남김). 웹 `Table`도 같은 기본값 |
 | 열 `sortable` | `boolean` | `false` | — |
 | 열 `width` | 양수 px | — | 힌트 |
 | 열 `sortDescFirst` | `boolean` | `false` | 첫 누름이 내림차순(높은 값 먼저). 낮을수록 좋은 열(평균자책점·순위)은 끈다. 미게시(1.20.0 이후) |
@@ -141,15 +141,15 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | --- | --- | --- |
 | 크기 | 본문 폭을 채운다(표 `inline-size: 100%`). 선택 열 폭 `control.minTouchTarget` 44, 정렬 버튼·체크 상자 터치 영역 44 | `packages/react/src/styles.css` `.hjm-data-table*`, `src/data-table.ts` |
 | 간격 | 루트 세로 간격 `spacing.sm` 12. 셀 여백(`dataTableRecipe.density`): `regular` 세로 `spacing.sm` 12 · 가로 `spacing.md` 16, `compact` 세로 `spacing.xs` 8 · 가로 `spacing.sm` 12. `footer` 간격 `spacing.sm` 12 | `packages/react/src/styles.css` |
-| 순서·정렬 | 위에서 [상태 메시지] → 표 → [footer]. 선택 열은 맨 앞. 숫자·금액 열은 `align: "end"`로 끝 정렬하고 머리 행 정렬도 열 `align`을 따른다. 셀은 위 정렬. `footer`는 한 줄 flex(`space-between`, 넘치면 줄바꿈)이며 요약을 앞에, [Pagination](pagination.md)을 끝에 둔다 | `packages/react/src/data-table.tsx` |
+| 순서·정렬 | 위에서 [상태 메시지] → 표 → [footer]. 선택 열은 맨 앞. 머리 칸과 본문 칸은 글자·숫자 모두 가운데 정렬이다(`dataTableColumnDefaults.align`). 셀은 위 정렬. `footer`는 한 줄 flex(`space-between`, 넘치면 줄바꿈)이며 요약을 앞에, [Pagination](pagination.md)을 끝에 둔다 | `packages/react/src/data-table.tsx` |
 | 고정·스크롤 | `maxBodyHeight`를 주면 Web은 스크롤 상자(`max-block-size`, `overflow: auto`) 안에서 `thead`를 `sticky`로, Native는 머리글을 본문 밖에 두고 본문만 세로 `ScrollView`에 넣는다. 그 밖의 Web 표는 가로 스크롤 컨테이너를 그리지 않고 긴 글자를 줄바꿈한다. `pinned: "start"` 열은 `position: sticky`로 시작 쪽에 붙는다. Native는 고정 열을 제자리에 두고 나머지 열을 가로 `ScrollView`에 넣으며 스크롤 가장자리에 흐림을 둔다 | `packages/react/src/styles.css`, `react-native/src/data-table.tsx`, `splitPinnedDataTableColumns` |
 | 좁은 폭·큰 글자 | 열 비교가 목적인 기록 표는 열을 빼지 말고 이름 열을 `pinned: "start"`로 고정해 가로 스크롤로 보존한다. 행 하나가 하나의 항목이면 [List](list.md)로 바꾼다 | [계약](../../data-table.md#정렬-helper와-native-renderer--2026-10-14) |
 
 ```text
 ┌ DataTable ───────────────────────────────────────┐
 │ 불러오는 중…(asyncState 메시지, status/alert)     │
-│ ☐ │ 이름 ▲             │ 상태     │       합계 │ ← 머리 행
-│ ☐ │ …                  │ …        │     12,000 │
+│ ☐ │       이름 ▲       │   상태   │    합계    │ ← 머리 행
+│ ☐ │         …          │    …     │   12,000   │
 ├────────────────────────────────────────────────────┤
 │ 3개 선택됨               [‹ 1 2 3 ›] Pagination   │ ← footer
 └────────────────────────────────────────────────────┘
@@ -157,6 +157,10 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 
 ## 꼭 지킬 것
 
+- 열 정렬은 지정하지 않는다. 모든 표는 머리글과 본문을 가운데 정렬한다. 2026-11-04 사용자 결정: 기록 표는 1~2자리 횟수가
+  대부분인데 머리글 길이(「사구」~「도루실패」)가 달라, 끝 정렬한 숫자가 머리글 아래에서 들쭉날쭉해 보였다(오늘야구 최근 10경기).
+- 예외: 사진·배지와 이름을 함께 그리는 식별 열(선수·팀 이름 칸)만 `align: "start"`로 둔다. 가운데로 두면 이름 길이마다
+  시작 위치가 달라져 목록이 들쭉날쭉해진다(같은 날 오늘야구 박스스코어). 날짜·시즌처럼 글자만 있는 식별 열은 가운데다.
 - 열 `id`·행 `id`는 비어 있지 않고 중복이 없어야 한다. 열은 하나 이상. 어기면 렌더 중 `TypeError`가 난다.
 - `sortState`는 `sortable: true`인 열만 가리킨다. 아니면 `TypeError`.
 - `labels`의 모든 문구는 i18n 키로 만든다. `selectRow`는 행 `id`를 받으므로 사람이 읽을 이름으로 바꿔 돌려준다.

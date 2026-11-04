@@ -5,7 +5,7 @@ import { useContext, useImperativeHandle, useRef, useEffect, useState, type Reac
 import { AccessibilityInfo, Pressable, ScrollView, View, findNodeHandle } from "react-native";
 import {
   calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescriptor, resolveCalendarGridDescriptor,
-  type CalendarDescriptor, type CalendarSize, type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell,
+  resolveCalendarVisibleRows, calendarFoldStep, type CalendarDescriptor, type CalendarFold, type CalendarSize, type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell,
 } from "@hjmds/design-contracts/components/calendar";
 import { dateRangeRecipe } from "@hjmds/design-contracts/components/date-range";
 import { glyph } from "@hjmds/design-contracts/foundations";
@@ -27,6 +27,13 @@ export type CalendarProps<Content = unknown> = Readonly<{
   nextMonth?: CalendarMonthAction;
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
   size?: CalendarSize;
+  /** Shows one week with a handle that unfolds the month in place (see `CalendarFold`). */
+  fold?: CalendarFold;
+  /**
+   * `hidden` keeps the month label as the grid's accessible name but does not draw it, for hosts that already show the
+   * month in their own header (2026-11-04 오늘야구 games screen). Month buttons still draw when provided.
+   */
+  monthLabelVisibility?: "visible" | "hidden";
   ref?: Ref<CalendarHandle>;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -35,7 +42,7 @@ export type CalendarProps<Content = unknown> = Readonly<{
 
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth,
-  renderCellContent, size = "medium", ref, layoutStyle }: CalendarProps<Content>) {
+  renderCellContent, size = "medium", fold, monthLabelVisibility = "visible", ref, layoutStyle }: CalendarProps<Content>) {
   validateCalendarDescriptor(descriptor);
   for (const action of [previousMonth, nextMonth]) {
     if (!action) continue;
@@ -50,6 +57,8 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     ...(descriptor.onSelectionChange ? { onChange: descriptor.onSelectionChange } : {}),
   });
   const cells = resolveCalendarGridDescriptor(descriptor.grid, selected, { composeAccessibleName });
+  if (fold && !fold.label.trim()) throw new TypeError("Calendar fold label must not be empty");
+  const visibleRows = resolveCalendarVisibleRows(cells, fold?.expanded ?? true);
   const targets = useRef(new Map<string, ComponentRef<typeof View>>());
   const pending = useRef<string | undefined>(undefined);
   const [request, setRequest] = useState(0);
@@ -78,12 +87,13 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
           color={resolveColorReference(recipe.header.navButton.color, palette)} />
       </Pressable> : <View accessible={false} style={minimumTargetStyle} />;
   return <View style={[{ maxWidth: recipe.maxWidth, width: "100%" }, layoutStyle, { gap: recipe.header.gap, direction: environment.direction }]}>
-    <View style={{ flexDirection: "row", alignItems: "center", gap: recipe.header.gap }}>
+    {monthLabelVisibility === "visible" || previousMonth || nextMonth ? <View style={{ flexDirection: "row", alignItems: "center", gap: recipe.header.gap }}>
       {nav(previousMonth, "previous")}
-      <Text accessibilityRole="header" accessibilityLiveRegion="polite" variant={recipe.header.monthLabel.textVariant}
+      {monthLabelVisibility === "visible" ? <Text accessibilityRole="header" accessibilityLiveRegion="polite" variant={recipe.header.monthLabel.textVariant}
         emphasis="strong" align="center" style={{ flex: 1 }}>{descriptor.monthLabel}</Text>
+        : <View accessible accessibilityLabel={descriptor.monthLabel} accessibilityLiveRegion="polite" style={{ flex: 1 }} />}
       {nav(nextMonth, "next")}
-    </View>
+    </View> : null}
     {/* Horizontal overflow preserves all seven minimum-sized targets on narrow hosts. */}
     <ScrollView horizontal contentContainerStyle={{ flexGrow: 1 }}>
       <View style={{ flex: 1, minWidth: diameter * 7 }}>
@@ -91,7 +101,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
           {descriptor.grid.weekdayLabels.map((label, index) => <Text key={index} accessible={false} align="center" tone="muted"
             variant={recipe.weekdayLabel.textVariant} style={columnStyle}>{label}</Text>)}
         </View>
-        {Array.from({ length: cells.length / 7 }, (_, row) => <View key={row} style={{ flexDirection: "row" }}>
+        {visibleRows.map((row) => <View key={row} style={{ flexDirection: "row" }}>
           {cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
             ? <View accessible={false} key={`filler-${column}`} style={{ ...columnStyle, minHeight: diameter }} />
             : (() => {
@@ -103,7 +113,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
               {...webOnly({ "aria-pressed": filled, "aria-disabled": !cell.selectable })}
               accessibilityState={{ selected: filled, disabled: !cell.selectable }}
               onPress={() => { if (cell.selectable) setSelected(cell.date); }}
-              style={{ ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
+              style={{ ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start", gap: recipe.day.contentGap,
                 borderRadius: diameter / 2,
                 opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }}>
               {range && range.band !== "none" ? <View accessible={false} pointerEvents="none" style={{
@@ -124,5 +134,43 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
         </View>)}
       </View>
     </ScrollView>
+    {fold ? <Pressable accessibilityRole="button" accessibilityLabel={fold.label} accessibilityState={{ expanded: fold.expanded }}
+      {...webOnly({ "aria-expanded": fold.expanded })} onPress={() => fold.onExpandedChange(!fold.expanded)}
+      style={{ alignSelf: "center", minWidth: recipe.fold.handle.touchTarget, minHeight: recipe.fold.handle.touchTarget / 2, alignItems: "center", justifyContent: "center" }}>
+      <DrawnChevron direction={fold.expanded ? "up" : "down"} size={glyph[recipe.fold.handle.glyph]} color={resolveColorReference(recipe.fold.handle.color, palette)} />
+    </Pressable> : null}
+  </View>;
+}
+
+export type CalendarFoldHeaderProps = Readonly<{
+  monthLabel: string;
+  expanded: boolean;
+  selectedDate: string;
+  focusedMonth: string;
+  labels: Readonly<{ previousWeek: string; nextWeek: string; previousMonth: string; nextMonth: string }>;
+  onSelectedDateChange(date: string): void;
+  onFocusedMonthChange(month: string): void;
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
+
+/**
+ * ‹ month › for a folding Calendar that a host places in its own header line (2026-11-04 오늘야구 games screen keeps
+ * it in the top bar). The arrows step a week while folded and a month while unfolded (`calendarFoldStep`).
+ */
+export function CalendarFoldHeader({ monthLabel, expanded, selectedDate, focusedMonth, labels, onSelectedDateChange, onFocusedMonthChange, layoutStyle }: CalendarFoldHeaderProps) {
+  const { palette, environment } = useHjmNativeTheme();
+  const step = (direction: -1 | 1) => {
+    const next = calendarFoldStep({ expanded, selectedDate, focusedMonth }, direction);
+    if ("selectedDate" in next) onSelectedDateChange(next.selectedDate); else onFocusedMonthChange(next.focusedMonth);
+  };
+  const arrow = (direction: -1 | 1) => <Pressable accessibilityRole="button"
+    accessibilityLabel={expanded ? direction < 0 ? labels.previousMonth : labels.nextMonth : direction < 0 ? labels.previousWeek : labels.nextWeek}
+    onPress={() => step(direction)} style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}>
+    <DrawnChevron direction={direction < 0 ? "start" : "end"} size={glyph[recipe.sizes.medium.glyph]} color={resolveColorReference(recipe.header.navButton.color, palette)} />
+  </Pressable>;
+  return <View style={[{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: recipe.header.gap, direction: environment.direction }, layoutStyle]}>
+    {arrow(-1)}
+    <Text accessibilityRole="header" accessibilityLiveRegion="polite" variant={recipe.header.monthLabel.textVariant} emphasis="strong" align="center">{monthLabel}</Text>
+    {arrow(1)}
   </View>;
 }

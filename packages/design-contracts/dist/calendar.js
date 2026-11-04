@@ -261,6 +261,9 @@ export const calendarRecipe = {
     },
     day: {
         radius: "full",
+        // Space between the date circle and product content (dots, results). Native drew content flush against a
+        // selected circle while Web already used this gap (2026-11-04 오늘야구 games screen).
+        contentGap: spacing.xxs,
         label: { color: semanticColors.content.body, numericVariant: "tabular" },
         outsideFocusedMonthOpacity: opacity.muted,
         disabledOpacity: opacity.disabled,
@@ -271,7 +274,58 @@ export const calendarRecipe = {
         },
         focus: focusIndicatorContract,
     },
+    /**
+     * Folded calendar (2026-11-04, 오늘야구 games screen): one week row with a handle under it that unfolds the month in
+     * place. The handle is a chevron pointing where the grid will go (down folded, up unfolded): a plain grab bar did not
+     * say it opens anything (same-day user request). It keeps the full touch target.
+     */
+    fold: {
+        handle: { icon: { expand: "chevronDown", collapse: "chevronUp" }, glyph: "md", color: semanticColors.content.secondary, touchTarget: control.minTouchTarget },
+    },
 };
+/** Row indexes of a grid to draw: all unfolded; folded, the week of the selected date, then today, then the first date. */
+function visibleRowIndexes(cells, { expanded, selectedDate, todayDate }) {
+    const rows = Array.from({ length: Math.ceil(cells.length / GRID_COLUMNS) }, (_, index) => index);
+    if (expanded)
+        return rows;
+    const index = [selectedDate, todayDate].map((date) => date ? cells.findIndex((cell) => cell.date === date) : -1).find((found) => found >= 0)
+        ?? cells.findIndex((cell) => cell.date !== undefined);
+    return index >= 0 ? [Math.floor(index / GRID_COLUMNS)] : rows.slice(0, 1);
+}
+/**
+ * The week rows a calendar shows: every row when unfolded, otherwise the row holding the selected date, then today,
+ * then the first date of the grid (2026-11-04).
+ */
+export function resolveCalendarVisibleRows(cells, expanded) {
+    const dated = cells.filter((cell) => !("filler" in cell));
+    return visibleRowIndexes(cells.map((cell) => "filler" in cell ? {} : { date: cell.date }), {
+        expanded, selectedDate: dated.find((cell) => cell.isSelected)?.date ?? null, todayDate: dated.find((cell) => cell.isToday)?.date ?? "",
+    });
+}
+/**
+ * First and last date the calendar will draw, so a product loads exactly that (2026-11-04: 오늘야구 asked for a six-week
+ * grid, past its range API's 31-day limit, and lost every game dot). Folded, that is one week, which may cross into the
+ * adjacent month when its cells come from `createCalendarMonthCells(..., { outsideMonth: "adjacent" })`.
+ */
+export function calendarVisibleDateRange(cells, view) {
+    const dates = visibleRowIndexes(cells, view)
+        .flatMap((row) => cells.slice(row * GRID_COLUMNS, row * GRID_COLUMNS + GRID_COLUMNS))
+        .flatMap((cell) => cell.date ? [cell.date] : []);
+    return dates.length ? { from: dates[0], to: dates[dates.length - 1] } : null;
+}
+/**
+ * The header arrows of a folding calendar move one week while folded (the selected date) and one month while unfolded
+ * (the focused month), so the folded week never jumps a whole month (2026-11-04 오늘야구 games screen).
+ */
+export function calendarFoldStep(view, direction) {
+    assertIsoCalendarDate(view.selectedDate, "selectedDate");
+    assertIsoCalendarMonth(view.focusedMonth, "focusedMonth");
+    if (view.expanded) {
+        const [year, month] = view.focusedMonth.split("-").map(Number);
+        return { focusedMonth: new Date(Date.UTC(year, month - 1 + direction, 1)).toISOString().slice(0, 7) };
+    }
+    return { selectedDate: new Date(Date.parse(`${view.selectedDate}T00:00:00Z`) + direction * 7 * 86_400_000).toISOString().slice(0, 10) };
+}
 /**
  * Calendar is `shared`, not `adaptive`: the grid is always visible inline
  * (no popup/Sheet choice to make). Web gets `grid` role + roving-tabindex
