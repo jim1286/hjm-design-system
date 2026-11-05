@@ -650,7 +650,7 @@
     "lucide": "1.49.0"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=2.5.0 <2.6.0",
+    "@hjmds/design-contracts": ">=2.6.0 <2.7.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",
