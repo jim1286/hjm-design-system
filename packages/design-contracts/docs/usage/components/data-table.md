@@ -106,7 +106,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `columns` | `{ id, header: string, align?, sortable?, width?, sortDescFirst?, pinned? }[]` | — (필수, 하나 이상) | `id`는 비어 있지 않고 중복 없음 |
+| `columns` | `{ id, header: string, align?, sortable?, width?, sortDescFirst?, pinned?, headerVisibility? }[]` | — (필수, 하나 이상) | `id`는 비어 있지 않고 중복 없음. `header`는 숨겨도 필수(접근 이름) |
 | `rows` | `{ id, disabled? }[]` | — (필수) | 셀 내용은 `renderCell`이 그린다 |
 | `renderCell` | `(rowId: RowKey, columnId: ColumnKey) => ReactNode` | — (필수) | 행·열 id로 셀을 그린다 |
 | `getCellText` | `(rowId, columnId) => string \| undefined` | 없음 | 미게시. 사진·아이콘 등을 포함한 셀의 읽기용 값. Native 행 이름과 Web 셀 이름에 사용한다. 생략한 문자열·숫자 셀은 기존 표시 텍스트를 읽는다 |
@@ -121,6 +121,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | 열 `sortable` | `boolean` | `false` | — |
 | 열 `width` | 양수 px | — | 힌트 |
 | 열 `sortDescFirst` | `boolean` | `false` | 첫 누름이 내림차순(높은 값 먼저). 낮을수록 좋은 열(평균자책점·순위)은 끈다. 미게시(1.20.0 이후) |
+| 열 `headerVisibility` | `visible` · `hidden` | `visible` | `hidden`이면 머리글 글자를 그리지 않고 `header`를 열의 접근 이름으로만 쓴다. 셀이 스스로 무엇인지 말하는 열(선수 사진+이름)에 쓴다. 2.7.0, 2026-11-05 오늘야구 타자/투수 머리글 제거 요청 |
 | 열 `pinned` | `"start"` | — | 가로 스크롤 중에도 보이는 열. 시작 쪽에서 끊기지 않고 이어진 열만 고정된다. 미게시(1.20.0 이후) |
 | `summaryRow` | `(columnId: ColumnKey) => ReactNode` | — | 표 끝 합계·평균 행(Web `tfoot`). 값 계산·문구는 제품. 미게시(1.20.0 이후) |
 | `onRowPress`(Native) | `(rowId: RowKey) => void` | — | 행 누름. 미게시(1.20.0 이후) |

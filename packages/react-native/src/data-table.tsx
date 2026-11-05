@@ -113,14 +113,14 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const logicalAlign = column.align ?? dataTableColumnDefaults.align;
     // The sort mark is a Lucide arrow after the header text; the row follows the inherited table direction.
     const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xxs, justifyContent: logicalAlign === "center" ? "center" : logicalAlign === "end" ? "flex-end" : "flex-start" }}>
-      <NativeText numberOfLines={1} style={{ flexShrink: 1, color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(logicalAlign, direction) }}>{column.header}</NativeText>
+      {column.headerVisibility === "hidden" ? null : <NativeText numberOfLines={1} style={{ flexShrink: 1, color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(logicalAlign, direction) }}>{column.header}</NativeText>}
       {active ? <LucideGlyph icon={active === "ascending" ? ArrowUp : ArrowDown} size={glyph.xs} color={textColor} /> : null}
     </View>;
     const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
     return sortable && onSortChange
       ? <Pressable key={column.id} accessibilityRole="button" accessibilityLabel={labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null)}
           hitSlop={4} onPress={() => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column)))} style={style}>{content}</Pressable>
-      : <View key={column.id} accessibilityRole="header" style={style}>{content}</View>;
+      : <View key={column.id} accessibilityRole="header" accessibilityLabel={column.header} style={style}>{content}</View>;
   }
   const heatBase = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
   function cell(node: ReactNode, column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean, emphasis: boolean, key: string, decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null = null, indent = 0) {
@@ -214,7 +214,8 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
         const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
           .filter((value): value is string | number => typeof value === "string" || typeof value === "number");
         return <View key={column.id} style={{ flexShrink: 0 }}>
-          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }}>{column.header}</NativeText>
+          {/* A hidden header reserves no width; its cells alone size the column. */}
+          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }}>{column.headerVisibility === "hidden" ? "" : column.header}</NativeText>
           <NativeText onLayout={event => measure(`${column.id}:body`, event.nativeEvent.layout.width)} style={{ fontSize: 14, fontWeight: dataTableFamilyRecipe.tone.leader.fontWeight, fontVariant: ["tabular-nums"], flexShrink: 0 }}>{values.join("\n")}</NativeText>
         </View>;
       })}</View>

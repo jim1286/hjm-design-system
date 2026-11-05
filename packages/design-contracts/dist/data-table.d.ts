@@ -3,8 +3,14 @@ import { type TextVariant } from "./foundations.js";
 export type DataTableAlign = "start" | "center" | "end";
 export type DataTableColumnDescriptor<Key extends CollectionKey = CollectionKey> = Readonly<{
     id: Key;
-    /** Visible column header text; also the columnheader's accessible name. */
+    /** Column header text; also the columnheader's accessible name. */
     header: string;
+    /**
+     * `hidden` keeps `header` as the accessible name but draws no header text, for a column whose cells already say what
+     * they are (a player portrait + name column). Added 2026-11-05 when 오늘야구 removed its 타자/투수 header words;
+     * the accessible name stays required, so an empty header is still rejected.
+     */
+    headerVisibility?: "visible" | "hidden";
     align?: DataTableAlign;
     sortable?: boolean;
     /** Layout hint only (px or flex-basis); renderers may ignore or clamp it. */

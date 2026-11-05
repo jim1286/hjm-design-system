@@ -296,7 +296,7 @@ export const DataTable = forwardRef(function DataTable<
                       // `sortDescFirst` columns (stat tables: highest first) start descending.
                       onSort={() => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column)))}
                     />
-                  ) : column.header}
+                  ) : column.headerVisibility === "hidden" ? <span className="hjm-visually-hidden">{column.header}</span> : column.header}
                 </th>
               );
             })}

@@ -92,3 +92,14 @@ it.each([true, false])("names rich-cell rows once and preserves activation, pinn
     }
   } finally { act(() => tree.unmount()); }
 });
+
+it("hides a header visually but keeps it as the column's accessible name", () => {
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><DataTable columns={[{ id: "name", header: "선수", headerVisibility: "hidden", pinned: "start" as const }, { id: "avg", header: "타율" }]} rows={[{ id: "a" }]}
+    labels={{ table: "타율", sortColumn: header => header }} renderCell={(row, column) => data[row]![column]!} /></HjmNativeProvider>); });
+  try {
+    const header = tree.root.find(n => typeof n.type === "string" && n.props.accessibilityRole === "header" && n.props.accessibilityLabel === "선수");
+    expect(header.findAll(n => n.props.children === "선수")).toHaveLength(0);
+    expect(tree.root.findAll(n => typeof n.type === "string" && n.props.accessibilityRole === "header" && n.props.accessibilityLabel === "타율")).toHaveLength(1);
+  } finally { act(() => tree.unmount()); }
+});
