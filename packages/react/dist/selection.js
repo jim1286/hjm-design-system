@@ -4,6 +4,8 @@ import { Grid } from "./layout.js";
 import { Button } from "./actions.js";
 import { useDesignProfileDefaults } from "./internal.js";
 import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
+import { Check } from "lucide";
+import { CheckGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useLayoutEffect, useId, useRef, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
@@ -20,7 +22,7 @@ export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults
                     selected: true,
                     color: "currentColor",
                     size: iconRecipe.sizes[chipRecipe.selectionIndicator.glyph],
-                }) ?? "✓" })) : null, leading === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__leading", children: leading }), _jsx("span", { className: "hjm-chip__label", children: label }), trailing === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__trailing", children: trailing })] }));
+                }) ?? _jsx(LucideGlyph, { node: Check }) })) : null, leading === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__leading", children: leading }), _jsx("span", { className: "hjm-chip__label", children: label }), trailing === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__trailing", children: trailing })] }));
 });
 export const Checkbox = forwardRef(function Checkbox({ label, description, checked: checkedProp, defaultChecked = false, indeterminate = false, onCheckedChange, onChange, disabled, readOnly = false, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, renderLeading, className, onClick, layoutStyle, ...props }, forwardedRef) {
     const [checked, setChecked] = useControllableState({
@@ -43,7 +45,7 @@ export const Checkbox = forwardRef(function Checkbox({ label, description, check
                     if (!readOnly)
                         setChecked(event.currentTarget.checked);
                     onChange?.(event);
-                } }), _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true" }), renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading({
+                } }), _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true", children: _jsx(CheckGlyph, { state: indeterminate ? "mixed" : checked }) }), renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading({
                     selected,
                     color: "currentColor",
                     size: leadingSize,
@@ -121,7 +123,7 @@ function CheckboxGroupInner({ items, label, accessibilityLabel, description, err
                                     if (!readOnly) {
                                         setValue(toggleCheckboxSelection(items, reconciledValue, item.id));
                                     }
-                                }, onClick: readOnly ? (event) => event.preventDefault() : undefined }), _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true" }), renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading(item, {
+                                }, onClick: readOnly ? (event) => event.preventDefault() : undefined }), _jsx("span", { className: "hjm-choice__indicator", "aria-hidden": "true", children: _jsx(CheckGlyph, { state: checked }) }), renderLeading ? (_jsx("span", { className: "hjm-choice__leading", "aria-hidden": "true", children: renderLeading(item, {
                                     selected: checked,
                                     color: "currentColor",
                                     size: iconRecipe.sizes[selectionControlRecipe.leading.size],

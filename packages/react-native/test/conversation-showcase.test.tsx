@@ -8,7 +8,7 @@ import { ChatMessage, MessageComposer, NotificationItem } from '@hjmds/react-nat
 import { ChatMessagePreview, ComposerPreview, NotificationItemPreview } from '../../../showcase/native/src/conversation-previews';
 // Photo pixels are outside these composer callback/lifecycle tests.
 vi.mock('../../../showcase/native/src/reference-screen-parts',()=>({PreviewPhoto:()=>null}));
-vi.mock('react-native-svg',async()=>{const {View}=await import('react-native');return {default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
+vi.mock('react-native-svg',async (importOriginal) => {const {View}=await import('react-native');return { ...(await importOriginal<Record<string, unknown>>()),default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
 vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({top:0,bottom:0,left:0,right:0})}));
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;afterEach(()=>{if(tree)act(()=>tree.unmount());});

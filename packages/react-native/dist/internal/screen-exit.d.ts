@@ -6,6 +6,6 @@ export type ScreenExit = Readonly<{
     onPress(): void;
     disabled?: boolean;
 }>;
-/** Drawn chevron/cross so back and close look identical on every platform and font. */
+/** Lucide chevron/X so back and close look identical on every platform and font; back mirrors with the reading direction. */
 export declare function ScreenExitButton({ kind, label, onPress, disabled }: ScreenExit): import("react").JSX.Element;
 //# sourceMappingURL=screen-exit.d.ts.map

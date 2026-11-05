@@ -33,6 +33,8 @@ import {
 } from "react";
 import { classNames, composeRefs } from "./internal.js";
 import { getModalLayer, HjmPortal, renderTrigger, useModalFocus, type OverlayTrigger } from "./modal.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 type ResultSection<Key extends string> = Readonly<{
   id: string;
@@ -254,7 +256,7 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
                   aria-label={descriptor.closeLabel}
                   onClick={() => requestClose("close-action")}
                 >
-                  <span aria-hidden="true">×</span>
+                  <LucideGlyph node={X} />
                 </button>
               </div>
             ) : searchInput}

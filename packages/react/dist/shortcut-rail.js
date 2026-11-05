@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef } from "react";
 import { chipRecipe } from "@hjmds/design-contracts/recipes";
 import { shortcutRailRecipe, validateShortcutRail } from "@hjmds/design-contracts/shortcut-rail";
 import { classNames } from "./internal.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, renderLeading, layoutStyle, className, style, ...props }) {
     validateShortcutRail(items, label, layout);
     const root = useRef(null), leadingRoot = useRef(null), buttons = useRef(new Map());
@@ -32,6 +34,6 @@ export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, re
                             if (event.currentTarget === document.activeElement)
                                 pending.current = { removed: item.id, index };
                             onRemove(item);
-                        }, children: _jsx("span", { "aria-hidden": "true", children: removeIcon ?? "×" }) }) : null] }, item.id))] });
+                        }, children: _jsx("span", { "aria-hidden": "true", children: removeIcon ?? _jsx(LucideGlyph, { node: X }) }) }) : null] }, item.id))] });
 }
 //# sourceMappingURL=shortcut-rail.js.map

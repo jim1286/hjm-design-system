@@ -15,7 +15,8 @@ export { ImageViewerTrigger, type ImageViewerTriggerProps } from "./internal/ima
 export { CircularPhotoCropper, type CircularPhotoCropperProps } from "./internal/circular-photo-cropper.js";
 import { createAttachedPhoto, createPhotoAttachmentField } from "./internal/photo-attachment.js";
 import { Surface, Text } from "./primitives.js";
-import { DrawnChevron, DrawnClose } from "./internal/drawn-glyphs.js";
+import X from "lucide-react-native/icons/x";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
@@ -173,7 +174,7 @@ function ImageViewerSession(props: ImageViewerProps) {
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
         <Animated.View style={[{ ...controlInsets, flexDirection: "row", justifyContent: "flex-start" }, chromeStyle]}>
-          <IconButton label={props.closeLabel} tone="ghost" onPress={props.onClose}><DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton>
+          <IconButton label={props.closeLabel} tone="ghost" onPress={props.onClose}><LucideGlyph icon={X} size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton>
           {props.actions ? <View style={{ flex: 1, alignItems: "flex-end" }}>{props.actions}</View> : null}
         </Animated.View>
         {props.inspection ? <View style={controlInsets}><SegmentedControl label={props.inspection.labels.mode}
@@ -201,12 +202,12 @@ function ImageViewerSession(props: ImageViewerProps) {
         </View>}
         {/* Gallery navigation is neutral chrome, not three stacked primary actions (BurnTok image QA, 2026-10-20). */}
         <Animated.View style={[{ flexDirection: "row", alignItems: "center", gap: theme.tokens.spacing.sm, ...controlInsets, paddingTop: theme.tokens.spacing.sm }, chromeStyle]}>
-          {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}><DrawnChevron direction="start" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
+          {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}><ChevronGlyph direction="start" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text variant="caption" align="center" numberOfLines={2} accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
             {props.items.length > 1 ? <Text variant="caption" tone="muted" numeric="tabular" align="center">{`${currentIndex + 1}/${props.items.length}`}</Text> : null}
           </View>
-          {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}><DrawnChevron direction="end" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
+          {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}><ChevronGlyph direction="end" size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={theme.colors.text} /></IconButton> : null}
         </Animated.View>
       </View>
     </GestureHandlerRootView>

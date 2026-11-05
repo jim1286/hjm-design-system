@@ -12,7 +12,8 @@ import { Button, IconButton } from "./actions.js";
 import { EmptyState, Notice } from "./feedback.js";
 import { ImageChoiceGroup } from "./image-choice.js";
 import { SearchField } from "./inputs.js";
-import { DrawnRefresh } from "./internal/drawn-glyphs.js";
+import RefreshCw from "lucide-react-native/icons/refresh-cw";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { Spinner } from "./internal/spinner.js";
 import { Sheet } from "./overlays.js";
 import { Stack, Text } from "./primitives.js";
@@ -217,7 +218,7 @@ export function ShareSheet({
           onValueChange={remoteSearch ? recipients.search!.onQueryChange! : setLocalQuery} />
         {status === "error" ? <Notice tone="danger" announcement="polite" title={recipients.labels.loadFailed} {...(recipients.onRetry ? { action:
           <IconButton label={recipients.labels.retry} tone="secondary" size="small" loading={recipients.retrying === true} onPress={recipients.onRetry}>
-            <DrawnRefresh size={glyph[iconButtonRecipe.sizes.small.glyph]} color={colors.text} />
+            <LucideGlyph icon={RefreshCw} size={glyph[iconButtonRecipe.sizes.small.glyph]} color={colors.text} />
           </IconButton> } : {})} />
           : status === "loading" ? <Spinner label={recipients.labels.loading} />
           : visible.length === 0 ? <EmptyState density="compact" title={query.trim() ? recipients.labels.noResults : recipients.labels.empty} />

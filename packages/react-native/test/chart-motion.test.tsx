@@ -1,14 +1,14 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const React = await import("react");
   const { View } = await import("react-native");
   const Path = React.forwardRef((props: Record<string, unknown>, ref) => {
     React.useImperativeHandle(ref, () => ({ setNativeProps: (next: unknown) => updates.push(next) }), []);
     return React.createElement(View, props);
   });
-  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path, Rect: Path, Stop: View, Text: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path, Rect: Path, Stop: View, Text: View };
 });
 const updates: unknown[] = [];
 import { BarChart, LineChart } from "../src/chart.js";

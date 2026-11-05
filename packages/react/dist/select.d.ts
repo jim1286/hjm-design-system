@@ -72,7 +72,7 @@ type SelectBaseProps<Key extends string> = Omit<ButtonHTMLAttributes<HTMLButtonE
     renderOptionLeading?: (item: SelectItemDescriptor<Key>, appearance: SelectOptionLeadingRenderProps) => ReactNode;
     /**
      * `multiple` keeps the listbox open and toggles each committed option; the trigger lists every chosen label.
-     * Same contract as Native (2026-11-04, 오늘야구 metric charts pick any number of stats in one field).
+     * Same contract as Native (2026-11-04, a baseball app's metric charts pick any number of stats in one field).
      */
     selectionMode?: SelectSelectionMode;
     selectedKeys?: ReadonlySet<Key>;

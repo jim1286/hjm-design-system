@@ -1,6 +1,6 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Path: View, Circle: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Path: View, Circle: View }; });
 import { ToggleFeedbackButton } from "../src/toggle-feedback.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Button } from "../src/actions.js";

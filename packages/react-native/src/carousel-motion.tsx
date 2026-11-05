@@ -8,7 +8,7 @@ import { glyph, motion as timing } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 /** Fraction of a slide past which a slow release still pages (platform paging uses half). */
@@ -75,15 +75,15 @@ export function CarouselMotion(props: CarouselMotionProps) {
       onSnapToItem={next => { const slide = props.slides[next]; if (slide && slide.id !== props.currentKey) props.onCurrentKeyChange(slide.id); }}
       renderItem={({ item, index: i }) => <View accessibilityLabel={resolved[i]!.accessibleName} accessibilityElementsHidden={resolved[i]!.inert} importantForAccessibility={i === index ? "auto" : "no-hide-descendants"}
         pointerEvents={i === index ? "auto" : "none"}>{props.renderSlide(item)}</View>} />
-    {/* Tool actions: icon buttons named by the localized labels, matching Carousel and CollectionRail. Drawn
-        chevrons mirror with the reading direction (2026-10-17 composition review). */}
+    {/* Tool actions: icon buttons named by the localized labels, matching Carousel and CollectionRail. Lucide
+        chevrons follow the reading direction (2026-10-17 composition review). */}
     {props.navigation === "counter" ? <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><ChevronGlyph direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
       <Text align="center" variant="caption" accessibilityLiveRegion="polite">{index + 1}/{props.slides.length}</Text>
-      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><ChevronGlyph direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
     </View> : <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }}>
-      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
-      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onPress={() => pageBy(-1)}><ChevronGlyph direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.slides.length - 1} onPress={() => pageBy(1)}><ChevronGlyph direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
     </View>}
   </View>;
 }

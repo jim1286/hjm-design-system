@@ -1,10 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveStepsDescriptor, stepsDefaults, stepsRecipe, validateStepsPresentation, } from "@hjmds/design-contracts/components/steps";
-import { opacity as controlOpacity } from "@hjmds/design-contracts/foundations";
+import { opacity as controlOpacity, glyph } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, View } from "react-native";
+import Check from "lucide-react-native/icons/check";
+import X from "lucide-react-native/icons/x";
 import { Text } from "./primitives.js";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 function StepMark({ status, position, renderMark }) {
     const { colors, environment, palette } = useHjmNativeTheme();
@@ -26,7 +29,13 @@ function StepMark({ status, position, renderMark }) {
     const size = renderMark ? indicator.customSize : indicator.size;
     return _jsxs(Animated.View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { opacity, width: size, height: size, alignItems: "center", justifyContent: "center",
             borderRadius: size / 2, borderWidth: status === "error" ? indicator.activeBorderWidth : indicator.borderWidth,
-            borderColor: color(indicator.border[status]), backgroundColor: renderMark || indicator.background[status] === null ? colors.bg : color(indicator.background[status]) }, children: [status === "current" ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: -4, bottom: -4, left: -4, right: -4, borderWidth: 1, borderColor: colors.border, borderRadius: size } }) : null, renderMark?.(status, position) ?? _jsx(Text, { align: "center", emphasis: "medium", style: { color: renderMark ? colors.text : color(indicator.content[status]) }, variant: "label", children: status === "complete" ? "✓" : status === "error" ? "!" : position })] });
+            borderColor: color(indicator.border[status]), backgroundColor: renderMark || indicator.background[status] === null ? colors.bg : color(indicator.background[status]) }, children: [status === "current" ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: -4, bottom: -4, left: -4, right: -4, borderWidth: 1, borderColor: colors.border, borderRadius: size } }) : null, renderMark?.(status, position) ?? (status === "complete"
+                ? _jsx(LucideGlyph, { icon: Check, size: glyph.sm, color: renderMark ? colors.text : color(indicator.content[status]) })
+                // Lucide has no bare exclamation mark (framed alerts would double the indicator ring), so an error step shows
+                // Lucide X like Web; the position is copy, not artwork.
+                : status === "error"
+                    ? _jsx(LucideGlyph, { icon: X, size: glyph.sm, color: color(indicator.content[status]) })
+                    : _jsx(Text, { align: "center", emphasis: "medium", style: { color: renderMark ? colors.text : color(indicator.content[status]) }, variant: "label", children: position }))] });
 }
 /** All presentations share one resolver: changing the layout never skips form validation. */
 export function Steps({ descriptor, statusLabels, composeAccessibleName, presentation = stepsDefaults.presentation, overviewLabel, renderStepContent, renderMark, onStepPress, layoutStyle }) {
@@ -58,6 +67,6 @@ export function Steps({ descriptor, statusLabels, composeAccessibleName, present
             return _jsxs(View, { style: cell, children: [vertical && !terminal ? _jsx(View, { pointerEvents: "none", style: { position: "absolute", start: size / 2, top: size, bottom: 0, width: 1, backgroundColor: colors.border } }) : null, canPress ? _jsx(Pressable, { accessibilityRole: "button", accessibilityState: { selected }, accessibilityLabel: step.accessibleName, accessibilityHint: step.statusLabel, onPress: () => onStepPress(step.id), style: ({ pressed }) => [headerStyle, { opacity: pressed ? controlOpacity.pressed : 1 }], children: content })
                         : _jsx(View, { accessible: true, accessibilityLabel: step.accessibleName, accessibilityHint: step.statusLabel, style: headerStyle, children: content }), presentation === "vertical" && cursor && renderStepContent ? _jsx(View, { style: { marginStart: size + tokens.spacing.md, paddingVertical: tokens.spacing.sm }, children: renderStepContent(step.id) }) : null] }, step.id);
         }) });
-    return _jsxs(View, { style: [{ direction: environment.direction }, layoutStyle], children: [compact ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: tokens.spacing.sm, marginBottom: tokens.spacing.xs }, children: [_jsxs(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flex: 1 }, children: [_jsxs(Text, { variant: "label", children: [current.position, " / ", current.total, " \u00B7 ", current.label] }), _jsx(Text, { variant: "caption", tone: "muted", children: current.statusLabel })] }), _jsx(Pressable, { accessibilityRole: "button", accessibilityState: { expanded }, accessibilityLabel: overviewLabel, onPress: () => setExpanded(value => !value), style: ({ pressed }) => ({ minHeight: stepsRecipe.press.minTouchTarget, justifyContent: "center", opacity: pressed ? controlOpacity.pressed : 1 }), children: _jsxs(Text, { variant: "label", tone: "muted", children: [overviewLabel, " ", expanded ? "⌃" : "⌄"] }) })] }) : null, rail] });
+    return _jsxs(View, { style: [{ direction: environment.direction }, layoutStyle], children: [compact ? _jsxs(View, { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: tokens.spacing.sm, marginBottom: tokens.spacing.xs }, children: [_jsxs(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { flex: 1 }, children: [_jsxs(Text, { variant: "label", children: [current.position, " / ", current.total, " \u00B7 ", current.label] }), _jsx(Text, { variant: "caption", tone: "muted", children: current.statusLabel })] }), _jsx(Pressable, { accessibilityRole: "button", accessibilityState: { expanded }, accessibilityLabel: overviewLabel, onPress: () => setExpanded(value => !value), style: ({ pressed }) => ({ minHeight: stepsRecipe.press.minTouchTarget, justifyContent: "center", opacity: pressed ? controlOpacity.pressed : 1 }), children: _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.xxs }, children: [_jsx(Text, { variant: "label", tone: "muted", children: overviewLabel }), _jsx(ChevronGlyph, { direction: expanded ? "up" : "down", size: glyph.xs, color: colors.textMuted })] }) })] }) : null, rail] });
 }
 //# sourceMappingURL=steps.js.map

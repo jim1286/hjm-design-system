@@ -4,6 +4,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useId, useRef, type CSSProperties } from "react";
 import { resolveRating, type RatingDescriptor } from "@hjmds/design-contracts/reference-controls";
 import { Button } from "./actions.js";
+import { Star as StarNode } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type RatingProps = RatingDescriptor & Readonly<{
   /** Product-localized score and unrated text, also used as the radio name. */
@@ -14,8 +16,8 @@ export type RatingProps = RatingDescriptor & Readonly<{
   name?: string;
 }> & (Readonly<{ readOnly: true; onValueChange?: never }> | Readonly<{ readOnly?: false; onValueChange: (value: number | null) => void }>);
 function Star({ fraction }: { fraction: number }) {
-  return <span aria-hidden="true" style={{ pointerEvents: "none", position: "relative", display: "inline-block", fontSize: "1.75em", lineHeight: 1, color: "var(--hjm-color-content-brand, currentColor)" }}>
-    <span>☆</span><span style={{ position: "absolute", inset: 0, width: `${fraction * 100}%`, overflow: "hidden" }}>★</span>
+  return <span aria-hidden="true" style={{ pointerEvents: "none", position: "relative", display: "inline-flex", fontSize: "1.75em", color: "var(--hjm-color-content-brand, currentColor)" }}>
+    <LucideGlyph node={StarNode} /><span style={{ position: "absolute", inset: 0, width: `${fraction * 100}%`, overflow: "hidden" }}><LucideGlyph node={StarNode} filled /></span>
   </span>;
 }
 /** Controlled score input, with a distinct non-interactive average representation. */

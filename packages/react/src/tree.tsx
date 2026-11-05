@@ -29,6 +29,8 @@ import {
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { ChevronDown, ChevronRight } from "lucide";
+import { CheckGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type TreeProps<Id extends string = string> = Readonly<{
   label: string;
@@ -249,11 +251,11 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
           <span aria-hidden="true" className="hjm-tree__indent" />
           {checkedStates ? (
             <span aria-hidden="true" className="hjm-tree__check" data-state={String(checkedStates.get(node.id) ?? false)}>
-              {checkedStates.get(node.id) === true ? "✓" : checkedStates.get(node.id) === "mixed" ? "–" : ""}
+              <CheckGlyph state={checkedStates.get(node.id) ?? false} />
             </span>
           ) : null}
           <span aria-hidden="true" className="hjm-tree__toggle" data-visible={node.hasChildren || undefined}>
-            {node.hasChildren ? renderToggle?.({ expanded: node.expanded }) ?? (node.expanded ? "▾" : "▸") : null}
+            {node.hasChildren ? renderToggle?.({ expanded: node.expanded }) ?? (node.expanded ? <LucideGlyph node={ChevronDown} /> : <LucideGlyph node={ChevronRight} mirrored />) : null}
           </span>
           <span aria-hidden="true" className="hjm-tree__label">
             {node.label}

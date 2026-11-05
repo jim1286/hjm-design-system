@@ -3,9 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { reconcileAgreementSelection, resolveAgreementState, toggleAgreementAll, toggleAgreementItem, validateAgreementDescriptor, } from "@hjmds/design-contracts/components/agreement";
 import { forwardRef, useEffect, useId, useMemo, useRef } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import { CheckGlyph } from "./internal/lucide-glyph.js";
 // Consent rows are multi-select, so they draw Checkbox's indicator; a 16px box with radius sm read as a radio dot.
 function Mark({ state }) {
-    return _jsx("span", { "aria-hidden": "true", className: "hjm-choice__indicator", "data-kind": "checkbox", "data-state": state === "mixed" ? "mixed" : state ? "checked" : "unchecked" });
+    return _jsx("span", { "aria-hidden": "true", className: "hjm-choice__indicator", "data-kind": "checkbox", "data-state": state === "mixed" ? "mixed" : state ? "checked" : "unchecked", children: _jsx(CheckGlyph, { state: state }) });
 }
 export const Agreement = forwardRef(function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, className, layoutStyle, }, forwardedRef) {
     validateAgreementDescriptor(descriptor);

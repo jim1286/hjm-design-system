@@ -11,7 +11,12 @@ import { Button,IconButton } from "./actions.js";
 import { glyph,spacing,radius } from "@hjmds/design-contracts/foundations";
 import { withAlpha } from "@hjmds/design-contracts/colors";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnClose,DrawnMoreHorizontal,DrawnPencil,DrawnPlus,DrawnSearch } from "./internal/drawn-glyphs.js";
+import X from "lucide-react-native/icons/x";
+import Ellipsis from "lucide-react-native/icons/ellipsis";
+import Pencil from "lucide-react-native/icons/pencil";
+import Plus from "lucide-react-native/icons/plus";
+import Search from "lucide-react-native/icons/search";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { Stack,Text } from "./primitives.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
@@ -71,7 +76,7 @@ export function ExpandableSearch<T>(props:ExpandableSearchProps<T>){
  const glyphColor=resolveIconButtonPresentation("ghost",useHjmNativeTheme().palette,false).content;
  // Opening and closing are tool actions, as on Web: a search icon at the area's end, and the search screen's own
  // header-leading close exit instead of a full-width primary button and a text close button (2026-10-17 review).
- return <Stack gap="sm">{!props.expanded?<IconButton label={props.labels.open} tone="ghost" disabled={props.disabled===true} layoutStyle={{alignSelf:"flex-end"}} onPress={()=>props.onExpandedChange(true)}><DrawnSearch size={glyph.sm} color={glyphColor} /></IconButton>:<>
+ return <Stack gap="sm">{!props.expanded?<IconButton label={props.labels.open} tone="ghost" disabled={props.disabled===true} layoutStyle={{alignSelf:"flex-end"}} onPress={()=>props.onExpandedChange(true)}><LucideGlyph icon={Search} size={glyph.sm} color={glyphColor} /></IconButton>:<>
  <SearchScreen title={props.labels.title} titleVisibility="hidden" exit={{kind:"close",label:props.labels.cancel,onPress:cancel}} queryLabel={props.labels.query} queryField={<SearchField ref={input} label={props.labels.query} clearLabel={props.labels.clear} busyLabel={props.labels.searching} value={props.query} onValueChange={props.onQueryChange} busy={pending} onSubmitEditing={()=>commit(props.query)} returnKeyType="search"/>} query={props.query} onQueryChange={props.onQueryChange} onSearch={search}
  {...(props.debounceMs===undefined?{}:{debounceMs:props.debounceMs})} {...(props.recentQueries?{recentQueries:props.recentQueries}:{})}
  committedQuery={committed} onSubmit={commit} searching={pending} searchingLabel={props.labels.searching}
@@ -110,13 +115,13 @@ export function ChatRoomProfile({value,onValueChange,onSave,onPickPhoto,disabled
  const mounted=useRef(true);useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
  const patch=(change:Partial<ChatRoomProfileValue>)=>onValueChange({...value,...change});
  // A new room has no identity yet; its photo slot is decorative until a name exists.
- const identity=value.name.trim()?{name:value.name,accessibilityLabel:labels.photo}:{decorative:true as const,renderFallback:()=><DrawnPlus size={glyph.md} color={colors.textMuted}/>};
+ const identity=value.name.trim()?{name:value.name,accessibilityLabel:labels.photo}:{decorative:true as const,renderFallback:()=><LucideGlyph icon={Plus} size={glyph.md} color={colors.textMuted}/>};
  const avatar=(accessory?:ReactNode)=><Avatar {...photoOf(value.photoUrl)} size={chatRoomRecipe.heroAvatar} {...identity} {...(accessory?{accessory}:{})}/>;
  const inline=presentation==="inline";
  const remove=onPickPhoto&&value.photoUrl?<Button tone="ghost" size="small" disabled={blocked} {...(inline?{layoutStyle:{alignSelf:"flex-start" as const}}:{})} onPress={()=>patch({photoUrl:null})}>{labels.removePhoto}</Button>:null;
  return <ScreenLayout title={title} {...(back?{exit:{kind:"back" as const,label:back.label,onPress:back.onPress}}:{})} actions={<Button tone="ghost" disabled={blocked||submitDisabled||!canSubmitChatRoom(value)} loading={save.pending} onPress={()=>void save.run("save",()=>onSave(value))}>{labels.save}</Button>}><Stack gap="md">
  <Stack axis={inline?"inline":"block"} align="center" gap="md">
- <Stack align="center" gap="xs">{onPickPhoto?<Pressable accessibilityRole="button" accessibilityLabel={labels.changePhoto} accessibilityState={{disabled:blocked,busy:photo.pending}} disabled={blocked} onPress={()=>void photo.run("photo",async()=>{const url=await onPickPhoto();if(url!==null&&mounted.current)latest.current.onValueChange({...latest.current.value,photoUrl:url});})}>{avatar(<CornerBadge size={chatRoomRecipe.badgeSize} tone="brand">{(color,size)=><DrawnPencil size={size} color={color} strokeWidth={1.5}/>}</CornerBadge>)}</Pressable>:avatar()}
+ <Stack align="center" gap="xs">{onPickPhoto?<Pressable accessibilityRole="button" accessibilityLabel={labels.changePhoto} accessibilityState={{disabled:blocked,busy:photo.pending}} disabled={blocked} onPress={()=>void photo.run("photo",async()=>{const url=await onPickPhoto();if(url!==null&&mounted.current)latest.current.onValueChange({...latest.current.value,photoUrl:url});})}>{avatar(<CornerBadge size={chatRoomRecipe.badgeSize} tone="brand">{(color,size)=><LucideGlyph icon={Pencil} size={size} color={color} strokeWidth={1.5}/>}</CornerBadge>)}</Pressable>:avatar()}
  {inline?null:remove}</Stack>
  <Stack gap="xs" layoutStyle={inline?{flex:1,minWidth:0}:{alignSelf:"stretch"}}><TextField label={labels.name} value={value.name} onValueChange={name=>patch({name})} disabled={blocked} {...(nameCharacterCount?{characterCount:nameCharacterCount}:{})}/></Stack></Stack>
  {inline?remove:null}
@@ -145,7 +150,7 @@ export function ChatRoomMembers({members,title,emptyLabel,countLabel,onSelection
  const leading=(member:ChatRoomMember)=><Avatar size={chatRoomRecipe.memberAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative/>;
  const add=chatRoomRecipe.addLeadingSize;
  return <Stack gap="xs"><Stack axis="inline" align="end" gap="xxs"><Text variant="label">{title}</Text>{countLabel?<Text variant="label" tone="brand">{countLabel}</Text>:null}</Stack>
- {invite?<ListRow title={invite.label} tone="brand" leading={<View style={{width:add,height:add,borderRadius:add/2,alignItems:"center",justifyContent:"center",backgroundColor:withAlpha(colors.contentBrand,.12)}}><DrawnPlus size={glyph.sm} color={colors.contentBrand}/></View>} disabled={disabled} onPress={invite.onPress}/>:null}
+ {invite?<ListRow title={invite.label} tone="brand" leading={<View style={{width:add,height:add,borderRadius:add/2,alignItems:"center",justifyContent:"center",backgroundColor:withAlpha(colors.contentBrand,.12)}}><LucideGlyph icon={Plus} size={glyph.sm} color={colors.contentBrand}/></View>} disabled={disabled} onPress={invite.onPress}/>:null}
  {members.length===0?<Text tone="muted">{emptyLabel}</Text>:members.map(member=>onSelectionChange?
  <Checkbox key={member.id} presentation="plain" label={member.name} {...(member.detail?{description:member.detail}:{})} renderLeading={()=>leading(member)} checked={member.selected===true} disabled={disabled||member.disabled===true} onCheckedChange={selected=>onSelectionChange(member.id,selected)} layoutStyle={{width:"100%"}}/>:
  <ListRow key={member.id} title={member.name} {...(member.detail?{description:member.detail}:{})} leading={leading(member)} {...(memberProfile?{leadingAction:{label:memberProfile.label(member),onPress:()=>memberProfile.onPress(member)},onPress:()=>memberProfile.onPress(member)}:{})} {...(member.role?{trailing:<Text variant="caption" tone="brand">{member.role}</Text>}:{})}
@@ -157,7 +162,7 @@ function SelectedMembers({members,labels,onRemove,disabled}:{members:readonly Ch
  if(members.length===0)return null;
  return <ScrollView horizontal showsHorizontalScrollIndicator={false} accessibilityLabel={labels.count(members.length)} contentContainerStyle={{gap:chatRoomRecipe.selectedGap,paddingVertical:spacing.xxs}}>{members.map(member=>
  <Pressable key={member.id} accessibilityRole="button" accessibilityLabel={labels.remove(member)} accessibilityState={{disabled}} disabled={disabled} onPress={()=>onRemove(member.id)} style={({pressed})=>({width:chatRoomRecipe.selectedItemWidth,alignItems:"center",gap:spacing.xxs,borderRadius:radius.md,opacity:pressed?.7:1})}>
- <Avatar size={chatRoomRecipe.selectedAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative accessory={<CornerBadge size={chatRoomRecipe.removeBadgeSize} tone="neutral">{(color,size)=><DrawnClose size={size} color={color} strokeWidth={1.5}/>}</CornerBadge>}/>
+ <Avatar size={chatRoomRecipe.selectedAvatar} {...photoOf(member.photoUrl)} name={member.name} decorative accessory={<CornerBadge size={chatRoomRecipe.removeBadgeSize} tone="neutral">{(color,size)=><LucideGlyph icon={X} size={size} color={color} strokeWidth={1.5}/>}</CornerBadge>}/>
  <Text variant="caption" numberOfLines={1}>{member.name}</Text></Pressable>)}</ScrollView>;
 }
 type MemberPickerProps=Readonly<{members:readonly ChatRoomMember[];title:string;emptyLabel:string;search:ChatRoomMemberSearch;selection:ChatRoomSelectionLabels;onSelectionChange:(id:string,selected:boolean)=>void;disabled:boolean}>;
@@ -209,7 +214,7 @@ function RoomActionList({actions,disabled=false,menu}:{actions:readonly ChatRoom
  const [active,setActive]=useState<ChatRoomConfirmation|null>(null);const {colors}=useHjmNativeTheme();
  if(actions.length===0)return null;
  const dialog=active?<RoomConfirmDialog action={active} onClose={()=>setActive(null)}/>:null;
- return <><Menu triggerLabel={menu.label} renderTrigger={props=><IconButton label={menu.label} tone="ghost" onPress={props.onPress} accessibilityState={props.accessibilityState}><DrawnMoreHorizontal size={glyph.md} color={colors.textMuted}/></IconButton>} presentation="anchored" disabled={disabled||active!==null} dismissLabel={menu.dismissLabel} items={actions.map((action,index)=>({id:String(index),label:action.label,...(action.destructive?{tone:"danger" as const}:{})}))} onActionAfterDismiss={id=>setActive(actions[Number(id)]??null)}/>{dialog}</>;
+ return <><Menu triggerLabel={menu.label} renderTrigger={props=><IconButton label={menu.label} tone="ghost" onPress={props.onPress} accessibilityState={props.accessibilityState}><LucideGlyph icon={Ellipsis} size={glyph.md} color={colors.textMuted}/></IconButton>} presentation="anchored" disabled={disabled||active!==null} dismissLabel={menu.dismissLabel} items={actions.map((action,index)=>({id:String(index),label:action.label,...(action.destructive?{tone:"danger" as const}:{})}))} onActionAfterDismiss={id=>setActive(actions[Number(id)]??null)}/>{dialog}</>;
 }
 
 /** `pressed` makes the tile a toggle (mute): its surface and the product icon show the current state. */

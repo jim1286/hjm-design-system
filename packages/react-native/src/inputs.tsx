@@ -3,7 +3,6 @@ import { Button } from "./actions.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { setInputVisibilityFrame } from "./internal/field-visibility.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
@@ -122,6 +121,11 @@ import { Grid, Text } from "./primitives.js";
 import type { GridDescriptor } from "@hjmds/design-contracts/grid";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import X from "lucide-react-native/icons/x";
+import Check from "lucide-react-native/icons/check";
+import Eye from "lucide-react-native/icons/eye";
+import EyeOff from "lucide-react-native/icons/eye-off";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 type FieldAccessibleName =
   | Readonly<{
@@ -688,7 +692,7 @@ export const SearchField: ReturnType<typeof forwardRef<ComponentRef<typeof TextI
       }}
     >
       {renderClearIcon?.(iconProps) ?? (
-        <FixedGlyph tone="muted" fontSize={iconProps.size}>×</FixedGlyph>
+        <LucideGlyph icon={X} size={iconProps.size} color={theme.colors.textMuted} />
       )}
     </Pressable>
   ) : trailingNode;
@@ -742,47 +746,10 @@ export type PasswordFieldProps = Omit<
     renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
   }>;
 
-function DefaultPasswordToggleIcon({
-  color,
-  revealed,
-  size,
-}: Pick<PasswordFieldToggleRenderProps, "color" | "revealed" | "size">) {
-  // Web's `visibility`/`visibilityOff` paths: an almond eye pointed at both sides, a ring pupil and a top-start to
-  // bottom-end slash. The eye is a square with two rounded opposite corners turned 45deg; the earlier full pill read
-  // as a capsule, not an eye (2026-10-17 review). Views keep react-native-svg optional for this core input.
-  const strokeWidth = Math.max(1.5, size * 0.1);
-  const side = size * 0.62;
-  const pupil = size * 0.34;
-  // RTL swaps the rounded corners and the turn together (scenario matrix), which draws the same symmetric eye.
-  const rtl = useHjmNativeTheme().environment.direction === "rtl";
-  return (
-    <View accessible={false} style={{ alignItems: "center", height: size, justifyContent: "center", width: size }}>
-      <View
-        style={{
-          borderColor: color,
-          ...(rtl ? { borderTopRightRadius: side * 0.85, borderBottomLeftRadius: side * 0.85 } : { borderTopLeftRadius: side * 0.85, borderBottomRightRadius: side * 0.85 }),
-          borderWidth: strokeWidth,
-          height: side,
-          position: "absolute",
-          transform: [{ rotate: rtl ? "-45deg" : "45deg" }],
-          width: side,
-        }}
-      />
-      <View style={{ borderColor: color, borderRadius: pupil / 2, borderWidth: strokeWidth, height: pupil, width: pupil }} />
-      {revealed ? (
-        <View
-          style={{
-            backgroundColor: color,
-            borderRadius: strokeWidth,
-            height: strokeWidth,
-            position: "absolute",
-            transform: [{ rotate: "45deg" }],
-            width: size * 1.06,
-          }}
-        />
-      ) : null}
-    </View>
-  );
+// The recipe names the mark for each state (visibility / visibilityOff); they are Lucide Eye / EyeOff, the glyphs the
+// contract maps those semantic names to.
+function DefaultPasswordToggleIcon({ name, color, size }: Pick<PasswordFieldToggleRenderProps, "name" | "color" | "size">) {
+  return <LucideGlyph icon={name === "visibilityOff" ? EyeOff : Eye} size={size} color={color} />;
 }
 
 /** Password input with independent reveal state and native autofill translation. */
@@ -2501,7 +2468,7 @@ export const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipP
             })
           ) : (
             // Like Checkbox, the selection mark fits a fixed glyph slot; the chip label still scales.
-            <NativeText accessible={false} allowFontScaling={false} style={{ ...typography.caption, color: indicatorColor }}>✓</NativeText>
+            <LucideGlyph icon={Check} size={glyph[chipRecipe.selectionIndicator.glyph]} color={indicatorColor} />
           )}
         </View>
       ) : null}

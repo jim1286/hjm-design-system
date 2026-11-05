@@ -74,6 +74,8 @@ import {
   type OverlayTrigger,
 } from "./modal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { TriangleAlert, X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type { OverlayTrigger } from "./modal.js";
 
@@ -280,7 +282,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
                     disabled={busy}
                     onClick={() => requestClose("close-action")}
                   >
-                    ×
+                    <LucideGlyph node={X} />
                   </button>
                 ) : null}
               </header>
@@ -879,7 +881,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
                     disabled={busy && !policy.dismissWhileBusy}
                     onClick={() => requestClose("close-action")}
                   >
-                    ×
+                    <LucideGlyph node={X} />
                   </button>
                 ) : null}
               </header> : null}
@@ -1577,7 +1579,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
                   {title ? <div className="hjm-menu__title">{title}</div> : null}
                   {description ? <div className="hjm-menu__subtitle">{description}</div> : null}
                 </div>
-                {dismissPlacement === "header" ? <button type="button" className="hjm-dialog__close" aria-label={dismissLabel} onClick={() => close("programmatic", true)}>×</button> : null}
+                {dismissPlacement === "header" ? <button type="button" className="hjm-dialog__close" aria-label={dismissLabel} onClick={() => close("programmatic", true)}><LucideGlyph node={X} /></button> : null}
               </div>
             ) : null}
             {asyncState.status !== "idle" ? (
@@ -1687,7 +1689,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
         onClick={() => activateItem(item, index)}
       >
         {item.tone === "danger" ? (
-          <span className="hjm-menu__danger-indicator" aria-hidden="true">!</span>
+          <span className="hjm-menu__danger-indicator" aria-hidden="true"><LucideGlyph node={TriangleAlert} /></span>
         ) : null}
         {item.leading ? <span className="hjm-menu__leading" aria-hidden="true">{item.leading}</span> : null}
         <span className="hjm-menu__copy">

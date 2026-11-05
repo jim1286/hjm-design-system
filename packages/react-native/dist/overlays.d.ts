@@ -133,7 +133,7 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;
-    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    /** Visible close button (Lucide X) in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
     /** Side sheets only: same as Dialog. Bottom sheets disable automatic input focus, including nested screens. */
     initialFocus?: InitialFocusMode;

@@ -49,6 +49,8 @@ import { spacing, typography } from "@hjmds/design-contracts/foundations";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { ArrowRight, ArrowUp } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 /*
  * Web chart renderers (2026-10-14). Geometry, domains, stacking, gaps and the text alternative come
@@ -872,7 +874,7 @@ export function ScatterChart({
         </svg>
         {focusPoint ? <CursorBubble x={focusPoint.px} width={width} text={`${focusPoint.label} · ${formatX(focusPoint.x)} / ${formatY(focusPoint.y)}`} /> : null}
       </div>
-      <div className="hjm-chart__axis-titles" aria-hidden="true"><span>{yLabel} ↑</span><span>{xLabel} →</span></div>
+      <div className="hjm-chart__axis-titles" aria-hidden="true"><span>{yLabel} <LucideGlyph node={ArrowUp} /></span><span>{xLabel} <LucideGlyph node={ArrowRight} /></span></div>
       {seriesLabels && seriesLabels.length > 1 ? <ChartLegend items={seriesLabels.map((label, i) => ({ id: String(i), label, color: colorOf({}, i) }))} /> : null}
       <p id={descriptionId} className="hjm-visually-hidden">{points.map(describe).join(". ")}</p>
     </div>

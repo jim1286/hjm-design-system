@@ -9,7 +9,7 @@ import { ChatMessage, MessageComposer, NotificationItem, NotificationInboxScreen
 import { AuthProviderButton } from '@hjmds/react-native/provider-button';
 import { Chip } from '@hjmds/react-native/inputs';
 import { LoginScreenPreview, NotificationScreenPreview, ChatScreenPreview } from '../../../showcase/native/src/common-screen-previews';
-vi.mock('react-native-svg',async()=>{const {View}=await import('react-native');return {default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
+vi.mock('react-native-svg',async (importOriginal) => {const {View}=await import('react-native');return { ...(await importOriginal<Record<string, unknown>>()),default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;
 afterEach(async()=>{if(tree)await act(async()=>tree.unmount());vi.useRealTimers();vi.restoreAllMocks();});

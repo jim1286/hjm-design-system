@@ -21,6 +21,8 @@ import {
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type TagsInputProps = Readonly<{
   label: string;
@@ -179,7 +181,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
                 disabled={disabled}
                 onClick={() => remove(index)}
               >
-                ×
+                <LucideGlyph node={X} />
               </button>
             </li>
           ))}

@@ -1,4 +1,3 @@
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import {
   removeTagAt,
   resolveTagsInputCommit,
@@ -8,7 +7,7 @@ import {
   type TagsInputSuggestion,
 } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing, glyph } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
@@ -16,6 +15,8 @@ import { Text } from "./primitives.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type TagsInputProps = Readonly<{
   label: string;
@@ -128,7 +129,7 @@ export function TagsInput({
               hitSlop={tagsInputRecipe.remove.minTouchTarget / 2}
               onPress={() => setTags(removeTagAt(tags, index))}
             >
-              <FixedGlyph color={content}>×</FixedGlyph>
+              <LucideGlyph icon={X} size={glyph.xs} color={content} />
             </Pressable>
           </View>
         ))}

@@ -792,15 +792,14 @@ async function checkRenderer(renderer) {
     // Social and toggle compositions explicitly opt into AnimatedStatistic (usage/compositions/{social-compositions,toggle-feedback}.md).
     // Native gesture panels and SVG compositions likewise opt into their host peers through dedicated subpaths.
     // Keep these boundaries aligned with their existing public implementations; the root remains peer-free.
-    // DrawingEditor (Web lucide-react; Native react-native-svg + lucide-react-native) and ColorPicker (Native
-    // react-native-svg like Chart) opt into these peers as their usage guides state; the gate treated them as peer-free, so every release check failed (2026-10-30).
-    const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./icon-svg", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    // DrawingEditor opts into Web lucide-react as its usage guide states; the gate treated it as peer-free, so every
+    // release check failed (2026-10-30). Native react-native-svg and lucide-react-native are required peers since
+    // Lucide became the only icon source (user instruction 2026-11-05): core controls draw their marks with them, so
+    // the manifest no longer marks them optional and this gate treats them like react-native itself.
+    const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     const compositionPeers = renderer.packageName === "@hjmds/react"
       ? { "./social-compositions": ["@number-flow/react"], "./toggle-feedback": ["@number-flow/react"], "./drawing-editor": ["lucide-react"] }
-      : { "./sheet-panel": ["react-native-reanimated", "react-native-worklets", "react-native-gesture-handler"],
-          "./chart": ["react-native-svg"], "./color-picker": ["react-native-svg"], "./drawing-editor": ["react-native-svg", "lucide-react-native"], "./data-workflows": ["react-native-svg"],
-          "./media-transport": ["react-native-svg"], "./authoring-tools": ["react-native-svg"],
-          "./toggle-feedback": ["react-native-svg"] };
+      : { "./sheet-panel": ["react-native-reanimated", "react-native-worklets", "react-native-gesture-handler"] };
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && !(compositionPeers[exportPath] ?? []).includes(peer) && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

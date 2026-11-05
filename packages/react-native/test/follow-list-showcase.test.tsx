@@ -3,9 +3,9 @@ import { expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 import { Tabs } from "@hjmds/react-native/navigation";
 import story from "../../../showcase/native/src/components/FollowListScreen.stories";
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const { View } = await import("react-native");
-  return { default: View, Path: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Path: View };
 });
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 function assertTextHosts(node: ReactTestRendererJSON | ReactTestRendererJSON[] | null) {

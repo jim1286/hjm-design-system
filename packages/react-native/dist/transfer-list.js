@@ -8,7 +8,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import { useHjmNativeTheme } from "./provider.js";
 const emptySelection = () => ({
@@ -72,6 +72,6 @@ export function TransferList({ items, labels, targetKeys: controlledTargetKeys, 
                         return (_jsxs(Pressable, { accessibilityRole: "checkbox", accessibilityLabel: item.label, accessibilityState: { checked, disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id)), style: { backgroundColor: checked ? resolveColorReference(transferListRecipe.item.selectedBackground, palette) : "transparent", borderRadius: tokens.radius[transferListRecipe.item.radius], alignItems: "center", direction: environment.direction, flexDirection: "row", gap: transferListRecipe.item.gap, minHeight: control.minTouchTarget, opacity: item.disabled ? 0.5 : 1, paddingHorizontal: transferListRecipe.item.paddingHorizontal }, children: [_jsx(SelectionMark, { checked: checked }), _jsx(Text, { fontRole: "ui", style: { flex: 1 }, children: item.label })] }, item.id));
                     })) })] }));
     };
-    return (_jsxs(View, { style: [{ gap: spacing.md }, layoutStyle], children: [renderPanel("source"), _jsxs(View, { style: { alignItems: "stretch", gap: transferListRecipe.moveControls.gap }, children: [_jsx(Button, { tone: "secondary", disabled: !canMove("source"), onPress: () => move("toTarget"), leading: _jsx(DrawnChevron, { direction: "down", size: glyph.sm, color: colors.text }), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: !canMove("target"), onPress: () => move("toSource"), leading: _jsx(DrawnChevron, { direction: "up", size: glyph.sm, color: colors.text }), children: labels.toSource })] }), renderPanel("target")] }));
+    return (_jsxs(View, { style: [{ gap: spacing.md }, layoutStyle], children: [renderPanel("source"), _jsxs(View, { style: { alignItems: "stretch", gap: transferListRecipe.moveControls.gap }, children: [_jsx(Button, { tone: "secondary", disabled: !canMove("source"), onPress: () => move("toTarget"), leading: _jsx(ChevronGlyph, { direction: "down", size: glyph.sm, color: colors.text }), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: !canMove("target"), onPress: () => move("toSource"), leading: _jsx(ChevronGlyph, { direction: "up", size: glyph.sm, color: colors.text }), children: labels.toSource })] }), renderPanel("target")] }));
 }
 //# sourceMappingURL=transfer-list.js.map

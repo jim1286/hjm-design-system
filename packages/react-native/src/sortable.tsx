@@ -4,8 +4,8 @@ import { AccessibilityInfo, AppState, View } from "react-native";
 import Sortable from "react-native-sortables";
 import { reorderIntent, validateItems, type SortableItem, type SortableLabels, type ReorderIntent } from "@hjmds/design-contracts/components/interaction-adapters";
 import { IconButton } from "./actions.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
-import { Text } from "./primitives.js";
+import GripVertical from "lucide-react-native/icons/grip-vertical";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type SortableCollectionProps = {
@@ -69,13 +69,13 @@ export function SortableCollection(props: SortableCollectionProps) {
               }
             }}
             // The handle names the item only to assistive tech; a visible label repeated the row's own title (2026-10-17).
-            style={{ alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }}><Text accessible={false}>⠿</Text></View>
+            style={{ alignItems: "center", justifyContent: "center", minHeight: control.minTouchTarget, minWidth: control.minTouchTarget }}><LucideGlyph icon={GripVertical} size={glyph.sm} color={colors.text} /></View>
         </Sortable.Handle>
         <View style={{ flex: 1, minWidth: 0 }}>{props.renderItem(item)}</View>
         {/* Same as Web: one row, the move pair stacked as named icon buttons in the trailing column. */}
         <View style={{ gap: tokens.spacing.xs }}>
-          <IconButton tone="ghost" label={props.labels.previous(item)} disabled={props.disabled || item.disabled || index === 0} onPress={() => commit(item.id, index - 1, "accessibility-action")}><DrawnChevron direction="up" size={glyph.md} color={colors.text} /></IconButton>
-          <IconButton tone="ghost" label={props.labels.next(item)} disabled={props.disabled || item.disabled || index === props.items.length - 1} onPress={() => commit(item.id, index + 1, "accessibility-action")}><DrawnChevron direction="down" size={glyph.md} color={colors.text} /></IconButton>
+          <IconButton tone="ghost" label={props.labels.previous(item)} disabled={props.disabled || item.disabled || index === 0} onPress={() => commit(item.id, index - 1, "accessibility-action")}><ChevronGlyph direction="up" size={glyph.md} color={colors.text} /></IconButton>
+          <IconButton tone="ghost" label={props.labels.next(item)} disabled={props.disabled || item.disabled || index === props.items.length - 1} onPress={() => commit(item.id, index + 1, "accessibility-action")}><ChevronGlyph direction="down" size={glyph.md} color={colors.text} /></IconButton>
         </View>
       </View>} />
   </View>;

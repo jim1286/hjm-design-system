@@ -14,6 +14,8 @@ import {
 import { forwardRef, useLayoutEffect, useRef, type HTMLAttributes } from "react";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { ChevronLeft, ChevronRight, Ellipsis } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 /**
  * Bounded results pass a total and `composeAccessibleName` for the numbered window; open-ended results pass
@@ -101,7 +103,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               aria-disabled={!resolved.hasPrevious || undefined}
               onClick={() => { if (resolved.hasPrevious) onPageChange(resolved.currentPage - 1, "previous"); }}
             >
-              <span aria-hidden="true">‹</span>
+              <span aria-hidden="true"><LucideGlyph node={ChevronLeft} /></span>
             </button>
           </li>
           {openEnded ? (
@@ -114,7 +116,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
           {"items" in resolved && resolved.items.map((item, index) =>
             item.type === "ellipsis" ? (
               <li key={`ellipsis-${index}`}>
-                <span className="hjm-pagination__ellipsis" aria-hidden="true">…</span>
+                <span className="hjm-pagination__ellipsis" aria-hidden="true"><LucideGlyph node={Ellipsis} /></span>
               </li>
             ) : (
               <li key={item.page}>
@@ -142,7 +144,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               aria-disabled={!resolved.hasNext || undefined}
               onClick={() => { if (resolved.hasNext) onPageChange(resolved.currentPage + 1, "next"); }}
             >
-              <span aria-hidden="true">›</span>
+              <span aria-hidden="true"><LucideGlyph node={ChevronRight} /></span>
             </button>
           </li>
         </ul>

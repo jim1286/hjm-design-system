@@ -8,7 +8,7 @@ export type MessageMenuAction = Readonly<{
     label: string;
     icon?: ReactNode;
     onPress(): void;
-    disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */
+    disabled?: boolean; /** Shows a reading-end chevron for rows that open a further list (e.g. "Load more"). */
     submenu?: boolean;
     /** Same vocabulary as Menu items: `danger` for destructive rows such as delete (default `neutral`). */ tone?: MenuItemTone;
 }>;

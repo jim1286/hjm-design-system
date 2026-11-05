@@ -33,7 +33,7 @@ it.each(["light", "dark"] as const)("shares the neutral selection role and respe
    expect(getComputedStyle(chip).backgroundColor).toBe(expected);
    expect(getComputedStyle(pill,"::before").backgroundColor).toBe(expected);
    expect(getComputedStyle(connected).backgroundColor).toBe(expected);
-   expect(chip.querySelector(".hjm-chip__indicator")?.textContent).toBe("✓");
+   expect(chip.querySelector(".hjm-chip__indicator > svg.hjm-glyph path")?.getAttribute("d")).toBe("M20 6 9 17l-5-5");
    expect(getComputedStyle(chip).color).toBe(getComputedStyle(pill).color);
  }
 });

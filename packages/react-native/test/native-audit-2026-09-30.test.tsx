@@ -5,7 +5,9 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import type { AgreementDescriptor } from "@hjmds/design-contracts/components/agreement";
 import { TextInput } from "react-native";
 
+import Check from "lucide-react-native/icons/check";
 import { Agreement } from "../src/agreement.js";
+import { LucideGlyph } from "../src/internal/lucide-glyph.js";
 import { DatePicker } from "../src/date-picker.js";
 import { Combobox, Select } from "../src/forms.js";
 import { NumberField } from "../src/number-field.js";
@@ -53,12 +55,12 @@ it("Agreement: on-brand fixed check artwork, stable all-row name and a rebuildab
   render(<><Probe /><Agreement descriptor={agreement} requiredLabel="(required)" optionalLabel="(optional)" /></>);
   const rows = () => hosts((node) => String(node.type) === "Pressable" && node.props.accessibilityRole === "checkbox");
   act(() => rows()[0]!.props.onPress());
-  // The large-text fix replaced the font glyph with fixed artwork. Keep this audit's
+  // The large-text fix replaced the font glyph with fixed artwork, now Lucide's Check (2026-11-05). Keep this audit's
   // original contrast and accessibility assertions on the visible mark, not removed text.
-  const mark = hosts((node) => String(node.type) === "View" && flat(node.props.style).borderLeftWidth === 2)[0]!;
-  expect(flat(mark.props.style).borderColor).toBe(resolveColorReference(selectionControlRecipe.states.indicator, palette!));
+  const mark = renderer!.root.findAllByType(LucideGlyph).find((node) => node.props.icon === Check)!;
+  expect(mark.props.color).toBe(resolveColorReference(selectionControlRecipe.states.indicator, palette!));
   // Since component review C the shared SelectionMark hides the whole mark from assistive tech on its frame;
-  // the stroke found above is a child of that frame.
+  // the check found above is a child of that frame.
   let frame: typeof mark | null = mark; while (frame && frame.props.accessible === undefined) frame = frame.parent;
   expect(frame?.props.accessible).toBe(false);
 

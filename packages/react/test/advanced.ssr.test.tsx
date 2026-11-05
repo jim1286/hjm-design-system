@@ -173,7 +173,7 @@ describe("advanced renderer SSR", () => {
     expect(markup).toContain('href="/teams"');
     expect(markup).toContain('aria-current="page"');
     expect(markup).toContain('aria-label="검색 결과 페이지"');
-    expect(markup).toContain('aria-hidden="true">…');
+    expect(markup).toMatch(/class="hjm-pagination__ellipsis" aria-hidden="true"><svg class="hjm-glyph"/);
     expect(markup).toContain('aria-label="10 페이지 중 3 페이지, 현재"');
   });
 });

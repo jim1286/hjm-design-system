@@ -1,14 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { removeTagAt, resolveTagsInputCommit, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing, glyph } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { resolveNativeFontStyle, resolveNativeTextScaleProps } from "./internal/styles.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, }) {
     const { palette, tokens, textScaling } = useHjmNativeTheme();
@@ -62,6 +63,6 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
                             borderWidth: tagsInputRecipe.tag.borderWidth,
                             borderColor: resolveColorReference(tagsInputRecipe.tag.border, palette),
                             backgroundColor: surface,
-                        }, children: [_jsx(Text, { fontRole: "ui", style: { color: content }, children: tag }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: composeRemoveLabel(tag), disabled: disabled, hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(FixedGlyph, { color: content, children: "\u00D7" }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, onSubmitEditing: () => commit(draft), submitBehavior: "submit", ...inputText })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { fontRole: "ui", style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
+                        }, children: [_jsx(Text, { fontRole: "ui", style: { color: content }, children: tag }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: composeRemoveLabel(tag), disabled: disabled, hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(LucideGlyph, { icon: X, size: glyph.xs, color: content }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, onSubmitEditing: () => commit(draft), submitBehavior: "submit", ...inputText })] }), suggestions !== undefined && suggestions.length > 0 && draft.trim().length > 0 ? (_jsx(View, { accessibilityLabel: suggestionsLabel, style: { gap: spacing.xxs }, children: suggestions.map((item) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true }, disabled: item.disabled === true || disabled, onPress: () => commit(item.value ?? item.label), style: { minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }, children: _jsx(Text, { fontRole: "ui", style: { color: content }, children: item.label }) }, item.id))) })) : null, description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }));
 }
 //# sourceMappingURL=tags-input.js.map

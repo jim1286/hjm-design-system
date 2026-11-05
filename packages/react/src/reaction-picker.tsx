@@ -4,6 +4,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { nextReaction, validateReactions, resolveReactionOptions, type ReactionMoreOptions, type ReactionOption } from "@hjmds/design-contracts/reactions";
 import { Button } from "./actions.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { Minus, Plus } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export type ReactionPickerProps = Readonly<{ label: string; options: readonly ReactionOption[]; value: string | null; onValueChange: (value: string | null) => void; disabled?: boolean; layout?: "wrap" | "strip"; layoutStyle?: HjmCompositionStyleProp; more?: ReactionMoreOptions }>;
 /** Controlled single reaction; counts and persistence belong to the product. */
 export function ReactionPicker({ label, options, value, onValueChange, disabled = false, layout = "wrap", more, layoutStyle }: ReactionPickerProps) {
@@ -32,7 +34,7 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
       })}
     </div>
     <div>{more ? chips
-      ? <button ref={toggle} type="button" className="hjm-chip hjm-reaction-picker__chip" data-size="small" aria-label={more.label} aria-expanded={showingAll} disabled={disabled} onClick={() => setExpanded(current => !current)}><span aria-hidden="true" className="hjm-reaction-picker__glyph">{showingAll ? "−" : "+"}</span></button>
-      : <Button ref={toggle} tone="ghost" shape="pill" aria-label={more.label} aria-expanded={showingAll} disabled={disabled} onClick={() => setExpanded(current => !current)}><span aria-hidden="true" className="hjm-reaction-picker__glyph">{showingAll ? "−" : "+"}</span></Button> : null}</div>
+      ? <button ref={toggle} type="button" className="hjm-chip hjm-reaction-picker__chip" data-size="small" aria-label={more.label} aria-expanded={showingAll} disabled={disabled} onClick={() => setExpanded(current => !current)}><span aria-hidden="true" className="hjm-reaction-picker__glyph"><LucideGlyph node={showingAll ? Minus : Plus} /></span></button>
+      : <Button ref={toggle} tone="ghost" shape="pill" aria-label={more.label} aria-expanded={showingAll} disabled={disabled} onClick={() => setExpanded(current => !current)}><span aria-hidden="true" className="hjm-reaction-picker__glyph"><LucideGlyph node={showingAll ? Minus : Plus} /></span></Button> : null}</div>
   </div>;
 }

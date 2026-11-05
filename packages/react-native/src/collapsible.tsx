@@ -9,7 +9,7 @@ import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import { Spinner } from "./internal/spinner.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
@@ -79,7 +79,7 @@ export function Collapsible({ trigger, triggerLabel, title, pendingLabel, childr
 /** Decoration only: the expanded state travels through the trigger's accessibilityState. */
 export function CollapsibleMarker({ open }: Readonly<{ open: boolean }>) {
   const { colors } = useHjmNativeTheme();
-  // Web's chevron at glyph.sm replaced a text "▸" that rendered about 8pt (2026-10-17 review). DrawnChevron's
+  // Web's chevron at glyph.sm replaced a text "▸" that rendered about 8pt (2026-10-17 review). ChevronGlyph's
   // `end` points toward the reading end, so the closed mark mirrors in RTL.
-  return <DrawnChevron direction={open ? "down" : "end"} size={glyph.sm} color={colors.textMuted} />;
+  return <ChevronGlyph direction={open ? "down" : "end"} size={glyph.sm} color={colors.textMuted} />;
 }

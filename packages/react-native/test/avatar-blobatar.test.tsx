@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Image, View } from "react-native";
 import { expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Circle: View, Path: View, G: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, Path: View, G: View }; });
 import { Avatar } from "../src/data-display.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { createBlobatarFallback } from "../src/avatar-blobatar.js";

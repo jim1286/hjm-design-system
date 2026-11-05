@@ -53,6 +53,8 @@ import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { FieldError } from "./internal/field-error.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 type FieldCopyProps = Readonly<{
   label?: ReactNode;
@@ -676,7 +678,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
                 inputRef.current?.focus();
               }}
             >
-              {renderClearIcon?.(iconAppearance) ?? "×"}
+              {renderClearIcon?.(iconAppearance) ?? <LucideGlyph node={X} />}
             </button>
           ) : trailing
         }

@@ -3,6 +3,8 @@ import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { useLayoutEffect, useRef, useState } from "react";
 import { nextReaction, validateReactions, resolveReactionOptions } from "@hjmds/design-contracts/reactions";
 import { Button } from "./actions.js";
+import { Minus, Plus } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 /** Controlled single reaction; counts and persistence belong to the product. */
 export function ReactionPicker({ label, options, value, onValueChange, disabled = false, layout = "wrap", more, layoutStyle }) {
     const [expanded, setExpanded] = useState(false);
@@ -31,7 +33,7 @@ export function ReactionPicker({ label, options, value, onValueChange, disabled 
                         ? _jsx("button", { type: "button", className: "hjm-chip hjm-reaction-picker__chip", "data-size": "small", "data-selected": selected || undefined, "aria-pressed": selected, disabled: disabled || option.disabled, "aria-label": option.label, onClick: () => choose(option.id), children: glyph }, option.id)
                         : _jsx(Button, { tone: "ghost", shape: "pill", selected: selected, disabled: disabled || option.disabled, "aria-label": option.label, onClick: () => choose(option.id), children: glyph }, option.id);
                 }) }), _jsx("div", { children: more ? chips
-                    ? _jsx("button", { ref: toggle, type: "button", className: "hjm-chip hjm-reaction-picker__chip", "data-size": "small", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: showingAll ? "−" : "+" }) })
-                    : _jsx(Button, { ref: toggle, tone: "ghost", shape: "pill", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: showingAll ? "−" : "+" }) }) : null })] });
+                    ? _jsx("button", { ref: toggle, type: "button", className: "hjm-chip hjm-reaction-picker__chip", "data-size": "small", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: _jsx(LucideGlyph, { node: showingAll ? Minus : Plus }) }) })
+                    : _jsx(Button, { ref: toggle, tone: "ghost", shape: "pill", "aria-label": more.label, "aria-expanded": showingAll, disabled: disabled, onClick: () => setExpanded(current => !current), children: _jsx("span", { "aria-hidden": "true", className: "hjm-reaction-picker__glyph", children: _jsx(LucideGlyph, { node: showingAll ? Minus : Plus }) }) }) : null })] });
 }
 //# sourceMappingURL=reaction-picker.js.map

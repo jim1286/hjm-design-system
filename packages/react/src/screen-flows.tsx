@@ -13,6 +13,8 @@ import { Button, IconButton } from "./actions.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
+import { EllipsisVertical, X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export type { MediaAlbum } from "./internal/media-album.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
@@ -289,7 +291,7 @@ export type SearchRecentQueries = Readonly<{
   onRemove(query: string): void;
   /** Decorative leading glyph (for example a history icon). */
   icon?: ReactNode;
-  /** Glyph inside the remove button; defaults to "×". */
+  /** Glyph inside the remove button; defaults to the Lucide X. */
   removeIcon?: ReactNode;
   /** Rows shown; default `searchScreenRecipe.recentVisible` (5). */
   maxVisible?: number;
@@ -430,7 +432,7 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit, hostRef, onRe
       {/* The remove control is the row's trailingAction on both platforms: it sits outside the row command, the row text
           stays on the gutter and the edge-aligned × glyph ends on the gutter line (2026-10-17 alignment decision). */}
       <Stack gap="xxs">{visible.map((item, index) => <ListRow key={item} density="compact" leading={recent.icon} title={item} onClick={() => onCommit(item)}
-        trailingAction={<IconButton data-search-recent-remove="" label={recent.removeLabel(item)} tone="ghost" edge="end" onClick={() => onRemove(item, index)}>{recent.removeIcon ?? "×"}</IconButton>} />)}</Stack>
+        trailingAction={<IconButton data-search-recent-remove="" label={recent.removeLabel(item)} tone="ghost" edge="end" onClick={() => onRemove(item, index)}>{recent.removeIcon ?? <LucideGlyph node={X} />}</IconButton>} />)}</Stack>
     </Stack> : null}
     {suggested?.items.length ? <SearchSuggestedChips suggested={suggested} onCommit={onCommit} /> : null}
   </Stack>;
@@ -473,7 +475,7 @@ function SearchResultsHeader({ summary, applied, cause, appliedHost, onRemove, o
     </Stack> : null}
     {applied?.items.length ? <Stack ref={appliedHost} axis="inline" wrap gap="xs" align="center">
       {applied.items.map((item, index) => <Chip key={item.key} data-search-applied-filter="" label={item.label} aria-label={applied.removeLabel(item.label)}
-        trailing={applied.removeIcon ?? <span aria-hidden="true">×</span>} onPress={() => onRemove(item.key, index)} />)}
+        trailing={applied.removeIcon ?? <LucideGlyph node={X} />} onPress={() => onRemove(item.key, index)} />)}
       <Button tone="ghost" size="small" onClick={onClearAll}>{applied.clearAllLabel}</Button>
     </Stack> : null}
   </Stack>;
@@ -714,8 +716,8 @@ function CommentTextAction({label,onPress,disabled=false,expanded}:Readonly<{lab
  return <button type="button" className="hjm-comment-row__action" disabled={disabled} aria-expanded={expanded} onClick={onPress}>{label}</button>;
 }
 
-/** Vertical dots drawn in the icon grid, matching Native's drawn glyph (the semantic `more` icon is horizontal). */
-function CommentMenuGlyph(){const size=commentThreadRecipe.menuGlyphSize;return <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">{[5,12,19].map(y=><circle key={y} cx="12" cy={y} r="1.75"/>)}</svg>;}
+/** Vertical dots (the semantic `more` icon is horizontal). */
+function CommentMenuGlyph(){return <LucideGlyph node={EllipsisVertical} size={commentThreadRecipe.menuGlyphSize}/>;}
 function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;menu:CommentMenu;items:readonly CommentMenuItemDescriptor[]}>){
  const label=menu.label(item);
  return <Menu presentation={menu.presentation ?? "anchored"} {...(menu.dismissLabel === undefined ? {} : {dismissLabel: menu.dismissLabel})} label={label} align="end" trigger={<IconButton label={label} tone="ghost" size={commentThreadRecipe.actionButtonSize}><CommentMenuGlyph/></IconButton>} items={items.map(entry=>({id:entry.id,label:entry.label,textValue:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))} onActionAfterDismiss={id=>menu.onAction(item,id)}/>;

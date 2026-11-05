@@ -38,6 +38,7 @@ profile/event 구성도 동일 typed helper를 쓰며 문자열 JSON 직렬화�
 ## 모션
 
 - 선택하지 않음→선택에서만 효과를 한 번 시작한다. 초기 selected, 해제, 테마/활성 복귀는 재생하지 않는다.
+- 기본 아이콘은 2.6.0부터 HJM이 그린 경로 대신 Lucide `bell`·`bookmark`·`heart`다(`toggleFeedbackLucideNames`, 2026-11-05 Lucide 전용 지시).
 - ripple: SVG circle 반경이 확대되면서 사라진다. ribbon: 아이콘이 위로 당겨졌다 제자리로 돌아온다.
   burst: 하트 주변 8방향 선분이 퍼지며 사라진다. 기본 아이콘의 최종 채움은 selected와 함께 유지된다.
 - 총 시간은 `toggleFeedbackRecipe.duration = motion.slow = 320ms`. 공통 geometry resolver를

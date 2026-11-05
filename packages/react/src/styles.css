@@ -838,6 +838,8 @@
 .hjm-choice[data-presentation="grouped"][data-state="mixed"] { border-color: var(--hjm-color-border-control); background: var(--hjm-color-surface-selected); }
 .hjm-choice[data-size="small"] { min-block-size: 44px; gap: var(--hjm-space-xs); padding: var(--hjm-space-xs) var(--hjm-space-sm); }
 .hjm-choice[data-size="small"][data-presentation="plain"] { padding: 0; }
+.hjm-glyph { flex: none; vertical-align: -0.125em; }
+.hjm-glyph[data-mirror]:dir(rtl) { transform: scaleX(-1); }
 .hjm-choice__input { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; }
 .hjm-choice__indicator { flex: 0 0 24px; display: grid; place-items: center; inline-size: 24px; block-size: 24px; margin-block-start: 2px; border: 2px solid var(--hjm-color-text-muted); background: var(--hjm-color-bg); }
 .hjm-choice[data-size="small"] .hjm-choice__indicator { flex-basis: 20px; inline-size: 20px; block-size: 20px; }
@@ -847,10 +849,9 @@
 .hjm-choice[data-kind="radio"] .hjm-choice__indicator { border-radius: 50%; }
 .hjm-choice[data-state="checked"] .hjm-choice__indicator, .hjm-choice[data-state="mixed"] .hjm-choice__indicator,
 .hjm-choice__indicator[data-state="checked"], .hjm-choice__indicator[data-state="mixed"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
-.hjm-choice[data-state="checked"] .hjm-choice__indicator::after, .hjm-choice__indicator[data-kind="checkbox"][data-state="checked"]::after { content: ""; inline-size: 8px; block-size: 4px; border-inline-start: 2px solid var(--hjm-color-on-primary); border-block-end: 2px solid var(--hjm-color-on-primary); transform: rotate(-45deg); }
-[dir="rtl"] .hjm-choice[data-state="checked"] .hjm-choice__indicator::after, [dir="rtl"] .hjm-choice__indicator[data-kind="checkbox"][data-state="checked"]::after { transform: rotate(45deg); }
-.hjm-choice[data-kind="radio"][data-state="checked"] .hjm-choice__indicator::after { inline-size: 8px; block-size: 8px; border: 0; border-radius: 50%; background: var(--hjm-color-on-primary); transform: none; }
-.hjm-choice[data-state="mixed"] .hjm-choice__indicator::after, .hjm-choice__indicator[data-state="mixed"]::after { content: ""; inline-size: 10px; block-size: 2px; background: var(--hjm-color-on-primary); }
+.hjm-choice__indicator > .hjm-glyph { inline-size: 14px; block-size: 14px; color: var(--hjm-color-on-primary); stroke-width: 3; }
+.hjm-choice[data-size="small"] .hjm-choice__indicator > .hjm-glyph { inline-size: 12px; block-size: 12px; }
+.hjm-choice[data-kind="radio"][data-state="checked"] .hjm-choice__indicator::after { content: ""; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--hjm-color-on-primary); }
 .hjm-choice__copy { display: grid; gap: var(--hjm-space-xxs); padding-block: 2px; }
 .hjm-choice[data-state="checked"] .hjm-choice__copy > :first-child,
 .hjm-choice[data-state="mixed"] .hjm-choice__copy > :first-child { font-weight: var(--hjm-font-weight-semibold); }
@@ -2289,7 +2290,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tree__node[aria-disabled="true"] { color: var(--hjm-color-text-weak); }
 .hjm-tree__node:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
 .hjm-tree__indent { flex: 0 0 auto; inline-size: calc(var(--hjm-tree-depth) * var(--hjm-tree-indent)); }
-.hjm-tree__toggle { flex: 0 0 auto; inline-size: var(--hjm-space-md); color: var(--hjm-color-text-muted); text-align: center; }
+.hjm-tree__toggle { flex: 0 0 auto; display: grid; place-items: center; inline-size: var(--hjm-space-md); color: var(--hjm-color-text-muted); }
 .hjm-tree__label { min-inline-size: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--hjm-space-xs); overflow-wrap: anywhere; }
 .hjm-tree__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 .hjm-tree__check {
@@ -2796,7 +2797,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-select__leading, .hjm-select__option-leading { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; color: var(--hjm-color-text-muted); }
 .hjm-select__value { min-inline-size: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hjm-select__value[data-state="placeholder"] { color: var(--hjm-color-text-muted); }
-.hjm-select__indicator { flex: 0 0 auto; color: var(--hjm-color-text-muted); pointer-events: none; }
+.hjm-select__indicator { flex: 0 0 auto; display: flex; color: var(--hjm-color-text-muted); pointer-events: none; }
 .hjm-select__busy-indicator { flex: 0 0 auto; inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-select__native + .hjm-select__indicator { margin-inline-start: calc(-1 * var(--hjm-space-lg)); }
 .hjm-select__listbox { position: fixed; z-index: var(--hjm-layer-dropdown); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); max-block-size: 22.5rem; overflow: auto; padding: var(--hjm-select-popover-padding, var(--hjm-space-xs)); /* selectRecipe.popover.padding 8 (was 4 until 2026-10-06) */ border: 1px solid color-mix(in srgb, var(--hjm-color-border-control) 50%, transparent); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
@@ -3683,7 +3684,7 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-image-choice__tile:disabled { opacity: 0.5; cursor: default; }
 .hjm-image-choice__image { display: flex; align-items: center; justify-content: center; inline-size: 100%; block-size: 100%; overflow: hidden; border-radius: var(--hjm-image-choice-radius); background: var(--hjm-color-surface); }
 .hjm-image-choice__image > img { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
-.hjm-image-choice__check { position: absolute; inset-block-start: 0; inset-inline-end: 0; inline-size: var(--hjm-image-choice-check); block-size: var(--hjm-image-choice-check); border-radius: 50%; background: var(--hjm-color-content-brand); color: var(--hjm-color-on-primary); font-size: 12px; line-height: var(--hjm-image-choice-check); text-align: center; }
+.hjm-image-choice__check { position: absolute; inset-block-start: 0; inset-inline-end: 0; inline-size: var(--hjm-image-choice-check); block-size: var(--hjm-image-choice-check); border-radius: 50%; background: var(--hjm-color-content-brand); color: var(--hjm-color-on-primary); font-size: 12px; display: grid; place-items: center; }
 .hjm-message-composer__leading { flex: 0 0 auto; align-self: center; display: inline-flex; }
 .hjm-message-composer__quick { display: flex; justify-content: space-between; gap: var(--hjm-space-xs); }
 /* Items share the composer width (max 44px) so eight emoji fit beside a host avatar. */

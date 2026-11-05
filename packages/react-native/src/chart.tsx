@@ -10,11 +10,16 @@ import {
   splitSegments, stepChartIndex, validateChartLegendLayout, validateChartSeries,
   type ChartBar, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, glyph } from "@hjmds/design-contracts/foundations";
 // Chart labels and values use the text emphasis scale, the same weight the Web `.hjm-chart__*` rules read.
 import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text, useHjmTextFace } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import Square from "lucide-react-native/icons/square";
+import SquareCheck from "lucide-react-native/icons/square-check";
+import ArrowUp from "lucide-react-native/icons/arrow-up";
+import ArrowRight from "lucide-react-native/icons/arrow-right";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 // react-native-svg forwards native-only props to SVG DOM on Expo Web. Keep the
 // decorative drawing hidden with the host platform's accessibility property.
@@ -364,7 +369,7 @@ export function ChartLegend({ items, selectedId, onSelect, exclusion, layout = "
     </View>;
     const selection = onSelect ? <Pressable key={item.id} accessibilityRole="button" accessibilityState={{ selected: selectedId === item.id }} accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`} onPress={() => onSelect(selectedId === item.id ? null : item.id)}>{content}</Pressable>
       : <View key={item.id} accessible accessibilityLabel={`${item.label}${item.value ? ` ${item.value}` : ""}`}>{content}</View>;
-    return exclusion ? <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}><Pressable style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }} accessibilityRole="checkbox" accessibilityState={{ checked: !exclusion.excludedIds.includes(item.id) }} accessibilityLabel={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onPress={() => exclusion.onToggle(item.id)}><Text>{exclusion.excludedIds.includes(item.id) ? "□" : "✓"}</Text></Pressable><View style={inline ? {} : { flex: 1 }}>{selection}</View></View> : selection;
+    return exclusion ? <View key={item.id} style={{ flexDirection: "row", alignItems: "center", gap: spacing.sm }}><Pressable style={{ minHeight: 44, minWidth: 44, alignItems: "center", justifyContent: "center" }} accessibilityRole="checkbox" accessibilityState={{ checked: !exclusion.excludedIds.includes(item.id) }} accessibilityLabel={exclusion.label(item, !exclusion.excludedIds.includes(item.id))} onPress={() => exclusion.onToggle(item.id)}><LucideGlyph icon={exclusion.excludedIds.includes(item.id) ? Square : SquareCheck} size={glyph.sm} color={palette.legend} /></Pressable><View style={inline ? {} : { flex: 1 }}>{selection}</View></View> : selection;
   })}</View>;
 }
 
@@ -492,7 +497,11 @@ export function ScatterChart({ points, accessibilityLabel, xLabel, yLabel, forma
       </Svg>}
       {g && focusPoint && <CursorBubble x={focusPoint.px} width={width} text={`${focusPoint.label} · ${formatX(focusPoint.x)} / ${formatY(focusPoint.y)}`} surface={palette.surface} color={palette.legend} />}
     </View>
-    <View style={{ flexDirection: "row", justifyContent: "space-between" }}><Text variant="caption" tone="muted">{yLabel} ↑</Text><Text variant="caption" tone="muted">{xLabel} →</Text></View>
+    {/* Axis direction marks are Lucide arrows beside the axis names; axes do not mirror in RTL. */}
+    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xxs }}><Text variant="caption" tone="muted">{yLabel}</Text><LucideGlyph icon={ArrowUp} size={glyph.xs} color={palette.label} /></View>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xxs }}><Text variant="caption" tone="muted">{xLabel}</Text><LucideGlyph icon={ArrowRight} size={glyph.xs} color={palette.label} /></View>
+    </View>
     {seriesLabels && seriesLabels.length > 1 && <ChartLegend items={seriesLabels.map((label, i) => ({ id: String(i), label, color: palette.seriesColor({}, i) }))} />}
   </View>;
 }

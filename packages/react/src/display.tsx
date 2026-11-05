@@ -45,6 +45,8 @@ import { useHjmDensityDefault, useOptionalHjmTheme } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 import { Icon } from "./supplemental-display.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { Quote } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type { CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 export type { TagTone } from "@hjmds/design-contracts/components/tag";
@@ -344,7 +346,7 @@ export type QuoteCardProps = Omit<HTMLAttributes<HTMLElement>, "children" | "tit
 }>;
 
 export function QuoteCard({ children, attribution, renderMark, ...props }: QuoteCardProps) {
-  return <Card {...props} leading={<span className="hjm-quote-card__mark" aria-hidden="true">{renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? "“"}</span>}>
+  return <Card {...props} leading={<span className="hjm-quote-card__mark" aria-hidden="true">{renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? <LucideGlyph node={Quote} size={cardRecipe.quotation.markSize} />}</span>}>
     <blockquote className="hjm-quote-card__body">
       {children}
       {attribution === undefined ? null : <footer><Text variant="caption" tone="muted">{attribution}</Text></footer>}

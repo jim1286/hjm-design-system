@@ -1,9 +1,9 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { contrastRatio } from "@hjmds/design-contracts/palette-contrast";
 import { expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const { View } = await import("react-native");
-  return { default: View, Circle: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
 });
 import { BarChart, LineChart, PieChart, RadarChart, Sparkline } from "../src/chart.js";
 import { HjmNativeProvider } from "../src/provider.js";

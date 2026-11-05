@@ -120,7 +120,6 @@ import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 export type { TabsAppearance };
 
 import { Button, IconButton } from "./actions.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { ScreenExitButton, type ScreenExit } from "./internal/screen-exit.js";
 import { validateScreenExit } from "@hjmds/design-contracts/screen-patterns";
 import { Spinner } from "./feedback.js";
@@ -134,6 +133,9 @@ import { minimumTargetStyle, resolveNativeShadowElevation } from "./internal/sty
 import { Text } from "./primitives.js";
 import { resolveNativeMenuPosition } from "./internal/menu-position.js";
 import { HjmNativeProvider, useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
+import X from "lucide-react-native/icons/x";
+import Check from "lucide-react-native/icons/check";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type TabItem<Value extends string = string> = Readonly<{
   id: Value;
@@ -2068,7 +2070,7 @@ export function Menu<
         </View>
         {item.shortcut ? <Text accessible={false} tone="muted" variant={menuRecipe.shortcut.textVariant}>{item.shortcut}</Text> : null}
         {trailing ? <View accessibilityElementsHidden accessible={false}>{trailing}</View> : null}
-        {selection.mode !== "none" && selected ? <Text accessible={false} tone="brand">✓</Text> : null}
+        {selection.mode !== "none" && selected ? <LucideGlyph icon={Check} size={glyph.sm} color={theme.colors.contentBrand} /> : null}
       </Pressable>
     );
   };
@@ -2179,7 +2181,7 @@ export function Menu<
                   {title.trim() ? <Text variant="body" emphasis="strong" accessibilityRole="header">{title}</Text> : null}
                   {description ? <Text tone="muted" variant="label" numberOfLines={1}>{description}</Text> : null}
                 </View>
-                <IconButton label={dismissLabel} onPress={() => close("programmatic")}><FixedGlyph fontSize={glyph.sm}>×</FixedGlyph></IconButton>
+                <IconButton label={dismissLabel} onPress={() => close("programmatic")}><LucideGlyph icon={X} size={glyph.sm} color={theme.colors.text} /></IconButton>
               </View>
             ) : title.trim() ? <View onLayout={event => setHeadingHeight(event.nativeEvent.layout.height)}><Text tone="muted" variant="label" align="center">{title}</Text>{description ? <Text tone="muted" variant="label">{description}</Text> : null}</View> : null}
             {/* A short action list must size to its content; ScrollView's default growth left empty modal space. */}

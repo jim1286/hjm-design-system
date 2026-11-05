@@ -1,6 +1,6 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Path: View, Circle: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View, G: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Svg: View, Path: View, Circle: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View, G: View }; });
 import { semanticIconLucideNames, semanticIconNames } from "@hjmds/design-contracts/components/icon";
 import { renderSemanticGlyph, semanticIconGlyphs } from "../src/icon-svg.js";
 import { Icon } from "../src/primitives.js";

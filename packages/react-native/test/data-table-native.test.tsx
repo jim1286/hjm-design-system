@@ -2,6 +2,8 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { expect, it } from "vitest";
 import { sortDataTableRows, toDataTableSortValue, type DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { DataTable } from "../src/data-table.js";
+import { LucideGlyph } from "../src/internal/lucide-glyph.js";
+import ArrowUp from "lucide-react-native/icons/arrow-up";
 import { HjmNativeProvider } from "../src/provider.js";
 import { View } from "react-native";
 import { useState } from "react";
@@ -41,7 +43,8 @@ it("fits full sortable headers and innings values in both header and body column
   try {
     const measurement = (text: string, width: number) => act(() => tree.root.findAll(n => typeof n.props.onLayout === "function" && n.props.children === text)[0]!.props.onLayout({ nativeEvent: { layout: { width } } }));
     act(() => tree.root.findAllByType(View).find(n => n.props.accessibilityLabel === "투수 통산")!.props.onLayout({ nativeEvent: { layout: { width: 240 } } }));
-    measurement("평균자책점 ▲\n평균자책점 ▼", 96);
+    // The header text alone; a sortable header adds the Lucide sort arrow and its gap (4 + 14).
+    measurement("평균자책점", 78);
     measurement("150 ⅓", 64);
     const header = tree.root.find(n => typeof n.type === "string" && n.props.accessibilityLabel === "평균자책점 정렬");
     expect(header.props.style.width).toBe(112);
@@ -53,7 +56,7 @@ it("fits full sortable headers and innings values in both header and body column
     // Sorting can add an arrow without changing the space reserved for the header.
     act(() => header.props.onPress());
     expect(header.props.style.width).toBe(112);
-    expect(tree.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.children) && n.props.children.join("") === "평균자책점 ▲").length).toBeGreaterThan(0);
+    expect(header.findAllByType(LucideGlyph).map(n => n.props.icon)).toEqual([ArrowUp]);
   } finally { act(() => tree.unmount()); }
 });
 

@@ -27,6 +27,8 @@ import {
   useOpenState,
   type ModalOpenState,
 } from "./modal.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 // No `layoutStyle`: an edge-attached portal panel; only its optional trigger is in flow, and the caller places that.
 export type SidePanelProps = ModalOpenState<SidePanelOpenChangeDetails> &
@@ -203,7 +205,7 @@ export const SidePanel = forwardRef<HTMLDivElement, SidePanelProps>(function Sid
             disabled={busy && !policy.dismissWhileBusy}
             onClick={() => requestClose("close-action")}
           >
-            ×
+            <LucideGlyph node={X} />
           </button>
         ) : null}
       </header>

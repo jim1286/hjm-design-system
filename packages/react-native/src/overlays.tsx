@@ -73,7 +73,8 @@ import {
   type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
 import { isDevelopment } from "./internal/diagnostics.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { SheetBodyScrollContext, type SheetBodyScroll } from "./internal/sheet-body-scroll.js";
 import { minimumTargetStyle } from "./internal/styles.js";
@@ -81,9 +82,9 @@ import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import { resolveNativeShadowElevation } from "./internal/styles.js";
 
-// A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
+// A close glyph is icon artwork, not body copy: Lucide's X at a fixed size stays inside IconButton's frame.
 function CloseGlyph() {
-  return <FixedGlyph fontSize={glyph.sm}>×</FixedGlyph>;
+  return <LucideGlyph icon={X} size={glyph.sm} color={useHjmNativeTheme().colors.text} />;
 }
 
 // Keep interaction visibility off native-driven animation hosts: closing content becomes inert while its host exits.
@@ -1219,7 +1220,7 @@ export type SheetProps = NativeModalProps &
     keyboardAvoidance?: boolean;
     /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
     scrollable?: boolean;
-    /** Visible × in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
+    /** Visible close button (Lucide X) in the header. Off by default for bottom sheets, which close by dragging (2026-10-16). */
     showClose?: boolean;
     /** Side sheets only: same as Dialog. Bottom sheets disable automatic input focus, including nested screens. */
     initialFocus?: InitialFocusMode;

@@ -6,13 +6,13 @@ import { chatMessageRecipe, holdMenuRecipe, screenPatternRecipe, type ChatReacti
 import { resolveIconButtonPresentation, type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "../provider.js";
 import { IconButton } from "../actions.js";
-import { FixedGlyph } from "./fixed-glyph.js";
-import { DrawnMoreVertical } from "./drawn-glyphs.js";
+import EllipsisVertical from "lucide-react-native/icons/ellipsis-vertical";
+import { ChevronGlyph, LucideGlyph } from "./lucide-glyph.js";
 import { Text } from "../primitives.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list (e.g. "Load more"). */ submenu?: boolean;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows a reading-end chevron for rows that open a further list (e.g. "Load more"). */ submenu?: boolean;
   /** Same vocabulary as Menu items: `danger` for destructive rows such as delete (default `neutral`). */ tone?: MenuItemTone }>;
 /** Lets the owning message open the same hold menu from its reaction summary. */
 export type MessageReactionsHandle = Readonly<{ open(): void }>;
@@ -80,8 +80,8 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
       onAccessibilityAction={event => { if(event.nativeEvent.actionName === "reply") { if(replyAction && !replyAction.disabled) replyAction.onPress(); } else if (!picker.disabled) setAnchor(height / 2); }}>{children}</Pressable>
     {/* An interactive album must keep its own page buttons in the AX tree. A separate menu target
         preserves reaction/reply access instead of merging the whole album into one button. */}
-    {/* Match the comment menu's drawn vertical dots (2026-10-25 user decision), independent of font metrics. */}
-    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><DrawnMoreVertical size={glyph.sm} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>:null}
+    {/* Match the comment menu's vertical dots (2026-10-25 user decision): the same Lucide EllipsisVertical, independent of font metrics. */}
+    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><LucideGlyph icon={EllipsisVertical} size={glyph.sm} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>:null}
     <Modal visible={open} transparent statusBarTranslucent animationType={environment.reducedMotion ? "none" : "fade"}
       onRequestClose={close} onDismiss={() => { restore(); runQueuedAction(); }} onShow={focusPicker}>
       <View style={{ flex: 1 }}>
@@ -108,7 +108,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
               style={({ pressed }) => ({ minHeight: holdMenuRecipe.actionRowHeight, flexDirection: "row", alignItems: "center", gap: tokens.spacing.sm, paddingHorizontal: tokens.spacing.md, opacity: row.disabled ? 0.5 : 1, backgroundColor: pressed ? colors.surface : "transparent" })}>
               {row.icon ? <View style={{ width: holdMenuRecipe.iconSize, alignItems: "center" }}>{row.icon}</View> : null}
               <View style={{ flex: 1, minWidth: 0 }}><Text tone={row.tone === "danger" ? "danger" : "body"}>{row.label}</Text></View>
-              {row.submenu ? <FixedGlyph>›</FixedGlyph> : null}
+              {row.submenu ? <ChevronGlyph direction="end" size={glyph.sm} color={colors.textMuted} /> : null}
             </Pressable>)}
           </View> : null}
           </View>

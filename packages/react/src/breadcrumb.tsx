@@ -4,6 +4,8 @@ import { resolveBreadcrumbDescriptor, type BreadcrumbItemDescriptor } from "@hjm
 import { forwardRef, type ForwardedRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { ChevronRight } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type BreadcrumbProps<Id extends string = string> = Omit<
   HTMLAttributes<HTMLElement>,
@@ -56,7 +58,7 @@ function BreadcrumbInner<Id extends string>(
             )}
             {index < descriptor.items.length - 1 ? (
               <span className="hjm-breadcrumb__separator" aria-hidden="true" data-default={separator === undefined}>
-                {separator === undefined ? "›" : separator}
+                {separator === undefined ? <LucideGlyph node={ChevronRight} /> : separator}
               </span>
             ) : null}
           </li>

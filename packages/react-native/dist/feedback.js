@@ -7,12 +7,14 @@ import { emptyStateRecipe, noticeRecipe, progressRecipe, resolveProgressSegments
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
+import { AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { Button, IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
 import { Badge } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export function Notice({ title, description, tone = noticeRecipe.defaults.tone, appearance = noticeRecipe.defaults.appearance, announcement = "none", icon, renderIcon, action, layoutStyle, ...props }) {
     assertNoRemovedStyleProps("Notice", props, ["style"]);
     const theme = useHjmNativeTheme();
@@ -399,7 +401,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
     const closeControl = _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), 
         // The 44 target overhangs: block so it centres on the anchor without stretching the row, inline-end so the glyph
         // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
-        layoutStyle: { marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }, children: _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: material.close, fontSize: glyph[toastRecipe.close.glyph] }, children: "\u00D7" }) });
+        layoutStyle: { marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }, children: _jsx(LucideGlyph, { icon: X, size: glyph[toastRecipe.close.glyph], color: material.close }) });
     return (_jsxs(Animated.View, { accessible: false, onTouchCancel: () => onResume("pointer"), onTouchEnd: () => onResume("pointer"), onTouchStart: () => onPause("pointer"), style: [
             {
                 alignItems: "stretch",

@@ -43,14 +43,12 @@ const executableFamilyExports = Object.entries(packageJson.exports)
   .map(([exportPath, definition]) => [exportPath, getNativeRuntimeTarget(definition)])
   .filter(
     ([exportPath, target]) =>
-      // SVG/Blobatar effects, QR and charts (2026-10-14) use the complete Expo showcase export; this baseline must resolve without their peers.
-      // OverviewScreen composes EffectSurface, so its optional subpath belongs to the same SVG boundary.
-      // ./icon-svg draws the semantic Lucide glyphs with the optional lucide-react-native and react-native-svg peers.
-      // ./media-transport, ./toggle-feedback and ./authoring-tools (BezierEditor curve) draw with the same optional
-      // react-native-svg peer; their contract docs state it, so they sit outside this peer-free baseline too.
-      // ./data-workflows composes BarChart from ./chart and therefore inherits the same peer.
-      // ./sheet-panel requires Gesture Handler, Reanimated and Worklets, like ./sheet-gesture.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./design-profile", "./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./chart", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./sheet-panel", "./context-menu-native", "./icon-svg", "./media-transport", "./toggle-feedback", "./authoring-tools", "./data-workflows"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      // Blobatar, QR, motion and gesture effects (2026-10-14) use the complete Expo showcase export; this baseline must
+      // resolve without their optional peers. react-native-svg and lucide-react-native are required peers since Lucide
+      // became the only icon source (user instruction 2026-11-05), so SVG-only families (design-profile, effect-surface,
+      // chart, icon-svg, media-transport, toggle-feedback, authoring-tools, data-workflows) belong to the baseline.
+      // ./qr-code also needs qrcode-generator; ./sheet-panel requires Gesture Handler, Reanimated and Worklets, like ./sheet-gesture.
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./avatar-blobatar", "./avatar-blobatar-motion", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./sheet-panel", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>
@@ -58,7 +56,7 @@ const requiredRendererSources = executableFamilyExports.map(([, target]) =>
 );
 
 const forbiddenSourcePatterns = [
-  { label: "optional effect runtime", pattern: /(?:@shopify[\/]react-native-skia|react-native-reanimated|react-native-worklets|qrcode-generator|react-native-svg)/u },
+  { label: "optional effect runtime", pattern: /(?:@shopify[\/]react-native-skia|react-native-reanimated|react-native-worklets|qrcode-generator)/u },
   { label: "Expo", pattern: /(?:^|\/)node_modules\/expo(?:\/|$)/u },
   { label: "react-dom", pattern: /(?:^|\/)node_modules\/react-dom(?:\/|$)/u },
   {

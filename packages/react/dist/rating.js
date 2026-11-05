@@ -3,8 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useId, useRef } from "react";
 import { resolveRating } from "@hjmds/design-contracts/reference-controls";
 import { Button } from "./actions.js";
+import { Star as StarNode } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 function Star({ fraction }) {
-    return _jsxs("span", { "aria-hidden": "true", style: { pointerEvents: "none", position: "relative", display: "inline-block", fontSize: "1.75em", lineHeight: 1, color: "var(--hjm-color-content-brand, currentColor)" }, children: [_jsx("span", { children: "\u2606" }), _jsx("span", { style: { position: "absolute", inset: 0, width: `${fraction * 100}%`, overflow: "hidden" }, children: "\u2605" })] });
+    return _jsxs("span", { "aria-hidden": "true", style: { pointerEvents: "none", position: "relative", display: "inline-flex", fontSize: "1.75em", color: "var(--hjm-color-content-brand, currentColor)" }, children: [_jsx(LucideGlyph, { node: StarNode }), _jsx("span", { style: { position: "absolute", inset: 0, width: `${fraction * 100}%`, overflow: "hidden" }, children: _jsx(LucideGlyph, { node: StarNode, filled: true }) })] });
 }
 /** Controlled score input, with a distinct non-interactive average representation. */
 export function Rating(props) {

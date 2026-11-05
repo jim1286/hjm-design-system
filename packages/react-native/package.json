@@ -812,9 +812,6 @@
     "react-native-gesture-handler": {
       "optional": true
     },
-    "react-native-svg": {
-      "optional": true
-    },
     "qrcode-generator": {
       "optional": true
     },
@@ -840,9 +837,6 @@
       "optional": true
     },
     "@blobatar/react-native": {
-      "optional": true
-    },
-    "lucide-react-native": {
       "optional": true
     }
   }

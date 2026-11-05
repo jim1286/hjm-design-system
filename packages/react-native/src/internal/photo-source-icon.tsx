@@ -2,9 +2,12 @@ import { View } from "react-native";
 import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import type { PhotoSource } from "@hjmds/design-contracts/screen-patterns";
 import { glyph } from "@hjmds/design-contracts/foundations";
+import Camera from "lucide-react-native/icons/camera";
+import Images from "lucide-react-native/icons/images";
 import { useHjmNativeTheme } from "../provider.js";
+import { LucideGlyph } from "./lucide-glyph.js";
 
-/** Built-in source marks use Views so opening the core sheet never requires an optional SVG peer. */
+/** Built-in source marks are Lucide icons (the only icon source, 2026-11-05) on a neutral plate. */
 export function PhotoSourceIcon({ source }: { source: PhotoSource }) {
   const { environment, tokens } = useHjmNativeTheme();
   // Shared neutral colors use a stronger plate/line contrast after device feedback (2026-10-20).
@@ -14,29 +17,14 @@ export function PhotoSourceIcon({ source }: { source: PhotoSource }) {
   return <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
     style={{ width: listRowRecipe.leadingSize, height: listRowRecipe.leadingSize, borderRadius: tokens.radius.md,
       backgroundColor: colors.surfaceAccent, alignItems: "center", justifyContent: "center" }}>
-    <PhotoSourceGlyph source={source} color={colors.contentBrand} background={colors.surfaceAccent} />
+    <PhotoSourceGlyph source={source} color={colors.contentBrand} />
   </View>;
 }
 
 /**
- * The source mark without its plate, for a quiet inline action (PhotoAttachmentField's choose button, 2026-11-03).
- * `background` fills the overlapping frame so the back frame's line does not show through.
+ * The source mark without its plate, for a quiet inline action (PhotoAttachmentField's choose button, 2026-11-03):
+ * Lucide Camera and Images.
  */
-export function PhotoSourceGlyph({ source, color, background, size = glyph.md }: Readonly<{ source: PhotoSource; color: string; background: string; size?: number }>) {
-  const stroke = { borderColor: color, borderWidth: 2 };
-  return <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
-    style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
-      {source === "camera" ? <>
-        <View style={{ ...stroke, position: "absolute", top: size * .12, width: size * .34, height: size * .2, borderRadius: 2 }} />
-        <View style={{ ...stroke, width: size * .88, height: size * .62, marginTop: size * .12, borderRadius: 3, backgroundColor: background, alignItems: "center", justifyContent: "center" }}>
-          <View style={{ ...stroke, width: size * .3, height: size * .3, borderRadius: size }} />
-        </View>
-      </> : <>
-        <View style={{ ...stroke, width: size * .7, height: size * .7, position: "absolute", top: 0, start: 0, borderRadius: 3 }} />
-        <View style={{ ...stroke, width: size * .78, height: size * .72, position: "absolute", bottom: 0, end: 0, borderRadius: 3, backgroundColor: background, overflow: "hidden" }}>
-          <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: color, position: "absolute", top: 3, end: 3 }} />
-          <View style={{ ...stroke, width: size * .45, height: size * .45, position: "absolute", bottom: -size * .3, start: 1, transform: [{ rotate: "45deg" }] }} />
-        </View>
-      </>}
-  </View>;
+export function PhotoSourceGlyph({ source, color, size = glyph.md }: Readonly<{ source: PhotoSource; color: string; size?: number }>) {
+  return <LucideGlyph icon={source === "camera" ? Camera : Images} size={size} color={color} />;
 }

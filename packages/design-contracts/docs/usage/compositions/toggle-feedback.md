@@ -36,7 +36,7 @@ Web의 counter는 기존 AnimatedStatistic과 같은 `@number-flow/react`, Nativ
 | --- | --- | --- | --- |
 | 바깥 틀 | Stack | 카드·상세 본문 안 | gap=sm (`spacing.sm`, 12px) |
 | 행동·수치 | Button · AnimatedStatistic | inline 행, 부족하면 wrap | gap=md (`spacing.md`, 16px), 수치 compact |
-| 아이콘 | 기본 SVG / icon / renderIcon | 버튼 leading | glyph=24px, effect=40px, 중심 유지 |
+| 아이콘 | 기본 Lucide(ripple `bell`·ribbon `bookmark`·burst `heart`, `toggleFeedbackLucideNames`) / icon / renderIcon | 버튼 leading | glyph=24px, effect=40px, 중심 유지 |
 | 오류 | Text | 안내 영역 가로·세로 중앙 | 임의 상단 여백 없음 |
 
 ## 흐름과 상태

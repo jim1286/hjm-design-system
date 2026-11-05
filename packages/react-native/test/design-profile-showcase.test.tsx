@@ -16,7 +16,7 @@ vi.mock("expo", () => ({ requireOptionalNativeModule: () => null }));
 vi.mock("../../../showcase/native/node_modules/expo", () => ({ requireOptionalNativeModule: () => null }));
 // EffectSurface imports the SVG native drawing host even when only RecordSample is rendered; the FAB comparison
 // draws its semantic add icon with a Lucide glyph, which needs the Svg/Path hosts too.
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Path: View, Line: View, Polyline: View, Polygon: View, G: View, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Svg: View, Path: View, Line: View, Polyline: View, Polygon: View, G: View, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
 vi.mock("../../../showcase/native/src/toast-preview", () => ({ ToastPreview: () => null }));
 vi.mock("react-native-safe-area-context", () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

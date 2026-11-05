@@ -14,7 +14,8 @@ import { Stack } from "../primitives.js";
 import { useHjmNativeTheme } from "../provider.js";
 import type { HjmCompositionStyleProp } from "../composition-style.js";
 import type { ImageViewerProps } from "../image-viewer.js";
-import { DrawnClose } from "./drawn-glyphs.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./lucide-glyph.js";
 import { ImageViewerTrigger } from "./image-viewer-trigger.js";
 import { PhotoSourceGlyph } from "./photo-source-icon.js";
 import { PhotoSourceSheet } from "./photo-source-sheet.js";
@@ -135,7 +136,7 @@ export function createPhotoAttachmentField(Viewer: ViewerProps["Viewer"]) {
       {actions.choose.visible && props.chooseAction !== "none" ? <View style={{ alignSelf: "flex-start" }}>
         <Button tone={photoAttachmentRecipe.chooseTone} size={photoAttachmentRecipe.chooseSize} edge="start"
           disabled={actions.choose.disabled} loading={actions.choose.loading}
-          leading={<PhotoSourceGlyph source="library" color={colors.textMuted} background="transparent" size={glyph.sm} />}
+          leading={<PhotoSourceGlyph source="library" color={colors.textMuted} size={glyph.sm} />}
           onPress={() => setSourceOpen(true)}>{labels.add}</Button>
       </View> : null}
       <PhotoSourceSheet open={sourceOpen} onOpenChange={setSourceOpen} labels={labels.source} disabled={actions.choose.disabled}
@@ -146,7 +147,7 @@ export function createPhotoAttachmentField(Viewer: ViewerProps["Viewer"]) {
         safeAreaInsets={props.safeAreaInsets} Viewer={Viewer} {...(props.imageHost ? { imageHost: props.imageHost } : {})}
         corner={<IconButton label={labels.remove} tone={photoAttachmentRecipe.removeTone} size={photoAttachmentRecipe.removeSize}
           shape={photoAttachmentRecipe.removeShape} disabled={actions.remove.disabled} onPress={props.onRemove}>
-          <DrawnClose size={glyph[iconButtonRecipe.sizes[photoAttachmentRecipe.removeSize].glyph]} color={colors.text} />
+          <LucideGlyph icon={X} size={glyph[iconButtonRecipe.sizes[photoAttachmentRecipe.removeSize].glyph]} color={colors.text} />
         </IconButton>} /> : null}
     </Stack>;
   };

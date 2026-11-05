@@ -4,7 +4,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AppState, Text, startedAnimatedTimings } from "./react-native.mock.js";
 import { expect, it, vi } from "vitest";
 const host = vi.hoisted(() => ({ fail: false }));
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: (props: object) => { if (host.fail) throw new Error("SVG host unavailable"); return <View {...props} />; }, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: (props: object) => { if (host.fail) throw new Error("SVG host unavailable"); return <View {...props} />; }, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
 import { EffectSurface } from "../src/effect-surface.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { TextField } from "../src/inputs.js";

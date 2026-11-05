@@ -5,6 +5,8 @@ import { chipRecipe } from "@hjmds/design-contracts/recipes";
 import { shortcutRailRecipe, validateShortcutRail, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { classNames } from "./internal.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> = Omit<HTMLAttributes<HTMLUListElement>, "children"> & Readonly<{
   // Infer payload from items; a product's base-typed handler must not erase extra fields.
@@ -50,7 +52,7 @@ export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAc
           // Reconcile only a focused removal after the product actually removes its stable ID.
           if (event.currentTarget === document.activeElement) pending.current = { removed: item.id, index };
           onRemove(item);
-        }}><span aria-hidden="true">{removeIcon ?? "×"}</span></button> : null}
+        }}><span aria-hidden="true">{removeIcon ?? <LucideGlyph node={X} />}</span></button> : null}
     </li>)}
   </ul>;
 }

@@ -4,6 +4,8 @@ import { getTreeArrowKeyIntent, getTreeArrowResult, getVisibleTreeNavigationTarg
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import { ChevronDown, ChevronRight } from "lucide";
+import { CheckGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 const typeaheadResetMs = 500;
 function selectedIds(selection) {
     if (!selection || selection.mode === "none")
@@ -172,6 +174,6 @@ export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleNa
                     if (node.hasChildren)
                         setExpanded(node.id, !node.expanded);
                     toggleSelection(node);
-                }, onFocus: () => setFocusedId(node.id), onKeyDown: (event) => onKeyDown(event, node), children: [_jsx("span", { "aria-hidden": "true", className: "hjm-tree__indent" }), checkedStates ? (_jsx("span", { "aria-hidden": "true", className: "hjm-tree__check", "data-state": String(checkedStates.get(node.id) ?? false), children: checkedStates.get(node.id) === true ? "✓" : checkedStates.get(node.id) === "mixed" ? "–" : "" })) : null, _jsx("span", { "aria-hidden": "true", className: "hjm-tree__toggle", "data-visible": node.hasChildren || undefined, children: node.hasChildren ? renderToggle?.({ expanded: node.expanded }) ?? (node.expanded ? "▾" : "▸") : null }), _jsxs("span", { "aria-hidden": "true", className: "hjm-tree__label", children: [node.label, node.description ? _jsx("span", { className: "hjm-tree__description", children: node.description }) : null] })] }, node.id))), asyncState.status === "loadingMore" ? _jsx("p", { className: "hjm-tree__state", role: "status", children: asyncState.message }) : null] }));
+                }, onFocus: () => setFocusedId(node.id), onKeyDown: (event) => onKeyDown(event, node), children: [_jsx("span", { "aria-hidden": "true", className: "hjm-tree__indent" }), checkedStates ? (_jsx("span", { "aria-hidden": "true", className: "hjm-tree__check", "data-state": String(checkedStates.get(node.id) ?? false), children: _jsx(CheckGlyph, { state: checkedStates.get(node.id) ?? false }) })) : null, _jsx("span", { "aria-hidden": "true", className: "hjm-tree__toggle", "data-visible": node.hasChildren || undefined, children: node.hasChildren ? renderToggle?.({ expanded: node.expanded }) ?? (node.expanded ? _jsx(LucideGlyph, { node: ChevronDown }) : _jsx(LucideGlyph, { node: ChevronRight, mirrored: true })) : null }), _jsxs("span", { "aria-hidden": "true", className: "hjm-tree__label", children: [node.label, node.description ? _jsx("span", { className: "hjm-tree__description", children: node.description }) : null] })] }, node.id))), asyncState.status === "loadingMore" ? _jsx("p", { className: "hjm-tree__state", role: "status", children: asyncState.message }) : null] }));
 });
 //# sourceMappingURL=tree.js.map

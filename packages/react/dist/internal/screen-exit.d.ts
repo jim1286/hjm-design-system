@@ -6,6 +6,6 @@ export type ScreenExit = Readonly<{
     onClick(): void;
     disabled?: boolean;
 }>;
-/** Drawn chevron/cross (currentColor) so back and close match native; back mirrors in RTL via CSS. */
+/** Lucide chevron/cross (currentColor); back mirrors in RTL via CSS. */
 export declare function ScreenExitButton({ kind, label, onClick, disabled }: ScreenExit): import("react").JSX.Element;
 //# sourceMappingURL=screen-exit.d.ts.map

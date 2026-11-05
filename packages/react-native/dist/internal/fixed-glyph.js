@@ -2,8 +2,8 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { Text as NativeText } from "react-native";
 import { typography } from "@hjmds/design-contracts/foundations";
 import { useHjmNativeTheme } from "../provider.js";
-// A text glyph drawn as icon artwork (×, ···) inside a fixed frame — IconButton's glyph box, a
-// SearchField clear circle, an attachment badge. HJM Text scales with text in both modes (OS Dynamic
+// Emoji content (quick-insert and reaction choices) inside a fixed frame. Icon marks are Lucide glyphs
+// (internal/lucide-glyph) since 2026-11-05; this stays for product emoji only. HJM Text scales with text in both modes (OS Dynamic
 // Type through allowFontScaling in native mode, textScale in controlled mode, even with
 // allowFontScaling=false), so the glyph outgrew the frame and was clipped: Dialog close at 200% (1.11)
 // and SearchScreen's recent remove read as "⌄" at iOS large text (utilverse 1.13.1, 2026-10-06).

@@ -9,7 +9,7 @@ import {
 import { IconButton } from "./actions.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
@@ -113,8 +113,8 @@ export function CollectionRail<Item extends CollectionRailItem = CollectionRailI
     </ScrollView>
     {showNavigation && <View accessibilityLabel={labels.navigation} style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }}>
       {/* Tool actions: icon buttons named by the localized label, matching Web (2026-10-17 review E9). */}
-      <IconButton label={labels.previous} tone="ghost" disabled={state.atStart} onPress={() => navigate("previous")}><DrawnChevron direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
-      <IconButton label={labels.next} tone="ghost" disabled={state.atEnd} onPress={() => navigate("next")}><DrawnChevron direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={labels.previous} tone="ghost" disabled={state.atStart} onPress={() => navigate("previous")}><ChevronGlyph direction="start" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={labels.next} tone="ghost" disabled={state.atEnd} onPress={() => navigate("next")}><ChevronGlyph direction="end" size={glyph.sm} color={chevronColor} /></IconButton>
     </View>}
   </View>;
 }

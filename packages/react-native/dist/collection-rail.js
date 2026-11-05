@@ -5,7 +5,7 @@ import { collectionRailRecipe, validateCollectionRail, resolveCollectionRailLayo
 import { IconButton } from "./actions.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { ScreenBodyInsetContext } from "./internal/screen-body-inset.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
@@ -87,6 +87,6 @@ export function CollectionRail({ label, items, renderItem, labels, density = col
                     publish(next);
                 }, scrollEventThrottle: 16, keyboardShouldPersistTaps: "handled", removeClippedSubviews: false, style: { direction: "ltr", ...room.viewport }, contentContainerStyle: { direction: "ltr", flexDirection: direction === "rtl" ? "row-reverse" : "row",
                     gap, width: Math.max(layout.contentWidth, width) + outset * 2, paddingVertical: tokens.spacing.xs, ...room.content }, children: [items.map((item, index) => _jsx(View, { style: { width: layout.itemWidth, direction }, onFocus: () => { focusedKey.current = item.id; scrollToOffset(getCollectionRailRevealOffset(geometry.current, logicalOffset.current, index), false); }, onBlur: () => { if (focusedKey.current === item.id)
-                            focusedKey.current = null; }, children: renderItem(item) }, item.id)), items.length === 0 ? emptyContent : null] }), showNavigation && _jsxs(View, { accessibilityLabel: labels.navigation, style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", disabled: state.atStart, onPress: () => navigate("previous"), children: _jsx(DrawnChevron, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", disabled: state.atEnd, onPress: () => navigate("next"), children: _jsx(DrawnChevron, { direction: "end", size: glyph.sm, color: chevronColor }) })] })] });
+                            focusedKey.current = null; }, children: renderItem(item) }, item.id)), items.length === 0 ? emptyContent : null] }), showNavigation && _jsxs(View, { accessibilityLabel: labels.navigation, style: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: tokens.spacing.xs, marginTop: tokens.spacing.sm }, children: [_jsx(IconButton, { label: labels.previous, tone: "ghost", disabled: state.atStart, onPress: () => navigate("previous"), children: _jsx(ChevronGlyph, { direction: "start", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: labels.next, tone: "ghost", disabled: state.atEnd, onPress: () => navigate("next"), children: _jsx(ChevronGlyph, { direction: "end", size: glyph.sm, color: chevronColor }) })] })] });
 }
 //# sourceMappingURL=collection-rail.js.map

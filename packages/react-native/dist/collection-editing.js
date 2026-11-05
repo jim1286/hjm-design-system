@@ -6,7 +6,9 @@ import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focus
 import { Button, IconButton } from "./actions.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnChevron, DrawnPencil, DrawnTrash } from "./internal/drawn-glyphs.js";
+import Pencil from "lucide-react-native/icons/pencil";
+import Trash from "lucide-react-native/icons/trash";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { TextField, Checkbox } from "./inputs.js";
 import { Stack, Text } from "./primitives.js";
@@ -44,7 +46,7 @@ function InlineEditBody(props) {
         if (result.status === "success")
             close(input.current?.isFocused() ?? false);
     };
-    return _jsx(View, { accessible: false, children: !editing ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", children: [_jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: props.label }), _jsx(Text, { emphasis: "strong", children: props.value })] }), _jsx(IconButton, { ref: trigger, label: props.editLabel, tone: "ghost", edge: "end", disabled: props.disabled ?? false, onPress: () => { setDraft(props.value); action.session.reset(null); setEditing(true); }, children: _jsx(DrawnPencil, { size: glyph.sm, color: toolColor(props.disabled === true) }) })] })
+    return _jsx(View, { accessible: false, children: !editing ? _jsxs(Stack, { axis: "inline", gap: "sm", align: "center", children: [_jsxs(Stack, { gap: "xxs", layoutStyle: { flex: 1, minWidth: 0 }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: props.label }), _jsx(Text, { emphasis: "strong", children: props.value })] }), _jsx(IconButton, { ref: trigger, label: props.editLabel, tone: "ghost", edge: "end", disabled: props.disabled ?? false, onPress: () => { setDraft(props.value); action.session.reset(null); setEditing(true); }, children: _jsx(LucideGlyph, { icon: Pencil, size: glyph.sm, color: toolColor(props.disabled === true) }) })] })
             : _jsxs(Stack, { gap: collectionEditingRecipe.actionGap, children: [_jsx(TextField, { ref: input, label: props.label, value: draft, disabled: props.disabled === true || action.pending, ...(error ? { error, invalid: true } : {}), onValueChange: setDraft, onSubmitEditing: () => void save() }), _jsxs(Stack, { axis: "inline", gap: "xs", wrap: true, children: [_jsx(Button, { tone: "ghost", disabled: action.pending, onPress: () => close(), children: props.cancelLabel }), _jsx(Button, { loading: action.pending, disabled: props.disabled === true || !!error, onPress: () => void save(), children: props.saveLabel })] }), action.failed ? _jsx(ErrorMessage, { children: props.errorLabel }) : null] }) });
 }
 export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFields = 0, maxFields = Infinity, isRemoveDisabled, onAdd, onRemove, ...props }) {
@@ -76,7 +78,7 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
                                     return;
                                 focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
                                 current.onRemove(binding.id);
-                            }), children: _jsx(DrawnTrash, { size: glyph.sm, color: resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true).content }) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
+                            }), children: _jsx(LucideGlyph, { icon: Trash, size: glyph.sm, color: resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true).content }) })] }) }), _jsx(Button, { ref: add, tone: "secondary", disabled: props.descriptor.disabled === true || fields.length >= maxFields, onPress: () => {
                     const current = policy.current;
                     if (!live.current || current.disabled || current.fields.length >= current.maxFields)
                         return;
@@ -120,6 +122,6 @@ export function TableColumnSettings(props) {
     const chevronColor = resolveIconButtonPresentation("ghost", useHjmNativeTheme().palette, false).content;
     // One row per column: visibility checkbox, then reorder as icon tools (labels stay the accessible names); the last
     // tool takes edge="end" so its glyph slot ends on the group's edge like the checkbox starts on it (2026-10-17 audit), as on Web.
-    return _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { emphasis: "strong", children: props.label }), props.columns.map(column => _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [_jsx(Checkbox, { label: column.label, checked: column.visible, layoutStyle: { flex: 1, minWidth: 0 }, disabled: props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1), onCheckedChange: () => change(column.id, "toggle") }), _jsx(IconButton, { label: props.earlierLabel(column), tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns, onPress: () => change(column.id, "earlier"), children: _jsx(DrawnChevron, { direction: "up", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: props.laterLabel(column), tone: "ghost", edge: "end", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns, onPress: () => change(column.id, "later"), children: _jsx(DrawnChevron, { direction: "down", size: glyph.sm, color: chevronColor }) })] }, column.id))] });
+    return _jsxs(Stack, { gap: "sm", children: [_jsx(Text, { emphasis: "strong", children: props.label }), props.columns.map(column => _jsxs(Stack, { axis: "inline", gap: "xs", align: "center", children: [_jsx(Checkbox, { label: column.label, checked: column.visible, layoutStyle: { flex: 1, minWidth: 0 }, disabled: props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1), onCheckedChange: () => change(column.id, "toggle") }), _jsx(IconButton, { label: props.earlierLabel(column), tone: "ghost", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns, onPress: () => change(column.id, "earlier"), children: _jsx(ChevronGlyph, { direction: "up", size: glyph.sm, color: chevronColor }) }), _jsx(IconButton, { label: props.laterLabel(column), tone: "ghost", edge: "end", disabled: props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns, onPress: () => change(column.id, "later"), children: _jsx(ChevronGlyph, { direction: "down", size: glyph.sm, color: chevronColor }) })] }, column.id))] });
 }
 //# sourceMappingURL=collection-editing.js.map

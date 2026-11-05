@@ -6,7 +6,9 @@ import { assertDistinctIds, changeColumnSettings, collectionEditingRecipe, focus
 import { Button, IconButton } from "./actions.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnChevron, DrawnPencil, DrawnTrash } from "./internal/drawn-glyphs.js";
+import Pencil from "lucide-react-native/icons/pencil";
+import Trash from "lucide-react-native/icons/trash";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { TextField, Checkbox } from "./inputs.js";
 import { Stack, Text } from "./primitives.js";
@@ -50,7 +52,7 @@ function InlineEditBody(props: InlineEditProps) {
         beside a text "Edit title" button lost the label (2026-10-17 review). */}
     {!editing ? <Stack axis="inline" gap="sm" align="center">
       <Stack gap="xxs" layoutStyle={{ flex: 1, minWidth: 0 }}><Text variant="caption" tone="muted">{props.label}</Text><Text emphasis="strong">{props.value}</Text></Stack>
-      <IconButton ref={trigger} label={props.editLabel} tone="ghost" edge="end" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><DrawnPencil size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>
+      <IconButton ref={trigger} label={props.editLabel} tone="ghost" edge="end" disabled={props.disabled ?? false} onPress={() => { setDraft(props.value); action.session.reset(null); setEditing(true); }}><LucideGlyph icon={Pencil} size={glyph.sm} color={toolColor(props.disabled === true)} /></IconButton>
     </Stack>
       : <Stack gap={collectionEditingRecipe.actionGap}>
         <TextField ref={input} label={props.label} value={draft} disabled={props.disabled === true || action.pending}
@@ -92,7 +94,7 @@ export function RepeatableFieldGroup({ renderField, addLabel, removeLabel, minFi
         if (!live.current || current.disabled || current.fields.length <= current.minFields || current.isRemoveDisabled?.(binding.id)) return;
         focus.current = focusAfterRemoval(current.fields.map(field => field.id), binding.id, current.fields.filter(field => field.disabled).map(field => field.id)) ?? null;
         current.onRemove(binding.id);
-      })}><DrawnTrash size={glyph.sm} color={resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true).content} /></IconButton>
+      })}><LucideGlyph icon={Trash} size={glyph.sm} color={resolveIconButtonPresentation("ghost", palette, binding.controlProps.disabled || fields.length <= minFields || isRemoveDisabled?.(binding.id) === true).content} /></IconButton>
     </Stack>} />
     <Button ref={add} tone="secondary" disabled={props.descriptor.disabled === true || fields.length >= maxFields} onPress={() => {
       const current = policy.current;
@@ -162,8 +164,8 @@ export function TableColumnSettings(props: TableColumnSettingsProps) {
   return <Stack gap="sm"><Text emphasis="strong">{props.label}</Text>
     {props.columns.map(column => <Stack key={column.id} axis="inline" gap="xs" align="center">
       <Checkbox label={column.label} checked={column.visible} layoutStyle={{ flex: 1, minWidth: 0 }} disabled={props.disabled === true || column.locked === true || (column.visible && props.columns.filter(item => item.visible).length === 1)} onCheckedChange={() => change(column.id, "toggle")} />
-      <IconButton label={props.earlierLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns} onPress={() => change(column.id, "earlier")}><DrawnChevron direction="up" size={glyph.sm} color={chevronColor} /></IconButton>
-      <IconButton label={props.laterLabel(column)} tone="ghost" edge="end" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}><DrawnChevron direction="down" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.earlierLabel(column)} tone="ghost" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "earlier") === props.columns} onPress={() => change(column.id, "earlier")}><ChevronGlyph direction="up" size={glyph.sm} color={chevronColor} /></IconButton>
+      <IconButton label={props.laterLabel(column)} tone="ghost" edge="end" disabled={props.disabled === true || changeColumnSettings(props.columns, column.id, "later") === props.columns} onPress={() => change(column.id, "later")}><ChevronGlyph direction="down" size={glyph.sm} color={chevronColor} /></IconButton>
     </Stack>)}
   </Stack>;
 }

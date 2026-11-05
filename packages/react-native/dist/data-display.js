@@ -20,7 +20,13 @@ import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, use
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import Plus from "lucide-react-native/icons/plus";
+import Minus from "lucide-react-native/icons/minus";
+import TrendingUp from "lucide-react-native/icons/trending-up";
+import TrendingDown from "lucide-react-native/icons/trending-down";
+import Equal from "lucide-react-native/icons/equal";
+import Quote from "lucide-react-native/icons/quote";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import { Surface, Text, } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function Badge({ label, tone: toneProp, categoryColor, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, accessibilityLabel, layoutStyle, ...props }) {
@@ -172,7 +178,7 @@ function CardActivationRegion({ split, activation, disabled, onPress, feedbackOp
 /** The quotation and caption stay one visual unit; nested disclosures remain independently accessible. */
 export function QuoteCard({ children, attribution, renderMark, ...props }) {
     const { colors } = useHjmNativeTheme();
-    return _jsx(Card, { ...props, leading: _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderMark?.({ color: colors.contentBrand, size: cardRecipe.quotation.markSize }) ?? _jsx(Text, { variant: "heading", tone: "brand", children: "\u201C" }) }), children: _jsxs(View, { style: { gap: cardRecipe.quotation.gap }, children: [children, attribution === undefined ? null : _jsx(Text, { variant: "caption", tone: "muted", children: attribution })] }) });
+    return _jsx(Card, { ...props, leading: _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderMark?.({ color: colors.contentBrand, size: cardRecipe.quotation.markSize }) ?? _jsx(LucideGlyph, { icon: Quote, size: cardRecipe.quotation.markSize, color: colors.contentBrand }) }), children: _jsxs(View, { style: { gap: cardRecipe.quotation.gap }, children: [children, attribution === undefined ? null : _jsx(Text, { variant: "caption", tone: "muted", children: attribution })] }) });
 }
 /**
  * A List item hands its rows this reporter so the indented separator drawn after the item follows the row's text
@@ -279,7 +285,7 @@ export function ListRow({ title, tone = listRowRecipe.defaults.tone, description
                         ], variant: listRowRecipe.description.textVariant, children: description })) : null, hjmMeta ? (hjmUnreadLabel ? (_jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: notificationRowRecipe.contentGap }, children: [_jsx(Text, { variant: "caption", tone: "muted", children: hjmMeta }), _jsx(View, { accessible: true, accessibilityRole: "image", accessibilityLabel: hjmUnreadLabel, testID: "hjm-unread-dot", style: { backgroundColor: theme.colors.contentBrand, borderRadius: notificationRowRecipe.unreadSize / 2, flexShrink: 0,
                                     height: notificationRowRecipe.unreadSize, width: notificationRowRecipe.unreadSize } })] })) : _jsx(Text, { variant: "caption", tone: "muted", children: hjmMeta })) : null] }), trailingText || trailing ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [{ flexShrink: 0 }, trailingStyle], children: trailingText ? (_jsx(Text, { style: { color: resolveColorReference(listRowRecipe.trailing.textColor, theme.palette) }, variant: listRowRecipe.trailing.textVariant, children: trailingText })) : trailing })) : null, accessory ? (_jsx(View, { testID: "hjm-list-row-accessory", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", 
                 // A preceding trailing value pulls the chevron to the tighter accessory gap (iOS detail → chevron).
-                style: { flexShrink: 0, ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) }, children: _jsx(DrawnChevron, { direction: "end", size: glyph[accessory.glyph], color: resolveColorReference(accessory.color, theme.palette), strokeWidth: iconRecipe.weights[accessory.weight] }) })) : null] }));
+                style: { flexShrink: 0, ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) }, children: _jsx(ChevronGlyph, { direction: "end", size: glyph[accessory.glyph], color: resolveColorReference(accessory.color, theme.palette), strokeWidth: iconRecipe.weights[accessory.weight] }) })) : null] }));
     const contentStyleFor = (pressed) => [
         minimumTargetStyle,
         {
@@ -481,7 +487,7 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                                     disabled: item.disabled === true,
                                     color: indicatorColor,
                                     size: glyph[accordionRecipe.indicator.glyph],
-                                })) : (_jsx(Text, { style: { color: indicatorColor }, children: isExpanded ? "−" : "+" })) })] }), isExpanded ? (_jsx(View, { accessibilityLabel: item.contentAccessibilityLabel, style: [
+                                })) : (_jsx(LucideGlyph, { icon: isExpanded ? Minus : Plus, size: glyph[accordionRecipe.indicator.glyph], color: indicatorColor })) })] }), isExpanded ? (_jsx(View, { accessibilityLabel: item.contentAccessibilityLabel, style: [
                             {
                                 paddingBottom: accordionRecipe.panel.paddingBottom,
                                 paddingStart: accordionRecipe.panel.paddingInlineStart,
@@ -827,7 +833,10 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                     flexWrap: "nowrap",
                     gap: statisticRecipe.trend.gap,
                     minWidth: 0,
-                }, children: [renderTrendMark && trendMark && trendColor ? (_jsx(View, { accessible: false, style: { flexShrink: 0 }, children: renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm }) })) : (_jsx(Text, { accessible: false, style: { color: trendColor, flexShrink: 0 }, variant: "caption", children: resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—" })), _jsx(Text, { accessible: false, style: [
+                }, children: [renderTrendMark && trendMark && trendColor ? (_jsx(View, { accessible: false, style: { flexShrink: 0 }, children: renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm }) })) : (
+                    // Without a product renderer, draw the Lucide marks the contract names for trendUp/trendDown/trendFlat
+                    // (semanticIconLucideNames), the same glyphs icon-svg renders for those names.
+                    _jsx(View, { accessible: false, style: { flexShrink: 0 }, children: _jsx(LucideGlyph, { icon: resolved.trend.direction === "up" ? TrendingUp : resolved.trend.direction === "down" ? TrendingDown : Equal, size: glyph.sm, color: trendColor ?? theme.colors.text }) })), _jsx(Text, { accessible: false, style: [
                             {
                                 color: trendColor,
                                 flexShrink: 1,
@@ -970,7 +979,7 @@ export function Timeline({ items, variant = timelineDefaults.variant, composeAcc
                             }, children: [_jsx(Text, { emphasis: "medium", style: {
                                         ...(journal ? { flex: 1 } : {}),
                                         color: resolveColorReference(timelineRecipe.label.color, theme.palette),
-                                    }, variant: timelineRecipe.label.textVariant, children: item.label }), !journal ? renderMetadata?.(item) : selectable ? _jsx(Text, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", tone: "muted", variant: "caption", children: expanded ? "⌃" : "⌄" }) : null] }), journal && item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null, journal && expanded ? renderMetadata?.(item) : null, item.description && (!journal || expanded) ? (_jsx(Text, { style: {
+                                    }, variant: timelineRecipe.label.textVariant, children: item.label }), !journal ? renderMetadata?.(item) : selectable ? _jsx(ChevronGlyph, { direction: expanded ? "up" : "down", size: glyph.xs, color: theme.colors.textMuted }) : null] }), journal && item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null, journal && expanded ? renderMetadata?.(item) : null, item.description && (!journal || expanded) ? (_jsx(Text, { style: {
                                 color: resolveColorReference(timelineRecipe.description.color, theme.palette),
                             }, variant: timelineRecipe.description.textVariant, children: item.description })) : null, !journal && item.timestamp ? _jsx(Text, { tone: "muted", variant: timelineRecipe.timestamp.textVariant, children: item.timestamp }) : null] }), actions ? _jsx(View, { style: { flexDirection: "row", alignSelf: "center", alignItems: "center", gap: spacing.xs }, children: actions }) : null] }, item.id));
     };

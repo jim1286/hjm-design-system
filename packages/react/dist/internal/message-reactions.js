@@ -5,6 +5,8 @@ import { chatMessageRecipe, screenPatternRecipe } from "@hjmds/design-contracts/
 import { Text, VisuallyHidden } from "../layout.js";
 import { Popover } from "../popover.js";
 import { ReactionPicker } from "../reaction-picker.js";
+import { ChevronRight } from "lucide";
+import { LucideGlyph } from "./lucide-glyph.js";
 /** Chat-specific trigger translation; Popover retains collision, focus, Escape and outside dismissal. */
 export function MessageReactions({ children, closeLabel, menuAction, interactiveContent = false, triggerClassName = "hjm-chat-message__bubble", replyAction, menuTitle, menuActions = [], reportAction, menuRef, ...picker }) {
     // Reply leads and report trails; legacy single menuAction keeps its place before report.
@@ -47,7 +49,7 @@ export function MessageReactions({ children, closeLabel, menuAction, interactive
                 event.preventDefault();
                 event.stopPropagation();
                 held.current = false;
-            } }, children: children }), children: [picker.options.length ? _jsx(ReactionPicker, { ...picker, layout: "strip", onValueChange: value => { picker.onValueChange(value); setOpen(false); } }) : null, menuTitle || rows.length ? _jsxs("div", { className: "hjm-message-menu", children: [menuTitle ? _jsx(Text, { variant: "caption", tone: "muted", className: "hjm-message-menu__title", children: menuTitle }) : null, rows.map(row => _jsxs("button", { type: "button", className: "hjm-message-menu__item", "data-tone": row.tone === "danger" ? "danger" : undefined, disabled: row.disabled, onClick: () => { setOpen(false); row.onPress(); }, children: [row.icon ? _jsx("span", { className: "hjm-message-menu__icon", "aria-hidden": "true", children: row.icon }) : null, _jsx("span", { className: "hjm-message-menu__label", children: row.label }), row.submenu ? _jsx("span", { className: "hjm-message-menu__chevron", "aria-hidden": "true", children: "\u203A" }) : null] }, row.id))] }) : null] });
+            } }, children: children }), children: [picker.options.length ? _jsx(ReactionPicker, { ...picker, layout: "strip", onValueChange: value => { picker.onValueChange(value); setOpen(false); } }) : null, menuTitle || rows.length ? _jsxs("div", { className: "hjm-message-menu", children: [menuTitle ? _jsx(Text, { variant: "caption", tone: "muted", className: "hjm-message-menu__title", children: menuTitle }) : null, rows.map(row => _jsxs("button", { type: "button", className: "hjm-message-menu__item", "data-tone": row.tone === "danger" ? "danger" : undefined, disabled: row.disabled, onClick: () => { setOpen(false); row.onPress(); }, children: [row.icon ? _jsx("span", { className: "hjm-message-menu__icon", "aria-hidden": "true", children: row.icon }) : null, _jsx("span", { className: "hjm-message-menu__label", children: row.label }), row.submenu ? _jsx("span", { className: "hjm-message-menu__chevron", "aria-hidden": "true", children: _jsx(LucideGlyph, { node: ChevronRight, mirrored: true }) }) : null] }, row.id))] }) : null] });
 }
 /** ChatMessage strips its summary before spreading the rest into the hold menu. */
 export function omitReactionSummary({ summary: _summary, ...rest }) {

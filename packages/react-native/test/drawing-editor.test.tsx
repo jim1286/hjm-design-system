@@ -1,17 +1,13 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { expect, it, vi } from 'vitest';
-vi.mock('react-native-svg', async () => {
+vi.mock('react-native-svg', async (importOriginal) => {
   const { createElement, forwardRef, useImperativeHandle } = await import('react');
   const Svg = forwardRef((props: Record<string, unknown>, ref) => {
     useImperativeHandle(ref, () => ({ toDataURL: (done: (base64: string) => void) => done('cG5n') }));
     return createElement('Svg', props, props.children as never);
   });
   const shape = (name: string) => (props: Record<string, unknown>) => createElement(name, props, props.children as never);
-  return { default: Svg, Path: shape('Path'), Rect: shape('Rect'), Circle: shape('Circle'), Defs: shape('Defs'), G: shape('G'), Mask: shape('Mask'), Pattern: shape('Pattern'), LinearGradient: shape('LinearGradient'), Stop: shape('Stop') };
-});
-vi.mock('lucide-react-native', async () => {
-  const { View } = await import('react-native');
-  return { PaintBucket: View, Palette: View, Redo2: View, Trash2: View, Undo2: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: Svg, Path: shape('Path'), Rect: shape('Rect'), Circle: shape('Circle'), Defs: shape('Defs'), G: shape('G'), Mask: shape('Mask'), Pattern: shape('Pattern'), LinearGradient: shape('LinearGradient'), Stop: shape('Stop') };
 });
 import type { DrawingImage } from '@hjmds/design-contracts/components/drawing-editor';
 import { DrawingEditor } from '../src/drawing-editor.js';
@@ -32,7 +28,8 @@ function draw(tree: ReactTestRenderer) {
   act(() => canvas(tree).props.onResponderMove({ nativeEvent: { identifier: 1, locationX: 80, locationY: 90 } }));
   act(() => canvas(tree).props.onResponderEnd({ nativeEvent: { identifier: 1 } }));
 }
-const ink = (tree: ReactTestRenderer) => tree.root.findAll(node => typeof node.type === 'string' && node.props.strokeLinecap === 'round');
+// Strokes on the drawing canvas only; the Lucide tool icons are round-capped SVG too.
+const ink = (tree: ReactTestRenderer) => canvas(tree).findAll(node => typeof node.type === 'string' && node.props.strokeLinecap === 'round');
 
 it('keeps the owning finger and supports undo without yielding a vertical stroke', () => {
   const tree = mount();

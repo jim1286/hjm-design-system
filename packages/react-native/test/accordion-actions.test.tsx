@@ -6,6 +6,9 @@ import executedScenarioRegistry from "./executed-scenarios.json" with { type: "j
 import { Accordion } from "../src/data-display.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
+import { LucideGlyph } from "../src/internal/lucide-glyph.js";
+import Minus from "lucide-react-native/icons/minus";
+import Plus from "lucide-react-native/icons/plus";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -38,17 +41,19 @@ it("expands and collapses the native Accordion through its named press action", 
   const trigger = () => renderer.root.findAllByType(Pressable)
     .find((node) => node.props.accessibilityLabel === "배송 안내")!;
   expect(trigger().props.accessibilityState.expanded).toBe(false);
-  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내", "+"]);
+  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내"]);
+  expect(renderer.root.findAllByType(LucideGlyph).map((node) => node.props.icon)).toEqual([Plus]);
 
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(true);
   expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual([
     "배송 안내",
-    "−",
     "주문 후 이틀 안에 도착합니다.",
   ]);
+  expect(renderer.root.findAllByType(LucideGlyph).map((node) => node.props.icon)).toEqual([Minus]);
 
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(false);
-  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내", "+"]);
+  expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내"]);
+  expect(renderer.root.findAllByType(LucideGlyph).map((node) => node.props.icon)).toEqual([Plus]);
 });

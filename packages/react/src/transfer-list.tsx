@@ -27,6 +27,7 @@ import { Button } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { CheckGlyph } from "./internal/lucide-glyph.js";
 
 export type TransferListLabels = Readonly<{
   source: string;
@@ -57,7 +58,7 @@ const emptySelection = <Id extends string>(): TransferListSelection<Id> => ({
 
 // Rows are multi-select: Checkbox's indicator, not a 16px rounded box that read as a radio.
 function SelectionMark({ state }: { state: boolean | "mixed" }) {
-  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"} />;
+  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"}><CheckGlyph state={state} /></span>;
 }
 
 // The panels sit side by side or stack depending on width (CSS), so both directions are drawn and CSS shows the one

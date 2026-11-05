@@ -8,7 +8,7 @@ import { Tabs } from '@hjmds/react-native/navigation';
 import { Dialog } from '@hjmds/react-native/overlays';
 import { ContentTransitionComparison } from '../../../showcase/native/src/content-transition-comparison-preview.js';
 import { PaperSurfacePreview } from '../../../showcase/native/src/paper-surface-preview.js';
-vi.mock('react-native-svg',async()=>{const{View}=await import('react-native');return{default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View,Defs:View,RadialGradient:View,Stop:View,Pattern:View,Mask:View,Image:View};});
+vi.mock('react-native-svg',async (importOriginal) => {const{View}=await import('react-native');return{ ...(await importOriginal<Record<string, unknown>>()),default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View,Defs:View,RadialGradient:View,Stop:View,Pattern:View,Mask:View,Image:View};});
 let tree:ReactTestRenderer;
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 afterEach(async()=>{if(tree)await act(async()=>tree.unmount());vi.restoreAllMocks();});

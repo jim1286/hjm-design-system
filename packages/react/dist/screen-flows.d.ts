@@ -200,7 +200,7 @@ export type SearchRecentQueries = Readonly<{
     onRemove(query: string): void;
     /** Decorative leading glyph (for example a history icon). */
     icon?: ReactNode;
-    /** Glyph inside the remove button; defaults to "×". */
+    /** Glyph inside the remove button; defaults to the Lucide X. */
     removeIcon?: ReactNode;
     /** Rows shown; default `searchScreenRecipe.recentVisible` (5). */
     maxVisible?: number;

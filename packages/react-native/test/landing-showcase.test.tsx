@@ -9,7 +9,7 @@ import { Collapsible } from '@hjmds/react-native/collapsible';
 import { ListRow } from '@hjmds/react-native/data-display';
 import { LandingPreview } from '../../../showcase/native/src/landing-preview.js';
 import { landingCopy as copy } from '../../../showcase/shared/landing-pattern.js';
-vi.mock('react-native-svg',async()=>{const {View}=await import('react-native');return {default:View,Circle:View,Defs:View,Ellipse:View,RadialGradient:View,Stop:View,Pattern:View,Rect:View,Mask:View,Image:View};});
+vi.mock('react-native-svg',async (importOriginal) => {const {View}=await import('react-native');return { ...(await importOriginal<Record<string, unknown>>()),default:View,Circle:View,Defs:View,Ellipse:View,RadialGradient:View,Stop:View,Pattern:View,Rect:View,Mask:View,Image:View};});
 vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({top:0,bottom:0,left:0,right:0})}));
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 let tree:ReactTestRenderer;afterEach(()=>{if(tree)act(()=>tree.unmount());vi.restoreAllMocks();});

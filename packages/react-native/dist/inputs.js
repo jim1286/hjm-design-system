@@ -4,7 +4,6 @@ import { Button } from "./actions.js";
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { setInputVisibilityFrame } from "./internal/field-visibility.js";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { InheritedTextColorContext } from "./internal/text-colors.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import { FieldMessage, NativeFieldFrame, useFieldErrorAnnouncement } from "./internal/field-frame.js";
@@ -24,6 +23,11 @@ import { isWebRenderer, webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeFontStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Grid, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import X from "lucide-react-native/icons/x";
+import Check from "lucide-react-native/icons/check";
+import Eye from "lucide-react-native/icons/eye";
+import EyeOff from "lucide-react-native/icons/eye-off";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 function resolveFieldAccessibleName(label, accessibilityLabel) {
     const visibleLabel = label?.trim();
     const explicitAccessibleName = accessibilityLabel?.trim();
@@ -270,38 +274,17 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
             height: searchSizing.clearDiameter,
             justifyContent: "center",
             width: searchSizing.clearDiameter,
-        }, children: renderClearIcon?.(iconProps) ?? (_jsx(FixedGlyph, { tone: "muted", fontSize: iconProps.size, children: "\u00D7" })) })) : trailingNode;
+        }, children: renderClearIcon?.(iconProps) ?? (_jsx(LucideGlyph, { icon: X, size: iconProps.size, color: theme.colors.textMuted })) })) : trailingNode;
     return (_jsx(FieldRenderer, { ...props, ref: inputRef, busy: busy, disabled: disabled, leading: leading, multiline: false, onValueChange: (next) => {
             // Typing continues while busy (same as Web `loading`); only disabled ignores input.
             if (!disabled)
                 setSearchValue(next);
         }, search: true, searchSize: size, trailing: trailing, value: searchValue }));
 });
-function DefaultPasswordToggleIcon({ color, revealed, size, }) {
-    // Web's `visibility`/`visibilityOff` paths: an almond eye pointed at both sides, a ring pupil and a top-start to
-    // bottom-end slash. The eye is a square with two rounded opposite corners turned 45deg; the earlier full pill read
-    // as a capsule, not an eye (2026-10-17 review). Views keep react-native-svg optional for this core input.
-    const strokeWidth = Math.max(1.5, size * 0.1);
-    const side = size * 0.62;
-    const pupil = size * 0.34;
-    // RTL swaps the rounded corners and the turn together (scenario matrix), which draws the same symmetric eye.
-    const rtl = useHjmNativeTheme().environment.direction === "rtl";
-    return (_jsxs(View, { accessible: false, style: { alignItems: "center", height: size, justifyContent: "center", width: size }, children: [_jsx(View, { style: {
-                    borderColor: color,
-                    ...(rtl ? { borderTopRightRadius: side * 0.85, borderBottomLeftRadius: side * 0.85 } : { borderTopLeftRadius: side * 0.85, borderBottomRightRadius: side * 0.85 }),
-                    borderWidth: strokeWidth,
-                    height: side,
-                    position: "absolute",
-                    transform: [{ rotate: rtl ? "-45deg" : "45deg" }],
-                    width: side,
-                } }), _jsx(View, { style: { borderColor: color, borderRadius: pupil / 2, borderWidth: strokeWidth, height: pupil, width: pupil } }), revealed ? (_jsx(View, { style: {
-                    backgroundColor: color,
-                    borderRadius: strokeWidth,
-                    height: strokeWidth,
-                    position: "absolute",
-                    transform: [{ rotate: "45deg" }],
-                    width: size * 1.06,
-                } })) : null] }));
+// The recipe names the mark for each state (visibility / visibilityOff); they are Lucide Eye / EyeOff, the glyphs the
+// contract maps those semantic names to.
+function DefaultPasswordToggleIcon({ name, color, size }) {
+    return _jsx(LucideGlyph, { icon: name === "visibilityOff" ? EyeOff : Eye, size: size, color: color });
 }
 /** Password input with independent reveal state and native autofill translation. */
 export const PasswordField = forwardRef(function PasswordField({ revealed: revealedProp, defaultRevealed = false, onRevealedChange, autofillHint, revealLabel, concealLabel, size = passwordFieldRecipe.defaults.size, renderToggleIcon, disabled = false, onSelectionChange, ...props }, forwardedRef) {
@@ -1005,7 +988,7 @@ export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults
                     size: glyph[chipRecipe.selectionIndicator.glyph],
                 })) : (
                 // Like Checkbox, the selection mark fits a fixed glyph slot; the chip label still scales.
-                _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.caption, color: indicatorColor }, children: "\u2713" })) })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: [
+                _jsx(LucideGlyph, { icon: Check, size: glyph[chipRecipe.selectionIndicator.glyph], color: indicatorColor })) })) : null, _jsx(Text, { fontRole: "ui", align: "center", style: [
                     {
                         color: contentColor,
                         // Shrink beside the leading glyph and selection mark so a long label wraps inside the chip (chip.md: labels

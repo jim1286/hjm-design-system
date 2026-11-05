@@ -10,6 +10,8 @@ import { Button, IconButton } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { useHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { GripVertical } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type SortableCollectionProps = {
   items: readonly SortableItem[]; label: string; labels: SortableLabels;
@@ -28,7 +30,7 @@ function Row({ item, index, children, disabled, reduced, labels, move, count }: 
   // column; the old text buttons on their own line made every item take three lines (2026-10-17 review).
   return <li ref={ref} data-item-id={item.id} style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr) auto", alignItems: "center", gap: "var(--hjm-space-sm)", paddingBlock: "var(--hjm-space-xs)" }}>
     <Button ref={handleRef} tone="ghost" type="button" disabled={disabled || item.disabled} aria-label={labels.handle(item)}
-      style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }}>⠿</Button>
+      style={{ minWidth: control.minTouchTarget, minHeight: control.minTouchTarget, touchAction: "none", cursor: "grab" }}><LucideGlyph node={GripVertical} /></Button>
     <div style={{ minWidth: 0, overflowWrap: "anywhere" }}>{children}</div>
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--hjm-space-xs)" }}>
       <IconButton tone="ghost" data-sortable-move="previous" label={labels.previous(item)} disabled={disabled || item.disabled || index === 0} onClick={() => move(index - 1)}><Icon name="chevronUp" /></IconButton>

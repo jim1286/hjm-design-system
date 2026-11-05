@@ -33,7 +33,7 @@ HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 48개)�
 | `semanticIconLucideNames` · `isSemanticIconName` | semantic 이름별 Lucide 아이콘 이름(2.5.0)과 이름 판별 | `@hjmds/design-contracts/components/icon` | 같음 |
 
 `/icon-lucide`는 optional peer가 필요하다. Web `lucide-react` 1.49.0,
-Native `lucide-react-native` 1.49.0. Native `/icon-svg`는 optional peer `react-native-svg` 15.15.5가 필요하다.
+Native `lucide-react-native` 1.49.0. 2.6.0부터 Native는 `lucide-react-native`·`react-native-svg`가 필수 peer다(core 컨트롤 기호도 Lucide).
 둘 다 루트 entry에서는 나오지 않는다.
 
 ## 최소 사용 예
@@ -70,9 +70,8 @@ import { renderSemanticGlyph } from "@hjmds/react-native/icon-svg";
 그렸다. Web만 HJM 경로를 내장하고 그 경로가 renderer 내부에 있어 Native는 같은 그림을 받을 수 없었기 때문이다.
 2.5.0부터 두 플랫폼은 HJM이 직접 그린 경로 대신 계약 `semanticIconLucideNames`가 정한 Lucide 아이콘을 그린다.
 
-Native Icon은 `renderGlyph`를 필수로 유지한다. core 컨트롤이 `react-native-svg` 없이 동작하도록 SVG와 `lucide-react-native`는 optional peer이고,
-내장 컨트롤의 몇 기호(셰브런·달력·삭제 등)는 내부에서 View로 그린다. 그래서 공용 그림은 `/icon-lucide`와 같은
-선택 entry `/icon-svg`의 `renderSemanticGlyph`로 연다. 앱 고유 이름을 함께 쓰면 판별 후 넘긴다.
+Native Icon은 `renderGlyph`를 필수로 유지한다. 공용 그림은 `/icon-svg`의 `renderSemanticGlyph`로 연다(Web은 내장).
+2.6.0부터 내장 컨트롤의 기호(셰브런·달력·삭제·닫기·체크 등)도 View·글자 대신 Lucide로 그린다. 앱 고유 이름을 함께 쓰면 판별 후 넘긴다.
 
 ```tsx
 // Native — app glyph names mixed with HJM names

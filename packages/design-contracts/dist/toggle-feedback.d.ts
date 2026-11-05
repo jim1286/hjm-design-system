@@ -10,7 +10,8 @@ export declare const toggleFeedbackRecipe: {
     readonly glyphSize: 24;
     readonly effectSize: 40;
 };
-export declare const toggleFeedbackPaths: Readonly<Record<ToggleFeedbackEffect, string>>;
+/** Lucide icon (kebab-case) each effect's default glyph shows; the renderer draws it, HJM draws no artwork (2026-11-05). */
+export declare const toggleFeedbackLucideNames: Readonly<Record<ToggleFeedbackEffect, string>>;
 /** Host geometry only, never product state or a timer-driven counter. p=1 clears every transient. */
 export declare function resolveToggleFeedbackFrame(effect: ToggleFeedbackEffect, progress: number): Readonly<{
     radius: number;

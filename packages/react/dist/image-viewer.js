@@ -6,6 +6,8 @@ import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { Button, IconButton } from "./actions.js";
 import { createAttachedPhoto, createPhotoAttachmentField } from "./internal/photo-attachment.js";
+import { ChevronLeft, ChevronRight, X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 /**
  * Button around product media that opens ImageViewer. The product keeps the viewer's `open` state and calls it from
  * `onClick`; the trigger owns the name, focus ring on the image frame radius, zoom cursor and pressed opacity.
@@ -73,7 +75,7 @@ function ViewerSession(props) {
         else if (view.scale > 1)
             clamp(view.scale, view.x + event.clientX - old.x, view.y + event.clientY - old.y);
     };
-    return _jsx(HjmPortal, { children: _jsxs("div", { className: "hjm-image-viewer", style: { zIndex: getModalLayer(0) }, ref: contentRef, role: "dialog", "aria-modal": "true", "aria-label": item.label, "data-hjm-modal-content": "", tabIndex: -1, children: [_jsxs("div", { className: "hjm-image-viewer__header", style: { opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }, children: [_jsx(IconButton, { ref: closeRef, label: props.closeLabel, tone: "ghost", onClick: props.onClose, children: "\u00D7" }), props.actions ? _jsx("div", { className: "hjm-image-viewer__actions", children: props.actions }) : null] }), _jsx("div", { className: "hjm-image-viewer__stage", onDoubleClick: () => clamp(view.scale === 1 ? 2 : 1, 0, 0), onPointerDown: event => {
+    return _jsx(HjmPortal, { children: _jsxs("div", { className: "hjm-image-viewer", style: { zIndex: getModalLayer(0) }, ref: contentRef, role: "dialog", "aria-modal": "true", "aria-label": item.label, "data-hjm-modal-content": "", tabIndex: -1, children: [_jsxs("div", { className: "hjm-image-viewer__header", style: { opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }, children: [_jsx(IconButton, { ref: closeRef, label: props.closeLabel, tone: "ghost", onClick: props.onClose, children: _jsx(LucideGlyph, { node: X }) }), props.actions ? _jsx("div", { className: "hjm-image-viewer__actions", children: props.actions }) : null] }), _jsx("div", { className: "hjm-image-viewer__stage", onDoubleClick: () => clamp(view.scale === 1 ? 2 : 1, 0, 0), onPointerDown: event => {
                         if (event.target.closest("button"))
                             return;
                         pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -120,7 +122,7 @@ function ViewerSession(props) {
                                 move(index + 1);
                         }
                     }, tabIndex: 0, "aria-label": item.label, children: _jsx("div", { className: "hjm-image-viewer__image", style: { transform: `translate(${view.x}px, ${view.y + pull}px) scale(${view.scale * (1 - 0.15 * Math.min(1, pull / (PULL_CLOSE_DISTANCE * 3)))})`,
-                            transition: settling ? "transform 200ms ease-out" : "none" }, children: props.renderImage ? props.renderImage(item) : _jsx(ViewerImage, { item: item, ...props }, item.uri) }) }), _jsxs("div", { className: "hjm-image-viewer__footer", style: { opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }, children: [props.items.length > 1 ? _jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onClick: () => move(index - 1), children: "\u2039" }) : null, _jsxs("span", { "aria-live": "polite", children: [item.label, props.items.length > 1 ? ` · ${index + 1}/${props.items.length}` : ""] }), props.items.length > 1 ? _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.items.length - 1, onClick: () => move(index + 1), children: "\u203A" }) : null] })] }) });
+                            transition: settling ? "transform 200ms ease-out" : "none" }, children: props.renderImage ? props.renderImage(item) : _jsx(ViewerImage, { item: item, ...props }, item.uri) }) }), _jsxs("div", { className: "hjm-image-viewer__footer", style: { opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }, children: [props.items.length > 1 ? _jsx(IconButton, { label: props.previousLabel, tone: "ghost", disabled: index === 0, onClick: () => move(index - 1), children: _jsx(LucideGlyph, { node: ChevronLeft, mirrored: true }) }) : null, _jsxs("span", { "aria-live": "polite", children: [item.label, props.items.length > 1 ? ` · ${index + 1}/${props.items.length}` : ""] }), props.items.length > 1 ? _jsx(IconButton, { label: props.nextLabel, tone: "ghost", disabled: index === props.items.length - 1, onClick: () => move(index + 1), children: _jsx(LucideGlyph, { node: ChevronRight, mirrored: true }) }) : null] })] }) });
 }
 function ViewerImage({ item, loadingLabel, errorLabel, retryLabel }) {
     const [attempt, setAttempt] = useState(0);

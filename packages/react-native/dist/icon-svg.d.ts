@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { type LucideIcon } from "lucide-react-native";
+import type { LucideIcon } from "lucide-react-native";
 import type { NativeIconRenderProps } from "./primitives.js";
 export declare const semanticIconGlyphs: {
     readonly add: LucideIcon;

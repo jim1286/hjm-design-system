@@ -12,6 +12,8 @@ import { classNames } from "./internal.js";
 import { useHjmDensityDefault, useOptionalHjmTheme } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 import { Icon } from "./supplemental-display.js";
+import { Quote } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export const Badge = forwardRef(function Badge({ tone: toneProp, categoryColor, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, trailing, className, children, layoutStyle, style, ...props }, ref) {
     if (categoryColor !== undefined && toneProp !== undefined)
         throw new TypeError("Badge takes either tone or categoryColor, not both");
@@ -81,7 +83,7 @@ selected, onActivate, href, renderLink, disabled = false, tone = cardRecipe.defa
                                         : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] }), headerActions === undefined ? null : _jsx("div", { className: "hjm-card__header-actions", "data-slot": "header-actions", children: headerActions })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), destination, overlay && href === undefined ? (_jsx("button", { type: "button", className: "hjm-card__activator", "data-slot": "activator", "aria-label": activationLabel, "aria-pressed": selected, disabled: disabled, onClick: activate })) : null, actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
 export function QuoteCard({ children, attribution, renderMark, ...props }) {
-    return _jsx(Card, { ...props, leading: _jsx("span", { className: "hjm-quote-card__mark", "aria-hidden": "true", children: renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? "“" }), children: _jsxs("blockquote", { className: "hjm-quote-card__body", children: [children, attribution === undefined ? null : _jsx("footer", { children: _jsx(Text, { variant: "caption", tone: "muted", children: attribution }) })] }) });
+    return _jsx(Card, { ...props, leading: _jsx("span", { className: "hjm-quote-card__mark", "aria-hidden": "true", children: renderMark?.({ color: "currentColor", size: cardRecipe.quotation.markSize }) ?? _jsx(LucideGlyph, { node: Quote, size: cardRecipe.quotation.markSize }) }), children: _jsxs("blockquote", { className: "hjm-quote-card__body", children: [children, attribution === undefined ? null : _jsx("footer", { children: _jsx(Text, { variant: "caption", tone: "muted", children: attribution }) })] }) });
 }
 export const ListRow = forwardRef(function ListRow({ title, description, leading, leadingAction, trailing, trailingAccessory = listRowRecipe.defaults.trailingAccessory, trailingAction, renderLink, density: densityProp, tone = listRowRecipe.defaults.tone, leadingShape = "square", leadingSize = leadingShape === "circle" ? "large" : "default", selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
     // The hook runs unconditionally — `??` would short-circuit it and break the

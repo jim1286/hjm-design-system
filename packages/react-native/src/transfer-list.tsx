@@ -19,7 +19,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { SelectionMark } from "./internal/selection-mark.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -169,11 +169,11 @@ export function TransferList<Id extends string = string>({
       */}
       <View style={{ alignItems: "stretch", gap: transferListRecipe.moveControls.gap }}>
         <Button tone="secondary" disabled={!canMove("source")} onPress={() => move("toTarget")}
-          leading={<DrawnChevron direction="down" size={glyph.sm} color={colors.text} />}>
+          leading={<ChevronGlyph direction="down" size={glyph.sm} color={colors.text} />}>
           {labels.toTarget}
         </Button>
         <Button tone="secondary" disabled={!canMove("target")} onPress={() => move("toSource")}
-          leading={<DrawnChevron direction="up" size={glyph.sm} color={colors.text} />}>
+          leading={<ChevronGlyph direction="up" size={glyph.sm} color={colors.text} />}>
           {labels.toSource}
         </Button>
       </View>

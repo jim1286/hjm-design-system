@@ -7,7 +7,7 @@ import { Collapsible } from "../src/collapsible.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
-import { DrawnChevron } from "../src/internal/drawn-glyphs.js";
+import { ChevronGlyph } from "../src/internal/lucide-glyph.js";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -34,14 +34,14 @@ it("exposes expanded accessibility state and toggles content through the native 
   const trigger = () => renderer.root.findByType(Pressable);
   expect(trigger().props.accessibilityRole).toBe("button");
   expect(trigger().props.accessibilityState).toEqual({ expanded: false, disabled: false });
-  // The open/closed mark is a drawn chevron (no text glyph), hidden from assistive technology.
-  expect(renderer.root.findAllByType(DrawnChevron).map((node) => node.props.direction)).toEqual(["end"]);
+  // The open/closed mark is a Lucide chevron (no text glyph), hidden from assistive technology.
+  expect(renderer.root.findAllByType(ChevronGlyph).map((node) => node.props.direction)).toEqual(["end"]);
   expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내"]);
 
   // The renderer test invokes the native Pressable host action; it makes no claim about physical keyboard input.
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(true);
-  expect(renderer.root.findAllByType(DrawnChevron).map((node) => node.props.direction)).toEqual(["down"]);
+  expect(renderer.root.findAllByType(ChevronGlyph).map((node) => node.props.direction)).toEqual(["down"]);
   expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual([
     "배송 안내",
     "영업일 기준 이틀 안에 도착합니다.",
@@ -80,7 +80,7 @@ it("names an artwork disclosure independently of its decorative trigger", () => 
   </HjmNativeProvider>); });
   const action = () => renderer.root.findByType(Pressable);
   expect(action().props.accessibilityLabel).toBe("Show proportions");
-  expect(renderer.root.findAllByType(DrawnChevron)).toHaveLength(0);
+  expect(renderer.root.findAllByType(ChevronGlyph)).toHaveLength(0);
   expect(renderer.root.findAllByType(Text).some(node => node.props.children === "Blue 66.7%")).toBe(false);
   act(() => action().props.onPress());
   expect(action().props.accessibilityState.expanded).toBe(true);

@@ -3,7 +3,7 @@ import { dateRangeRecipe, emptyDateRange, defaultDateRangeLimit, isDateWithinRan
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { Pressable, View } from "react-native";
 import { glyph } from "@hjmds/design-contracts/foundations";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { Calendar } from "./calendar.js";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
 import { Chip } from "./inputs.js";
@@ -46,7 +46,7 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
     return (_jsxs(View, { style: { gap: dateRangeRecipe.gap }, children: [summary && collapsible ? (_jsxs(Pressable, { accessibilityRole: "button", accessibilityState: { expanded: open }, accessibilityLabel: [["start", summary.startLabel], ["end", summary.endLabel]].map(([edge, label]) => {
                     const date = value[edge];
                     return `${label}, ${date === null ? summary.placeholder : summary.formatDate(date)}`;
-                }).join(", "), onPress: () => setExpanded(!open), style: { flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }, children: [_jsxs(View, { style: { flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }), _jsx(DrawnChevron, { direction: open ? "up" : "down", size: glyph[dateRangeRecipe.toggle.glyph], color: color(dateRangeRecipe.summary.label.color) })] })) : summary ? _jsxs(View, { style: { flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }) : null, presets?.length ? (_jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }, children: presets.map((preset) => {
+                }).join(", "), onPress: () => setExpanded(!open), style: { flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }, children: [_jsxs(View, { style: { flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }), _jsx(ChevronGlyph, { direction: open ? "up" : "down", size: glyph[dateRangeRecipe.toggle.glyph], color: color(dateRangeRecipe.summary.label.color) })] })) : summary ? _jsxs(View, { style: { flexDirection: "row", gap: dateRangeRecipe.summary.gap }, children: [field("start"), field("end")] }) : null, presets?.length ? (_jsx(View, { style: { flexDirection: "row", flexWrap: "wrap", gap: dateRangeRecipe.presets.gap }, children: presets.map((preset) => {
                     const range = resolveDateRangePreset(descriptor.grid.todayDate, preset.length);
                     return (_jsx(Chip, { label: preset.label, size: dateRangeRecipe.presets.chipSize, selectionMode: "single", selected: range.start === value.start && range.end === value.end, onPress: () => {
                             validateDateRange(range, maxRange);

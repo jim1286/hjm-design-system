@@ -1,9 +1,9 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const { View } = await import("react-native");
-  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Path: View, Rect: View, Stop: View, Text: View };
 });
 import { chartRecipe } from "@hjmds/design-contracts/components/chart";
 import { ChartLegend } from "../src/chart.js";

@@ -2,12 +2,18 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
 import { Animated, AppState, View } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
-import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackPaths, toggleFeedbackRecipe } from "@hjmds/design-contracts/toggle-feedback";
+import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackRecipe } from "@hjmds/design-contracts/toggle-feedback";
 import { Button } from "./actions.js";
 import { AnimatedStatistic } from "./statistic-motion.js";
 import { Stack, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
+import Bell from "lucide-react-native/icons/bell";
+import Bookmark from "lucide-react-native/icons/bookmark";
+import Heart from "lucide-react-native/icons/heart";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
+// Default glyphs are the Lucide icons contracts `toggleFeedbackLucideNames` names (Lucide only, 2026-11-05).
+const effectIcons = { ripple: Bell, ribbon: Bookmark, burst: Heart };
 function FeedbackGlyph({ effect, selected, active, icon }) {
     const glyph = useRef(null), circle = useRef(null), rays = useRef(null), previous = useRef(selected);
     const [value] = useState(() => new Animated.Value(1));
@@ -30,7 +36,7 @@ function FeedbackGlyph({ effect, selected, active, icon }) {
         return () => { value.stopAnimation(); value.removeListener(listener); app.remove(); };
     }, [selected, effect, active, reduced, value]);
     const f = resolveToggleFeedbackFrame(effect, 1);
-    return _jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "relative", width: toggleFeedbackRecipe.glyphSize, height: toggleFeedbackRecipe.glyphSize }, children: [_jsx(View, { ref: glyph, children: icon ?? _jsx(Svg, { width: 24, height: 24, viewBox: "0 0 24 24", children: _jsx(Path, { d: toggleFeedbackPaths[effect], fill: selected ? theme.colors.contentBrand : "none", stroke: theme.colors.contentBrand, strokeWidth: 1.7, strokeLinejoin: "round" }) }) }), _jsxs(Svg, { pointerEvents: "none", width: 40, height: 40, viewBox: "0 0 40 40", style: { position: "absolute", left: -8, top: -8 }, fill: "none", stroke: theme.colors.contentBrand, strokeWidth: 1.7, children: [_jsx(Circle, { ref: circle, cx: 20, cy: 20, r: f.radius, opacity: 0 }), _jsx(Path, { ref: rays, d: f.rays, opacity: 0, strokeLinecap: "round" })] })] });
+    return _jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "relative", width: toggleFeedbackRecipe.glyphSize, height: toggleFeedbackRecipe.glyphSize }, children: [_jsx(View, { ref: glyph, children: icon ?? _jsx(LucideGlyph, { icon: effectIcons[effect], size: 24, color: theme.colors.contentBrand, strokeWidth: 1.7, fill: selected ? theme.colors.contentBrand : "none" }) }), _jsxs(Svg, { pointerEvents: "none", width: 40, height: 40, viewBox: "0 0 40 40", style: { position: "absolute", left: -8, top: -8 }, fill: "none", stroke: theme.colors.contentBrand, strokeWidth: 1.7, children: [_jsx(Circle, { ref: circle, cx: 20, cy: 20, r: f.radius, opacity: 0 }), _jsx(Path, { ref: rays, d: f.rays, opacity: 0, strokeLinecap: "round" })] })] });
 }
 export function ToggleFeedbackButton(props) {
     if (!props.entityId.trim())

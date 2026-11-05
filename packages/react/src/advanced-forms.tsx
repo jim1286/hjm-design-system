@@ -31,6 +31,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { Field } from "./forms.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
+import { ChevronDown } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 function useControlId(id: string | undefined, prefix: string): string {
   const generated = useId().replaceAll(":", "");
@@ -162,7 +164,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
               </option>
             ))}
           </select>
-          <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
+          <span className="hjm-select__indicator" aria-hidden="true"><LucideGlyph node={ChevronDown} /></span>
         </div>
       )}
     </Field>
@@ -468,7 +470,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                 onKeyDown={handleKeyDown}
               />
               {loading ? <span className="hjm-combobox__spinner" aria-hidden="true" /> : null}
-              <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
+              <span className="hjm-select__indicator" aria-hidden="true"><LucideGlyph node={ChevronDown} /></span>
             </div>
             {name ? <input type="hidden" name={name} value={selectedValue} /> : null}
             {open ? (

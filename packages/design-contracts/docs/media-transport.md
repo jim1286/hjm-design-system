@@ -23,11 +23,11 @@ Web adapter는 seeked/error에서 확정하고, Native adapter는 엔진 setter�
 
 ## 표현과 플랫폼
 
-동일 vertex 수의 두 path를 실제 playing의 play/pause 모양 사이로 보간한다. 시간/진행률을 가짜로 늘리지 않는다.
-Web requestAnimationFrame은 경로 attribute만 변경한다. Native Animated.Value listener는 SVG host d만 변경하며 useNativeDriver=false인 이유는 d가 경로 문자열이기 때문이다.
-모핑은 공통 motion.normal 동안만 실행한다. reduced motion·비활성·숨긴 문서/백그라운드에서는 목표 경로로 정착하며 루프를 남기지 않는다.
+2.6.0부터 HJM이 그린 모핑 경로 대신 Lucide `play`·`pause`를 실제 playing에 맞춰 교차 페이드한다(`mediaTransportGlyphOpacity`, 2026-11-05 Lucide 전용 지시). 시간/진행률을 가짜로 늘리지 않는다.
+Web requestAnimationFrame은 두 아이콘 그룹의 opacity attribute만 변경하고, Native는 opacity를 native driver로 움직인다.
+전환은 공통 motion.normal 동안만 실행한다. reduced motion·비활성·숨긴 문서/백그라운드에서는 목표 경로로 정착하며 루프를 남기지 않는다.
 프레임마다 React setState를 호출하지 않는다. 실제 재생 시간 갱신 빈도는 제품 엔진 이벤트 정책이다.
-Native는 기존 optional peer react-native-svg가 필요하며 이 별도 진입점을 import할 때만 사용한다.
+Native는 필수 peer `react-native-svg`·`lucide-react-native`로 그린다.
 레이블·시간 formatter·길이 미정·실패 문구는 제품에서 공급한다. 슬라이더 접근성/키보드는 기존 Slider 계약을 따른다.
 
 ## 예제와 검증 경계

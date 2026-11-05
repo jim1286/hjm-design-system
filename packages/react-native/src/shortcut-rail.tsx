@@ -7,8 +7,9 @@ import { visibleControlHeight } from "@hjmds/design-contracts/components/design-
 import { shortcutRailRecipe, validateShortcutRail, revealShortcut, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> = Readonly<{
   // Infer payload from items; a product's base-typed handler must not erase extra fields.
@@ -66,7 +67,7 @@ export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAc
         disabled={item.disabled} testID={testID ? `${testID}-remove-${item.id}` : undefined} onPress={() => { if (!item.disabled) onRemove(item); }}
         style={({ pressed }) => ({ width: shortcutRailRecipe.removeWidth, minHeight: targetHeight, alignItems: "center", justifyContent: "center",
           borderRadius: tokens.radius[chipRecipe.radius], opacity: pressed ? chipRecipe.states.pressedOpacity : 1 })}>
-        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{removeIcon ?? <FixedGlyph color={content} fontSize={shortcutRailRecipe.glyph}>×</FixedGlyph>}</View>
+        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{removeIcon ?? <LucideGlyph icon={X} size={shortcutRailRecipe.glyph} color={content} />}</View>
       </Pressable> : null}
     </View>);
   if (layout === "wrap") return <View accessibilityRole="list" accessibilityLabel={label} testID={testID}

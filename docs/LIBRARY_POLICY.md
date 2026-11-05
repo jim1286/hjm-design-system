@@ -229,12 +229,13 @@ The user made Lucide the single icon source and asked for HJM's hand-drawn seman
 (their refresh arrowheads shipped detached from the arc, and they drifted from the Lucide glyphs products
 placed beside them). `@hjmds/react` now depends on `lucide` 1.49.0 (ISC, no dependencies or peers) and paints
 the built-in Icon, toast close and photo-source marks from its icon nodes through named imports, so bundlers
-keep only those icons. `@hjmds/react-native` keeps `lucide-react-native` an optional peer: `/icon-svg` draws
-the same icons with it and `react-native-svg`, and core controls stay free of both. Contracts stay
+keep only those icons. In 2.6.0 `@hjmds/react-native` made `lucide-react-native` and `react-native-svg` required peers: `/icon-svg`
+and every core control draw their marks with Lucide components imported per icon file (Metro does not tree-shake
+the package barrel). Contracts stay
 dependency-free and only name each icon (`semanticIconLucideNames`). A meaning Lucide lacks maps to its
-nearest icon (`trendFlat` → `equal`); drawing a new mark needs the user's explicit approval. Native core
-controls still draw a few marks with Views because they must run without SVG; moving them to Lucide would
-make both peers required, which is a breaking change awaiting the user's decision.
+nearest icon (`trendFlat` → `equal`); drawing a new mark needs the user's explicit approval. Every managed
+Native consumer already shipped both packages except utilverse, which adopted them first. Web text-character marks,
+the toggle-feedback defaults and the play/pause morph moved to Lucide in the same release.
 
 ## Native typography candidate loader — 2026-10-01
 

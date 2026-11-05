@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useRef, type ReactNode } from "react";
-import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackPaths, toggleFeedbackRecipe, type ToggleFeedbackEffect, type ToggleFeedbackState } from "@hjmds/design-contracts/toggle-feedback";
+import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackRecipe, type ToggleFeedbackEffect, type ToggleFeedbackState } from "@hjmds/design-contracts/toggle-feedback";
 import { Button } from "./actions.js";
 import { AnimatedStatistic } from "./statistic-motion.js";
 import { Stack, Text } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
+import { Bell, Bookmark, Heart, type IconNode } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
+// Default glyphs are the Lucide icons contracts `toggleFeedbackLucideNames` names (Lucide only, 2026-11-05).
+const effectIcons: Readonly<Record<ToggleFeedbackEffect, IconNode>> = { ripple: Bell, ribbon: Bookmark, burst: Heart };
 function FeedbackGlyph({ effect, selected, active, icon }: Readonly<{ effect: ToggleFeedbackEffect; selected: boolean; active: boolean; icon?: ReactNode }>) {
   const glyph = useRef<HTMLSpanElement>(null), circle = useRef<SVGCircleElement>(null), rays = useRef<SVGPathElement>(null), previous = useRef(selected);
   const reduced = useHjmTheme().environment.reducedMotion;
@@ -22,7 +26,7 @@ function FeedbackGlyph({ effect, selected, active, icon }: Readonly<{ effect: To
   }, [selected, effect, active, reduced]);
   const f = resolveToggleFeedbackFrame(effect, 1);
   return <span aria-hidden="true" style={{ position: "relative", display: "inline-flex", width: toggleFeedbackRecipe.glyphSize, height: toggleFeedbackRecipe.glyphSize }}>
-    <span ref={glyph} style={{ display: "inline-flex" }}>{icon ?? <svg width={24} height={24} viewBox="0 0 24 24" focusable="false"><path d={toggleFeedbackPaths[effect]} fill={selected ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.7} strokeLinejoin="round" /></svg>}</span>
+    <span ref={glyph} style={{ display: "inline-flex" }}>{icon ?? <LucideGlyph node={effectIcons[effect]} size={24} strokeWidth={1.7} filled={selected} />}</span>
     <svg data-toggle-effect={effect} width={40} height={40} viewBox="0 0 40 40" focusable="false" style={{ position: "absolute", left: -8, top: -8, pointerEvents: "none" }} fill="none" stroke="currentColor" strokeWidth={1.7}><circle ref={circle} cx={20} cy={20} r={f.radius} opacity={0} /><path ref={rays} d={f.rays} opacity={0} strokeLinecap="round" /></svg>
   </span>;
 }

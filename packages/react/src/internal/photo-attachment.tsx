@@ -15,6 +15,8 @@ import { Stack } from "../layout.js";
 import { Image, type ImageProps } from "../supplemental-display.js";
 import { PhotoSourceGlyph } from "./photo-source-icon.js";
 import { PhotoSourceSheet } from "./photo-source-sheet.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./lucide-glyph.js";
 
 export type { PhotoAttachmentLabels, PhotoAttachmentPhoto } from "@hjmds/design-contracts/components/image";
 
@@ -135,7 +137,7 @@ export function createPhotoAttachmentField(parts: ViewerParts) {
         {...(props.decoratePreview ? { decoratePreview: props.decoratePreview } : {})} parts={parts}
         {...(props.imageHost ? { imageHost: props.imageHost } : {})}
         corner={<IconButton type="button" label={labels.remove} tone={photoAttachmentRecipe.removeTone} size={photoAttachmentRecipe.removeSize}
-          shape={photoAttachmentRecipe.removeShape} disabled={actions.remove.disabled} onClick={props.onRemove}>×</IconButton>} /> : null}
+          shape={photoAttachmentRecipe.removeShape} disabled={actions.remove.disabled} onClick={props.onRemove}><LucideGlyph node={X} /></IconButton>} /> : null}
     </Stack>;
   };
 }

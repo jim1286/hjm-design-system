@@ -8,7 +8,7 @@ import { IconButton } from "@hjmds/react-native/actions";
 import { SegmentedControl } from "@hjmds/react-native/inputs";
 import { NavigationBehaviorPreview } from "../../../showcase/native/src/reference-navigation-bars.js";
 import { navigationBarReferences, navigationBehaviorGroups } from "../../../showcase/shared/navigation-bar-references.js";
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
 let tree:ReactTestRenderer;
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
 afterEach(()=>{if(tree)act(()=>tree.unmount());});

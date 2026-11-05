@@ -57,7 +57,6 @@ import {
   type ReactNode,
 } from "react";
 import {
-  Text as NativeText,
   AccessibilityInfo,
   Animated,
   AppState,
@@ -81,6 +80,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { Text } from "./primitives.js";
 import { Badge } from "./data-display.js";
 import { useHjmNativeTheme } from "./provider.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type AnnouncementMode = "none" | "polite" | "assertive";
 export type NoticeTone = ContractNoticeTone;
@@ -966,7 +967,7 @@ function ToastSurface({
     // (not the hit area) ends at the md padding edge like the badge's start inset (toastRecipe.close).
     layoutStyle={{ marginVertical: -toastRecipe.close.blockOverhang, marginEnd: -toastRecipe.close.inlineOverhang }}
   >
-    <NativeText accessible={false} allowFontScaling={false} style={{ color: material.close, fontSize: glyph[toastRecipe.close.glyph] }}>×</NativeText>
+    <LucideGlyph icon={X} size={glyph[toastRecipe.close.glyph]} color={material.close} />
   </IconButton>;
 
   return (

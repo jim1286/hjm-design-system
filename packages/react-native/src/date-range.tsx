@@ -22,7 +22,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import type { ReactNode } from "react";
 import { Pressable, View } from "react-native";
 import { glyph } from "@hjmds/design-contracts/foundations";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { Calendar, type CalendarMonthAction } from "./calendar.js";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
 import { Chip } from "./inputs.js";
@@ -140,7 +140,7 @@ export function DateRangePicker<Content = unknown>({
           onPress={() => setExpanded(!open)}
           style={{ flexDirection: "row", alignItems: "center", gap: dateRangeRecipe.toggle.gap }}>
           <View style={{ flex: 1, flexDirection: "row", gap: dateRangeRecipe.summary.gap }}>{field("start")}{field("end")}</View>
-          <DrawnChevron direction={open ? "up" : "down"} size={glyph[dateRangeRecipe.toggle.glyph]} color={color(dateRangeRecipe.summary.label.color)} />
+          <ChevronGlyph direction={open ? "up" : "down"} size={glyph[dateRangeRecipe.toggle.glyph]} color={color(dateRangeRecipe.summary.label.color)} />
         </Pressable>
       ) : summary ? <View style={{ flexDirection: "row", gap: dateRangeRecipe.summary.gap }}>{field("start")}{field("end")}</View> : null}
       {presets?.length ? (

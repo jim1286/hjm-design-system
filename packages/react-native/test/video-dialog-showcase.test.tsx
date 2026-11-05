@@ -2,7 +2,7 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
 import { AppState, AccessibilityInfo, type AppStateStatus } from 'react-native';
 import { HjmNativeProvider } from '@hjmds/react-native/provider';
-import { Button } from '@hjmds/react-native/actions';
+import { Button, IconButton } from '@hjmds/react-native/actions';
 import { Dialog } from '@hjmds/react-native/overlays';
 import { TextField } from '@hjmds/react-native/inputs';
 import { VideoDialogPreview } from '../../../showcase/native/src/video-dialog-preview';
@@ -21,7 +21,8 @@ let tree:ReactTestRenderer|undefined;
 beforeEach(()=>{fixture.available=true;fixture.players=[];fixture.rejectPlay=false;});
 afterEach(()=>{if(tree)act(()=>tree!.unmount());tree=undefined;vi.restoreAllMocks();});
 const render=()=>act(()=>{tree=create(<HjmNativeProvider reducedMotion><VideoDialogPreview/></HjmNativeProvider>,{createNodeMock:()=>({})});});
-const button=(label:string)=>tree!.root.findAllByType(Button).find(node=>node.props.children===label)!;
+// Text actions are Buttons; the player controls are IconButtons named by `label` (showcase 208157ee).
+const button=(label:string)=>[...tree!.root.findAllByType(Button).filter(node=>node.props.children===label),...tree!.root.findAllByType(IconButton).filter(node=>node.props.label===label)][0]!;
 const press=(label:string)=>act(()=>button(label).props.onPress());
 const close=()=>act(()=>tree!.root.findByType(Dialog).props.onOpenChange(false));
 const text=()=>tree!.root.findAll(node=>String(node.type)==='Text').map(node=>node.children.filter(child=>typeof child==='string').join('')).join(' ');

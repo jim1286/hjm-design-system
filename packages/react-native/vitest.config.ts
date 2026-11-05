@@ -7,6 +7,9 @@ export default defineConfig({
       "react-native": fileURLToPath(new URL("./test/react-native.mock.tsx", import.meta.url)),
       // The real package needs the native runtime; tests only need scheduleOnRN to call through.
       "react-native-worklets": fileURLToPath(new URL("./test/worklets.mock.ts", import.meta.url)),
+      // Core controls draw Lucide marks over react-native-svg (required peer since 2026-11-05); Node cannot load the
+      // native package, so every test resolves it to named host components.
+      "react-native-svg": fileURLToPath(new URL("./test/react-native-svg.mock.tsx", import.meta.url)),
     },
   },
   test: {

@@ -36,10 +36,11 @@ it("inherits two palettes and both themes without overflowing a narrow host",asy
  }
 });
 
-it("morphs actual state on SVG hosts without committing React on animation frames",async()=>{
+it("cross-fades the Lucide play/pause icons on SVG hosts without committing React on animation frames",async()=>{
  let commits=0;
  const render=(playing:boolean)=><HjmProvider><Profiler id="transport" onRender={()=>{commits++;}}><MediaTransport state={{playing,position:0,duration:6}} labels={labels} formatTime={String} onPlay={()=>undefined} onPause={()=>undefined} onSeek={()=>undefined}/></Profiler></HjmProvider>;
  await act(async()=>root.render(render(false)));await act(async()=>root.render(render(true)));
- await expect.poll(()=>host.querySelector('svg[viewBox="0 0 24 24"] path')?.getAttribute("d")).toBe("M6 4L10 4L10 20L6 20Z");
+ const layers=()=>[...host.querySelectorAll('svg[viewBox="0 0 24 24"] > g')].map(layer=>layer.getAttribute("opacity"));
+ await expect.poll(layers).toEqual(["0","1"]);
  expect(commits).toBe(2);
 });

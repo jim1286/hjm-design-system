@@ -15,9 +15,12 @@ import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
 import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { chipRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
-import { DrawnMoreVertical, DrawnPencil } from "./internal/drawn-glyphs.js";
+import EllipsisVertical from "lucide-react-native/icons/ellipsis-vertical";
+import Pencil from "lucide-react-native/icons/pencil";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
@@ -28,7 +31,6 @@ import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
 import { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { MessageReactions } from "./internal/message-reactions.js";
 import { Heading } from "./heading.js";
 import { Menu } from "./navigation.js";
@@ -147,12 +149,16 @@ function useSearchAnnouncement(text) {
             AccessibilityInfo.announceForAccessibility(text);
     }, [text]);
 }
+/** Default remove mark for recent queries and applied filters; the button or chip carries the accessible name. */
+function RemoveGlyph({ size }) {
+    return _jsx(LucideGlyph, { icon: X, size: size, color: useHjmNativeTheme().colors.textMuted });
+}
 function SearchIdleSections({ recent, suggested, legacy, onCommit }) {
     const visible = recent?.items.slice(0, Math.max(0, recent.maxVisible ?? searchScreenRecipe.recentVisible)) ?? [];
     // Without the structured sections the legacy `recentSearches` slot renders exactly as before 2026-10-06.
     if (!visible.length && !suggested?.items.length)
         return _jsx(_Fragment, { children: legacy });
-    return _jsxs(Stack, { gap: "xl", children: [legacy, recent && visible.length ? _jsxs(Stack, { gap: "sm", children: [_jsxs(Stack, { axis: "inline", justify: "between", align: "center", gap: "sm", children: [_jsx(Heading, { level: "level5", children: recent.title }), _jsx(Button, { tone: "ghost", size: "small", edge: "end", onPress: recent.onClearAll, children: recent.clearAllLabel })] }), _jsx(Stack, { gap: "xxs", children: visible.map(item => _jsx(ListRow, { density: "compact", leading: recent.icon, title: item, onPress: () => onCommit(item), trailingAction: _jsx(IconButton, { label: recent.removeLabel(item), tone: "ghost", edge: "end", onPress: () => recent.onRemove(item), children: recent.removeIcon ?? _jsx(FixedGlyph, { tone: "muted", children: "\u00D7" }) }) }, item)) })] }) : null, suggested?.items.length ? _jsx(SearchSuggestedChips, { suggested: suggested, onCommit: onCommit }) : null] });
+    return _jsxs(Stack, { gap: "xl", children: [legacy, recent && visible.length ? _jsxs(Stack, { gap: "sm", children: [_jsxs(Stack, { axis: "inline", justify: "between", align: "center", gap: "sm", children: [_jsx(Heading, { level: "level5", children: recent.title }), _jsx(Button, { tone: "ghost", size: "small", edge: "end", onPress: recent.onClearAll, children: recent.clearAllLabel })] }), _jsx(Stack, { gap: "xxs", children: visible.map(item => _jsx(ListRow, { density: "compact", leading: recent.icon, title: item, onPress: () => onCommit(item), trailingAction: _jsx(IconButton, { label: recent.removeLabel(item), tone: "ghost", edge: "end", onPress: () => recent.onRemove(item), children: recent.removeIcon ?? _jsx(RemoveGlyph, { size: glyph.sm }) }) }, item)) })] }) : null, suggested?.items.length ? _jsx(SearchSuggestedChips, { suggested: suggested, onCommit: onCommit }) : null] });
 }
 function SearchSuggestedChips({ suggested, onCommit }) {
     return _jsxs(Stack, { gap: "sm", children: [_jsx(Heading, { level: "level5", children: suggested.title }), _jsx(Stack, { axis: "inline", wrap: true, gap: "xs", children: suggested.items.map(item => _jsx(Chip, { label: item, onPress: () => onCommit(item) }, item)) })] });
@@ -170,7 +176,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }) {
     if (!summary?.notice && !showCount && !showSort && !applied?.items.length)
         return null;
     return _jsxs(Stack, { gap: "sm", children: [summary?.notice, showCount || showSort ? _jsxs(Stack, { axis: "inline", justify: showCount ? "between" : "end", align: "center", gap: "sm", wrap: true, children: [showCount ? (summary.count === null ? _jsx(Skeleton, { shape: "text", width: "30%" }) : _jsx(Text, { tone: "muted", children: summary.countLabel(summary.count) })) : null, sort ? _jsx(Menu, { presentation: "anchored", triggerLabel: sort.triggerLabel, title: sort.label, dismissLabel: sort.dismissLabel, items: sort.options.map(option => ({ id: option.id, label: option.label })), selection: { mode: "single", selectedKey: sort.value, onSelectionChange: next => { if (next)
-                                onSortChange(next); } }, renderTrigger: trigger => _jsx(Button, { size: "small", tone: "ghost", edge: "end", accessibilityState: trigger.accessibilityState, onPress: trigger.onPress, ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map(item => _jsx(Chip, { label: item.label, accessibilityLabel: applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx(FixedGlyph, { tone: "muted", children: "\u00D7" }), onPress: () => applied.onRemove(item.key) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onPress: applied.onClearAll, children: applied.clearAllLabel })] }) : null] });
+                                onSortChange(next); } }, renderTrigger: trigger => _jsx(Button, { size: "small", tone: "ghost", edge: "end", accessibilityState: trigger.accessibilityState, onPress: trigger.onPress, ...(sort.icon === undefined ? {} : { trailing: sort.icon }), children: sort.triggerLabel }) }) : null] }) : null, applied?.items.length ? _jsxs(Stack, { axis: "inline", wrap: true, gap: "xs", align: "center", children: [applied.items.map(item => _jsx(Chip, { label: item.label, accessibilityLabel: applied.removeLabel(item.label), trailing: applied.removeIcon ?? _jsx(RemoveGlyph, { size: glyph[chipRecipe.selectionIndicator.glyph] }), onPress: () => applied.onRemove(item.key) }, item.key)), _jsx(Button, { tone: "ghost", size: "small", onPress: applied.onClearAll, children: applied.clearAllLabel })] }) : null] });
 }
 function SearchResultsBody({ summary, applied, suggested, cause, onCommit, children }) {
     // The row owns its two-line geometry; only the first placeholder is an accessible status.
@@ -300,7 +306,7 @@ function CommentTextAction({ label, onPress, disabled = false, expanded }) {
 function CommentMenuButton({ item, menu, items }) {
     const { palette } = useHjmNativeTheme();
     const label = menu.label(item);
-    return _jsx(Menu, { presentation: menu.presentation ?? "anchored", triggerLabel: label, dismissLabel: menu.dismissLabel, items: items.map(entry => ({ id: entry.id, label: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id), renderTrigger: trigger => _jsx(IconButton, { label: label, tone: "ghost", size: commentThreadRecipe.actionButtonSize, onPress: trigger.onPress, children: _jsx(DrawnMoreVertical, { size: commentThreadRecipe.menuGlyphSize, color: resolveIconButtonPresentation("ghost", palette).content }) }) });
+    return _jsx(Menu, { presentation: menu.presentation ?? "anchored", triggerLabel: label, dismissLabel: menu.dismissLabel, items: items.map(entry => ({ id: entry.id, label: entry.label, ...(entry.tone === undefined ? {} : { tone: entry.tone }), ...(entry.disabled === undefined ? {} : { disabled: entry.disabled }) })), onActionAfterDismiss: id => menu.onAction(item, id), renderTrigger: trigger => _jsx(IconButton, { label: label, tone: "ghost", size: commentThreadRecipe.actionButtonSize, onPress: trigger.onPress, children: _jsx(LucideGlyph, { icon: EllipsisVertical, size: commentThreadRecipe.menuGlyphSize, color: resolveIconButtonPresentation("ghost", palette).content }) }) });
 }
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
 export function CommentThreadRow({ item, onLike, onReply, replyLabel, layoutStyle, commentMenu }) {
@@ -373,11 +379,11 @@ function profileActionItems(actions) {
         ? profileActionItems(action.props.children)
         : [action]);
 }
-// react-native-svg is an optional peer: screen-flows must not import icon-svg (2026-10-25 Metro crash in apps without it).
-// The fallback pencil is the View-drawn glyph like the comment ⋮; products normally pass their own glyph via `nameEdit.icon`.
+// The fallback pencil is Lucide's Pencil like the comment menu's EllipsisVertical; products normally pass their own glyph
+// via `nameEdit.icon`.
 function NameEditGlyph() {
     const { palette } = useHjmNativeTheme();
-    return _jsx(DrawnPencil, { size: glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph], color: resolveIconButtonPresentation("ghost", palette).content });
+    return _jsx(LucideGlyph, { icon: Pencil, size: glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph], color: resolveIconButtonPresentation("ghost", palette).content });
 }
 export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children }) {
     const actionLayout = profileSummaryRecipe.actionsLayouts[actionsLayout];

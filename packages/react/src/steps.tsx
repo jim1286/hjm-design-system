@@ -8,6 +8,8 @@ import {
 import { forwardRef, useId, useState, type HTMLAttributes, type ReactNode } from "react";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { Check, ChevronDown, ChevronUp, X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type StepsProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
   descriptor: StepsDescriptor<Id>;
@@ -54,7 +56,7 @@ export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
       const content = <>
         <div className="hjm-steps__rail" aria-hidden="true">
           {!vertical && index === steps.length - 1 ? <span className="hjm-steps__connector" data-reached={steps[index - 1]?.status === "complete" || undefined} /> : null}
-          <span className="hjm-steps__indicator">{renderMark?.(step.status, step.position) ?? (step.status === "complete" ? "✓" : step.status === "error" ? "!" : step.position)}</span>
+          <span className="hjm-steps__indicator">{renderMark?.(step.status, step.position) ?? (step.status === "complete" ? <LucideGlyph node={Check} /> : step.status === "error" ? <LucideGlyph node={X} /> : step.position)}</span>
           {vertical || index === steps.length - 1 ? null : <span className="hjm-steps__connector" />}
         </div>
         <div className="hjm-steps__copy">
@@ -76,7 +78,7 @@ export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
     <div className="hjm-steps-compact__header">
       <span aria-hidden="true">{current.position} / {current.total} · {current.label}<span className="hjm-steps__status"> · {current.statusLabel}</span></span>
       <button type="button" className="hjm-steps-compact__toggle" aria-expanded={expanded} aria-controls={props.id ?? `${statusId}-list`} onClick={() => setExpanded(value => !value)}>
-        {overviewLabel}<span aria-hidden="true">{expanded ? "⌃" : "⌄"}</span>
+        {overviewLabel}<LucideGlyph node={expanded ? ChevronUp : ChevronDown} />
       </button>
     </div>{list}
   </div> : list;

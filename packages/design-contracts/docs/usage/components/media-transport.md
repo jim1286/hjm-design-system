@@ -5,7 +5,7 @@
 - 지원: Web · Native
 - 적용: 1.21.0
 - 검토일: 2026-10-16
-- 근거: [미디어 재생 제어 계약](../../media-transport.md), `src/media-transport.ts`의 `resolveMediaPlayback`·`mediaTransportPaths`, 양 renderer `src/media-transport.tsx`
+- 근거: [미디어 재생 제어 계약](../../media-transport.md), `src/media-transport.ts`의 `resolveMediaPlayback`·`mediaTransportGlyphOpacity`·`mediaTransportLucideNames`, 양 renderer `src/media-transport.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/미디어 재생 제어`
 
 ## 언제 쓰나
@@ -92,13 +92,13 @@ import { MediaTransport } from "@hjmds/react-native/media-transport";
 | 탐색 | 드래그·키 입력 중 값은 로컬 초안, 놓으면 `onSeek` 한 번. 끝나면 관측 위치로 복귀 |
 | 실패 | 관측 상태 유지, 중앙 오류, 같은 제어로 재시도 |
 
-모핑은 `motion.normal` 동안만 실행하고 reduced motion·비활성·백그라운드에서는 목표 모양으로 즉시 정착한다. 프레임마다 React 렌더를 하지 않는다.
+Lucide `play`·`pause` 교차 페이드(2.6.0, HJM 모핑 경로 대체)는 `motion.normal` 동안만 실행하고 reduced motion·비활성·백그라운드에서는 목표 모양으로 즉시 정착한다. 프레임마다 React 렌더를 하지 않는다.
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
-| 글리프 | SVG `currentColor`, requestAnimationFrame으로 path만 변경 | react-native-svg `contentBrand`, Animated.Value listener로 path만 변경(`useNativeDriver: false`) |
+| 글리프 | Lucide play/pause를 `currentColor`로, requestAnimationFrame으로 opacity만 변경 | Lucide play/pause를 `contentBrand`로, opacity를 native driver로 변경 |
 | 정지 조건 | `document.hidden` | `AppState`가 active 아님 |
 | 탐색 단계 문구 | `decrement`·`increment`를 Slider에 전달하지 않음 | Slider `decrementLabel`·`incrementLabel` |
 | 실패 알림 | `role="alert"` | `accessibilityRole="alert"`·assertive |

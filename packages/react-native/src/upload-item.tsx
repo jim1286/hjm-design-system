@@ -9,7 +9,9 @@ import type { ReactNode } from "react";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { View } from "react-native";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
-import { DrawnClose, DrawnRefresh } from "./internal/drawn-glyphs.js";
+import X from "lucide-react-native/icons/x";
+import RefreshCw from "lucide-react-native/icons/refresh-cw";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 import { IconButton } from "./actions.js";
 
@@ -72,8 +74,8 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, lay
           tone="ghost"
         >
           {action === "cancel"
-            ? <DrawnClose size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />
-            : <DrawnRefresh size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />}
+            ? <LucideGlyph icon={X} size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />
+            : <LucideGlyph icon={RefreshCw} size={glyph[iconButtonRecipe.sizes.medium.glyph]} color={colors.textMuted} />}
         </IconButton>
       )}
     </View>

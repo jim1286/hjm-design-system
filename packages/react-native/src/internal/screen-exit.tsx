@@ -1,21 +1,22 @@
-import { View } from "react-native";
+import X from "lucide-react-native/icons/x";
 import { screenExitRecipe, type ScreenExitKind } from "@hjmds/design-contracts/screen-patterns";
 import { IconButton } from "../actions.js";
 import { useHjmNativeTheme } from "../provider.js";
+import { ChevronGlyph, LucideGlyph } from "./lucide-glyph.js";
 
 /** Leaving a screen: icon-only, fixed at the header's leading edge (ScreenLayout and TopBar `exit`). */
 export type ScreenExit = Readonly<{ kind: ScreenExitKind; label: string; onPress(): void; disabled?: boolean }>;
 
-/** Drawn chevron/cross so back and close look identical on every platform and font. */
+/** Lucide chevron/X so back and close look identical on every platform and font; back mirrors with the reading direction. */
 export function ScreenExitButton({ kind, label, onPress, disabled = false }: ScreenExit) {
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors } = useHjmNativeTheme();
   const { chevronSize, closeSize, stroke } = screenExitRecipe;
-  const rtl = environment.direction === "rtl";
-  const glyph = kind === "back"
-    ? <View style={{ width: chevronSize, height: chevronSize, borderLeftWidth: stroke, borderBottomWidth: stroke, borderColor: colors.text, transform: [{ translateX: chevronSize / 4 * (rtl ? -1 : 1) }, { rotate: rtl ? "-135deg" : "45deg" }] }} />
-    : <View style={{ width: closeSize, height: closeSize, alignItems: "center", justifyContent: "center" }}>
-        {["45deg", "-45deg"].map(rotate => <View key={rotate} style={{ position: "absolute", width: closeSize * Math.SQRT2, height: stroke, borderRadius: stroke / 2, backgroundColor: colors.text, transform: [{ rotate }] }} />)}
-      </View>;
+  // Lucide draws both marks across half of its 24-unit grid, so a frame of twice the recipe's close arm keeps the
+  // ink at the recipe extent, and the recipe stroke stays in points at that frame.
+  const size = Math.max(chevronSize, closeSize) * 2;
+  const glyph = { size, color: colors.text, strokeWidth: stroke * 24 / size };
   // The compact target aligns to the header gutter without an edge overhang (2026-10-21).
-  return <IconButton label={label} tone="ghost" size="small" hitSlop={0} disabled={disabled} onPress={onPress}><View accessible={false} importantForAccessibility="no-hide-descendants">{glyph}</View></IconButton>;
+  return <IconButton label={label} tone="ghost" size="small" hitSlop={0} disabled={disabled} onPress={onPress}>
+    {kind === "back" ? <ChevronGlyph direction="start" {...glyph} /> : <LucideGlyph icon={X} {...glyph} />}
+  </IconButton>;
 }

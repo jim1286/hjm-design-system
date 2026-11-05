@@ -1,12 +1,16 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef } from "react";
-import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackPaths, toggleFeedbackRecipe } from "@hjmds/design-contracts/toggle-feedback";
+import { resolveToggleFeedbackProposal, resolveToggleFeedbackFrame, toggleFeedbackRecipe } from "@hjmds/design-contracts/toggle-feedback";
 import { Button } from "./actions.js";
 import { AnimatedStatistic } from "./statistic-motion.js";
 import { Stack, Text } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
+import { Bell, Bookmark, Heart } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
+// Default glyphs are the Lucide icons contracts `toggleFeedbackLucideNames` names (Lucide only, 2026-11-05).
+const effectIcons = { ripple: Bell, ribbon: Bookmark, burst: Heart };
 function FeedbackGlyph({ effect, selected, active, icon }) {
     const glyph = useRef(null), circle = useRef(null), rays = useRef(null), previous = useRef(selected);
     const reduced = useHjmTheme().environment.reducedMotion;
@@ -31,7 +35,7 @@ function FeedbackGlyph({ effect, selected, active, icon }) {
         return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
     }, [selected, effect, active, reduced]);
     const f = resolveToggleFeedbackFrame(effect, 1);
-    return _jsxs("span", { "aria-hidden": "true", style: { position: "relative", display: "inline-flex", width: toggleFeedbackRecipe.glyphSize, height: toggleFeedbackRecipe.glyphSize }, children: [_jsx("span", { ref: glyph, style: { display: "inline-flex" }, children: icon ?? _jsx("svg", { width: 24, height: 24, viewBox: "0 0 24 24", focusable: "false", children: _jsx("path", { d: toggleFeedbackPaths[effect], fill: selected ? "currentColor" : "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinejoin: "round" }) }) }), _jsxs("svg", { "data-toggle-effect": effect, width: 40, height: 40, viewBox: "0 0 40 40", focusable: "false", style: { position: "absolute", left: -8, top: -8, pointerEvents: "none" }, fill: "none", stroke: "currentColor", strokeWidth: 1.7, children: [_jsx("circle", { ref: circle, cx: 20, cy: 20, r: f.radius, opacity: 0 }), _jsx("path", { ref: rays, d: f.rays, opacity: 0, strokeLinecap: "round" })] })] });
+    return _jsxs("span", { "aria-hidden": "true", style: { position: "relative", display: "inline-flex", width: toggleFeedbackRecipe.glyphSize, height: toggleFeedbackRecipe.glyphSize }, children: [_jsx("span", { ref: glyph, style: { display: "inline-flex" }, children: icon ?? _jsx(LucideGlyph, { node: effectIcons[effect], size: 24, strokeWidth: 1.7, filled: selected }) }), _jsxs("svg", { "data-toggle-effect": effect, width: 40, height: 40, viewBox: "0 0 40 40", focusable: "false", style: { position: "absolute", left: -8, top: -8, pointerEvents: "none" }, fill: "none", stroke: "currentColor", strokeWidth: 1.7, children: [_jsx("circle", { ref: circle, cx: 20, cy: 20, r: f.radius, opacity: 0 }), _jsx("path", { ref: rays, d: f.rays, opacity: 0, strokeLinecap: "round" })] })] });
 }
 export function ToggleFeedbackButton(props) {
     if (!props.entityId.trim())

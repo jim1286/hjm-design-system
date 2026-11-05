@@ -7,6 +7,8 @@ import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer, useModalFocus } from "./modal.js";
 import { Button, IconButton } from "./actions.js";
 import { createAttachedPhoto, createPhotoAttachmentField } from "./internal/photo-attachment.js";
+import { ChevronLeft, ChevronRight, X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string };
 export type ImageViewerProps = {
@@ -100,7 +102,7 @@ function ViewerSession(props: ImageViewerProps) {
   };
   return <HjmPortal><div className="hjm-image-viewer" style={{ zIndex: getModalLayer(0) }} ref={contentRef}
     role="dialog" aria-modal="true" aria-label={item.label} data-hjm-modal-content="" tabIndex={-1}>
-    <div className="hjm-image-viewer__header" style={{ opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }}><IconButton ref={closeRef} label={props.closeLabel} tone="ghost" onClick={props.onClose}>×</IconButton>{props.actions ? <div className="hjm-image-viewer__actions">{props.actions}</div> : null}</div>
+    <div className="hjm-image-viewer__header" style={{ opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }}><IconButton ref={closeRef} label={props.closeLabel} tone="ghost" onClick={props.onClose}><LucideGlyph node={X} /></IconButton>{props.actions ? <div className="hjm-image-viewer__actions">{props.actions}</div> : null}</div>
     <div className="hjm-image-viewer__stage" onDoubleClick={() => clamp(view.scale === 1 ? 2 : 1, 0, 0)}
       onPointerDown={event => {
         if ((event.target as HTMLElement).closest("button")) return;
@@ -137,9 +139,9 @@ function ViewerSession(props: ImageViewerProps) {
       </div>
     </div>
     <div className="hjm-image-viewer__footer" style={{ opacity: 1 - 0.8 * Math.min(1, pull / PULL_CLOSE_DISTANCE) }}>
-      {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => move(index - 1)}>‹</IconButton> : null}
+      {props.items.length > 1 ? <IconButton label={props.previousLabel} tone="ghost" disabled={index === 0} onClick={() => move(index - 1)}><LucideGlyph node={ChevronLeft} mirrored /></IconButton> : null}
       <span aria-live="polite">{item.label}{props.items.length > 1 ? ` · ${index + 1}/${props.items.length}` : ""}</span>
-      {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.items.length - 1} onClick={() => move(index + 1)}>›</IconButton> : null}
+      {props.items.length > 1 ? <IconButton label={props.nextLabel} tone="ghost" disabled={index === props.items.length - 1} onClick={() => move(index + 1)}><LucideGlyph node={ChevronRight} mirrored /></IconButton> : null}
     </div>
   </div></HjmPortal>;
 }

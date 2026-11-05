@@ -20,6 +20,8 @@ import {
   type SwitchSize,
   type SwitchPresentation,
 } from "@hjmds/design-contracts/recipes";
+import { Check } from "lucide";
+import { CheckGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type { SwitchSize, SwitchPresentation };
 import {
@@ -137,7 +139,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
             selected: true,
             color: "currentColor",
             size: iconRecipe.sizes[chipRecipe.selectionIndicator.glyph],
-          }) ?? "✓"}
+          }) ?? <LucideGlyph node={Check} />}
         </span>
       ) : null}
       {leading === undefined ? null : <span aria-hidden="true" className="hjm-chip__leading">{leading}</span>}
@@ -232,7 +234,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             onChange?.(event);
           }}
         />
-        <span className="hjm-choice__indicator" aria-hidden="true" />
+        <span className="hjm-choice__indicator" aria-hidden="true"><CheckGlyph state={indeterminate ? "mixed" : checked} /></span>
         {renderLeading ? (
           <span className="hjm-choice__leading" aria-hidden="true">
             {renderLeading({
@@ -518,7 +520,7 @@ function CheckboxGroupInner<Key extends string>(
                 }}
                 onClick={readOnly ? (event) => event.preventDefault() : undefined}
               />
-              <span className="hjm-choice__indicator" aria-hidden="true" />
+              <span className="hjm-choice__indicator" aria-hidden="true"><CheckGlyph state={checked} /></span>
               {renderLeading ? (
                 <span className="hjm-choice__leading" aria-hidden="true">
                   {renderLeading(item, {

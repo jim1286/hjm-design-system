@@ -9,11 +9,14 @@ import {
   type DataTableAsyncState, type DataTableCellHeat, type DataTableCellTone, type DataTableColumnDescriptor, type DataTableColumnGroup, type DataTableDensity,
   type DataTableRowDescriptor, type DataTableRowGroup, type DataTableSortCycle, type DataTableSortState,
 } from "@hjmds/design-contracts/components/data-table";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, glyph } from "@hjmds/design-contracts/foundations";
 import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import ArrowUp from "lucide-react-native/icons/arrow-up";
+import ArrowDown from "lucide-react-native/icons/arrow-down";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 /*
  * Native DataTable (2026-10-14). Same contract as Web DataTable: the product renders cells and owns
@@ -90,9 +93,11 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   // Measure with the native font in an unconstrained horizontal rail, independent of the
   // visible column width, so truncation cannot feed a smaller width back into sizing.
   const measure = (key: string, measured: number) => setTextWidths(previous => previous[key] === measured ? previous : { ...previous, [key]: measured });
+  // A sortable header reserves the Lucide sort arrow and its gap, so sorting never changes the column width.
+  const sortMarkWidth = spacing.xxs + glyph.xs;
   const naturalWidth = (column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) => Math.max(
     column.width ?? (pinnedColumn ? PINNED_WIDTH : DEFAULT_WIDTH),
-    Math.ceil(Math.max(textWidths[`${column.id}:header`] ?? 0, textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal,
+    Math.ceil(Math.max((textWidths[`${column.id}:header`] ?? 0) + (column.sortable ? sortMarkWidth : 0), textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal,
   );
   const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
   // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
@@ -105,9 +110,12 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
     const sortable = column.sortable ?? dataTableColumnDefaults.sortable;
     const active = sortState?.columnId === column.id ? sortState.direction : null;
     const textColor = active ? color(dataTableRecipe.sortButton.activeColor) : color(dataTableRecipe.header.color);
-    const content = <NativeText numberOfLines={1} style={{ color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(column.align ?? dataTableColumnDefaults.align, direction) }}>
-      {column.header}{active ? (active === "ascending" ? " ▲" : " ▼") : ""}
-    </NativeText>;
+    const logicalAlign = column.align ?? dataTableColumnDefaults.align;
+    // The sort mark is a Lucide arrow after the header text; the row follows the inherited table direction.
+    const content = <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xxs, justifyContent: logicalAlign === "center" ? "center" : logicalAlign === "end" ? "flex-end" : "flex-start" }}>
+      <NativeText numberOfLines={1} style={{ flexShrink: 1, color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(logicalAlign, direction) }}>{column.header}</NativeText>
+      {active ? <LucideGlyph icon={active === "ascending" ? ArrowUp : ArrowDown} size={glyph.xs} color={textColor} /> : null}
+    </View>;
     const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" as const };
     return sortable && onSortChange
       ? <Pressable key={column.id} accessibilityRole="button" accessibilityLabel={labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null)}
@@ -206,7 +214,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
         const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
           .filter((value): value is string | number => typeof value === "string" || typeof value === "number");
         return <View key={column.id} style={{ flexShrink: 0 }}>
-          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }}>{`${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}`}</NativeText>
+          <NativeText onLayout={event => measure(`${column.id}:header`, event.nativeEvent.layout.width)} style={{ fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }}>{column.header}</NativeText>
           <NativeText onLayout={event => measure(`${column.id}:body`, event.nativeEvent.layout.width)} style={{ fontSize: 14, fontWeight: dataTableFamilyRecipe.tone.leader.fontWeight, fontVariant: ["tabular-nums"], flexShrink: 0 }}>{values.join("\n")}</NativeText>
         </View>;
       })}</View>

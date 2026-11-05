@@ -10,7 +10,7 @@ import { Button, IconButton } from "./actions.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { glyph } from "@hjmds/design-contracts/foundations";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
@@ -162,14 +162,14 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
         element, like a platform page control, which also keeps interactive card children reachable. */}
     <View accessibilityLabel={labels.navigation} onFocus={() => setRotating(false)} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: tokens.spacing.xs }}>
       <IconButton label={labels.previous} tone="ghost" disabled={current === slides[0]!.id} onPress={() => move("previous")}>
-        <DrawnChevron direction="start" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
+        <ChevronGlyph direction="start" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
       </IconButton>
       <PageIndicator label={label} count={slides.length} currentIndex={selected.position - 1}
         composeAccessibleName={({ position }) => resolved[position - 1]!.accessibleName}
         labels={{ previous: labels.previous, next: labels.next }}
         onCurrentIndexChange={(index) => select(slides[index]!.id)} />
       <IconButton label={labels.next} tone="ghost" disabled={last} onPress={() => move("next")}>
-        <DrawnChevron direction="end" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
+        <ChevronGlyph direction="end" size={glyph[carouselRecipe.sizes.medium.controlIcon]} color={chevronColor} />
       </IconButton>
     </View>
   </View>;

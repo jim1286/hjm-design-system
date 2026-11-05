@@ -10,7 +10,7 @@ import {
 import { dateRangeRecipe } from "@hjmds/design-contracts/components/date-range";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { CalendarPaintContext } from "./internal/calendar-paint.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -83,7 +83,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
         onPress={() => descriptor.onFocusedMonthChange?.(action.month, reason)}
         style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}>
         {/* recipe navIcon chevrons, not the ‹ › text that rendered about 8pt (2026-10-25 range redesign). */}
-        <DrawnChevron direction={reason === "previous" ? "start" : "end"} size={glyph[recipe.sizes[size].glyph]}
+        <ChevronGlyph direction={reason === "previous" ? "start" : "end"} size={glyph[recipe.sizes[size].glyph]}
           color={resolveColorReference(recipe.header.navButton.color, palette)} />
       </Pressable> : <View accessible={false} style={minimumTargetStyle} />;
   return <View style={[{ maxWidth: recipe.maxWidth, width: "100%" }, layoutStyle, { gap: recipe.header.gap, direction: environment.direction }]}>
@@ -137,7 +137,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     {fold ? <Pressable accessibilityRole="button" accessibilityLabel={fold.label} accessibilityState={{ expanded: fold.expanded }}
       {...webOnly({ "aria-expanded": fold.expanded })} onPress={() => fold.onExpandedChange(!fold.expanded)}
       style={{ alignSelf: "center", minWidth: recipe.fold.handle.touchTarget, minHeight: recipe.fold.handle.touchTarget / 2, alignItems: "center", justifyContent: "center" }}>
-      <DrawnChevron direction={fold.expanded ? "up" : "down"} size={glyph[recipe.fold.handle.glyph]} color={resolveColorReference(recipe.fold.handle.color, palette)} />
+      <ChevronGlyph direction={fold.expanded ? "up" : "down"} size={glyph[recipe.fold.handle.glyph]} color={resolveColorReference(recipe.fold.handle.color, palette)} />
     </Pressable> : null}
   </View>;
 }
@@ -166,7 +166,7 @@ export function CalendarFoldHeader({ monthLabel, expanded, selectedDate, focused
   const arrow = (direction: -1 | 1) => <Pressable accessibilityRole="button"
     accessibilityLabel={expanded ? direction < 0 ? labels.previousMonth : labels.nextMonth : direction < 0 ? labels.previousWeek : labels.nextWeek}
     onPress={() => step(direction)} style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}>
-    <DrawnChevron direction={direction < 0 ? "start" : "end"} size={glyph[recipe.sizes.medium.glyph]} color={resolveColorReference(recipe.header.navButton.color, palette)} />
+    <ChevronGlyph direction={direction < 0 ? "start" : "end"} size={glyph[recipe.sizes.medium.glyph]} color={resolveColorReference(recipe.header.navButton.color, palette)} />
   </Pressable>;
   return <View style={[{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: recipe.header.gap, direction: environment.direction }, layoutStyle]}>
     {arrow(-1)}

@@ -15,9 +15,12 @@ import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { initialFocusDefaults, validateCommentThread, resolvePermissionAction, resolvePermissionFooter, resolveOnboardingStep, resolveSearchCommit, resolveSearchDebounceMs, resolveSearchEmptyCause, resolveSearchFilterRailVisible, resolveSearchScreenPhase, screenPatternRecipe, commentThreadRecipe, profileSummaryRecipe, searchScreenRecipe, resolveCommentMenuItems, resolveCommentReplyPage, type CommentMenuItemDescriptor, type SearchEmptyCause, type SearchFiltersRole, type PermissionScreenStatus } from "@hjmds/design-contracts/screen-patterns";
-import { iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
+import { chipRecipe, iconButtonRecipe, resolveIconButtonEdgeOverhang, resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
-import { DrawnMoreVertical, DrawnPencil } from "./internal/drawn-glyphs.js";
+import EllipsisVertical from "lucide-react-native/icons/ellipsis-vertical";
+import Pencil from "lucide-react-native/icons/pencil";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
@@ -29,7 +32,6 @@ import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/c
 import { ListRow } from "./data-display.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
 import { ImageViewerTrigger } from "./internal/image-viewer-trigger.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { MessageReactions, type MessageMenuAction } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Heading } from "./heading.js";
@@ -214,7 +216,7 @@ export type SearchRecentQueries = Readonly<{
   removeLabel(query: string): string;
   onRemove(query: string): void;
   icon?: ReactNode;
-  /** Glyph inside the remove button; defaults to "×". */
+  /** Glyph inside the remove button; defaults to Lucide X. */
   removeIcon?: ReactNode;
   /** Rows shown; default `searchScreenRecipe.recentVisible` (5). */
   maxVisible?: number;
@@ -284,6 +286,11 @@ function useSearchAnnouncement(text: string) {
   }, [text]);
 }
 
+/** Default remove mark for recent queries and applied filters; the button or chip carries the accessible name. */
+function RemoveGlyph({ size }: Readonly<{ size: number }>) {
+  return <LucideGlyph icon={X} size={size} color={useHjmNativeTheme().colors.textMuted} />;
+}
+
 function SearchIdleSections({ recent, suggested, legacy, onCommit }: {
   recent: SearchRecentQueries | undefined; suggested: SearchSuggestedQueries | undefined; legacy: ReactNode; onCommit(query: string): void;
 }) {
@@ -298,7 +305,7 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit }: {
         <Button tone="ghost" size="small" edge="end" onPress={recent.onClearAll}>{recent.clearAllLabel}</Button>
       </Stack>
       <Stack gap="xxs">{visible.map(item => <ListRow key={item} density="compact" leading={recent.icon} title={item} onPress={() => onCommit(item)}
-        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" edge="end" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>}</IconButton>} />)}</Stack>
+        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" edge="end" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <RemoveGlyph size={glyph.sm} />}</IconButton>} />)}</Stack>
     </Stack> : null}
     {suggested?.items.length ? <SearchSuggestedChips suggested={suggested} onCommit={onCommit} /> : null}
   </Stack>;
@@ -341,7 +348,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }: {
     </Stack> : null}
     {applied?.items.length ? <Stack axis="inline" wrap gap="xs" align="center">
       {applied.items.map(item => <Chip key={item.key} label={item.label} accessibilityLabel={applied.removeLabel(item.label)}
-        trailing={applied.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>} onPress={() => applied.onRemove(item.key)} />)}
+        trailing={applied.removeIcon ?? <RemoveGlyph size={glyph[chipRecipe.selectionIndicator.glyph]} />} onPress={() => applied.onRemove(item.key)} />)}
       <Button tone="ghost" size="small" onPress={applied.onClearAll}>{applied.clearAllLabel}</Button>
     </Stack> : null}
   </Stack>;
@@ -579,7 +586,7 @@ function CommentMenuButton({item,menu,items}:Readonly<{item:CommentThreadItem;me
  const {palette}=useHjmNativeTheme();
  const label=menu.label(item);
  return <Menu presentation={menu.presentation ?? "anchored"} triggerLabel={label} dismissLabel={menu.dismissLabel} items={items.map(entry=>({id:entry.id,label:entry.label,...(entry.tone===undefined?{}:{tone:entry.tone}),...(entry.disabled===undefined?{}:{disabled:entry.disabled})}))}
-  onActionAfterDismiss={id=>menu.onAction(item,id)} renderTrigger={trigger=><IconButton label={label} tone="ghost" size={commentThreadRecipe.actionButtonSize} onPress={trigger.onPress}><DrawnMoreVertical size={commentThreadRecipe.menuGlyphSize} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>}/>;
+  onActionAfterDismiss={id=>menu.onAction(item,id)} renderTrigger={trigger=><IconButton label={label} tone="ghost" size={commentThreadRecipe.actionButtonSize} onPress={trigger.onPress}><LucideGlyph icon={EllipsisVertical} size={commentThreadRecipe.menuGlyphSize} color={resolveIconButtonPresentation("ghost",palette).content}/></IconButton>}/>;
 }
 
 /** Virtualized hosts reuse the same row as CommentThreadScreen; product slots add content, not a second layout. */
@@ -642,7 +649,8 @@ export type ProfileSummaryProps = Readonly<{
    * Edit beside the name (2026-10-25 user rule): on one's own profile the name carries a pencil IconButton that opens the
    * nickname change, while tapping the photo (`Avatar.action`) changes the photo. HJM owns the icon, size and placement
    * (before `nameActions`); the product supplies the label and the route. Pass `icon` with the product's own pencil
-   * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
+   * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil; the
+   * default is Lucide's Pencil since 2026-11-05).
    */
   nameEdit?: ScreenFlowAction;
   /**
@@ -680,11 +688,11 @@ function profileActionItems(actions: ReactNode): ReactNode[] {
       : [action]);
 }
 
-// react-native-svg is an optional peer: screen-flows must not import icon-svg (2026-10-25 Metro crash in apps without it).
-// The fallback pencil is the View-drawn glyph like the comment ⋮; products normally pass their own glyph via `nameEdit.icon`.
+// The fallback pencil is Lucide's Pencil like the comment menu's EllipsisVertical; products normally pass their own glyph
+// via `nameEdit.icon`.
 function NameEditGlyph() {
   const { palette } = useHjmNativeTheme();
-  return <DrawnPencil size={glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph]} color={resolveIconButtonPresentation("ghost", palette).content} />;
+  return <LucideGlyph icon={Pencil} size={glyph[iconButtonRecipe.sizes[profileSummaryRecipe.nameEdit.size].glyph]} color={resolveIconButtonPresentation("ghost", palette).content} />;
 }
 
 export function ProfileSummary({ name, headingLevel = 2, avatar, badge, nameActions, nameEdit, avatarView, stats = [], actions, actionsLayout = "inline", children }: ProfileSummaryProps) {

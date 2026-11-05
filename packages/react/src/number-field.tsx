@@ -26,6 +26,8 @@ import {
 import { classNames, composeRefs, isAriaInvalid, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { FieldError } from "./internal/field-error.js";
+import { Minus, Plus } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 type NativeNumberInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -248,7 +250,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
             onMouseDown={(event) => event.preventDefault()}
             tabIndex={-1}
           >
-            <span aria-hidden="true">−</span>
+            <LucideGlyph node={Minus} />
           </button>
           <input
             {...inputProps}
@@ -289,7 +291,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
             onMouseDown={(event) => event.preventDefault()}
             tabIndex={-1}
           >
-            <span aria-hidden="true">+</span>
+            <LucideGlyph node={Plus} />
           </button>
         </div>
         {description && !error ? (

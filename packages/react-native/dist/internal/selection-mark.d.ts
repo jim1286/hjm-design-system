@@ -4,7 +4,7 @@ export type SelectionMarkState = boolean | "mixed";
 /**
  * Checkbox/Radio indicator box. Agreement and TransferList rows are multi-select too, so they draw this same box
  * rather than their own 16pt mark (2026-10-17 review: the 16pt box with radius sm read as a radio).
- * The check and dash are fixed artwork: HJM Text scales with textScale even when OS scaling is off.
+ * The check and dash are fixed-size Lucide artwork: HJM Text scales with textScale even when OS scaling is off.
  */
 export declare function SelectionMark({ kind, checked, size, invalid, children }: Readonly<{
     kind?: "checkbox" | "radio";

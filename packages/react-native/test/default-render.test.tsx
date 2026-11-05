@@ -1,9 +1,9 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 // Chart paints with react-native-svg; the test host renders its primitives as plain views (chart.test.tsx does the same).
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const { View } = await import("react-native");
-  return { default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Pattern: View, Path: View, Rect: View, Stop: View, Text: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, ClipPath: View, Defs: View, G: View, Line: View, LinearGradient: View, Pattern: View, Path: View, Rect: View, Stop: View, Text: View };
 });
 import { HjmNativeProvider } from "../src/index.js";
 import { reactNativeRendererEvidence } from "../src/evidence.js";

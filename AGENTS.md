@@ -58,12 +58,13 @@ VPS에 전달한다. 특정 Codex/Sites 계정은 요건이 아니다. 기존 Gi
 어긋나서, 아이콘 그림은 [Lucide](https://lucide.dev)만 쓰고 직접 그린 semantic 경로를 제거했다(2.5.0).
 
 - semantic 이름별 Lucide 대응은 contracts `semanticIconLucideNames`가 정본이다. Web은 `lucide` 의존성, Native
-  `/icon-svg`는 optional peer `lucide-react-native`로 같은 아이콘을 named import한다(사전 전체 import 금지).
+  `/icon-svg`와 core 컨트롤은 필수 peer `lucide-react-native`(+`react-native-svg`)로 같은 아이콘을 아이콘별 파일에서 import한다
+  (Metro는 패키지 barrel을 tree-shake하지 않으므로 `lucide-react-native/icons/<name>` 경로, Web은 `lucide`의 named import).
 - Lucide에 같은 뜻이 없으면 가장 가까운 Lucide 아이콘에 대응한다(`trendFlat` → `equal`).
 - **아이콘을 새로 그려야 하는 경우에는 반드시 사용자 허락을 먼저 받는다.** 허락 없이 SVG 경로·View 조합으로
   아이콘을 만들지 않는다.
-- Native core 컨트롤의 View 기호(셰브런·검색·삭제 등)는 SVG 없이 동작해야 해서 아직 남아 있다. Lucide로 옮기면
-  두 peer가 필수가 되는 호환성 변경이라 사용자 결정 후 진행한다.
+- 2.6.0에서 Native core 컨트롤의 View 기호·글자 기호, Web의 글자 기호, 재생·토글 기본 그림까지 모두 Lucide로 옮겼다.
+  그래서 `react-native-svg`·`lucide-react-native`는 Native 필수 peer다.
 
 ## 문서와 완료 보고
 

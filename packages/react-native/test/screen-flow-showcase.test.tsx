@@ -9,7 +9,7 @@ import { Chip,TextField,TextArea } from '@hjmds/react-native/inputs';
 import { Text } from '@hjmds/react-native/primitives';
 import { ListRow } from '@hjmds/react-native/data-display';
 import { Sheet,AlertDialog } from '@hjmds/react-native/overlays';
-vi.mock('react-native-svg',async()=>{const {View}=await import('react-native');return {default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
+vi.mock('react-native-svg',async (importOriginal) => {const {View}=await import('react-native');return { ...(await importOriginal<Record<string, unknown>>()),default:View,Svg:View,Circle:View,Path:View,G:View,Rect:View,Line:View,Polyline:View,Polygon:View,Ellipse:View};});
 vi.mock('react-native-safe-area-context',()=>({useSafeAreaInsets:()=>({top:0,bottom:0,left:0,right:0})}));
 // Media picking is a separate flow; retain the real shared profile/photo UI with opaque Metro image sources.
 vi.mock('../../../showcase/native/src/media-picker-preview',()=>({MediaPickerPreview:()=>null}));

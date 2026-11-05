@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, type ComponentRef } from "react";
-import { Animated, AppState } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import { mediaTransportPaths, resolveMediaPlayback, type MediaPlaybackState } from "@hjmds/design-contracts/media-transport";
+import { useEffect, useState } from "react";
+import { Animated, AppState, View } from "react-native";
+import { resolveMediaPlayback, type MediaPlaybackState } from "@hjmds/design-contracts/media-transport";
+import Pause from "lucide-react-native/icons/pause";
+import Play from "lucide-react-native/icons/play";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { IconButton } from "./actions.js";
 import { Slider } from "./slider.js";
@@ -9,21 +11,22 @@ import { Stack, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 function MediaGlyph({ playing, active }: Readonly<{ playing: boolean; active: boolean }>) {
-  const first = useRef<ComponentRef<typeof Path>>(null), second = useRef<ComponentRef<typeof Path>>(null);
-  const [value] = useState(() => new Animated.Value(playing ? 1 : 0)), current = useRef(playing ? 1 : 0);
+  const [value] = useState(() => new Animated.Value(playing ? 1 : 0));
   const theme = useHjmNativeTheme(), reduced = theme.environment.reducedMotion;
   useEffect(() => {
     const target = playing ? 1 : 0;
-    const draw = (n: number) => { current.current = n; const paths = mediaTransportPaths(n); first.current?.setNativeProps?.({ d: paths[0] }); second.current?.setNativeProps?.({ d: paths[1] }); };
-    const listener = value.addListener(({ value: n }) => draw(n));
-    const settle = () => { value.stopAnimation(); value.setValue(target); draw(target); };
-    // d is a path, so useNativeDriver cannot animate it. Update SVG hosts without React renders.
-    if (reduced || !active || AppState.currentState !== "active") settle(); else Animated.timing(value, { toValue: target, duration: motion.normal, useNativeDriver: false }).start();
+    const settle = () => { value.stopAnimation(); value.setValue(target); };
+    // Lucide play/pause cross-fade (user instruction 2026-11-05: Lucide only). Opacity runs on the native driver;
+    // the weights match contracts `mediaTransportGlyphOpacity`.
+    if (reduced || !active || AppState.currentState !== "active") settle(); else Animated.timing(value, { toValue: target, duration: motion.normal, useNativeDriver: true }).start();
     const app = AppState.addEventListener("change", state => { if (state !== "active") settle(); });
-    return () => { value.stopAnimation(); value.removeListener(listener); app.remove(); };
+    return () => { value.stopAnimation(); app.remove(); };
   }, [playing, active, reduced, value]);
-  const paths = mediaTransportPaths(current.current);
-  return <Svg width={24} height={24} viewBox="0 0 24 24" accessible={false}><Path ref={first} d={paths[0]} fill={theme.colors.contentBrand} /><Path ref={second} d={paths[1]} fill={theme.colors.contentBrand} /></Svg>;
+  const layer = { position: "absolute", top: 0, left: 0 } as const;
+  return <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ width: 24, height: 24 }}>
+    <Animated.View style={[layer, { opacity: value.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]}><LucideGlyph icon={Play} size={24} color={theme.colors.contentBrand} /></Animated.View>
+    <Animated.View style={[layer, { opacity: value }]}><LucideGlyph icon={Pause} size={24} color={theme.colors.contentBrand} /></Animated.View>
+  </View>;
 }
 export type MediaTransportProps = Readonly<{
   state: MediaPlaybackState; onPlay: () => void | Promise<void>; onPause: () => void | Promise<void>;

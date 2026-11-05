@@ -10,6 +10,8 @@ import { composeRefs, classNames, isAriaInvalid, useControllableState } from "./
 import { useInitialFocusTarget } from "./internal/initial-focus.js";
 import { Icon } from "./supplemental-display.js";
 import { FieldError } from "./internal/field-error.js";
+import { X } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 /*
   How far a disabled field fades its label and control (fieldRecipe.disabledScope). The
   frame defaults to fieldRecipe.disabledOpacity; SearchField and PasswordField render
@@ -183,7 +185,7 @@ export const SearchField = forwardRef(function SearchField({ value: valueProp, d
                     setValue("");
                     onClear?.();
                     inputRef.current?.focus();
-                }, children: renderClearIcon?.(iconAppearance) ?? "×" })) : trailing }) }));
+                }, children: renderClearIcon?.(iconAppearance) ?? _jsx(LucideGlyph, { node: X }) })) : trailing }) }));
 });
 /** Password input with an independently controlled, selection-safe reveal action. */
 export const PasswordField = forwardRef(function PasswordField({ value: valueProp, defaultValue = "", onValueChange, onChange, revealed: revealedProp, defaultRevealed = false, onRevealedChange, autofillHint, revealLabel, concealLabel, size = passwordFieldRecipe.defaults.size, renderToggleIcon, fieldClassName, className, disabled, readOnly, ...props }, forwardedRef) {

@@ -2,6 +2,8 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { View, Text } from "react-native";
 import { expect, it } from "vitest";
 import { StatisticGroup } from "../src/data-display.js";
+import TrendingUp from "lucide-react-native/icons/trending-up";
+import { LucideGlyph } from "../src/internal/lucide-glyph.js";
 import { HjmNativeProvider } from "../src/provider.js";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const flatten = (value: unknown): Record<string, unknown> => Array.isArray(value) ? Object.assign({}, ...value.map(flatten)) : (value ?? {}) as Record<string, unknown>;
@@ -47,8 +49,9 @@ it("keeps the trend mark on the trend label's line so a long label wraps beside 
   let row = label.parent;
   while (row && flatten(row.props.style).flexDirection !== "row") row = row.parent;
   expect(flatten(row!.props.style).flexWrap).toBe("nowrap");
-  const mark = tree.root.findAll(node => node.type === Text && node.props.children === "↑")[0]!;
-  expect(flatten(mark.props.style).flexShrink).toBe(0);
+  // The default mark is the Lucide icon the contract names for trendUp, in a frame that does not shrink.
+  const mark = tree.root.findAllByType(LucideGlyph).find(node => node.props.icon === TrendingUp)!;
+  expect(flatten(mark.parent!.props.style).flexShrink).toBe(0);
   expect(flatten(label.props.style).flexShrink).toBe(1);
   act(() => tree.unmount());
 });

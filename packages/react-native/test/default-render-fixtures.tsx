@@ -16,7 +16,7 @@ import { vi } from "vitest";
 import { ThinkingOrb } from "../src/thinking-orb.js";
 // Default proof exercises the opt-in entry without loading a native binary in Node.
 // Installed Skia linkage is checked separately by the focused showcase smoke.
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Defs: View, LinearGradient: View, Pattern: View, Rect: View, Path: View, Stop: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Defs: View, LinearGradient: View, Pattern: View, Rect: View, Path: View, Stop: View }; });
 vi.mock("react-native-reanimated", async () => {
   const { useRef } = await import("react");
   return { useSharedValue: (value: unknown) => useRef({ value }).current };

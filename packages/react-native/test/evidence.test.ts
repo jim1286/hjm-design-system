@@ -6,7 +6,7 @@ import { componentCatalog, getComponentSurfaceStatus, type ComponentCatalogEntry
 // is covered by the documented iOS/Android showcase smoke.
 vi.mock("react-native-reanimated", () => ({ useSharedValue: vi.fn() }));
 vi.mock("@shopify/react-native-skia", () => ({}));
-vi.mock("react-native-svg", () => ({}));
+vi.mock("react-native-svg", async (importOriginal) => ({ ...(await importOriginal<Record<string, unknown>>()) }));
 
 import {
   reactNativeRendererEvidence,

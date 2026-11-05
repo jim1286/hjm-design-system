@@ -19,16 +19,17 @@ import { Animated, Easing, Keyboard, Modal, PanResponder, Platform, ScrollView, 
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { isDevelopment } from "./internal/diagnostics.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
+import X from "lucide-react-native/icons/x";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
 import { SheetBodyScrollContext } from "./internal/sheet-body-scroll.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import { resolveNativeShadowElevation } from "./internal/styles.js";
-// A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
+// A close glyph is icon artwork, not body copy: Lucide's X at a fixed size stays inside IconButton's frame.
 function CloseGlyph() {
-    return _jsx(FixedGlyph, { fontSize: glyph.sm, children: "\u00D7" });
+    return _jsx(LucideGlyph, { icon: X, size: glyph.sm, color: useHjmNativeTheme().colors.text });
 }
 // Keep interaction visibility off native-driven animation hosts: closing content becomes inert while its host exits.
 // This boundary does not reset UIKit state leaked by Fabric's native view recycling (react/react-native#58361);

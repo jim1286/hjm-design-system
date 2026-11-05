@@ -6,9 +6,11 @@ import type { MenuItemTone } from "@hjmds/design-contracts/recipes";
 import { Text, VisuallyHidden } from "../layout.js";
 import { Popover } from "../popover.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
+import { ChevronRight } from "lucide";
+import { LucideGlyph } from "./lucide-glyph.js";
 
 /** One row of the hold menu. Products supply copy and icons; HJM owns order, size and tone. */
-export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows › for rows that open a further list. */ submenu?: boolean;
+export type MessageMenuAction = Readonly<{ id: string; label: string; icon?: ReactNode; onPress(): void; disabled?: boolean; /** Shows a chevron for rows that open a further list. */ submenu?: boolean;
   /** Same vocabulary as Menu items: `danger` for destructive rows such as delete (default `neutral`). */ tone?: MenuItemTone }>;
 /** Lets the owning message open the same hold menu from its reaction summary. */
 export type MessageReactionsHandle = Readonly<{ open(): void }>;
@@ -58,7 +60,7 @@ export function MessageReactions({ children, closeLabel, menuAction, interactive
     {menuTitle || rows.length ? <div className="hjm-message-menu">
       {menuTitle ? <Text variant="caption" tone="muted" className="hjm-message-menu__title">{menuTitle}</Text> : null}
       {rows.map(row => <button key={row.id} type="button" className="hjm-message-menu__item" data-tone={row.tone === "danger" ? "danger" : undefined} disabled={row.disabled} onClick={() => { setOpen(false); row.onPress(); }}>
-        {row.icon ? <span className="hjm-message-menu__icon" aria-hidden="true">{row.icon}</span> : null}<span className="hjm-message-menu__label">{row.label}</span>{row.submenu ? <span className="hjm-message-menu__chevron" aria-hidden="true">›</span> : null}</button>)}
+        {row.icon ? <span className="hjm-message-menu__icon" aria-hidden="true">{row.icon}</span> : null}<span className="hjm-message-menu__label">{row.label}</span>{row.submenu ? <span className="hjm-message-menu__chevron" aria-hidden="true"><LucideGlyph node={ChevronRight} mirrored /></span> : null}</button>)}
     </div> : null}
   </Popover>;
 }

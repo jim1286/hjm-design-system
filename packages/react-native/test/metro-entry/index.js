@@ -21,6 +21,19 @@ import * as optionalFamily28 from "@hjmds/react-native/communication";
 import * as optionalFamily29 from "@hjmds/react-native/streaming-answer";
 import * as optionalFamily30 from "@hjmds/react-native/conversation-row";
 import * as optionalFamily31 from "@hjmds/react-native/pagination";
+// react-native-svg and lucide-react-native are required peers since 2026-11-05 (Lucide is the only icon source), so
+// SVG-drawn families are part of the baseline graph too.
+import * as svgFamily0 from "@hjmds/react-native/effect-surface";
+import * as svgFamily1 from "@hjmds/react-native/icon-svg";
+import * as svgFamily2 from "@hjmds/react-native/chart";
+import * as svgFamily3 from "@hjmds/react-native/design-profile";
+import * as svgFamily4 from "@hjmds/react-native/data-workflows";
+import * as svgFamily5 from "@hjmds/react-native/media-transport";
+import * as svgFamily6 from "@hjmds/react-native/authoring-tools";
+import * as svgFamily7 from "@hjmds/react-native/toggle-feedback";
+import * as svgFamily8 from "@hjmds/react-native/color-picker";
+import * as svgFamily9 from "@hjmds/react-native/drawing-editor";
+import * as followListFamily from "@hjmds/react-native/follow-list";
 import * as shareSheetFamily from "@hjmds/react-native/share-sheet";
 import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 import { ProfileScreen } from "@hjmds/react-native/screen-flows";
@@ -99,7 +112,7 @@ import { StatusText } from "@hjmds/react-native/status-text";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 // Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
-const optionalFamilyNames = [shortcutRailFamily, shareSheetFamily, timePickerFamily, optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18, optionalFamily19, optionalFamily20, optionalFamily21, optionalFamily22, optionalFamily23, optionalFamily25, optionalFamily26, optionalFamily27, optionalFamily28, optionalFamily29, optionalFamily30, optionalFamily31, optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
+const optionalFamilyNames = [svgFamily0, svgFamily1, svgFamily2, svgFamily3, svgFamily4, svgFamily5, svgFamily6, svgFamily7, svgFamily8, svgFamily9, followListFamily, shortcutRailFamily, shareSheetFamily, timePickerFamily, optionalFamily15, optionalFamily16, optionalFamily17, optionalFamily18, optionalFamily19, optionalFamily20, optionalFamily21, optionalFamily22, optionalFamily23, optionalFamily25, optionalFamily26, optionalFamily27, optionalFamily28, optionalFamily29, optionalFamily30, optionalFamily31, optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
 
 const noop = () => undefined;
 const calendarGrid = {

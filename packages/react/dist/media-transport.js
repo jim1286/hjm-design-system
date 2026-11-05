@@ -1,7 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
-import { mediaTransportPaths, resolveMediaPlayback } from "@hjmds/design-contracts/media-transport";
+import { mediaTransportGlyphOpacity, resolveMediaPlayback } from "@hjmds/design-contracts/media-transport";
+import { Pause, Play } from "lucide";
+import { renderLucideNodes } from "./semantic-lucide.js";
 import { motion } from "@hjmds/design-contracts/foundations";
 import { IconButton } from "./actions.js";
 import { Slider } from "./slider.js";
@@ -9,18 +11,18 @@ import { Stack, Text } from "./layout.js";
 import { useHjmTheme } from "./provider.js";
 import { useCompositionAction } from "./internal/use-composition-action.js";
 function MediaGlyph({ playing, active }) {
-    const first = useRef(null), second = useRef(null), current = useRef(playing ? 1 : 0);
+    const play = useRef(null), pause = useRef(null), current = useRef(playing ? 1 : 0);
     const reduced = useHjmTheme().environment.reducedMotion;
     useEffect(() => {
         const target = playing ? 1 : 0, initial = current.current;
         let frame = 0, start;
-        const draw = (value) => { current.current = value; const paths = mediaTransportPaths(value); first.current?.setAttribute("d", paths[0]); second.current?.setAttribute("d", paths[1]); };
+        const draw = (value) => { current.current = value; const weight = mediaTransportGlyphOpacity(value); play.current?.setAttribute("opacity", String(weight.play)); pause.current?.setAttribute("opacity", String(weight.pause)); };
         const settle = () => { cancelAnimationFrame(frame); draw(target); };
         const visibility = () => { if (document.hidden)
             settle(); };
         const animate = (now) => { start ??= now; const p = Math.min(1, (now - start) / motion.normal); draw(initial + (target - initial) * (1 - (1 - p) ** 3)); if (p < 1)
             frame = requestAnimationFrame(animate); };
-        // Geometry updates go directly to SVG: no per-frame React render and no background loop.
+        // Lucide play/pause cross-fade (user instruction 2026-11-05: Lucide only). Opacity updates go directly to SVG: no per-frame React render and no background loop.
         if (reduced || !active || document.hidden || initial === target)
             settle();
         else
@@ -28,8 +30,8 @@ function MediaGlyph({ playing, active }) {
         document.addEventListener("visibilitychange", visibility);
         return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", visibility); };
     }, [playing, active, reduced]);
-    const paths = mediaTransportPaths(current.current);
-    return _jsxs("svg", { width: 24, height: 24, viewBox: "0 0 24 24", "aria-hidden": "true", focusable: "false", fill: "currentColor", children: [_jsx("path", { ref: first, d: paths[0] }), _jsx("path", { ref: second, d: paths[1] })] });
+    const weight = mediaTransportGlyphOpacity(current.current);
+    return _jsxs("svg", { width: 24, height: 24, viewBox: "0 0 24 24", "aria-hidden": "true", focusable: "false", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", children: [_jsx("g", { ref: play, opacity: weight.play, children: renderLucideNodes(Play) }), _jsx("g", { ref: pause, opacity: weight.pause, children: renderLucideNodes(Pause) })] });
 }
 export function MediaTransport(props) {
     const state = resolveMediaPlayback(props.state), active = props.active !== false;

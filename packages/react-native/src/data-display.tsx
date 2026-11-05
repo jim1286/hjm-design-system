@@ -110,7 +110,13 @@ import {
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import Plus from "lucide-react-native/icons/plus";
+import Minus from "lucide-react-native/icons/minus";
+import TrendingUp from "lucide-react-native/icons/trending-up";
+import TrendingDown from "lucide-react-native/icons/trending-down";
+import Equal from "lucide-react-native/icons/equal";
+import Quote from "lucide-react-native/icons/quote";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import {
   Surface,
   Text,
@@ -531,7 +537,7 @@ export type QuoteCardProps = Omit<ViewProps, "children" | "style"> & Readonly<{
 export function QuoteCard({ children, attribution, renderMark, ...props }: QuoteCardProps) {
   const { colors } = useHjmNativeTheme();
   return <Card {...props} leading={<View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-    {renderMark?.({ color: colors.contentBrand, size: cardRecipe.quotation.markSize }) ?? <Text variant="heading" tone="brand">“</Text>}
+    {renderMark?.({ color: colors.contentBrand, size: cardRecipe.quotation.markSize }) ?? <LucideGlyph icon={Quote} size={cardRecipe.quotation.markSize} color={colors.contentBrand} />}
   </View>}>
     <View style={{ gap: cardRecipe.quotation.gap }}>
       {children}
@@ -810,7 +816,7 @@ export function ListRow({
           // A preceding trailing value pulls the chevron to the tighter accessory gap (iOS detail → chevron).
           style={{ flexShrink: 0, ...(trailing || trailingText ? { marginStart: accessory.gap - listRowRecipe.gap } : {}) }}
         >
-          <DrawnChevron
+          <ChevronGlyph
             direction="end"
             size={glyph[accessory.glyph]}
             color={resolveColorReference(accessory.color, theme.palette)}
@@ -1247,9 +1253,7 @@ export function Accordion<Value extends string = string>({
                     size: glyph[accordionRecipe.indicator.glyph],
                   })
                 ) : (
-                  <Text style={{ color: indicatorColor }}>
-                    {isExpanded ? "−" : "+"}
-                  </Text>
+                  <LucideGlyph icon={isExpanded ? Minus : Plus} size={glyph[accordionRecipe.indicator.glyph]} color={indicatorColor} />
                 )}
               </View>
             </Pressable>
@@ -2006,9 +2010,12 @@ function renderStatistic<Id extends string = string>({
               {renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm })}
             </View>
           ) : (
-            <Text accessible={false} style={{ color: trendColor, flexShrink: 0 }} variant="caption">
-              {resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—"}
-            </Text>
+            // Without a product renderer, draw the Lucide marks the contract names for trendUp/trendDown/trendFlat
+            // (semanticIconLucideNames), the same glyphs icon-svg renders for those names.
+            <View accessible={false} style={{ flexShrink: 0 }}>
+              <LucideGlyph icon={resolved.trend.direction === "up" ? TrendingUp : resolved.trend.direction === "down" ? TrendingDown : Equal}
+                size={glyph.sm} color={trendColor ?? theme.colors.text} />
+            </View>
           )}
           <Text
             accessible={false}
@@ -2319,7 +2326,7 @@ export function Timeline<Id extends string = string>({
                 >
                   {item.label}
                 </Text>
-                {!journal ? renderMetadata?.(item) : selectable ? <Text accessibilityElementsHidden importantForAccessibility="no-hide-descendants" tone="muted" variant="caption">{expanded ? "⌃" : "⌄"}</Text> : null}
+                {!journal ? renderMetadata?.(item) : selectable ? <ChevronGlyph direction={expanded ? "up" : "down"} size={glyph.xs} color={theme.colors.textMuted} /> : null}
               </View>
               {journal && item.timestamp ? <Text tone="muted" variant={timelineRecipe.timestamp.textVariant}>{item.timestamp}</Text> : null}
               {journal && expanded ? renderMetadata?.(item) : null}

@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { Pressable } from 'react-native';
 import { expect, it, vi } from 'vitest';
-vi.mock('react-native-svg', async () => { const { View } = await import('react-native'); return { default: View, Defs: View, LinearGradient: View, Pattern: View, Rect: View, Stop: View }; });
+vi.mock('react-native-svg', async (importOriginal) => { const { View } = await import('react-native'); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Defs: View, LinearGradient: View, Pattern: View, Rect: View, Stop: View }; });
 import { ColorPicker, ColorSwatchPicker } from '../src/color-picker.js';
 import { TextField } from '../src/inputs.js';
 import { Slider } from '../src/slider.js';

@@ -70,6 +70,9 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import X from "lucide-react-native/icons/x";
+import Check from "lucide-react-native/icons/check";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 
 type NativeCollectionLeadingRenderProps = Readonly<{
   placement: "trigger" | "option";
@@ -626,7 +629,7 @@ export function Select<
             </Text>
           ) : null}
         </View>
-        {checked ? <Text accessible={false} tone="brand">✓</Text> : null}
+        {checked ? <LucideGlyph icon={Check} size={glyph.sm} color={theme.colors.contentBrand} /> : null}
       </Pressable>
     );
   };
@@ -696,7 +699,7 @@ export function Select<
               fontRole="ui" numberOfLines={multiple ? 1 : undefined} style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={triggerText ? "body" : "muted"} variant={sizeContract.textVariant}>
           {triggerText ?? placeholder}
         </Text>
-        <Text accessible={false} style={{ opacity: busy ? 0 : 1 }} tone="muted">⌄</Text>
+        <View accessible={false} style={{ opacity: busy ? 0 : 1 }}><ChevronGlyph direction="down" size={glyph.sm} color={theme.colors.textMuted} /></View>
         {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator size={glyph[selectRecipe.busyIndicator.glyph]} /></View> : null}
       </Pressable>
       {error ? (
@@ -1140,7 +1143,7 @@ export function Combobox<
               fontRole="ui" tone={checked ? "brand" : "body"} variant={densityContract.label.textVariant}>{item.label}</Text>
           {item.description ? <Text tone="muted" variant={densityContract.description.textVariant}>{item.description}</Text> : null}
         </View>
-        {checked ? <Text accessible={false} tone="brand">✓</Text> : null}
+        {checked ? <LucideGlyph icon={Check} size={glyph.sm} color={theme.colors.contentBrand} /> : null}
       </Pressable>
     );
   };
@@ -1250,9 +1253,9 @@ export function Combobox<
             accessibilityRole="button"
             disabled={disabled || busy || viewStatus === "loading"}
             onPress={clear}
-            style={minimumTargetStyle}
+            style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}
           >
-            <Text align="center" tone="muted" variant="title">×</Text>
+            <LucideGlyph icon={X} size={glyph.sm} color={theme.colors.textMuted} />
           </Pressable>
         ) : null}
       </View>

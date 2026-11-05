@@ -1,16 +1,19 @@
 import { Pressable, View } from "react-native";
 import { resolveRating, type RatingDescriptor } from "@hjmds/design-contracts/reference-controls";
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import StarIcon from "lucide-react-native/icons/star";
 import { Text } from "./primitives.js";
 import { Button } from "./actions.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 export type RatingProps = RatingDescriptor & Readonly<{ getValueLabel: (value: number | null) => string; disabled?: boolean; clearLabel?: string }> &
   (Readonly<{ readOnly: true; onValueChange?: never }> | Readonly<{ readOnly?: false; onValueChange: (value: number | null) => void }>);
 function Star({ fraction }: { fraction: number }) {
   const { colors } = useHjmNativeTheme();
   return <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "relative" }}>
-    <Text style={{ fontSize: 28, lineHeight: 36, color: colors.contentBrand }}>☆</Text>
-    <View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${fraction * 100}%`, overflow: "hidden" }}><Text style={{ fontSize: 28, lineHeight: 36, color: colors.contentBrand }}>★</Text></View>
+    <LucideGlyph icon={StarIcon} size={glyph.lg} color={colors.contentBrand} />
+    {/* The filled star is clipped to the score fraction over the outline. */}
+    <View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${fraction * 100}%`, overflow: "hidden" }}><LucideGlyph icon={StarIcon} size={glyph.lg} color={colors.contentBrand} fill={colors.contentBrand} /></View>
   </View>;
 }
 export function Rating(props: RatingProps) {

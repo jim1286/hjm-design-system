@@ -6,13 +6,14 @@ import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, } fr
 import { Button } from "./actions.js";
 import { Icon } from "./supplemental-display.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { CheckGlyph } from "./internal/lucide-glyph.js";
 const emptySelection = () => ({
     source: new Set(),
     target: new Set(),
 });
 // Rows are multi-select: Checkbox's indicator, not a 16px rounded box that read as a radio.
 function SelectionMark({ state }) {
-    return _jsx("span", { "aria-hidden": "true", className: "hjm-choice__indicator", "data-kind": "checkbox", "data-state": state === "mixed" ? "mixed" : state ? "checked" : "unchecked" });
+    return _jsx("span", { "aria-hidden": "true", className: "hjm-choice__indicator", "data-kind": "checkbox", "data-state": state === "mixed" ? "mixed" : state ? "checked" : "unchecked", children: _jsx(CheckGlyph, { state: state }) });
 }
 // The panels sit side by side or stack depending on width (CSS), so both directions are drawn and CSS shows the one
 // that points at the destination panel; products no longer bake "→" into the label.

@@ -21,7 +21,10 @@ describe("@hjmds/react-native package boundary", () => {
     expect(packageJson.peerDependencies["@hjmds/design-contracts"]).toMatch(/^>=\d+\.\d+\.0 <\d+\.\d+\.0$/);
     for (const peer of Object.keys(packageJson.peerDependencies)) {
       expect(peer).not.toMatch(/^expo(?:-|$)/);
-      if (!["@hjmds/design-contracts", "react", "react-native"].includes(peer)) expect(packageJson.peerDependenciesMeta[peer]?.optional).toBe(true);
+      // Lucide is the only icon source (user instruction 2026-11-05): core controls draw their marks with
+      // lucide-react-native over react-native-svg, so both are required like React Native itself.
+      const required = ["@hjmds/design-contracts", "react", "react-native", "react-native-svg", "lucide-react-native"];
+      expect(packageJson.peerDependenciesMeta[peer]?.optional, peer).toBe(required.includes(peer) ? undefined : true);
     }
     expect(packageJson.sideEffects).toBe(false);
     const familyTargets = await Promise.all(Object.entries(packageJson.exports)

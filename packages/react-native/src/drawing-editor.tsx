@@ -15,7 +15,11 @@ import {
   DRAWING_BACKGROUND_COLORS, DRAWING_INK_COLORS, DRAWING_PAPER, DRAWING_TRANSPARENT, drawingEraseRuns, drawingInkPath, drawingReducer, emptyDrawing, drawingHasContent,
   drawingQuickColors, drawingStrokeColor, drawingEditorRecipe, type DrawingStroke, type DrawingEditorProps,
 } from '@hjmds/design-contracts/components/drawing-editor';
-import { PaintBucket, Palette, Redo2, Trash2, Undo2 } from 'lucide-react-native';
+import PaintBucket from 'lucide-react-native/icons/paint-bucket';
+import Palette from 'lucide-react-native/icons/palette';
+import Redo2 from 'lucide-react-native/icons/redo-2';
+import Trash2 from 'lucide-react-native/icons/trash';
+import Undo2 from 'lucide-react-native/icons/undo-2';
 export type { DrawingEditorProps, DrawingEditorLabels, DrawingImage } from '@hjmds/design-contracts/components/drawing-editor';
 
 /** Canvas edge cap: big enough to draw comfortably, small enough to leave the tool rows on screen without scrolling. */
@@ -25,7 +29,8 @@ const SIZE_PREVIEW_MS = drawingEditorRecipe.sizePreviewMs;
 
 /** Shared paint editor extracted from Diairy and Spint (2026-10-27).
  * Tools, history, crop preview and failed-save draft preservation have one owner per renderer.
- * The product supplies localized labels, upload and navigation; SVG/lucide stay optional entry peers. */
+ * The product supplies localized labels, upload and navigation. Icons are per-file Lucide imports (the required
+ * lucide-react-native peer, 2026-11-05); Metro does not tree-shake the package barrel. */
 export function DrawingEditor({ labels, onSave, onCancel, cropPreview = 'none', ground = 'paper', safeAreaBottom = 0, testID = 'drawing-editor' }: DrawingEditorProps) {
   const { colors } = useHjmNativeTheme();
   const [history, dispatch] = useReducer(drawingReducer, emptyDrawing);

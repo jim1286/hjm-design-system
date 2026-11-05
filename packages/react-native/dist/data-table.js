@@ -1,13 +1,16 @@
-import { jsxs as _jsxs, jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { resolveDensityDefault } from "@hjmds/design-contracts/components/design-system-provider";
 import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, Text as NativeText, View } from "react-native";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { dataTableColumnDefaults, dataTableDefaults, dataTableFamilyRecipe, dataTableFirstSortDirection, dataTableRecipe, getNextDataTableSortState, resolveDataTableBody, resolveDataTableHeaderBands, splitPinnedDataTableColumns, validateDataTableColumns, validateDataTableRows, validateDataTableSortState, } from "@hjmds/design-contracts/components/data-table";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { spacing, glyph } from "@hjmds/design-contracts/foundations";
 import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import ArrowUp from "lucide-react-native/icons/arrow-up";
+import ArrowDown from "lucide-react-native/icons/arrow-down";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 const DEFAULT_WIDTH = 72, PINNED_WIDTH = 96;
 // React Native textAlign has no logical start/end; mirror through the provider direction so RTL tables read
 // from the right like the Web renderer's logical alignment (2026-10-18 scenario-matrix rtl proof).
@@ -29,7 +32,9 @@ export function DataTable({ columns, rows, labels, renderCell, getCellText, sort
     // Measure with the native font in an unconstrained horizontal rail, independent of the
     // visible column width, so truncation cannot feed a smaller width back into sizing.
     const measure = (key, measured) => setTextWidths(previous => previous[key] === measured ? previous : { ...previous, [key]: measured });
-    const naturalWidth = (column, pinnedColumn) => Math.max(column.width ?? (pinnedColumn ? PINNED_WIDTH : DEFAULT_WIDTH), Math.ceil(Math.max(textWidths[`${column.id}:header`] ?? 0, textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal);
+    // A sortable header reserves the Lucide sort arrow and its gap, so sorting never changes the column width.
+    const sortMarkWidth = spacing.xxs + glyph.xs;
+    const naturalWidth = (column, pinnedColumn) => Math.max(column.width ?? (pinnedColumn ? PINNED_WIDTH : DEFAULT_WIDTH), Math.ceil(Math.max((textWidths[`${column.id}:header`] ?? 0) + (column.sortable ? sortMarkWidth : 0), textWidths[`${column.id}:body`] ?? 0)) + pad.paddingHorizontal);
     const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
     // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
     const natural = scrolling.reduce((sum, column) => sum + naturalWidth(column, false), 0);
@@ -40,7 +45,9 @@ export function DataTable({ columns, rows, labels, renderCell, getCellText, sort
         const sortable = column.sortable ?? dataTableColumnDefaults.sortable;
         const active = sortState?.columnId === column.id ? sortState.direction : null;
         const textColor = active ? color(dataTableRecipe.sortButton.activeColor) : color(dataTableRecipe.header.color);
-        const content = _jsxs(NativeText, { numberOfLines: 1, style: { color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(column.align ?? dataTableColumnDefaults.align, direction) }, children: [column.header, active ? (active === "ascending" ? " ▲" : " ▼") : ""] });
+        const logicalAlign = column.align ?? dataTableColumnDefaults.align;
+        // The sort mark is a Lucide arrow after the header text; the row follows the inherited table direction.
+        const content = _jsxs(View, { style: { flexDirection: "row", alignItems: "center", gap: spacing.xxs, justifyContent: logicalAlign === "center" ? "center" : logicalAlign === "end" ? "flex-end" : "flex-start" }, children: [_jsx(NativeText, { numberOfLines: 1, style: { flexShrink: 1, color: textColor, fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, textAlign: alignOf(logicalAlign, direction) }, children: column.header }), active ? _jsx(LucideGlyph, { icon: active === "ascending" ? ArrowUp : ArrowDown, size: glyph.xs, color: textColor }) : null] });
         const style = { width: widthOf(column, pinnedColumn), flexShrink: 0, height: headerHeight, paddingHorizontal: pad.paddingHorizontal / 2, justifyContent: "center" };
         return sortable && onSortChange
             ? _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null), hitSlop: 4, onPress: () => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column))), style: style, children: content }, column.id)
@@ -112,7 +119,7 @@ export function DataTable({ columns, rows, labels, renderCell, getCellText, sort
     return _jsxs(View, { style: [{ gap: spacing.sm, direction }, layoutStyle], children: [_jsx(ScrollView, { horizontal: true, scrollEnabled: false, pointerEvents: "none", "aria-hidden": true, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: 0, right: 0, top: 0, height: 0, opacity: 0 }, children: _jsx(View, { style: { flexDirection: "row" }, children: columns.map(column => {
                         const values = [...rows.map(row => renderCell(row.id, column.id)), summaryRow?.(column.id)]
                             .filter((value) => typeof value === "string" || typeof value === "number");
-                        return _jsxs(View, { style: { flexShrink: 0 }, children: [_jsx(NativeText, { onLayout: event => measure(`${column.id}:header`, event.nativeEvent.layout.width), style: { fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }, children: `${column.header}${column.sortable ? ` ▲\n${column.header} ▼` : ""}` }), _jsx(NativeText, { onLayout: event => measure(`${column.id}:body`, event.nativeEvent.layout.width), style: { fontSize: 14, fontWeight: dataTableFamilyRecipe.tone.leader.fontWeight, fontVariant: ["tabular-nums"], flexShrink: 0 }, children: values.join("\n") })] }, column.id);
+                        return _jsxs(View, { style: { flexShrink: 0 }, children: [_jsx(NativeText, { onLayout: event => measure(`${column.id}:header`, event.nativeEvent.layout.width), style: { fontSize: 12, fontWeight: dataTableRecipe.header.fontWeight, flexShrink: 0 }, children: column.header }), _jsx(NativeText, { onLayout: event => measure(`${column.id}:body`, event.nativeEvent.layout.width), style: { fontSize: 14, fontWeight: dataTableFamilyRecipe.tone.leader.fontWeight, fontVariant: ["tabular-nums"], flexShrink: 0 }, children: values.join("\n") })] }, column.id);
                     }) }) }), _jsx(View, { accessibilityLabel: labels.table, onLayout: event => setWidth(event.nativeEvent.layout.width), style: { borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }, children: bodyMessage
                     ? _jsx(View, { style: { minHeight: 120, alignItems: "center", justifyContent: "center", padding: spacing.md }, children: _jsx(Text, { tone: status === "error" ? "danger" : "muted", align: "center", children: bodyMessage }) })
                     : _jsxs(_Fragment, { children: [_jsxs(View, { style: { flexDirection: "row", backgroundColor: headerBackground }, children: [pinned.length > 0 && _jsxs(View, { style: { borderEndWidth: overflow ? 1 : 0, borderColor: color(dataTableRecipe.row.borderBottom) }, children: [bands(pinned, "pinned"), _jsx(View, { style: { flexDirection: "row" }, children: pinned.map(column => header(column, true)) })] }), _jsx(ScrollView, { ref: headerScroll, horizontal: true, scrollEnabled: false, showsHorizontalScrollIndicator: false, style: { flex: 1 }, children: _jsxs(View, { children: [bands(scrolling, "scrolling"), _jsx(View, { style: { flexDirection: "row" }, children: scrolling.map(column => header(column, false)) })] }) })] }), maxBodyHeight ? _jsx(ScrollView, { nestedScrollEnabled: true, style: { maxHeight: maxBodyHeight }, children: columnsBody }) : columnsBody] }) }), footer] });

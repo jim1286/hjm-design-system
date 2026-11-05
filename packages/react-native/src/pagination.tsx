@@ -1,6 +1,9 @@
 import { isPaginationOpenEndedDescriptor, resolvePaginationDescriptor, resolvePaginationOpenEndedDescriptor, paginationRecipe as recipe, type ComposePaginationAccessibleName, type ComposePaginationCurrentPageLabel, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels, type PaginationOpenEndedDescriptor } from '@hjmds/design-contracts/components/pagination';
 import { resolveColorReference } from '@hjmds/design-contracts/color-references';
+import { glyph } from '@hjmds/design-contracts/foundations';
+import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
+import { ChevronGlyph } from './internal/lucide-glyph.js';
 import { Text } from './primitives.js';
 import { useHjmNativeTheme } from './provider.js';
 import type { HjmCompositionStyleProp } from './composition-style.js';
@@ -31,7 +34,9 @@ export function Pagination({ label, descriptor, labels, composeAccessibleName, c
     : null;
   const resolved = openEnded ?? resolvePaginationDescriptor(descriptor as PaginationDescriptor, { labels, composeAccessibleName: composeAccessibleName as ComposePaginationAccessibleName });
   const rtl = theme.environment.direction === 'rtl';
-  const button = (key: string | number, text: string, accessibleName: string, unavailable: boolean, current: boolean, onPress: () => void) => (
+  const itemColor = (current: boolean) => resolveColorReference(recipe.item.color[current ? 'current' : 'default'], theme.palette);
+  // Previous/next carry Lucide chevrons toward the reading start/end; page numbers stay text.
+  const button = (key: string | number, content: ReactNode, accessibleName: string, unavailable: boolean, current: boolean, onPress: () => void) => (
     <Pressable key={key} accessibilityRole="button" accessibilityLabel={accessibleName}
       accessibilityState={{ disabled: disabled || unavailable, selected: current }} disabled={disabled || unavailable}
       onPress={() => { if (!disabled && !unavailable && !current) onPress(); }}
@@ -41,11 +46,11 @@ export function Pagination({ label, descriptor, labels, composeAccessibleName, c
         borderColor: current ? resolveColorReference(recipe.item.border.current, theme.palette) : 'transparent',
         backgroundColor: pressed ? resolveColorReference(recipe.item.background.hover, theme.palette) : 'transparent',
         opacity: disabled || unavailable ? recipe.states.disabledOpacity : 1 })}>
-      <Text accessible={false} style={{ color: resolveColorReference(recipe.item.color[current ? 'current' : 'default'], theme.palette) }}>{text}</Text>
+      {content}
     </Pressable>
   );
   return <View accessibilityLabel={label} testID={testID} style={[{ flexDirection: rtl ? 'row-reverse' : 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: recipe.gap }, layoutStyle]}>
-    {button('previous', rtl ? '›' : '‹', resolved.labels.previous, !resolved.hasPrevious, false, () => onPageChange(resolved.currentPage - 1, 'previous'))}
+    {button('previous', <ChevronGlyph direction="start" size={glyph.sm} color={itemColor(false)} />, resolved.labels.previous, !resolved.hasPrevious, false, () => onPageChange(resolved.currentPage - 1, 'previous'))}
     {openEnded ? (
       // Plain text, not a button: it is the only page the control can address. `selected` mirrors the bounded
       // current page so assistive tech reports it the same way.
@@ -56,7 +61,7 @@ export function Pagination({ label, descriptor, labels, composeAccessibleName, c
     ) : null}
     {'items' in resolved && resolved.items.map((item, index) => item.type === 'ellipsis'
       ? <Text key={`ellipsis-${index}`} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" tone="muted">…</Text>
-      : button(item.page, String(item.page), item.accessibleName, false, item.current, () => onPageChange(item.page, 'page')))}
-    {button('next', rtl ? '‹' : '›', resolved.labels.next, !resolved.hasNext, false, () => onPageChange(resolved.currentPage + 1, 'next'))}
+      : button(item.page, <Text accessible={false} style={{ color: itemColor(item.current) }}>{item.page}</Text>, item.accessibleName, false, item.current, () => onPageChange(item.page, 'page')))}
+    {button('next', <ChevronGlyph direction="end" size={glyph.sm} color={itemColor(false)} />, resolved.labels.next, !resolved.hasNext, false, () => onPageChange(resolved.currentPage + 1, 'next'))}
   </View>;
 }

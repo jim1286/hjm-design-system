@@ -49,6 +49,8 @@ import {
   type AnchoredPopupAlign,
 } from "./portal.js";
 import { FieldError } from "./internal/field-error.js";
+import { Check, ChevronDown } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<
@@ -147,7 +149,7 @@ type SelectBaseProps<Key extends string> = Omit<
     ) => ReactNode;
     /**
      * `multiple` keeps the listbox open and toggles each committed option; the trigger lists every chosen label.
-     * Same contract as Native (2026-11-04, 오늘야구 metric charts pick any number of stats in one field).
+     * Same contract as Native (2026-11-04, a baseball app's metric charts pick any number of stats in one field).
      */
     selectionMode?: SelectSelectionMode;
     selectedKeys?: ReadonlySet<Key>;
@@ -617,7 +619,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
             <span className="hjm-select__option-description">{item.description}</span>
           ) : null}
         </span>
-        {selected ? <span className="hjm-select__check" aria-hidden="true">✓</span> : null}
+        {selected ? <span className="hjm-select__check" aria-hidden="true"><LucideGlyph node={Check} /></span> : null}
       </div>
     );
   };
@@ -697,7 +699,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
           {busy ? (
             <span className="hjm-select__busy-overlay" aria-hidden="true"><span className="hjm-select__busy-indicator" /></span>
           ) : (
-            <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
+            <span className="hjm-select__indicator" aria-hidden="true"><LucideGlyph node={ChevronDown} /></span>
           )}
         </button>
         {open ? (

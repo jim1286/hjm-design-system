@@ -6,7 +6,7 @@ import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
 import { Spinner } from "./internal/spinner.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 // UI control labels keep the ui font even when their metric variant is body; content still uses reading.
 export function Collapsible({ trigger, triggerLabel, title, pendingLabel, children, disabled = false, presentation = "disclosure", keepMounted = false, marker = "end", layoutStyle, ...openState }) {
     validateCollapsibleOpenState(openState);
@@ -29,8 +29,8 @@ export function Collapsible({ trigger, triggerLabel, title, pendingLabel, childr
 /** Decoration only: the expanded state travels through the trigger's accessibilityState. */
 export function CollapsibleMarker({ open }) {
     const { colors } = useHjmNativeTheme();
-    // Web's chevron at glyph.sm replaced a text "▸" that rendered about 8pt (2026-10-17 review). DrawnChevron's
+    // Web's chevron at glyph.sm replaced a text "▸" that rendered about 8pt (2026-10-17 review). ChevronGlyph's
     // `end` points toward the reading end, so the closed mark mirrors in RTL.
-    return _jsx(DrawnChevron, { direction: open ? "down" : "end", size: glyph.sm, color: colors.textMuted });
+    return _jsx(ChevronGlyph, { direction: open ? "down" : "end", size: glyph.sm, color: colors.textMuted });
 }
 //# sourceMappingURL=collapsible.js.map

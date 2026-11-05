@@ -5,9 +5,11 @@ import {
   resolveImageChoiceToggle, validateImageChoiceItemLabelLines, validateImageChoiceItems, type ImageChoiceItemDescriptor, type ImageChoiceItemLabelLines,
 } from "@hjmds/design-contracts/components/image-choice";
 import { resolveVirtualWindow, virtualListRecipe } from "@hjmds/design-contracts/components/virtual-list";
+import { glyph } from "@hjmds/design-contracts/foundations";
 import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
-import { FixedGlyph } from "./internal/fixed-glyph.js";
+import Check from "lucide-react-native/icons/check";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type ImageChoiceItem = ImageChoiceItemDescriptor & Readonly<{ image: ReactNode }>;
 export type ImageChoiceVirtualization = Readonly<{
@@ -74,7 +76,7 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
       <View style={{ width: outer, height: outer, padding: recipe.ringOffset, borderWidth: recipe.ringWidth, borderColor: selected ? colors.contentBrand : "transparent", borderRadius: recipe.radius + recipe.ringOffset + recipe.ringWidth }}>
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", borderRadius: recipe.radius, overflow: "hidden", backgroundColor: colors.surface }}>{item.image}</View>
         {selected ? <View pointerEvents="none" style={{ position: "absolute", top: 0, end: 0, width: recipe.checkSize, height: recipe.checkSize, borderRadius: recipe.checkSize / 2, backgroundColor: colors.contentBrand, alignItems: "center", justifyContent: "center" }}>
-          <FixedGlyph color={colors.onPrimary} fontSize={12} lineHeight={14}>✓</FixedGlyph>
+          <LucideGlyph icon={Check} size={glyph.xs} color={colors.onPrimary} strokeWidth={3} />
         </View> : null}
       </View>
       {/* The tile height reserves the same caption block in every tile, so wrapped rows stay even and virtual rows

@@ -67,6 +67,9 @@ import {
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { assignRef, classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Minus, Plus } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
+import { semanticIconNodes } from "./semantic-lucide.js";
 
 export type AccordionItem = Readonly<{
   id: string;
@@ -228,7 +231,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
             >
               <span className="hjm-accordion__title">{item.title}</span>
               <span className="hjm-accordion__indicator" aria-hidden="true">
-                {renderIndicator ? renderIndicator({ value: item.id, expanded, disabled: item.disabled === true }) : expanded ? "−" : "+"}
+                {renderIndicator ? renderIndicator({ value: item.id, expanded, disabled: item.disabled === true }) : <LucideGlyph node={expanded ? Minus : Plus} />}
               </span>
             </button>
           );
@@ -626,7 +629,7 @@ function StatisticView<Id extends string = string>({
         <span aria-hidden="true" className="hjm-statistic__trend" data-tone={resolved.trend.tone}>
           <span className="hjm-statistic__trend-mark">
             {renderTrendMark?.({ name: trendName!, color: "currentColor", size: 16 }) ?? (
-              resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—"
+              <LucideGlyph node={semanticIconNodes[trendName!]} size={16} />
             )}
           </span>
           {resolved.trend.label}
@@ -837,7 +840,7 @@ function TableInner<Row>(
                   <TableSortButton
                     header={column.header}
                     {...(column.sortDirection === undefined ? {} : { direction: column.sortDirection })}
-                    glyphs={{ ascending: " ↑", descending: " ↓", none: " ↕" }}
+                    glyphs={{ ascending: ArrowUp, descending: ArrowDown, none: ArrowUpDown }}
                     className="hjm-table__sort"
                     onSort={() => {
                       const next = getNextDataTableSortState(
@@ -982,7 +985,7 @@ function TimelineInner<Id extends string = string>(
           <span className="hjm-timeline__content">
             <span className="hjm-timeline__heading">
               <strong className="hjm-timeline__label">{item.label}</strong>
-              {!journal ? renderMetadata?.(item) : selectable ? <span className="hjm-timeline__chevron" aria-hidden="true">⌄</span> : null}
+              {!journal ? renderMetadata?.(item) : selectable ? <span className="hjm-timeline__chevron" aria-hidden="true"><LucideGlyph node={ChevronDown} /></span> : null}
             </span>
             {journal && item.timestamp ? <time className="hjm-timeline__timestamp" dateTime={item.dateTime}>{item.timestamp}</time> : null}
             <span className="hjm-timeline__details" id={`${idPrefix}-${index}-details`} hidden={journal && !expanded}>

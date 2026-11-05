@@ -10,6 +10,8 @@ import {
   validateImageChoiceItemLabelLines, validateImageChoiceItems, type ImageChoiceItemDescriptor, type ImageChoiceItemLabelLines,
 } from "@hjmds/design-contracts/components/image-choice";
 import { resolveVirtualWindow, virtualListRecipe } from "@hjmds/design-contracts/components/virtual-list";
+import { Check } from "lucide";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 
 export type ImageChoiceItem = ImageChoiceItemDescriptor & Readonly<{ image: ReactNode }>;
 export type ImageChoiceVirtualization = Readonly<{
@@ -72,7 +74,7 @@ export function ImageChoiceGroup(props: ImageChoiceGroupProps) {
       {/* The ring lives on an inner frame so an item label can sit below it inside the same button (one tap target). */}
       <span className="hjm-image-choice__ring">
         <span className="hjm-image-choice__image">{item.image}</span>
-        {selected ? <span className="hjm-image-choice__check" aria-hidden="true">✓</span> : null}
+        {selected ? <span className="hjm-image-choice__check" aria-hidden="true"><LucideGlyph node={Check} /></span> : null}
       </span>
       {/* Every tile reserves the same caption block, so wrapped rows stay even and virtual rows share one height.
           aria-label already names the tile; the description is read once through aria-describedby. */}

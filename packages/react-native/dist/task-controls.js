@@ -4,7 +4,7 @@ import { resolveTaskChoice, resolvePasswordRules, resolvePriceOption } from "@hj
 import { Button, IconButton } from "./actions.js";
 import { glyph } from "@hjmds/design-contracts/foundations";
 import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
-import { DrawnChevron } from "./internal/drawn-glyphs.js";
+import { ChevronGlyph } from "./internal/lucide-glyph.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { Menu } from "./navigation.js";
 import { PasswordField } from "./inputs.js";
@@ -16,7 +16,7 @@ import { useCompositionAction } from "./internal/use-composition-action.js";
 function ChoiceMenu(props) {
     const available = props.choices.some(choice => !choice.disabled);
     const { palette } = useHjmNativeTheme();
-    const chevron = (disabled) => _jsx(DrawnChevron, { direction: "down", size: glyph.sm, color: resolveIconButtonPresentation("secondary", palette, disabled).content });
+    const chevron = (disabled) => _jsx(ChevronGlyph, { direction: "down", size: glyph.sm, color: resolveIconButtonPresentation("secondary", palette, disabled).content });
     if (props.trigger === "icon" && !available)
         return _jsx(IconButton, { label: props.label, tone: "secondary", disabled: true, children: chevron(true) });
     // The menu trigger is content-width like the Web Menu trigger; a column Stack would otherwise stretch it full width.

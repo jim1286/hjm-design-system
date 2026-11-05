@@ -42,7 +42,7 @@ Native receives resolved numeric size/color/stroke and retains its existing
 renderGlyph contract. Both adapters hide artwork and leave naming, directionality
 and mirroring on Icon. Missing map entries throw to reveal product mapping errors.
 
-Lucide 1.49.0 is the verified development/showcase version and optional peer.
+Lucide 1.49.0 is the verified version. Since 2.6.0 it is a required Native peer (see below).
 The Native factory uses a scalar-only component interface instead of exporting
 one host version's RN StyleProp types, keeping consumers on supported newer RN
 versions structurally compatible. This does not replace provider/brand logos.
@@ -52,6 +52,6 @@ versions structurally compatible. This does not replace provider/brand logos.
 1.31.0에서 HJM이 직접 그린 24-unit 경로(`semanticIconPaths`)를 계약으로 옮겨 Web과 Native(`/icon-svg`)가 같은 그림을
 읽게 했다. 2026-11-05 사용자 지시로 그림 출처를 Lucide 하나로 정하고 직접 그린 경로를 제거했다(2.5.0). 계약은
 `semanticIconLucideNames`로 이름별 Lucide 아이콘만 정하고, Web은 `lucide` 의존성의 아이콘 노드를 내장 그림으로,
-Native `/icon-svg`는 optional peer `lucide-react-native`·`react-native-svg`로 같은 아이콘을 그린다. `trendFlat`은
+Native `/icon-svg`는 `lucide-react-native`·`react-native-svg`로 같은 아이콘을 그린다(2.6.0부터 필수 peer, core 컨트롤의 기호도 Lucide). `trendFlat`은
 Lucide에 보합 뜻이 없어 `equal`로 대응한다. 새 아이콘을 직접 그려야 하면 사용자 허락을 먼저 받는다.
 순서 이동(`arrowUp`·`arrowDown`)과 회전(`rotate`)은 물리 방향이라 RTL에서 반전하지 않는다.

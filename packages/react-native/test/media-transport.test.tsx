@@ -1,6 +1,6 @@
 import { act,create,type ReactTestRenderer } from "react-test-renderer";
 import { afterEach,expect,it,vi } from "vitest";
-vi.mock("react-native-svg",async()=>{const {View}=await import("react-native");return {default:View,Path:View};});
+vi.mock("react-native-svg",async (importOriginal) => {const {View}=await import("react-native");return { ...(await importOriginal<Record<string, unknown>>()),default:View,Path:View};});
 import { MediaTransport } from "../src/media-transport.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { IconButton } from "../src/actions.js";

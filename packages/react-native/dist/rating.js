@@ -1,13 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Pressable, View } from "react-native";
 import { resolveRating } from "@hjmds/design-contracts/reference-controls";
-import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { control, glyph, spacing } from "@hjmds/design-contracts/foundations";
+import StarIcon from "lucide-react-native/icons/star";
 import { Text } from "./primitives.js";
 import { Button } from "./actions.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { LucideGlyph } from "./internal/lucide-glyph.js";
 function Star({ fraction }) {
     const { colors } = useHjmNativeTheme();
-    return _jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "relative" }, children: [_jsx(Text, { style: { fontSize: 28, lineHeight: 36, color: colors.contentBrand }, children: "\u2606" }), _jsx(View, { style: { position: "absolute", left: 0, top: 0, bottom: 0, width: `${fraction * 100}%`, overflow: "hidden" }, children: _jsx(Text, { style: { fontSize: 28, lineHeight: 36, color: colors.contentBrand }, children: "\u2605" }) })] });
+    return _jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "relative" }, children: [_jsx(LucideGlyph, { icon: StarIcon, size: glyph.lg, color: colors.contentBrand }), _jsx(View, { style: { position: "absolute", left: 0, top: 0, bottom: 0, width: `${fraction * 100}%`, overflow: "hidden" }, children: _jsx(LucideGlyph, { icon: StarIcon, size: glyph.lg, color: colors.contentBrand, fill: colors.contentBrand }) })] });
 }
 export function Rating(props) {
     const { label, value, readOnly = false, disabled = false, getValueLabel, clearLabel } = props;

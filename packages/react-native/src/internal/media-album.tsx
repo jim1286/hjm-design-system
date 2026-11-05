@@ -5,7 +5,7 @@ import { resolveIconButtonPresentation } from "@hjmds/design-contracts/recipes";
 import { Button, IconButton } from "../actions.js";
 import { Text } from "../primitives.js";
 import { useHjmNativeTheme } from "../provider.js";
-import { DrawnChevron } from "./drawn-glyphs.js";
+import { ChevronGlyph } from "./lucide-glyph.js";
 import { Spinner } from "./spinner.js";
 
 type MediaAlbumBase = Readonly<{
@@ -107,10 +107,10 @@ export function MediaAlbumView({ album, index, onIndexChange, width, radius }: R
       {opens ? <Pressable accessibilityRole="imagebutton" accessibilityLabel={label} onPress={() => album.onPress?.(index)} style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }} /> : null}
     </View>
     {album.count > 1 ? <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-      {/* Same counter presentation as CarouselMotion navigation="counter"; drawn chevrons mirror in RTL. */}
-      <IconButton label={album.previousLabel} tone="ghost" size={mediaAlbumRecipe.controlSize} edge="start" disabled={index === 0} onPress={() => onIndexChange(index - 1)}><DrawnChevron direction="start" size={mediaAlbumRecipe.controlGlyphSize} color={chevron} /></IconButton>
+      {/* Same counter presentation as CarouselMotion navigation="counter"; Lucide chevrons follow the reading direction. */}
+      <IconButton label={album.previousLabel} tone="ghost" size={mediaAlbumRecipe.controlSize} edge="start" disabled={index === 0} onPress={() => onIndexChange(index - 1)}><ChevronGlyph direction="start" size={mediaAlbumRecipe.controlGlyphSize} color={chevron} /></IconButton>
       <Text align="center" variant="caption" accessibilityLiveRegion="polite">{index + 1}/{album.count}</Text>
-      <IconButton label={album.nextLabel} tone="ghost" size={mediaAlbumRecipe.controlSize} edge="end" disabled={index === album.count - 1} onPress={() => onIndexChange(index + 1)}><DrawnChevron direction="end" size={mediaAlbumRecipe.controlGlyphSize} color={chevron} /></IconButton>
+      <IconButton label={album.nextLabel} tone="ghost" size={mediaAlbumRecipe.controlSize} edge="end" disabled={index === album.count - 1} onPress={() => onIndexChange(index + 1)}><ChevronGlyph direction="end" size={mediaAlbumRecipe.controlGlyphSize} color={chevron} /></IconButton>
     </View> : null}
   </View>;
 }

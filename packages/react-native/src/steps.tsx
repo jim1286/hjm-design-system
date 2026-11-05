@@ -3,11 +3,14 @@ import {
   type ComposeStepsAccessibleName, type StepStatus, type StepsDescriptor,
   type StepsPresentation, type StepsStatusLabels,
 } from "@hjmds/design-contracts/components/steps";
-import { opacity as controlOpacity } from "@hjmds/design-contracts/foundations";
+import { opacity as controlOpacity, glyph } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Pressable, View, type ViewStyle } from "react-native";
+import Check from "lucide-react-native/icons/check";
+import X from "lucide-react-native/icons/x";
 import { Text } from "./primitives.js";
+import { ChevronGlyph, LucideGlyph } from "./internal/lucide-glyph.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -45,7 +48,13 @@ function StepMark({ status, position, renderMark }: { status: StepStatus; positi
     borderRadius: size / 2, borderWidth: status === "error" ? indicator.activeBorderWidth : indicator.borderWidth,
     borderColor: color(indicator.border[status]), backgroundColor: renderMark || indicator.background[status] === null ? colors.bg : color(indicator.background[status]!) }}>
     {status === "current" ? <View pointerEvents="none" style={{ position: "absolute", top: -4, bottom: -4, left: -4, right: -4, borderWidth: 1, borderColor: colors.border, borderRadius: size }} /> : null}
-    {renderMark?.(status, position) ?? <Text align="center" emphasis="medium" style={{ color: renderMark ? colors.text : color(indicator.content[status]) }} variant="label">{status === "complete" ? "✓" : status === "error" ? "!" : position}</Text>}
+    {renderMark?.(status, position) ?? (status === "complete"
+      ? <LucideGlyph icon={Check} size={glyph.sm} color={renderMark ? colors.text : color(indicator.content[status])} />
+      // Lucide has no bare exclamation mark (framed alerts would double the indicator ring), so an error step shows
+      // Lucide X like Web; the position is copy, not artwork.
+      : status === "error"
+        ? <LucideGlyph icon={X} size={glyph.sm} color={color(indicator.content[status])} />
+        : <Text align="center" emphasis="medium" style={{ color: renderMark ? colors.text : color(indicator.content[status]) }} variant="label">{position}</Text>)}
   </Animated.View>;
 }
 
@@ -95,7 +104,10 @@ export function Steps<Id extends string>({ descriptor, statusLabels, composeAcce
       <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ flex: 1 }}><Text variant="label">{current.position} / {current.total} · {current.label}</Text><Text variant="caption" tone="muted">{current.statusLabel}</Text></View>
       <Pressable accessibilityRole="button" accessibilityState={{ expanded }} accessibilityLabel={overviewLabel} onPress={() => setExpanded(value => !value)}
         style={({ pressed }) => ({ minHeight: stepsRecipe.press.minTouchTarget, justifyContent: "center", opacity: pressed ? controlOpacity.pressed : 1 })}>
-        <Text variant="label" tone="muted">{overviewLabel} {expanded ? "⌃" : "⌄"}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: tokens.spacing.xxs }}>
+          <Text variant="label" tone="muted">{overviewLabel}</Text>
+          <ChevronGlyph direction={expanded ? "up" : "down"} size={glyph.xs} color={colors.textMuted} />
+        </View>
       </Pressable>
     </View> : null}{rail}
   </View>;

@@ -198,7 +198,7 @@ export type SearchRecentQueries = Readonly<{
     removeLabel(query: string): string;
     onRemove(query: string): void;
     icon?: ReactNode;
-    /** Glyph inside the remove button; defaults to "×". */
+    /** Glyph inside the remove button; defaults to Lucide X. */
     removeIcon?: ReactNode;
     /** Rows shown; default `searchScreenRecipe.recentVisible` (5). */
     maxVisible?: number;
@@ -519,7 +519,8 @@ export type ProfileSummaryProps = Readonly<{
      * Edit beside the name (2026-10-25 user rule): on one's own profile the name carries a pencil IconButton that opens the
      * nickname change, while tapping the photo (`Avatar.action`) changes the photo. HJM owns the icon, size and placement
      * (before `nameActions`); the product supplies the label and the route. Pass `icon` with the product's own pencil
-     * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil).
+     * glyph so it matches the other name-row icons (2026-10-25: BurnTok's lucide gear sat beside HJM's drawn pencil; the
+     * default is Lucide's Pencil since 2026-11-05).
      */
     nameEdit?: ScreenFlowAction;
     /**

@@ -6,7 +6,7 @@ import { HjmNativeProvider } from "../src/provider.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { Masonry } from "../src/masonry.js";
 import { QRCode } from "../src/qr-code.js";
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Rect: View, Path: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Rect: View, Path: View }; });
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 it("passes fixed-row geometry and keys to native virtualization", async () => {
   let tree!: ReturnType<typeof create>;

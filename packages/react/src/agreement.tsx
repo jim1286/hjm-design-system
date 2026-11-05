@@ -12,6 +12,7 @@ import {
 import { forwardRef, useEffect, useId, useMemo, useRef } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { CheckGlyph } from "./internal/lucide-glyph.js";
 
 export type AgreementProps<Id extends string = string> = Readonly<{
   descriptor: AgreementDescriptor<Id>;
@@ -33,7 +34,7 @@ export type AgreementProps<Id extends string = string> = Readonly<{
 
 // Consent rows are multi-select, so they draw Checkbox's indicator; a 16px box with radius sm read as a radio dot.
 function Mark({ state }: { state: boolean | "mixed" }) {
-  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"} />;
+  return <span aria-hidden="true" className="hjm-choice__indicator" data-kind="checkbox" data-state={state === "mixed" ? "mixed" : state ? "checked" : "unchecked"}><CheckGlyph state={state} /></span>;
 }
 
 export const Agreement = forwardRef(function Agreement<Id extends string = string>(

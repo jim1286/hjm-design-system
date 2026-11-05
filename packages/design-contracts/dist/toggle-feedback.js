@@ -9,14 +9,15 @@ export function resolveToggleFeedbackProposal(state, selected) {
     return Object.freeze({ selected, count });
 }
 export const toggleFeedbackRecipe = { duration: motion.slow, glyphSize: 24, effectSize: 40 };
-export const toggleFeedbackPaths = {
-    ripple: "M6 10C6 2 18 2 18 10V15L20 18H4L6 15ZM9 21H15",
-    ribbon: "M6 3H18V21L12 17L6 21Z",
-    burst: "M12 21L3.8 12.8C-2 7 6 0 12 7C18 0 26 7 20.2 12.8Z",
+/** Lucide icon (kebab-case) each effect's default glyph shows; the renderer draws it, HJM draws no artwork (2026-11-05). */
+export const toggleFeedbackLucideNames = {
+    ripple: "bell",
+    ribbon: "bookmark",
+    burst: "heart",
 };
 /** Host geometry only, never product state or a timer-driven counter. p=1 clears every transient. */
 export function resolveToggleFeedbackFrame(effect, progress) {
-    if (!Object.hasOwn(toggleFeedbackPaths, effect))
+    if (!Object.hasOwn(toggleFeedbackLucideNames, effect))
         throw new TypeError("Unknown toggle feedback effect");
     if (!Number.isFinite(progress))
         throw new TypeError("Feedback progress must be finite");

@@ -8,7 +8,7 @@ import { ListRow } from "@hjmds/react-native/data-display";
 import { Container } from "@hjmds/react-native/primitives";
 import meta from "../../../showcase/native/src/FloatingActionButton.stories.js";
 // The FAB glyph comes from the Showcase Lucide map; its SVG pixels are outside these behavior tests.
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
+vi.mock("react-native-svg", async (importOriginal) => { const { View } = await import("react-native"); return { ...(await importOriginal<Record<string, unknown>>()), default: View, Svg: View, Circle: View, Path: View, G: View, Rect: View, Line: View, Polyline: View, Polygon: View, Ellipse: View }; });
 const Preview = meta.component;
 let tree: ReactTestRenderer;
 const scrollTo = vi.fn();

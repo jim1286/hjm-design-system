@@ -4,14 +4,16 @@ export function resolveMediaPlayback(state) {
     const seekable = state.duration !== null && state.duration > 0;
     return { ...state, seekable, position: seekable ? Math.min(state.position, state.duration) : state.position };
 }
-/** Equal vertex counts allow play→pause interpolation without replacing a glyph or label. */
-export function mediaTransportPaths(progress) {
+/**
+ * Lucide icons (kebab-case) for the play/pause toggle. HJM no longer draws its own morphing play/pause paths: Lucide is
+ * the only icon source (user instruction 2026-11-05), so renderers cross-fade these two icons over the same progress.
+ */
+export const mediaTransportLucideNames = { play: "play", pause: "pause" };
+/** Cross-fade weights for progress 0 (play) → 1 (pause); out-of-range progress clamps. */
+export function mediaTransportGlyphOpacity(progress) {
     if (!Number.isFinite(progress))
         throw new RangeError("Media glyph progress must be finite");
     const t = Math.max(0, Math.min(1, progress));
-    const play = [[6, 4, 12, 8, 12, 16, 6, 20], [12, 8, 20, 12, 20, 12, 12, 16]];
-    const pause = [[6, 4, 10, 4, 10, 20, 6, 20], [14, 4, 18, 4, 18, 20, 14, 20]];
-    const path = (index) => { const p = play[index].map((value, vertex) => value + (pause[index][vertex] - value) * t); return `M${p[0]} ${p[1]}L${p[2]} ${p[3]}L${p[4]} ${p[5]}L${p[6]} ${p[7]}Z`; };
-    return [path(0), path(1)];
+    return Object.freeze({ play: 1 - t, pause: t });
 }
 //# sourceMappingURL=media-transport.js.map

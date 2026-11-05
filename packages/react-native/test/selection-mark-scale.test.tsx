@@ -1,8 +1,11 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Pressable, StyleSheet, Text as NativeText, View } from "react-native";
+import { Pressable, StyleSheet, Text as NativeText } from "react-native";
+import Check from "lucide-react-native/icons/check";
+import Minus from "lucide-react-native/icons/minus";
 import { expect, it, vi } from "vitest";
 import { Checkbox, Chip } from "../src/inputs.js";
 import { HjmNativeProvider } from "../src/provider.js";
+import { LucideGlyph } from "../src/internal/lucide-glyph.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -19,18 +22,10 @@ it.each(["checked", "mixed", "chip"] as const)("keeps %s artwork within its slot
     </HjmNativeProvider>); });
     const texts = renderer.root.findAllByType(NativeText);
     const label = texts.find(node => node.props.children === "선택 항목")!;
-    if (kind === "chip") {
-      const mark = texts.find(node => node.props.children === "✓")!;
-      expect(mark.props.accessible).toBe(false);
-      expect(mark.props.allowFontScaling).toBe(false);
-      sizes.push(StyleSheet.flatten(mark.props.style).fontSize);
-    } else {
-      // Checkbox draws its check/dash as View artwork (shared SelectionMark), so no text glyph can scale out of the box.
-      expect(texts.some(node => node.props.children === "✓" || node.props.children === "−")).toBe(false);
-      const width = kind === "mixed" ? 10 : 8;
-      const mark = renderer.root.findAllByType(View).find(node => StyleSheet.flatten(node.props.style)?.width === width)!;
-      sizes.push(StyleSheet.flatten(mark.props.style).width as number);
-    }
+    // Chip and Checkbox draw their check/dash as fixed-size Lucide artwork, so no text glyph can scale out of the box.
+    expect(texts.some(node => node.props.children === "✓" || node.props.children === "−")).toBe(false);
+    const mark = renderer.root.findAllByType(LucideGlyph).find(node => node.props.icon === (kind === "mixed" ? Minus : Check))!;
+    sizes.push(mark.props.size as number);
     labels.push(StyleSheet.flatten(label.props.style).fontSize);
     const control = renderer.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "선택 항목")!;
     expect(control.props.accessibilityRole).toBe("checkbox");

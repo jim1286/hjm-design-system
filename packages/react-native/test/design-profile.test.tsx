@@ -17,9 +17,9 @@ const floatingShadow = foundationShadow.floating;
 
 // Substitute only the native drawing host. Real profile/grid/screen/state code
 // runs here; device rendering and optional SVG availability need separate QA.
-vi.mock("react-native-svg", async () => {
+vi.mock("react-native-svg", async (importOriginal) => {
   const { View } = await import("react-native");
-  return { default: View, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View };
+  return { ...(await importOriginal<Record<string, unknown>>()), default: View, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View };
 });
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

@@ -32,6 +32,8 @@ import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { tableCellEmphasis, type TableHeatColors } from "./table-family.js";
+import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide";
+import { CheckGlyph } from "./internal/lucide-glyph.js";
 
 export type DataTableLabels = Readonly<{
   /** Accessible name for the table itself. */
@@ -265,7 +267,7 @@ export const DataTable = forwardRef(function DataTable<
                     className="hjm-data-table__check"
                     onClick={toggleAll}
                   >
-                    {selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : ""}
+                    <CheckGlyph state={selectAllState === "mixed" ? "mixed" : selectAllState === true} />
                   </button>
                 ) : null}
               </th>
@@ -288,7 +290,7 @@ export const DataTable = forwardRef(function DataTable<
                     <TableSortButton
                       header={column.header}
                       direction={sorted}
-                      glyphs={{ ascending: "▲", descending: "▼", none: "↕" }}
+                      glyphs={{ ascending: ChevronUp, descending: ChevronDown, none: ChevronsUpDown }}
                       className="hjm-data-table__sort"
                       accessibleName={labels.sortColumn(column.header, sortState as DataTableSortState<string>)}
                       // `sortDescFirst` columns (stat tables: highest first) start descending.
@@ -320,7 +322,7 @@ export const DataTable = forwardRef(function DataTable<
                     className="hjm-data-table__check"
                     onClick={() => toggleRow(row)}
                   >
-                    {selectedKeys.has(row.id) ? "✓" : ""}
+                    <CheckGlyph state={selectedKeys.has(row.id)} />
                   </button>
                 </td>
               ) : null}
