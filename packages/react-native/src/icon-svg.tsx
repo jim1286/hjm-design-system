@@ -1,41 +1,120 @@
 import type { ReactNode } from "react";
-import { Platform } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowLeftRight,
+  ArrowRight,
+  ArrowUp,
+  Bell,
+  Calendar,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  CircleAlert,
+  CircleCheck,
+  CircleQuestionMark,
+  Copy,
+  Download,
+  Ellipsis,
+  EllipsisVertical,
+  Equal,
+  Eye,
+  EyeOff,
+  Funnel,
+  Heart,
+  House,
+  Info,
+  Lock,
+  LockOpen,
+  Menu,
+  Pause,
+  Pencil,
+  Play,
+  Plus,
+  RefreshCw,
+  RotateCw,
+  Search,
+  Settings,
+  Share2,
+  Sparkles,
+  Trash,
+  TrendingDown,
+  TrendingUp,
+  TriangleAlert,
+  Upload,
+  User,
+  Users,
+  X,
+  type LucideIcon,
+} from "lucide-react-native";
 import {
   isSemanticIconName,
-  semanticIconPaths,
+  type SemanticIconName,
 } from "@hjmds/design-contracts/components/icon";
-import { iconRecipe } from "@hjmds/design-contracts/recipes";
 import type { NativeIconRenderProps } from "./primitives.js";
 
-// Native Icon keeps `renderGlyph` as its tree-shakeable artwork seam, and react-native-svg stays an optional peer so
-// core controls do not require it (they use Views in internal/drawn-glyphs). This granular entry is the opt-in that
-// draws the same shared 24-unit paths Web ships built in, the way `/icon-lucide` opts in to Lucide artwork.
-
-// react-native-svg forwards native-only props to SVG DOM on Expo Web; hide the artwork with the host's own property.
-const hiddenArtwork = Platform.OS === "web"
-  ? { "aria-hidden": true as const }
-  : { accessible: false as const, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants" as const };
+// Native Icon keeps `renderGlyph` as its tree-shakeable artwork seam; this granular entry opts in to HJM's semantic
+// marks. They are Lucide icons (contracts `semanticIconLucideNames` names each one), drawn through the optional peers
+// `lucide-react-native` and `react-native-svg`, so core controls still run without either.
+export const semanticIconGlyphs = {
+  add: Plus,
+  ai: Sparkles,
+  alert: TriangleAlert,
+  arrowDown: ArrowDown,
+  arrowUp: ArrowUp,
+  back: ArrowLeft,
+  calendar: Calendar,
+  check: Check,
+  chevronDown: ChevronDown,
+  chevronEnd: ChevronRight,
+  chevronStart: ChevronLeft,
+  chevronUp: ChevronUp,
+  close: X,
+  compare: ArrowLeftRight,
+  copy: Copy,
+  delete: Trash,
+  download: Download,
+  edit: Pencil,
+  error: CircleAlert,
+  favorite: Heart,
+  filter: Funnel,
+  forward: ArrowRight,
+  help: CircleQuestionMark,
+  home: House,
+  info: Info,
+  lock: Lock,
+  menu: Menu,
+  more: Ellipsis,
+  moreVertical: EllipsisVertical,
+  notifications: Bell,
+  pause: Pause,
+  play: Play,
+  refresh: RefreshCw,
+  rotate: RotateCw,
+  search: Search,
+  settings: Settings,
+  share: Share2,
+  success: CircleCheck,
+  trendDown: TrendingDown,
+  trendFlat: Equal,
+  trendUp: TrendingUp,
+  unblock: LockOpen,
+  upload: Upload,
+  user: User,
+  users: Users,
+  visibility: Eye,
+  visibilityOff: EyeOff,
+  warning: TriangleAlert,
+} as const satisfies Record<SemanticIconName, LucideIcon>;
 
 /**
  * Draws an HJM semantic mark inside Icon's frame. Icon still owns naming, size, tone and RTL mirroring; this only
- * paints the shared geometry with the resolved size, color and stroke.
+ * paints the Lucide glyph with the resolved size, color and stroke and hides it from assistive technology.
  */
 export function renderSemanticGlyph({ name, size, color, strokeWidth }: NativeIconRenderProps<string>): ReactNode {
   if (!isSemanticIconName(name)) throw new TypeError(`No HJM semantic glyph for ${name}`);
-  return (
-    <Svg
-      {...hiddenArtwork}
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={strokeWidth}
-      strokeLinecap={iconRecipe.stroke.lineCap}
-      strokeLinejoin={iconRecipe.stroke.lineJoin}
-    >
-      <Path d={semanticIconPaths[name]} />
-    </Svg>
-  );
+  const Glyph = semanticIconGlyphs[name];
+  return <Glyph size={size} color={color} strokeWidth={strokeWidth} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />;
 }

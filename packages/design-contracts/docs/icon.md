@@ -47,11 +47,11 @@ The Native factory uses a scalar-only component interface instead of exporting
 one host version's RN StyleProp types, keeping consumers on supported newer RN
 versions structurally compatible. This does not replace provider/brand logos.
 
-## 공용 경로 — 2026-10-18 (1.31.0)
+## 공용 경로 — 2026-10-18 (1.31.0), 2.5.0에서 Lucide로 교체
 
-semantic 이름별 24-unit stroke 경로는 `semanticIconPaths`(`components/icon`)가 소유한다. 이전에는 Web renderer
-내부 레지스트리라 Native 제품이 같은 그림을 adapter에 다시 그렸다(utilverse `arrowUp`·`arrowDown`·`rotate`).
-Web Icon은 이 데이터를 내장 그림으로 쓰고, Native는 optional peer `react-native-svg`를 쓰는 `/icon-svg`의
-`renderSemanticGlyph`로 같은 경로를 그린다. Native core는 계속 SVG 없이 동작하며 `renderGlyph` 계약은 바뀌지 않는다.
-이번에 순서 이동(`arrowUp`·`arrowDown`), 회전(`rotate`, 시계 방향), 차단 해제(`unblock`)를 추가했다. 세 방향 기호는
-물리 방향이라 RTL에서 반전하지 않는다. 눈/가린 눈은 기존 `visibility`·`visibilityOff`다.
+1.31.0에서 HJM이 직접 그린 24-unit 경로(`semanticIconPaths`)를 계약으로 옮겨 Web과 Native(`/icon-svg`)가 같은 그림을
+읽게 했다. 2026-11-05 사용자 지시로 그림 출처를 Lucide 하나로 정하고 직접 그린 경로를 제거했다(2.5.0). 계약은
+`semanticIconLucideNames`로 이름별 Lucide 아이콘만 정하고, Web은 `lucide` 의존성의 아이콘 노드를 내장 그림으로,
+Native `/icon-svg`는 optional peer `lucide-react-native`·`react-native-svg`로 같은 아이콘을 그린다. `trendFlat`은
+Lucide에 보합 뜻이 없어 `equal`로 대응한다. 새 아이콘을 직접 그려야 하면 사용자 허락을 먼저 받는다.
+순서 이동(`arrowUp`·`arrowDown`)과 회전(`rotate`)은 물리 방향이라 RTL에서 반전하지 않는다.

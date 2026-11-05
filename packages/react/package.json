@@ -646,6 +646,9 @@
     "check": "pnpm typecheck && pnpm test && pnpm build",
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
+  "dependencies": {
+    "lucide": "1.49.0"
+  },
   "peerDependencies": {
     "@hjmds/design-contracts": ">=2.4.0 <2.5.0",
     "react": ">=19.0.0",

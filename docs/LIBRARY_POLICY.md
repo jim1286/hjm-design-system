@@ -223,6 +223,19 @@ EffectSurface uses no new engine dependency: Web uses SVG/WAAPI, Native uses the
 existing react-native-svg and core Animated. It independently implements simple
 seeded gradients/noise rather than redistributing Shaders.com code or presets.
 
+## Lucide as the only icon artwork — 2026-11-05
+
+The user made Lucide the single icon source and asked for HJM's hand-drawn semantic paths to be removed
+(their refresh arrowheads shipped detached from the arc, and they drifted from the Lucide glyphs products
+placed beside them). `@hjmds/react` now depends on `lucide` 1.49.0 (ISC, no dependencies or peers) and paints
+the built-in Icon, toast close and photo-source marks from its icon nodes through named imports, so bundlers
+keep only those icons. `@hjmds/react-native` keeps `lucide-react-native` an optional peer: `/icon-svg` draws
+the same icons with it and `react-native-svg`, and core controls stay free of both. Contracts stay
+dependency-free and only name each icon (`semanticIconLucideNames`). A meaning Lucide lacks maps to its
+nearest icon (`trendFlat` → `equal`); drawing a new mark needs the user's explicit approval. Native core
+controls still draw a few marks with Views because they must run without SVG; moving them to Lucide would
+make both peers required, which is a breaking change awaiting the user's decision.
+
 ## Native typography candidate loader — 2026-10-01
 
 `showcase/native` uses Expo SDK-matched `expo-font@57.0.4` directly for the

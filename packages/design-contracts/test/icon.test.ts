@@ -7,7 +7,7 @@ import {
   isSemanticIconName,
   resolveIconDescriptor,
   semanticIconNames,
-  semanticIconPaths,
+  semanticIconLucideNames,
   statisticRecipe,
   toastRecipe,
   menuRecipe,
@@ -79,12 +79,13 @@ describe("Icon semantic contract", () => {
     });
   });
 
-  it("ships one shared 24-unit path per semantic name, including reorder, rotate and unblock", () => {
-    expect(Object.keys(semanticIconPaths).sort()).toEqual([...semanticIconNames].sort());
+  it("maps every semantic name to one Lucide icon, including reorder, rotate and unblock", () => {
+    expect(Object.keys(semanticIconLucideNames).sort()).toEqual([...semanticIconNames].sort());
     for (const name of ["arrowUp", "arrowDown", "rotate", "unblock", "visibility", "visibilityOff"]) {
       expect(isSemanticIconName(name)).toBe(true);
-      expect(semanticIconPaths[name as keyof typeof semanticIconPaths]).toMatch(/^[Mm]/u);
+      expect(semanticIconLucideNames[name as keyof typeof semanticIconLucideNames]).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u);
     }
+    expect(semanticIconLucideNames.trendFlat).toBe("equal");
     // Up/down and rotation are physical directions, not reading order.
     for (const name of ["arrowUp", "arrowDown", "rotate"]) expect(getIconDirectionality(name)).toBe("fixed");
     expect(isSemanticIconName("productOnly")).toBe(false);

@@ -1,10 +1,11 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
-import { getIconTransform, resolveIconDescriptor, semanticIconPaths, } from "@hjmds/design-contracts/components/icon";
+import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contracts/components/icon";
 import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { counterBadgeRecipe, formatCounterBadgeCount, iconRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useState, useMemo, useRef, useLayoutEffect, } from "react";
 import { classNames } from "./internal.js";
+import { renderLucideNodes, semanticIconNodes } from "./semantic-lucide.js";
 import { useOptionalHjmTheme } from "./provider.js";
 export const Icon = forwardRef(function Icon({ name, size, tone, weight, directionality, decorative, accessibilityLabel, renderGlyph, className, style, layoutStyle, ...props }, ref) {
     const descriptor = resolveIconDescriptor({
@@ -19,7 +20,7 @@ export const Icon = forwardRef(function Icon({ name, size, tone, weight, directi
     const theme = useOptionalHjmTheme();
     const transform = getIconTransform(descriptor.directionality, theme?.environment.direction ?? "ltr");
     const dimension = iconRecipe.sizes[descriptor.size];
-    return (_jsx("svg", { ...props, ref: ref, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: classNames("hjm-icon", className), "data-name": descriptor.name, "data-size": descriptor.size, "data-tone": descriptor.tone, "data-weight": descriptor.weight, "data-transform": transform, width: dimension, height: dimension, stroke: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight], strokeLinecap: "round", strokeLinejoin: "round", role: descriptor.decorative ? undefined : "img", "aria-hidden": descriptor.decorative || undefined, "aria-label": descriptor.decorative ? undefined : descriptor.accessibilityLabel, focusable: "false", style: { ...style, ...layoutStyle }, children: renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? _jsx("path", { d: semanticIconPaths[descriptor.name] }) }));
+    return (_jsx("svg", { ...props, ref: ref, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: classNames("hjm-icon", className), "data-name": descriptor.name, "data-size": descriptor.size, "data-tone": descriptor.tone, "data-weight": descriptor.weight, "data-transform": transform, width: dimension, height: dimension, stroke: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight], strokeLinecap: "round", strokeLinejoin: "round", role: descriptor.decorative ? undefined : "img", "aria-hidden": descriptor.decorative || undefined, "aria-label": descriptor.decorative ? undefined : descriptor.accessibilityLabel, focusable: "false", style: { ...style, ...layoutStyle }, children: renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? renderLucideNodes(semanticIconNodes[descriptor.name]) }));
 });
 /** Intrinsic-size image with canonical alt semantics and an accessible fallback. */
 export const Image = forwardRef(function Image({ src, width, height, fit, decorative, accessibilityLabel, imageProps, renderImage, fallback, imageRef, onLoad, onError, onLoadStatusChange, className, style, layoutStyle, ...props }, ref) {

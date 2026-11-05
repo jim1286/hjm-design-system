@@ -1,0 +1,59 @@
+import { ArrowDown, ArrowLeft, ArrowLeftRight, ArrowRight, ArrowUp, Bell, Calendar, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleAlert, CircleCheck, CircleQuestionMark, Copy, Download, Ellipsis, EllipsisVertical, Equal, Eye, EyeOff, Funnel, Heart, House, Info, Lock, LockOpen, Menu, Pause, Pencil, Play, Plus, RefreshCw, RotateCw, Search, Settings, Share2, Sparkles, Trash, TrendingDown, TrendingUp, TriangleAlert, Upload, User, Users, X, } from "lucide";
+import { createElement } from "react";
+// Built-in Icon artwork comes from Lucide (contracts `semanticIconLucideNames` names each icon). Named imports keep
+// the rest of the library out of product bundles; the test holds this table to the contract map.
+export const semanticIconNodes = {
+    add: Plus,
+    ai: Sparkles,
+    alert: TriangleAlert,
+    arrowDown: ArrowDown,
+    arrowUp: ArrowUp,
+    back: ArrowLeft,
+    calendar: Calendar,
+    check: Check,
+    chevronDown: ChevronDown,
+    chevronEnd: ChevronRight,
+    chevronStart: ChevronLeft,
+    chevronUp: ChevronUp,
+    close: X,
+    compare: ArrowLeftRight,
+    copy: Copy,
+    delete: Trash,
+    download: Download,
+    edit: Pencil,
+    error: CircleAlert,
+    favorite: Heart,
+    filter: Funnel,
+    forward: ArrowRight,
+    help: CircleQuestionMark,
+    home: House,
+    info: Info,
+    lock: Lock,
+    menu: Menu,
+    more: Ellipsis,
+    moreVertical: EllipsisVertical,
+    notifications: Bell,
+    pause: Pause,
+    play: Play,
+    refresh: RefreshCw,
+    rotate: RotateCw,
+    search: Search,
+    settings: Settings,
+    share: Share2,
+    success: CircleCheck,
+    trendDown: TrendingDown,
+    trendFlat: Equal,
+    trendUp: TrendingUp,
+    unblock: LockOpen,
+    upload: Upload,
+    user: User,
+    users: Users,
+    visibility: Eye,
+    visibilityOff: EyeOff,
+    warning: TriangleAlert,
+};
+/** Paints a Lucide icon's nodes inside an SVG frame that already sets the viewBox, stroke and caps. */
+export function renderLucideNodes(node) {
+    return node.map(([tag, attributes], index) => createElement(tag, { ...attributes, key: index }));
+}
+//# sourceMappingURL=semantic-lucide.js.map

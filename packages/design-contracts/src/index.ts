@@ -31,7 +31,7 @@ export {
   isSemanticIconName,
   resolveIconDescriptor,
   semanticIconNames,
-  semanticIconPaths,
+  semanticIconLucideNames,
   validateIconDescriptor,
   type DecorativeIconDescriptor,
   type IconDescriptor,

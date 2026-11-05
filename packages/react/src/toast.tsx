@@ -41,6 +41,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { classNames } from "./internal.js";
+import { renderLucideNodes, semanticIconNodes } from "./semantic-lucide.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
 
@@ -216,8 +217,8 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
         aria-label={descriptor.closeLabel}
         onClick={() => onDismiss("close-action")}
       >
-        <svg aria-hidden="true" viewBox="0 0 24 24" width={closeGlyphSize} height={closeGlyphSize} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" focusable="false">
-          <path d="M18 6 6 18M6 6l12 12" />
+        <svg aria-hidden="true" viewBox="0 0 24 24" width={closeGlyphSize} height={closeGlyphSize} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+          {renderLucideNodes(semanticIconNodes.close)}
         </svg>
       </button>
     </div>

@@ -52,6 +52,19 @@ VPS에 전달한다. 특정 Codex/Sites 계정은 요건이 아니다. 기존 Gi
   bundle의 금지 모듈 유입은 실패한다. 모듈 수·바이트 상한은 없앴고 수와 크기는 기준값 대비 증감으로
   보고만 한다([번들 크기 상한](docs/RELEASE_GOVERNANCE.md#번들-크기-상한), 2026-10-06 사용자 결정).
 
+## 아이콘은 Lucide만 쓴다
+
+2026-11-05 사용자 지시. HJM이 직접 그린 아이콘이 화살촉이 떨어진 채 배포됐고 제품의 Lucide 아이콘과 선 느낌이
+어긋나서, 아이콘 그림은 [Lucide](https://lucide.dev)만 쓰고 직접 그린 semantic 경로를 제거했다(2.5.0).
+
+- semantic 이름별 Lucide 대응은 contracts `semanticIconLucideNames`가 정본이다. Web은 `lucide` 의존성, Native
+  `/icon-svg`는 optional peer `lucide-react-native`로 같은 아이콘을 named import한다(사전 전체 import 금지).
+- Lucide에 같은 뜻이 없으면 가장 가까운 Lucide 아이콘에 대응한다(`trendFlat` → `equal`).
+- **아이콘을 새로 그려야 하는 경우에는 반드시 사용자 허락을 먼저 받는다.** 허락 없이 SVG 경로·View 조합으로
+  아이콘을 만들지 않는다.
+- Native core 컨트롤의 View 기호(셰브런·검색·삭제 등)는 SVG 없이 동작해야 해서 아직 남아 있다. Lucide로 옮기면
+  두 peer가 필수가 되는 호환성 변경이라 사용자 결정 후 진행한다.
+
 ## 문서와 완료 보고
 
 - 로그인 화면은 기존 `AuthScreenLayout`의 hero/main/footer와 `AuthProviderButton`을 재사용한다.

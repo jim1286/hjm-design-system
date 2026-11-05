@@ -45,7 +45,7 @@ const executableFamilyExports = Object.entries(packageJson.exports)
     ([exportPath, target]) =>
       // SVG/Blobatar effects, QR and charts (2026-10-14) use the complete Expo showcase export; this baseline must resolve without their peers.
       // OverviewScreen composes EffectSurface, so its optional subpath belongs to the same SVG boundary.
-      // ./icon-svg (1.31) draws the contract glyph paths with the optional react-native-svg peer, like ./chart.
+      // ./icon-svg draws the semantic Lucide glyphs with the optional lucide-react-native and react-native-svg peers.
       // ./media-transport, ./toggle-feedback and ./authoring-tools (BezierEditor curve) draw with the same optional
       // react-native-svg peer; their contract docs state it, so they sit outside this peer-free baseline too.
       // ./data-workflows composes BarChart from ./chart and therefore inherits the same peer.

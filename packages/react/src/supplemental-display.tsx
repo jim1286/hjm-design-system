@@ -3,7 +3,6 @@
 import {
   getIconTransform,
   resolveIconDescriptor,
-  semanticIconPaths,
   type IconDescriptor,
   type SemanticIconName,
 } from "@hjmds/design-contracts/components/icon";
@@ -39,6 +38,7 @@ import {
   type SVGAttributes,
 } from "react";
 import { classNames } from "./internal.js";
+import { renderLucideNodes, semanticIconNodes } from "./semantic-lucide.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -110,7 +110,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
       focusable="false"
       style={{ ...style, ...layoutStyle }}
     >
-      {renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? <path d={semanticIconPaths[descriptor.name]} />}
+      {renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? renderLucideNodes(semanticIconNodes[descriptor.name])}
     </svg>
   );
 });
