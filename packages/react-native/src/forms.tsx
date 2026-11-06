@@ -695,8 +695,10 @@ export function Select<
             {triggerLeading}
           </View>
         ) : null}
+        {/* Grow and shrink from the content width, not a zero basis: with `flex: 1` an intrinsically sized trigger (a Select
+            beside a value in an inline row) measured its value text as 0 wide and showed only the chevron (2026-11-06). */}
         <Text
-              fontRole="ui" numberOfLines={multiple ? 1 : undefined} style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={triggerText ? "body" : "muted"} variant={sizeContract.textVariant}>
+              fontRole="ui" numberOfLines={multiple ? 1 : undefined} style={{ flexGrow: 1, flexShrink: 1, opacity: busy ? 0 : 1 }} tone={triggerText ? "body" : "muted"} variant={sizeContract.textVariant}>
           {triggerText ?? placeholder}
         </Text>
         <View accessible={false} style={{ opacity: busy ? 0 : 1 }}><ChevronGlyph direction="down" size={glyph.sm} color={theme.colors.textMuted} /></View>
