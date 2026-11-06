@@ -1,3 +1,4 @@
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import { IdentityAction } from "./internal/identity-action.js";
 import { withAlpha } from "@hjmds/design-contracts/colors";
 import type { ComponentRef } from "react";
@@ -279,11 +280,11 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
       </View><Stack axis="inline" align="center" gap={topBarRecipe.gap}>{actions}</Stack>
     </View>)}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}
-    {scroll === "screen" || resolved.replacesContent ? <ScrollView {...scrollProps} {...(refresh ? { refreshControl: <HjmRefreshControl refresh={refresh} /> } : {})} onLayout={refresh ? event => setBodyTop(event.nativeEvent.layout.y) : undefined} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
+    {scroll === "screen" || resolved.replacesContent ? <SheetScrollView {...scrollProps} {...(refresh ? { refreshControl: <HjmRefreshControl refresh={refresh} /> } : {})} onLayout={refresh ? event => setBodyTop(event.nativeEvent.layout.y) : undefined} ref={bodyScroll} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" scrollEventThrottle={scrollProps?.scrollEventThrottle ?? 16} onScroll={event => { trackScroll(event); scrollProps?.onScroll?.(event); }}
       alwaysBounceVertical={pullToDismiss || scrollProps?.alwaysBounceVertical}
       onScrollBeginDrag={event => { dismissal.onScrollBeginDrag(event); scrollProps?.onScrollBeginDrag?.(event); }}
       onScrollEndDrag={event => { dismissal.onScrollEndDrag(event); scrollProps?.onScrollEndDrag?.(event); }}
-      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</ScrollView>
+      contentContainerStyle={{ flexGrow: 1, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }} accessibilityState={{ busy: resolved.busy }}>{body}</SheetScrollView>
       : <View onLayout={refresh ? event => setBodyTop(event.nativeEvent.layout.y) : undefined} style={{ flex: 1, minHeight: 0, padding, paddingTop: bodyPaddingTop + (overlayHeader ? overlayHeaderHeight : header == null && !showHeader ? safeAreaTop : 0), paddingBottom: bodyPaddingBottom, paddingHorizontal: bodyInline }}>{body}</View>}
     {refresh?.refreshing && refresh.productIndicator && state.kind === "ready" ? <View pointerEvents="none" accessible accessibilityRole="progressbar" accessibilityLabel={refreshLabel} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" testID="hjm-screen-refresh-indicator" style={{ position: "absolute", top: bodyTop + refresh.progressViewOffset + recipe.refresh.indicatorOffset, start: 0, end: 0, alignItems: "center", zIndex: 1 }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : null}
     {/* The footer owns the bar (border, padding, surface) unless contentInset="none" hands every inset to the host;

@@ -25,8 +25,8 @@ import { glyph } from "@hjmds/design-contracts/foundations";
 import { MediaAlbumView, useMediaAlbumIndex } from "./internal/media-album.js";
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
 import { useHjmNativeTheme } from "./provider.js";
-import { AccessibilityInfo, Animated, Keyboard, Pressable, ScrollView, View } from "react-native";
-import { useSheetBodyScroll } from "./internal/sheet-body-scroll.js";
+import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View } from "react-native";
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
@@ -250,7 +250,6 @@ export function SearchScreen({ embedded = false, query, queryLabel, queryField, 
     const scrollView = useRef(null);
     // Inside a Sheet's plain body the results scroller adopts the sheet's pull wiring, so the sheet reads this list's
     // offset instead of taking downward scrolls of a scrolled list as a drag (2026-10-30 Spint city sheet).
-    const sheetScroll = useSheetBodyScroll();
     const scrollRef = (node) => { scrollView.current = node; const own = screen.scrollRef; if (typeof own === "function")
         own(node);
     else if (own)
@@ -274,8 +273,7 @@ export function SearchScreen({ embedded = false, query, queryLabel, queryField, 
     // A virtualized host needs the full remaining body height; without this flex the FlatList measured at zero.
     const results = _jsx(Stack, { gap: "lg", justify: embedded && centerResults ? "center" : "start", layoutStyle: screen.scroll === "content" || embedded ? { flex: 1 } : undefined, children: body });
     const embeddedResults = screen.scroll === "content" ? results
-        : embedded && sheetScroll ? _jsx(View, { ...sheetScroll.wrapperProps, style: { flex: 1, minHeight: 0 }, children: _jsx(Animated.ScrollView, { ref: scrollRef, keyboardShouldPersistTaps: "handled", style: { flex: 1, minHeight: 0 }, contentContainerStyle: { flexGrow: 1 }, ...sheetScroll.scrollProps, children: _jsx(Animated.View, { style: [{ flexGrow: 1 }, sheetScroll.contentStyle], children: results }) }) })
-            : _jsx(ScrollView, { ref: scrollRef, keyboardShouldPersistTaps: "handled", style: { flex: 1, minHeight: 0 }, contentContainerStyle: { flexGrow: 1 }, children: results });
+        : _jsx(SheetScrollView, { ref: scrollRef, keyboardShouldPersistTaps: "handled", style: { flex: 1, minHeight: 0 }, contentContainerStyle: { flexGrow: 1 }, children: results });
     return _jsxs(_Fragment, { children: [embedded ? _jsx(CompositionLayout, { notice: notice, ...(screen.state === undefined ? {} : { state: screen.state }), stateAction: screen.stateAction, loadingIndicator: screen.loadingIndicator, footer: screen.footer, layoutStyle: [{ flex: 1 }, screen.layoutStyle], children: embeddedResults })
                 : _jsx(ScreenLayout, { ...screen, contentAlignment: phase === "results" && cause !== "none" && resultSummary?.empty ? "center" : screen.contentAlignment ?? "start", initialFocus: initialFocus, ...(inlineNavigation ? { header: _jsx(_Fragment, {}) } : {}), scrollRef: scrollRef, notice: notice, children: results }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }

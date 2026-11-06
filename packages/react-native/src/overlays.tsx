@@ -76,7 +76,7 @@ import { isDevelopment } from "./internal/diagnostics.js";
 import X from "lucide-react-native/icons/x";
 import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
-import { SheetBodyScrollContext, type SheetBodyScroll } from "./internal/sheet-body-scroll.js";
+import { SheetBodyScrollContext, SheetScrollOwnershipContext, type SheetBodyScroll } from "./internal/sheet-body-scroll.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -1516,14 +1516,17 @@ export function Sheet({
   // The scrollable body only hands a downward drag to the sheet when it is already at the top; otherwise the
   // same finger movement scrolls the content back up (2026-10-27 user decision).
   const bodyScrollY = useRef(0);
+  const bodyDragEligible = useRef(true);
+  const scrollTouchAllowed = useRef(true);
   // The body ScrollView stops scrolling while the sheet owns the finger, so iOS does not bounce the content
   // under a moving sheet.
   const [bodyDragging, setBodyDragging] = useState(false);
   // A touch that starts inside a nested scroller (SheetBodyScrollContext) belongs to that scroller's pull wiring;
   // the plain body responder must not also claim it, or a scrolled list and the sheet move together.
   const nestedTouch = useRef(false);
-  const wantsDrag = (gesture: { dx: number; dy: number }) =>
-    canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx);
+  const dragActivationY = useRef(0);
+  const wantsDrag = (gesture: { dx: number; dy: number; numberActiveTouches?: number }) =>
+    (gesture.numberActiveTouches ?? 1) === 1 && canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx);
   // PanResponder owns accumulated distance/velocity. Recreating it on keyboard,
   // layout or owner updates replaces that state while the finger is still down.
   // One gesture physics for every zone: the handle/header, a plain body, and a scrollable body at its top.
@@ -1531,24 +1534,37 @@ export function Sheet({
   const [dragResponders] = useState(() => {
     const physics = {
       onPanResponderTerminationRequest: () => false,
-      onPanResponderGrant: () => dragOffset.stopAnimation(),
-      onPanResponderMove: (_: unknown, gesture: { dy: number }) => { if (canSwipeRef.current) dragOffset.setValue(Math.max(0, gesture.dy)); },
+      onPanResponderGrant: () => { dragOffset.stopAnimation(); dragOffset.setValue(dragActivationY.current); },
+      onPanResponderMove: (_: unknown, gesture: { dy: number }) => { if (canSwipeRef.current) dragOffset.setValue(Math.max(0, dragActivationY.current + gesture.dy)); },
       onPanResponderRelease: (_: unknown, gesture: { dy: number; vy: number }) => {
+        const distance = dragActivationY.current + gesture.dy;
+        dragActivationY.current = 0;
         setBodyDragging(false);
-        if (canSwipeRef.current && (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity)) requestCloseRef.current("swipe");
+        if (canSwipeRef.current && (distance > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity)) requestCloseRef.current("swipe");
         else settleDrag();
       },
-      onPanResponderTerminate: () => { setBodyDragging(false); settleDrag(); },
+      onPanResponderTerminate: () => { dragActivationY.current = 0; setBodyDragging(false); settleDrag(); },
     };
     return {
       // Bubble phase: a pressable row or field keeps a tap, and yields once the finger clearly moves down.
       // A nested native scroller still wins its own gesture, as before.
-      zone: PanResponder.create({ ...physics, onMoveShouldSetPanResponder: (_, gesture) => !nestedTouch.current && wantsDrag(gesture) }),
+      zone: PanResponder.create({ ...physics, onMoveShouldSetPanResponder: (_, gesture) => {
+        if (nestedTouch.current || !wantsDrag(gesture)) return false;
+        // RN resets dy on responder grant. Preserve the activating move, including fast single-move flicks.
+        dragActivationY.current = gesture.dy;
+        return true;
+      } }),
       // Android only: capture phase so the sheet, not the ScrollView, takes the pull-down that starts at the top.
       scroll: PanResponder.create({
         ...physics,
-        onMoveShouldSetPanResponderCapture: (_, gesture) => bodyScrollY.current <= 0 && wantsDrag(gesture),
-        onPanResponderGrant: () => { setBodyDragging(true); dragOffset.stopAnimation(); },
+        onMoveShouldSetPanResponderCapture: (_, gesture) => {
+          // Freeze ownership at touch start; reaching the top during the same scroll must not dismiss.
+          if (gesture.dy < -sheetDragRecipe.activationDistance || (Math.abs(gesture.dx) > sheetDragRecipe.activationDistance && Math.abs(gesture.dx) >= Math.abs(gesture.dy))) bodyDragEligible.current = false;
+          if (!scrollTouchAllowed.current || !bodyDragEligible.current || !wantsDrag(gesture)) return false;
+          dragActivationY.current = gesture.dy;
+          return true;
+        },
+        onPanResponderGrant: () => { setBodyDragging(true); physics.onPanResponderGrant(); },
       }),
     };
   });
@@ -1586,7 +1602,7 @@ export function Sheet({
       const y = event.nativeEvent.contentOffset.y;
       bodyScrollY.current = y;
       // The released pull has bounced back: later momentum bounces stay inside the content.
-      if (pullOpen.current && !bodyUserDragging.current && y >= 0) setPullOpen(false);
+      if (pullOpen.current && (bodyUserDragging.current ? y > 0 : y >= 0)) setPullOpen(false);
     },
   }));
   const bodyScrollProps: SheetBodyScroll["scrollProps"] = {
@@ -1597,7 +1613,7 @@ export function Sheet({
     onScrollBeginDrag: (event) => {
       bodyUserDragging.current = true;
       // Only a drag that starts at the top may move the sheet; one that scrolls up to it does not.
-      if (pullFromOverscroll && canSwipeRef.current && event.nativeEvent.contentOffset.y <= 0) setPullOpen(true);
+      if (pullFromOverscroll) setPullOpen(scrollTouchAllowed.current && canSwipeRef.current && event.nativeEvent.contentOffset.y <= 0);
     },
     onScrollEndDrag: (event) => {
       bodyUserDragging.current = false;
@@ -1612,11 +1628,23 @@ export function Sheet({
       }
     },
   };
+  const keepScroll = () => {
+    nestedTouch.current = true;
+    scrollTouchAllowed.current = false;
+    bodyDragEligible.current = false;
+    setPullOpen(false);
+  };
+  const startBodyTouch = () => {
+    nestedTouch.current = true;
+    scrollTouchAllowed.current = true;
+    bodyDragEligible.current = bodyScrollY.current <= 0;
+    setPullOpen(false);
+  };
   const bodyScrollWrapper = canSwipe && !pullFromOverscroll ? dragResponders.scroll.panHandlers : {};
   const nestedBodyScroll: SheetBodyScroll | null = scrollable ? null : {
     scrollProps: bodyScrollProps,
     contentStyle: { transform: [{ translateY: bodyPull.pin }] },
-    wrapperProps: { ...bodyScrollWrapper, onTouchStart: () => { nestedTouch.current = true; } },
+    wrapperProps: { ...bodyScrollWrapper, onTouchStart: startBodyTouch },
   };
   useEffect(() => {
     if (visible || !canSwipe) { dragOffset.stopAnimation(); dragOffset.setValue(0); }
@@ -1698,6 +1726,9 @@ export function Sheet({
             accessibilityViewIsModal
             importantForAccessibility="yes"
             onAccessibilityEscape={() => requestClose("escape")}
+            // Reset ownership for every new touch before a nested scroller marks its own.
+            // Resetting only the body left a previous list touch blocking later handle/header drags.
+            onTouchStartCapture={() => { dragActivationY.current = 0; nestedTouch.current = false; }}
             onLayout={(event) => { sheetHeight.current = event.nativeEvent.layout.height; }}
             role="dialog"
             style={[
@@ -1800,7 +1831,7 @@ export function Sheet({
             </View>
             {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
             {scrollable ? (
-              <View {...bodyScrollWrapper} style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}>
+              <View {...bodyScrollWrapper} onTouchStartCapture={startBodyTouch} style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}>
               <Animated.ScrollView
                 // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
                 // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
@@ -1815,11 +1846,11 @@ export function Sheet({
               >
                 <Animated.View style={{ flexGrow: 1, gap: sheetRecipe.body.gap, transform: [{ translateY: bodyPull.pin }] }}>
                 {/* The body already scrolls; a scroller nested in it must not adopt the sheet's pull a second time. */}
-                <SheetBodyScrollContext.Provider value={null}><ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider></SheetBodyScrollContext.Provider>
+                <SheetScrollOwnershipContext.Provider value={{ keepScroll }}><SheetBodyScrollContext.Provider value={null}><ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider></SheetBodyScrollContext.Provider></SheetScrollOwnershipContext.Provider>
                 </Animated.View>
               </Animated.ScrollView>
               </View>
-            ) : <View {...(canSwipe ? dragResponder.panHandlers : {})} onTouchStartCapture={() => { nestedTouch.current = false; }} style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}><SheetBodyScrollContext.Provider value={nestedBodyScroll}><ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider></SheetBodyScrollContext.Provider></View>}
+            ) : <View {...(canSwipe ? dragResponder.panHandlers : {})} style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}><SheetScrollOwnershipContext.Provider value={{ keepScroll }}><SheetBodyScrollContext.Provider value={nestedBodyScroll}><ScreenFooterContext.Provider value={null}><KeyboardAvoidanceContext.Provider value={keyboardAvoidance}>{children}</KeyboardAvoidanceContext.Provider></ScreenFooterContext.Provider></SheetBodyScrollContext.Provider></SheetScrollOwnershipContext.Provider></View>}
             {footer ? (
               <View
                 style={{
@@ -1929,3 +1960,6 @@ export function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, childre
     </InitialFocusProvider></ScreenBodyInsetContext.Provider>
   );
 }
+
+// Public scroll host for custom Sheet content and FlatList.renderScrollComponent.
+export { SheetScrollView, type SheetScrollViewProps } from "./internal/sheet-scroll-view.js";

@@ -1,3 +1,4 @@
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import type { ComponentRef } from "react";
 import { assertNoRemovedStyleProps } from "./internal/diagnostics.js";
 import { FieldErrorText, NativeFieldFrame } from "./internal/field-frame.js";
@@ -724,7 +725,7 @@ export function Select<
         }}
       >
           <View accessibilityLabel={optionsAccessibilityLabel ?? accessibleName} accessibilityRole={multiple ? "list" : "radiogroup"} style={{ flexShrink: 1 }}>
-            <ScrollView ref={optionsScroll}
+            <SheetScrollView ref={optionsScroll}
               onLayout={event => { optionViewport.current.height = event.nativeEvent.layout.height; revealInitialOption(); }}
               onContentSizeChange={(_width, height) => { optionViewport.current.contentHeight = height; revealInitialOption(); }}>
               <View ref={optionsContent} collapsable={false}>
@@ -749,7 +750,7 @@ export function Select<
                 </View>
               ) : null}
               </View>
-            </ScrollView>
+            </SheetScrollView>
           </View>
       </Sheet>
     </View>
@@ -1292,14 +1293,14 @@ export function Combobox<
                 ) : null}
               </View>
             ) : (
-              <ScrollView keyboardShouldPersistTaps="handled">
+              <SheetScrollView keyboardShouldPersistTaps="handled">
                 {collection}
                 {viewStatus === "loadingMore" ? (
                   <View accessibilityLabel={stateMessage || loadingMoreMessage || loadingMessage} accessibilityRole="progressbar" accessibilityState={{ busy: true }} style={{ alignItems: "center", justifyContent: "center" }}>
                     <ActivityIndicator />
                   </View>
                 ) : null}
-              </ScrollView>
+              </SheetScrollView>
             )}
           </View>
       </Sheet>

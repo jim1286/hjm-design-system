@@ -33,6 +33,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Sheet` | 기본(모달) | `@hjmds/react`, `/overlays` | `@hjmds/react-native`, `/overlays` |
+| `SheetScrollView` | 동반(Native 세로 스크롤·가상 목록 host, 미게시) | — | `@hjmds/react-native`, `/overlays` |
 | `GestureSheet` | 확장(optional: 끌어서 snap·닫기) | — | `/sheet-gesture` |
 | `GestureSheetProvider` | 동반(optional: GestureSheet host) | — | `/sheet-gesture` |
 | `SheetPanel` | 확장(optional: 지도를 계속 조작하는 비모달 하단 패널, 미게시) | — | `/sheet-panel` |
@@ -262,3 +263,30 @@ import { SheetPanel } from "@hjmds/react-native/sheet-panel";
 - 손잡이를 눌러도 접기/펼치기가 가능하며 `accessibilityState.expanded`가 바뀐다. 접힌 본문은 보조기술에서 숨기고 뒤 지도는 숨기지 않는다. 포커스 격리·backdrop·Android back 가로채기는 없다.
 - 제품의 가로 넘김은 `contentGesture`로 제공한다. 수직 동작/멀티터치/짧은 탭을 가로 넘김이 빼앗지 않도록 제품 gesture의 방향 기준을 지정한다. `handleActions`/`onHandleAction`으로 이전/다음 같은 도메인 접근성 행동을 추가할 수 있다. `overlay`는 제품 그림·소인 슬롯이다.
 - 현재 호스트 검사와 소비 앱 타입/동작 검사 대상이며, 새 패널의 실제 iOS/Android 제스처·지도 동시 조작은 별도 기기 확인이 필요하다. 안정화·게시 완료를 뜻하지 않는다.
+
+
+## Native 중첩 스크롤 소유권 (2026-11-06 수정)
+
+목록을 읽는 스크롤과 시트 닫기를 동시에 처리하지 않는다. `scrollable` Sheet의 자체 본문,
+`Select`·`Combobox`·`ScreenLayout`·embedded `SearchScreen`은 공통 연결을 사용한다.
+최상단에서 시작한 새 아래 드래그만 시트를 닫는다. 목록 중간에서 시작해 최상단에 도달한
+같은 손가락은 계속 목록이 소유하며 손잡이에서 시작하는 새 드래그는 별도로 닫을 수 있다.
+
+제품이 시트 안에서 직접 스크롤을 렌더하면 `SheetScrollView`를 사용한다. ref와 기존 ScrollView
+props를 보존하며 시트 밖에서는 일반 ScrollView다. 가상 목록은 `Sheet scrollable` 안에 넣지 않고
+아래처럼 기존 FlatList의 host만 연결한다. 목록의 데이터·가상화·선택은 제품이 계속 소유한다.
+
+```tsx
+import { FlatList } from 'react-native';
+import { Sheet, SheetScrollView } from '@hjmds/react-native/overlays';
+
+<Sheet open={open} title={title} closeLabel={closeLabel} onOpenChange={setOpen}>
+  <FlatList data={items} renderItem={renderItem}
+    renderScrollComponent={props => <SheetScrollView {...props} />} />
+</Sheet>
+```
+
+시간 휠·코드 창처럼 스크롤 자체가 입력인 곳에는 `gestureRole="input"`을 쓴다. 최상단에서도
+그 입력이 손가락을 소유하고 손잡이로 닫기는 유지한다. 본문 아래에 다시 중첩된 스크롤도
+상위 본문과 같은 제스처를 나누어 갖지 않는다. 이 연결은 11월 6일 전체 앱 감사에서 발견한
+원시 ScrollView/FlatList의 위치 전달 누락을 해결하기 위한 것이며 게시 전까지 로컬 개발 소스에서만 사용한다.

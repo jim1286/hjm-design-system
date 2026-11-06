@@ -13,7 +13,7 @@ export { Steps, } from "./steps.js";
 export { Accordion, Avatar, Badge, Card, QuoteCard, CounterBadge, DescriptionList, Divider, Image, List, ListSeparator, ListRow, Tag, Statistic, StatisticGroup, Timeline, } from "./data-display.js";
 export { UploadItem, } from "./upload-item.js";
 export { EmptyState, Notice, Progress, Result, Skeleton, Spinner, PendingContent, Toast, ToastRegion, useToastRegion, } from "./feedback.js";
-export { AlertDialog, Dialog, ImmersiveOverlay, Sheet, } from "./overlays.js";
+export { AlertDialog, Dialog, ImmersiveOverlay, Sheet, SheetScrollView, } from "./overlays.js";
 export { Carousel, PageIndicator } from "./carousel.js";
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance } from "./floating-action-button.js";
 export { Calendar, CalendarFoldHeader } from "./calendar.js";

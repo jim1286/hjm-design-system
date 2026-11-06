@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { timePickerDraft, timePickerItems, resolveTimePickerValue, resolveTimePickerWheelIndex, moveTimePickerWheelIndex, validateTimePicker, timePickerRecipe } from "@hjmds/design-contracts/components/time-picker";
@@ -102,7 +103,7 @@ function TimeColumn({ part, label, draft, options, locked, onSelect, onMoving })
                         if (target !== null)
                             choose(target);
                     },
-                } : {}), style: { height }, children: [wheel && _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: (height - rowHeight) / 2, left: 0, right: 0, height: rowHeight, borderWidth: timePickerRecipe.selectionStroke, borderColor: colors.borderControl, borderRadius: tokens.radius[timePickerRecipe.radius], zIndex: 1 } }), _jsx(ScrollView, { ref: scroll, onLayout: reveal, nestedScrollEnabled: true, keyboardShouldPersistTaps: "handled", style: { height, flexGrow: 0 }, ...(wheel ? {
+                } : {}), style: { height }, children: [wheel && _jsx(View, { pointerEvents: "none", style: { position: "absolute", top: (height - rowHeight) / 2, left: 0, right: 0, height: rowHeight, borderWidth: timePickerRecipe.selectionStroke, borderColor: colors.borderControl, borderRadius: tokens.radius[timePickerRecipe.radius], zIndex: 1 } }), _jsx(SheetScrollView, { gestureRole: "input", ref: scroll, onLayout: reveal, nestedScrollEnabled: true, keyboardShouldPersistTaps: "handled", style: { height, flexGrow: 0 }, ...(wheel ? {
                             contentContainerStyle: { paddingVertical: (height - rowHeight) / 2 },
                             snapToOffsets: items.flatMap((item, index) => item.disabled ? [] : [index * rowHeight]),
                             snapToStart: false, snapToEnd: false, bounces: false,

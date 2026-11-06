@@ -30,4 +30,8 @@ export declare const SheetBodyScrollContext: import("react").Context<Readonly<{
     }>;
 }> | null>;
 export declare function useSheetBodyScroll(): SheetBodyScroll | null;
+/** Present even below a scrollable Sheet: an inner input must prevent its outer body from dragging. */
+export declare const SheetScrollOwnershipContext: import("react").Context<Readonly<{
+    keepScroll(): void;
+}> | null>;
 //# sourceMappingURL=sheet-body-scroll.d.ts.map

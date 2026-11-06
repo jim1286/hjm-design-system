@@ -74,6 +74,9 @@ export const Animated = {
   // Native-driven mapping is not observable here; tests drive the JS listener the renderer attaches.
   event: (_mapping: unknown, configuration?: Readonly<{ listener?: (event: unknown) => void }>) =>
     (event: unknown) => configuration?.listener?.(event),
+  forkEvent: (event: ((...args: unknown[]) => void) | null, listener: (...args: unknown[]) => void) =>
+    (...args: unknown[]) => { event?.(...args); listener(...args); },
+  unforkEvent: (_event: unknown, _listener: unknown) => undefined,
   timing: (value: AnimatedValue, configuration: Readonly<{ toValue: number; duration?: number }>) => ({
     start: (callback?: (result: Readonly<{ finished: boolean }>) => void) => {
       // The reduced-motion scenario proof reads what actually started.

@@ -24,3 +24,6 @@ export const SheetBodyScrollContext = createContext<SheetBodyScroll | null>(null
 export function useSheetBodyScroll(): SheetBodyScroll | null {
   return useContext(SheetBodyScrollContext);
 }
+
+/** Present even below a scrollable Sheet: an inner input must prevent its outer body from dragging. */
+export const SheetScrollOwnershipContext = createContext<Readonly<{ keepScroll(): void }> | null>(null);

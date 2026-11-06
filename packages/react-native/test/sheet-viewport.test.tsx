@@ -8,6 +8,7 @@ import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlay
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 import { Select } from "../src/forms.js";
+import { useSheetBodyScroll } from "../src/internal/sheet-body-scroll.js";
 import { BottomCTA } from "../src/actions.js";
 
 // The evidence registry points to this test because it exercises Sheet viewport and dismissal actions directly.
@@ -363,6 +364,27 @@ describe('side Sheet downward reading-panel dismissal', () => {
 describe("Sheet swipe continuity", () => {
   const zone = () => renderer!.root.findAllByType(View).find(view => typeof view.props.onMoveShouldSetResponder === "function")!;
 
+  it("lets the handle dismiss after an earlier touch in a nested scroller", () => {
+    const onOpenChange = vi.fn();
+    function NestedScroller() {
+      const wiring = useSheetBodyScroll();
+      return <View testID="nested-scroller" {...wiring?.wrapperProps}><Text>도시 목록</Text></View>;
+    }
+    render(<HjmNativeProvider reducedMotion><Sheet open title="도시" closeLabel="닫기" onOpenChange={onOpenChange}>
+      <NestedScroller />
+    </Sheet></HjmNativeProvider>);
+    act(() => dialog().props.onLayout({ nativeEvent: { layout: { height: 600 } } }));
+    const scroller = renderer!.root.findAllByType(View).find(view => view.props.testID === "nested-scroller")!;
+    act(() => scroller.props.onTouchStart());
+    // The plain body must yield the current touch to the nested list.
+    expect(zone().props.onMoveShouldSetResponder({}, { dy: 200, dx: 0 })).toBe(false);
+    // A later touch starts on the handle instead of the list.
+    act(() => dialog().props.onTouchStartCapture?.());
+    expect(zone().props.onMoveShouldSetResponder({}, { dy: 200, dx: 0 })).toBe(true);
+    act(() => zone().props.onResponderRelease({}, { dy: 200, vy: 0.1 }));
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "swipe" });
+  });
+
   it("keeps an active swipe across keyboard and owner rerenders and calls the latest owner", () => {
     const previousOwner = vi.fn();
     const currentOwner = vi.fn();
@@ -416,6 +438,7 @@ describe("Sheet swipe continuity", () => {
     const wrapper = renderer!.root.findAllByType(View).find(view => typeof view.props.onMoveShouldSetResponderCapture === "function")!;
     expect(wrapper.props.onMoveShouldSetResponderCapture({}, { dy: 20, dx: 0 })).toBe(true);
     act(() => scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 120 } } }));
+    act(() => wrapper.props.onTouchStartCapture());
     expect(wrapper.props.onMoveShouldSetResponderCapture({}, { dy: 20, dx: 0 })).toBe(false);
   });
 

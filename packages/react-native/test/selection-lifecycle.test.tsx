@@ -1,5 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Modal, PanResponder, Pressable, ScrollView, type GestureResponderEvent, type PanResponderGestureState } from "react-native";
+import { Animated, Modal, PanResponder, Pressable, type GestureResponderEvent, type PanResponderGestureState } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { Combobox, Select } from "../src/forms.js";
 import { CheckboxGroup } from "../src/inputs.js";
@@ -28,8 +28,8 @@ it("reconciles Native group removal and blocks actions after readOnly changes",(
 it("reveals the selected row after actual modal and list layout, including section offsets",async()=>{
  const scrollTo=vi.fn(); const measure=vi.fn((_content: unknown, done: (...args: number[])=>void)=>done(0,900,200,80));
  const ui=(open:boolean)=><HjmNativeProvider><Select label="Pick" sections={[{id:"group",label:"Group",items}]} selectedKey="b" open={open} onSelectionChange={()=>{}} placeholder="Choose" dismissLabel="Close"/></HjmNativeProvider>;
- act(()=>{tree=create(ui(true),{createNodeMock: node=>node.type==="ScrollView"?{scrollTo}:(node.props as {accessibilityLabel?:string}).accessibilityLabel==="Beta"?{measureLayout:measure}:{} });});
- const scroll=()=>tree!.root.findByType(ScrollView);
+ act(()=>{tree=create(ui(true),{createNodeMock: node=>(node.type==="ScrollView"||node.type==="AnimatedScrollView")?{scrollTo}:(node.props as {accessibilityLabel?:string}).accessibilityLabel==="Beta"?{measureLayout:measure}:{} });});
+ const scroll=()=>tree!.root.findByType(Animated.ScrollView);
  act(()=>{scroll().props.onLayout({nativeEvent:{layout:{height:300}}});scroll().props.onContentSizeChange(200,1200);});
  expect(scrollTo).not.toHaveBeenCalled();
  act(()=>tree!.root.findByType(Modal).props.onShow());

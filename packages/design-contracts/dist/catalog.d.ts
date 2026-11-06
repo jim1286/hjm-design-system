@@ -1383,6 +1383,7 @@ export declare const componentCatalog: readonly [{
     };
     readonly name: "Sheet";
     readonly label: "시트";
+    readonly companions: readonly ["SheetScrollView"];
     readonly extensions: readonly ["GestureSheet", "GestureSheetProvider", "SheetPanel"];
     readonly category: "overlay";
     readonly platform: "adaptive";
@@ -4702,6 +4703,12 @@ export declare const recipeRegistry: {
         };
     };
     readonly chartRecipe: {
+        readonly summary: {
+            readonly gap: 12;
+            readonly labelVariant: "caption";
+            readonly valueVariant: "title";
+            readonly compactValueVariant: "bodyLarge";
+        };
         readonly heights: {
             readonly sparkline: 28;
             readonly compact: 128;

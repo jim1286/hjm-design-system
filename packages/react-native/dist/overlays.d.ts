@@ -165,5 +165,5 @@ export type ImmersiveOverlayProps = Readonly<{
  * down), dismisses on back with a reason, and returns accessibility focus after the native dismissal.
  */
 export declare function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, children, tools, status, returnFocusRef, onShow }: ImmersiveOverlayProps): import("react").JSX.Element;
-export {};
+export { SheetScrollView, type SheetScrollViewProps } from "./internal/sheet-scroll-view.js";
 //# sourceMappingURL=overlays.d.ts.map

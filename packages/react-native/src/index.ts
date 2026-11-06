@@ -274,6 +274,8 @@ export {
   Dialog,
   ImmersiveOverlay,
   Sheet,
+  SheetScrollView,
+  type SheetScrollViewProps,
   type AlertDialogProps,
   type DialogOpenChangeReason,
   type DialogProps,

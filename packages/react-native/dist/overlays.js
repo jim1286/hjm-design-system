@@ -22,7 +22,7 @@ import { isDevelopment } from "./internal/diagnostics.js";
 import X from "lucide-react-native/icons/x";
 import { LucideGlyph } from "./internal/lucide-glyph.js";
 import { listRowScrollRoom } from "./internal/list-row-scroll-room.js";
-import { SheetBodyScrollContext } from "./internal/sheet-body-scroll.js";
+import { SheetBodyScrollContext, SheetScrollOwnershipContext } from "./internal/sheet-body-scroll.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -984,13 +984,16 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     // The scrollable body only hands a downward drag to the sheet when it is already at the top; otherwise the
     // same finger movement scrolls the content back up (2026-10-27 user decision).
     const bodyScrollY = useRef(0);
+    const bodyDragEligible = useRef(true);
+    const scrollTouchAllowed = useRef(true);
     // The body ScrollView stops scrolling while the sheet owns the finger, so iOS does not bounce the content
     // under a moving sheet.
     const [bodyDragging, setBodyDragging] = useState(false);
     // A touch that starts inside a nested scroller (SheetBodyScrollContext) belongs to that scroller's pull wiring;
     // the plain body responder must not also claim it, or a scrolled list and the sheet move together.
     const nestedTouch = useRef(false);
-    const wantsDrag = (gesture) => canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx);
+    const dragActivationY = useRef(0);
+    const wantsDrag = (gesture) => (gesture.numberActiveTouches ?? 1) === 1 && canSwipeRef.current && gesture.dy > sheetDragRecipe.activationDistance && Math.abs(gesture.dy) > Math.abs(gesture.dx);
     // PanResponder owns accumulated distance/velocity. Recreating it on keyboard,
     // layout or owner updates replaces that state while the finger is still down.
     // One gesture physics for every zone: the handle/header, a plain body, and a scrollable body at its top.
@@ -998,27 +1001,43 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
     const [dragResponders] = useState(() => {
         const physics = {
             onPanResponderTerminationRequest: () => false,
-            onPanResponderGrant: () => dragOffset.stopAnimation(),
+            onPanResponderGrant: () => { dragOffset.stopAnimation(); dragOffset.setValue(dragActivationY.current); },
             onPanResponderMove: (_, gesture) => { if (canSwipeRef.current)
-                dragOffset.setValue(Math.max(0, gesture.dy)); },
+                dragOffset.setValue(Math.max(0, dragActivationY.current + gesture.dy)); },
             onPanResponderRelease: (_, gesture) => {
+                const distance = dragActivationY.current + gesture.dy;
+                dragActivationY.current = 0;
                 setBodyDragging(false);
-                if (canSwipeRef.current && (gesture.dy > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity))
+                if (canSwipeRef.current && (distance > sheetHeight.current * sheetDragRecipe.dismissDistanceRatio || gesture.vy > sheetDragRecipe.dismissVelocity))
                     requestCloseRef.current("swipe");
                 else
                     settleDrag();
             },
-            onPanResponderTerminate: () => { setBodyDragging(false); settleDrag(); },
+            onPanResponderTerminate: () => { dragActivationY.current = 0; setBodyDragging(false); settleDrag(); },
         };
         return {
             // Bubble phase: a pressable row or field keeps a tap, and yields once the finger clearly moves down.
             // A nested native scroller still wins its own gesture, as before.
-            zone: PanResponder.create({ ...physics, onMoveShouldSetPanResponder: (_, gesture) => !nestedTouch.current && wantsDrag(gesture) }),
+            zone: PanResponder.create({ ...physics, onMoveShouldSetPanResponder: (_, gesture) => {
+                    if (nestedTouch.current || !wantsDrag(gesture))
+                        return false;
+                    // RN resets dy on responder grant. Preserve the activating move, including fast single-move flicks.
+                    dragActivationY.current = gesture.dy;
+                    return true;
+                } }),
             // Android only: capture phase so the sheet, not the ScrollView, takes the pull-down that starts at the top.
             scroll: PanResponder.create({
                 ...physics,
-                onMoveShouldSetPanResponderCapture: (_, gesture) => bodyScrollY.current <= 0 && wantsDrag(gesture),
-                onPanResponderGrant: () => { setBodyDragging(true); dragOffset.stopAnimation(); },
+                onMoveShouldSetPanResponderCapture: (_, gesture) => {
+                    // Freeze ownership at touch start; reaching the top during the same scroll must not dismiss.
+                    if (gesture.dy < -sheetDragRecipe.activationDistance || (Math.abs(gesture.dx) > sheetDragRecipe.activationDistance && Math.abs(gesture.dx) >= Math.abs(gesture.dy)))
+                        bodyDragEligible.current = false;
+                    if (!scrollTouchAllowed.current || !bodyDragEligible.current || !wantsDrag(gesture))
+                        return false;
+                    dragActivationY.current = gesture.dy;
+                    return true;
+                },
+                onPanResponderGrant: () => { setBodyDragging(true); physics.onPanResponderGrant(); },
             }),
         };
     });
@@ -1053,7 +1072,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
             const y = event.nativeEvent.contentOffset.y;
             bodyScrollY.current = y;
             // The released pull has bounced back: later momentum bounces stay inside the content.
-            if (pullOpen.current && !bodyUserDragging.current && y >= 0)
+            if (pullOpen.current && (bodyUserDragging.current ? y > 0 : y >= 0))
                 setPullOpen(false);
         },
     }));
@@ -1065,8 +1084,8 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
         onScrollBeginDrag: (event) => {
             bodyUserDragging.current = true;
             // Only a drag that starts at the top may move the sheet; one that scrolls up to it does not.
-            if (pullFromOverscroll && canSwipeRef.current && event.nativeEvent.contentOffset.y <= 0)
-                setPullOpen(true);
+            if (pullFromOverscroll)
+                setPullOpen(scrollTouchAllowed.current && canSwipeRef.current && event.nativeEvent.contentOffset.y <= 0);
         },
         onScrollEndDrag: (event) => {
             bodyUserDragging.current = false;
@@ -1083,11 +1102,23 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
             }
         },
     };
+    const keepScroll = () => {
+        nestedTouch.current = true;
+        scrollTouchAllowed.current = false;
+        bodyDragEligible.current = false;
+        setPullOpen(false);
+    };
+    const startBodyTouch = () => {
+        nestedTouch.current = true;
+        scrollTouchAllowed.current = true;
+        bodyDragEligible.current = bodyScrollY.current <= 0;
+        setPullOpen(false);
+    };
     const bodyScrollWrapper = canSwipe && !pullFromOverscroll ? dragResponders.scroll.panHandlers : {};
     const nestedBodyScroll = scrollable ? null : {
         scrollProps: bodyScrollProps,
         contentStyle: { transform: [{ translateY: bodyPull.pin }] },
-        wrapperProps: { ...bodyScrollWrapper, onTouchStart: () => { nestedTouch.current = true; } },
+        wrapperProps: { ...bodyScrollWrapper, onTouchStart: startBodyTouch },
     };
     useEffect(() => {
         if (visible || !canSwipe) {
@@ -1134,7 +1165,10 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                             }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (
                                 // Backdrop press closes every sheet by default (2026-10-17 user decision) through the same
                                 // requestClose path as the handle, so busy and dismissPolicy guards apply. Named by closeLabel.
-                                _jsx(Pressable, { accessibilityLabel: closeLabel, accessibilityRole: "button", accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", onAccessibilityEscape: () => requestClose("escape"), onLayout: (event) => { sheetHeight.current = event.nativeEvent.layout.height; }, role: "dialog", style: [
+                                _jsx(Pressable, { accessibilityLabel: closeLabel, accessibilityRole: "button", accessibilityState: { disabled: closeBlocked }, disabled: closeBlocked, onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", onAccessibilityEscape: () => requestClose("escape"), 
+                                    // Reset ownership for every new touch before a nested scroller marks its own.
+                                    // Resetting only the body left a previous list touch blocking later handle/header drags.
+                                    onTouchStartCapture: () => { dragActivationY.current = 0; nestedTouch.current = false; }, onLayout: (event) => { sheetHeight.current = event.nativeEvent.layout.height; }, role: "dialog", style: [
                                         {
                                             backgroundColor: contentBackground,
                                             borderColor: contentBorder,
@@ -1193,7 +1227,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                                         // Without a description the × keeps its inline-end place (2026-10-17: no visible title).
                                                         justifyContent: "flex-end",
                                                         gap: spacing.sm,
-                                                    }, children: [description ? _jsx(View, { style: { flex: 1 }, children: _jsx(Text, { tone: "muted", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })) : null] }), scrollable ? (_jsx(View, { ...bodyScrollWrapper, style: { flexShrink: 1, minHeight: 0, ...bodyFill }, children: _jsx(Animated.ScrollView
+                                                    }, children: [description ? _jsx(View, { style: { flex: 1 }, children: _jsx(Text, { tone: "muted", children: description }) }) : null, policy.dismissible && closeVisible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] })) : null] }), scrollable ? (_jsx(View, { ...bodyScrollWrapper, onTouchStartCapture: startBodyTouch, style: { flexShrink: 1, minHeight: 0, ...bodyFill }, children: _jsx(Animated.ScrollView
                                             // The sheet's inline padding used to sit outside this clipping viewport, so ListRows cut their surface
                                             // bleed. The viewport now reaches the padding edge and carries the padding inside its content (Web's
                                             // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
@@ -1203,7 +1237,7 @@ keyboardAvoidance = true, scrollable = false, showClose, onShow, initialFocus = 
                                                 // body scroll box does the same); content keeps its position (2026-10-17 1.27.2 adoption).
                                                 style: { flexShrink: 1, minHeight: 0, ...bodyFill, ...sheetBodyRoom.viewport }, 
                                                 // Fill the scroll viewport so a CompositionLayout state can center in the sheet body.
-                                                contentContainerStyle: { flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, ...bodyScrollProps, children: _jsx(Animated.View, { style: { flexGrow: 1, gap: sheetRecipe.body.gap, transform: [{ translateY: bodyPull.pin }] }, children: _jsx(SheetBodyScrollContext.Provider, { value: null, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }) }) }) })) : _jsx(View, { ...(canSwipe ? dragResponder.panHandlers : {}), onTouchStartCapture: () => { nestedTouch.current = false; }, style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(SheetBodyScrollContext.Provider, { value: nestedBodyScroll, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }) }), footer ? (_jsx(View, { style: {
+                                                contentContainerStyle: { flexGrow: 1, gap: sheetRecipe.body.gap, ...sheetBodyRoom.content }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, ...bodyScrollProps, children: _jsx(Animated.View, { style: { flexGrow: 1, gap: sheetRecipe.body.gap, transform: [{ translateY: bodyPull.pin }] }, children: _jsx(SheetScrollOwnershipContext.Provider, { value: { keepScroll }, children: _jsx(SheetBodyScrollContext.Provider, { value: null, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }) }) }) }) })) : _jsx(View, { ...(canSwipe ? dragResponder.panHandlers : {}), style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: _jsx(SheetScrollOwnershipContext.Provider, { value: { keepScroll }, children: _jsx(SheetBodyScrollContext.Provider, { value: nestedBodyScroll, children: _jsx(ScreenFooterContext.Provider, { value: null, children: _jsx(KeyboardAvoidanceContext.Provider, { value: keyboardAvoidance, children: children }) }) }) }) }), footer ? (_jsx(View, { style: {
                                                 gap: sheetRecipe.footer.gap,
                                                 flexShrink: 0,
                                                 paddingTop: sheetRecipe.footer.paddingTop,
@@ -1256,4 +1290,6 @@ export function ImmersiveOverlay({ open, onOpenChange, label, exitLabel, childre
                                     paddingRight: Math.max(recipe.controls.padding, insets.right ?? 0),
                                 }, children: [status, _jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: recipe.controls.actionGap }, children: [tools, _jsx(Button, { size: "large", growWithContent: true, layoutStyle: { flex: 1 }, onPress: () => onOpenChange(false, { reason: "exit-action" }), children: exitLabel })] })] })] })] }) }) }));
 }
+// Public scroll host for custom Sheet content and FlatList.renderScrollComponent.
+export { SheetScrollView } from "./internal/sheet-scroll-view.js";
 //# sourceMappingURL=overlays.js.map

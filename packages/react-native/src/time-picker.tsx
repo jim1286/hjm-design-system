@@ -1,3 +1,4 @@
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import type { ComponentRef } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, View, type NativeSyntheticEvent, type NativeScrollEvent } from "react-native";
@@ -107,7 +108,7 @@ function TimeColumn({ part, label, draft, options, locked, onSelect, onMoving }:
       },
     } : {})} style={{ height }}>
     {wheel && <View pointerEvents="none" style={{ position: "absolute", top: (height - rowHeight) / 2, left: 0, right: 0, height: rowHeight, borderWidth: timePickerRecipe.selectionStroke, borderColor: colors.borderControl, borderRadius: tokens.radius[timePickerRecipe.radius], zIndex: 1 }} />}
-    <ScrollView ref={scroll} onLayout={reveal} nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ height, flexGrow: 0 }}
+    <SheetScrollView gestureRole="input" ref={scroll} onLayout={reveal} nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ height, flexGrow: 0 }}
       {...(wheel ? {
         contentContainerStyle: { paddingVertical: (height - rowHeight) / 2 },
         snapToOffsets: items.flatMap((item, index) => item.disabled ? [] : [index * rowHeight]),
@@ -136,7 +137,7 @@ function TimeColumn({ part, label, draft, options, locked, onSelect, onMoving }:
         style={({ pressed }) => ({ height: rowHeight, alignItems: "center", justifyContent: "center", borderRadius: tokens.radius[timePickerRecipe.radius], backgroundColor: draft[part] === item.value ? colors.surfaceSelected : "transparent", opacity: locked || item.disabled ? 0.4 : pressed ? 0.72 : 1 })}>
         <Text fontRole="ui" style={{ color: draft[part] === item.value ? colors.text : colors.textBody, fontWeight: draft[part] === item.value ? "500" : "400", fontVariant: ["tabular-nums"] }}>{item.value}</Text>
       </Pressable>)}
-    </ScrollView>
+    </SheetScrollView>
     </View>
   </View>;
 }

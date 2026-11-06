@@ -26,8 +26,8 @@ import { MediaAlbumView, useMediaAlbumIndex, type MediaAlbum } from "./internal/
 import { validateMediaSetChoice } from "@hjmds/design-contracts/screen-patterns";
 export type { MediaAlbum } from "./internal/media-album.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { AccessibilityInfo, Animated, Keyboard, Pressable, ScrollView, View, type TextInputProps } from "react-native";
-import { useSheetBodyScroll } from "./internal/sheet-body-scroll.js";
+import { AccessibilityInfo, Keyboard, Pressable, ScrollView, View, type TextInputProps } from "react-native";
+import { SheetScrollView } from "./internal/sheet-scroll-view.js";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 // The trigger alone has no optional peers; the viewer (gesture/zoom peers) stays in the image-viewer subpath.
@@ -455,7 +455,6 @@ export function SearchScreen<F = unknown>({embedded=false,query,queryLabel,query
  const scrollView=useRef<ComponentRef<typeof ScrollView>|null>(null);
  // Inside a Sheet's plain body the results scroller adopts the sheet's pull wiring, so the sheet reads this list's
  // offset instead of taking downward scrolls of a scrolled list as a drag (2026-10-30 Spint city sheet).
- const sheetScroll=useSheetBodyScroll();
  const scrollRef=(node:ComponentRef<typeof ScrollView>|null)=>{scrollView.current=node;const own=screen.scrollRef;if(typeof own==="function")own(node);else if(own)(own as {current:ComponentRef<typeof ScrollView>|null}).current=node;};
  // A new order starts at the top; the previous offset would land mid-list in unrelated results.
  const changeSort=(id:string)=>{resultSummary?.sort?.onChange(id);scrollView.current?.scrollTo?.({y:0,animated:false});};
@@ -477,8 +476,7 @@ export function SearchScreen<F = unknown>({embedded=false,query,queryLabel,query
  // A virtualized host needs the full remaining body height; without this flex the FlatList measured at zero.
  const results=<Stack gap="lg" justify={embedded&&centerResults?"center":"start"} layoutStyle={screen.scroll==="content"||embedded?{flex:1}:undefined}>{body}</Stack>;
  const embeddedResults=screen.scroll==="content"?results
-  :embedded&&sheetScroll?<View {...sheetScroll.wrapperProps} style={{flex:1,minHeight:0}}><Animated.ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" style={{flex:1,minHeight:0}} contentContainerStyle={{flexGrow:1}} {...sheetScroll.scrollProps}><Animated.View style={[{flexGrow:1},sheetScroll.contentStyle]}>{results}</Animated.View></Animated.ScrollView></View>
-  :<ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" style={{flex:1,minHeight:0}} contentContainerStyle={{flexGrow:1}}>{results}</ScrollView>;
+  :<SheetScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" style={{flex:1,minHeight:0}} contentContainerStyle={{flexGrow:1}}>{results}</SheetScrollView>;
  return <>{embedded?<CompositionLayout notice={notice} {...(screen.state===undefined?{}:{state:screen.state})} stateAction={screen.stateAction}
    loadingIndicator={screen.loadingIndicator} footer={screen.footer} layoutStyle={[{flex:1},screen.layoutStyle]}>{embeddedResults}</CompositionLayout>
    :<ScreenLayout {...screen} contentAlignment={phase==="results"&&cause!=="none"&&resultSummary?.empty?"center":screen.contentAlignment??"start"} initialFocus={initialFocus} {...(inlineNavigation?{header:<></>}: {})} scrollRef={scrollRef} notice={notice}>{results}</ScreenLayout>}
