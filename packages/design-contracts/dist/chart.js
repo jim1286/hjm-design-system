@@ -22,7 +22,11 @@ export function resolveChartSummary(categories, series, focus, options) {
         low: marks ? extreme(marks.min) : null,
     };
 }
-/** At most four readable calendar labels, using the measured plot width instead of shrinking typography. */
+/**
+ * As many readable category labels as the measured plot width fits, without shrinking typography. A fixed cap of four
+ * and a 48px minimum step hid months that fit (2026-11-06 user request: show every month of a season), so the step is
+ * the widest label plus a gap and every category shows when they all fit; longer or denser labels still thin out.
+ */
 export function resolveChartCategoryTicks(categories, width) {
     if (!categories.length || width <= 0)
         return [];
@@ -32,8 +36,8 @@ export function resolveChartCategoryTicks(categories, width) {
     const gap = spacing.sm;
     if (estimatedWidth(categories[0]) + estimatedWidth(categories.at(-1)) + gap > width)
         return [0];
-    const step = Math.max(48, ...categories.map(label => estimatedWidth(label) + gap));
-    const count = Math.min(categories.length, 4, Math.max(2, Math.floor(width / step) + 1));
+    const step = Math.max(...categories.map(label => estimatedWidth(label) + gap));
+    const count = Math.min(categories.length, Math.max(2, Math.floor(width / step) + 1));
     return Array.from({ length: count }, (_, index) => Math.round(index * (categories.length - 1) / (count - 1)));
 }
 export const chartRecipe = {

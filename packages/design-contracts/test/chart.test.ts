@@ -23,9 +23,11 @@ it("resolves summary values and extrema from the named primary series, not paint
   expect(resolveChartSummary(categories, [ops], 99, {}).category).toBeNull();
 });
 
-it("keeps calendar ticks ordered, bounded and sparse at a measured width", () => {
+it("shows every category that fits the measured width and thins only what does not", () => {
   const months = Array.from({ length: 8 }, (_, i) => `${i + 3}월`);
-  expect(resolveChartCategoryTicks(months, 276)).toEqual([0, 2, 5, 7]);
+  expect(resolveChartCategoryTicks(months, 276)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+  // A narrow plot keeps ordered, evenly spread labels with both ends.
+  expect(resolveChartCategoryTicks(months, 120)).toEqual([0, 2, 5, 7]);
   expect(resolveChartCategoryTicks(["2025", "2026"], 80)).toEqual([0, 1]);
   expect(resolveChartCategoryTicks(["2026"], 276)).toEqual([0]);
   expect(resolveChartCategoryTicks([], 276)).toEqual([]);

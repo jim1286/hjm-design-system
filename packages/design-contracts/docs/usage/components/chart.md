@@ -109,7 +109,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
   accessibilityLabel={t("seasonComparison")} formatValue={formatRate} missingLabel={t("missing")} />
 ```
 
-- 요약 모드는 `showAxis` 기본값이 `true`이며 범주 눈금은 실제 plot 폭에 따라 중간 기간을 포함해 최대 4개를 표시한다.
+- 요약 모드는 `showAxis` 기본값이 `true`이며 범주 눈금은 실제 plot 폭에 들어가는 만큼 모두 표시하고(가장 긴 라벨 + 간격 기준), 넘칠 때만 양 끝을 포함해 고르게 줄인다. 2026-11-06 사용자 요청으로 고정 상한 4개를 없앴다(시즌의 모든 월 표시).
 - 여러 선은 `area`를 생략하면 채우지 않는다. 누적량의 `stacked` 영역과 명시적인 `area` 선택은 유지한다.
 - 요약 모드의 선 차트는 손을 뗀 기간을 기본으로 유지한다. `holdOnRelease={false}`를 명시하면 기존 복귀 동작을 쓴다.
 - plot 안의 선택 말풍선을 중복 표시하지 않는다. `extremes`는 주 계열의 최고·최저와 기간을 plot 아래에 표시하며 드래그 중에도 유지한다.

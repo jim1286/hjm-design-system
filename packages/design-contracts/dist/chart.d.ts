@@ -81,7 +81,11 @@ export declare function resolveChartSummary(categories: readonly string[], serie
         value: number;
     } | null;
 };
-/** At most four readable calendar labels, using the measured plot width instead of shrinking typography. */
+/**
+ * As many readable category labels as the measured plot width fits, without shrinking typography. A fixed cap of four
+ * and a 48px minimum step hid months that fit (2026-11-06 user request: show every month of a season), so the step is
+ * the widest label plus a gap and every category shows when they all fit; longer or denser labels still thin out.
+ */
 export declare function resolveChartCategoryTicks(categories: readonly string[], width: number): readonly number[];
 export type ChartPlot = Readonly<{
     index: number;
