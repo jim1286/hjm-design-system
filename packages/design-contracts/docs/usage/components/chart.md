@@ -95,6 +95,29 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 
 ### LineChart
 
+#### 고정 요약 모드 (개발 소스 · 미게시)
+
+2026-11-06 사용자 요청으로 제품마다 선택값·비교 범례·최고/최저를 재조립하던 구조를 HJM에 모았다.
+`LineChart`·`BarChart`에 `summary={{ label, seriesId }}`를 주면 선택한 기간과 값이 plot 위의 고정 위치에 나오고
+여러 계열은 값이 정렬된 범례로 비교한다. `seriesId`는 주 계열이며 생략하면 첫 계열이다. 존재하지 않는 id는 오류다.
+없는 값은 `missingLabel`로 표시하며 0으로 바꾸지 않는다. 문구·단위·숫자 서식·계열 색은 제품이 공급한다.
+
+```tsx
+<LineChart categories={months} series={seasonSeries}
+  summary={{ label: t("monthlyAverage"), seriesId: "current" }}
+  extremes={{ high: t("highest"), low: t("lowest") }}
+  accessibilityLabel={t("seasonComparison")} formatValue={formatRate} missingLabel={t("missing")} />
+```
+
+- 요약 모드는 `showAxis` 기본값이 `true`이며 범주 눈금은 실제 plot 폭에 따라 중간 기간을 포함해 최대 4개를 표시한다.
+- 여러 선은 `area`를 생략하면 채우지 않는다. 누적량의 `stacked` 영역과 명시적인 `area` 선택은 유지한다.
+- 요약 모드의 선 차트는 손을 뗀 기간을 기본으로 유지한다. `holdOnRelease={false}`를 명시하면 기존 복귀 동작을 쓴다.
+- plot 안의 선택 말풍선을 중복 표시하지 않는다. `extremes`는 주 계열의 최고·최저와 기간을 plot 아래에 표시하며 드래그 중에도 유지한다.
+- `high`·`low`는 숫자 최댓값·최솟값이다. ERA처럼 낮을수록 좋은 지표의 표현은 제품이 두 라벨을 바꿔 준다.
+- 기존 제품이 별도 헤더를 제공하면 `summary`를 생략해 기존 plot 전용 API를 계속 쓸 수 있다.
+- `summary={{ compact: true }}`는 고정 값에 `bodyLarge` 크기를 사용한다. 기본값은 공통 `title` 크기이며 제품이 별도 숫자 헤더를 중복해 만들지 않는다.
+- 요약 모드는 현재 개발 소스에만 있다. 게시·버전 채택 전에는 설치된 패키지가 이 API를 제공한다고 판단하지 않는다.
+
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `categories` | `readonly string[]` | — (필수) | x축 범주(시간 순서) |

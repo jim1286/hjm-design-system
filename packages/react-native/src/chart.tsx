@@ -4,6 +4,7 @@ import Svg, { Circle, ClipPath, Defs, G, Line, LinearGradient, Path, Rect, Stop,
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import {
+  resolveChartSummary, resolveChartCategoryTicks, type ChartSummaryOptions,
   prepareChartLineMorph,
   areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices,
   resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
@@ -177,11 +178,28 @@ function MotionBar({ bar, animate, ...rest }: React.ComponentProps<typeof Rect> 
   return <Rect {...rest} ref={node as React.Ref<React.ComponentRef<typeof Rect>>} x={bar.x} y={bar.y} width={bar.width} height={bar.height} />;
 }
 
+type SummaryData = ReturnType<typeof resolveChartSummary>;
+function FixedChartSummary({ data, colorOf, format, missingLabel, compact }: { compact?: boolean | undefined; data: SummaryData; colorOf: (series: ChartSeries, index: number) => string; format(value: number): string; missingLabel: string }) {
+  return <View style={{ gap: chartRecipe.summary.gap }}>
+    <Text variant={chartRecipe.summary.labelVariant} tone="muted">{`${data.label}${data.category === null ? "" : ` · ${data.category}`}`}</Text>
+    <Text variant={compact ? chartRecipe.summary.compactValueVariant : chartRecipe.summary.valueVariant} emphasis="strong" numeric="tabular">{data.value === null ? missingLabel : format(data.value)}</Text>
+    {data.items.length > 1 && <ChartLegend layout="stack" items={data.items.map(item => ({ id: item.series.id, label: item.series.label, color: colorOf(item.series, item.index), value: item.value === null ? missingLabel : format(item.value) }))} />}
+  </View>;
+}
+function FixedChartExtremes({ data, labels, format }: { data: SummaryData; labels: { high: string; low: string }; format(value: number): string }) {
+  return <View style={{ flexDirection: "row", flexWrap: "wrap", gap: chartRecipe.summary.gap }}>
+    {data.high && <Text variant={chartRecipe.summary.labelVariant} tone="muted">{`${data.primary.label} · ${labels.high} ${data.high.category} ${format(data.high.value)}`}</Text>}
+    {data.low && <Text variant={chartRecipe.summary.labelVariant} tone="muted">{`${data.primary.label} · ${labels.low} ${data.low.category} ${format(data.low.value)}`}</Text>}
+  </View>;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
 
 export type LineChartProps = Readonly<{
+  /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+  summary?: ChartSummaryOptions;
   categories: readonly string[];
   series: readonly ChartSeries[];
   accessibilityLabel: string;
@@ -210,27 +228,28 @@ export type LineChartProps = Readonly<{
   scrubEmphasis?: "before" | "after";
 } & FocusProps>;
 
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showAxis = !!summary, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [width, onLayout] = useWidth();
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
+  const { focus, scrubbing, set, release } = useFocus({ ...focusProps, holdOnRelease: focusProps.holdOnRelease ?? !!summary }, available.at(-1) ?? null, categories);
   // The persistent cursor bubble occupies the top row. Reserve it in the geometry,
   // plus room below the low point, so neither extreme label is covered or clipped.
   const insets = useMemo(() => {
     const base = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     return {
       ...base,
-      top: base.top + (focusProps.showFocusLabel ? spacing.xxxl : 0),
-      bottom: extremes ? Math.max(base.bottom, spacing.lg) : base.bottom,
+      top: base.top + (!summary && focusProps.showFocusLabel ? spacing.xxxl : 0),
+      bottom: !summary && extremes ? Math.max(base.bottom, spacing.lg) : base.bottom,
     };
-  }, [showAxis, valueAxis, focusProps.showFocusLabel, !!extremes]);
+  }, [showAxis, valueAxis, focusProps.showFocusLabel, !!extremes, !!summary]);
   const g = useMemo(() => width > 0 ? resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, domain, includeZero }) : null, [categories, series, width, height, insets, invert, stacked, domain, includeZero]);
   const handlers = useScrub(x => g ? nearestChartIndex(g.xs, x, available) : null, index => set(index, true), release);
   const showArea = area ?? series.length === 1;
   const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
-  const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
-  return <View accessible accessibilityRole="adjustable" accessibilityLabel={accessibilityLabel} accessibilityHint={describeChart(categories, series, formatValue, missingLabel)}
+  const summaryData = summary ? resolveChartSummary(categories, series, focus, summary) : null;
+  const marks = extremes && !summary && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
+  const plot = <View accessible accessibilityRole="adjustable" accessibilityLabel={accessibilityLabel} accessibilityHint={describeChart(categories, series, formatValue, missingLabel)}
     accessibilityValue={{ text: focus === null ? missingLabel : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }}
     accessibilityActions={[{ name: "increment" }, { name: "decrement" }]} onAccessibilityAction={event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false)}
     onLayout={onLayout} style={{ height }} {...handlers}>
@@ -273,13 +292,15 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
         const above = index === (invert ? marks.min : marks.max);
         return p ? <ChartLabel key={label} x={Math.min(g.plot.right - 4, Math.max(g.plot.left + 4, p.x))} y={Math.max(10, Math.min(height - 2, p.y + (above ? -10 : 16)))} fontWeight={textRecipe.emphasis.medium} fill={palette.label} textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</ChartLabel> : null;
       })}
-      {showAxis && categories.length > 0 && <>
-        <ChartLabel x={g.xs[0]!} y={height - 4} fill={palette.label} textAnchor="start">{categories[0]}</ChartLabel>
-        <ChartLabel x={g.xs.at(-1)!} y={height - 4} fill={palette.label} textAnchor="end">{categories.at(-1)}</ChartLabel>
-      </>}
+      {showAxis && resolveChartCategoryTicks(categories, g.plot.right - g.plot.left).map(index => <ChartLabel key={index} x={g.xs[index]!} y={height - 4} fill={palette.label} textAnchor={index === 0 ? "start" : index === categories.length - 1 ? "end" : "middle"}>{categories[index]}</ChartLabel>)}
     </Svg>}
-    {g && (scrubbing || focusProps.showFocusLabel) && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
+    {g && !summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
   </View>;
+  return summaryData ? <View style={{ gap: chartRecipe.summary.gap }}>
+    <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={palette.seriesColor} format={formatValue} missingLabel={missingLabel} />
+    {plot}
+    {extremes && <FixedChartExtremes data={summaryData} labels={extremes} format={formatValue} />}
+  </View> : plot;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -287,6 +308,8 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
 // ---------------------------------------------------------------------------------------------
 
 export type BarChartProps = Readonly<{
+  /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+  summary?: ChartSummaryOptions;
   categories: readonly string[];
   series: readonly ChartSeries[];
   accessibilityLabel: string;
@@ -301,14 +324,15 @@ export type BarChartProps = Readonly<{
   animateChanges?: boolean;
 } & FocusProps>;
 
-export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, ...focusProps }: BarChartProps) {
+export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, summary, showAxis = !!summary, showValues = false, animateChanges = false, ...focusProps }: BarChartProps) {
   const palette = useChartPalette();
   const [width, onLayout] = useWidth();
   const vertical = orientation === "vertical";
   // Horizontal bars grow with the category count so labels never overlap (gifted-charts horizontal mode).
   const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
+  const { focus, scrubbing, set } = useFocus(focusProps, summary ? available.at(-1) ?? null : null, categories);
+  const summaryData = summary ? resolveChartSummary(categories, series, focus, summary) : null;
   const insets = vertical
     ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
     : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
@@ -318,7 +342,7 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
     return categories.map(label => { const occurrence = occurrences.get(label) ?? 0; occurrences.set(label, occurrence + 1); return JSON.stringify([label, occurrence]); });
   }, [categories]);
   const handlers = useScrub((x, y) => g ? nearestChartIndex(g.centers, vertical ? x : y, available) : null, index => set(index, true), () => set(focus, false));
-  return <View accessible accessibilityRole="adjustable" accessibilityLabel={accessibilityLabel} accessibilityHint={describeChart(categories, series, formatValue, missingLabel)}
+  const plot = <View accessible accessibilityRole="adjustable" accessibilityLabel={accessibilityLabel} accessibilityHint={describeChart(categories, series, formatValue, missingLabel)}
     accessibilityValue={{ text: focus === null ? "" : `${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(", ")}` }}
     accessibilityActions={[{ name: "increment" }, { name: "decrement" }]} onAccessibilityAction={event => set(stepChartIndex(available, focus, event.nativeEvent.actionName === "increment" ? 1 : -1), false)}
     onLayout={onLayout} style={{ height: resolvedHeight }} {...handlers}>
@@ -333,8 +357,12 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <ChartLabel key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</ChartLabel>
         : <ChartLabel key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</ChartLabel>)}
     </Svg>}
-    {g && (scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
+    {g && !summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
   </View>;
+  return summaryData ? <View style={{ gap: chartRecipe.summary.gap }}>
+    <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={palette.seriesColor} format={formatValue} missingLabel={missingLabel} />
+    {plot}
+  </View> : plot;
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -3,10 +3,35 @@ import {
   areaPath, arcPath, describeChart, linePath, nearestChartIndex, nearestScatterPoint, niceTicks, observedIndices,
   resolveBarGeometry, resolveChartDomain, resolveLineGeometry, resolvePieGeometry, resolveRadarGeometry,
   resolveScatterGeometry, scaleLinear, seriesExtremes, splitSegments, stackValues, stepChartIndex, validateChartSeries,
+  resolveChartSummary, resolveChartCategoryTicks,
 } from "../src/chart.js";
 
 const categories = ["3월", "4월", "5월", "6월"];
 const ops = { id: "ops", label: "OPS", values: [0.8, null, 0.9, 1.0] };
+
+it("resolves summary values and extrema from the named primary series, not paint order", () => {
+  const past = { id: "past", label: "과거", values: [9, 8, 7, 6] };
+  const result = resolveChartSummary(categories, [past, ops], 1, { seriesId: "ops", label: "기록" });
+  expect(result.label).toBe("기록");
+  expect(result.category).toBe("4월");
+  expect(result.value).toBeNull();
+  expect(result.items.map(item => [item.series.id, item.index, item.value])).toEqual([["ops", 1, null], ["past", 0, 8]]);
+  expect(result.high).toEqual({ category: "6월", value: 1 });
+  expect(result.low).toEqual({ category: "3월", value: .8 });
+  expect(() => resolveChartSummary(categories, [ops], 0, { seriesId: "unknown" })).toThrow(/Unknown/);
+  expect(resolveChartSummary(categories, [{ ...ops, values: [0, null, null, null] }], 0, {}).value).toBe(0);
+  expect(resolveChartSummary(categories, [ops], 99, {}).category).toBeNull();
+});
+
+it("keeps calendar ticks ordered, bounded and sparse at a measured width", () => {
+  const months = Array.from({ length: 8 }, (_, i) => `${i + 3}월`);
+  expect(resolveChartCategoryTicks(months, 276)).toEqual([0, 2, 5, 7]);
+  expect(resolveChartCategoryTicks(["2025", "2026"], 80)).toEqual([0, 1]);
+  expect(resolveChartCategoryTicks(["2026"], 276)).toEqual([0]);
+  expect(resolveChartCategoryTicks([], 276)).toEqual([]);
+  expect(resolveChartCategoryTicks(months, 0)).toEqual([]);
+  expect(resolveChartCategoryTicks(["아주 긴 첫 번째 기간", "아주 긴 마지막 기간"], 100)).toEqual([0]);
+});
 
 describe("chart validation", () => {
   it("rejects mismatched lengths, empty labels and duplicate ids", () => {

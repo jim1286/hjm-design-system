@@ -9,6 +9,14 @@
 [Progress](progress.md), 연간 일별 밀도는 [ActivityHeatmap](activity-heatmap.md), 정확한 값의
 비교·정렬은 [DataTable](data-table.md)이 맡는다. 이 계약은 그 사이의 **그림으로 읽는 수치**를 맡는다.
 
+## 고정 요약의 소유권 (2026-11-06 · 개발 소스)
+
+오늘야구에서 여러 선·채움·선택값·최고/최저가 겹친 문제와 제품 내부 개선만으로 다른 소비자가 재사용할 수 없던
+문제를 해결하기 위해 `LineChart`·`BarChart`의 `summary` 옵션을 추가했다. HJM이 선택 상태·고정 값·비교 범례·축·주석의
+배치를 소유하고 제품은 계열·주 계열 id·문구·단위·색을 준다. plot 전용 소비자는 기존 API를 유지한다.
+`resolveChartSummary`는 주 계열과 그 수치·최고/최저를 그림 순서와 독립해 계산하며 없는 값을 0으로 바꾸지 않는다.
+`resolveChartCategoryTicks`는 측정한 plot 폭에 맞춰 중간 범주 눈금을 선택한다. 상세는 [사용법](usage/components/chart.md#고정-요약-모드-개발-소스--미게시)을 따른다.
+
 ## 결정 번복 — 2026-10-14
 
 **이전 결정.** 2026-09 라이브러리 격차 분석은 `Chart`를 "토큰만 채택"으로 닫았고

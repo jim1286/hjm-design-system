@@ -15,6 +15,7 @@ import {
 import type { ColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDatavizSeriesColor } from "@hjmds/design-contracts/dataviz";
 import {
+  resolveChartSummary, resolveChartCategoryTicks, type ChartSummaryOptions,
   prepareChartLineMorph,
   areaPath,
   chartRecipe,
@@ -275,11 +276,28 @@ function MotionBar({ bar, animate, vertical = true, rounded = true, ...rest }: R
   return <path {...rest} ref={node} d={barPath(bar, vertical, bar.value < 0, rounded)} />;
 }
 
+type SummaryData = ReturnType<typeof resolveChartSummary>;
+function FixedChartSummary({ data, colorOf, format, missingLabel, compact }: { compact?: boolean | undefined; data: SummaryData; colorOf: (series: ChartSeries, index: number) => string; format(value: number): string; missingLabel: string }) {
+  return <div className="hjm-chart__summary" data-compact={compact || undefined}>
+    <span className="hjm-chart__summary-label">{data.label}{data.category === null ? "" : ` · ${data.category}`}</span>
+    <span className="hjm-chart__summary-value">{data.value === null ? missingLabel : format(data.value)}</span>
+    {data.items.length > 1 && <ChartLegend layout="stack" items={data.items.map(item => ({ id: item.series.id, label: item.series.label, color: colorOf(item.series, item.index), value: item.value === null ? missingLabel : format(item.value) }))} />}
+  </div>;
+}
+function FixedChartExtremes({ data, labels, format }: { data: SummaryData; labels: { high: string; low: string }; format(value: number): string }) {
+  return <div className="hjm-chart__summary-extremes">
+    {data.high && <span>{`${data.primary.label} · ${labels.high} ${data.high.category} ${format(data.high.value)}`}</span>}
+    {data.low && <span>{`${data.primary.label} · ${labels.low} ${data.low.category} ${format(data.low.value)}`}</span>}
+  </div>;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
 
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
+  /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+  summary?: ChartSummaryOptions;
   curve?: ChartCurve;
   /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
   missingConnection?: "none" | "dotted" | "bridge";
@@ -307,24 +325,24 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
 
 export function LineChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320,
-  curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, showAxis = false,
+  curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showAxis = !!summary,
   valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, className, layoutStyle, ...focusProps
 }: LineChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
   const [measure, width] = useMeasuredWidth(fallbackWidth);
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set, release } = useFocus(focusProps, available.at(-1) ?? null, categories);
+  const { focus, scrubbing, set, release } = useFocus({ ...focusProps, holdOnRelease: focusProps.holdOnRelease ?? !!summary }, available.at(-1) ?? null, categories);
   // The persistent cursor bubble occupies the top row. Reserve it in the geometry,
   // plus room below the low point, so neither extreme label is covered or clipped.
   const insets = useMemo(() => {
     const base = showAxis || valueAxis ? chartRecipe.insets.axis : chartRecipe.insets.plot;
     return {
       ...base,
-      top: base.top + (focusProps.showFocusLabel ? spacing.xxxl : 0),
-      bottom: extremes ? Math.max(base.bottom, spacing.lg) : base.bottom,
+      top: base.top + (!summary && focusProps.showFocusLabel ? spacing.xxxl : 0),
+      bottom: !summary && extremes ? Math.max(base.bottom, spacing.lg) : base.bottom,
     };
-  }, [showAxis, valueAxis, focusProps.showFocusLabel, !!extremes]);
+  }, [showAxis, valueAxis, focusProps.showFocusLabel, !!extremes, !!summary]);
   const g = useMemo(() => resolveLineGeometry({
     categories, series, width, height, insets, invert, stacked,
     ...(domain ? { domain } : {}), ...(includeZero === undefined ? {} : { includeZero }),
@@ -333,7 +351,8 @@ export function LineChart({
   const handlers = useScrub((x) => nearestChartIndex(g.xs, x, available), (index) => set(index, true), release);
   const showArea = area ?? series.length === 1;
   const reference = referenceValue === "first" ? series[0]?.values.find(isChartNumber) : referenceValue;
-  const marks = extremes && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
+  const summaryData = summary ? resolveChartSummary(categories, series, focus, summary) : null;
+  const marks = extremes && !summary && !scrubbing ? seriesExtremes(series[0]?.values ?? []) : null;
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const next = keyStep(event, available, focus, ["ArrowRight", "ArrowUp"], ["ArrowLeft", "ArrowDown"]);
     if (next === undefined) return;
@@ -342,6 +361,7 @@ export function LineChart({
   };
   return (
     <div ref={measure} className={classNames("hjm-chart", "hjm-chart--line", className)} style={{ ...chromeStyle, ...layoutStyle }} data-scrubbing={scrubbing || undefined}>
+      {summaryData && <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={colorOf} format={formatValue} missingLabel={missingLabel} />}
       <div
         className="hjm-chart__plot"
         role="slider"
@@ -429,15 +449,11 @@ export function LineChart({
                   textAnchor={p.x < width * 0.2 ? "start" : p.x > width * 0.8 ? "end" : "middle"}>{`${label} ${formatValue(p.value)}`}</text>
               );
             }) : null}
-          {showAxis && categories.length > 0 ? (
-            <>
-              <text className="hjm-chart__label" x={g.xs[0]} y={height - 4} textAnchor="start">{categories[0]}</text>
-              {categories.length > 1 ? <text className="hjm-chart__label" x={g.xs.at(-1)} y={height - 4} textAnchor="end">{categories.at(-1)}</text> : null}
-            </>
-          ) : null}
+          {showAxis && resolveChartCategoryTicks(categories, g.plot.right - g.plot.left).map(index => <text key={index} className="hjm-chart__label" x={g.xs[index]} y={height - 4} textAnchor={index === 0 ? "start" : index === categories.length - 1 ? "end" : "middle"}>{categories[index]}</text>)}
         </svg>
-        {(scrubbing || focusProps.showFocusLabel) && focus !== null && g.xs[focus] !== undefined ? <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} /> : null}
+        {!summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && g.xs[focus] !== undefined ? <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} /> : null}
       </div>
+      {summaryData && extremes && <FixedChartExtremes data={summaryData} labels={extremes} format={formatValue} />}
       <p id={descriptionId} className="hjm-visually-hidden">{describeChart(categories, series, formatValue, missingLabel)}</p>
     </div>
   );
@@ -448,6 +464,8 @@ export function LineChart({
 // ---------------------------------------------------------------------------------------------
 
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
+  /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+  summary?: ChartSummaryOptions;
   orientation?: ChartOrientation;
   layout?: ChartBarLayout;
   /** Value label at each bar end (the stack total for stacked bars). */
@@ -469,7 +487,7 @@ function barPath(bar: ChartBar, vertical: boolean, negative: boolean, round: boo
 
 export function BarChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth = 320, orientation = "vertical",
-  layout = "grouped", domain, showAxis = false, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps
+  layout = "grouped", domain, summary, showAxis = !!summary, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps
 }: BarChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
@@ -478,7 +496,8 @@ export function BarChart({
   // Horizontal bars grow with the category count so labels never overlap (same rule as Native).
   const resolvedHeight = height ?? (vertical ? chartRecipe.heights.regular : Math.max(chartRecipe.heights.compact, categories.length * 36 + spacing.lg));
   const available = useMemo(() => observedIndices(series), [series]);
-  const { focus, scrubbing, set } = useFocus(focusProps, null, categories);
+  const { focus, scrubbing, set } = useFocus(focusProps, summary ? available.at(-1) ?? null : null, categories);
+  const summaryData = summary ? resolveChartSummary(categories, series, focus, summary) : null;
   const insets: ChartInsets = vertical
     ? (showAxis ? chartRecipe.insets.axis : { ...chartRecipe.insets.plot, bottom: spacing.lg })
     : { top: spacing.xs, right: showValues ? 48 : spacing.sm, bottom: spacing.xs, left: 72 };
@@ -515,6 +534,7 @@ export function BarChart({
     : null;
   return (
     <div ref={measure} className={classNames("hjm-chart", "hjm-chart--bar", className)} style={{ ...chromeStyle, ...layoutStyle }} data-orientation={orientation} data-scrubbing={scrubbing || undefined}>
+      {summaryData && <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={colorOf} format={formatValue} missingLabel={missingLabel} />}
       <div
         className="hjm-chart__plot"
         role="slider"
@@ -565,7 +585,7 @@ export function BarChart({
               : null
             : <text key={`c${i}`} className="hjm-chart__label" data-focused={focus === i || undefined} x={g.plot.left - 8} y={g.centers[i]} dominantBaseline="middle" textAnchor="end">{category}</text>)}
         </svg>
-        {(scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && g.centers[focus] !== undefined
+        {!summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && g.centers[focus] !== undefined
           ? <CursorBubble x={g.centers[focus]!} width={width} text={valueText(categories, series, focus, formatValue, missingLabel)} />
           : null}
       </div>

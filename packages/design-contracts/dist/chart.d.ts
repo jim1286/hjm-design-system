@@ -39,6 +39,50 @@ export type ChartBarLayout = "grouped" | "stacked";
  * not adopt ChartLegend because Native only stacked rows.
  */
 export type ChartLegendLayout = "stack" | "inline";
+/** Fixed selected-value summary shared by Cartesian charts. Text and the primary series are product inputs. */
+export type ChartSummaryOptions = Readonly<{
+    label?: string;
+    seriesId?: string;
+    compact?: boolean;
+}>;
+/** Preserve missing values and numeric extrema; paint order must not choose the product's primary series. */
+export declare function resolveChartSummary(categories: readonly string[], series: readonly ChartSeries[], focus: number | null, options: ChartSummaryOptions): {
+    primary: Readonly<{
+        id: string;
+        /** Visible legend text and the series' accessible name. Product-localized. */
+        label: string;
+        /** One value per category; `null` is a missing observation (drawn as a gap, never as zero). */
+        values: readonly ChartValue[];
+        /** Product-owned series color; renderers fall back to the dataviz series palette by index. */
+        color?: string;
+    }>;
+    label: string;
+    category: string | null;
+    value: number | null;
+    items: {
+        series: Readonly<{
+            id: string;
+            /** Visible legend text and the series' accessible name. Product-localized. */
+            label: string;
+            /** One value per category; `null` is a missing observation (drawn as a gap, never as zero). */
+            values: readonly ChartValue[];
+            /** Product-owned series color; renderers fall back to the dataviz series palette by index. */
+            color?: string;
+        }>;
+        index: number;
+        value: number | null;
+    }[];
+    high: {
+        category: string;
+        value: number;
+    } | null;
+    low: {
+        category: string;
+        value: number;
+    } | null;
+};
+/** At most four readable calendar labels, using the measured plot width instead of shrinking typography. */
+export declare function resolveChartCategoryTicks(categories: readonly string[], width: number): readonly number[];
 export type ChartPlot = Readonly<{
     index: number;
     seriesIndex: number;
@@ -47,6 +91,12 @@ export type ChartPlot = Readonly<{
     value: number;
 }>;
 export declare const chartRecipe: {
+    readonly summary: {
+        readonly gap: 12;
+        readonly labelVariant: "caption";
+        readonly valueVariant: "title";
+        readonly compactValueVariant: "bodyLarge";
+    };
     readonly heights: {
         readonly sparkline: 28;
         readonly compact: 128;

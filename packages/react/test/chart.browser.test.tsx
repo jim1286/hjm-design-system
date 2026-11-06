@@ -1,5 +1,6 @@
 import { contrastRatio } from "@hjmds/design-contracts/palette-contrast";
 import { act } from "react";
+import { page } from "vitest/browser";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { BarChart, ChartLegend, LineChart, PieChart, RadarChart, ScatterChart, Sparkline } from "../src/chart.js";
@@ -178,5 +179,52 @@ it.each([false, true])("keeps both extrema clear of the persistent cursor bubble
     const bounds = label.getBoundingClientRect();
     expect(bounds.top).toBeGreaterThan(bubble.bottom);
     expect(bounds.bottom).toBeLessThanOrEqual(plot.bottom);
+  }
+});
+
+it("keeps a primary-series summary and comparison values above the plot while moving extrema below", async () => {
+  await render(<LineChart categories={months} series={[{ id: "old", label: "2025", values: [9, 8, 7, 6] }, ...ops]}
+    summary={{ seriesId: "ops", label: "월별 OPS" }} extremes={{ high: "최고", low: "최저" }} showFocusLabel
+    accessibilityLabel="비교" formatValue={format} missingLabel="기록 없음" />);
+  const summary = host.querySelector('.hjm-chart__summary')!;
+  expect(summary.textContent).toContain('월별 OPS · 6월');
+  expect(summary.querySelector('.hjm-chart__summary-value')!.textContent).toBe('1.000');
+  expect(host.querySelectorAll('.hjm-chart__area')).toHaveLength(0);
+  expect(host.querySelector('.hjm-chart__bubble')).toBeNull();
+  expect(host.querySelector('.hjm-chart__extreme')).toBeNull();
+  expect(host.querySelector('.hjm-chart__summary-extremes')!.textContent).toContain('OPS · 최고 6월 1.000');
+  expect(host.querySelector('.hjm-chart__summary-extremes')!.textContent).not.toContain('9.000');
+  expect(summary.compareDocumentPosition(slider()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  await press('ArrowLeft');
+  expect(summary.querySelector('.hjm-chart__summary-value')!.textContent).toBe('0.900');
+  expect(summary.textContent).toContain('2025');
+  expect(summary.textContent).toContain('7.000');
+  const rect = slider().getBoundingClientRect();
+  await act(async () => { slider().dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, button: 0, clientX: rect.left + 38, clientY: rect.top + 40, bubbles: true })); });
+  expect(host.querySelector('.hjm-chart__bubble')).toBeNull();
+  await act(async () => { slider().dispatchEvent(new PointerEvent('pointerup', { pointerId: 1, button: 0, bubbles: true })); });
+  expect(summary.querySelector('.hjm-chart__summary-value')!.textContent).toBe('0.800');
+});
+
+it("shows missing primary values as missing and keeps a summary for bars", async () => {
+  await render(<BarChart categories={months} series={[...ops, { id: 'other', label: '다른 시즌', values: [1, 2, 3, 4] }]} summary={{ seriesId: 'ops' }} focusIndex={1}
+    accessibilityLabel="막대 비교" formatValue={format} missingLabel="기록 없음" />);
+  expect(host.querySelector('.hjm-chart__summary-value')!.textContent).toBe('기록 없음');
+  expect(host.querySelector('.hjm-chart__summary')!.textContent).toContain('2.000');
+  expect(host.querySelectorAll('.hjm-chart__label').length).toBeGreaterThan(0);
+});
+
+it.each(["light", "dark"] as const)("keeps fixed summaries and external extrema separated at mobile and desktop widths (%s)", async theme => {
+  for (const width of [320, 960]) for (const colors of [["#be123c", "#546174"], ["#0369a1", "#7c3aed"]]) {
+    await act(async () => { host.style.width = `${width}px`; root.render(<HjmProvider theme={theme} reducedMotion><div style={{ padding: 16, background: "var(--hjm-color-bg)" }}>
+      <LineChart categories={months} series={[{ ...ops[0]!, color: colors[0]! }, { id: "past", label: "지난 시즌", values: [.7, .8, .75, .9], color: colors[1]! }]}
+        summary={{ label: "월별 OPS", seriesId: "ops" }} extremes={{ high: "최고", low: "최저" }} accessibilityLabel="기록 비교" formatValue={format} missingLabel="기록 없음" />
+    </div></HjmProvider>); });
+    const chart = host.querySelector<HTMLElement>('.hjm-chart')!;
+    expect(chart.scrollWidth).toBeLessThanOrEqual(chart.clientWidth);
+    expect(host.querySelector('.hjm-chart__summary')!.getBoundingClientRect().bottom).toBeLessThanOrEqual(slider().getBoundingClientRect().top);
+    expect(host.querySelector('.hjm-chart__summary-extremes')!.getBoundingClientRect().top).toBeGreaterThanOrEqual(slider().getBoundingClientRect().bottom);
+    const evidenceDir = (import.meta as ImportMeta & { env: { VITE_CHART_SUMMARY_EVIDENCE_DIR?: string } }).env.VITE_CHART_SUMMARY_EVIDENCE_DIR;
+    if (evidenceDir && colors[0] === '#be123c') await page.screenshot({ path: `${evidenceDir}/${theme}-${width}.png` });
   }
 });

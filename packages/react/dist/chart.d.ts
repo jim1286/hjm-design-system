@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type ChartLegendLayout, type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type ChartSummaryOptions, type ChartLegendLayout, type PieVisibilitySummary, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FocusDetail = Readonly<{
     scrubbing: boolean;
@@ -34,6 +34,8 @@ type CartesianCommon = ChartRootProps & Readonly<{
     showAxis?: boolean;
 }>;
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
+    /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+    summary?: ChartSummaryOptions;
     curve?: ChartCurve;
     /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
     missingConnection?: "none" | "dotted" | "bridge";
@@ -61,15 +63,17 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     /** Overrides grid/label ticks. */
     ticks?: readonly number[];
 }>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, summary, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
+    /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+    summary?: ChartSummaryOptions;
     orientation?: ChartOrientation;
     layout?: ChartBarLayout;
     /** Value label at each bar end (the stack total for stacked bars). */
     showValues?: boolean;
     animateChanges?: boolean;
 }>;
-export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, showAxis, showValues, animateChanges, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
+export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, summary, showAxis, showValues, animateChanges, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
 export type ChartLegendItem = Readonly<{
     id: string;
     label: string;

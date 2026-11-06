@@ -168,3 +168,34 @@ it.each([false, true])("keeps both extreme labels below the persistent bubble an
     }
   } finally { act(() => tree.unmount()); }
 });
+
+it("keeps the selected primary series and extrema outside Native plots and holds the released month", () => {
+  const tree = render(<LineChart categories={categories} series={[{ id: 'past', label: '2025', values: [9, 8, 7] }, ...series]}
+    summary={{ seriesId: 'ops', label: '월별 OPS' }} extremes={{ high: '최고', low: '최저' }} showFocusLabel
+    accessibilityLabel="시즌 비교" formatValue={fmt} missingLabel="기록 없음" />);
+  const text = () => tree.root.findAll(n => typeof n.type === 'string' && typeof n.props.children === 'string').map(n => n.props.children).join(' ');
+  try {
+    layout(tree);
+    expect(text()).toContain('월별 OPS · 5월');
+    expect(text()).toContain('OPS · 최고 5월 0.900');
+    expect(text()).not.toContain('최고 3월 9.000');
+    expect(tree.root.findAll(n => typeof n.type === 'string' && n.props.stopOpacity !== undefined)).toHaveLength(4);
+    expect(tree.root.findAll(n => typeof n.type === 'string' && n.props.fill?.startsWith?.('url('))).toHaveLength(0);
+    act(() => adjustable(tree).props.onResponderGrant({ nativeEvent: { locationX: 38, locationY: 50 } }));
+    act(() => adjustable(tree).props.onResponderRelease({ nativeEvent: {} }));
+    expect(adjustable(tree).props.accessibilityValue.text).toContain('3월');
+    expect(text()).toContain('월별 OPS · 3월');
+    expect(tree.root.findAll(n => typeof n.type === 'string' && n.props.y !== undefined && typeof n.props.children === 'string' && n.props.children.includes('최고'))).toHaveLength(0);
+  } finally { act(() => tree.unmount()); }
+});
+
+it("shows a missing primary value and present comparison value in the Native bar summary", () => {
+  const tree = render(<BarChart categories={categories} series={[...series, { id: 'other', label: '다른 시즌', values: [1, 2, 3] }]}
+    summary={{ seriesId: 'ops' }} focusIndex={1} accessibilityLabel="비교" formatValue={fmt} missingLabel="기록 없음" />);
+  try {
+    layout(tree);
+    const texts = tree.root.findAll(n => typeof n.type === 'string' && typeof n.props.children === 'string').map(n => n.props.children);
+    expect(texts).toContain('기록 없음');
+    expect(texts).toContain('2.000');
+  } finally { act(() => tree.unmount()); }
+});

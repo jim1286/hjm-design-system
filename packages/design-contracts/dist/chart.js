@@ -1,6 +1,43 @@
 import { datavizChromeTokens } from "./dataviz.js";
 import { radius, spacing, stroke } from "./foundations.js";
+/** Preserve missing values and numeric extrema; paint order must not choose the product's primary series. */
+export function resolveChartSummary(categories, series, focus, options) {
+    const primary = options.seriesId === undefined ? series[0] : series.find(item => item.id === options.seriesId);
+    if (!primary)
+        throw new TypeError(`Unknown chart summary series: ${options.seriesId ?? "(empty)"}`);
+    const index = focus !== null && Number.isInteger(focus) && focus >= 0 && focus < categories.length ? focus : null;
+    const value = index === null ? null : primary.values[index];
+    const marks = seriesExtremes(primary.values);
+    const extreme = (at) => ({ category: categories[at], value: primary.values[at] });
+    return {
+        primary,
+        label: options.label ?? primary.label,
+        category: index === null ? null : categories[index],
+        value: isChartNumber(value) ? value : null,
+        items: [primary, ...series.filter(item => item.id !== primary.id)].map(item => {
+            const selected = index === null ? null : item.values[index];
+            return { series: item, index: series.indexOf(item), value: isChartNumber(selected) ? selected : null };
+        }),
+        high: marks ? extreme(marks.max) : null,
+        low: marks ? extreme(marks.min) : null,
+    };
+}
+/** At most four readable calendar labels, using the measured plot width instead of shrinking typography. */
+export function resolveChartCategoryTicks(categories, width) {
+    if (!categories.length || width <= 0)
+        return [];
+    if (categories.length === 1)
+        return [0];
+    const estimatedWidth = (label) => Array.from(label).reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 12 : 7), 0);
+    const gap = spacing.sm;
+    if (estimatedWidth(categories[0]) + estimatedWidth(categories.at(-1)) + gap > width)
+        return [0];
+    const step = Math.max(48, ...categories.map(label => estimatedWidth(label) + gap));
+    const count = Math.min(categories.length, 4, Math.max(2, Math.floor(width / step) + 1));
+    return Array.from({ length: count }, (_, index) => Math.round(index * (categories.length - 1) / (count - 1)));
+}
 export const chartRecipe = {
+    summary: { gap: spacing.sm, labelVariant: "caption", valueVariant: "title", compactValueVariant: "bodyLarge" },
     heights: { sparkline: 28, compact: 128, regular: 180, tall: 240 },
     insets: {
         plot: { top: spacing.lg, right: spacing.xs, bottom: spacing.xs, left: spacing.xs },

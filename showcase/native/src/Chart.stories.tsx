@@ -13,18 +13,14 @@ function Example({ title, children }: { title: string; children: React.ReactNode
   return <Stack gap="sm"><Text variant="title" emphasis="medium">{title}</Text>{children}</Stack>;
 }
 
-/** Stock-style quote: the header follows the scrubbed month, release returns to the latest one. */
+/** HJM owns the fixed selected-value summary; the example supplies period data and localized labels. */
 function LineExample() {
-  const [focus, setFocus] = useState<number | null>(null);
   const [recent, setRecent] = useState(false);
   const labels = recent ? months.slice(-3) : months;
   const values = opsSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
-  const index = focus ?? values[0]!.values.length - 1, value = values[0]!.values[index];
   return <Example title={copy.line}>
-    <Text variant="heading">{value == null ? copy.missing : formatRate(value)}</Text>
-    <Text variant="caption" tone="muted">{labels[index]}</Text>
-    <SegmentedControl label={copy.period} items={copy.periods} value={recent ? "recent" : "all"} onValueChange={(next) => { setFocus(null); setRecent(next === "recent"); }} />
-    <LineChart animateChanges scrubEmphasis="before" categories={labels} series={values} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} referenceValue="first" extremes={{ high: copy.high, low: copy.low }} onFocusChange={(next, { scrubbing }) => setFocus(scrubbing ? next : null)} />
+    <SegmentedControl label={copy.period} items={copy.periods} value={recent ? "recent" : "all"} onValueChange={(next) => { setRecent(next === "recent"); }} />
+    <LineChart summary={{ label: copy.line }} animateChanges scrubEmphasis="before" categories={labels} series={values} accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} referenceValue="first" extremes={{ high: copy.high, low: copy.low }} />
   </Example>;
 }
 
@@ -33,7 +29,7 @@ function BarExample() {
   const categories = recent ? months.slice(-3) : months;
   const series = homeRunSeries.map(item => ({ ...item, values: recent ? item.values.slice(-3) : item.values }));
   return <Example title={copy.bar}><SegmentedControl label={copy.period} items={copy.periods} value={recent ? "recent" : "all"} onValueChange={(next) => setRecent(next === "recent")} />
-    <BarChart animateChanges categories={categories} series={series} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} />
+    <BarChart summary={{ label: copy.bar }} animateChanges categories={categories} series={series} showValues accessibilityLabel={copy.bar} formatValue={formatCount} missingLabel={copy.missing} />
   </Example>;
 }
 
@@ -48,7 +44,7 @@ function Gallery({ only }: { only?: "line" | "bar" | "horizontal" | "stacked" | 
   const show = (kind: typeof only) => only === undefined || only === kind;
   return <ScrollView><Section title="차트" description="눌러서 끌면 값을 따라가고, 키보드 화살표로도 옮길 수 있어요."><Stack gap="xl">
     {show("line") && <LineExample />}
-    {show("line") && only === "line" && <Example title={`${copy.line} · 비교`}><LineChart categories={months} series={comparisonSeries} curve="monotone" showAxis accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} /></Example>}
+    {show("line") && only === "line" && <Example title={`${copy.line} · 비교`}><LineChart categories={months} series={comparisonSeries} summary={{ label: copy.line }} curve="monotone" accessibilityLabel={copy.line} formatValue={formatRate} missingLabel={copy.missing} /></Example>}
     {show("bar") && <BarExample />}
     {show("horizontal") && <Example title={copy.horizontal}><BarChart categories={teams} series={teamHomeRuns} orientation="horizontal" showValues accessibilityLabel={copy.horizontal} formatValue={formatCount} missingLabel={copy.missing} /></Example>}
     {show("stacked") && <Example title={copy.stacked}><BarChart categories={months} series={hitMixSeries} layout="stacked" showAxis accessibilityLabel={copy.stacked} formatValue={formatCount} missingLabel={copy.missing} /></Example>}

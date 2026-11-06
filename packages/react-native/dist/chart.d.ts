@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type PieVisibilitySummary, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
+import { type ChartSummaryOptions, type PieVisibilitySummary, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum } from "@hjmds/design-contracts/components/chart";
 type FocusProps = Readonly<{
     /** Keep the selected-point tooltip visible after release, including tap selection. */
     showFocusLabel?: boolean;
@@ -15,6 +15,8 @@ type FocusProps = Readonly<{
     holdOnRelease?: boolean;
 }>;
 export type LineChartProps = Readonly<{
+    /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+    summary?: ChartSummaryOptions;
     categories: readonly string[];
     series: readonly ChartSeries[];
     accessibilityLabel: string;
@@ -45,8 +47,10 @@ export type LineChartProps = Readonly<{
     /** Keep the chosen side in series color; mute the other side. */
     scrubEmphasis?: "before" | "after";
 } & FocusProps>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, summary, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = Readonly<{
+    /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
+    summary?: ChartSummaryOptions;
     categories: readonly string[];
     series: readonly ChartSeries[];
     accessibilityLabel: string;
@@ -60,7 +64,7 @@ export type BarChartProps = Readonly<{
     showValues?: boolean;
     animateChanges?: boolean;
 } & FocusProps>;
-export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation, layout, domain, showAxis, showValues, animateChanges, ...focusProps }: BarChartProps): import("react").JSX.Element;
+export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation, layout, domain, summary, showAxis, showValues, animateChanges, ...focusProps }: BarChartProps): import("react").JSX.Element;
 export type ChartLegendItem = Readonly<{
     id: string;
     label: string;

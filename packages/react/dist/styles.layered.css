@@ -1518,6 +1518,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Chart ------------------------------------------------------------------- */
 /* Colors come from chartRecipe.chrome via --hjm-chart-* set inline by the renderer (2026-10-14). */
 .hjm-chart { position: relative; display: flex; flex-direction: column; gap: var(--hjm-space-xs); inline-size: 100%; min-inline-size: 0; }
+.hjm-chart__summary { display: flex; flex-direction: column; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-chart__summary-label, .hjm-chart__summary-extremes { color: var(--hjm-chart-axis-label); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); overflow-wrap: anywhere; }
+.hjm-chart__summary-value { color: var(--hjm-chart-legend-label); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-text-emphasis-strong); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hjm-chart__summary[data-compact] .hjm-chart__summary-value { font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
+.hjm-chart__summary-extremes { display: flex; flex-wrap: wrap; gap: var(--hjm-space-xs); }
 .hjm-chart__plot {
   position: relative;
   /* Horizontal drags scrub; vertical drags keep scrolling the page. */
