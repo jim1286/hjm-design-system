@@ -31,7 +31,7 @@ import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type CSSPropert
 import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { tableCellEmphasis, type TableHeatColors } from "./table-family.js";
+import { tableCellEmphasis, useTableHeatColors, type TableHeatColors } from "./table-family.js";
 import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide";
 import { CheckGlyph } from "./internal/lucide-glyph.js";
 
@@ -146,6 +146,7 @@ export const DataTable = forwardRef(function DataTable<
   }: DataTableProps<ColumnKey, RowKey>,
   forwardedRef: React.Ref<HTMLTableElement>,
 ) {
+  const heatBase = useTableHeatColors(heatColors);
   // Unconditional: `??` on the hook call would break the rules of hooks.
   const densityDefault = useHjmDensityDefault({ comfortable: "regular", compact: "compact" });
   const density = densityProp ?? densityDefault;
@@ -328,7 +329,7 @@ export const DataTable = forwardRef(function DataTable<
               ) : null}
               {columns.map((column, columnIndex) => {
                 const sticky = columnSticky(columnIndex);
-                const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatColors);
+                const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatBase);
                 // Sub-rows (TanStack `depth`) indent only the first column, which is the pinned one when pinning.
                 const depth = columnIndex === 0 ? row.depth ?? 0 : 0;
                 return (

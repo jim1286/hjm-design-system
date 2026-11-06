@@ -21,8 +21,8 @@ export function ProgressRingPreview() {
   return (
     <Section title="원으로 보는 진행" description="선형과 같은 값·같은 발표를 씁니다.">
       <Stack axis="inline" gap="lg" align="center" wrap>
-        <Progress label="읽은 분량" value={35} valueText="35%" shape="circular">35%</Progress>
-        <Progress label="오늘 목표" value={80} valueText="80%" shape="circular" tone="success" size="large">80%</Progress>
+        <Progress label="읽은 분량" value={35} valueText="35%" showValue={false} shape="circular">35%</Progress>
+        <Progress label="오늘 목표" value={80} valueText="80%" showValue={false} shape="circular" tone="success" size="large">80%</Progress>
         <Progress label="불러오는 중" shape="circular" size="small" />
         <Progress label="선형 비교" value={35} valueText="35%" />
       </Stack>

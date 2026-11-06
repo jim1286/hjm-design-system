@@ -36,6 +36,11 @@ type CartesianCommon = ChartRootProps & Readonly<{
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
     summary?: ChartSummaryOptions;
+    /**
+     * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+     * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+     */
+    showLegend?: boolean;
     curve?: ChartCurve;
     /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
     missingConnection?: "none" | "dotted" | "bridge";
@@ -63,17 +68,22 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
     /** Overrides grid/label ticks. */
     ticks?: readonly number[];
 }>;
-export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, summary, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
+export declare function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, curve, missingConnection, area, stacked, invert, domain, includeZero, referenceValue, extremes, summary, showLegend, showAxis, valueAxis, ticks: tickOverride, cursorLabel, animateChanges, scrubEmphasis, className, layoutStyle, ...focusProps }: LineChartProps): import("react").JSX.Element;
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
     /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
     summary?: ChartSummaryOptions;
+    /**
+     * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+     * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+     */
+    showLegend?: boolean;
     orientation?: ChartOrientation;
     layout?: ChartBarLayout;
     /** Value label at each bar end (the stack total for stacked bars). */
     showValues?: boolean;
     animateChanges?: boolean;
 }>;
-export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, summary, showAxis, showValues, animateChanges, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
+export declare function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth, orientation, layout, domain, summary, showLegend, showAxis, showValues, animateChanges, className, layoutStyle, ...focusProps }: BarChartProps): import("react").JSX.Element;
 export type ChartLegendItem = Readonly<{
     id: string;
     label: string;
@@ -162,9 +172,11 @@ export type SparklineProps = ChartRootProps & Readonly<{
     domain?: readonly [number, number];
     width?: number;
     height?: number;
+    /** `bridge` (default) joins interior gaps with a faint dashed guide; `none` leaves them broken. */
+    missingConnection?: "none" | "bridge";
     /** Omit when the adjacent text already states the value; the sparkline is then decorative. */
     accessibilityLabel?: string;
 }>;
-export declare function Sparkline({ values, color, invert, domain, width, height, accessibilityLabel, className, layoutStyle, }: SparklineProps): import("react").JSX.Element;
+export declare function Sparkline({ values, color, invert, domain, width, height, accessibilityLabel, missingConnection, className, layoutStyle, }: SparklineProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=chart.d.ts.map

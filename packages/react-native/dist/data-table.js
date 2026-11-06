@@ -7,6 +7,7 @@ import { dataTableColumnDefaults, dataTableDefaults, dataTableFamilyRecipe, data
 import { spacing, glyph } from "@hjmds/design-contracts/foundations";
 import { textRecipe } from "@hjmds/design-contracts/recipes";
 import { Text } from "./primitives.js";
+import { resolveDatavizDivergingColors } from "@hjmds/design-contracts/dataviz";
 import { useHjmNativeTheme } from "./provider.js";
 import ArrowUp from "lucide-react-native/icons/arrow-up";
 import ArrowDown from "lucide-react-native/icons/arrow-down";
@@ -53,7 +54,8 @@ export function DataTable({ columns, rows, labels, renderCell, getCellText, sort
             ? _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: labels.sortColumn(column.header, sortState?.columnId === column.id ? sortState : null), hitSlop: 4, onPress: () => onSortChange(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column))), style: style, children: content }, column.id)
             : _jsx(View, { accessibilityRole: "header", accessibilityLabel: column.header, style: style, children: content }, column.id);
     }
-    const heatBase = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
+    // Product colors, else the theme's dataviz diverging pair: the recipe `info` was violet, not the documented blue (2026-11-06).
+    const heatBase = heatColors ?? resolveDatavizDivergingColors(theme.environment.theme);
     function cell(node, column, pinnedColumn, emphasis, key, decoration = null, indent = 0) {
         const logicalAlign = column.align ?? dataTableColumnDefaults.align, align = alignOf(logicalAlign, direction);
         const tone = decoration?.tone ? dataTableFamilyRecipe.tone[decoration.tone] : null, heat = decoration?.heat ?? null;

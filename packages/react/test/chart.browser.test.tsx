@@ -142,6 +142,29 @@ it("keeps an unlabeled sparkline decorative and names a labeled one", async () =
   expect(labeled!.getAttribute("aria-label")).toBe("최근 흐름");
 });
 
+it("names the series of multi-series charts unless a summary or the product already does", async () => {
+  const series = [{ id: "a", label: "단타", values: [3, 4, 5, 6] }, { id: "b", label: "홈런", values: [1, 2, 3, 4] }];
+  const legend = () => [...host.querySelectorAll(".hjm-chart-legend__item")].map((item) => item.textContent);
+  await render(<BarChart categories={months} series={series} layout="stacked" accessibilityLabel="안타" formatValue={String} missingLabel="-" />);
+  expect(legend()).toEqual(["단타", "홈런"]);
+  await render(<BarChart categories={months} series={series} layout="stacked" showLegend={false} accessibilityLabel="안타" formatValue={String} missingLabel="-" />);
+  expect(legend()).toEqual([]);
+  await render(<LineChart categories={months} series={ops} accessibilityLabel="OPS" formatValue={format} missingLabel="-" />);
+  expect(legend()).toEqual([]);
+  // The summary already lists every series with its value; a second legend would repeat it.
+  await render(<LineChart summary={{ label: "OPS" }} categories={months} series={[ops[0]!, { id: "b", label: "B", values: [0.7, 0.8, 0.9, 0.95] }]} accessibilityLabel="OPS" formatValue={format} missingLabel="-" />);
+  expect(legend()).toEqual(["OPS1.000", "B0.950"]);
+});
+
+it("bridges sparkline gaps without inventing values and keeps isolated points", async () => {
+  await render(<><Sparkline values={[1, 3, null, 2, 4]} /><Sparkline values={[1, null, 2, null, 3]} missingConnection="none" /></>);
+  const [bridged, broken] = [...host.querySelectorAll("svg.hjm-sparkline")];
+  expect(bridged!.querySelectorAll("[data-missing-bridge]")).toHaveLength(1);
+  expect(broken!.querySelectorAll("[data-missing-bridge]")).toHaveLength(0);
+  // Three single observations have no path length; each keeps a dot instead of vanishing.
+  expect(broken!.querySelectorAll("circle")).toHaveLength(3);
+});
+
 it("renders a standalone legend with labels next to every swatch", async () => {
   await render(<ChartLegend items={[{ id: "a", label: "선수 A", color: "#2563eb", value: ".912" }, { id: "b", label: "선수 B", color: "#db2777" }]} />);
   expect([...host.querySelectorAll(".hjm-chart-legend__item")].map((item) => item.textContent)).toEqual(["선수 A.912", "선수 B"]);

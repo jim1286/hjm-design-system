@@ -34,3 +34,13 @@ it('keeps the circular native progress available to accessibility', async()=>{
     expect(getComputedStyle(host.querySelector('progress')!).display).not.toBe('none');
   } finally {await act(async()=>root.unmount());host.remove();}
 });
+it("keeps ring content visible: the ring mask belongs to its paint, not to the children", async () => {
+  const host=document.createElement("div");document.body.append(host);const root=createRoot(host);
+  try {
+    await act(async()=>root.render(<HjmProvider><Progress label="Goal" value={80} shape="circular" size="large" showValue={false}>80%</Progress></HjmProvider>));
+    const ring=host.querySelector<HTMLElement>(".hjm-progress__ring")!;
+    expect(getComputedStyle(ring).maskImage).toBe("none");
+    expect(getComputedStyle(ring,"::before").maskImage).toContain("radial-gradient");
+    expect(host.querySelector(".hjm-progress__ring-content")!.textContent).toBe("80%");
+  } finally {await act(async()=>root.unmount());host.remove();}
+});

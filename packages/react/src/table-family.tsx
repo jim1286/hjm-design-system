@@ -6,7 +6,9 @@ import {
   dataTableFamilyRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix,
   type ComparisonRow, type DataTableCellHeat, type DataTableCellTone, type LineScoreTeam, type MatrixCell,
 } from "@hjmds/design-contracts/components/data-table";
+import { resolveDatavizDivergingColors } from "@hjmds/design-contracts/dataviz";
 import { classNames } from "./internal.js";
+import { useOptionalHjmTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 /*
@@ -35,13 +37,19 @@ const withFamilyStyle = (layoutStyle: HjmCompositionStyleProp | undefined) => ({
 
 export type TableHeatColors = Readonly<{ high: string; low: string }>;
 
+/** Product heat colors, else the theme's dataviz diverging pair (red high, blue low). */
+export function useTableHeatColors(heatColors: TableHeatColors | undefined): TableHeatColors {
+  const theme = useOptionalHjmTheme()?.environment.theme ?? "light";
+  return heatColors ?? resolveDatavizDivergingColors(theme);
+}
+
 /**
  * Cell emphasis as inline style. Heat paints a background *image* so pinned cells keep their opaque
  * canvas color underneath and scrolled content never shows through the translucent tint.
  */
 export function tableCellEmphasis(
   decoration: Readonly<{ tone?: DataTableCellTone | null; heat?: DataTableCellHeat | null }> | null | undefined,
-  heatColors?: TableHeatColors,
+  heatColors: TableHeatColors,
 ): Readonly<{ style: CSSProperties; tone?: DataTableCellTone; heat?: string }> {
   if (!decoration) return { style: {} };
   const style: Record<string, string | number> = {};
@@ -51,7 +59,7 @@ export function tableCellEmphasis(
     style.fontWeight = dataTableFamilyRecipe.tone[tone].fontWeight;
   }
   if (heat) {
-    const base = heatColors?.[heat.side] ?? tableCssColor(dataTableFamilyRecipe.heat[heat.side]);
+    const base = heatColors[heat.side];
     style["--hjm-data-table-heat"] = `color-mix(in srgb, ${base} ${Math.round(dataTableFamilyRecipe.heatAlpha[heat.strength] * 100)}%, transparent)`;
   }
   return { style: style as CSSProperties, ...(tone ? { tone } : {}), ...(heat ? { heat: `${heat.side}-${heat.strength}` } : {}) };
@@ -146,6 +154,7 @@ export type MatrixTableProps<Key extends string = string> = Readonly<{
 
 export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, className, layoutStyle }: MatrixTableProps<Key>) {
   const matrix = resolveMatrix(ids, getCell);
+  const heatBase = useTableHeatColors(heatColors);
   return (
     <div className={classNames("hjm-table-family", "hjm-matrix-table", className)} style={withFamilyStyle(layoutStyle)}>
       <table className="hjm-matrix-table__table" aria-label={accessibilityLabel}>
@@ -164,7 +173,7 @@ export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell
                 {cells.map((cell, columnIndex) => {
                   // The diagonal is a team against itself: blank and hidden, not "no record".
                   if (cell === "self") return <td key={ids[columnIndex]} className="hjm-matrix-table__self" aria-hidden="true" />;
-                  const emphasis = tableCellEmphasis(cell, heatColors);
+                  const emphasis = tableCellEmphasis(cell, heatBase);
                   return <td key={ids[columnIndex]} className={emphasis.heat ? "hjm-table-family__heat" : undefined} style={emphasis.style} data-tone={emphasis.tone} data-heat={emphasis.heat}>{cell?.label ?? "—"}</td>;
                 })}
               </tr>

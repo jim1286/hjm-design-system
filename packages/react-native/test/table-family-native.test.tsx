@@ -75,3 +75,12 @@ it("hides repeated side headings while retaining season identity in spoken rows"
     expect(hosts(tree, props => props.accessibilityLabel === "타율 구자욱 2026 .371, 구자욱 2024 .343")).toHaveLength(1);
   } finally { act(() => tree.unmount()); }
 });
+
+it("defaults Native heat to the dataviz red–blue pair, not the violet status accent", () => {
+  const tree = render(<MatrixTable accessibilityLabel="상대 전적" ids={["lg", "kia"]} labelOf={id => id}
+    getCell={(row) => ({ label: row, heat: { side: row === "lg" ? "high" : "low", strength: 3 } })} />);
+  try {
+    const fills = hosts(tree, props => (props.style as { opacity?: number } | undefined)?.opacity === 0.42).map(n => (n.props.style as { backgroundColor?: string }).backgroundColor);
+    expect(fills).toEqual(expect.arrayContaining(["#dc2626", "#2563eb"]));
+  } finally { act(() => tree.unmount()); }
+});

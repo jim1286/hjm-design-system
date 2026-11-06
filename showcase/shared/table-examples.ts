@@ -188,7 +188,7 @@ export const comparisonSides = [
 ] as const;
 
 export const pitcherComparison = [
-  { id: "era", label: "평균자책", values: [3.83, 4.10] as const, lowerIsBetter: true },
+  { id: "era", label: "평균자책", values: [3.83, 4.10] as const, lowerIsBetter: true, display: ["3.83", "4.10"] as const },
   { id: "w", label: "승", values: [10, 11] as const },
   { id: "ip", label: "이닝", values: [134.0, 171.1] as const, display: ["134", "171⅓"] as const },
   { id: "so", label: "탈삼진", values: [107, 129] as const },

@@ -23,6 +23,25 @@ export declare const datavizSeriesCount: 8;
  */
 export declare function resolveDatavizSeriesColor(theme: ResolvedTheme, index: number): string;
 /**
+ * 높음·낮음을 칠하는 **발산 끝색**(백분위 표·상대 전적 열지도). 2026-11-06 검수에서 표의 낮은 쪽이 상태색
+ * `info`(보라 #6d28d9)를 써서 문서의 "낮으면 파랑"과 어긋났고, 위 규칙대로 상태색은 데이터 색이 될 수 없다.
+ * 빨강–파랑은 계열 0번 파랑과 같은 계통이며, 셀에는 `dataTableFamilyRecipe.heatAlpha` 농도로만 칠한다.
+ */
+export declare const datavizDivergingPalette: {
+    readonly light: {
+        readonly high: "#dc2626";
+        readonly low: "#2563eb";
+    };
+    readonly dark: {
+        readonly high: "#f87171";
+        readonly low: "#60a5fa";
+    };
+};
+export declare function resolveDatavizDivergingColors(theme: ResolvedTheme): Readonly<{
+    high: string;
+    low: string;
+}>;
+/**
  * 축·격자·범례는 차트가 아니라 **화면의 부속**이라 본문 토큰을 그대로 쓴다. 차트 전용
  * 회색을 따로 두면 같은 화면의 표·캡션과 어긋난다.
  */

@@ -2,7 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useLayoutEffect, useRef } from "react";
 import { dataTableFamilyRecipe, formatLineScoreCell, resolveComparisonRow, resolveLineScore, resolveMatrix, } from "@hjmds/design-contracts/components/data-table";
+import { resolveDatavizDivergingColors } from "@hjmds/design-contracts/dataviz";
 import { classNames } from "./internal.js";
+import { useOptionalHjmTheme } from "./provider.js";
 /*
  * Table family companions (2026-10-14): layouts products kept hand-building next to DataTable.
  * LineScore follows MLB/ESPN game headers, MatrixTable a head-to-head cross table, ComparisonTable
@@ -23,6 +25,11 @@ export function tableCssColor(reference) {
 /** Live period and "my team" row share the family highlight tint. */
 const familyStyle = { "--hjm-table-family-selected": tableCssColor(dataTableFamilyRecipe.highlight.background) };
 const withFamilyStyle = (layoutStyle) => ({ ...familyStyle, ...layoutStyle });
+/** Product heat colors, else the theme's dataviz diverging pair (red high, blue low). */
+export function useTableHeatColors(heatColors) {
+    const theme = useOptionalHjmTheme()?.environment.theme ?? "light";
+    return heatColors ?? resolveDatavizDivergingColors(theme);
+}
 /**
  * Cell emphasis as inline style. Heat paints a background *image* so pinned cells keep their opaque
  * canvas color underneath and scrolled content never shows through the translucent tint.
@@ -37,7 +44,7 @@ export function tableCellEmphasis(decoration, heatColors) {
         style.fontWeight = dataTableFamilyRecipe.tone[tone].fontWeight;
     }
     if (heat) {
-        const base = heatColors?.[heat.side] ?? tableCssColor(dataTableFamilyRecipe.heat[heat.side]);
+        const base = heatColors[heat.side];
         style["--hjm-data-table-heat"] = `color-mix(in srgb, ${base} ${Math.round(dataTableFamilyRecipe.heatAlpha[heat.strength] * 100)}%, transparent)`;
     }
     return { style: style, ...(tone ? { tone } : {}), ...(heat ? { heat: `${heat.side}-${heat.strength}` } : {}) };
@@ -72,13 +79,14 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
 }
 export function MatrixTable({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, className, layoutStyle }) {
     const matrix = resolveMatrix(ids, getCell);
+    const heatBase = useTableHeatColors(heatColors);
     return (_jsx("div", { className: classNames("hjm-table-family", "hjm-matrix-table", className), style: withFamilyStyle(layoutStyle), children: _jsxs("table", { className: "hjm-matrix-table__table", "aria-label": accessibilityLabel, children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("td", { className: "hjm-matrix-table__corner" }), ids.map((id) => _jsx("th", { scope: "col", children: labelOf(id) }, id))] }) }), _jsx("tbody", { children: matrix.map((cells, rowIndex) => {
                         const rowId = ids[rowIndex];
                         return (_jsxs("tr", { "data-highlighted": rowId === highlightId || undefined, children: [_jsx("th", { scope: "row", children: labelOf(rowId) }), cells.map((cell, columnIndex) => {
                                     // The diagonal is a team against itself: blank and hidden, not "no record".
                                     if (cell === "self")
                                         return _jsx("td", { className: "hjm-matrix-table__self", "aria-hidden": "true" }, ids[columnIndex]);
-                                    const emphasis = tableCellEmphasis(cell, heatColors);
+                                    const emphasis = tableCellEmphasis(cell, heatBase);
                                     return _jsx("td", { className: emphasis.heat ? "hjm-table-family__heat" : undefined, style: emphasis.style, "data-tone": emphasis.tone, "data-heat": emphasis.heat, children: cell?.label ?? "—" }, ids[columnIndex]);
                                 })] }, rowId));
                     }) })] }) }));

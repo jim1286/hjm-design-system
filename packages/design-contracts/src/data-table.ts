@@ -519,6 +519,11 @@ export function percentileHeat(percentile: number | null): DataTableCellHeat | n
 export const dataTableFamilyRecipe = {
   /** Heat background alpha per strength, over the high/low base colors. */
   heatAlpha: { 1: 0.14, 2: 0.26, 3: 0.42 },
+  /**
+   * @deprecated Renderers default to `resolveDatavizDivergingColors(theme)` since 2026-11-06: `info` here was the violet
+   * status accent, not the documented blue. Kept only so the 2.x public type stays stable; remove at the next
+   * user-approved major.
+   */
   heat: { high: themeColor("danger"), low: accentColor("info") },
   tone: {
     leader: { color: semanticColors.content.primary, fontWeight: fontWeight.medium },

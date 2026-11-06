@@ -199,3 +199,19 @@ it("shows a missing primary value and present comparison value in the Native bar
     expect(texts).toContain('2.000');
   } finally { act(() => tree.unmount()); }
 });
+
+it("names multi-series Native charts by default and bridges Native sparkline gaps", () => {
+  const two = [{ id: "a", label: "단타", values: [3, 4, 5] }, { id: "b", label: "홈런", values: [1, 2, 3] }];
+  const texts = (tree: ReactTestRenderer) => tree.root.findAll(n => typeof n.type === "string").map(n => n.props.children).filter(child => typeof child === "string");
+  const stacked = render(<BarChart categories={categories} series={two} layout="stacked" accessibilityLabel="안타" formatValue={String} missingLabel="—" />);
+  const hidden = render(<BarChart categories={categories} series={two} layout="stacked" showLegend={false} accessibilityLabel="안타" formatValue={String} missingLabel="—" />);
+  const spark = render(<Sparkline values={[1, null, 2, 3]} />);
+  try {
+    expect(texts(stacked)).toEqual(expect.arrayContaining(["단타", "홈런"]));
+    expect(texts(hidden)).not.toContain("단타");
+    // One interior gap: one dashed bridge using the missing-line dash, and the isolated first point keeps a dot.
+    const dashed = spark.root.findAll(n => typeof n.type === "string" && Array.isArray(n.props.strokeDasharray));
+    expect(dashed).toHaveLength(1);
+    expect(spark.root.findAll(n => typeof n.type === "string" && n.props.r === chartRecipe.sparkline.strokeWidth)).toHaveLength(1);
+  } finally { act(() => { stacked.unmount(); hidden.unmount(); spark.unmount(); }); }
+});

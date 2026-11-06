@@ -132,7 +132,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | `rowGroups` | `{ id, label: string, rows: RowKey[] }[]` | — | 행 묶음(선발 / 교체). 묶음마다 이름 행이 먼저 나오고, 묶이지 않은 행은 맨 앞. Web은 묶음마다 `tbody` + `scope="rowgroup"`. 미게시(1.20.0 이후) |
 | 행 `depth` | `0`–`3` | `0` | 하위 행 들여쓰기. 첫 열에 `dataTableFamilyRecipe.depthIndent`(16) × depth |
 | `cellStyle` | `(rowId, columnId) => { tone?, heat? } \| null` | — | 셀 강조. `tone`: `leader` · `positive` · `negative` · `muted`, `heat`: `{ side: "high" \| "low", strength: 1 \| 2 \| 3 }`(백분위 색). 판정은 제품(`percentileRank`·`percentileHeat`). 미게시(1.20.0 이후) |
-| `heatColors` | `{ high: string; low: string }` | 높음 `danger` 빨강 · 낮음 `info` 파랑 | heat 기준색. 칠할 때 `heatAlpha`(0.14·0.26·0.42)를 곱한다 |
+| `heatColors` | `{ high: string; low: string }` | `datavizDivergingPalette`(높음 빨강 · 낮음 파랑, 테마별) | heat 기준색. 칠할 때 `heatAlpha`(0.14·0.26·0.42)를 곱한다. 2026-11-06까지 낮음은 상태색 `info`(보라)였다 — 상태색은 데이터 색이 될 수 없어 바꿨다 (개발 소스, 미게시) |
 | `maxBodyHeight` | 양수 px | — | 높이 제한. 머리글은 고정되고 본문만 세로 스크롤 |
 | `layoutStyle` | 배치 전용 style(여백·폭·grid 위치) | — | 루트 wrapper에 붙는다. 시각 키는 받지 않는다 |
 
@@ -219,3 +219,5 @@ Native는 고정 열의 행 target 하나만 이름을 갖고, 고정 열이 없
 개발 브라우저에서도 이 구분을 유지하며, 고정 행 이름에는 스크롤 열의 값까지 포함한다.
 
 2026-10-26 사용자 요청: LineScore 현재 이닝은 카테고리 선택과 같은 `selection.background`/`selection.content`를 쓴다. MatrixTable의 내 팀 강조는 기존 브랜드 역할을 유지한다. 개발 소스, 미게시.
+
+2026-11-06 검수: MatrixTable의 내 팀 강조는 행 이름 칸에만 브랜드 바탕과 굵은 글씨로 둔다. 행 전체를 칠하면 낮은 쪽(파랑) heat와 섞여 행 전체가 약한 성적처럼 읽혔다. LineScore 팀 열에는 고정 열 경계선을 둔다(개발 소스, 미게시).

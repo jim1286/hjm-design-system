@@ -8,6 +8,7 @@ import {
 } from "@hjmds/design-contracts/components/data-table";
 import { fontWeight, spacing } from "@hjmds/design-contracts/foundations";
 import { textRecipe } from "@hjmds/design-contracts/recipes";
+import { resolveDatavizDivergingColors } from "@hjmds/design-contracts/dataviz";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -19,7 +20,7 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 function usePalette() {
   const theme = useHjmNativeTheme();
-  return { colors: theme.colors, color: (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, theme.palette) };
+  return { theme, colors: theme.colors, color: (reference: Parameters<typeof resolveColorReference>[0]) => resolveColorReference(reference, theme.palette) };
 }
 const num = { fontVariant: ["tabular-nums" as const] };
 
@@ -56,7 +57,8 @@ export function LineScore({ teams, totals, currentPeriod = null, minPeriods, ren
   };
   const rowLabel = (team: LineScoreTeam) => `${team.name} ${totalColumns.map(column => `${column.header} ${team.totals[column.header] ?? "—"}`).join(", ")}`;
   return <View accessibilityLabel={accessibilityLabel} style={[{ flexDirection: "row", borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface, paddingVertical: spacing.xs }, layoutStyle]}>
-    <View>
+    {/* Same divider as the totals: a half-scrolled inning beside the name otherwise reads as part of it (2026-11-06 review). */}
+    <View style={{ borderRightWidth: 1, borderColor: color(dataTableRecipe.row.borderBottom) }}>
       <View style={{ height: 26 }} />
       {teams.map(team => <View key={team.id} accessible accessibilityLabel={rowLabel(team)} style={{ height: ROW, width: NAME, flexDirection: "row", alignItems: "center", gap: 6, paddingLeft: spacing.sm }}>
         {renderTeam ? renderTeam(team) : <NativeText numberOfLines={1} style={{ flex: 1, color: score.leaderId === team.id ? colors.text : colors.textBody, fontSize: 14, fontWeight: score.leaderId === team.id ? fontWeight.semibold : textRecipe.emphasis.medium }}>{team.name}</NativeText>}
@@ -99,22 +101,24 @@ export type MatrixTableProps<Key extends string = string> = Readonly<{
 }>;
 
 export function MatrixTable<Key extends string = string>({ ids, labelOf, getCell, highlightId = null, heatColors, accessibilityLabel, cellAccessibilityLabel, layoutStyle }: MatrixTableProps<Key>) {
-  const { colors, color } = usePalette();
+  const { theme, colors, color } = usePalette();
   const matrix = resolveMatrix(ids, getCell);
-  const heat = { high: heatColors?.high ?? color(dataTableFamilyRecipe.heat.high), low: heatColors?.low ?? color(dataTableFamilyRecipe.heat.low) };
+  // Product colors, else the theme's dataviz diverging pair: the recipe `info` was violet, not the documented blue (2026-11-06).
+  const heat = heatColors ?? resolveDatavizDivergingColors(theme.environment.theme);
   const CELL = 58, NAME = 52, ROW = 38;
   const border = color(dataTableRecipe.row.borderBottom);
   return <View accessibilityLabel={accessibilityLabel} style={[{ flexDirection: "row", borderRadius: 12, overflow: "hidden", backgroundColor: colors.surface }, layoutStyle]}>
     <View style={{ borderRightWidth: 1, borderColor: border }}>
       <View style={{ height: 32 }} />
       {ids.map(id => <View key={id} style={{ width: NAME, height: ROW, justifyContent: "center", paddingHorizontal: spacing.sm, borderTopWidth: 1, borderColor: border, backgroundColor: id === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
-        <NativeText numberOfLines={1} style={{ color: colors.text, fontSize: 13, fontWeight: textRecipe.emphasis.medium }}>{labelOf(id)}</NativeText>
+        <NativeText numberOfLines={1} style={{ color: colors.text, fontSize: 13, fontWeight: id === highlightId ? fontWeight.semibold : textRecipe.emphasis.medium }}>{labelOf(id)}</NativeText>
       </View>)}
     </View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View>
         <View style={{ flexDirection: "row", height: 32 }}>{ids.map(id => <NativeText key={id} accessibilityRole="header" numberOfLines={1} style={{ width: CELL, lineHeight: 32, textAlign: "center", color: color(dataTableRecipe.header.color), fontSize: 12, fontWeight: textRecipe.emphasis.medium }}>{labelOf(id)}</NativeText>)}</View>
-        {matrix.map((cells, rowIndex) => <View key={ids[rowIndex]} style={{ flexDirection: "row", height: ROW, borderTopWidth: 1, borderColor: border, backgroundColor: ids[rowIndex] === highlightId ? color(dataTableFamilyRecipe.highlight.background) : "transparent" }}>
+        {/* Only the row name carries the my-team tint; tinted cells mixed with the low (blue) heat (2026-11-06 review). */}
+        {matrix.map((cells, rowIndex) => <View key={ids[rowIndex]} style={{ flexDirection: "row", height: ROW, borderTopWidth: 1, borderColor: border }}>
           {cells.map((cell, columnIndex) => {
             if (cell === "self") return <View key={columnIndex} accessibilityElementsHidden importantForAccessibility="no" style={{ width: CELL, backgroundColor: color(dataTableFamilyRecipe.groupRow.background) }} />;
             const tone = cell?.tone ? dataTableFamilyRecipe.tone[cell.tone] : null;

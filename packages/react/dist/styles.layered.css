@@ -1288,22 +1288,27 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   inline-size: var(--hjm-progress-diameter);
   block-size: var(--hjm-progress-diameter);
   border-radius: var(--hjm-radius-full);
+}
+/* The ring paint lives on a pseudo-element: a mask on the ring itself also masked its children, so the value inside
+   the ring (children) was never visible (2026-11-06 review). Descendants cannot opt out of an ancestor's mask. */
+.hjm-progress__ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   background: conic-gradient(var(--hjm-progress-fill) var(--hjm-progress-sweep), var(--hjm-progress-track) 0);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--hjm-progress-stroke)), #000 calc(100% - var(--hjm-progress-stroke)));
   mask: radial-gradient(farthest-side, transparent calc(100% - var(--hjm-progress-stroke)), #000 calc(100% - var(--hjm-progress-stroke)));
 }
-.hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring { animation: hjm-provider-spin 1200ms linear infinite; }
+.hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring::before { animation: hjm-provider-spin 1200ms linear infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring { animation: none; }
+  .hjm-progress[data-state="indeterminate"][data-shape="circular"] .hjm-progress__ring::before { animation: none; }
 }
 .hjm-progress__ring-content {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  /* The mask hides the ring's own paint region; content must escape it. */
-  -webkit-mask: none;
-  mask: none;
   color: var(--hjm-color-text);
   font-size: var(--hjm-type-label-size);
 }
@@ -1485,6 +1490,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-line-score { --hjm-line-score-total-width: 30px; scroll-padding-inline-end: calc(var(--hjm-line-score-total-width) * var(--hjm-line-score-total-count, 0)); }
 .hjm-line-score__table .hjm-line-score__team, .hjm-line-score__table .hjm-line-score__total { position: sticky; z-index: 1; background: var(--hjm-color-surface); }
 .hjm-line-score__table .hjm-line-score__team { inset-inline-start: 0; }
+/* Scrolled periods pass under the pinned team column. Without an edge, a half-cut inning digit read as part of the
+   team name (2026-11-06 review), so the team column gets the same divider as the pinned totals and DataTable. */
+.hjm-line-score__table .hjm-line-score__team { box-shadow: inset -1px 0 0 var(--hjm-color-border); }
+.hjm-line-score__table .hjm-line-score__team:dir(rtl) { box-shadow: inset 1px 0 0 var(--hjm-color-border); }
 .hjm-line-score__table td.hjm-line-score__period { min-inline-size: 26px; color: var(--hjm-color-text-sub); }
 .hjm-line-score__table td[data-scored] { color: var(--hjm-color-text); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-line-score__table [data-current] { background: var(--hjm-line-score-current-background); }
@@ -1500,7 +1509,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-matrix-table__table td { color: var(--hjm-color-text-muted); }
 .hjm-matrix-table__table thead td { border-block-start: 0; }
 .hjm-matrix-table__self { background: var(--hjm-color-surface-alt); }
-.hjm-matrix-table__table tr[data-highlighted] > * { background-color: var(--hjm-table-family-selected); }
+/* Only the row name carries the my-team tint: tinting every cell mixed with the low (blue) heat and read as a weak
+   result across the whole row (2026-11-06 review). Heat cells keep their own meaning. */
+.hjm-matrix-table__table tr[data-highlighted] > th { background-color: var(--hjm-table-family-selected); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-comparison-table { padding-block: var(--hjm-space-xs); }
 .hjm-comparison-table__sides { display: flex; justify-content: space-between; padding: var(--hjm-space-xs) var(--hjm-space-md); font-weight: var(--hjm-text-emphasis-medium); }
 .hjm-comparison-table__rows { margin: 0; padding: 0; list-style: none; }

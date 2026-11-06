@@ -141,6 +141,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `onFocusChange` | `(index: number \| null, detail: { scrubbing: boolean }) => void` | — | 스크럽 중 `scrubbing: true`, 손을 떼면 `false` |
 | `showFocusLabel` | `boolean` | `false` | LineChart·BarChart에서 누름을 놓은 뒤에도 선택한 점의 말풍선 유지 (2026-10-29 기록 차트 요청) |
 | `cursorLabel` | `(index: number) => string` | `categories[index]` | 스크럽 중 커서 위 말풍선 |
+| `showLegend` | `boolean` | 계열이 둘 이상이고 `summary`가 없으면 `true` | plot 위 한 줄 범례(이름·색). `summary`가 있으면 요약이 범례를 그린다. 제품이 `ChartLegend`를 따로 그리면 `false` (개발 소스, 미게시) |
 
 ### BarChart
 
@@ -154,6 +155,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `showAxis` | `boolean` | `false` | — |
 | `showValues` | `boolean` | `false` | 막대 끝 값 글자 |
 | `focusIndex`·`defaultFocusIndex`·`onFocusChange` | LineChart와 같음 | — | 누름·끌기로 범주 선택, 나머지 막대 불투명도 `chartRecipe.bar.restOpacity` 0.4 |
+| `showLegend` | `boolean` | 계열이 둘 이상이고 `summary`가 없으면 `true` | LineChart와 같음. 쌓은 막대가 범례 없이 그려져 색의 뜻을 읽을 수 없던 문제(2026-11-06 검수)로 기본값을 켰다 (개발 소스, 미게시) |
 
 ### PieChart
 
@@ -198,7 +200,8 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `values`(`Sparkline`) | `readonly (number \| null)[]` | — (필수) | 빈 값은 끊김 |
+| `values`(`Sparkline`) | `readonly (number \| null)[]` | — (필수) | 빈 값은 0으로 바꾸지 않는다. 앞뒤 관측 사이만 옅은 점선으로 잇고, 홀로 남은 관측은 점으로 그린다 |
+| `missingConnection`(`Sparkline`) | `bridge` · `none` | `bridge` | 72×28에서 끊긴 선이 깨진 그림으로 읽혀(2026-11-06 검수) 기본으로 잇는다. `none`은 끊어 둔다 (개발 소스, 미게시) |
 | `color`(`Sparkline`) | `string` | 첫 dataviz 계열색 | — |
 | `invert`(`Sparkline`) | `boolean` | `false` | 작을수록 위 |
 | `domain`(`Sparkline`) | `readonly [number, number]` | 관측 범위 | 여러 행의 스파크라인을 같은 척도로 비교할 때 고정 |

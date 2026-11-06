@@ -5,7 +5,7 @@ import { dataTableColumnDefaults, dataTableDefaults, dataTableFamilyRecipe, data
 import { forwardRef, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
-import { tableCellEmphasis } from "./table-family.js";
+import { tableCellEmphasis, useTableHeatColors } from "./table-family.js";
 import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide";
 import { CheckGlyph } from "./internal/lucide-glyph.js";
 function selectedRowKeysFrom(selection) {
@@ -42,6 +42,7 @@ function bodySections(items) {
     return sections.length > 0 ? sections : [{ group: null, rows: [] }];
 }
 export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, getCellText, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, summaryRow, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, className, layoutStyle, }, forwardedRef) {
+    const heatBase = useTableHeatColors(heatColors);
     // Unconditional: `??` on the hook call would break the rules of hooks.
     const densityDefault = useHjmDensityDefault({ comfortable: "regular", compact: "compact" });
     const density = densityProp ?? densityDefault;
@@ -158,7 +159,7 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
                                                     onSort: () => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle, dataTableFirstSortDirection(column))) })) : column.headerVisibility === "hidden" ? _jsx("span", { className: "hjm-visually-hidden", children: column.header }) : column.header }, column.id));
                                         })] })] }), sections.map((section) => (_jsxs("tbody", { children: [section.group ? (_jsx("tr", { className: "hjm-data-table__group", children: _jsx("th", { scope: "rowgroup", colSpan: columnSpan, children: _jsx("span", { children: section.group.label }) }) })) : null, section.rows.map((rowId) => rowById.get(rowId)).map((row) => (_jsxs("tr", { "aria-selected": selection && selection.mode !== "none" ? selectedKeys.has(row.id) : undefined, "data-disabled": row.disabled || undefined, children: [selection && selection.mode !== "none" ? (_jsx("td", { className: classNames("hjm-data-table__selector", selectorSticky.className), style: selectorSticky.style, children: _jsx("button", { type: "button", role: multiple ? "checkbox" : "radio", "aria-checked": selectedKeys.has(row.id), "aria-label": labels.selectRow(row.id), "aria-disabled": row.disabled || undefined, className: "hjm-data-table__check", onClick: () => toggleRow(row), children: _jsx(CheckGlyph, { state: selectedKeys.has(row.id) }) }) })) : null, columns.map((column, columnIndex) => {
                                             const sticky = columnSticky(columnIndex);
-                                            const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatColors);
+                                            const emphasis = tableCellEmphasis(cellStyle?.(row.id, column.id), heatBase);
                                             // Sub-rows (TanStack `depth`) indent only the first column, which is the pinned one when pinning.
                                             const depth = columnIndex === 0 ? row.depth ?? 0 : 0;
                                             return (_jsx("td", { "aria-label": getCellText?.(row.id, column.id), className: classNames(sticky.className, emphasis.heat && "hjm-table-family__heat"), "data-tone": emphasis.tone, "data-heat": emphasis.heat, "data-depth": depth > 0 ? depth : undefined, style: {

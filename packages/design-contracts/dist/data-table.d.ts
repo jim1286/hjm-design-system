@@ -311,6 +311,11 @@ export declare const dataTableFamilyRecipe: {
         readonly 2: 0.26;
         readonly 3: 0.42;
     };
+    /**
+     * @deprecated Renderers default to `resolveDatavizDivergingColors(theme)` since 2026-11-06: `info` here was the violet
+     * status accent, not the documented blue. Kept only so the 2.x public type stays stable; remove at the next
+     * user-approved major.
+     */
     readonly heat: {
         readonly high: Readonly<{
             source: "theme";

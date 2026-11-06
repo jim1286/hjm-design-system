@@ -81,6 +81,16 @@ it("paints percentile heat and leader tone from cellStyle", async () => {
   expect(cell("10").dataset.heat).toBeUndefined();
 });
 
+it("defaults heat to the dataviz red–blue pair, not the violet status accent", async () => {
+  await render(
+    <DataTable columns={columns} rows={[{ id: "kim" }, { id: "park" }]} labels={labels} renderCell={(row, column) => stats[row]![column]}
+      cellStyle={(row, column) => column === "hr" ? { heat: { side: row === "kim" ? "high" : "low", strength: 3 } } : null} />,
+  );
+  const cell = (text: string) => [...document.querySelectorAll<HTMLTableCellElement>("tbody td")].find((node) => node.textContent === text)!;
+  expect(cell("38").style.getPropertyValue("--hjm-data-table-heat")).toContain("#dc2626");
+  expect(cell("6").style.getPropertyValue("--hjm-data-table-heat")).toContain("#2563eb");
+});
+
 it("bounds the scroll box and keeps the header fixed while pinned columns still stick", async () => {
   const many = Array.from({ length: 25 }, (_, i) => ({ id: `p${i}` }));
   await render(
@@ -129,6 +139,10 @@ it("matrix diagonal is a hidden blank self cell", async () => {
   expect(self.every((cell) => cell.getAttribute("aria-hidden") === "true" && cell.textContent === "")).toBe(true);
   expect(document.querySelectorAll("th[scope='col']")).toHaveLength(3);
   expect(document.querySelector("tr[data-highlighted] th")!.textContent).toBe("LG");
+  // The my-team tint stays on the row name so it never reads as low heat in the data cells.
+  const highlighted = document.querySelector("tr[data-highlighted]")!;
+  expect(getComputedStyle(highlighted.querySelector("th")!).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(getComputedStyle(highlighted.querySelector("td:not(.hjm-matrix-table__self)")!).backgroundColor).toBe("rgba(0, 0, 0, 0)");
   expect(document.querySelector("td[data-heat='high-2']")!.textContent).toBe("lg-kia");
 });
 

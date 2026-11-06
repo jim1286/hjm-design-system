@@ -291,6 +291,11 @@ function FixedChartExtremes({ data, labels, format }: { data: SummaryData; label
   </div>;
 }
 
+/** Cartesian series legend: names and colors only, since values follow focus in the summary or cursor. */
+function SeriesLegend({ series, colorOf }: Readonly<{ series: readonly ChartSeries[]; colorOf: ReturnType<typeof useSeriesColor> }>) {
+  return <ChartLegend layout="inline" items={series.map((item, s) => ({ id: item.id, label: item.label, color: colorOf(item, s) }))} />;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
@@ -298,6 +303,11 @@ function FixedChartExtremes({ data, labels, format }: { data: SummaryData; label
 export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
   /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
   summary?: ChartSummaryOptions;
+  /**
+   * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+   * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+   */
+  showLegend?: boolean;
   curve?: ChartCurve;
   /** dotted: separate vertical drops; bridge: faint edge-to-edge visual guide. Neither creates missing values. */
   missingConnection?: "none" | "dotted" | "bridge";
@@ -325,7 +335,7 @@ export type LineChartProps = CartesianCommon & FocusProps & Readonly<{
 
 export function LineChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, width: fallbackWidth = 320,
-  curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showAxis = !!summary,
+  curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showLegend, showAxis = !!summary,
   valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, className, layoutStyle, ...focusProps
 }: LineChartProps) {
   validateChartSeries(categories, series);
@@ -362,6 +372,7 @@ export function LineChart({
   return (
     <div ref={measure} className={classNames("hjm-chart", "hjm-chart--line", className)} style={{ ...chromeStyle, ...layoutStyle }} data-scrubbing={scrubbing || undefined}>
       {summaryData && <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={colorOf} format={formatValue} missingLabel={missingLabel} />}
+      {(showLegend ?? (!summary && series.length > 1)) && <SeriesLegend series={series} colorOf={colorOf} />}
       <div
         className="hjm-chart__plot"
         role="slider"
@@ -466,6 +477,11 @@ export function LineChart({
 export type BarChartProps = CartesianCommon & FocusProps & Readonly<{
   /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
   summary?: ChartSummaryOptions;
+  /**
+   * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+   * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+   */
+  showLegend?: boolean;
   orientation?: ChartOrientation;
   layout?: ChartBarLayout;
   /** Value label at each bar end (the stack total for stacked bars). */
@@ -487,7 +503,7 @@ function barPath(bar: ChartBar, vertical: boolean, negative: boolean, round: boo
 
 export function BarChart({
   categories, series, accessibilityLabel, formatValue, missingLabel, height, width: fallbackWidth = 320, orientation = "vertical",
-  layout = "grouped", domain, summary, showAxis = !!summary, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps
+  layout = "grouped", domain, summary, showLegend, showAxis = !!summary, showValues = false, animateChanges = false, className, layoutStyle, ...focusProps
 }: BarChartProps) {
   validateChartSeries(categories, series);
   const colorOf = useSeriesColor(), id = useSvgId(), descriptionId = `${id}-description`;
@@ -535,6 +551,7 @@ export function BarChart({
   return (
     <div ref={measure} className={classNames("hjm-chart", "hjm-chart--bar", className)} style={{ ...chromeStyle, ...layoutStyle }} data-orientation={orientation} data-scrubbing={scrubbing || undefined}>
       {summaryData && <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={colorOf} format={formatValue} missingLabel={missingLabel} />}
+      {(showLegend ?? (!summary && series.length > 1)) && <SeriesLegend series={series} colorOf={colorOf} />}
       <div
         className="hjm-chart__plot"
         role="slider"
@@ -912,13 +929,15 @@ export type SparklineProps = ChartRootProps & Readonly<{
   domain?: readonly [number, number];
   width?: number;
   height?: number;
+  /** `bridge` (default) joins interior gaps with a faint dashed guide; `none` leaves them broken. */
+  missingConnection?: "none" | "bridge";
   /** Omit when the adjacent text already states the value; the sparkline is then decorative. */
   accessibilityLabel?: string;
 }>;
 
 export function Sparkline({
   values, color, invert = false, domain, width = chartRecipe.sparkline.width, height = chartRecipe.sparkline.height, accessibilityLabel,
-  className, layoutStyle,
+  missingConnection = "bridge", className, layoutStyle,
 }: SparklineProps) {
   const colorOf = useSeriesColor(), id = useSvgId();
   const stroke = color ?? colorOf({}, 0);
@@ -946,7 +965,15 @@ export function Sparkline({
         </linearGradient>
       </defs>
       {segments.map((segment, i) => <path key={`a${i}`} d={areaPath(segment, height)} fill={`url(#${id}-spark)`} />)}
+      {/* At 72×28 a broken trend reads as a rendering fault, so gaps get the LineChart bridge guide by default
+          (2026-11-06 review). Values stay null: no area or point is invented and nothing is extrapolated. */}
+      {missingConnection === "bridge" && segments.slice(1).map((segment, i) => {
+        const before = segments[i]!.at(-1)!, after = segment[0]!;
+        return <line key={`b${i}`} data-missing-bridge="true" x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={stroke} strokeWidth={chartRecipe.sparkline.strokeWidth} strokeDasharray={chartRecipe.line.missingDash.join(" ")} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
+      })}
       {segments.map((segment, i) => <path key={`l${i}`} className="hjm-chart__line" d={linePath(segment)} stroke={stroke} strokeWidth={chartRecipe.sparkline.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+      {/* A single observation between gaps has no path length, so it would vanish without a dot. */}
+      {segments.filter(segment => segment.length === 1).map(segment => <circle key={`d${segment[0]!.index}`} cx={segment[0]!.x} cy={segment[0]!.y} r={chartRecipe.sparkline.strokeWidth} fill={stroke} />)}
     </svg>
   );
 }

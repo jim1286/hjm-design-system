@@ -8,6 +8,8 @@ export type TableHeatColors = Readonly<{
     high: string;
     low: string;
 }>;
+/** Product heat colors, else the theme's dataviz diverging pair (red high, blue low). */
+export declare function useTableHeatColors(heatColors: TableHeatColors | undefined): TableHeatColors;
 /**
  * Cell emphasis as inline style. Heat paints a background *image* so pinned cells keep their opaque
  * canvas color underneath and scrolled content never shows through the translucent tint.
@@ -15,7 +17,7 @@ export type TableHeatColors = Readonly<{
 export declare function tableCellEmphasis(decoration: Readonly<{
     tone?: DataTableCellTone | null;
     heat?: DataTableCellHeat | null;
-}> | null | undefined, heatColors?: TableHeatColors): Readonly<{
+}> | null | undefined, heatColors: TableHeatColors): Readonly<{
     style: CSSProperties;
     tone?: DataTableCellTone;
     heat?: string;

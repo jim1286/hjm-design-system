@@ -193,6 +193,11 @@ function FixedChartExtremes({ data, labels, format }: { data: SummaryData; label
   </View>;
 }
 
+/** Cartesian series legend: names and colors only, since values follow focus in the summary or cursor. */
+function SeriesLegend({ series, colorOf }: Readonly<{ series: readonly ChartSeries[]; colorOf: (series: Readonly<{ color?: string | undefined }>, index: number) => string }>) {
+  return <ChartLegend layout="inline" items={series.map((item, s) => ({ id: item.id, label: item.label, color: colorOf(item, s) }))} />;
+}
+
 // ---------------------------------------------------------------------------------------------
 // LineChart
 // ---------------------------------------------------------------------------------------------
@@ -200,6 +205,11 @@ function FixedChartExtremes({ data, labels, format }: { data: SummaryData; label
 export type LineChartProps = Readonly<{
   /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
   summary?: ChartSummaryOptions;
+  /**
+   * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+   * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+   */
+  showLegend?: boolean;
   categories: readonly string[];
   series: readonly ChartSeries[];
   accessibilityLabel: string;
@@ -228,7 +238,7 @@ export type LineChartProps = Readonly<{
   scrubEmphasis?: "before" | "after";
 } & FocusProps>;
 
-export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showAxis = !!summary, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
+export function LineChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height = chartRecipe.heights.regular, curve = "linear", missingConnection = "none", area, stacked = false, invert = false, domain, includeZero, referenceValue, extremes, summary, showLegend, showAxis = !!summary, valueAxis = false, ticks: tickOverride, cursorLabel, animateChanges = false, scrubEmphasis, ...focusProps }: LineChartProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [width, onLayout] = useWidth();
   const available = useMemo(() => observedIndices(series), [series]);
@@ -296,11 +306,12 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
     </Svg>}
     {g && !summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && <CursorBubble x={g.xs[focus]!} width={width} text={cursorLabel?.(focus) ?? categories[focus]!} surface={palette.surface} color={palette.legend} />}
   </View>;
-  return summaryData ? <View style={{ gap: chartRecipe.summary.gap }}>
+  if (summaryData) return <View style={{ gap: chartRecipe.summary.gap }}>
     <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={palette.seriesColor} format={formatValue} missingLabel={missingLabel} />
     {plot}
     {extremes && <FixedChartExtremes data={summaryData} labels={extremes} format={formatValue} />}
-  </View> : plot;
+  </View>;
+  return (showLegend ?? series.length > 1) ? <View style={{ gap: chartRecipe.summary.gap }}><SeriesLegend series={series} colorOf={palette.seriesColor} />{plot}</View> : plot;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -310,6 +321,11 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
 export type BarChartProps = Readonly<{
   /** Fixed selected value, aligned comparison legend and axes; data and wording stay with the product. */
   summary?: ChartSummaryOptions;
+  /**
+   * Series names and colors above the plot. Defaults to on for two or more series without `summary` (the summary
+   * already lists them): a stacked or grouped chart without a legend could not be read (2026-11-06 review).
+   */
+  showLegend?: boolean;
   categories: readonly string[];
   series: readonly ChartSeries[];
   accessibilityLabel: string;
@@ -324,7 +340,7 @@ export type BarChartProps = Readonly<{
   animateChanges?: boolean;
 } & FocusProps>;
 
-export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, summary, showAxis = !!summary, showValues = false, animateChanges = false, ...focusProps }: BarChartProps) {
+export function BarChart({ categories, series, accessibilityLabel, formatValue, missingLabel, height, orientation = "vertical", layout = "grouped", domain, summary, showLegend, showAxis = !!summary, showValues = false, animateChanges = false, ...focusProps }: BarChartProps) {
   const palette = useChartPalette();
   const [width, onLayout] = useWidth();
   const vertical = orientation === "vertical";
@@ -359,10 +375,11 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
     </Svg>}
     {g && !summary && (scrubbing || focusProps.showFocusLabel) && focus !== null && vertical && <CursorBubble x={g.centers[focus]!} width={width} text={`${categories[focus]} ${series.map(item => { const v = item.values[focus]; return isChartNumber(v) ? formatValue(v) : missingLabel; }).join(" · ")}`} surface={palette.surface} color={palette.legend} />}
   </View>;
-  return summaryData ? <View style={{ gap: chartRecipe.summary.gap }}>
+  if (summaryData) return <View style={{ gap: chartRecipe.summary.gap }}>
     <FixedChartSummary compact={summary?.compact} data={summaryData} colorOf={palette.seriesColor} format={formatValue} missingLabel={missingLabel} />
     {plot}
-  </View> : plot;
+  </View>;
+  return (showLegend ?? series.length > 1) ? <View style={{ gap: chartRecipe.summary.gap }}><SeriesLegend series={series} colorOf={palette.seriesColor} />{plot}</View> : plot;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -541,10 +558,12 @@ export type SparklineProps = Readonly<{
   domain?: readonly [number, number];
   width?: number;
   height?: number;
+  /** `bridge` (default) joins interior gaps with a faint dashed guide; `none` leaves them broken. */
+  missingConnection?: "none" | "bridge";
   /** Omit when the adjacent text already states the value; the sparkline is then decorative. */
   accessibilityLabel?: string;
 }>;
-export function Sparkline({ values, color, invert = false, domain, width = chartRecipe.sparkline.width, height = chartRecipe.sparkline.height, accessibilityLabel }: SparklineProps) {
+export function Sparkline({ values, color, invert = false, domain, width = chartRecipe.sparkline.width, height = chartRecipe.sparkline.height, accessibilityLabel, missingConnection = "bridge" }: SparklineProps) {
   const palette = useChartPalette(), id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const stroke = color ?? palette.seriesColor({}, 0);
   const pad = chartRecipe.sparkline.padding;
@@ -553,7 +572,15 @@ export function Sparkline({ values, color, invert = false, domain, width = chart
   const svg = <Svg width={width} height={height} {...decorativeSvgAccessibility}>
     <Defs><LinearGradient id={`hjmSpark${id}`} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor={stroke} stopOpacity={0.28} /><Stop offset="1" stopColor={stroke} stopOpacity={0} /></LinearGradient></Defs>
     {segments.map((segment, i) => <Path key={`a${i}`} d={areaPath(segment, height)} fill={`url(#hjmSpark${id})`} />)}
+    {/* At 72×28 a broken trend reads as a rendering fault, so gaps get the LineChart bridge guide by default
+        (2026-11-06 review). Values stay null: no area or point is invented and nothing is extrapolated. */}
+    {missingConnection === "bridge" && segments.slice(1).map((segment, i) => {
+      const before = segments[i]!.at(-1)!, after = segment[0]!;
+      return <Line key={`b${i}`} x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={stroke} strokeWidth={chartRecipe.sparkline.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
+    })}
     {segments.map((segment, i) => <Path key={`l${i}`} d={linePath(segment)} stroke={stroke} strokeWidth={chartRecipe.sparkline.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+    {/* A single observation between gaps has no path length, so it would vanish without a dot. */}
+    {segments.filter(segment => segment.length === 1).map(segment => <Circle key={`d${segment[0]!.index}`} cx={segment[0]!.x} cy={segment[0]!.y} r={chartRecipe.sparkline.strokeWidth} fill={stroke} />)}
   </Svg>;
   return accessibilityLabel
     ? <View accessible accessibilityRole="image" accessibilityLabel={accessibilityLabel}>{svg}</View>
