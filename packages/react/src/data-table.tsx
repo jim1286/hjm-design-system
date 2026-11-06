@@ -75,6 +75,11 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   heatColors?: TableHeatColors;
   /** Bounds the scroll box height in px; the header stays fixed while rows scroll. */
   maxBodyHeight?: number;
+  /**
+   * `false` keeps every column at its natural width in a short table instead of stretching the scrolling columns to the
+   * card width, so a five-column row reads like its long sibling table (2026-11-06, Yajalal 공격/주루). Default `true`.
+   */
+  fill?: boolean;
   className?: string;
   /** Canonical layout-only placement on the root wrapper. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
@@ -141,6 +146,7 @@ export const DataTable = forwardRef(function DataTable<
     cellStyle,
     heatColors,
     maxBodyHeight,
+    fill = true,
     className,
     layoutStyle,
   }: DataTableProps<ColumnKey, RowKey>,
@@ -235,7 +241,7 @@ export const DataTable = forwardRef(function DataTable<
   };
 
   return (
-    <div className={classNames("hjm-data-table", className)} style={layoutStyle} data-density={density}>
+    <div className={classNames("hjm-data-table", className)} style={layoutStyle} data-density={density} data-fill={fill ? undefined : "false"}>
       {asyncState.status === "idle" ? null : (
         <p className="hjm-data-table__state" role={asyncState.status === "error" ? "alert" : "status"}>{asyncState.message}</p>
       )}

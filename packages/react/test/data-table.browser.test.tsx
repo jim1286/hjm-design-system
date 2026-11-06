@@ -276,3 +276,14 @@ it("labels rich cells without replacing their visual nodes or selection controls
   expect(check("느리게 걸었던 오후 선택").getAttribute("role")).toBe("checkbox");
   expect([...host.querySelectorAll("td")].some(cell => cell.textContent === "9월 12일" && !cell.hasAttribute("aria-label"))).toBe(true);
 });
+
+it.each([true, false])("keeps natural column widths in a short table only when fill is off (fill=%s)", async fill => {
+  host.style.width = "600px";
+  await act(async () => root.render(<HjmProvider><DataTable fill={fill}
+    columns={[{ id: "g", header: "경기" }, { id: "cs", header: "도루 실패" }]} rows={[{ id: "r" }]}
+    labels={{ table: "주루", selectAll: "", selectRow: id => id, sortColumn: header => header }}
+    renderCell={(_, column) => ({ g: "127", cs: "4" })[column]} /></HjmProvider>));
+  const table = host.querySelector<HTMLTableElement>(".hjm-data-table__table")!;
+  if (fill) expect(table.getBoundingClientRect().width).toBeGreaterThan(590);
+  else expect(table.getBoundingClientRect().width).toBeLessThan(300);
+});

@@ -103,3 +103,18 @@ it("hides a header visually but keeps it as the column's accessible name", () =>
     expect(tree.root.findAll(n => typeof n.type === "string" && n.props.accessibilityRole === "header" && n.props.accessibilityLabel === "타율")).toHaveLength(1);
   } finally { act(() => tree.unmount()); }
 });
+
+it.each([[true, 160], [false, 54]])("stretches short tables only when fill is on (fill=%s)", (fill, expected) => {
+  let tree!: ReactTestRenderer;
+  act(() => { tree = create(<HjmNativeProvider><DataTable fill={fill}
+    columns={[{ id: "g", header: "경기", width: 48, pinned: "start" }, { id: "sba", header: "도루 시도", width: 54 }, { id: "cs", header: "도루 실패", width: 54 }]}
+    rows={[{ id: "r" }]} labels={{ table: "주루", sortColumn: header => header }} renderCell={(_, column) => ({ g: "127", sba: "7", cs: "4" })[column]} /></HjmNativeProvider>); });
+  try {
+    act(() => tree.root.findAllByType(View).find(n => n.props.accessibilityLabel === "주루")!.props.onLayout({ nativeEvent: { layout: { width: 368 } } }));
+    const cell = tree.root.findAll(n => typeof n.type === "string" && n.props.children === "7" && n.props.onLayout === undefined)[0]!;
+    let box = cell.parent;
+    while (box && typeof box.props.style?.width !== "number") box = box.parent;
+    // 368 − 48 pinned = 320 shared by two 54pt columns → 160 each when filling.
+    expect(box!.props.style.width).toBe(expected);
+  } finally { act(() => tree.unmount()); }
+});

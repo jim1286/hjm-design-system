@@ -134,6 +134,7 @@ const sorted = sortDataTableRows(players, sort, (player, columnId) => toDataTabl
 | `cellStyle` | `(rowId, columnId) => { tone?, heat? } \| null` | — | 셀 강조. `tone`: `leader` · `positive` · `negative` · `muted`, `heat`: `{ side: "high" \| "low", strength: 1 \| 2 \| 3 }`(백분위 색). 판정은 제품(`percentileRank`·`percentileHeat`). 미게시(1.20.0 이후) |
 | `heatColors` | `{ high: string; low: string }` | `datavizDivergingPalette`(높음 빨강 · 낮음 파랑, 테마별) | heat 기준색. 칠할 때 `heatAlpha`(0.14·0.26·0.42)를 곱한다. 2026-11-06까지 낮음은 상태색 `info`(보라)였다 — 상태색은 데이터 색이 될 수 없어 바꿨다 (개발 소스, 미게시) |
 | `maxBodyHeight` | 양수 px | — | 높이 제한. 머리글은 고정되고 본문만 세로 스크롤 |
+| `fill` | `boolean` | `true` | `false`면 열이 적은 표도 스크롤 열을 카드 폭까지 늘리지 않고 원래 너비를 유지한다. 같은 화면의 긴 표와 열 너비를 맞출 때 쓴다(2026-11-06, 개발 소스·미게시) |
 | `layoutStyle` | 배치 전용 style(여백·폭·grid 위치) | — | 루트 wrapper에 붙는다. 시각 키는 받지 않는다 |
 
 ## 배치

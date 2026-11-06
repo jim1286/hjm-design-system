@@ -1449,6 +1449,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
    scroll container; pinned cells paint the canvas so scrolled text never shows through. */
 .hjm-data-table__scroll { overflow-x: auto; min-inline-size: 0; }
 .hjm-data-table__scroll > .hjm-data-table__table { inline-size: max-content; min-inline-size: 100%; }
+/* fill={false}: a short table keeps natural column widths instead of stretching to the container (2026-11-06). */
+.hjm-data-table[data-fill="false"] .hjm-data-table__table { inline-size: max-content; min-inline-size: 0; }
 .hjm-data-table__table .hjm-data-table__pinned { position: sticky; z-index: 1; background: var(--hjm-color-bg); }
 .hjm-data-table__table .hjm-data-table__pinned-edge { box-shadow: inset -1px 0 0 var(--hjm-color-border); }
 .hjm-data-table__table .hjm-data-table__pinned-edge:dir(rtl) { box-shadow: inset 1px 0 0 var(--hjm-color-border); }

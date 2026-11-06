@@ -41,7 +41,7 @@ function bodySections(items) {
     // An empty table still renders one (empty) tbody, as before row groups existed.
     return sections.length > 0 ? sections : [{ group: null, rows: [] }];
 }
-export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, getCellText, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, summaryRow, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, className, layoutStyle, }, forwardedRef) {
+export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, getCellText, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, summaryRow, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, fill = true, className, layoutStyle, }, forwardedRef) {
     const heatBase = useTableHeatColors(heatColors);
     // Unconditional: `??` on the hook call would break the rules of hooks.
     const densityDefault = useHjmDensityDefault({ comfortable: "regular", compact: "compact" });
@@ -141,7 +141,7 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
         commitSelection(next);
         selection.onSelectionChange?.(next);
     };
-    return (_jsxs("div", { className: classNames("hjm-data-table", className), style: layoutStyle, "data-density": density, children: [asyncState.status === "idle" ? null : (_jsx("p", { className: "hjm-data-table__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })), _jsx(TableScroll, { scroll: pinnedCount > 0, maxBodyHeight: maxBodyHeight, children: _jsxs("table", { ref: forwardedRef, className: "hjm-data-table__table", "aria-label": labels.table, "aria-busy": asyncState.status === "loading" || undefined, children: [_jsxs("thead", { children: [bands ? (_jsxs("tr", { className: "hjm-data-table__bands", children: [hasSelector ? _jsx("td", { "aria-hidden": "true", className: classNames("hjm-data-table__selector", selectorSticky.className), style: selectorSticky.style }) : null, bands.map((band) => {
+    return (_jsxs("div", { className: classNames("hjm-data-table", className), style: layoutStyle, "data-density": density, "data-fill": fill ? undefined : "false", children: [asyncState.status === "idle" ? null : (_jsx("p", { className: "hjm-data-table__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })), _jsx(TableScroll, { scroll: pinnedCount > 0, maxBodyHeight: maxBodyHeight, children: _jsxs("table", { ref: forwardedRef, className: "hjm-data-table__table", "aria-label": labels.table, "aria-busy": asyncState.status === "loading" || undefined, children: [_jsxs("thead", { children: [bands ? (_jsxs("tr", { className: "hjm-data-table__bands", children: [hasSelector ? _jsx("td", { "aria-hidden": "true", className: classNames("hjm-data-table__selector", selectorSticky.className), style: selectorSticky.style }) : null, bands.map((band) => {
                                             const first = columns.findIndex((column) => column.id === band.columnIds[0]);
                                             // A band sticks only when every column under it is pinned; otherwise it scrolls with them.
                                             const sticky = first + band.span <= pinnedCount ? columnSticky(first + band.span - 1) : {};

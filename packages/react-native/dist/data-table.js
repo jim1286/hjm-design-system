@@ -16,7 +16,7 @@ const DEFAULT_WIDTH = 72, PINNED_WIDTH = 96;
 // React Native textAlign has no logical start/end; mirror through the provider direction so RTL tables read
 // from the right like the Web renderer's logical alignment (2026-10-18 scenario-matrix rtl proof).
 const alignOf = (align, direction) => align === "center" ? "center" : (align === "end") !== (direction === "rtl") ? "right" : "left";
-export function DataTable({ columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, }) {
+export function DataTable({ columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null, summaryRow, asyncState = { status: "idle" }, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, fill = true, }) {
     validateDataTableColumns(columns);
     validateDataTableRows(rows);
     validateDataTableSortState(sortState, columns);
@@ -39,7 +39,7 @@ export function DataTable({ columns, rows, labels, renderCell, getCellText, sort
     const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
     // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
     const natural = scrolling.reduce((sum, column) => sum + naturalWidth(column, false), 0);
-    const stretch = width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
+    const stretch = fill && width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
     const widthOf = (column, pinnedColumn) => naturalWidth(column, pinnedColumn) * (pinnedColumn ? 1 : stretch);
     const overflow = width > 0 && pinnedWidth + natural > width + 1;
     function header(column, pinnedColumn) {

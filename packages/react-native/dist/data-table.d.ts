@@ -43,8 +43,13 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     }>;
     /** Bounds the body height; the header stays fixed while rows scroll (react-native-sticky-table). */
     maxBodyHeight?: number;
+    /**
+     * `false` keeps every column at its natural width in a short table instead of stretching the scrolling columns to the
+     * card width, so a five-column row reads like its long sibling table (2026-11-06, Yajalal 공격/주루). Default `true`.
+     */
+    fill?: boolean;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, getCellText, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
+export declare function DataTable<ColumnKey extends string = string, RowKey extends string = string>({ columns, rows, labels, renderCell, getCellText, sortState, sortCycle, onSortChange, onRowPress, selectedRowId, summaryRow, asyncState, emptyLabel, density: suppliedDensity, footer, layoutStyle, columnGroups, rowGroups, cellStyle, heatColors, maxBodyHeight, fill, }: DataTableProps<ColumnKey, RowKey>): import("react").JSX.Element;
 export { LineScore, MatrixTable, ComparisonTable, type LineScoreProps, type MatrixTableProps, type ComparisonTableProps } from "./table-family.js";
 //# sourceMappingURL=data-table.d.ts.map

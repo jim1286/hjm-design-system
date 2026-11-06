@@ -64,6 +64,11 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   heatColors?: Readonly<{ high: string; low: string }>;
   /** Bounds the body height; the header stays fixed while rows scroll (react-native-sticky-table). */
   maxBodyHeight?: number;
+  /**
+   * `false` keeps every column at its natural width in a short table instead of stretching the scrolling columns to the
+   * card width, so a five-column row reads like its long sibling table (2026-11-06, Yajalal 공격/주루). Default `true`.
+   */
+  fill?: boolean;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
 
@@ -76,7 +81,7 @@ const alignOf = (align: DataTableColumnDescriptor["align"], direction: "ltr" | "
 export function DataTable<ColumnKey extends string = string, RowKey extends string = string>({
   columns, rows, labels, renderCell, getCellText, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, onRowPress, selectedRowId = null,
   summaryRow, asyncState = { status: "idle" }, emptyLabel, density: suppliedDensity, footer, layoutStyle,
-  columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight,
+  columnGroups = [], rowGroups = [], cellStyle, heatColors, maxBodyHeight, fill = true,
 }: DataTableProps<ColumnKey, RowKey>) {
   validateDataTableColumns(columns);
   validateDataTableRows(rows);
@@ -103,7 +108,7 @@ export function DataTable<ColumnKey extends string = string, RowKey extends stri
   const pinnedWidth = pinned.reduce((sum, column) => sum + naturalWidth(column, true), 0);
   // Short tables stretch scrolling columns to fill the card; wide ones keep their widths and scroll.
   const natural = scrolling.reduce((sum, column) => sum + naturalWidth(column, false), 0);
-  const stretch = width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
+  const stretch = fill && width > 0 && natural > 0 && natural < width - pinnedWidth ? (width - pinnedWidth) / natural : 1;
   const widthOf = (column: DataTableColumnDescriptor<ColumnKey>, pinnedColumn: boolean) => naturalWidth(column, pinnedColumn) * (pinnedColumn ? 1 : stretch);
   const overflow = width > 0 && pinnedWidth + natural > width + 1;
 
