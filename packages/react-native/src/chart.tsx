@@ -8,7 +8,7 @@ import {
   prepareChartLineMorph,
   areaPath, chartRecipe, describeChart, isChartNumber, linePath, nearestChartIndex, nearestScatterPoint, observedIndices,
   resolveBarGeometry, resolveLineGeometry, resolvePieGeometry, resolvePieVisibility, type PieVisibilitySummary, resolveRadarGeometry, resolveScatterGeometry, seriesExtremes,
-  splitSegments, stepChartIndex, validateChartLegendLayout, validateChartSeries,
+  splitSegments, stackValues, stepChartIndex, validateChartLegendLayout, validateChartSeries,
   type ChartBar, type ChartLegendLayout, type ChartBarLayout, type ChartCurve, type ChartOrientation, type ChartSeries, type ScatterDatum,
 } from "@hjmds/design-contracts/components/chart";
 import { spacing, glyph } from "@hjmds/design-contracts/foundations";
@@ -369,6 +369,13 @@ export function BarChart({ categories, series, accessibilityLabel, formatValue, 
       {showAxis && vertical && <AxisLabels ticks={g.ticks} y={g.value} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {g.bars.map(bar => <MotionBar key={`${series[bar.seriesIndex]!.id}-${categoryKeys[bar.index]}`} bar={bar} animate={animateChanges && g.bars.length <= 200} rx={chartRecipe.bar.radius} fill={palette.seriesColor(series[bar.seriesIndex]!, bar.seriesIndex)} opacity={focus === null || focus === bar.index ? 1 : chartRecipe.bar.restOpacity} />)}
       {showValues && layout === "grouped" && g.bars.map(bar => <ChartLabel key={`v${bar.seriesIndex}-${bar.index}`} x={vertical ? bar.x + bar.width / 2 : bar.x + bar.width + 4} y={vertical ? bar.y - 4 : bar.y + bar.height / 2 + 4} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(bar.value)}</ChartLabel>)}
+      {/* Stack totals, as on Web: showValues on a stacked bar labels each stack's total at its end (Native drew none). */}
+      {showValues && layout === "stacked" && categories.map((_, i) => {
+        if (!available.includes(i)) return null;
+        const total = series.reduce((sum, item) => sum + (isChartNumber(item.values[i]) ? item.values[i]! : 0), 0);
+        const end = g.value(Math.max(0, ...stackValues(series).map(row => row[i]?.[1] ?? 0)));
+        return <ChartLabel key={`total${i}`} x={vertical ? g.centers[i]! : end + 4} y={vertical ? end - 4 : g.centers[i]! + 4} fontWeight={textRecipe.emphasis.medium} fill={palette.legend} textAnchor={vertical ? "middle" : "start"}>{formatValue(total)}</ChartLabel>;
+      })}
       {categories.map((category, i) => vertical
         ? (categories.length <= 12 || i % Math.ceil(categories.length / 12) === 0) && <ChartLabel key={category + i} x={g.centers[i]!} y={resolvedHeight - 4} fill={focus === i ? palette.legend : palette.label} textAnchor="middle">{category}</ChartLabel>
         : <ChartLabel key={category + i} x={g.plot.left - 8} y={g.centers[i]! + 4} fill={focus === i ? palette.legend : palette.label} textAnchor="end">{category}</ChartLabel>)}

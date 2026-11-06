@@ -215,3 +215,14 @@ it("names multi-series Native charts by default and bridges Native sparkline gap
     expect(spark.root.findAll(n => typeof n.type === "string" && n.props.r === chartRecipe.sparkline.strokeWidth)).toHaveLength(1);
   } finally { act(() => { stacked.unmount(); hidden.unmount(); spark.unmount(); }); }
 });
+
+it("labels Native stacked bar totals like Web", () => {
+  const tree = render(<BarChart categories={categories} series={[{ id: "a", label: "A", values: [3, 4, null] }, { id: "b", label: "B", values: [1, null, null] }]}
+    layout="stacked" orientation="horizontal" showValues showLegend={false} accessibilityLabel="합" formatValue={v => `${v}개`} missingLabel="—" />);
+  try {
+    layout(tree);
+    const labels = tree.root.findAll(n => typeof n.type === "string" && typeof n.props.children === "string" && n.props.children.endsWith("개")).map(n => n.props.children);
+    expect(labels).toEqual(expect.arrayContaining(["4개", "4개"]));
+    expect(labels.filter(text => text === "4개")).toHaveLength(2);
+  } finally { act(() => tree.unmount()); }
+});
