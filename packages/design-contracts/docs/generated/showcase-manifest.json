@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "2.7.0",
+  "designSystemVersion": "2.8.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
@@ -5101,7 +5101,9 @@
       "storyId": "overlay/sheet",
       "name": "Sheet",
       "label": "시트",
-      "companions": [],
+      "companions": [
+        "SheetScrollView"
+      ],
       "extensions": [
         "GestureSheet",
         "GestureSheetProvider",

@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/design-contracts",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Renderer-neutral design contracts, tokens, recipes, and behaviors shared by HJM products.",
   "license": "MIT",
   "repository": {
