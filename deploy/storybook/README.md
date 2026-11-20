@@ -20,7 +20,7 @@
 gh run view <run-id> --repo jim1286/hjm-design-system --json headSha,status,conclusion,jobs
 gh run download <run-id> --repo jim1286/hjm-design-system --name hjm-storybook-<source-sha> --dir /absolute/new/artifact
 python3 deploy/storybook/artifact.py verify /absolute/new/artifact <source-sha>
-bash deploy/storybook/publish.sh /absolute/new/artifact ubuntu@51.79.240.56 /absolute/ssh-key-file <source-sha>
+bash deploy/storybook/publish.sh /absolute/new/artifact ubuntu@15.235.193.11 /absolute/ssh-key-file <source-sha>
 python3 deploy/storybook/artifact.py check-http /absolute/new/artifact https://storybook.jmstudioapps.com
 ```
 
@@ -31,10 +31,10 @@ Python 3, curl, Bash, SSH/SCP 및 known_hosts가 필요하다. 빌드는 Node 24
 
 ## 운영·검증·복구
 
-- DNS: OVH `storybook` A `51.79.240.56`, TTL300. HTTPS는 기존 Caddy가 관리한다.
+- DNS: OVH `storybook` A `15.235.193.11`, TTL300. HTTPS는 기존 Caddy가 관리한다.
 - web root: `/srv/hjm-storybook/current/public`; releases는 `<source-sha>-<manifest-prefix>`.
 - edge snippet: `/etc/caddy/conf.d/hjm-storybook.caddy`. 다른 snippet/컨테이너/DB는 교체하지 않는다.
-- 포폴·정책·BurnTok과 `/opt/burntok/deploy.lock`을 공유한다. 전송 archive hash, 설치 closure/hash,
+- 포폴·정책·BurnTok과 `/var/lib/portfolio-deploy/deploy.lock`을 공유한다. 전송 archive hash, 설치 closure/hash,
   loopback 18086 후보의 모든 file status/hash/cache 및 음성 404 검증 후 current를 원자 교체한다.
 - HTML/index는 revalidation, Vite content-hash assets만 1년 immutable, 나머지는 300초다.
   임의 URL을 manager HTML로 반환하지 않는다. `?path=/story/...`와 `iframe.html?id=...`는 실제 파일을 사용한다.

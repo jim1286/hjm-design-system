@@ -32,7 +32,7 @@ set -euo pipefail
 release_id=$1 archive_sha=$2 stage=$3
 [[ "$release_id" =~ ^[0-9a-f]{40}-[0-9a-f]{12}$ && "$archive_sha" =~ ^[0-9a-f]{64}$ && "$stage" = "/tmp/storybook-publish-$release_id" ]]
 # Caddy is shared with portfolio, policies and BurnTok; use the established host lock.
-exec 9>/opt/burntok/deploy.lock
+exec 9<>/var/lib/portfolio-deploy/deploy.lock
 flock -w 300 9
 printf '%s  %s\n' "$archive_sha" "$stage/artifact.tgz" | sha256sum --check
 grep -Fq 'import /etc/caddy/conf.d/*.caddy' /etc/caddy/Caddyfile
