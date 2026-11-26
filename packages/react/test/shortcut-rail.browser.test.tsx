@@ -55,3 +55,20 @@ it("moves focus to the retained default item when its clear action disappears", 
   await act(async()=>host.querySelector<HTMLButtonElement>('[aria-label="2026"]')!.click());expect(action).toHaveBeenCalledWith({id:"season",label:"2026",active:false});
  }finally{await act(async()=>root.unmount());host.remove();}
 });
+
+it("draws the control outline and primary label only for strong emphasis", async () => {
+  const host = document.createElement("div"); document.body.append(host);
+  const root = createRoot(host);
+  const faces = async (emphasis?: "strong") => {
+    await act(async () => root.render(<HjmProvider><ShortcutRail label="Recent cities" items={[{ id: "seoul", label: "Seoul" }]} onAction={() => {}}
+      {...(emphasis ? { emphasis } : {})} /></HjmProvider>));
+    const item = host.querySelector<HTMLElement>(".hjm-shortcut-rail__item")!;
+    return { border: getComputedStyle(item, "::before").borderTopColor, content: getComputedStyle(item).color };
+  };
+  try {
+    const resting = await faces(), strong = await faces("strong");
+    // The option must change the painted outline and label, not only a data attribute.
+    expect(strong.border).not.toBe(resting.border);
+    expect(strong.content).not.toBe(resting.content);
+  } finally { await act(async () => root.unmount()); host.remove(); }
+});

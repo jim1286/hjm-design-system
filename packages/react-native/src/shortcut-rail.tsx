@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { chipRecipe } from "@hjmds/design-contracts/recipes";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
-import { shortcutRailRecipe, validateShortcutRail, revealShortcut, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
+import { shortcutRailRecipe, validateShortcutRail, revealShortcut, type ShortcutRailEmphasis, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -18,20 +18,22 @@ export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> 
   leading?: ReactNode;
   layout?: "scroll" | "wrap";
   size?: keyof typeof chipRecipe.sizes;
+  /** `strong` uses the control outline and primary label, for a rail placed beside other outlined controls. */
+  emphasis?: ShortcutRailEmphasis;
   renderLeading?(item: NoInfer<Item>): ReactNode;
   layoutStyle?: HjmCompositionStyleProp; testID?: string;
 }> & (Readonly<{ onRemove(item: NoInfer<Item>): void; removeLabel(item: NoInfer<Item>): string; removeIcon?: ReactNode; isRemovable?(item: NoInfer<Item>): boolean }>
   | Readonly<{ onRemove?: never; removeLabel?: never; removeIcon?: never; isRemovable?: never }>);
 
 export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading,
-  layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, renderLeading, layoutStyle, testID }: ShortcutRailProps<Item>) {
+  layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, emphasis = shortcutRailRecipe.defaults.emphasis, renderLeading, layoutStyle, testID }: ShortcutRailProps<Item>) {
   validateShortcutRail(items, label, layout);
   const { palette, tokens, environment } = useHjmNativeTheme();
   const scroll = useRef<ComponentRef<typeof ScrollView>>(null), viewport = useRef(0), offset = useRef(0);
   const frames = useRef(new Map<string, { x: number; width: number }>());
   const leadingFrame = useRef<{ x: number; width: number } | null>(null);
   const hasLeading = leading != null && leading !== false;
-  const metrics = chipRecipe.sizes[size], presentation = chipRecipe.states.idle;
+  const metrics = chipRecipe.sizes[size], presentation = { ...chipRecipe.states.idle, ...shortcutRailRecipe.emphasis[emphasis] };
   const visualHeight = visibleControlHeight(metrics.height, environment.minimumVisualTarget);
   const targetHeight = Math.max(visualHeight, shortcutRailRecipe.minTouchTarget);
   const paintInset = (targetHeight - visualHeight) / 2;

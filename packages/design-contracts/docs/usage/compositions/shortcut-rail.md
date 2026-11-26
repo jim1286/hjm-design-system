@@ -72,6 +72,7 @@ Native는 물리 LTR scroll 좌표와 RTL 행 배치를 분리한다.
 | layout | scroll | 1.36.1 게시. `scroll`은 기존 한 줄, `wrap`은 본문 폭에서 줄바꿈하며 별도 스크롤 host를 만들지 않는다. 긴 라벨도 부모 폭 안에서 감싼다 |
 | items[].description | 없음 | 1.36.1 게시. Native accessibilityHint / Web aria-description. 짧은 행동 설명 |
 | size | small | small/medium. 선택 칩의 selected·selectionMode는 없다 |
+| emphasis | default | 2026-11-26 추가. `default`는 Chip idle의 얇은 테두리·흐린 라벨, `strong`은 기간 칩·secondary Button과 같은 컨트롤 테두리(`border.control`)·기본 글자색. 같은 화면의 다른 윤곽 컨트롤 옆에서 흐려 보일 때 고른다(Spint 도시 시트 최근 도시, 기간 칩 아래). 선택 표시는 아니다 |
 | renderLeading · removeIcon | 없음/× | 장식 슬롯. 읽을 의미는 label/removeLabel에 쓴다 |
 | layoutStyle | 없음 | 구성 바깥 배치 전용 |
 | Native testID | 없음 | 루트. 항목은 `${testID}-${id}`, 제거는 `${testID}-remove-${id}` |

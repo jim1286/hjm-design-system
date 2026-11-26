@@ -1,3 +1,3 @@
 /** Package release shown by documentation surfaces. Kept in sync by a test. */
-export const designSystemVersion = "2.8.1";
+export const designSystemVersion = "2.8.2";
 //# sourceMappingURL=version.js.map

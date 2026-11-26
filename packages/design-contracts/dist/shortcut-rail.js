@@ -1,9 +1,15 @@
 import { validateItems } from "./interaction-adapters.js";
 import { control, glyph, spacing } from "./foundations.js";
+import { semanticColors } from "./semantic-colors.js";
 // Recent cities need independent open/remove targets, not nested buttons or selected filters.
 // Chip owns the pill's appearance; this composition adds finite horizontal placement and removal.
 export const shortcutRailRecipe = {
-    defaults: { layout: "scroll" },
+    defaults: { layout: "scroll", emphasis: "default" },
+    /** Overrides on top of `chipRecipe.states.idle`; `default` overrides nothing. */
+    emphasis: {
+        default: {},
+        strong: { content: semanticColors.content.primary, border: semanticColors.border.control },
+    },
     gap: spacing.xs,
     glyph: glyph.xs,
     actionMinWidth: control.minTouchTarget,

@@ -3970,6 +3970,8 @@ button.hjm-chat-message__media-item:focus-visible { outline: 2px solid var(--hjm
 .hjm-shortcut-rail__item { position: relative; display: inline-flex; align-items: stretch; flex: 0 0 auto; color: var(--hjm-color-text-body); }
 .hjm-shortcut-rail__item::before { content: ""; pointer-events: none; position: absolute; inset: 4px 0; border: 1px solid var(--hjm-color-border); border-radius: 999px; background: var(--hjm-color-bg); }
 .hjm-shortcut-rail[data-size="medium"] .hjm-shortcut-rail__item::before { inset-block: 0; }
+.hjm-shortcut-rail[data-emphasis="strong"] .hjm-shortcut-rail__item { color: var(--hjm-color-text); }
+.hjm-shortcut-rail[data-emphasis="strong"] .hjm-shortcut-rail__item::before { border-color: var(--hjm-color-border-control); }
 .hjm-shortcut-rail__action, .hjm-shortcut-rail__remove { position: relative; display: inline-flex; align-items: center; justify-content: center; min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); background: transparent; color: inherit; font: inherit; font-weight: var(--hjm-text-emphasis-medium); border: 0; border-radius: 999px; cursor: pointer; }
 .hjm-shortcut-rail__action { gap: var(--hjm-space-xxs); padding-inline: var(--hjm-space-sm); white-space: nowrap; }
 .hjm-shortcut-rail[data-size="medium"] .hjm-shortcut-rail__action { gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); }

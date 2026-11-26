@@ -9,14 +9,14 @@ import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import X from "lucide-react-native/icons/x";
 import { LucideGlyph } from "./internal/lucide-glyph.js";
-export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, renderLeading, layoutStyle, testID }) {
+export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, emphasis = shortcutRailRecipe.defaults.emphasis, renderLeading, layoutStyle, testID }) {
     validateShortcutRail(items, label, layout);
     const { palette, tokens, environment } = useHjmNativeTheme();
     const scroll = useRef(null), viewport = useRef(0), offset = useRef(0);
     const frames = useRef(new Map());
     const leadingFrame = useRef(null);
     const hasLeading = leading != null && leading !== false;
-    const metrics = chipRecipe.sizes[size], presentation = chipRecipe.states.idle;
+    const metrics = chipRecipe.sizes[size], presentation = { ...chipRecipe.states.idle, ...shortcutRailRecipe.emphasis[emphasis] };
     const visualHeight = visibleControlHeight(metrics.height, environment.minimumVisualTarget);
     const targetHeight = Math.max(visualHeight, shortcutRailRecipe.minTouchTarget);
     const paintInset = (targetHeight - visualHeight) / 2;

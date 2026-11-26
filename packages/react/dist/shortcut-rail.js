@@ -6,7 +6,7 @@ import { shortcutRailRecipe, validateShortcutRail } from "@hjmds/design-contract
 import { classNames } from "./internal.js";
 import { X } from "lucide";
 import { LucideGlyph } from "./internal/lucide-glyph.js";
-export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, renderLeading, layoutStyle, className, style, ...props }) {
+export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, emphasis = shortcutRailRecipe.defaults.emphasis, renderLeading, layoutStyle, className, style, ...props }) {
     validateShortcutRail(items, label, layout);
     const root = useRef(null), leadingRoot = useRef(null), buttons = useRef(new Map());
     const pending = useRef(null);
@@ -26,7 +26,7 @@ export function ShortcutRail({ label, items, onAction, onRemove, removeLabel, re
         const control = leadingRoot.current?.querySelector('button:not(:disabled), a[href], input:not(:disabled), [tabindex="0"]');
         (next ? buttons.current.get(next.id) : control ?? root.current)?.focus({ preventScroll: true });
     }, [identity]);
-    return _jsxs("ul", { ...props, ref: root, "aria-label": label, tabIndex: -1, className: classNames("hjm-shortcut-rail", className), "data-layout": layout, "data-size": size, "data-empty": !items.length && !hasLeading || undefined, style: { ...style, ...layoutStyle, gap: shortcutRailRecipe.gap }, children: [hasLeading ? _jsx("li", { ref: leadingRoot, style: { display: "inline-flex", flex: "0 0 auto", alignItems: "center" }, onFocusCapture: event => event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }), children: leading }) : null, items.map((item, index) => _jsxs("li", { className: "hjm-shortcut-rail__item", "data-disabled": item.disabled || undefined, children: [_jsxs("button", { ref: node => { if (node)
+    return _jsxs("ul", { ...props, ref: root, "aria-label": label, tabIndex: -1, className: classNames("hjm-shortcut-rail", className), "data-layout": layout, "data-size": size, "data-emphasis": emphasis, "data-empty": !items.length && !hasLeading || undefined, style: { ...style, ...layoutStyle, gap: shortcutRailRecipe.gap }, children: [hasLeading ? _jsx("li", { ref: leadingRoot, style: { display: "inline-flex", flex: "0 0 auto", alignItems: "center" }, onFocusCapture: event => event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }), children: leading }) : null, items.map((item, index) => _jsxs("li", { className: "hjm-shortcut-rail__item", "data-disabled": item.disabled || undefined, children: [_jsxs("button", { ref: node => { if (node)
                             buttons.current.set(item.id, node);
                         else
                             buttons.current.delete(item.id); }, type: "button", disabled: item.disabled, "aria-label": item.label, "aria-description": item.description, className: "hjm-shortcut-rail__action", onFocus: event => event.currentTarget.closest("li")?.scrollIntoView({ block: "nearest", inline: "nearest" }), onClick: () => onAction(item), children: [renderLeading ? _jsx("span", { "aria-hidden": "true", children: renderLeading(item) }) : null, _jsx("span", { children: item.label })] }), onRemove && removable(item) ? _jsx("button", { type: "button", disabled: item.disabled, "aria-label": removeLabel(item), className: "hjm-shortcut-rail__remove", onClick: event => {

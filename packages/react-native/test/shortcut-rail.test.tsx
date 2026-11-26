@@ -69,3 +69,19 @@ it.each(["scroll", "wrap"] as const)("retains leading controls with no summaries
   act(()=>buttons()[3]!.props.onPress());expect(remove).toHaveBeenCalledWith(mixed[1]);expect(open).toHaveBeenCalledOnce();
  }finally{act(()=>tree.unmount());}
 });
+
+it("paints the control outline and primary label only for strong emphasis", () => {
+  const faces = (emphasis?: "strong") => {
+    let tree!: ReactTestRenderer;
+    try {
+      act(() => { tree = create(<HjmNativeProvider><ShortcutRail label="Recent cities" items={items} onAction={() => {}} {...(emphasis ? { emphasis } : {})} /></HjmNativeProvider>); });
+      const paint = tree.root.findAllByType(View).find(node => node.props.pointerEvents === "none")!;
+      const label = tree.root.findAll(node => node.props.fontRole === "ui")[0]!;
+      return { border: paint.props.style.borderColor, content: label.props.style.color };
+    } finally { act(() => tree.unmount()); }
+  };
+  const resting = faces(), strong = faces("strong");
+  // A resting rail keeps the Chip hairline; strong must differ in both signals or the option is a no-op.
+  expect(strong.border).not.toBe(resting.border);
+  expect(strong.content).not.toBe(resting.content);
+});

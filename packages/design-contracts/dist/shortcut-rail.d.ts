@@ -4,9 +4,32 @@ export type ShortcutRailItem = Readonly<{
     description?: string;
     disabled?: boolean;
 }>;
+/**
+ * `default` keeps the Chip idle face (hairline border, muted label). `strong` is for a rail that sits among controls with a
+ * resting control outline, such as Spint's recent cities above period pills: the hairline read as disabled next to them
+ * (2026-11-26 Spint city sheet). It uses the same control outline and primary label as the pills and secondary Button.
+ */
+export type ShortcutRailEmphasis = "default" | "strong";
 export declare const shortcutRailRecipe: {
     readonly defaults: {
         readonly layout: "scroll";
+        readonly emphasis: ShortcutRailEmphasis;
+    };
+    /** Overrides on top of `chipRecipe.states.idle`; `default` overrides nothing. */
+    readonly emphasis: {
+        readonly default: {};
+        readonly strong: {
+            readonly content: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "borderControl";
+                alpha?: number;
+            }>;
+        };
     };
     readonly gap: 8;
     readonly glyph: 14;

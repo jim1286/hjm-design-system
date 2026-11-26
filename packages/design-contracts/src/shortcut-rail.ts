@@ -1,12 +1,25 @@
 import { validateItems } from "./interaction-adapters.js";
 import { control, glyph, spacing } from "./foundations.js";
+import { semanticColors } from "./semantic-colors.js";
 
 export type ShortcutRailItem = Readonly<{ id: string; label: string; description?: string; disabled?: boolean }>;
+
+/**
+ * `default` keeps the Chip idle face (hairline border, muted label). `strong` is for a rail that sits among controls with a
+ * resting control outline, such as Spint's recent cities above period pills: the hairline read as disabled next to them
+ * (2026-11-26 Spint city sheet). It uses the same control outline and primary label as the pills and secondary Button.
+ */
+export type ShortcutRailEmphasis = "default" | "strong";
 
 // Recent cities need independent open/remove targets, not nested buttons or selected filters.
 // Chip owns the pill's appearance; this composition adds finite horizontal placement and removal.
 export const shortcutRailRecipe = {
-  defaults: { layout: "scroll" },
+  defaults: { layout: "scroll", emphasis: "default" as ShortcutRailEmphasis },
+  /** Overrides on top of `chipRecipe.states.idle`; `default` overrides nothing. */
+  emphasis: {
+    default: {},
+    strong: { content: semanticColors.content.primary, border: semanticColors.border.control },
+  },
   gap: spacing.xs,
   glyph: glyph.xs,
   actionMinWidth: control.minTouchTarget,

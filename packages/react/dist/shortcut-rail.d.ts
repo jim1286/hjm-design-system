@@ -1,6 +1,6 @@
 import { type HTMLAttributes, type ReactNode } from "react";
 import { chipRecipe } from "@hjmds/design-contracts/recipes";
-import { type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
+import { type ShortcutRailEmphasis, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> = Omit<HTMLAttributes<HTMLUListElement>, "children"> & Readonly<{
     label: string;
@@ -10,6 +10,8 @@ export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> 
     leading?: ReactNode;
     layout?: "scroll" | "wrap";
     size?: keyof typeof chipRecipe.sizes;
+    /** `strong` uses the control outline and primary label, for a rail placed beside other outlined controls. */
+    emphasis?: ShortcutRailEmphasis;
     renderLeading?(item: NoInfer<Item>): ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }> & (Readonly<{
@@ -23,5 +25,5 @@ export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> 
     removeIcon?: never;
     isRemovable?: never;
 }>);
-export declare function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout, size, renderLeading, layoutStyle, className, style, ...props }: ShortcutRailProps<Item>): import("react").JSX.Element;
+export declare function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading, layout, size, emphasis, renderLeading, layoutStyle, className, style, ...props }: ShortcutRailProps<Item>): import("react").JSX.Element;
 //# sourceMappingURL=shortcut-rail.d.ts.map

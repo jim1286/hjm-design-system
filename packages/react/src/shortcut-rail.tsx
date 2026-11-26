@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, type HTMLAttributes, type ReactNode } from "react";
 import { chipRecipe } from "@hjmds/design-contracts/recipes";
-import { shortcutRailRecipe, validateShortcutRail, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
+import { shortcutRailRecipe, validateShortcutRail, type ShortcutRailEmphasis, type ShortcutRailItem } from "@hjmds/design-contracts/shortcut-rail";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { classNames } from "./internal.js";
 import { X } from "lucide";
@@ -14,12 +14,14 @@ export type ShortcutRailProps<Item extends ShortcutRailItem = ShortcutRailItem> 
   /** Controls before the item list, in the same scroll/wrap flow. */
   leading?: ReactNode;
   layout?: "scroll" | "wrap";
-  size?: keyof typeof chipRecipe.sizes; renderLeading?(item: NoInfer<Item>): ReactNode; layoutStyle?: HjmCompositionStyleProp;
+  size?: keyof typeof chipRecipe.sizes;
+  /** `strong` uses the control outline and primary label, for a rail placed beside other outlined controls. */
+  emphasis?: ShortcutRailEmphasis; renderLeading?(item: NoInfer<Item>): ReactNode; layoutStyle?: HjmCompositionStyleProp;
 }> & (Readonly<{ onRemove(item: NoInfer<Item>): void; removeLabel(item: NoInfer<Item>): string; removeIcon?: ReactNode; isRemovable?(item: NoInfer<Item>): boolean }>
   | Readonly<{ onRemove?: never; removeLabel?: never; removeIcon?: never; isRemovable?: never }>);
 
 export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAction, onRemove, removeLabel, removeIcon, isRemovable, leading,
-  layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, renderLeading, layoutStyle, className, style, ...props }: ShortcutRailProps<Item>) {
+  layout = shortcutRailRecipe.defaults.layout, size = chipRecipe.defaults.size, emphasis = shortcutRailRecipe.defaults.emphasis, renderLeading, layoutStyle, className, style, ...props }: ShortcutRailProps<Item>) {
   validateShortcutRail(items, label, layout);
   const root = useRef<HTMLUListElement>(null), leadingRoot = useRef<HTMLLIElement>(null), buttons = useRef(new Map<string, HTMLButtonElement>());
   const pending = useRef<{ removed: string; index: number } | null>(null);
@@ -38,7 +40,7 @@ export function ShortcutRail<Item extends ShortcutRailItem>({ label, items, onAc
     (next ? buttons.current.get(next.id) : control ?? root.current)?.focus({ preventScroll: true });
   }, [identity]);
   return <ul {...props} ref={root} aria-label={label} tabIndex={-1} className={classNames("hjm-shortcut-rail", className)}
-    data-layout={layout} data-size={size} data-empty={!items.length && !hasLeading || undefined} style={{ ...style, ...layoutStyle, gap: shortcutRailRecipe.gap }}>
+    data-layout={layout} data-size={size} data-emphasis={emphasis} data-empty={!items.length && !hasLeading || undefined} style={{ ...style, ...layoutStyle, gap: shortcutRailRecipe.gap }}>
     {hasLeading ? <li ref={leadingRoot} style={{ display: "inline-flex", flex: "0 0 auto", alignItems: "center" }}
       onFocusCapture={event => event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}>{leading}</li> : null}
     {items.map((item, index) => <li key={item.id} className="hjm-shortcut-rail__item" data-disabled={item.disabled || undefined}>
