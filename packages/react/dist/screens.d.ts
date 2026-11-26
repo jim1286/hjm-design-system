@@ -59,6 +59,8 @@ export type ScreenLayoutProps = Readonly<{
     stateAction?: ReactNode;
     /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
     loadingIndicator?: ReactNode;
+    /** Shape of the arriving content drawn in its own place while loading, instead of the centered Spinner (2026-11-26). */
+    loadingPlaceholder?: ReactNode;
     children?: ReactNode;
     /** A virtualized list must own scrolling; never nest it inside a second scroll container. */
     scroll?: "screen" | "content";
@@ -76,8 +78,7 @@ export type ScreenLayoutProps = Readonly<{
      */
     initialFocus?: ScreenInitialFocus;
 }>;
-/** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, as: Element, className, layoutStyle, initialFocus }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility, headerAlignment, header, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, loadingPlaceholder, children, scroll, as: Element, className, layoutStyle, initialFocus }: ScreenLayoutProps): import("react").JSX.Element;
 /**
  * Style for a product scroller that owns the body with `scroll="content"`: it reaches across the body gutter
  * (`--hjm-screen-body-inline`) and pads it back, so items stay on the gutter while the clip moves to the screen edges and
@@ -293,9 +294,11 @@ export type CompositionLayoutProps = Readonly<{
     stateHeight?: CompositionStateHeight;
     /** Brand visual only; the shared state group owns copy, centering and announcement. */
     loadingIndicator?: ReactNode;
+    /** Shape of the arriving content drawn in its own place while loading, instead of the centered Spinner (2026-11-26). */
+    loadingPlaceholder?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, loadingPlaceholder, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;

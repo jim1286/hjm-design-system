@@ -268,9 +268,12 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
       {(tickOverride ?? g.ticks).map(tick => <Line key={tick} x1={g.plot.left} x2={g.plot.right} y1={g.y(tick)} y2={g.y(tick)} stroke={palette.grid} strokeWidth={chartRecipe.chrome.gridWidth} />)}
       {(showAxis || valueAxis) && <AxisLabels ticks={tickOverride ?? g.ticks} y={g.y} x={g.plot.left - 6} color={palette.label} format={formatValue} />}
       {isChartNumber(reference) && <Line x1={g.plot.left} x2={g.plot.right} y1={g.y(reference)} y2={g.y(reference)} stroke={palette.label} strokeDasharray={[...chartRecipe.reference.dash]} strokeWidth={1} />}
-      {series.map((item, s) => {
-        const color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);
+      {g.paintOrder.map(s => {
+        const item = series[s]!, color = palette.seriesColor(item, s), segments = splitSegments(g.plots[s]!);
         const lowerSegments = g.lower ? splitSegments(g.lower[s]!) : null;
+        const context = item.emphasis === "context";
+        const lineWidth = context ? chartRecipe.line.contextStrokeWidth : chartRecipe.line.strokeWidth;
+        const dash = item.stroke === "dashed" ? { strokeDasharray: [...chartRecipe.line.dash] } : {};
         return <G key={item.id}>
           {/* Mark every observed edge next to missing periods, including leading/trailing gaps.
               Keep the marker at the observed x; the floor indicates absence, never zero. */}
@@ -283,17 +286,24 @@ export function LineChart({ categories, series, accessibilityLabel, formatValue,
             const before = segments[index]!.at(-1)!, after = segment[0]!;
             return <Line key={`bridge${index}`} x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={[...chartRecipe.line.missingDash]} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
           })}
-          {(showArea || stacked) && segments.map((segment, i) => <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lowerSegments?.[i]} key={`a${i}`} fill={`url(#hjmArea${id}${s})`} />)}
+          {(showArea || stacked) && !context && segments.map((segment, i) => <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lowerSegments?.[i]} key={`a${i}`} fill={`url(#hjmArea${id}${s})`} />)}
           {segments.map((segment, i) => <G key={`l${i}`}>
-            <MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={scrubEmphasis && focus !== null ? palette.label : color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
-            {scrubEmphasis && focus !== null && <G clipPath={`url(#hjmScrub${id})`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" /></G>}
+            <MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={scrubEmphasis && focus !== null ? palette.label : color} strokeWidth={lineWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" {...dash} />
+            {scrubEmphasis && focus !== null && <G clipPath={`url(#hjmScrub${id})`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} stroke={color} strokeWidth={lineWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" {...dash} /></G>}
           </G>)}
           {segments.filter(segment => segment.length === 1).map(segment => <Circle key={`d${segment[0]!.index}`} cx={segment[0]!.x} cy={segment[0]!.y} r={3} fill={color} />)}
+          {g.lowSample[s]!.map(point => point && <Circle key={`s${point.index}`} cx={point.x} cy={point.y} r={chartRecipe.line.lowSampleRadius} fill={palette.background} stroke={color} strokeWidth={chartRecipe.line.lowSampleStrokeWidth} />)}
         </G>;
       })}
       {focus !== null && <>
         <Line x1={g.xs[focus]!} x2={g.xs[focus]!} y1={g.plot.top - 4} y2={g.plot.bottom} stroke={palette.label} strokeWidth={chartRecipe.cursor.strokeWidth} {...(scrubbing ? {} : { strokeDasharray: [...chartRecipe.cursor.dash] })} />
-        {series.map((item, s) => { const p = g.plots[s]![focus]; const color = palette.seriesColor(item, s); return p ? <G key={item.id}><Circle cx={p.x} cy={p.y} r={chartRecipe.line.focusHaloRadius} fill={color} opacity={chartRecipe.line.focusHaloOpacity} /><Circle cx={p.x} cy={p.y} r={chartRecipe.line.pointRadius} fill={color} stroke={palette.background} strokeWidth={2} /></G> : null; })}
+        {g.paintOrder.map(s => {
+          const item = series[s]!, color = palette.seriesColor(item, s), low = g.lowSample[s]![focus], p = g.plots[s]![focus] ?? low;
+          if (!p) return null;
+          // Context lines mark the focused month without a halo; a low-sample point stays hollow.
+          const context = item.emphasis === "context";
+          return <G key={item.id}>{!context && <Circle cx={p.x} cy={p.y} r={chartRecipe.line.focusHaloRadius} fill={color} opacity={chartRecipe.line.focusHaloOpacity} />}<Circle cx={p.x} cy={p.y} r={context ? chartRecipe.line.contextPointRadius : chartRecipe.line.pointRadius} fill={low ? palette.background : color} stroke={low ? color : palette.background} strokeWidth={low ? chartRecipe.line.lowSampleStrokeWidth : 2} /></G>;
+        })}
       </>}
       {marks && extremes && ([[marks.max, extremes.high], [marks.min, extremes.low]] as const).filter(([index], i) => i === 0 || index !== marks.max).map(([index, label]) => {
         const p = g.plots[0]![index];

@@ -60,6 +60,8 @@ import { Skeleton } from "@hjmds/react-native/feedback";
 </Stack>
 ```
 
+화면·구역의 첫 로딩을 자리표시로 그릴 때는 [ScreenLayout](screen-layout.md)·[CompositionLayout](composition-layout.md)의 `loadingPlaceholder`에 넘긴다. 레이아웃이 busy 안내를 한 번 맡는다(2026-11-26, 개발 소스·미게시).
+
 목록 행 하나를 대신할 때는 Skeleton을 조립하지 말고 [ListRow](list-row.md)의 `loading`을 쓴다. 행 높이·슬롯
 배치를 그대로 유지하고 같은 채움색을 쓴다.
 

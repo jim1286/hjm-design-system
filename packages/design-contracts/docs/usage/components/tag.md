@@ -51,13 +51,14 @@ import { Tag } from "@hjmds/react-native/data-display";
 | --- | --- | --- | --- |
 | `children` | 문자열 | — (필수) | 문자열만 받는다. 비어 있으면 `TypeError` |
 | `tone` | `neutral` · `info` · `success` · `attention` · `brand` | `neutral` | `warning`·`danger`는 없다(이유는 계약 문서) |
-| `variant` | `default` · `outline` | `outline` | outline은 배경 없는 테두리형 캡슐 |
+| `variant` | `default` · `outline` · `strong` | `outline` | outline은 배경 없는 테두리형 캡슐. `strong`은 같은 캡슐을 흰 판에 진한 테두리·글자로 그린다(개발 소스·미게시) |
 | `layoutStyle` | `HjmCompositionStyleProp` | — | 바깥 여백·`alignSelf` 같은 배치. Web·Native 모두 |
 | `accessibilityLabel`(Native) | `string` | 라벨 | — |
 | `style`·`labelStyle`(Native) | 지원하지 않음 | — | 제거된 속성 — `layoutStyle` 또는 `tone`. 현재 공개 props에서 제거되었다 |
 
 작은 사각형은 명시적인 `variant="default"`, 최소 높이 20, caption medium(500)이다.
 기본 `variant="outline"`은 투명 배경, radius `full`, 최소 높이 32, 좌우 10·상하 6, caption regular(400)이다.
+`variant="strong"`는 outline과 같은 캡슐 크기에 canvas 판을 깔고 테두리·글자를 진하게 그린다. neutral은 `border.control`(#6b7684) 테두리와 `content.primary`(#191f28) 글자, 다른 tone은 tone 글자색을 테두리에도 쓴다. 2026-11-26 오늘야구 수상 카드에서 흰 카드 위 hairline outline이 카드와 구분되지 않아 추가했고, 사용자가 색 판 대신 흰 바탕에 진한 테두리·글자를 골랐다.
 프로필의 긴 사실 정보처럼 배경 채움 없이 나열할 때 쓴다. neutral 글자는 `content.primary`를 따른다.
 
 ## 배치

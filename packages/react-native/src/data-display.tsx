@@ -274,6 +274,8 @@ export function Tag({
   });
   const presentation = resolveTagPresentation(descriptor.tone, theme.palette, descriptor.variant);
   const outlined = descriptor.variant === "outline";
+  // Strong shares the outline capsule geometry; only the border and text strength differ.
+  const capsule = outlined || descriptor.variant === "strong";
   return (
     <View
       {...props}
@@ -285,21 +287,21 @@ export function Tag({
           alignSelf: "flex-start",
           backgroundColor: presentation.background,
           borderColor: presentation.border ?? "transparent",
-          borderRadius: theme.tokens.radius[outlined ? tagRecipe.outline.radius : tagRecipe.radius],
+          borderRadius: theme.tokens.radius[capsule ? tagRecipe.outline.radius : tagRecipe.radius],
           borderWidth: tagRecipe.borderWidth,
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: tagRecipe.size.gap,
-          minHeight: outlined ? tagRecipe.outline.minHeight : tagRecipe.size.minHeight,
-          paddingHorizontal: outlined ? tagRecipe.outline.paddingHorizontal : tagRecipe.size.paddingHorizontal,
-          paddingVertical: outlined ? tagRecipe.outline.paddingVertical : 0,
+          minHeight: capsule ? tagRecipe.outline.minHeight : tagRecipe.size.minHeight,
+          paddingHorizontal: capsule ? tagRecipe.outline.paddingHorizontal : tagRecipe.size.paddingHorizontal,
+          paddingVertical: capsule ? tagRecipe.outline.paddingVertical : 0,
         },
         layoutStyle,
       ]}
     >
       <Text
         align="center"
-        emphasis={outlined ? "regular" : "medium"}
+        emphasis={capsule ? "regular" : "medium"}
         style={[{ color: presentation.content }]}
         variant={tagRecipe.size.textVariant}
       >

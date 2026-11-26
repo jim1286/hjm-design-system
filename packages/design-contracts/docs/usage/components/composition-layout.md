@@ -56,6 +56,7 @@ import { CompositionLayout } from "@hjmds/react-native/screens";
 | leading / badge / actions | ReactNode | 없음 | 앞 콘텐츠·제목 옆 배지·끝 행동. 자리와 간격은 HJM |
 | notice | ReactNode | 없음 | 초안을 유지하는 비차단 안내 |
 | loadingIndicator | ReactNode | 기본 Spinner | loading 상태의 제품 브랜드 그림. HJM이 제목·설명을 접근성 이름으로 전달하고 중앙 배치를 소유하며 ready/error에는 표시하지 않는다(1.24.0) |
+| loadingPlaceholder | ReactNode | 없음 | loading 상태에서 Spinner 대신 **도착할 내용 자리에** 그리는 자리표시([Skeleton](skeleton.md)·ListRow `loading` 조합). 가운데 정렬·`stateHeight`를 쓰지 않고, 영역을 `state.title`로 한 번 busy 안내하며 자리표시 자체는 보조기술에서 숨긴다. empty·error에는 쓰지 않는다(2026-11-26 오늘야구 스켈레톤, 개발 소스·미게시) |
 | children | ReactNode | 없음 | 제품 도메인 콘텐츠 또는 HJM 전용 구성 |
 | aside | ReactNode | 없음 | 제목·본문 옆의 비상호작용 보조 그림. 머리글 actions로 장식을 넣어 다음 줄로 밀리던 Diairy 엽서 카드 문제에서 추가(2026-10-20). 최대 폭 40%, 본문은 남은 폭에서 줄바꿈 |
 | footerAside | ReactNode | 없음 | footer 끝의 짧은 보조 정보. 좁으면 다음 줄로 감싸며 본문 상태 교체와 독립 |

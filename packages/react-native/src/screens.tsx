@@ -115,6 +115,12 @@ export type ScreenLayoutProps = Readonly<{
   stateAction?: ReactNode;
   /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
   loadingIndicator?: ReactNode;
+  /**
+   * Shape of the arriving content (Skeleton, ListRow `loading`) drawn in the content's own place while
+   * `state.kind === "loading"`, instead of the centered Spinner (2026-11-26, 오늘야구 스켈레톤). The region is announced once
+   * as busy with `state.title`; the placeholder itself is hidden from assistive tech. Ignored for other states.
+   */
+  loadingPlaceholder?: ReactNode;
   children?: ReactNode;
   /** Use content when the child is a FlatList/virtualized timeline. */
   scroll?: "screen" | "content";
@@ -161,7 +167,7 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
 
-export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility = "visible", headerAlignment = "center", header, headerPosition = "flow", scrollEdgeEffect, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, pullToDismiss = false, keyboardAvoidance = true, safeAreaBottom = 0, safeAreaTop = 0, initialFocus = initialFocusDefaults.screen, onRefresh, refreshing = false, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
+export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility = "visible", headerAlignment = "center", header, headerPosition = "flow", scrollEdgeEffect, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, loadingPlaceholder, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps, pullToDismiss = false, keyboardAvoidance = true, safeAreaBottom = 0, safeAreaTop = 0, initialFocus = initialFocusDefaults.screen, onRefresh, refreshing = false, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps) {
   if (exit) validateScreenExit(exit, false);
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("ScreenLayout safeAreaTop must be non-negative");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("ScreenLayout safeAreaBottom must be non-negative");
@@ -215,7 +221,8 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
   const bleed = contentInset === "body-bleed";
   // A notice can contain navigation tabs; keep its separation from body filters.
   const bodyPaddingTop = bleed ? 0 : compactHeader && !notice ? Math.min(padding, screenHeaderRecipe.compactBodyTop) : padding;
-  // The last region (footer, else body) owns the bottom inset once: max(gutter, safe area), never gutter + inset.
+  // The last region owns the bottom inset once. A footer uses max(gutter, safe area), never gutter + inset; a body that
+  // ends the screen adds its gutter above the inset (see bodyEndPadding).
   // An overlay BottomNavigation covers `navigationInset` of the screen bottom (its safe area included), so the last
   // region keeps the gutter above the bar instead of each tab screen adding a spacer (BottomNavigationInsetProvider).
   // This is the only place the inset is applied: `scroll="content"` lists inside must not add it again.
@@ -225,13 +232,18 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
     return navigationInset > 0 && keyboardOverlap === 0 ? Math.max(edge, gutter + navigationInset) : edge;
   };
   const bottomPadding = lastRegionBottom(padding);
+  // A body that ends the screen keeps its gutter above the home indicator, the way a tab body keeps it above the bar.
+  // max(gutter, inset) suits footer buttons (2026-10-17), but put the last scrolled row flush on the safe-area edge
+  // (2026-11-26 오늘야구 주루 rows "세이프 존 때문에 이상해"). Bars and the keyboard already cover the inset themselves.
+  // Only a screen-scrolled body: a `scroll="content"` list scrolls inside and would leave a gap under its viewport.
+  const bodyEndPadding = scroll !== "screen" || keyboardOverlap > 0 || navigationInset > 0 ? bottomPadding : padding + safeAreaBottom;
   // A bleeding last body still clears the safe area and the bar, only without the gutter.
-  const bodyPaddingBottom = footer ? (bleed ? 0 : padding) : bleed ? lastRegionBottom(0) : bottomPadding;
+  const bodyPaddingBottom = footer ? (bleed ? 0 : padding) : bleed ? lastRegionBottom(0) : bodyEndPadding;
   const ready = contentAlignment === "center" ? <View style={{ marginVertical: "auto", flexShrink: 0, width: "100%" }}>{children}</View> : children;
   // body-edge/body-bleed hand the body gutter to product content (rows, a map); the shared state group has no inset
   // of its own, so it keeps the screen gutter instead of putting copy against the screen edge.
   const stateInline = contentInset === "body-edge" || bleed ? padding : 0;
-  const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap, paddingHorizontal: stateInline }}>
+  const body = state.kind === "ready" ? <ScreenBodyInsetContext.Provider value={bodyInline}>{ready}</ScreenBodyInsetContext.Provider> : resolved.busy && loadingPlaceholder != null ? <ScreenBodyInsetContext.Provider value={bodyInline}><LoadingPlaceholder state={state}>{loadingPlaceholder}</LoadingPlaceholder></ScreenBodyInsetContext.Provider> : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap, paddingHorizontal: stateInline }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
     {resolved.busy ? (loadingIndicator ? <View accessible accessibilityRole="progressbar" accessibilityLabel={[state.title, state.description].filter(Boolean).join(". ")} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite" style={{ alignItems: "center" }}><View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{loadingIndicator}</View></View> : <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} />) : <View accessibilityRole={state.kind === "error" ? "alert" : "text"} accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
@@ -612,9 +624,23 @@ export type CompositionLayoutProps = Readonly<{
   stateHeight?: CompositionStateHeight;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
+  /**
+   * Shape of the arriving content (Skeleton, ListRow `loading`) drawn in the content's own place while
+   * `state.kind === "loading"`, instead of the centered Spinner (2026-11-26, 오늘야구 스켈레톤). The region is announced once
+   * as busy with `state.title`; the placeholder itself is hidden from assistive tech. Ignored for other states.
+   */
+  loadingPlaceholder?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+/** One busy announcement around a decorative placeholder, shared by ScreenLayout and CompositionLayout. */
+function LoadingPlaceholder({ state, children }: Readonly<{ state: ScreenContentState; children: ReactNode }>) {
+  const label = "title" in state ? [state.title, "description" in state ? state.description : undefined].filter(Boolean).join(". ") : undefined;
+  return <View accessible accessibilityRole="progressbar" {...(label ? { accessibilityLabel: label } : {})} accessibilityState={{ busy: true }} accessibilityLiveRegion="polite">
+    <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{children}</View>
+  </View>;
+}
+
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, loadingPlaceholder, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   const stateMinHeight = resolveCompositionStateMinHeight(stateHeight);
   // The floor sits on a host around the state group: layoutStyle is placement-only and excludes sizes.
@@ -639,7 +665,7 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       </Stack>}{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : stateMinHeight === null ? stateGroup : <View testID="hjm-composition-state-region" style={{flex: 1, minHeight: stateMinHeight}}>{stateGroup}</View>}
+    {state.kind === "ready" ? children : resolved.busy && loadingPlaceholder != null ? <LoadingPlaceholder state={state}>{loadingPlaceholder}</LoadingPlaceholder> : stateMinHeight === null ? stateGroup : <View testID="hjm-composition-state-region" style={{flex: 1, minHeight: stateMinHeight}}>{stateGroup}</View>}
   </>;
   // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
   // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.

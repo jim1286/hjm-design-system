@@ -134,3 +134,23 @@ describe("focus and accessibility", () => {
     expect(describeChart(["3월", "4월"], [{ id: "a", label: "OPS", values: [0.8, null] }], v => v.toFixed(3), "기록 없음")).toBe("OPS: 3월 0.800, 4월 기록 없음");
   });
 });
+
+describe("line emphasis and low-sample observations", () => {
+  const months = ["8월", "9월", "10월"];
+  const current = { id: "2026", label: "2026", values: [0.4, 0.44, null], emphasis: "primary" as const };
+  const past = { id: "2025", label: "2025", values: [0.343, 0.323, 1], emphasis: "context" as const, lowSample: [false, false, true] };
+  const g = resolveLineGeometry({ categories: months, series: [current, past], width: 300, height: 120 });
+  it("keeps a low-sample outlier out of the line and the automatic domain, pinned inside the plot", () => {
+    expect(g.domain[1]).toBeLessThan(1);
+    expect(g.plots[1]![2]).toBeNull();
+    expect(g.lowSample[1]![2]).toMatchObject({ index: 2, value: 1, y: g.plot.top });
+    expect(g.lowSample[0]!.every(point => point === null)).toBe(true);
+    expect(observedIndices([current, past])).toEqual([0, 1, 2]);
+  });
+  it("paints context series beneath primary ones", () => {
+    expect(g.paintOrder).toEqual([1, 0]);
+  });
+  it("rejects lowSample flags that do not match the values", () => {
+    expect(() => validateChartSeries(months, [{ ...past, lowSample: [true] }])).toThrow(RangeError);
+  });
+});

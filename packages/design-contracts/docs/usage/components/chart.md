@@ -121,7 +121,7 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `categories` | `readonly string[]` | — (필수) | x축 범주(시간 순서) |
-| `series` | `{ id, label, values: (number \| null)[], color? }[]` | — (필수) | `color`가 없으면 dataviz 팔레트 index 색 |
+| `series` | `{ id, label, values: (number \| null)[], color?, emphasis?, stroke?, lowSample? }[]` | — (필수) | `color`가 없으면 dataviz 팔레트 index 색. 나머지는 아래 「강조 선과 표본 적은 점」 |
 | `accessibilityLabel` | `string` | — (필수) | 차트 이름. Web은 `aria-label`로 나간다 |
 | `formatValue` | `(value: number) => string` | — (필수) | 축 눈금·텍스트 대안·포커스 값 서식 |
 | `missingLabel` | `string` | — (필수) | 텍스트 대안에서 빈 값을 읽는 문구 |
@@ -142,6 +142,24 @@ import { BarChart, Sparkline } from "@hjmds/react-native/chart";
 | `showFocusLabel` | `boolean` | `false` | LineChart·BarChart에서 누름을 놓은 뒤에도 선택한 점의 말풍선 유지 (2026-10-29 기록 차트 요청) |
 | `cursorLabel` | `(index: number) => string` | `categories[index]` | 스크럽 중 커서 위 말풍선 |
 | `showLegend` | `boolean` | 계열이 둘 이상이고 `summary`가 없으면 `true` | plot 위 한 줄 범례(이름·색). `summary`가 있으면 요약이 범례를 그린다. 제품이 `ChartLegend`를 따로 그리면 `false` (개발 소스, 미게시) |
+
+#### 강조 선과 표본 적은 점 (개발 소스 · 미게시)
+
+2026-11-26 오늘야구 월별 비교에서 시즌마다 축을 따로 둔 작은 차트 세 개는 같은 높이가 다른 값을 뜻해 비교가 어려웠다.
+한 축에 겹치려면 주 계열과 비교 계열을 선 모양으로 구분하고, 표본이 적은 한 점(1타석 타율 1.000)이 축을 늘리지 않아야 해서 계열 필드 셋을 더했다.
+
+- `emphasis: "context"`는 `chartRecipe.line.contextStrokeWidth`(1.5) 선으로 그리고 영역을 채우지 않으며 포커스 점에 후광을 붙이지 않는다. 그리는 순서는 `context` 계열이 먼저라 `primary` 선이 위에 놓인다. 기본값은 `primary`다.
+- `stroke: "dashed"`는 `chartRecipe.line.dash`(5·4) 점선이다. 색만으로 계열을 구분하지 않도록 비교 계열이 둘 이상이면 하나를 점선으로 둔다.
+- `lowSample`은 값마다 표본이 적은지 표시하는 `boolean[]`이며 길이가 `values`와 다르면 오류다. 표시한 값은 선에서 빠져 속 빈 점(`lowSampleRadius` 3.5)으로 그려지고 자동 값 범위 계산에서 빠지며, 범위 밖이면 plot 가장자리에 고정된다. 포커스·텍스트 대안에는 그대로 남는다. 판정 기준과 설명 문구는 제품이 정한다. `stacked`에서는 적용하지 않는다.
+- 범례를 표로 대신하는 제품은 `showLegend={false}`를 주고 표에 선 색·모양을 함께 둔다.
+
+```tsx
+<LineChart categories={months} showLegend={false} area series={[
+  { id: "2026", label: "2026 시즌", values: current, color: gain },
+  { id: "2025", label: "2025 시즌", values: last, color: flat, emphasis: "context", lowSample: lastLowSample },
+  { id: "2024", label: "2024 시즌", values: older, color: silver, emphasis: "context", stroke: "dashed" },
+]} accessibilityLabel={t("monthlyComparison")} formatValue={formatRate} missingLabel={t("missing")} />
+```
 
 ### BarChart
 

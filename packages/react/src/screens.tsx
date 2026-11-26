@@ -75,6 +75,8 @@ export type ScreenLayoutProps = Readonly<{
   stateAction?: ReactNode;
   /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
   loadingIndicator?: ReactNode;
+  /** Shape of the arriving content drawn in its own place while loading, instead of the centered Spinner (2026-11-26). */
+  loadingPlaceholder?: ReactNode;
   children?: ReactNode;
   /** A virtualized list must own scrolling; never nest it inside a second scroll container. */
   scroll?: "screen" | "content";
@@ -94,7 +96,12 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
+/** One busy announcement around a decorative placeholder, shared by ScreenLayout and CompositionLayout. */
+function LoadingPlaceholder({ label, children }: Readonly<{ label: string; children: ReactNode }>) {
+  return <div role="status" aria-busy="true" aria-label={label}><div aria-hidden="true">{children}</div></div>;
+}
+
+export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility = "visible", headerAlignment = "center", header, contentInset = "default", contentAlignment = "start", surface = "default", presentation: suppliedPresentation, exit, actions, notice, footer, state = { kind: "ready" }, stateAction, loadingIndicator, loadingPlaceholder, children, scroll = "screen", as: Element = "main", className, layoutStyle, initialFocus = initialFocusDefaults.screen }: ScreenLayoutProps) {
   const id = useId();
   if (exit) validateScreenExit(exit, false);
   const leading = exit ? <ScreenExitButton {...exit} /> : null;
@@ -164,7 +171,7 @@ export function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingActi
         }
       }}
       className="hjm-screen__body" data-content-alignment={contentAlignment} data-scroll={bodyScroll} data-replacement={resolved.replacesContent || undefined} aria-busy={resolved.busy || undefined}>
-      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : <div className="hjm-screen__state">
+      {state.kind === "ready" ? (contentAlignment === "center" ? <div className="hjm-screen__centered-content">{children}</div> : children) : resolved.busy && loadingPlaceholder != null ? <LoadingPlaceholder label={[state.title, state.description].filter(Boolean).join(". ")}>{loadingPlaceholder}</LoadingPlaceholder> : <div className="hjm-screen__state">
         {/* Loading copy is an accessible name; visible copy beside the spinner
             contradicts the shared spinner-only loading contract. */}
         {/* The live role wraps only the copy: an alert around the retry action announced the button too (2026-10-17). */}
@@ -417,9 +424,11 @@ export type CompositionLayoutProps = Readonly<{
   stateHeight?: CompositionStateHeight;
   /** Brand visual only; the shared state group owns copy, centering and announcement. */
   loadingIndicator?: ReactNode;
+  /** Shape of the arriving content drawn in its own place while loading, instead of the centered Spinner (2026-11-26). */
+  loadingPlaceholder?: ReactNode;
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, layoutStyle}: CompositionLayoutProps) {
+export function CompositionLayout({title, titleSize = "default", headingLevel = 3, description, badge, leading, actions, notice, children, footer, aside, footerAside, state = {kind: "ready"}, stateAction, stateHeight = "fit", loadingIndicator, loadingPlaceholder, layoutStyle}: CompositionLayoutProps) {
   const resolved = resolveScreenContentState(state);
   const stateMinHeight = resolveCompositionStateMinHeight(stateHeight);
   // The floor sits on a host around the state group: layoutStyle is placement-only and excludes sizes.
@@ -443,7 +452,7 @@ export function CompositionLayout({title, titleSize = "default", headingLevel = 
       </Stack>}{actions}
     </Stack> : null}
     {notice}
-    {state.kind === "ready" ? children : stateMinHeight === null ? stateGroup : <div data-hjm-state-height={stateHeight} style={{display: "flex", flexDirection: "column", flex: 1, minHeight: stateMinHeight}}>{stateGroup}</div>}
+    {state.kind === "ready" ? children : resolved.busy && loadingPlaceholder != null ? <LoadingPlaceholder label={[state.title, state.description].filter(Boolean).join(". ")}>{loadingPlaceholder}</LoadingPlaceholder> : stateMinHeight === null ? stateGroup : <div data-hjm-state-height={stateHeight} style={{display: "flex", flexDirection: "column", flex: 1, minHeight: stateMinHeight}}>{stateGroup}</div>}
   </>;
   // Supporting art spans the heading and body, so a long title cannot push it into a separate row.
   // Diairy postcard cards (2026-10-20) exposed the misuse of header actions for this passive content.

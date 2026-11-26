@@ -7,7 +7,7 @@
 [선택 기준](SELECTION.md)으로 그대로 사용·공개 슬롯 확장·공통 API 보완·제품 고유 기능 연결을 고른다. 설치 버전의 지침을 본다: `node_modules/@hjmds/design-contracts/docs/usage/`.
 이름을 모르면 [쉬운 말로 찾고 비교하기](FINDING.md)에서 일상 표현과 선택 기준·요청 예시로 시작한다.
 제공 기준은 확인한 기본 API 버전이며 최초 출시 버전이 아니다. 구성·화면은 각 API 지침의 제공 버전을 확인한다.
-API 안정성은 2.4.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
+API 안정성은 2.8.0의 생성 manifest에서 읽은 정규(canonical) API 기준이다. 동반·선택형 확장은 개별 계약을 확인한다.
 Storybook 배포는 예제 분류이며 npm 게시·기기 검증·제품 반영을 의미하지 않는다.
 `분류`는 Storybook 제목 `배포/<단계>/<분류>/<항목>`의 셋째 마디이고, 토큰·구성·화면은 Storybook 메뉴와 같은 순서다.
 
@@ -111,7 +111,7 @@ Storybook 배포는 예제 분류이며 npm 게시·기기 검증·제품 반영
 | [Grid](components/grid.md) | 레이아웃 | 카드·타일처럼 같은 모양의 자식을 창 크기에 따라 열 수를 바꿔 배치할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [Heading](components/heading.md) | 글자와 아이콘 | 자리를 모르는 제목 글자 하나가 필요할 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [HistogramExplorer](components/histogram-explorer.md) | 구성/정보 표시 | 실제 관측값 배열의 분포를 동폭 구간 막대로 보여 주고, 사용자가 구간 수를 바꿔 볼 때 쓴다. | 1.21.0 | Web · Native | 개별 API 계약 참조 | 배포 |
-| [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 47개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
+| [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 48개)으로 고르는 그림 기호에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |
 | [IconTile](components/icon-tile.md) | 데이터 표시 | 프로필·런처 격자의 아이콘 위/제목 아래 항목에 쓴다. | 1.26.0 | Web · Native | Web stable / Native stable | 배포 |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 1.12.1 | Web · Native | Web stable / Native stable | 배포 |

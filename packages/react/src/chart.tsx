@@ -402,9 +402,12 @@ export function LineChart({
           {isChartNumber(reference) ? (
             <line className="hjm-chart__reference" x1={g.plot.left} x2={g.plot.right} y1={g.y(reference)} y2={g.y(reference)} strokeDasharray={chartRecipe.reference.dash.join(" ")} />
           ) : null}
-          {series.map((item, s) => {
-            const color = colorOf(item, s), segments = splitSegments(g.plots[s]!);
+          {g.paintOrder.map(s => {
+            const item = series[s]!, color = colorOf(item, s), segments = splitSegments(g.plots[s]!);
             const lower = g.lower?.[s];
+            const context = item.emphasis === "context";
+            const lineWidth = context ? chartRecipe.line.contextStrokeWidth : chartRecipe.line.strokeWidth;
+            const dash = item.stroke === "dashed" ? chartRecipe.line.dash.join(" ") : undefined;
             return (
               <g key={item.id} data-series={item.id}>
                 {/* Mark every observed edge next to missing periods, including leading/trailing gaps.
@@ -418,16 +421,19 @@ export function LineChart({
                   const before = segments[index]!.at(-1)!, after = segment[0]!;
                   return <line key={`bridge${index}`} data-missing-bridge="true" x1={before.x} y1={before.y} x2={after.x} y2={after.y} stroke={color} strokeWidth={chartRecipe.line.strokeWidth} strokeDasharray={chartRecipe.line.missingDash.join(" ")} strokeLinecap="round" opacity={chartRecipe.line.missingOpacity} />;
                 })}
-                {showArea || stacked ? segments.map((segment, i) => (
+                {(showArea || stacked) && !context ? segments.map((segment, i) => (
                   <MotionLinePath animate={animateChanges} points={segment} floor={g.plot.bottom} curve={curve} lower={lower ? segment.map((p) => lower[p.index]!) : undefined} key={`a${i}`} className="hjm-chart__area" fill={`url(#${id}-area-${s})`} />
                 )) : null}
                 {segments.map((segment, i) => (
-                  <g key={`l${i}`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={scrubEmphasis && focus !== null ? "var(--hjm-chart-axis-label)" : color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" />
-                    {scrubEmphasis && focus !== null && <g clipPath={`url(#${id}-scrub)`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={color} strokeWidth={chartRecipe.line.strokeWidth} fill="none" strokeLinejoin="round" strokeLinecap="round" /></g>}</g>
+                  <g key={`l${i}`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={scrubEmphasis && focus !== null ? "var(--hjm-chart-axis-label)" : color} strokeWidth={lineWidth} strokeDasharray={dash} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                    {scrubEmphasis && focus !== null && <g clipPath={`url(#${id}-scrub)`}><MotionLinePath animate={animateChanges} points={segment} curve={curve} className="hjm-chart__line" stroke={color} strokeWidth={lineWidth} strokeDasharray={dash} fill="none" strokeLinejoin="round" strokeLinecap="round" /></g>}</g>
                 ))}
                 {/* An isolated observation between gaps has no line, so it gets a dot. */}
                 {segments.filter((segment) => segment.length === 1).map((segment) => (
                   <circle key={`d${segment[0]!.index}`} cx={segment[0]!.x} cy={segment[0]!.y} r={3} fill={color} />
+                ))}
+                {g.lowSample[s]!.map((point) => point && (
+                  <circle key={`s${point.index}`} data-low-sample="true" cx={point.x} cy={point.y} r={chartRecipe.line.lowSampleRadius} fill="var(--hjm-color-bg)" stroke={color} strokeWidth={chartRecipe.line.lowSampleStrokeWidth} />
                 ))}
               </g>
             );
@@ -435,14 +441,17 @@ export function LineChart({
           {focus !== null && g.xs[focus] !== undefined ? (
             <g className="hjm-chart__focus">
               <line className="hjm-chart__cursor" x1={g.xs[focus]} x2={g.xs[focus]} y1={g.plot.top - 4} y2={g.plot.bottom} strokeWidth={chartRecipe.cursor.strokeWidth} strokeDasharray={scrubbing ? undefined : chartRecipe.cursor.dash.join(" ")} />
-              {series.map((item, s) => {
-                const p = g.plots[s]![focus];
+              {g.paintOrder.map(s => {
+                const item = series[s]!, low = g.lowSample[s]![focus], p = g.plots[s]![focus] ?? low;
                 if (!p) return null;
-                const color = colorOf(item, s);
+                const color = colorOf(item, s), context = item.emphasis === "context";
+                // Context lines mark the focused category without a halo; a low-sample point stays hollow.
                 return (
                   <g key={item.id}>
-                    <circle cx={p.x} cy={p.y} r={chartRecipe.line.focusHaloRadius} fill={color} opacity={chartRecipe.line.focusHaloOpacity} />
-                    <circle className="hjm-chart__dot" cx={p.x} cy={p.y} r={chartRecipe.line.pointRadius} fill={color} strokeWidth={2} />
+                    {!context && <circle cx={p.x} cy={p.y} r={chartRecipe.line.focusHaloRadius} fill={color} opacity={chartRecipe.line.focusHaloOpacity} />}
+                    {low
+                      ? <circle cx={p.x} cy={p.y} r={context ? chartRecipe.line.contextPointRadius : chartRecipe.line.pointRadius} fill="var(--hjm-color-bg)" stroke={color} strokeWidth={chartRecipe.line.lowSampleStrokeWidth} />
+                      : <circle className="hjm-chart__dot" cx={p.x} cy={p.y} r={context ? chartRecipe.line.contextPointRadius : chartRecipe.line.pointRadius} fill={color} strokeWidth={2} />}
                   </g>
                 );
               })}

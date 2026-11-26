@@ -62,6 +62,7 @@ import { Chip } from "@hjmds/react-native/inputs";
 | --- | --- | --- | --- |
 | `selectionMode` | `action`(버튼) · `single`(radio 역할) · `multiple`(checkbox 역할) | `action` | `single`·`multiple`이면 `selected`가 필수이고, `action`이면 `selected`를 줄 수 없다 |
 | `selected` | `boolean` | — | 제어 전용. Chip은 내부 선택 상태를 두지 않는다 |
+| `selectionTone` | `neutral` · `brand` | `neutral` | `single`·`multiple` 전용. `brand`는 선택된 칩을 `chipRecipe.states.selectedBrand`(primary 판·onPrimary 글자)로 칠한다. 선택이 한눈에 보여야 하는 필터 줄에 쓴다(2026-11-26 오늘야구 기록실 팀 필터, 개발 소스·미게시) |
 | Web `onSelectedChange` | `(selected: boolean) => void` | — | 선택 칩에서 필수. 다음 상태(`!selected`)를 받는다 |
 | Web `onPress` | `(event: MouseEvent<HTMLButtonElement>) => void` | — | 선택 사항. `event.preventDefault()`면 `onSelectedChange`를 부르지 않는다 |
 | Native `onPress` | 행동 칩 `(event: GestureResponderEvent) => void` · 선택 칩 `(selected: boolean, event: GestureResponderEvent) => void` | — | 필수 |

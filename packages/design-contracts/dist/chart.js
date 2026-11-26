@@ -47,7 +47,7 @@ export const chartRecipe = {
         plot: { top: spacing.lg, right: spacing.xs, bottom: spacing.xs, left: spacing.xs },
         axis: { top: spacing.md, right: spacing.xs, bottom: spacing.lg, left: 36 },
     },
-    line: { strokeWidth: 2.4, pointRadius: 4.5, focusHaloRadius: 9, focusHaloOpacity: 0.25, missingDash: [1, 5], missingOpacity: 0.55 },
+    line: { strokeWidth: 2.4, contextStrokeWidth: 1.5, contextPointRadius: 3.5, dash: [5, 4], lowSampleRadius: 3.5, lowSampleStrokeWidth: 1.5, pointRadius: 4.5, focusHaloRadius: 9, focusHaloOpacity: 0.25, missingDash: [1, 5], missingOpacity: 0.55 },
     area: { topOpacity: 0.32, bottomOpacity: 0 },
     bar: { radius: radius.sm / 2, maxWidth: 28, bandPadding: 0.36, groupGap: 2, restOpacity: 0.4 },
     pie: { donutRatio: 0.62, padAngle: 0.012, minLabelPercent: 4 },
@@ -93,6 +93,9 @@ export function validateChartSeries(categories, series) {
             throw new TypeError(`Chart series "${item.id}" label must not be empty`);
         if (item.values.length !== categories.length) {
             throw new RangeError(`Chart series "${item.id}" has ${item.values.length} values for ${categories.length} categories`);
+        }
+        if (item.lowSample && item.lowSample.length !== item.values.length) {
+            throw new RangeError(`Chart series "${item.id}" has ${item.lowSample.length} lowSample flags for ${item.values.length} values`);
         }
     }
 }
@@ -245,16 +248,20 @@ export function resolveLineGeometry({ categories, series, width, height, insets 
     validateChartSeries(categories, series);
     const plot = { left: insets.left, right: width - insets.right, top: insets.top, bottom: height - insets.bottom };
     const totals = stacked ? stackValues(series) : null;
-    const domainValues = totals ? totals.flatMap(row => row.map(cell => cell?.[1] ?? null)) : series.flatMap(item => item.values);
+    // A stacked total has no single observation to set apart, so stacked charts plot every value on the line.
+    const isLowSample = (item, i) => !stacked && item.lowSample?.[i] === true;
+    const domainValues = totals ? totals.flatMap(row => row.map(cell => cell?.[1] ?? null)) : series.flatMap(item => item.values.map((value, i) => isLowSample(item, i) ? null : value));
     const domain = resolveChartDomain(domainValues, { includeZero: stacked || domainOptions.includeZero, ...domainOptions });
     const y = scaleLinear(domain, [plot.bottom, plot.top], invert);
     const xs = pointPositions(categories.length, [plot.left, plot.right]);
     const plots = series.map((item, s) => item.values.map((value, i) => {
         const top = totals ? totals[s][i]?.[1] : value;
-        return isChartNumber(value) && isChartNumber(top) ? { index: i, seriesIndex: s, x: xs[i], y: y(top), value } : null;
+        return isChartNumber(value) && isChartNumber(top) && !isLowSample(item, i) ? { index: i, seriesIndex: s, x: xs[i], y: y(top), value } : null;
     }));
+    const lowSample = series.map((item, s) => item.values.map((value, i) => isChartNumber(value) && isLowSample(item, i) ? { index: i, seriesIndex: s, x: xs[i], y: Math.min(plot.bottom, Math.max(plot.top, y(value))), value } : null));
     const lower = totals ? series.map((_, s) => categories.map((__, i) => { const cell = totals[s][i]; return cell ? { index: i, seriesIndex: s, x: xs[i], y: y(cell[0]), value: cell[0] } : null; })) : null;
-    return { plot, domain, ticks: niceTicks(domain[0], domain[1], 4), xs, y, plots, lower };
+    const paintOrder = series.map((_, s) => s).sort((a, b) => Number(series[a].emphasis !== "context") - Number(series[b].emphasis !== "context"));
+    return { plot, domain, ticks: niceTicks(domain[0], domain[1], 4), xs, y, plots, lower, lowSample, paintOrder };
 }
 /** Cumulative [lower, upper] per series per category; missing values do not add to the stack. */
 export function stackValues(series) {

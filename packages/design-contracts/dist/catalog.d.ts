@@ -4043,6 +4043,23 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
             };
+            readonly selectedBrand: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+            };
             readonly pressedOpacity: 0.86;
             readonly disabledOpacity: 0.5;
         };
@@ -4731,6 +4748,11 @@ export declare const recipeRegistry: {
         };
         readonly line: {
             readonly strokeWidth: 2.4;
+            readonly contextStrokeWidth: 1.5;
+            readonly contextPointRadius: 3.5;
+            readonly dash: readonly [5, 4];
+            readonly lowSampleRadius: 3.5;
+            readonly lowSampleStrokeWidth: 1.5;
             readonly pointRadius: 4.5;
             readonly focusHaloRadius: 9;
             readonly focusHaloOpacity: 0.25;
@@ -9016,6 +9038,75 @@ export declare const recipeRegistry: {
                 key: "text";
                 alpha?: number;
             }>;
+        };
+        readonly strong: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly tones: {
+                readonly neutral: {
+                    readonly content: Readonly<{
+                        source: "theme";
+                        key: "text";
+                        alpha?: number;
+                    }>;
+                    readonly border: Readonly<{
+                        source: "theme";
+                        key: "borderControl";
+                        alpha?: number;
+                    }>;
+                };
+                readonly brand: {
+                    readonly content: Readonly<{
+                        source: "theme";
+                        key: "contentBrand";
+                        alpha?: number;
+                    }>;
+                    readonly border: Readonly<{
+                        source: "theme";
+                        key: "contentBrand";
+                        alpha?: number;
+                    }>;
+                };
+                readonly info: {
+                    readonly content: Readonly<{
+                        source: "accent";
+                        key: "info";
+                        alpha?: number;
+                    }>;
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "info";
+                        alpha?: number;
+                    }>;
+                };
+                readonly success: {
+                    readonly content: Readonly<{
+                        source: "accent";
+                        key: "success";
+                        alpha?: number;
+                    }>;
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "success";
+                        alpha?: number;
+                    }>;
+                };
+                readonly attention: {
+                    readonly content: Readonly<{
+                        source: "accent";
+                        key: "attention";
+                        alpha?: number;
+                    }>;
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "attention";
+                        alpha?: number;
+                    }>;
+                };
+            };
         };
         readonly radius: "sm";
         readonly borderWidth: 1;

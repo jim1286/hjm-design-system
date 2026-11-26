@@ -137,3 +137,12 @@ describe("Tag visual identity vs. Chip", () => {
     }
   });
 });
+
+describe("strong Tag", () => {
+  it("keeps the canvas plate and draws a control-strength border with primary text", () => {
+    expect(resolveTagDescriptor({ label: "2024", variant: "strong" }).variant).toBe("strong");
+    const palette = { theme: THEMES.light, statusAccents: ACCENTS.light, statusAccentFills: accentFill };
+    expect(resolveTagPresentation("neutral", palette, "strong")).toEqual({ background: THEMES.light.bg, content: THEMES.light.text, border: THEMES.light.borderControl });
+    expect(resolveTagPresentation("neutral", palette, "strong").border).not.toBe(resolveTagPresentation("neutral", palette, "outline").border);
+  });
+});

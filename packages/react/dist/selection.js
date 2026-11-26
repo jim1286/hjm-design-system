@@ -11,10 +11,10 @@ import { forwardRef, useEffect, useLayoutEffect, useId, useRef, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { FieldError } from "./internal/field-error.js";
 /** Action/filter chip with explicit selection semantics and no hidden state. */
-export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, leading, trailing, renderSelectionIndicator, selectionMode = "action", selected, onSelectedChange, onPress, disabled, className, layoutStyle, style, ...props }, ref) {
+export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, leading, trailing, renderSelectionIndicator, selectionMode = "action", selectionTone = "neutral", selected, onSelectedChange, onPress, disabled, className, layoutStyle, style, ...props }, ref) {
     const selectable = selectionMode !== "action";
     const active = selectable && selected === true;
-    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, "aria-checked": selectable ? active : undefined, className: classNames("hjm-chip", className), "data-selected": active || undefined, "data-size": size, disabled: disabled, onClick: (event) => {
+    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, "aria-checked": selectable ? active : undefined, className: classNames("hjm-chip", className), "data-selected": active || undefined, "data-selection-tone": selectionTone === "brand" ? "brand" : undefined, "data-size": size, disabled: disabled, onClick: (event) => {
             onPress?.(event);
             if (!event.defaultPrevented && selectable)
                 onSelectedChange?.(!active);

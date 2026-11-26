@@ -1,6 +1,11 @@
 import { type ColorReferencePalette } from "./color-references.js";
 export type TagTone = "neutral" | "info" | "success" | "attention" | "brand";
-export type TagVariant = "default" | "outline";
+/**
+ * `strong` (2026-11-26, 오늘야구 수상 연도): the outline capsule with a control-strength border and primary text. The
+ * hairline outline read as part of a white card; the user asked for a white plate with a darker border and text
+ * rather than a tinted plate.
+ */
+export type TagVariant = "default" | "outline" | "strong";
 export declare const tagDefaults: {
     readonly tone: "neutral";
     readonly variant: "outline";
@@ -135,6 +140,76 @@ export declare const tagRecipe: {
             key: "text";
             alpha?: number;
         }>;
+    };
+    /** Same capsule geometry as `outline` on the canvas plate; border and text carry the tone at full strength. */
+    readonly strong: {
+        readonly background: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+        readonly tones: {
+            readonly neutral: {
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "borderControl";
+                    alpha?: number;
+                }>;
+            };
+            readonly brand: {
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+            };
+            readonly info: {
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+            };
+            readonly success: {
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+            };
+            readonly attention: {
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
+            };
+        };
     };
     readonly radius: "sm";
     readonly borderWidth: 1;

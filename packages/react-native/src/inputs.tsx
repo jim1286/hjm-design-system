@@ -2352,6 +2352,7 @@ type ChipBaseProps = Readonly<{
 }>;
 
 type ActionChipProps = Readonly<{
+  selectionTone?: never;
   selectionMode?: "action";
   selected?: never;
   onPress: (event: GestureResponderEvent) => void;
@@ -2359,6 +2360,8 @@ type ActionChipProps = Readonly<{
 
 type SelectionChipProps = Readonly<{
   selectionMode: "single" | "multiple";
+  /** `brand` paints the selected chip with the opaque primary plate; `neutral` (default) uses the shared selection gray. */
+  selectionTone?: "neutral" | "brand";
   /** Product-owned controlled selection. */
   selected: boolean;
   onPress: (selected: boolean, event: GestureResponderEvent) => void;
@@ -2383,6 +2386,7 @@ export const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipP
   trailingStyle,
   renderSelectionIndicator,
   selectionMode = "action",
+  selectionTone = "neutral",
   selected,
   onPress,
 }, ref) {
@@ -2391,10 +2395,10 @@ export const Chip: ReturnType<typeof forwardRef<ComponentRef<typeof View>, ChipP
   const selectable = selectionMode !== "action";
   const active = selectable && selected === true;
   const metrics = chipRecipe.sizes[size];
-  const presentation = chipRecipe.states[active ? "selected" : "idle"];
+  const presentation = chipRecipe.states[active ? (selectionTone === "brand" ? "selectedBrand" : "selected") : "idle"];
   const contentColor = resolveColorReference(presentation.content, theme.palette);
   const indicatorColor = resolveColorReference(
-    chipRecipe.selectionIndicator.color,
+    active && selectionTone === "brand" ? presentation.content : chipRecipe.selectionIndicator.color,
     theme.palette,
   );
   const role = selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : "button";

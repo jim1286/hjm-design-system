@@ -79,6 +79,7 @@ type ChipBaseProps = Omit<
   }>;
 
 type ActionChipProps = Readonly<{
+  selectionTone?: never;
   selectionMode?: "action";
   selected?: never;
   onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -87,6 +88,8 @@ type ActionChipProps = Readonly<{
 
 type SelectionChipProps = Readonly<{
   selectionMode: "single" | "multiple";
+  /** `brand` paints the selected chip with the opaque primary plate; `neutral` (default) uses the shared selection gray. */
+  selectionTone?: "neutral" | "brand";
   selected: boolean;
   onSelectedChange: (selected: boolean) => void;
   onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -103,6 +106,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
     trailing,
     renderSelectionIndicator,
     selectionMode = "action",
+    selectionTone = "neutral",
     selected,
     onSelectedChange,
     onPress,
@@ -124,6 +128,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
       aria-checked={selectable ? active : undefined}
       className={classNames("hjm-chip", className)}
       data-selected={active || undefined}
+      data-selection-tone={selectionTone === "brand" ? "brand" : undefined}
       data-size={size}
       disabled={disabled}
       onClick={(event) => {

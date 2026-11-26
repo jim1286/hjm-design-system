@@ -20,7 +20,7 @@ it("draws BottomCTA bare inside ScreenLayout footer", () => {
   act(()=>tree.unmount());
 });
 // The bottom inset is max(footer padding 16, safe area), never 16 + inset (2026-10-17 "버튼 아래 여백이 많아").
-it("pads the screen bottom with max(16, safeAreaBottom) once", () => {
+it("pads footers with max(16, safeAreaBottom) and a scrolled body end with 16 + safeAreaBottom", () => {
   const flat=(node:{props:{style?:unknown}})=>Object.assign({},...[node.props.style].flat(3).filter(Boolean));
   const footerOf=(tree:ReactTestRenderer)=>tree.root.findAllByType(View).find(node=>node.props.children?.props?.value!==undefined&&flat(node).borderTopWidth!==undefined)!;
   const ctaOf=(tree:ReactTestRenderer)=>flat(tree.root.findAllByType(View).find(node=>node.props.testID==="footer-cta")!);
@@ -36,6 +36,10 @@ it("pads the screen bottom with max(16, safeAreaBottom) once", () => {
   // Without a footer the body is the last region and owns the same inset.
   tree=render(<ScreenLayout title="설정" scroll="content" safeAreaBottom={34}><View testID="content"/></ScreenLayout>);
   expect(flat(tree.root.findByProps({testID:"content"}).parent!)).toMatchObject({paddingTop:16,paddingBottom:34}); act(()=>tree.unmount());
+  // A screen-scrolled body ends with its gutter above the home indicator: 16 + 34, not flush on the safe-area edge.
+  tree=render(<ScreenLayout title="설정" safeAreaBottom={34}><View testID="content"/></ScreenLayout>);
+  let scroller=tree.root.findByProps({testID:"content"}).parent; while(scroller&&scroller.props.contentContainerStyle===undefined) scroller=scroller.parent;
+  expect(scroller!.props.contentContainerStyle.paddingBottom).toBe(50); act(()=>tree.unmount());
   expect(()=>render(<ScreenLayout title="설정" safeAreaBottom={-1}>본문</ScreenLayout>)).toThrow(/safeAreaBottom must be non-negative/u);
 });
 // contentInset="none" hands every inset to the host, so the footer draws no bar and BottomCTA keeps its own.
@@ -91,9 +95,9 @@ it("forwards safeAreaBottom through onboarding, both list-detail panes and the s
   let tree=render(<OnboardingScreen safeAreaBottom={34} steps={[{id:"a",title:"하나",description:"설명",content:null}]} index={0} onIndexChange={vi.fn()} nextLabel="다음" backLabel="이전" complete={{label:"시작",onAction:vi.fn()}} progressLabel={(i,n)=>`${i}/${n}`}/>);
   expect(footerPad(tree)).toBe(34); act(()=>tree.unmount());
   tree=render(<ListDetailScreen title="목록" safeAreaBottom={34} scroll="content" list={<View testID="list"/>} back={{label:"뒤로",onAction:vi.fn()}} detail={{title:"상세",content:<View testID="detail"/>}}/>);
-  // The detail pane scrolls the screen body: its content container owns the last-region inset.
+  // The detail pane scrolls the screen body: its content container owns the last-region inset, gutter included.
   let host=tree.root.findByProps({testID:"detail"}).parent; while(host&&host.props.contentContainerStyle===undefined) host=host.parent;
-  expect(host!.props.contentContainerStyle.paddingBottom).toBe(34); act(()=>tree.unmount());
+  expect(host!.props.contentContainerStyle.paddingBottom).toBe(50); act(()=>tree.unmount());
   tree=render(<SearchScreen title="검색" safeAreaBottom={34} queryClearLabel="지우기" query="" queryLabel="검색어" onQueryChange={vi.fn()} onSearch={vi.fn()} footer={<View testID="ad"/>}>{null}</SearchScreen>);
   expect(tree.root.findByProps({testID:"ad"})).toBeTruthy(); expect(footerPad(tree)).toBe(34); act(()=>tree.unmount());
 });

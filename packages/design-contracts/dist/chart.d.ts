@@ -23,7 +23,22 @@ export type ChartSeries = Readonly<{
     values: readonly ChartValue[];
     /** Product-owned series color; renderers fall back to the dataviz series palette by index. */
     color?: string;
+    /**
+     * Line role (2026-11-26, Yajalal: one season compared against earlier seasons on one shared axis). `context` lines are
+     * thinner, never filled and painted beneath `primary` ones, so a highlighted series stays readable over the others.
+     */
+    emphasis?: ChartSeriesEmphasis;
+    /** Line pattern, so context series differ by more than color. */
+    stroke?: ChartSeriesStroke;
+    /**
+     * Per value: observations the product judges too small a sample (e.g. a month with one plate appearance). They stay
+     * focusable and announced, but are drawn as hollow points off the line, left out of the automatic value domain and
+     * pinned to the plot edge when outside it, so a single outlier cannot flatten every other line.
+     */
+    lowSample?: readonly boolean[];
 }>;
+export type ChartSeriesEmphasis = "primary" | "context";
+export type ChartSeriesStroke = "solid" | "dashed";
 export type ChartInsets = Readonly<{
     top: number;
     right: number;
@@ -55,6 +70,19 @@ export declare function resolveChartSummary(categories: readonly string[], serie
         values: readonly ChartValue[];
         /** Product-owned series color; renderers fall back to the dataviz series palette by index. */
         color?: string;
+        /**
+         * Line role (2026-11-26, Yajalal: one season compared against earlier seasons on one shared axis). `context` lines are
+         * thinner, never filled and painted beneath `primary` ones, so a highlighted series stays readable over the others.
+         */
+        emphasis?: ChartSeriesEmphasis;
+        /** Line pattern, so context series differ by more than color. */
+        stroke?: ChartSeriesStroke;
+        /**
+         * Per value: observations the product judges too small a sample (e.g. a month with one plate appearance). They stay
+         * focusable and announced, but are drawn as hollow points off the line, left out of the automatic value domain and
+         * pinned to the plot edge when outside it, so a single outlier cannot flatten every other line.
+         */
+        lowSample?: readonly boolean[];
     }>;
     label: string;
     category: string | null;
@@ -68,6 +96,19 @@ export declare function resolveChartSummary(categories: readonly string[], serie
             values: readonly ChartValue[];
             /** Product-owned series color; renderers fall back to the dataviz series palette by index. */
             color?: string;
+            /**
+             * Line role (2026-11-26, Yajalal: one season compared against earlier seasons on one shared axis). `context` lines are
+             * thinner, never filled and painted beneath `primary` ones, so a highlighted series stays readable over the others.
+             */
+            emphasis?: ChartSeriesEmphasis;
+            /** Line pattern, so context series differ by more than color. */
+            stroke?: ChartSeriesStroke;
+            /**
+             * Per value: observations the product judges too small a sample (e.g. a month with one plate appearance). They stay
+             * focusable and announced, but are drawn as hollow points off the line, left out of the automatic value domain and
+             * pinned to the plot edge when outside it, so a single outlier cannot flatten every other line.
+             */
+            lowSample?: readonly boolean[];
         }>;
         index: number;
         value: number | null;
@@ -123,6 +164,11 @@ export declare const chartRecipe: {
     };
     readonly line: {
         readonly strokeWidth: 2.4;
+        readonly contextStrokeWidth: 1.5;
+        readonly contextPointRadius: 3.5;
+        readonly dash: readonly [5, 4];
+        readonly lowSampleRadius: 3.5;
+        readonly lowSampleStrokeWidth: 1.5;
         readonly pointRadius: 4.5;
         readonly focusHaloRadius: 9;
         readonly focusHaloOpacity: 0.25;
@@ -306,6 +352,10 @@ export type LineGeometry = Readonly<{
     plots: readonly (readonly (ChartPlot | null)[])[];
     /** Stacked areas: the lower edge per series (previous cumulative). */
     lower: readonly (readonly (ChartPlot | null)[])[] | null;
+    /** Per series, per category: `lowSample` observations (absent from `plots`), clamped into the plot. */
+    lowSample: readonly (readonly (ChartPlot | null)[])[];
+    /** Series indices in paint order: `context` lines first, so `primary` lines sit on top. */
+    paintOrder: readonly number[];
 }>;
 export declare function resolveLineGeometry({ categories, series, width, height, insets, invert, stacked, ...domainOptions }: LineGeometryInput): LineGeometry;
 /** Cumulative [lower, upper] per series per category; missing values do not add to the stack. */

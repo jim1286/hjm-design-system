@@ -7,7 +7,12 @@ import { fontWeight, spacing, stroke } from "./foundations.js";
 
 export type TagTone = "neutral" | "info" | "success" | "attention" | "brand";
 
-export type TagVariant = "default" | "outline";
+/**
+ * `strong` (2026-11-26, 오늘야구 수상 연도): the outline capsule with a control-strength border and primary text. The
+ * hairline outline read as part of a white card; the user asked for a white plate with a darker border and text
+ * rather than a tinted plate.
+ */
+export type TagVariant = "default" | "outline" | "strong";
 
 export const tagDefaults = {
   tone: "neutral",
@@ -48,7 +53,7 @@ const supportedTones: readonly TagTone[] = [
 
 export function validateTagDescriptor(descriptor: TagDescriptor): void {
   assertCopy(descriptor.label, "label");
-  if (descriptor.variant !== undefined && !["default", "outline"].includes(descriptor.variant)) {
+  if (descriptor.variant !== undefined && !["default", "outline", "strong"].includes(descriptor.variant)) {
     throw new TypeError(`Unsupported Tag variant: ${String(descriptor.variant)}`);
   }
   if (
@@ -122,6 +127,17 @@ export const tagRecipe = {
     background: "transparent",
     content: semanticColors.content.primary,
   },
+  /** Same capsule geometry as `outline` on the canvas plate; border and text carry the tone at full strength. */
+  strong: {
+    background: semanticColors.canvas,
+    tones: {
+      neutral: { content: semanticColors.content.primary, border: semanticColors.border.control },
+      brand: { content: semanticColors.content.brand, border: semanticColors.content.brand },
+      info: { content: semanticColors.feedback.info.foreground, border: semanticColors.feedback.info.foreground },
+      success: { content: semanticColors.feedback.success.foreground, border: semanticColors.feedback.success.foreground },
+      attention: { content: semanticColors.feedback.attention.foreground, border: semanticColors.feedback.attention.foreground },
+    },
+  },
   radius: "sm",
   borderWidth: stroke.default,
 } as const;
@@ -139,6 +155,10 @@ export function resolveTagPresentation(
   variant: TagVariant = tagDefaults.variant,
 ): ResolvedTagPresentation {
   const contract = tagRecipe.tones[tone];
+  if (variant === "strong") {
+    const strong = tagRecipe.strong.tones[tone];
+    return { background: resolveColorReference(tagRecipe.strong.background, palette), content: resolveColorReference(strong.content, palette), border: resolveColorReference(strong.border, palette) };
+  }
   return {
     background: variant === "outline" ? "transparent" : resolveColorReference(contract.background, palette),
     content: resolveColorReference(variant === "outline" && tone === "neutral" ? tagRecipe.outline.content : contract.content, palette),

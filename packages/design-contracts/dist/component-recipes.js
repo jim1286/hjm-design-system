@@ -325,6 +325,13 @@ export const chipRecipe = {
             content: semanticColors.selection.content,
             border: semanticColors.selection.border,
         },
+        // `selectionTone="brand"` (2026-11-26, 오늘야구 기록실 팀 필터): an opaque primary plate like SegmentedControl's brand
+        // selection, for a filter row whose selected chip must read at a glance. Neutral stays the default (2026-10-23).
+        selectedBrand: {
+            background: semanticColors.action.brand.background,
+            content: semanticColors.action.brand.content,
+            border: semanticColors.action.brand.background,
+        },
         pressedOpacity: opacity.pressed,
         disabledOpacity: opacity.disabled,
     },

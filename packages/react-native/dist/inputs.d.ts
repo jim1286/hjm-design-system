@@ -330,12 +330,15 @@ type ChipBaseProps = Readonly<{
     }>) => ReactNode;
 }>;
 type ActionChipProps = Readonly<{
+    selectionTone?: never;
     selectionMode?: "action";
     selected?: never;
     onPress: (event: GestureResponderEvent) => void;
 }>;
 type SelectionChipProps = Readonly<{
     selectionMode: "single" | "multiple";
+    /** `brand` paints the selected chip with the opaque primary plate; `neutral` (default) uses the shared selection gray. */
+    selectionTone?: "neutral" | "brand";
     /** Product-owned controlled selection. */
     selected: boolean;
     onPress: (selected: boolean, event: GestureResponderEvent) => void;

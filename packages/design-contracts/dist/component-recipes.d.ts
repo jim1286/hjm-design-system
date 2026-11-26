@@ -739,6 +739,23 @@ export declare const chipRecipe: {
                 alpha?: number;
             }>;
         };
+        readonly selectedBrand: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+        };
         readonly pressedOpacity: 0.86;
         readonly disabledOpacity: 0.5;
     };

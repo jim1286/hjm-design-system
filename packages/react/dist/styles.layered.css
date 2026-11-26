@@ -1038,6 +1038,12 @@
 .hjm-tag[data-tone="attention"] { background: color-mix(in srgb, var(--hjm-accent-attention) 10%, transparent); }
 .hjm-tag[data-variant="outline"] { min-block-size: 32px; padding: 6px 10px; border-radius: var(--hjm-radius-full); background: transparent; font-weight: var(--hjm-text-emphasis-regular); }
 .hjm-tag[data-variant="outline"][data-tone="neutral"] { color: var(--hjm-color-text); }
+.hjm-tag[data-variant="strong"] { min-block-size: 32px; padding: 6px 10px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-bg); font-weight: var(--hjm-text-emphasis-regular); }
+.hjm-tag[data-variant="strong"][data-tone="neutral"] { color: var(--hjm-color-text); border-color: var(--hjm-color-border-control); }
+.hjm-tag[data-variant="strong"][data-tone="brand"] { border-color: var(--hjm-color-content-brand); }
+.hjm-tag[data-variant="strong"][data-tone="info"] { background: var(--hjm-color-bg); border-color: var(--hjm-accent-info); }
+.hjm-tag[data-variant="strong"][data-tone="success"] { background: var(--hjm-color-bg); border-color: var(--hjm-accent-success); }
+.hjm-tag[data-variant="strong"][data-tone="attention"] { background: var(--hjm-color-bg); border-color: var(--hjm-accent-attention); }
 .hjm-icon { display: inline-block; flex: 0 0 auto; vertical-align: middle; }
 .hjm-icon[data-transform="mirror-inline"] { transform: scaleX(-1); }
 .hjm-icon[data-tone="primary"] { color: var(--hjm-color-text); }
@@ -1163,6 +1169,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-chip[data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); gap: var(--hjm-space-xxs); }
 .hjm-chip[data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
 .hjm-chip[data-selected] { border-color: var(--hjm-color-border-control); background: var(--hjm-color-surface-selected); color: var(--hjm-color-text); }
+.hjm-chip[data-selected][data-selection-tone="brand"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); color: var(--hjm-color-on-primary); }
 .hjm-chip:disabled { opacity: 0.5; cursor: not-allowed; }
 .hjm-chip:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
 .hjm-chip__indicator, .hjm-chip__leading, .hjm-chip__trailing { display: inline-flex; flex: 0 0 auto; }

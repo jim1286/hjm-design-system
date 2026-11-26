@@ -76,6 +76,12 @@ export type ScreenLayoutProps = Readonly<{
     stateAction?: ReactNode;
     /** Brand visual for `state.kind === "loading"`; the shared state group keeps copy, centering and announcement (as CompositionLayout). */
     loadingIndicator?: ReactNode;
+    /**
+     * Shape of the arriving content (Skeleton, ListRow `loading`) drawn in the content's own place while
+     * `state.kind === "loading"`, instead of the centered Spinner (2026-11-26, 오늘야구 스켈레톤). The region is announced once
+     * as busy with `state.title`; the placeholder itself is hidden from assistive tech. Ignored for other states.
+     */
+    loadingPlaceholder?: ReactNode;
     children?: ReactNode;
     /** Use content when the child is a FlatList/virtualized timeline. */
     scroll?: "screen" | "content";
@@ -121,7 +127,7 @@ export type ScreenLayoutProps = Readonly<{
     refreshLabel?: string;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator" | "onScroll" | "onScrollBeginDrag" | "onScrollEndDrag" | "scrollEventThrottle" | "alwaysBounceVertical" | "automaticallyAdjustKeyboardInsets">;
 }>;
-export declare function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, onRefresh, refreshing, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, titleBadge, titleLeading, titleLeadingAction, titleVisibility, headerAlignment, header, headerPosition, scrollEdgeEffect, contentInset, contentAlignment, surface, presentation: suppliedPresentation, exit, actions, notice, footer, state, stateAction, loadingIndicator, loadingPlaceholder, children, scroll, layoutStyle, testID, scrollRef, scrollProps, pullToDismiss, keyboardAvoidance, safeAreaBottom, safeAreaTop, initialFocus, onRefresh, refreshing, refreshLabel, hjmBodyInlinePadding }: ScreenLayoutProps & ScreenLayoutPrivateProps): import("react").JSX.Element;
 export type { ScreenHostEdge, ScreenHostSurface } from "@hjmds/design-contracts/screen-patterns";
 export type ScreenHostProps = Readonly<{
     children?: ReactNode;
@@ -351,9 +357,15 @@ export type CompositionLayoutProps = Readonly<{
     stateHeight?: CompositionStateHeight;
     /** Brand visual only; the shared state group owns copy, centering and announcement. */
     loadingIndicator?: ReactNode;
+    /**
+     * Shape of the arriving content (Skeleton, ListRow `loading`) drawn in the content's own place while
+     * `state.kind === "loading"`, instead of the centered Spinner (2026-11-26, 오늘야구 스켈레톤). The region is announced once
+     * as busy with `state.title`; the placeholder itself is hidden from assistive tech. Ignored for other states.
+     */
+    loadingPlaceholder?: ReactNode;
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
+export declare function CompositionLayout({ title, titleSize, headingLevel, description, badge, leading, actions, notice, children, footer, aside, footerAside, state, stateAction, stateHeight, loadingIndicator, loadingPlaceholder, layoutStyle }: CompositionLayoutProps): import("react").JSX.Element;
 export type NotificationRowProps = Readonly<{
     /** Text and inline emphasis only; interactive content belongs outside the row. */
     preview: ReactNode;
